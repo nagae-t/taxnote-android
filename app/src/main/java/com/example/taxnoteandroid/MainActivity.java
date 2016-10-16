@@ -32,13 +32,13 @@ public class MainActivity extends AppCompatActivity implements Consts {
         public Fragment getItem(int position) {
             switch (position) {
                 case 0:
-                    return Blank1Fragment.newInstance();
+                    return EntryFragment.newInstance();
                 case 1:
-                    return Blank2Fragment.newInstance();
+                    return HistoryFragment.newInstance();
                 case 2:
-                    return Blank3Fragment.newInstance();
+                    return SettingsFragment.newInstance();
             }
-            return Blank1Fragment.newInstance();
+            return EntryFragment.newInstance();
         }
 
         @Override

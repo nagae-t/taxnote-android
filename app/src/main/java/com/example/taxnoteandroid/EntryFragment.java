@@ -12,13 +12,13 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 
-public class Blank1Fragment extends Fragment {
-    public Blank1Fragment() {
+public class EntryFragment extends Fragment {
+    public EntryFragment() {
         // Required empty public constructor
     }
 
-    public static Blank1Fragment newInstance() {
-        Blank1Fragment fragment = new Blank1Fragment();
+    public static EntryFragment newInstance() {
+        EntryFragment fragment = new EntryFragment();
         Bundle args = new Bundle();
         fragment.setArguments(args);
         return fragment;
