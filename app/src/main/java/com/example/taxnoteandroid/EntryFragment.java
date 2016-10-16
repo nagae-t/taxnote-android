@@ -11,8 +11,12 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 public class EntryFragment extends Fragment {
+
     public EntryFragment() {
         // Required empty public constructor
     }
@@ -30,18 +34,24 @@ public class EntryFragment extends Fragment {
 
         ListView listView = (ListView) v.findViewById(R.id.list);
 
-        listView.setAdapter(new ListAdapter(getContext()));
+        List<String> strings = new ArrayList<>();
+        strings.add("test1");
+        strings.add("test2");
+        strings.add("test3");
+        strings.add("test4");
+        strings.add("test5");
+        listView.setAdapter(new ListAdapter(getContext(), strings));
 
         return v;
     }
 
     // @@ https://material.google.com/components/lists.html#
-    class ListAdapter extends ArrayAdapter {
+    class ListAdapter extends ArrayAdapter<String> {
 
         private LayoutInflater layoutInflater;
 
-        public ListAdapter(Context context) {
-            super(context, 0);
+        public ListAdapter(Context context, List<String> texts) {
+            super(context, 0, texts);
             layoutInflater = LayoutInflater.from(context);
         }
 
@@ -52,15 +62,13 @@ public class EntryFragment extends Fragment {
             // inflateでViewにする
             View v = layoutInflater.inflate(R.layout.row_list_item, null);
 
+            // getItemでcallのViewにbindしたいデータ型を取得できる
+            String s = getItem(position);
+
             TextView textView = (TextView) v.findViewById(R.id.text);
-            textView.setText("test");
+            textView.setText(s);
 
             return v;
-        }
-
-        @Override
-        public int getCount() {
-            return 10;
         }
     }
 }
