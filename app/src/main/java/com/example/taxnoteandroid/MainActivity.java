@@ -1,34 +1,62 @@
 package com.example.taxnoteandroid;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.widget.LinearLayout;
-import android.widget.ListView;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
+import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
+import android.support.v7.app.AppCompatActivity;
 
-public class MainActivity extends AppCompatActivity implements Consts
-{
-  @Override
-  protected void onCreate(Bundle savedInstanceState)
-  {
-    super.onCreate(savedInstanceState);
-    setContentView(R.layout.activity_main);
+public class MainActivity extends AppCompatActivity implements Consts {
 
-    LinearLayout layout = (LinearLayout)this.findViewById(R.id.main_container);
-    layout.setOrientation(LinearLayout.VERTICAL);
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
 
-    TextView text1 = new TextView(this);
-    text1.setText("ここに日付を入れる予定");
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.tab);
+        ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
 
-    TextView text2 = new TextView(this);
-    text2.setText("ここに支払い方法を入れる予定");
+        viewPager.setAdapter(new TabPagerAdapter(getSupportFragmentManager()));
+        tabLayout.setupWithViewPager(viewPager);
+    }
 
-    ListView list_view = new ListView(this);
+    class TabPagerAdapter extends FragmentPagerAdapter {
 
-    layout.addView(text1, MATCH_PARENT, WRAP_CONTENT);
-    layout.addView(text2, MATCH_PARENT, WRAP_CONTENT);
-    layout.addView(list_view, MATCH_PARENT, WRAP_CONTENT);
+        public TabPagerAdapter(FragmentManager fm) {
+            super(fm);
+        }
 
-  }
+        @Override
+        public Fragment getItem(int position) {
+            switch (position) {
+                case 0:
+                    return Blank1Fragment.newInstance();
+                case 1:
+                    return Blank2Fragment.newInstance();
+                case 2:
+                    return Blank3Fragment.newInstance();
+            }
+            return Blank1Fragment.newInstance();
+        }
+
+        @Override
+        public int getCount() {
+            return 3;
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            switch (position) {
+                case 0:
+                    return getString(R.string.MainActivity_tab1);
+                case 1:
+                    return getString(R.string.MainActivity_tab2);
+                case 2:
+                    return getString(R.string.MainActivity_tab3);
+            }
+            return super.getPageTitle(position);
+        }
+    }
 }
