@@ -1,18 +1,14 @@
 package com.example.taxnoteandroid;
 
-import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
-import android.widget.TextView;
-
-import java.util.ArrayList;
-import java.util.List;
 
 
 public class EntryFragment extends Fragment {
@@ -32,43 +28,45 @@ public class EntryFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_blank1, container, false);
 
-        ListView listView = (ListView) v.findViewById(R.id.list);
-
-        List<String> strings = new ArrayList<>();
-        strings.add("test1");
-        strings.add("test2");
-        strings.add("test3");
-        strings.add("test4");
-        strings.add("test5");
-        listView.setAdapter(new ListAdapter(getContext(), strings));
+        TabLayout tabLayout = (TabLayout) v.findViewById(R.id.tab);
+        final ViewPager viewPager = (ViewPager) v.findViewById(R.id.pager);
+        viewPager.setAdapter(new TabPagerAdapter(getChildFragmentManager()));
+        tabLayout.setupWithViewPager(viewPager);
 
         return v;
     }
 
-    // @@ https://material.google.com/components/lists.html#
-    class ListAdapter extends ArrayAdapter<String> {
+    class TabPagerAdapter extends FragmentPagerAdapter {
 
-        private LayoutInflater layoutInflater;
-
-        public ListAdapter(Context context, List<String> texts) {
-            super(context, 0, texts);
-            layoutInflater = LayoutInflater.from(context);
+        public TabPagerAdapter(FragmentManager fm) {
+            super(fm);
         }
 
-        @NonNull
         @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            // getViewでListViewの1つのセルを作る
-            // inflateでViewにする
-            View v = layoutInflater.inflate(R.layout.row_list_item, null);
+        public Fragment getItem(int position) {
+            switch (position) {
+                case 0:
+                    return EntrySub1Fragment.newInstance();
+                case 1:
+                    return EntrySub2Fragment.newInstance();
+            }
+            return EntryFragment.newInstance();
+        }
 
-            // getItemでcallのViewにbindしたいデータ型を取得できる
-            String s = getItem(position);
+        @Override
+        public int getCount() {
+            return 2;
+        }
 
-            TextView textView = (TextView) v.findViewById(R.id.text);
-            textView.setText(s);
-
-            return v;
+        @Override
+        public CharSequence getPageTitle(int position) {
+            switch (position) {
+                case 0:
+                    return getString(R.string.MainActivity_tab1);
+                case 1:
+                    return getString(R.string.MainActivity_tab2);
+            }
+            return super.getPageTitle(position);
         }
     }
 }
