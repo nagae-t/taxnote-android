@@ -11,14 +11,14 @@ import android.view.View;
 import android.view.ViewGroup;
 
 
-public class EntryFragment extends Fragment {
+public class EntryTabFragment extends Fragment {
 
-    public EntryFragment() {
+    public EntryTabFragment() {
         // Required empty public constructor
     }
 
-    public static EntryFragment newInstance() {
-        EntryFragment fragment = new EntryFragment();
+    public static EntryTabFragment newInstance() {
+        EntryTabFragment fragment = new EntryTabFragment();
         Bundle args = new Bundle();
         fragment.setArguments(args);
         return fragment;
@@ -46,11 +46,11 @@ public class EntryFragment extends Fragment {
         public Fragment getItem(int position) {
             switch (position) {
                 case 0:
-                    return EntrySub1Fragment.newInstance();
+                    return ExpenseFragment.newInstance();
                 case 1:
-                    return EntrySub2Fragment.newInstance();
+                    return IncomeFragment.newInstance();
             }
-            return EntryFragment.newInstance();
+            return EntryTabFragment.newInstance();
         }
 
         @Override

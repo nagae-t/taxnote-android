@@ -15,14 +15,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class EntrySub1Fragment extends Fragment {
+public class ExpenseFragment extends Fragment {
 
-    public EntrySub1Fragment() {
+    public ExpenseFragment() {
         // Required empty public constructor
     }
 
-    public static EntrySub1Fragment newInstance() {
-        EntrySub1Fragment fragment = new EntrySub1Fragment();
+    public static ExpenseFragment newInstance() {
+        ExpenseFragment fragment = new ExpenseFragment();
         Bundle args = new Bundle();
         fragment.setArguments(args);
         return fragment;
@@ -42,6 +42,10 @@ public class EntrySub1Fragment extends Fragment {
         strings.add("test3");
         strings.add("test4");
         strings.add("test5");
+        strings.add("test3");
+        strings.add("test4");
+        strings.add("test5");
+
         listView.setAdapter(new ListAdapter(getContext(), strings));
 
         return v;

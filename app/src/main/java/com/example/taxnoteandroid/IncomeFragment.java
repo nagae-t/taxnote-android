@@ -15,14 +15,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class EntrySub2Fragment extends Fragment {
+public class IncomeFragment extends Fragment {
 
-    public EntrySub2Fragment() {
+    public IncomeFragment() {
         // Required empty public constructor
     }
 
-    public static EntrySub2Fragment newInstance() {
-        EntrySub2Fragment fragment = new EntrySub2Fragment();
+    public static IncomeFragment newInstance() {
+        IncomeFragment fragment = new IncomeFragment();
         Bundle args = new Bundle();
         fragment.setArguments(args);
         return fragment;

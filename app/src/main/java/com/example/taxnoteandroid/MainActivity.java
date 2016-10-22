@@ -21,10 +21,10 @@ public class MainActivity extends AppCompatActivity implements Consts {
         TabPagerAdapter adapter = new TabPagerAdapter(getSupportFragmentManager());
         viewPager.setAdapter(adapter);
 
-        initTab();
+        setBottomNavigation();
     }
 
-    private void initTab() {
+    private void setBottomNavigation() {
         final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
         viewPager.beginFakeDrag();
 //        viewPager.setOnTouchListener(new View.OnTouchListener() {
@@ -66,13 +66,13 @@ public class MainActivity extends AppCompatActivity implements Consts {
         public Fragment getItem(int position) {
             switch (position) {
                 case 0:
-                    return EntryFragment.newInstance();
+                    return EntryTabFragment.newInstance();
                 case 1:
-                    return HistoryFragment.newInstance();
+                    return HistoryTabFragment.newInstance();
                 case 2:
-                    return SettingsFragment.newInstance();
+                    return SettingsTabFragment.newInstance();
             }
-            return EntryFragment.newInstance();
+            return EntryTabFragment.newInstance();
         }
 
         @Override

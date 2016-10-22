@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.example.taxnoteandroid.EntrySub1Fragment">
+    tools:context="com.example.taxnoteandroid.ExpenseFragment">
 
     <TextView
         android:layout_width="match_parent"
