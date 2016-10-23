@@ -8,6 +8,11 @@
     <string name="Blank1Fragment_cash">支払い方法</string>
     <string name="Blank1Fragment_select">選択</string>
 
+    <string name="SummaryActivity_no_select">備考を選択しない</string>
+    <string name="SummaryActivity_nex">次へ進む</string>
+    <string name="SummaryActivity_select">備考を選択</string>
+    <string name="SummaryActivity_footer">備考を追加</string>
+
     <string name="MainActivity_tab1">tab1</string>
     <string name="MainActivity_tab2">tab2</string>
     <string name="MainActivity_tab3">tab3</string>

@@ -27,12 +27,6 @@ public class MainActivity extends AppCompatActivity implements Consts {
     private void setBottomNavigation() {
         final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
         viewPager.beginFakeDrag();
-//        viewPager.setOnTouchListener(new View.OnTouchListener() {
-//            @Override
-//            public boolean onTouch(View v, MotionEvent event) {
-//                return true;
-//            }
-//        });
 
         BottomNavigationView bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_navigation);
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {

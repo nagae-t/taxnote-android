@@ -1,9 +1,10 @@
 package com.example.taxnoteandroid;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,27 +16,19 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
+public class SummaryActivity extends AppCompatActivity {
 
-public class ExpenseFragment extends Fragment {
-
-    public ExpenseFragment() {
-        // Required empty public constructor
-    }
-
-    public static ExpenseFragment newInstance() {
-        ExpenseFragment fragment = new ExpenseFragment();
-        Bundle args = new Bundle();
-        fragment.setArguments(args);
-        return fragment;
+    public static Intent createIntent(Context context) {
+        Intent i = new Intent(context, SummaryActivity.class);
+        return i;
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_summary);
 
-        View v = inflater.inflate(R.layout.fragment_entry_sub1, container, false);
-
-        ListView listView = (ListView) v.findViewById(R.id.list);
+        ListView listView = (ListView) findViewById(R.id.list);
 
         List<String> strings = new ArrayList<>();
         strings.add("test1");
@@ -46,16 +39,20 @@ public class ExpenseFragment extends Fragment {
         strings.add("test3");
         strings.add("test4");
         strings.add("test5");
+        strings.add("test3");
+        strings.add("test4");
+        strings.add("test5");
+        strings.add("test3");
+        strings.add("test4");
+        strings.add("test5");
 
-        listView.setAdapter(new ListAdapter(getContext(), strings));
+        listView.setAdapter(new ListAdapter(this, strings));
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                startActivity(SummaryActivity.createIntent(getContext()));
             }
         });
-
-        return v;
+        listView.addFooterView(getLayoutInflater().inflate(R.layout.footer_summary, null));
     }
 
     // @@ https://material.google.com/components/lists.html#
