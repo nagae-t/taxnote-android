@@ -46,6 +46,15 @@ public class SummaryActivity extends AppCompatActivity {
         strings.add("test4");
         strings.add("test5");
 
+        View next = findViewById(R.id.next);
+        next.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // request codeを指定する.onActivityResultのrequestCodeで返ってくる
+                startActivityForResult(InputDataActivity.createIntent(SummaryActivity.this), 1);
+            }
+        });
+
         listView.setAdapter(new ListAdapter(this, strings));
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -53,6 +62,16 @@ public class SummaryActivity extends AppCompatActivity {
             }
         });
         listView.addFooterView(getLayoutInflater().inflate(R.layout.footer_summary, null));
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        // startActivityForResultで呼び出したActivityの処理がどうだったのかを確認する
+        // resultCodeがInputDataActivityのsetResultでセットした値
+        if (requestCode == 1 && resultCode == RESULT_OK) {
+            finish();
+        }
     }
 
     // @@ https://material.google.com/components/lists.html#
