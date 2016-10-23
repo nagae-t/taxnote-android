@@ -1,14 +1,14 @@
 package com.example.taxnoteandroid;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-
-import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
-import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem;
+import android.view.MenuItem;
 
 public class MainActivity extends AppCompatActivity implements Consts {
 
@@ -34,24 +34,22 @@ public class MainActivity extends AppCompatActivity implements Consts {
 //            }
 //        });
 
-        AHBottomNavigation bottomNavigation = (AHBottomNavigation) findViewById(R.id.bottom_navigation);
-
-        // Create items
-        AHBottomNavigationItem item1 = new AHBottomNavigationItem(R.string.MainActivity_tab1, R.drawable.ic_clock, R.color.colorAccent);
-        AHBottomNavigationItem item2 = new AHBottomNavigationItem(R.string.MainActivity_tab2, R.drawable.ic_clock, R.color.colorAccent);
-        AHBottomNavigationItem item3 = new AHBottomNavigationItem(R.string.MainActivity_tab3, R.drawable.ic_clock, R.color.colorAccent);
-
-        // Add items
-        bottomNavigation.addItem(item1);
-        bottomNavigation.addItem(item2);
-        bottomNavigation.addItem(item3);
-
-        bottomNavigation.setOnTabSelectedListener(new AHBottomNavigation.OnTabSelectedListener() {
+        BottomNavigationView bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_navigation);
+        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
-            public boolean onTabSelected(int position, boolean wasSelected) {
-                viewPager.setCurrentItem(position);
-                // Do something cool here...
-                return true;
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.tab1:
+                        viewPager.setCurrentItem(0);
+                        break;
+                    case R.id.tab2:
+                        viewPager.setCurrentItem(1);
+                        break;
+                    case R.id.tab3:
+                        viewPager.setCurrentItem(2);
+                        break;
+                }
+                return false;
             }
         });
     }
