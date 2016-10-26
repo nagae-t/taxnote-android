@@ -27,7 +27,7 @@
         android:text="@string/SummaryActivity_select" />
 
     <ListView
-        android:id="@+id/list"
+        android:id="@+id/reason_list_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 </LinearLayout>

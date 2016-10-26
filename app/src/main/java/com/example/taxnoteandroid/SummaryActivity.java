@@ -28,7 +28,7 @@ public class SummaryActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_summary);
 
-        ListView listView = (ListView) findViewById(R.id.list);
+        ListView listView = (ListView) findViewById(R.id.reason_list_view);
 
         List<String> strings = new ArrayList<>();
         strings.add("test1");
@@ -61,7 +61,7 @@ public class SummaryActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
             }
         });
-        listView.addFooterView(getLayoutInflater().inflate(R.layout.footer_summary, null));
+        listView.addFooterView(getLayoutInflater().inflate(R.layout.listview_footer, null));
     }
 
     @Override

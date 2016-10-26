@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -15,14 +16,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class IncomeFragment extends Fragment {
+public class ExpenseInEntryTabFragment extends Fragment {
 
-    public IncomeFragment() {
+    public ExpenseInEntryTabFragment() {
         // Required empty public constructor
     }
 
-    public static IncomeFragment newInstance() {
-        IncomeFragment fragment = new IncomeFragment();
+    public static ExpenseInEntryTabFragment newInstance() {
+        ExpenseInEntryTabFragment fragment = new ExpenseInEntryTabFragment();
         Bundle args = new Bundle();
         fragment.setArguments(args);
         return fragment;
@@ -32,9 +33,9 @@ public class IncomeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
 
-        View v = inflater.inflate(R.layout.fragment_entry_sub1, container, false);
+        View v = inflater.inflate(R.layout.fragment_entry_tab_expense, container, false);
 
-        ListView listView = (ListView) v.findViewById(R.id.list);
+        ListView listView = (ListView) v.findViewById(R.id.reason_list_view);
 
         List<String> strings = new ArrayList<>();
         strings.add("test1");
@@ -42,7 +43,17 @@ public class IncomeFragment extends Fragment {
         strings.add("test3");
         strings.add("test4");
         strings.add("test5");
+        strings.add("test3");
+        strings.add("test4");
+        strings.add("test5");
+
         listView.setAdapter(new ListAdapter(getContext(), strings));
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                startActivity(SummaryActivity.createIntent(getContext()));
+            }
+        });
 
         return v;
     }
@@ -62,15 +73,15 @@ public class IncomeFragment extends Fragment {
         public View getView(int position, View convertView, ViewGroup parent) {
             // getViewでListViewの1つのセルを作る
             // inflateでViewにする
-            View v = layoutInflater.inflate(R.layout.row_list_item, null);
+            View view = layoutInflater.inflate(R.layout.row_list_item, null);
 
             // getItemでcallのViewにbindしたいデータ型を取得できる
-            String s = getItem(position);
+            String string = getItem(position);
 
-            TextView textView = (TextView) v.findViewById(R.id.text);
-            textView.setText(s);
+            TextView textView = (TextView) view.findViewById(R.id.text);
+            textView.setText(string);
 
-            return v;
+            return view;
         }
     }
 }

@@ -7,7 +7,6 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -16,14 +15,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class ExpenseFragment extends Fragment {
+public class IncomeInEntryTabFragment extends Fragment {
 
-    public ExpenseFragment() {
+    public IncomeInEntryTabFragment() {
         // Required empty public constructor
     }
 
-    public static ExpenseFragment newInstance() {
-        ExpenseFragment fragment = new ExpenseFragment();
+    public static IncomeInEntryTabFragment newInstance() {
+        IncomeInEntryTabFragment fragment = new IncomeInEntryTabFragment();
         Bundle args = new Bundle();
         fragment.setArguments(args);
         return fragment;
@@ -33,9 +32,9 @@ public class ExpenseFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
 
-        View v = inflater.inflate(R.layout.fragment_entry_sub1, container, false);
+        View v = inflater.inflate(R.layout.fragment_entry_tab_expense, container, false);
 
-        ListView listView = (ListView) v.findViewById(R.id.list);
+        ListView listView = (ListView) v.findViewById(R.id.reason_list_view);
 
         List<String> strings = new ArrayList<>();
         strings.add("test1");
@@ -43,17 +42,7 @@ public class ExpenseFragment extends Fragment {
         strings.add("test3");
         strings.add("test4");
         strings.add("test5");
-        strings.add("test3");
-        strings.add("test4");
-        strings.add("test5");
-
         listView.setAdapter(new ListAdapter(getContext(), strings));
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                startActivity(SummaryActivity.createIntent(getContext()));
-            }
-        });
 
         return v;
     }

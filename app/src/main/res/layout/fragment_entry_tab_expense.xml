@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.example.taxnoteandroid.ExpenseFragment">
+    tools:context="com.example.taxnoteandroid.ExpenseInEntryTabFragment">
 
     <TextView
         android:layout_width="match_parent"
@@ -38,7 +38,7 @@
         android:text="@string/Blank1Fragment_select" />
 
     <ListView
-        android:id="@+id/list"
+        android:id="@+id/reason_list_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 </LinearLayout>
