@@ -9,6 +9,11 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.taxnoteandroid.dataManager.EntryDataManager;
+import com.example.taxnoteandroid.model.Entry;
+
+import java.util.UUID;
+
 public class InputDataActivity extends AppCompatActivity {
 
     @Override
@@ -32,6 +37,13 @@ public class InputDataActivity extends AppCompatActivity {
             public void onClick(View view) {
 
                 showSavingDoneToast();
+
+                EntryDataManager entryDataManager = new EntryDataManager(InputDataActivity.this);
+                Entry entry = new Entry();
+                entry.price = 1000;
+                entry.memo = "memo";
+                entry.uuid = UUID.randomUUID().toString();
+                long id = entryDataManager.save(entry);
 
                 // 処理が正常に終わったりしたら、呼び出された画面にたいしてOKだったと伝えるためにsetResultする
                 setResult(RESULT_OK);
