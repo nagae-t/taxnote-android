@@ -15,20 +15,26 @@ public class MainActivity extends AppCompatActivity implements Consts {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_main);
-
-        final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
-        TabPagerAdapter adapter = new TabPagerAdapter(getSupportFragmentManager());
-        viewPager.setAdapter(adapter);
-
         setBottomNavigation();
     }
 
+
+    //--------------------------------------------------------------//
+    //    -- Bottom Navigation --
+    //--------------------------------------------------------------//
+
     private void setBottomNavigation() {
-        final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
+
+        // Set pager
+        final ViewPager viewPager   = (ViewPager) findViewById(R.id.pager);
+        TabPagerAdapter adapter     = new TabPagerAdapter(getSupportFragmentManager());
+        viewPager.setAdapter(adapter);
         viewPager.beginFakeDrag();
 
         BottomNavigationView bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_navigation);
+
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
