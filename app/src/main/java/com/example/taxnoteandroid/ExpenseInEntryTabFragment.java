@@ -58,6 +58,17 @@ public class ExpenseInEntryTabFragment extends Fragment {
         return v;
     }
 
+    //--------------------------------------------------------------//
+    //    -- Display Part --
+    //--------------------------------------------------------------//
+
+
+
+
+    //--------------------------------------------------------------//
+    //    -- List Adapter --
+    //--------------------------------------------------------------//
+
     // @@ https://material.google.com/components/lists.html#
     class ListAdapter extends ArrayAdapter<String> {
 

@@ -18,11 +18,6 @@ import java.util.List;
 
 public class SummaryActivity extends AppCompatActivity {
 
-    public static Intent createIntent(Context context) {
-        Intent i = new Intent(context, SummaryActivity.class);
-        return i;
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,16 +59,6 @@ public class SummaryActivity extends AppCompatActivity {
         listView.addFooterView(getLayoutInflater().inflate(R.layout.listview_footer, null));
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        // startActivityForResultで呼び出したActivityの処理がどうだったのかを確認する
-        // resultCodeがInputDataActivityのsetResultでセットした値
-        if (requestCode == 1 && resultCode == RESULT_OK) {
-            finish();
-        }
-    }
-
     // @@ https://material.google.com/components/lists.html#
     class ListAdapter extends ArrayAdapter<String> {
 
@@ -98,6 +83,27 @@ public class SummaryActivity extends AppCompatActivity {
             textView.setText(s);
 
             return v;
+        }
+    }
+
+
+    //--------------------------------------------------------------//
+    //    -- View Transition --
+    //--------------------------------------------------------------//
+
+    public static Intent createIntent(Context context) {
+        Intent i = new Intent(context, SummaryActivity.class);
+        return i;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        // startActivityForResultで呼び出したActivityの処理がどうだったのかを確認する
+        // resultCodeがInputDataActivityのsetResultでセットした値
+        if (requestCode == 1 && resultCode == RESULT_OK) {
+            finish();
         }
     }
 }

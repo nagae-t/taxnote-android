@@ -19,6 +19,7 @@ public class InputDataActivity extends AppCompatActivity {
         setSaveButton();
     }
 
+
     //--------------------------------------------------------------//
     //    -- Display Part --
     //--------------------------------------------------------------//
@@ -39,8 +40,9 @@ public class InputDataActivity extends AppCompatActivity {
         });
     }
 
+
     //--------------------------------------------------------------//
-    //    -- Pop Views --
+    //    -- Pop View --
     //--------------------------------------------------------------//
 
     private void showSavingDoneToast() {
@@ -51,6 +53,7 @@ public class InputDataActivity extends AppCompatActivity {
         toast.setView(getLayoutInflater().inflate(R.layout.toast_save, null));
         toast.show();
     }
+
 
     //--------------------------------------------------------------//
     //    -- View Transition --
