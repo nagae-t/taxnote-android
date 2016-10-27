@@ -1,4 +1,4 @@
-package com.example.taxnoteandroid;
+package com.example.taxnoteandroid.entryTab;
 
 import android.content.Context;
 import android.content.Intent;
@@ -12,6 +12,8 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import com.example.taxnoteandroid.R;
 
 import java.util.ArrayList;
 import java.util.List;

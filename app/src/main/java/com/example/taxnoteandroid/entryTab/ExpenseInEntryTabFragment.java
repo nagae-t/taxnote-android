@@ -1,4 +1,4 @@
-package com.example.taxnoteandroid;
+package com.example.taxnoteandroid.entryTab;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -7,22 +7,25 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import com.example.taxnoteandroid.R;
 
 import java.util.ArrayList;
 import java.util.List;
 
 
-public class IncomeInEntryTabFragment extends Fragment {
+public class ExpenseInEntryTabFragment extends Fragment {
 
-    public IncomeInEntryTabFragment() {
+    public ExpenseInEntryTabFragment() {
         // Required empty public constructor
     }
 
-    public static IncomeInEntryTabFragment newInstance() {
-        IncomeInEntryTabFragment fragment = new IncomeInEntryTabFragment();
+    public static ExpenseInEntryTabFragment newInstance() {
+        ExpenseInEntryTabFragment fragment = new ExpenseInEntryTabFragment();
         Bundle args = new Bundle();
         fragment.setArguments(args);
         return fragment;
@@ -42,10 +45,31 @@ public class IncomeInEntryTabFragment extends Fragment {
         strings.add("test3");
         strings.add("test4");
         strings.add("test5");
+        strings.add("test3");
+        strings.add("test4");
+        strings.add("test5");
+
         listView.setAdapter(new ListAdapter(getContext(), strings));
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                startActivity(SummaryActivity.createIntent(getContext()));
+            }
+        });
 
         return v;
     }
+
+    //--------------------------------------------------------------//
+    //    -- Display Part --
+    //--------------------------------------------------------------//
+
+
+
+
+    //--------------------------------------------------------------//
+    //    -- List Adapter --
+    //--------------------------------------------------------------//
 
     // @@ https://material.google.com/components/lists.html#
     class ListAdapter extends ArrayAdapter<String> {
@@ -62,15 +86,15 @@ public class IncomeInEntryTabFragment extends Fragment {
         public View getView(int position, View convertView, ViewGroup parent) {
             // getViewでListViewの1つのセルを作る
             // inflateでViewにする
-            View v = layoutInflater.inflate(R.layout.row_list_item, null);
+            View view = layoutInflater.inflate(R.layout.row_list_item, null);
 
             // getItemでcallのViewにbindしたいデータ型を取得できる
-            String s = getItem(position);
+            String string = getItem(position);
 
-            TextView textView = (TextView) v.findViewById(R.id.text);
-            textView.setText(s);
+            TextView textView = (TextView) view.findViewById(R.id.text);
+            textView.setText(string);
 
-            return v;
+            return view;
         }
     }
 }

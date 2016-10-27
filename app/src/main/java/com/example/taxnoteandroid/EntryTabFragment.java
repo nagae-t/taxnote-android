@@ -10,6 +10,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.taxnoteandroid.entryTab.ExpenseInEntryTabFragment;
+import com.example.taxnoteandroid.entryTab.IncomeInEntryTabFragment;
+
 
 public class EntryTabFragment extends Fragment {
 

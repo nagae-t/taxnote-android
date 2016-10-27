@@ -15,8 +15,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".SummaryActivity" />
-        <activity android:name=".InputDataActivity"></activity>
+        <activity android:name=".entryTab.SummaryActivity" />
+        <activity android:name=".entryTab.InputDataActivity"></activity>
     </application>
 
 </manifest>

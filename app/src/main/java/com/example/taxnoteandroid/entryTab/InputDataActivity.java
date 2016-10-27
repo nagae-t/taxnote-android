@@ -1,4 +1,4 @@
-package com.example.taxnoteandroid;
+package com.example.taxnoteandroid.entryTab;
 
 import android.content.Context;
 import android.content.Intent;
@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.taxnoteandroid.R;
 import com.example.taxnoteandroid.dataManager.EntryDataManager;
 import com.example.taxnoteandroid.model.Entry;
 
