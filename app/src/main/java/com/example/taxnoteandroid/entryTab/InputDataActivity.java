@@ -36,21 +36,41 @@ public class InputDataActivity extends AppCompatActivity {
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                showSavingDoneToast();
-
-                EntryDataManager entryDataManager = new EntryDataManager(InputDataActivity.this);
-                Entry entry = new Entry();
-                entry.price = 1000;
-                entry.memo = "memo";
-                entry.uuid = UUID.randomUUID().toString();
-                long id = entryDataManager.save(entry);
-
-                // 処理が正常に終わったりしたら、呼び出された画面にたいしてOKだったと伝えるためにsetResultする
-                setResult(RESULT_OK);
-                finish();
+                saveEntry();
             }
         });
+    }
+
+
+    //--------------------------------------------------------------//
+    //    -- Handle Data --
+    //--------------------------------------------------------------//
+
+    private void saveEntry() {
+
+        EntryDataManager entryDataManager = new EntryDataManager(InputDataActivity.this);
+
+        Entry entry = new Entry();
+        entry.price = 1000;
+        entry.memo  = "memo";
+        entry.uuid  = UUID.randomUUID().toString();
+        long id     = entryDataManager.save(entry);
+
+        //@@ 成功のチェックはどうしましょ
+        // Success
+        if (id) {
+
+            showSavingDoneToast();
+
+            // 処理が正常に終わったりしたら、呼び出された画面にたいしてOKだったと伝えるためにsetResultする
+            setResult(RESULT_OK);
+            finish();
+
+            // Show error message
+            //@@
+        } else {
+
+        }
     }
 
 
@@ -62,6 +82,7 @@ public class InputDataActivity extends AppCompatActivity {
 
         //@@ ここにチェックマークの画像を追加
         Toast toast = Toast.makeText(InputDataActivity.this, "Hogehoge", Toast.LENGTH_SHORT);
+
         toast.setGravity(Gravity.CENTER, 0, 0);
         toast.setView(getLayoutInflater().inflate(R.layout.toast_save, null));
         toast.show();
