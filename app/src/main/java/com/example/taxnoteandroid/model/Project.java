@@ -5,16 +5,16 @@ import com.github.gfx.android.orma.annotation.PrimaryKey;
 import com.github.gfx.android.orma.annotation.Table;
 
 @Table
-public class Entry {
+public class Project {
 
     @PrimaryKey(autoincrement = true)
     public long id;
     @Column
-    public long date;
+    public long order;
     @Column
-    public long updated;
+    public boolean isMaster;
     @Column
-    public long price;
+    public boolean decimal;
     @Column
     public boolean deleted;
     @Column
@@ -26,5 +26,9 @@ public class Entry {
     @Column
     public String uuid;
     @Column
-    public String memo;
+    public String name;
+    @Column
+    public String accountUuidForExpense;
+    @Column
+    public String accountUuidForIncome;
 }

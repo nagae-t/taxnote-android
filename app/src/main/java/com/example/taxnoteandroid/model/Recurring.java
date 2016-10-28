@@ -5,14 +5,14 @@ import com.github.gfx.android.orma.annotation.PrimaryKey;
 import com.github.gfx.android.orma.annotation.Table;
 
 @Table
-public class Entry {
+public class Recurring {
 
     @PrimaryKey(autoincrement = true)
     public long id;
     @Column
-    public long date;
+    public long order;
     @Column
-    public long updated;
+    public long dateIndex;
     @Column
     public long price;
     @Column
@@ -25,6 +25,8 @@ public class Entry {
     public boolean needSync;
     @Column
     public String uuid;
+    @Column
+    public String timezone;
     @Column
     public String memo;
 }

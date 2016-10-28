@@ -5,16 +5,12 @@ import com.github.gfx.android.orma.annotation.PrimaryKey;
 import com.github.gfx.android.orma.annotation.Table;
 
 @Table
-public class Entry {
+public class Reason {
 
     @PrimaryKey(autoincrement = true)
     public long id;
     @Column
-    public long date;
-    @Column
-    public long updated;
-    @Column
-    public long price;
+    public long order;
     @Column
     public boolean deleted;
     @Column
@@ -24,7 +20,9 @@ public class Entry {
     @Column
     public boolean needSync;
     @Column
-    public String uuid;
+    public String name;
     @Column
-    public String memo;
+    public String details;
+    @Column
+    public String uuid;
 }
