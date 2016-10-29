@@ -21,4 +21,9 @@ public class Summary {
     public String uuid;
     @Column
     public String name;
+
+    @Column(indexed = true)
+    public Project project;
+    @Column(indexed = true)
+    public Reason reason;
 }

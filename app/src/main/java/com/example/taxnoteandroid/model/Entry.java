@@ -27,4 +27,11 @@ public class Entry {
     public String uuid;
     @Column
     public String memo;
+
+    @Column(indexed = true)
+    public Project project;
+    @Column(indexed = true)
+    public Reason reason;
+    @Column(indexed = true)
+    public Account account;
 }

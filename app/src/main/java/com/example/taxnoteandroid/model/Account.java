@@ -23,4 +23,11 @@ public class Account {
     public String uuid;
     @Column
     public String name;
+
+    @Column(indexed = true)
+    public Project project;
+
+    public Entry_Relation getEntries(OrmaDatabase ormaDatabase) {
+        return ormaDatabase.relationOfEntry().accountEq(this);
+    }
 }

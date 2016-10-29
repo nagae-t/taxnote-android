@@ -25,4 +25,15 @@ public class Reason {
     public String details;
     @Column
     public String uuid;
+
+    @Column(indexed = true)
+    public Project project;
+
+    public Entry_Relation getEntries(OrmaDatabase ormaDatabase) {
+        return ormaDatabase.relationOfEntry().reasonEq(this);
+    }
+
+    public Summary_Relation getSummaries(OrmaDatabase ormaDatabase){
+        return ormaDatabase.relationOfSummary().reasonEq(this);
+    }
 }

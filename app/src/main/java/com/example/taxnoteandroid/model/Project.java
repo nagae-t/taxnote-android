@@ -31,4 +31,22 @@ public class Project {
     public String accountUuidForExpense;
     @Column
     public String accountUuidForIncome;
+
+    // TODO:recurringだけまだ
+
+    public Account_Relation getAccounts(OrmaDatabase ormaDatabase) {
+        return ormaDatabase.relationOfAccount().projectEq(this);
+    }
+
+    public Entry_Relation getEntries(OrmaDatabase ormaDatabase) {
+        return ormaDatabase.relationOfEntry().projectEq(this);
+    }
+
+    public Reason_Relation getReasons(OrmaDatabase ormaDatabase) {
+        return ormaDatabase.relationOfReason().projectEq(this);
+    }
+
+    public Summary_Relation getSummaries(OrmaDatabase ormaDatabase) {
+        return ormaDatabase.relationOfSummary().projectEq(this);
+    }
 }
