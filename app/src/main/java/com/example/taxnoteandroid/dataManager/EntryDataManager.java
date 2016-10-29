@@ -35,4 +35,8 @@ public class EntryDataManager {
     public int updatePrice(long id, long price) {
         return ormaDatabase.updateEntry().idEq(id).price(price).execute();
     }
+
+    public static boolean isSaveSuccess(long id) {
+        return id != -1;
+    }
 }

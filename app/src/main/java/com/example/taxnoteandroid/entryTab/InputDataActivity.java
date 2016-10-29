@@ -58,7 +58,7 @@ public class InputDataActivity extends AppCompatActivity {
 
         //@@ 成功のチェックはどうしましょ
         // Success
-        if (id) {
+        if (EntryDataManager.isSaveSuccess(id)) {
 
             showSavingDoneToast();
 
