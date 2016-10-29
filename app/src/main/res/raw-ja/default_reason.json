@@ -1,0 +1,13 @@
+
+[
+  {
+    "name": "接待交際費",
+    "isExpense": true,
+    "details": "飲食費・接待・贈答など"
+  },
+  {
+    "name": "売上高",
+    "isExpense": false,
+    "details": "本業による収入"
+  }
+]
