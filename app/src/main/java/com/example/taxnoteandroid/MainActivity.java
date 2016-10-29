@@ -10,11 +10,15 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
+import com.example.taxnoteandroid.dataManager.DataInstoller;
+
 public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        DataInstoller.installDefaultUserAndCategories(this);
 
         setContentView(R.layout.activity_main);
         setBottomNavigation();

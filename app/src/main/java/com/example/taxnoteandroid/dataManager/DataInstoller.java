@@ -32,6 +32,7 @@ public class DataInstoller {
         project.decimal = context.getResources().getBoolean(R.bool.is_decimal);
 
         long id = new ProjectDataManager(context).save(project);
+        project.id = id;
 
         // TODO:Accountのsaveも書く
 

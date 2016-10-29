@@ -7,6 +7,8 @@ import com.example.taxnoteandroid.model.OrmaDatabase;
 import com.example.taxnoteandroid.model.Reason;
 import com.github.gfx.android.orma.AccessThreadConstraint;
 
+import java.util.List;
+
 public class ReasonDataManager {
 
     private OrmaDatabase ormaDatabase;
@@ -22,5 +24,9 @@ public class ReasonDataManager {
 
     public long save(Reason reason) {
         return ormaDatabase.insertIntoReason(reason);
+    }
+
+    public List<Reason> findAll() {
+        return ormaDatabase.selectFromReason().toList();
     }
 }
