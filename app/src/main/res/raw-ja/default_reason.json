@@ -1,13 +1,32 @@
-
 [
   {
-    "name": "接待交際費",
+    "name": "仕入高",
     "isExpense": true,
-    "details": "飲食費・接待・贈答など"
+    "details": "販売する商品の仕入"
+  },
+  {
+    "name": "接待交際費",
+    "isExpense": false,
+    "details": "本業による収入"
+  },
+  {
+    "name": "旅費交通費",
+    "isExpense": true,
+    "details": "交通費・宿泊費など"
+  },
+  {
+    "name": "消耗品",
+    "isExpense": true,
+    "details": "日用品・事務機器など"
   },
   {
     "name": "売上高",
     "isExpense": false,
     "details": "本業による収入"
+  },
+  {
+    "name": "雑収入",
+    "isExpense": false,
+    "details": "本業以外の小さな収入"
   }
 ]
