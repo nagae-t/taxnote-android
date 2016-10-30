@@ -9,37 +9,44 @@ public class Project {
 
     @PrimaryKey(autoincrement = true)
     public long id;
+
     @Column
     public long order;
+
     @Column
     public boolean isMaster;
+
     @Column
     public boolean decimal;
+
     @Column
     public boolean deleted;
+
     @Column
     public boolean isExpense;
+
     @Column
     public boolean needSave = true;
+
     @Column
     public boolean needSync;
+
     @Column
     public String uuid;
+
     @Column
     public String name;
+
     @Column
     public String accountUuidForExpense;
+
     @Column
     public String accountUuidForIncome;
 
-    // TODO:recurringだけまだ
 
+    // HasMany Relation
     public Account_Relation getAccounts(OrmaDatabase ormaDatabase) {
         return ormaDatabase.relationOfAccount().projectEq(this);
-    }
-
-    public Entry_Relation getEntries(OrmaDatabase ormaDatabase) {
-        return ormaDatabase.relationOfEntry().projectEq(this);
     }
 
     public Reason_Relation getReasons(OrmaDatabase ormaDatabase) {
@@ -48,5 +55,13 @@ public class Project {
 
     public Summary_Relation getSummaries(OrmaDatabase ormaDatabase) {
         return ormaDatabase.relationOfSummary().projectEq(this);
+    }
+
+    public Entry_Relation getEntries(OrmaDatabase ormaDatabase) {
+        return ormaDatabase.relationOfEntry().projectEq(this);
+    }
+
+    public Recurring_Relation getRecurrings(OrmaDatabase ormaDatabase) {
+        return ormaDatabase.relationOfRecurring().projectEq(this);
     }
 }

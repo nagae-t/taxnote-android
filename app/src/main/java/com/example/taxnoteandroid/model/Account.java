@@ -9,6 +9,7 @@ public class Account {
 
     @PrimaryKey(autoincrement = true)
     public long id;
+
     @Column
     public long order;
     @Column
@@ -24,10 +25,18 @@ public class Account {
     @Column
     public String name;
 
+
+    // HasOne Relation
     @Column(indexed = true)
     public Project project;
 
+
+    // HasMany Relation
     public Entry_Relation getEntries(OrmaDatabase ormaDatabase) {
         return ormaDatabase.relationOfEntry().accountEq(this);
+    }
+
+    public Recurring_Relation getRecurrings(OrmaDatabase ormaDatabase) {
+        return ormaDatabase.relationOfRecurring().accountEq(this);
     }
 }

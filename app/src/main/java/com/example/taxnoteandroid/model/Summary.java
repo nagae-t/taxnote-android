@@ -9,21 +9,30 @@ public class Summary {
 
     @PrimaryKey(autoincrement = true)
     public long id;
+
     @Column
     public long order;
+
     @Column
     public boolean deleted;
+
     @Column
     public boolean needSave = true;
+
     @Column
     public boolean needSync;
+
     @Column
     public String uuid;
+
     @Column
     public String name;
 
+
+    // HasOne Relation
     @Column(indexed = true)
     public Project project;
+
     @Column(indexed = true)
     public Reason reason;
 }
