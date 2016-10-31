@@ -20,23 +20,49 @@ public class EntryDataManager {
                 .build();
     }
 
+
+    //--------------------------------------------------------------//
+    //    -- Create --
+    //--------------------------------------------------------------//
+
     public long save(Entry entry) {
         return ormaDatabase.insertIntoEntry(entry);
     }
+
+    public static boolean isSaveSuccess(long id) {
+        return id != -1;
+    }
+
+
+    //--------------------------------------------------------------//
+    //    -- Read --
+    //--------------------------------------------------------------//
 
     public Entry findById(long id) {
         return ormaDatabase.selectFromEntry().idEq(id).value();
     }
 
-    public int delete(long id) {
-        return ormaDatabase.deleteFromEntry().idEq(id).execute();
+
+    //--------------------------------------------------------------//
+    //    -- Update --
+    //--------------------------------------------------------------//
+
+    //@@ これでいいのかな？
+    public int updateEntry(Entry entry) {
+        return ormaDatabase.updateEntry().idEq(entry.id).execute();
     }
 
     public int updatePrice(long id, long price) {
         return ormaDatabase.updateEntry().idEq(id).price(price).execute();
     }
 
-    public static boolean isSaveSuccess(long id) {
-        return id != -1;
+
+    //--------------------------------------------------------------//
+    //    -- Delete --
+    //--------------------------------------------------------------//
+
+    public int delete(long id) {
+        return ormaDatabase.deleteFromEntry().idEq(id).execute();
     }
+
 }
