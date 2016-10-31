@@ -1,0 +1,26 @@
+[
+  {
+    "name": "現金",
+    "isExpense": true,
+  },
+  {
+    "name": "普通預金",
+    "isExpense": true,
+  },
+  {
+    "name": "当座預金",
+    "isExpense": true,
+  },
+  {
+    "name": "現金",
+    "isExpense": false,
+  },
+  {
+    "name": "普通預金",
+    "isExpense": false,
+  },
+  {
+    "name": "当座預金",
+    "isExpense": false,
+  }
+]
