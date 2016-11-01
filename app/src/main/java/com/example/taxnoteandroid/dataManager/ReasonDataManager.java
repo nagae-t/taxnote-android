@@ -22,11 +22,48 @@ public class ReasonDataManager {
                 .build();
     }
 
+
+    //--------------------------------------------------------------//
+    //    -- Create --
+    //--------------------------------------------------------------//
+
     public long save(Reason reason) {
         return ormaDatabase.insertIntoReason(reason);
     }
 
+    public static boolean isSaveSuccess(long id) {
+        return id != -1;
+    }
+
+
+    //--------------------------------------------------------------//
+    //    -- Read --
+    //--------------------------------------------------------------//
+
+    public Reason findById(long id) {
+        return ormaDatabase.selectFromReason().idEq(id).value();
+    }
+
+    //@@ 引数を　isExpenseにして、　ここで　currentProjectを sharedPreferenceからもってきて findAllしたい
     public List<Reason> findAll() {
         return ormaDatabase.selectFromReason().toList();
+    }
+
+
+    //--------------------------------------------------------------//
+    //    -- Update --
+    //--------------------------------------------------------------//
+
+    public int updateReason(Reason reason) {
+        return ormaDatabase.updateReason().idEq(reason.id).execute();
+    }
+
+
+    //--------------------------------------------------------------//
+    //    -- Delete --
+    //--------------------------------------------------------------//
+
+    public int delete(long id) {
+        return ormaDatabase.deleteFromReason().idEq(id).execute();
     }
 }
