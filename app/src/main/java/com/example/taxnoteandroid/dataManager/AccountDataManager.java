@@ -7,6 +7,8 @@ import com.example.taxnoteandroid.model.Account;
 import com.example.taxnoteandroid.model.OrmaDatabase;
 import com.github.gfx.android.orma.AccessThreadConstraint;
 
+import java.util.List;
+
 public class AccountDataManager {
 
     private OrmaDatabase ormaDatabase;
@@ -38,8 +40,12 @@ public class AccountDataManager {
     //    -- Read --
     //--------------------------------------------------------------//
 
-    public Account findById(long id) {
-        return ormaDatabase.selectFromAccount().idEq(id).value();
+    public Account findByUuid(String uuid) {
+        return ormaDatabase.selectFromAccount().uuidEq(uuid).value();
+    }
+
+    public List<Account> findAllByIsExpense(boolean isExpense) {
+        return ormaDatabase.selectFromAccount().where("isExpense = ?", isExpense).toList();
     }
 
 

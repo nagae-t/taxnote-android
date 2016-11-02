@@ -16,7 +16,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".entryTab.SummaryActivity" />
-        <activity android:name=".entryTab.InputDataActivity"></activity>
+        <activity android:name=".entryTab.InputDataActivity" />
+        <activity android:name=".CategorySelectActivity"></activity>
     </application>
 
 </manifest>

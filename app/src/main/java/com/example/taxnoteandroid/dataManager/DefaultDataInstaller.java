@@ -70,9 +70,9 @@ public class DefaultDataInstaller {
             reason.order    = i;
             reason.uuid     = UUID.randomUUID().toString();
             reason.project  = project;
-
-            reasonDataManager.save(reason);
         }
+
+        reasonDataManager.saveAll(reasons);
     }
 
     private static void setDefaultAccountData(Context context, Project project) {

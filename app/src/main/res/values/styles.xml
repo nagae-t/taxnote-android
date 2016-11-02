@@ -8,4 +8,10 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <!-- @@ Styleの復讐 -->
+    <style name="ListItemStyle">
+        <item name="android:minHeight">48dp</item>
+        <item name="android:paddingLeft">16dp</item>
+        <item name="android:paddingRight">16dp</item>
+    </style>
 </resources>

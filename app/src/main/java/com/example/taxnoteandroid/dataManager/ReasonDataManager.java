@@ -6,6 +6,7 @@ import com.example.taxnoteandroid.BuildConfig;
 import com.example.taxnoteandroid.model.OrmaDatabase;
 import com.example.taxnoteandroid.model.Reason;
 import com.github.gfx.android.orma.AccessThreadConstraint;
+import com.github.gfx.android.orma.Inserter;
 
 import java.util.List;
 
@@ -29,6 +30,17 @@ public class ReasonDataManager {
 
     public long save(Reason reason) {
         return ormaDatabase.insertIntoReason(reason);
+    }
+
+    // @@ 他のもの作る
+    public void saveAll(final List<Reason> reasons) {
+        ormaDatabase.transactionSync(new Runnable() {
+            @Override
+            public void run() {
+                Inserter<Reason> reasonInserter = ormaDatabase.prepareInsertIntoReason();
+                reasonInserter.executeAll(reasons);
+            }
+        });
     }
 
     public static boolean isSaveSuccess(long id) {

@@ -20,7 +20,7 @@ public class Account {
     public boolean needSave = true;
     @Column
     public boolean needSync;
-    @Column
+    @Column(unique = true, indexed = true)
     public String uuid;
     @Column
     public String name;

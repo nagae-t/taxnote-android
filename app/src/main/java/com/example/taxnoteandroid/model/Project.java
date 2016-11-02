@@ -23,15 +23,13 @@ public class Project {
     public boolean deleted;
 
     @Column
-    public boolean isExpense;
-
-    @Column
     public boolean needSave = true;
 
     @Column
     public boolean needSync;
 
-    @Column
+    // @@ uuidにuniqueつける
+    @Column(unique = true)
     public String uuid;
 
     @Column

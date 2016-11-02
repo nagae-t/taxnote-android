@@ -13,8 +13,14 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.example.taxnoteandroid.CategorySelectActivity;
 import com.example.taxnoteandroid.R;
+import com.example.taxnoteandroid.dataManager.AccountDataManager;
+import com.example.taxnoteandroid.dataManager.ProjectDataManager;
 import com.example.taxnoteandroid.dataManager.ReasonDataManager;
+import com.example.taxnoteandroid.dataManager.SharedPreferencesManager;
+import com.example.taxnoteandroid.model.Account;
+import com.example.taxnoteandroid.model.Project;
 import com.example.taxnoteandroid.model.Reason;
 
 import java.util.List;
@@ -41,6 +47,13 @@ public class ExpenseInEntryTabFragment extends Fragment {
 
         ListView listView = (ListView) v.findViewById(R.id.reason_list_view);
 
+        v.findViewById(R.id.cash).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(CategorySelectActivity.createIntent(getContext(), false));
+            }
+        });
+
         ReasonDataManager reasonDataManager = new ReasonDataManager(getContext());
         List<Reason> reasons = reasonDataManager.findAll();
 
@@ -53,6 +66,19 @@ public class ExpenseInEntryTabFragment extends Fragment {
         });
 
         return v;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        ProjectDataManager projectDataManager = new ProjectDataManager(getContext());
+        Project project = projectDataManager.findByUuid(SharedPreferencesManager.getUuidForCurrentProject(getContext()));
+
+        AccountDataManager accountDataManager = new AccountDataManager(getContext());
+        Account account = accountDataManager.findByUuid(project.accountUuidForExpense);
+
+        ((TextView) getView().findViewById(R.id.cash)).setText(account.name);
     }
 
     //--------------------------------------------------------------//
