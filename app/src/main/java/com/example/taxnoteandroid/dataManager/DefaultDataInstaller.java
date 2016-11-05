@@ -70,9 +70,14 @@ public class DefaultDataInstaller {
             reason.order    = i;
             reason.uuid     = UUID.randomUUID().toString();
             reason.project  = project;
+
+            reasonDataManager.save(reason);
         }
 
-        reasonDataManager.saveAll(reasons);
+
+    //QQ なんかおちる
+//        11-03 05:25:38.423 2193-2202/? W/SQLiteConnectionPool: A SQLiteConnection object for database '/data/data/com.example.taxnoteandroid/databases/com.example.taxnoteandroid.orma.db' was leaked!  Please fix your application to end transactions in progress properly and to close the database when it is no longer needed.
+//        reasonDataManager.saveAll(reasons);
     }
 
     private static void setDefaultAccountData(Context context, Project project) {

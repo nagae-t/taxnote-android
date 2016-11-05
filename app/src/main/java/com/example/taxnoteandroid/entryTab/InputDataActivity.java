@@ -56,7 +56,6 @@ public class InputDataActivity extends AppCompatActivity {
         entry.uuid  = UUID.randomUUID().toString();
         long id     = entryDataManager.save(entry);
 
-        //@@ 成功のチェックはどうしましょ
         // Success
         if (EntryDataManager.isSaveSuccess(id)) {
 

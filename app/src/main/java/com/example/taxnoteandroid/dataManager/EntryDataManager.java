@@ -47,11 +47,6 @@ public class EntryDataManager {
     //    -- Update --
     //--------------------------------------------------------------//
 
-    //@@ これでいいのかな？
-    public int updateEntry(Entry entry) {
-        return ormaDatabase.updateEntry().idEq(entry.id).execute();
-    }
-
     public int updatePrice(long id, long price) {
         return ormaDatabase.updateEntry().idEq(id).price(price).execute();
     }

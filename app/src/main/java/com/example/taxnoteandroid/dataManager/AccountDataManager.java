@@ -5,6 +5,7 @@ import android.content.Context;
 import com.example.taxnoteandroid.BuildConfig;
 import com.example.taxnoteandroid.model.Account;
 import com.example.taxnoteandroid.model.OrmaDatabase;
+import com.example.taxnoteandroid.model.Project;
 import com.github.gfx.android.orma.AccessThreadConstraint;
 
 import java.util.List;
@@ -45,7 +46,39 @@ public class AccountDataManager {
     }
 
     public List<Account> findAllByIsExpense(boolean isExpense) {
-        return ormaDatabase.selectFromAccount().where("isExpense = ?", isExpense).toList();
+
+        //QQ ここ orderで並べたい SQLはあってるかな？
+        return ormaDatabase.selectFromAccount().where("deleted = false && ORDER BY order && isExpense = ?", isExpense).toList();
+    }
+
+    //@@@
+    public Account findCurrentSelectedAccount(Context context, boolean isExpense) {
+
+        Account account;
+
+        // Get the current project
+        String currentProjectUuid               = SharedPreferencesManager.getUuidForCurrentProject(context);
+        ProjectDataManager projectDataManager   = new ProjectDataManager(context);
+        Project project                         = projectDataManager.findByUuid(currentProjectUuid);
+
+        if (isExpense) {
+
+            //QQ ここでthis使ってよい？　findCurrentSelectedAccountのcontextの受け渡しはあってる？
+            account = this.findByUuid(project.accountUuidForExpense);
+        } else  {
+            account = this.findByUuid(project.accountUuidForIncome);
+        }
+
+        //QQ nullチェックはこれでいいかな？
+        if (account != null) {
+            return account;
+        }
+
+        //QQリストの先頭を取得するのはこれでいい？
+        List<Account> accounts  = this.findAllByIsExpense(isExpense);
+        account                 = accounts.get(0);
+
+        return account;
     }
 
 

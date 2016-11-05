@@ -25,7 +25,7 @@
         android:text="@string/Blank1Fragment_cash" />
 
     <TextView
-        android:id="@+id/cash"
+        android:id="@+id/account_text_view"
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:gravity="center"
