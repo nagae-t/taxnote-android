@@ -51,7 +51,7 @@ public class AccountDataManager {
         return ormaDatabase.selectFromAccount().where("deleted = false && ORDER BY order && isExpense = ?", isExpense).toList();
     }
 
-    //@@@
+    //@@
     public Account findCurrentSelectedAccount(Context context, boolean isExpense) {
 
         Account account;

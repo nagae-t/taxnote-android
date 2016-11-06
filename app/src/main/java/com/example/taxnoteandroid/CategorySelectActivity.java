@@ -61,7 +61,7 @@ public class CategorySelectActivity extends AppCompatActivity {
                     project.accountUuidForIncome = account.uuid;
                 }
 
-                //@@ これで projectが更新されるの？
+                //QQ これで projectが更新されるの？
                 projectDataManager.updateUuid(project, uuid);
                 finish();
             }

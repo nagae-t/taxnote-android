@@ -28,7 +28,7 @@ public class Project {
     @Column
     public boolean needSync;
 
-    // @@ uuidにuniqueつける
+    // @@ 他のuuidにもuniqueつける
     @Column(unique = true)
     public String uuid;
 

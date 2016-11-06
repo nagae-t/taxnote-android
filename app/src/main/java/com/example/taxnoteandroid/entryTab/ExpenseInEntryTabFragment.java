@@ -76,7 +76,7 @@ public class ExpenseInEntryTabFragment extends Fragment {
 
     private void loadCurrentAccount() {
 
-        //@@@ここでおちるよ
+        //QQここでおちるよ
 //        AccountDataManager accountDataManager = new AccountDataManager(getContext());
 //        Account account = accountDataManager.findCurrentSelectedAccount(getContext(), true);
 
@@ -90,7 +90,7 @@ public class ExpenseInEntryTabFragment extends Fragment {
     //    -- List Adapter --
     //--------------------------------------------------------------//
 
-    // @@ https://material.google.com/components/lists.html#
+    // https://material.google.com/components/lists.html#
     class ListAdapter extends ArrayAdapter<Reason> {
 
         private LayoutInflater layoutInflater;

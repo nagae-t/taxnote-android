@@ -61,7 +61,7 @@ public class SummaryActivity extends AppCompatActivity {
         listView.addFooterView(getLayoutInflater().inflate(R.layout.listview_footer, null));
     }
 
-    // @@ https://material.google.com/components/lists.html#
+    //  https://material.google.com/components/lists.html#
     class ListAdapter extends ArrayAdapter<String> {
 
         private LayoutInflater layoutInflater;
