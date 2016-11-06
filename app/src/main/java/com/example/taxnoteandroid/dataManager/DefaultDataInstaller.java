@@ -45,6 +45,7 @@ public class DefaultDataInstaller {
 
         // set default summarydata
         // @@ ここちょっと構造が違う
+        
 
         // Save shared preferences
         SharedPreferencesManager.saveUuidForCurrentProject(context, project.uuid);
