@@ -79,10 +79,11 @@ public class ExpenseInEntryTabFragment extends Fragment {
         //QQここでおちるよ
 //        AccountDataManager accountDataManager = new AccountDataManager(getContext());
 //        Account account = accountDataManager.findCurrentSelectedAccount(getContext(), true);
-
+//
 //        ((TextView) getView().findViewById(R.id.account_text_view)).setText(account.name);
-
+//
         ((TextView) getView().findViewById(R.id.account_text_view)).setText("genkin");
+
     }
 
 
