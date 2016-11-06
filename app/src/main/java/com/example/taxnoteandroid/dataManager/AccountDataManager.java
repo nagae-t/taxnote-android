@@ -4,11 +4,14 @@ import android.content.Context;
 
 import com.example.taxnoteandroid.BuildConfig;
 import com.example.taxnoteandroid.model.Account;
+import com.example.taxnoteandroid.model.Account_Schema;
 import com.example.taxnoteandroid.model.OrmaDatabase;
 import com.example.taxnoteandroid.model.Project;
 import com.github.gfx.android.orma.AccessThreadConstraint;
 
 import java.util.List;
+
+import static java.util.stream.Collectors.toList;
 
 public class AccountDataManager {
 
@@ -42,11 +45,13 @@ public class AccountDataManager {
     //--------------------------------------------------------------//
 
     public Account findByUuid(String uuid) {
-        return ormaDatabase.selectFromAccount().uuidEq(uuid).value();
+        return ormaDatabase.selectFromAccount().uuidEq(uuid).valueOrNull();
     }
 
     public List<Account> findAllByIsExpense(boolean isExpense) {
-        return ormaDatabase.selectFromAccount().where("deleted = false AND ORDER BY order AND isExpense = ?", isExpense).toList();
+        return ormaDatabase.selectFromAccount()
+                .where(Account_Schema.INSTANCE.deleted.getQualifiedName() + " = 0  AND " + Account_Schema.INSTANCE.isExpense.getQualifiedName() + " = ?", isExpense)
+                .orderBy(Account_Schema.INSTANCE.order.getQualifiedName()).toList();
     }
 
     //@@

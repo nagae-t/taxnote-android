@@ -15,7 +15,9 @@ import android.widget.TextView;
 
 import com.example.taxnoteandroid.CategorySelectActivity;
 import com.example.taxnoteandroid.R;
+import com.example.taxnoteandroid.dataManager.AccountDataManager;
 import com.example.taxnoteandroid.dataManager.ReasonDataManager;
+import com.example.taxnoteandroid.model.Account;
 import com.example.taxnoteandroid.model.Reason;
 
 import java.util.List;
@@ -75,14 +77,12 @@ public class ExpenseInEntryTabFragment extends Fragment {
     //--------------------------------------------------------------//
 
     private void loadCurrentAccount() {
+        AccountDataManager accountDataManager = new AccountDataManager(getContext());
+        Account account = accountDataManager.findCurrentSelectedAccount(getContext(), true);
 
-        //QQここでおちるよ
-//        AccountDataManager accountDataManager = new AccountDataManager(getContext());
-//        Account account = accountDataManager.findCurrentSelectedAccount(getContext(), true);
+        ((TextView) getView().findViewById(R.id.account_text_view)).setText(account.name);
 //
-//        ((TextView) getView().findViewById(R.id.account_text_view)).setText(account.name);
-//
-        ((TextView) getView().findViewById(R.id.account_text_view)).setText("genkin");
+//        ((TextView) getView().findViewById(R.id.account_text_view)).setText("genkin");
 
     }
 
