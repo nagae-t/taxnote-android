@@ -47,6 +47,7 @@ public class ExpenseInEntryTabFragment extends Fragment {
         v.findViewById(R.id.account_text_view).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                // @@ isExpenseをtabによって変えてあげる
                 startActivity(CategorySelectActivity.createIntent(getContext(), false));
             }
         });
