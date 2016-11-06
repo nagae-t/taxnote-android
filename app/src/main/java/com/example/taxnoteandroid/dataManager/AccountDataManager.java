@@ -46,9 +46,7 @@ public class AccountDataManager {
     }
 
     public List<Account> findAllByIsExpense(boolean isExpense) {
-
-        //QQ ここ orderで並べたい SQLはあってるかな？
-        return ormaDatabase.selectFromAccount().where("deleted = false && ORDER BY order && isExpense = ?", isExpense).toList();
+        return ormaDatabase.selectFromAccount().where("deleted = false AND ORDER BY order AND isExpense = ?", isExpense).toList();
     }
 
     //@@
@@ -62,21 +60,19 @@ public class AccountDataManager {
         Project project                         = projectDataManager.findByUuid(currentProjectUuid);
 
         if (isExpense) {
-
-            //QQ ここでthis使ってよい？　findCurrentSelectedAccountのcontextの受け渡しはあってる？
-            account = this.findByUuid(project.accountUuidForExpense);
+            account = findByUuid(project.accountUuidForExpense);
         } else  {
-            account = this.findByUuid(project.accountUuidForIncome);
+            account = findByUuid(project.accountUuidForIncome);
         }
 
-        //QQ nullチェックはこれでいいかな？
         if (account != null) {
             return account;
         }
 
-        //QQリストの先頭を取得するのはこれでいい？
-        List<Account> accounts  = this.findAllByIsExpense(isExpense);
-        account                 = accounts.get(0);
+        List<Account> accounts  = findAllByIsExpense(isExpense);
+        if (accounts != null && accounts.size() > 0) {
+            account = accounts.get(0);
+        }
 
         return account;
     }

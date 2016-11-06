@@ -51,8 +51,12 @@ public class ProjectDataManager {
         return ormaDatabase.updateProject().idEq(project.id).execute();
     }
 
-    public int updateUuid(Project project, String uuid) {
-        return ormaDatabase.updateProject().idEq(project.id).uuid(uuid).execute();
+    public int updateAccountUuidForExpense(Project project) {
+        return ormaDatabase.updateProject().idEq(project.id).accountUuidForExpense(project.accountUuidForExpense).execute();
+    }
+
+    public int updateAccountUuidForIncome(Project project) {
+        return ormaDatabase.updateProject().idEq(project.id).accountUuidForIncome(project.accountUuidForIncome).execute();
     }
 
 

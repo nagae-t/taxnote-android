@@ -57,12 +57,12 @@ public class CategorySelectActivity extends AppCompatActivity {
 
                 if (isExpense) {
                     project.accountUuidForExpense = account.uuid;
+                    projectDataManager.updateAccountUuidForExpense(project);
                 } else {
                     project.accountUuidForIncome = account.uuid;
+                    projectDataManager.updateAccountUuidForIncome(project);
                 }
 
-                //QQ これで projectが更新されるの？
-                projectDataManager.updateUuid(project, uuid);
                 finish();
             }
         });
