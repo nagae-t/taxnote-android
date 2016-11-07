@@ -54,7 +54,6 @@ public class AccountDataManager {
                 .orderBy(Account_Schema.INSTANCE.order.getQualifiedName()).toList();
     }
 
-    //@@
     public Account findCurrentSelectedAccount(Context context, boolean isExpense) {
 
         Account account;
@@ -64,6 +63,7 @@ public class AccountDataManager {
         ProjectDataManager projectDataManager   = new ProjectDataManager(context);
         Project project                         = projectDataManager.findByUuid(currentProjectUuid);
 
+        // Get the current selected account
         if (isExpense) {
             account = findByUuid(project.accountUuidForExpense);
         } else  {
@@ -74,6 +74,7 @@ public class AccountDataManager {
             return account;
         }
 
+        // Get the first account from account list
         List<Account> accounts  = findAllByIsExpense(isExpense);
         if (accounts != null && accounts.size() > 0) {
             account = accounts.get(0);
@@ -87,9 +88,7 @@ public class AccountDataManager {
     //    -- Update --
     //--------------------------------------------------------------//
 
-    public int updateAccount(Account account) {
-        return ormaDatabase.updateAccount().idEq(account.id).execute();
-    }
+
 
 
     //--------------------------------------------------------------//

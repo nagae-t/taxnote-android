@@ -13,7 +13,7 @@
     <string name="SummaryActivity_select">備考を選択</string>
     <string name="SummaryActivity_footer">備考を追加</string>
 
-    <string name="MainActivity_entry_tab">Entry</string>
-    <string name="MainActivity_history_tab">History</string>
-    <string name="MainActivity_settings_tab">Settings</string>
+    <string name="MainActivity_entry_tab">入力</string>
+    <string name="MainActivity_history_tab">仕訳帳</string>
+    <string name="MainActivity_settings_tab">設定</string>
 </resources>

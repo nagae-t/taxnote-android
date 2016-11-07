@@ -39,17 +39,13 @@ public class ProjectDataManager {
     //--------------------------------------------------------------//
 
     public Project findByUuid(String uuid) {
-        return ormaDatabase.selectFromProject().where("uuid = ?", uuid).value();
+        return ormaDatabase.selectFromProject().where("uuid = ?", uuid).valueOrNull();
     }
 
 
     //--------------------------------------------------------------//
     //    -- Update --
     //--------------------------------------------------------------//
-
-    public int updateProject(Project project) {
-        return ormaDatabase.updateProject().idEq(project.id).execute();
-    }
 
     public int updateAccountUuidForExpense(Project project) {
         return ormaDatabase.updateProject().idEq(project.id).accountUuidForExpense(project.accountUuidForExpense).execute();

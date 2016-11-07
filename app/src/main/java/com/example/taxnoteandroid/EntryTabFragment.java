@@ -65,9 +65,9 @@ public class EntryTabFragment extends Fragment {
         public CharSequence getPageTitle(int position) {
             switch (position) {
                 case 0:
-                    return getString(R.string.MainActivity_tab1);
+                    return getString(R.string.MainActivity_entry_tab);
                 case 1:
-                    return getString(R.string.MainActivity_tab2);
+                    return getString(R.string.MainActivity_history_tab);
             }
             return super.getPageTitle(position);
         }

@@ -38,19 +38,54 @@ public class ExpenseInEntryTabFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
         // Inflate the layout for this fragment
+        View view = inflater.inflate(R.layout.fragment_entry_tab_expense, container, false);
 
-        View v = inflater.inflate(R.layout.fragment_entry_tab_expense, container, false);
+        setAccountView(view);
+        setReasonList(view);
 
-        ListView listView = (ListView) v.findViewById(R.id.reason_list_view);
+        return view;
+    }
 
-        v.findViewById(R.id.account_text_view).setOnClickListener(new View.OnClickListener() {
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        loadCurrentAccount();
+    }
+
+
+    //--------------------------------------------------------------//
+    //    -- Account Part --
+    //--------------------------------------------------------------//
+
+    private void setAccountView(View view) {
+
+        view.findViewById(R.id.account_text_view).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // @@ isExpenseをtabによって変えてあげる
-                startActivity(CategorySelectActivity.createIntent(getContext(), false));
+                startActivity(CategorySelectActivity.createIntent(getContext(), true));
             }
         });
+    }
+
+    private void loadCurrentAccount() {
+
+        AccountDataManager accountDataManager   = new AccountDataManager(getContext());
+        Account account                         = accountDataManager.findCurrentSelectedAccount(getContext(), true);
+
+        ((TextView) getView().findViewById(R.id.account_text_view)).setText(account.name);
+    }
+
+
+    //--------------------------------------------------------------//
+    //    -- Reason List --
+    //--------------------------------------------------------------//
+
+    private void setReasonList(View view) {
+
+        ListView listView = (ListView) view.findViewById(R.id.reason_list_view);
 
         ReasonDataManager reasonDataManager = new ReasonDataManager(getContext());
         List<Reason> reasons = reasonDataManager.findAll();
@@ -62,35 +97,7 @@ public class ExpenseInEntryTabFragment extends Fragment {
                 startActivity(SummaryActivity.createIntent(getContext()));
             }
         });
-
-        return v;
     }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-
-        loadCurrentAccount();
-    }
-
-    //--------------------------------------------------------------//
-    //    -- Display Part --
-    //--------------------------------------------------------------//
-
-    private void loadCurrentAccount() {
-        AccountDataManager accountDataManager = new AccountDataManager(getContext());
-        Account account = accountDataManager.findCurrentSelectedAccount(getContext(), true);
-
-        ((TextView) getView().findViewById(R.id.account_text_view)).setText(account.name);
-//
-//        ((TextView) getView().findViewById(R.id.account_text_view)).setText("genkin");
-
-    }
-
-
-    //--------------------------------------------------------------//
-    //    -- List Adapter --
-    //--------------------------------------------------------------//
 
     // https://material.google.com/components/lists.html#
     class ListAdapter extends ArrayAdapter<Reason> {
