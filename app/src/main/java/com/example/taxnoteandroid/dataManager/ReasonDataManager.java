@@ -52,11 +52,11 @@ public class ReasonDataManager {
     //    -- Read --
     //--------------------------------------------------------------//
 
-    public Reason findById(long id) {
-        return ormaDatabase.selectFromReason().idEq(id).value();
+    public Reason findByUuid(String uuid) {
+        return ormaDatabase.selectFromReason().uuidEq(uuid).valueOrNull();
     }
 
-    //@@ 引数を　isExpenseにして、　ここで　currentProjectを sharedPreferenceからもってきて findAllしたい
+    //@@@ 引数を　isExpenseにして、　ここで　currentProjectを sharedPreferenceからもってきて findAllしたい
     public List<Reason> findAll() {
         return ormaDatabase.selectFromReason().toList();
     }

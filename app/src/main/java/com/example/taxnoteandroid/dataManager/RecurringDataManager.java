@@ -38,8 +38,8 @@ public class RecurringDataManager {
     //    -- Read --
     //--------------------------------------------------------------//
 
-    public Recurring findById(long id) {
-        return ormaDatabase.selectFromRecurring().idEq(id).value();
+    public Recurring findByUuid(String uuid) {
+        return ormaDatabase.selectFromRecurring().uuidEq(uuid).valueOrNull();
     }
 
 

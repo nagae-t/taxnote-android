@@ -44,7 +44,7 @@ public class DefaultDataInstaller {
         setDefaultAccountData(context, project);
 
         // set default summarydata
-        // @@ ここちょっと構造が違う
+        // @@@ ここちょっと構造が違う
         
 
         // Save shared preferences

@@ -38,8 +38,8 @@ public class EntryDataManager {
     //    -- Read --
     //--------------------------------------------------------------//
 
-    public Entry findById(long id) {
-        return ormaDatabase.selectFromEntry().idEq(id).value();
+    public Entry findByUuid(String uuid) {
+        return ormaDatabase.selectFromEntry().where("uuid = ?", uuid).valueOrNull();
     }
 
 

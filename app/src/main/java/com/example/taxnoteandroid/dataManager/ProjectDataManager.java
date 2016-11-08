@@ -39,7 +39,7 @@ public class ProjectDataManager {
     //--------------------------------------------------------------//
 
     public Project findByUuid(String uuid) {
-        return ormaDatabase.selectFromProject().where("uuid = ?", uuid).valueOrNull();
+        return ormaDatabase.selectFromProject().uuidEq(uuid).valueOrNull();
     }
 
 
