@@ -22,7 +22,7 @@ public class Summary {
     @Column
     public boolean needSync;
 
-    @Column
+    @Column(unique = true, indexed = true)
     public String uuid;
 
     @Column

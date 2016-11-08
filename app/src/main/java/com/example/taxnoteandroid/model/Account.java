@@ -12,16 +12,22 @@ public class Account {
 
     @Column
     public long order;
+
     @Column
     public boolean deleted;
+
     @Column
     public boolean isExpense;
+
     @Column
     public boolean needSave = true;
+
     @Column
     public boolean needSync;
+
     @Column(unique = true, indexed = true)
     public String uuid;
+
     @Column
     public String name;
 

@@ -31,7 +31,7 @@ public class Reason {
     @Column
     public String details;
 
-    @Column
+    @Column(unique = true, indexed = true)
     public String uuid;
 
 

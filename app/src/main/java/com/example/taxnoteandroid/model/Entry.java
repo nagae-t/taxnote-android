@@ -31,7 +31,7 @@ public class Entry {
     @Column
     public boolean needSync;
 
-    @Column
+    @Column(unique = true)
     public String uuid;
 
     @Column
