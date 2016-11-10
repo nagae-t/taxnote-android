@@ -41,7 +41,9 @@ public class CategorySelectActivity extends AppCompatActivity {
         ListView listView = (ListView) findViewById(R.id.list);
 
         AccountDataManager accountDataManager = new AccountDataManager(this);
-        List<Account> accounts = accountDataManager.findAllByIsExpense(isExpense);
+
+        //QQ ここ context取得はthisでよいの？
+        List<Account> accounts = accountDataManager.findAllWithIsExpense(isExpense, this);
 
         CategorySelectAdapter categorySelectAdapter = new CategorySelectAdapter(this, accounts);
         listView.setAdapter(categorySelectAdapter);

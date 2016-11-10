@@ -88,7 +88,7 @@ public class ExpenseInEntryTabFragment extends Fragment {
         ListView listView = (ListView) view.findViewById(R.id.reason_list_view);
 
         ReasonDataManager reasonDataManager = new ReasonDataManager(getContext());
-        List<Reason> reasons = reasonDataManager.findAll();
+        List<Reason> reasons = reasonDataManager.findAllWithIsExpense(true, getContext());
 
         listView.setAdapter(new ListAdapter(getContext(), reasons));
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {

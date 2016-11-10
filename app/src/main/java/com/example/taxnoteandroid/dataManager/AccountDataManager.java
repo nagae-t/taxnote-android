@@ -11,8 +11,6 @@ import com.github.gfx.android.orma.AccessThreadConstraint;
 
 import java.util.List;
 
-import static java.util.stream.Collectors.toList;
-
 public class AccountDataManager {
 
     private OrmaDatabase ormaDatabase;
@@ -48,10 +46,20 @@ public class AccountDataManager {
         return ormaDatabase.selectFromAccount().uuidEq(uuid).valueOrNull();
     }
 
-    public List<Account> findAllByIsExpense(boolean isExpense) {
-        return ormaDatabase.selectFromAccount()
-                .where(Account_Schema.INSTANCE.deleted.getQualifiedName() + " = 0  AND " + Account_Schema.INSTANCE.isExpense.getQualifiedName() + " = ?", isExpense)
-                .orderBy(Account_Schema.INSTANCE.order.getQualifiedName()).toList();
+    public List<Account> findAllWithIsExpense(boolean isExpense, Context context) {
+
+        // Get the current project
+        ProjectDataManager projectDataManager   = new ProjectDataManager(context);
+        Project project                         = projectDataManager.findCurrentProjectWithContext(context);
+
+        //@@ projectを指定すると落ちる
+        List accounts = ormaDatabase.selectFromAccount().where(Account_Schema.INSTANCE.deleted.getQualifiedName() + " = 0  AND "
+                        + Account_Schema.INSTANCE.isExpense.getQualifiedName() + " = ? AND ", isExpense
+                        + Account_Schema.INSTANCE.project.getQualifiedName() + " = ?", project).
+                        orderBy(Account_Schema.INSTANCE.order.getQualifiedName()).
+                        toList();
+
+        return accounts;
     }
 
     public Account findCurrentSelectedAccount(Context context, boolean isExpense) {
@@ -59,9 +67,8 @@ public class AccountDataManager {
         Account account;
 
         // Get the current project
-        String currentProjectUuid               = SharedPreferencesManager.getUuidForCurrentProject(context);
         ProjectDataManager projectDataManager   = new ProjectDataManager(context);
-        Project project                         = projectDataManager.findByUuid(currentProjectUuid);
+        Project project                         = projectDataManager.findCurrentProjectWithContext(context);
 
         // Get the current selected account
         if (isExpense) {
@@ -75,7 +82,7 @@ public class AccountDataManager {
         }
 
         // Get the first account from account list
-        List<Account> accounts  = findAllByIsExpense(isExpense);
+        List<Account> accounts  = findAllWithIsExpense(isExpense, context);
         if (accounts != null && accounts.size() > 0) {
             account = accounts.get(0);
         }

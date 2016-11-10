@@ -38,6 +38,13 @@ public class ProjectDataManager {
     //    -- Read --
     //--------------------------------------------------------------//
 
+    public Project findCurrentProjectWithContext(Context context) {
+
+        String currentProjectUuid   = SharedPreferencesManager.getUuidForCurrentProject(context);
+        Project project             = findByUuid(currentProjectUuid);
+        return project;
+    }
+
     public Project findByUuid(String uuid) {
         return ormaDatabase.selectFromProject().uuidEq(uuid).valueOrNull();
     }
