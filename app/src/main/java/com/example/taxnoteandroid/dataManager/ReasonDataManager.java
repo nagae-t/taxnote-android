@@ -82,7 +82,6 @@ public class ReasonDataManager {
 //        at android.database.sqlite.SQLiteConnection.prepare(SQLiteConnection.java:500)
 
 
-
         List reasons = ormaDatabase.selectFromReason().where(Reason_Schema.INSTANCE.deleted.getQualifiedName() + " = 0  AND "
                 + Reason_Schema.INSTANCE.isExpense.getQualifiedName()
                 + " = ?", isExpense).orderBy(Reason_Schema.INSTANCE.order.getQualifiedName()).

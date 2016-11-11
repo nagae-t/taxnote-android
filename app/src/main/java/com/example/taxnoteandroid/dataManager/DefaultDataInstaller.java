@@ -7,6 +7,7 @@ import com.example.taxnoteandroid.model.Account;
 import com.example.taxnoteandroid.model.Project;
 import com.example.taxnoteandroid.model.Reason;
 
+import com.example.taxnoteandroid.model.Summary;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
@@ -42,10 +43,7 @@ public class DefaultDataInstaller {
         // Set categories
         setDefaultReasonData(context, project);
         setDefaultAccountData(context, project);
-
-        // set default summarydata
-        // @@@ ここちょっと構造が違う
-        
+        setDefaultSummaryData(context,project);
 
         // Save shared preferences
         SharedPreferencesManager.saveUuidForCurrentProject(context, project.uuid);
@@ -103,5 +101,31 @@ public class DefaultDataInstaller {
 
             accountDataManager.save(account);
         }
+    }
+
+    //@@
+    //QQ ここ構造が違う
+    private static void setDefaultSummaryData(Context context, Project project) {
+
+        Type type = new TypeToken<List<Summary>>() {
+        }.getType();
+
+        // Get default json list
+        InputStream inputStream = context.getResources().openRawResource(R.raw.default_summary);
+        JsonReader jsonReader   = new JsonReader(new InputStreamReader(inputStream));
+        Gson gson               = new Gson();
+        List<Summary> summaries  = gson.fromJson(jsonReader, type);
+
+        AccountDataManager accountDataManager = new AccountDataManager(context);
+
+//        for (int i = 0, size = accounts.size(); i < size; i++) {
+//
+//            Account account   = accounts.get(i);
+//            account.order    = i;
+//            account.uuid     = UUID.randomUUID().toString();
+//            account.project  = project;
+//
+//            accountDataManager.save(account);
+//        }
     }
 }

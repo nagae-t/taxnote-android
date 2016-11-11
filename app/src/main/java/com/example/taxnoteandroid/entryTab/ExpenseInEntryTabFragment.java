@@ -25,6 +25,8 @@ import java.util.List;
 
 public class ExpenseInEntryTabFragment extends Fragment {
 
+    public boolean isExpense = true;
+
     public ExpenseInEntryTabFragment() {
         // Required empty public constructor
     }
@@ -65,7 +67,7 @@ public class ExpenseInEntryTabFragment extends Fragment {
         view.findViewById(R.id.account_text_view).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(CategorySelectActivity.createIntent(getContext(), true));
+                startActivity(CategorySelectActivity.createIntent(getContext(), isExpense));
             }
         });
     }
@@ -73,7 +75,7 @@ public class ExpenseInEntryTabFragment extends Fragment {
     private void loadCurrentAccount() {
 
         AccountDataManager accountDataManager   = new AccountDataManager(getContext());
-        Account account                         = accountDataManager.findCurrentSelectedAccount(getContext(), true);
+        Account account                         = accountDataManager.findCurrentSelectedAccount(getContext(), isExpense);
 
         ((TextView) getView().findViewById(R.id.account_text_view)).setText(account.name);
     }
@@ -88,7 +90,7 @@ public class ExpenseInEntryTabFragment extends Fragment {
         ListView listView = (ListView) view.findViewById(R.id.reason_list_view);
 
         ReasonDataManager reasonDataManager = new ReasonDataManager(getContext());
-        List<Reason> reasons = reasonDataManager.findAllWithIsExpense(true, getContext());
+        List<Reason> reasons = reasonDataManager.findAllWithIsExpense(isExpense, getContext());
 
         listView.setAdapter(new ListAdapter(getContext(), reasons));
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
