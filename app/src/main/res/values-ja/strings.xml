@@ -8,6 +8,10 @@
     <string name="Expense">支出</string>
     <string name="Income">収入</string>
 
+    <string name="Entry">入力</string>
+    <string name="History">仕訳帳</string>
+    <string name="Settings">設定</string>
+
     <string name="Blank1Fragment_date">日付</string>
     <string name="Blank1Fragment_cash">支払い方法</string>
     <string name="Blank1Fragment_select">選択</string>

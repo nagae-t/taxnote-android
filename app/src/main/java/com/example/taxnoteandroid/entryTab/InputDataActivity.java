@@ -66,7 +66,7 @@ public class InputDataActivity extends AppCompatActivity {
             finish();
 
             // Show error message
-            //@@
+            // QQここでアラートを出したい
         } else {
 
         }

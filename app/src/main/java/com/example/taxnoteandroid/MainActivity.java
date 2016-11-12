@@ -86,11 +86,14 @@ public class MainActivity extends AppCompatActivity {
         public CharSequence getPageTitle(int position) {
             switch (position) {
                 case 0:
-                    return getString(R.string.MainActivity_entry_tab);
+
+                    //@@@
+                    //QQ ここが反映されませんねん
+                    return "@string/Entry";
                 case 1:
-                    return getString(R.string.MainActivity_history_tab);
+                    return "@string/History";
                 case 2:
-                    return getString(R.string.MainActivity_settings_tab);
+                    return "@string/Settings";
             }
             return super.getPageTitle(position);
         }
