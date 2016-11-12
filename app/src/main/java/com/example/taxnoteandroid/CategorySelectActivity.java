@@ -42,7 +42,6 @@ public class CategorySelectActivity extends AppCompatActivity {
 
         AccountDataManager accountDataManager = new AccountDataManager(this);
 
-        //QQ ここ context取得はthisでよいの？
         List<Account> accounts = accountDataManager.findAllWithIsExpense(isExpense, this);
 
         CategorySelectAdapter categorySelectAdapter = new CategorySelectAdapter(this, accounts);

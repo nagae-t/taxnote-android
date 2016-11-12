@@ -88,8 +88,8 @@ public class MainActivity extends AppCompatActivity {
                 case 0:
 
                     //@@@
-                    //QQ ここが反映されませんねん
-                    return "@string/Entry";
+
+                    return getString(R.string.Entry);
                 case 1:
                     return "@string/History";
                 case 2:

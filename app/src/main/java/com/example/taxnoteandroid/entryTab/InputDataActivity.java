@@ -3,6 +3,7 @@ package com.example.taxnoteandroid.entryTab;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Gravity;
 import android.view.View;
@@ -64,11 +65,13 @@ public class InputDataActivity extends AppCompatActivity {
             // 処理が正常に終わったりしたら、呼び出された画面にたいしてOKだったと伝えるためにsetResultする
             setResult(RESULT_OK);
             finish();
-
-            // Show error message
-            // QQここでアラートを出したい
         } else {
-
+            // Show error message
+            new AlertDialog.Builder(this)
+                    .setTitle("title")
+                    .setMessage("message")
+                    .setPositiveButton("OK", null)
+                    .show();
         }
     }
 

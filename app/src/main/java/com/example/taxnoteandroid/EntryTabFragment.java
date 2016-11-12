@@ -65,8 +65,7 @@ public class EntryTabFragment extends Fragment {
         public CharSequence getPageTitle(int position) {
             switch (position) {
                 case 0:
-                    //QQ ここでvaluesを使いたい
-//                    <string name="Expense">支出</string>
+                    // @@
                     return "支出";
                 case 1:
                     return "収入";

@@ -54,7 +54,7 @@ public class ExpenseInEntryTabFragment extends Fragment {
     public void onResume() {
         super.onResume();
 
-        loadCurrentAccount();
+//        loadCurrentAccount();
     }
 
 

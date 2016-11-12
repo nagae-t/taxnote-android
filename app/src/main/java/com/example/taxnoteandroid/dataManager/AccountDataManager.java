@@ -53,11 +53,13 @@ public class AccountDataManager {
         Project project                         = projectDataManager.findCurrentProjectWithContext(context);
 
         //@@ projectを指定すると落ちる
-        List accounts = ormaDatabase.selectFromAccount().where(Account_Schema.INSTANCE.deleted.getQualifiedName() + " = 0  AND "
-                        + Account_Schema.INSTANCE.isExpense.getQualifiedName() + " = ? AND ", isExpense
-                        + Account_Schema.INSTANCE.project.getQualifiedName() + " = ?", project).
-                        orderBy(Account_Schema.INSTANCE.order.getQualifiedName()).
-                        toList();
+        List accounts = ormaDatabase.selectFromAccount().where(
+                Account_Schema.INSTANCE.deleted.getQualifiedName() + " = 0  AND " +
+                        Account_Schema.INSTANCE.isExpense.getQualifiedName() + " = ? AND " +
+                        Account_Schema.INSTANCE.project.getQualifiedName() + " = ?",
+                isExpense, project).
+                orderBy(Account_Schema.INSTANCE.order.getQualifiedName()).
+                toList();
 
         return accounts;
     }
