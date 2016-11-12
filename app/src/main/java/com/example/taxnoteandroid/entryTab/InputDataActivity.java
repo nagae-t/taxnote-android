@@ -14,11 +14,14 @@ import com.example.taxnoteandroid.R;
 import com.example.taxnoteandroid.dataManager.EntryDataManager;
 import com.example.taxnoteandroid.model.Entry;
 
+import java.text.DecimalFormat;
 import java.util.UUID;
 
 public class InputDataActivity extends AppCompatActivity {
 
     private TextView textView;
+
+    private DecimalFormat format = new DecimalFormat("#,###.##");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,7 +90,13 @@ public class InputDataActivity extends AppCompatActivity {
                     textView.setText("0");
                     return;
             }
-            textView.setText(textView.getText() + price);
+
+            String text = textView.getText().toString().replace(",", "");
+            if (text.length() >= 9) {
+                return;
+            }
+
+            textView.setText(format.format(Long.parseLong(text + price)));
         }
     }
 
