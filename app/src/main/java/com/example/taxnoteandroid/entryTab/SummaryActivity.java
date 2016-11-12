@@ -14,6 +14,10 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.example.taxnoteandroid.R;
+import com.example.taxnoteandroid.model.Account;
+import com.example.taxnoteandroid.model.Reason;
+
+import org.parceler.Parcels;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +28,16 @@ public class SummaryActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_summary);
+
+        Intent intent = getIntent();
+
+        // @@
+        boolean isExpense = intent.getBooleanExtra(EXTRA_ISEXPENSE, false);
+        long date = intent.getLongExtra(EXTRA_DATE, 0);
+        Account account = Parcels.unwrap(intent.getParcelableExtra(Account.class.getName()));
+        Reason reason = Parcels.unwrap(intent.getParcelableExtra(Reason.class.getName()));
+
+        setTitle(reason.name);
 
         ListView listView = (ListView) findViewById(R.id.reason_list_view);
 
@@ -93,8 +107,15 @@ public class SummaryActivity extends AppCompatActivity {
     //    -- View Transition --
     //--------------------------------------------------------------//
 
-    public static Intent createIntent(Context context) {
+    private static final String EXTRA_ISEXPENSE = "isExpense";
+    private static final String EXTRA_DATE = "date";
+
+    public static Intent createIntent(Context context, boolean isExpense, long date, Account account, Reason reason) {
         Intent i = new Intent(context, SummaryActivity.class);
+        i.putExtra(EXTRA_ISEXPENSE, isExpense);
+        i.putExtra(Account.class.getName(), Parcels.wrap(account));
+        i.putExtra(Reason.class.getName(), Parcels.wrap(reason));
+        i.putExtra(EXTRA_DATE, date);
         return i;
     }
 

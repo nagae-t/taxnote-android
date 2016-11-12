@@ -96,7 +96,7 @@ public class IncomeInEntryTabFragment extends Fragment {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                startActivity(SummaryActivity.createIntent(getContext()));
+//                startActivity(SummaryActivity.createIntent(getContext()));
             }
         });
     }

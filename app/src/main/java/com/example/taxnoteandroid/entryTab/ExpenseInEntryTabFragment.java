@@ -29,6 +29,7 @@ public class ExpenseInEntryTabFragment extends Fragment {
     private static final String EXTRA_ISEXPENSE = "isExpense";
 
     public boolean isExpense = true;
+    private Account account;
 
     public ExpenseInEntryTabFragment() {
         // Required empty public constructor
@@ -86,7 +87,7 @@ public class ExpenseInEntryTabFragment extends Fragment {
     private void loadCurrentAccount() {
 
         AccountDataManager accountDataManager   = new AccountDataManager(getContext());
-        Account account                         = accountDataManager.findCurrentSelectedAccount(getContext(), isExpense);
+        account                         = accountDataManager.findCurrentSelectedAccount(getContext(), isExpense);
 
         ((TextView) getView().findViewById(R.id.account_text_view)).setText(account.name);
     }
@@ -101,13 +102,14 @@ public class ExpenseInEntryTabFragment extends Fragment {
         ListView listView = (ListView) view.findViewById(R.id.reason_list_view);
 
         ReasonDataManager reasonDataManager = new ReasonDataManager(getContext());
-        List<Reason> reasons = reasonDataManager.findAllWithIsExpense(isExpense, getContext());
+        final List<Reason> reasons = reasonDataManager.findAllWithIsExpense(isExpense, getContext());
 
         listView.setAdapter(new ListAdapter(getContext(), reasons));
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                startActivity(SummaryActivity.createIntent(getContext()));
+                Reason reason = (Reason) adapterView.getItemAtPosition(position);
+                startActivity(SummaryActivity.createIntent(getContext(), isExpense, System.currentTimeMillis(), account, reason));
             }
         });
     }
