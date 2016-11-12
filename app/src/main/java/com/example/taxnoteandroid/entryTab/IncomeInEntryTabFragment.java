@@ -54,7 +54,7 @@ public class IncomeInEntryTabFragment extends Fragment {
     public void onResume() {
         super.onResume();
 
-        loadCurrentAccount();
+//        loadCurrentAccount();
     }
 
 
