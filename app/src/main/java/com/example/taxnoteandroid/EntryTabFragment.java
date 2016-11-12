@@ -11,7 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.taxnoteandroid.entryTab.ExpenseInEntryTabFragment;
-import com.example.taxnoteandroid.entryTab.IncomeInEntryTabFragment;
 
 
 public class EntryTabFragment extends Fragment {
@@ -49,9 +48,9 @@ public class EntryTabFragment extends Fragment {
         public Fragment getItem(int position) {
             switch (position) {
                 case 0:
-                    return ExpenseInEntryTabFragment.newInstance();
+                    return ExpenseInEntryTabFragment.newInstance(true);
                 case 1:
-                    return IncomeInEntryTabFragment.newInstance();
+                    return ExpenseInEntryTabFragment.newInstance(false);
             }
             return EntryTabFragment.newInstance();
         }

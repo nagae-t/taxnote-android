@@ -3,6 +3,7 @@ package com.example.taxnoteandroid.entryTab;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -25,17 +26,27 @@ import java.util.List;
 
 public class ExpenseInEntryTabFragment extends Fragment {
 
+    private static final String EXTRA_ISEXPENSE = "isExpense";
+
     public boolean isExpense = true;
 
     public ExpenseInEntryTabFragment() {
         // Required empty public constructor
     }
 
-    public static ExpenseInEntryTabFragment newInstance() {
+    public static ExpenseInEntryTabFragment newInstance(boolean isExpense) {
         ExpenseInEntryTabFragment fragment = new ExpenseInEntryTabFragment();
+        // fragmentに値を渡す方法はBundleに値を入れる
         Bundle args = new Bundle();
+        args.putBoolean(EXTRA_ISEXPENSE, isExpense);
         fragment.setArguments(args);
         return fragment;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        isExpense = getArguments().getBoolean(EXTRA_ISEXPENSE);
     }
 
     @Override
