@@ -43,7 +43,6 @@ public class DefaultDataInstaller {
         // Set categories
         setDefaultReasonData(context, project);
         setDefaultAccountData(context, project);
-        setDefaultSummaryData(context,project);
 
         // Save shared preferences
         SharedPreferencesManager.saveUuidForCurrentProject(context, project.uuid);
@@ -71,6 +70,9 @@ public class DefaultDataInstaller {
             reason.project  = project;
 
             reasonDataManager.save(reason);
+
+            // Set summary data related to reason name
+            setDefaultSummaryData(context,project,reason.name);
         }
 
 
@@ -105,7 +107,7 @@ public class DefaultDataInstaller {
 
     //@@
     //QQ ここ構造が違う
-    private static void setDefaultSummaryData(Context context, Project project) {
+    private static void setDefaultSummaryData(Context context, Project project, String reasonName) {
 
         Type type = new TypeToken<List<Summary>>() {
         }.getType();
@@ -128,4 +130,30 @@ public class DefaultDataInstaller {
 //            accountDataManager.save(account);
 //        }
     }
+
+    //iOS code
+//    + (void)setSummaryDataWithContext:(NSManagedObjectContext *)context reason:(Reason *)reason user:(User *)user {
+//
+//        //fetch summary list matches the reason
+//        NSString *path              = [[NSBundle mainBundle] pathForResource:NSLocalizedString(@"Path:defaultSummaryData", nil) ofType:@"plist"];
+//        NSDictionary *summaryDic    = [[NSDictionary alloc] initWithContentsOfFile:path];
+//        NSArray *summaryArray       = [summaryDic objectForKey:reason.name];
+//
+//        //cancel if there is no summary list for the reason
+//        if (summaryArray.count == 0) {
+//            return;
+//        }
+//
+//        //save summary list with reason
+//        for (int order = 0; order < summaryArray.count; order ++) {
+//
+//            NSString *summaryName   = summaryArray[order];
+//            Summary *summary        = [Summary MR_createEntityInContext:context];
+//            summary.name            = summaryName;
+//            summary.order           = @(order);
+//            summary.reason          = reason;
+//            summary.uuid            = [[NSUUID UUID] UUIDString];
+//            summary.user            = user;
+//        }
+//    }
 }
