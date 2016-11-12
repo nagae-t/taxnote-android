@@ -72,7 +72,7 @@ public class DefaultDataInstaller {
             reasonDataManager.save(reason);
 
             // Set summary data related to reason name
-            setDefaultSummaryData(context,project,reason.name);
+//            setDefaultSummaryData(context,project,reason.name);
         }
 
 

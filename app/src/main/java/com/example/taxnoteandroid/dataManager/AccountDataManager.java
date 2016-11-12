@@ -50,16 +50,21 @@ public class AccountDataManager {
 
         // Get the current project
         ProjectDataManager projectDataManager   = new ProjectDataManager(context);
-        Project project                         = projectDataManager.findCurrentProjectWithContext(context);
+//        Project project                         = projectDataManager.findCurrentProjectWithContext(context);
+
+        //@@ projectを指定すると落ちる
+//        List accounts = ormaDatabase.selectFromAccount().where(
+//                Account_Schema.INSTANCE.deleted.getQualifiedName() + " = 0  AND " +
+//                        Account_Schema.INSTANCE.isExpense.getQualifiedName() + " = ? AND " +
+//                        Account_Schema.INSTANCE.project.getQualifiedName() + " = ?",
+//                isExpense, project).
+//                orderBy(Account_Schema.INSTANCE.order.getQualifiedName()).
+//                toList();
 
         //@@ projectを指定すると落ちる
         List accounts = ormaDatabase.selectFromAccount().where(
                 Account_Schema.INSTANCE.deleted.getQualifiedName() + " = 0  AND " +
-                        Account_Schema.INSTANCE.isExpense.getQualifiedName() + " = ? AND " +
-                        Account_Schema.INSTANCE.project.getQualifiedName() + " = ?",
-                isExpense, project).
-                orderBy(Account_Schema.INSTANCE.order.getQualifiedName()).
-                toList();
+                        Account_Schema.INSTANCE.isExpense.getQualifiedName() + " = ?",isExpense).orderBy(Account_Schema.INSTANCE.order.getQualifiedName()).toList();
 
         return accounts;
     }
