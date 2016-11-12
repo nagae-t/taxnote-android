@@ -6,8 +6,6 @@ import com.example.taxnoteandroid.R;
 import com.example.taxnoteandroid.model.Account;
 import com.example.taxnoteandroid.model.Project;
 import com.example.taxnoteandroid.model.Reason;
-
-import com.example.taxnoteandroid.model.Summary;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
@@ -106,17 +104,22 @@ public class DefaultDataInstaller {
     }
 
     //@@
-    //QQ ここ構造が違う
     private static void setDefaultSummaryData(Context context, Project project, String reasonName) {
 
-        Type type = new TypeToken<List<Summary>>() {
+        Type type = new TypeToken<List<DefaultSummary>>() {
         }.getType();
 
         // Get default json list
         InputStream inputStream = context.getResources().openRawResource(R.raw.default_summary);
         JsonReader jsonReader   = new JsonReader(new InputStreamReader(inputStream));
         Gson gson               = new Gson();
-        List<Summary> summaries  = gson.fromJson(jsonReader, type);
+        List<DefaultSummary> summaries  = gson.fromJson(jsonReader, type);
+
+        for (int i = 0, size = summaries.size(); i < size; i++) {
+            if (reasonName.equals(summaries.get(i).reasonName)) {
+                // 保存する
+            }
+        }
 
         AccountDataManager accountDataManager = new AccountDataManager(context);
 
@@ -129,6 +132,11 @@ public class DefaultDataInstaller {
 //
 //            accountDataManager.save(account);
 //        }
+    }
+
+    private class DefaultSummary {
+        String reasonName;
+        List<String> summary;
     }
 
     //iOS code
