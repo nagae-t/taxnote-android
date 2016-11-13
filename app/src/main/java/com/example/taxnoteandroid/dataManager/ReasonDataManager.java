@@ -64,7 +64,6 @@ public class ReasonDataManager {
         ProjectDataManager projectDataManager   = new ProjectDataManager(context);
         Project project                         = projectDataManager.findCurrentProjectWithContext(context);
 
-        //@@ アカウントでもやる
         List reasons = ormaDatabase.selectFromReason().where(Reason_Schema.INSTANCE.deleted.getQualifiedName() + " = 0  AND "
                         + Reason_Schema.INSTANCE.isExpense.getQualifiedName() + " = ?",
                 isExpense)
