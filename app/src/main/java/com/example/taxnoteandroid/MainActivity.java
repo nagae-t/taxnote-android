@@ -86,14 +86,11 @@ public class MainActivity extends AppCompatActivity {
         public CharSequence getPageTitle(int position) {
             switch (position) {
                 case 0:
-
-                    //@@@
-
                     return getString(R.string.Entry);
                 case 1:
-                    return "@string/History";
+                    return getString(R.string.History);
                 case 2:
-                    return "@string/Settings";
+                    return getString(R.string.Settings);
             }
             return super.getPageTitle(position);
         }
