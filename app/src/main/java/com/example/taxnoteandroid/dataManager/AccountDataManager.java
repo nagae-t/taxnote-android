@@ -47,12 +47,12 @@ public class AccountDataManager {
     }
 
     public List<Account> findAllWithIsExpense(boolean isExpense, Context context) {
-        
+
         // Get the current project
         ProjectDataManager projectDataManager   = new ProjectDataManager(context);
         Project project                         = projectDataManager.findCurrentProjectWithContext(context);
 
-        List accounts = ormaDatabase.selectFromReason().where(Account_Schema.INSTANCE.deleted.getQualifiedName() + " = 0  AND "
+        List accounts = ormaDatabase.selectFromAccount().where(Account_Schema.INSTANCE.deleted.getQualifiedName() + " = 0  AND "
                         + Account_Schema.INSTANCE.isExpense.getQualifiedName() + " = ?",
                 isExpense)
                 .and()
