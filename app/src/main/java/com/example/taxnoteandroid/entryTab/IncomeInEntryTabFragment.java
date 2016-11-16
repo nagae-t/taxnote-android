@@ -25,6 +25,8 @@ import java.util.List;
 
 public class IncomeInEntryTabFragment extends Fragment {
 
+    //@@ あとでこのfragment消す
+
     public boolean isExpense = false;
 
     public IncomeInEntryTabFragment() {

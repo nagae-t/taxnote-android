@@ -14,8 +14,10 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.example.taxnoteandroid.R;
+import com.example.taxnoteandroid.dataManager.SummaryDataManager;
 import com.example.taxnoteandroid.model.Account;
 import com.example.taxnoteandroid.model.Reason;
+import com.example.taxnoteandroid.model.Summary;
 
 import org.parceler.Parcels;
 
@@ -23,6 +25,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SummaryActivity extends AppCompatActivity {
+
+    private static final String EXTRA_ISEXPENSE = "isExpense";
+    private static final String EXTRA_DATE = "date";
+
+    public static Intent createIntent(Context context, boolean isExpense, long date, Account account, Reason reason) {
+
+        Intent i = new Intent(context, SummaryActivity.class);
+
+        i.putExtra(EXTRA_ISEXPENSE, isExpense);
+        i.putExtra(Account.class.getName(), Parcels.wrap(account));
+        i.putExtra(Reason.class.getName(), Parcels.wrap(reason));
+        i.putExtra(EXTRA_DATE, date);
+
+        return i;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,11 +52,41 @@ public class SummaryActivity extends AppCompatActivity {
         boolean isExpense = intent.getBooleanExtra(EXTRA_ISEXPENSE, false);
         long date = intent.getLongExtra(EXTRA_DATE, 0);
         Account account = Parcels.unwrap(intent.getParcelableExtra(Account.class.getName()));
+
         Reason reason = Parcels.unwrap(intent.getParcelableExtra(Reason.class.getName()));
 
         setTitle(reason.name);
+        setSummaryList(reason);
+
+    }
+
+
+    //--------------------------------------------------------------//
+    //    -- Summary List --
+    //--------------------------------------------------------------//
+
+    private void setSummaryList(Reason reason){
+
+//        ListView listView = (ListView) view.findViewById(R.id.reason_list_view);
+//
+//        ReasonDataManager reasonDataManager = new ReasonDataManager(getContext());
+//        final List<Reason> reasons = reasonDataManager.findAllWithIsExpense(isExpense, getContext());
+//
+//        listView.setAdapter(new ListAdapter(getContext(), reasons));
+//        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+//                Reason reason = (Reason) adapterView.getItemAtPosition(position);
+//                startActivity(SummaryActivity.createIntent(getContext(), isExpense, System.currentTimeMillis(), account, reason));
+//            }
+//        });
 
         ListView listView = (ListView) findViewById(R.id.reason_list_view);
+
+        SummaryDataManager summaryDataManager   = new SummaryDataManager(this);
+        List<Summary> summaries                 = summaryDataManager.findAllWithReason(reason, this);
+
+        //@@ イマココまでやってる
 
         List<String> strings = new ArrayList<>();
         strings.add("test1");
@@ -106,18 +153,6 @@ public class SummaryActivity extends AppCompatActivity {
     //--------------------------------------------------------------//
     //    -- View Transition --
     //--------------------------------------------------------------//
-
-    private static final String EXTRA_ISEXPENSE = "isExpense";
-    private static final String EXTRA_DATE = "date";
-
-    public static Intent createIntent(Context context, boolean isExpense, long date, Account account, Reason reason) {
-        Intent i = new Intent(context, SummaryActivity.class);
-        i.putExtra(EXTRA_ISEXPENSE, isExpense);
-        i.putExtra(Account.class.getName(), Parcels.wrap(account));
-        i.putExtra(Reason.class.getName(), Parcels.wrap(reason));
-        i.putExtra(EXTRA_DATE, date);
-        return i;
-    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

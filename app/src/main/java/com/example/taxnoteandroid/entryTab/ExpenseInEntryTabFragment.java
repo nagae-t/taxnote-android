@@ -36,11 +36,14 @@ public class ExpenseInEntryTabFragment extends Fragment {
     }
 
     public static ExpenseInEntryTabFragment newInstance(boolean isExpense) {
+
         ExpenseInEntryTabFragment fragment = new ExpenseInEntryTabFragment();
-        // fragmentに値を渡す方法はBundleに値を入れる
+
+        // Set value on bundle
         Bundle args = new Bundle();
         args.putBoolean(EXTRA_ISEXPENSE, isExpense);
         fragment.setArguments(args);
+
         return fragment;
     }
 
@@ -50,6 +53,7 @@ public class ExpenseInEntryTabFragment extends Fragment {
         isExpense = getArguments().getBoolean(EXTRA_ISEXPENSE);
     }
 
+    // QQ ここではonCreateView使ってるけど、SummaryActivityでは使ってないのはなぜ？
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
