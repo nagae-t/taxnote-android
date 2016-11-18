@@ -21,19 +21,39 @@ import com.example.taxnoteandroid.model.Summary;
 
 import org.parceler.Parcels;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class SummaryActivity extends AppCompatActivity {
 
-    private static final String EXTRA_ISEXPENSE = "isExpense";
-    private static final String EXTRA_DATE = "date";
+    private static final String EXTRA_IS_EXPENSE = "isExpense";
+    private static final String EXTRA_DATE       = "date";
+    public boolean isExpense;
+    public Account account;
+    public Reason reason;
+    public long date;
+
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_summary);
+
+        setIntentData();
+        setTitle(reason.name);
+        setNextButton();
+        setSummaryList(reason);
+    }
+
+
+    //--------------------------------------------------------------//
+    //    -- Intent --
+    //--------------------------------------------------------------//
 
     public static Intent createIntent(Context context, boolean isExpense, long date, Account account, Reason reason) {
 
         Intent i = new Intent(context, SummaryActivity.class);
 
-        i.putExtra(EXTRA_ISEXPENSE, isExpense);
+        i.putExtra(EXTRA_IS_EXPENSE, isExpense);
         i.putExtra(Account.class.getName(), Parcels.wrap(account));
         i.putExtra(Reason.class.getName(), Parcels.wrap(reason));
         i.putExtra(EXTRA_DATE, date);
@@ -41,23 +61,14 @@ public class SummaryActivity extends AppCompatActivity {
         return i;
     }
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_summary);
+    private void setIntentData() {
 
         Intent intent = getIntent();
 
-        // @@
-        boolean isExpense = intent.getBooleanExtra(EXTRA_ISEXPENSE, false);
-        long date = intent.getLongExtra(EXTRA_DATE, 0);
-        Account account = Parcels.unwrap(intent.getParcelableExtra(Account.class.getName()));
-
-        Reason reason = Parcels.unwrap(intent.getParcelableExtra(Reason.class.getName()));
-
-        setTitle(reason.name);
-        setSummaryList(reason);
-
+        isExpense   = intent.getBooleanExtra(EXTRA_IS_EXPENSE, false);
+        date        = intent.getLongExtra(EXTRA_DATE, 0);
+        account     = Parcels.unwrap(intent.getParcelableExtra(Account.class.getName()));
+        reason      = Parcels.unwrap(intent.getParcelableExtra(Reason.class.getName()));
     }
 
 
@@ -65,69 +76,44 @@ public class SummaryActivity extends AppCompatActivity {
     //    -- Summary List --
     //--------------------------------------------------------------//
 
-    private void setSummaryList(Reason reason){
-
-//        ListView listView = (ListView) view.findViewById(R.id.reason_list_view);
-//
-//        ReasonDataManager reasonDataManager = new ReasonDataManager(getContext());
-//        final List<Reason> reasons = reasonDataManager.findAllWithIsExpense(isExpense, getContext());
-//
-//        listView.setAdapter(new ListAdapter(getContext(), reasons));
-//        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-//                Reason reason = (Reason) adapterView.getItemAtPosition(position);
-//                startActivity(SummaryActivity.createIntent(getContext(), isExpense, System.currentTimeMillis(), account, reason));
-//            }
-//        });
-
-        ListView listView = (ListView) findViewById(R.id.reason_list_view);
-
-        SummaryDataManager summaryDataManager   = new SummaryDataManager(this);
-        List<Summary> summaries                 = summaryDataManager.findAllWithReason(reason, this);
-
-        //@@ イマココまでやってる
-
-        List<String> strings = new ArrayList<>();
-        strings.add("test1");
-        strings.add("test2");
-        strings.add("test3");
-        strings.add("test4");
-        strings.add("test5");
-        strings.add("test3");
-        strings.add("test4");
-        strings.add("test5");
-        strings.add("test3");
-        strings.add("test4");
-        strings.add("test5");
-        strings.add("test3");
-        strings.add("test4");
-        strings.add("test5");
+    private void setNextButton() {
 
         View next = findViewById(R.id.next);
         next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // request codeを指定する.onActivityResultのrequestCodeで返ってくる
-                startActivityForResult(InputDataActivity.createIntent(SummaryActivity.this), 1);
+
+                startInputDataActivity(null);
             }
         });
+    }
 
-        listView.setAdapter(new ListAdapter(this, strings));
+    private void setSummaryList(Reason reason){
+
+        // Get summary list
+        SummaryDataManager summaryDataManager   = new SummaryDataManager(this);
+        List<Summary> summaries                 = summaryDataManager.findAllWithReason(reason, this);
+
+        ListView listView = (ListView) findViewById(R.id.reason_list_view);
+
+        listView.setAdapter(new ListAdapter(this, summaries));
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+
+                Summary summary = (Summary) adapterView.getItemAtPosition(position);
+                startInputDataActivity(summary);
             }
         });
         listView.addFooterView(getLayoutInflater().inflate(R.layout.listview_footer, null));
     }
 
     //  https://material.google.com/components/lists.html#
-    class ListAdapter extends ArrayAdapter<String> {
+    class ListAdapter extends ArrayAdapter<Summary> {
 
         private LayoutInflater layoutInflater;
 
-        public ListAdapter(Context context, List<String> texts) {
+        public ListAdapter(Context context, List<Summary> texts) {
             super(context, 0, texts);
             layoutInflater = LayoutInflater.from(context);
         }
@@ -140,10 +126,10 @@ public class SummaryActivity extends AppCompatActivity {
             View v = layoutInflater.inflate(R.layout.row_list_item, null);
 
             // getItemでcallのViewにbindしたいデータ型を取得できる
-            String s = getItem(position);
+            Summary summary = getItem(position);
 
             TextView textView = (TextView) v.findViewById(R.id.text);
-            textView.setText(s);
+            textView.setText(summary.name);
 
             return v;
         }
@@ -153,6 +139,10 @@ public class SummaryActivity extends AppCompatActivity {
     //--------------------------------------------------------------//
     //    -- View Transition --
     //--------------------------------------------------------------//
+
+    private void startInputDataActivity(Summary summary) {
+        startActivityForResult(InputDataActivity.createIntent(SummaryActivity.this, isExpense, System.currentTimeMillis(), account, reason, summary), 1);
+    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

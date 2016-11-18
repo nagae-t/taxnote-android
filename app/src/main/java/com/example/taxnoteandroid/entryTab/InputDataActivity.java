@@ -12,7 +12,12 @@ import android.widget.Toast;
 
 import com.example.taxnoteandroid.R;
 import com.example.taxnoteandroid.dataManager.EntryDataManager;
+import com.example.taxnoteandroid.model.Account;
 import com.example.taxnoteandroid.model.Entry;
+import com.example.taxnoteandroid.model.Reason;
+import com.example.taxnoteandroid.model.Summary;
+
+import org.parceler.Parcels;
 
 import java.text.DecimalFormat;
 import java.util.UUID;
@@ -21,6 +26,14 @@ public class InputDataActivity extends AppCompatActivity {
 
     private TextView textView;
 
+    private static final String EXTRA_IS_EXPENSE = "isExpense";
+    private static final String EXTRA_DATE       = "date";
+    public boolean isExpense;
+    public Account account;
+    public Reason reason;
+    public Summary summary;
+    public long date;
+
     private DecimalFormat format = new DecimalFormat("#,###.##");
 
     @Override
@@ -28,6 +41,8 @@ public class InputDataActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_input_data);
+
+        setIntentData();
         setSaveButton();
 
         textView = (TextView) findViewById(R.id.text);
@@ -100,6 +115,36 @@ public class InputDataActivity extends AppCompatActivity {
         }
     }
 
+
+    //--------------------------------------------------------------//
+    //    -- Intent --
+    //--------------------------------------------------------------//
+
+    public static Intent createIntent(Context context, boolean isExpense, long date, Account account, Reason reason, Summary summary) {
+
+        Intent i = new Intent(context, InputDataActivity.class);
+
+        i.putExtra(EXTRA_IS_EXPENSE, isExpense);
+        i.putExtra(Account.class.getName(), Parcels.wrap(account));
+        i.putExtra(Reason.class.getName(), Parcels.wrap(reason));
+        i.putExtra(Summary.class.getName(), Parcels.wrap(summary));
+        i.putExtra(EXTRA_DATE, date);
+
+        return i;
+    }
+
+    private void setIntentData() {
+
+        Intent intent = getIntent();
+
+        isExpense   = intent.getBooleanExtra(EXTRA_IS_EXPENSE, false);
+        date        = intent.getLongExtra(EXTRA_DATE, 0);
+        account     = Parcels.unwrap(intent.getParcelableExtra(Account.class.getName()));
+        reason      = Parcels.unwrap(intent.getParcelableExtra(Reason.class.getName()));
+        summary     = Parcels.unwrap(intent.getParcelableExtra(Summary.class.getName()));
+    }
+
+
     //--------------------------------------------------------------//
     //    -- Display Part --
     //--------------------------------------------------------------//
@@ -168,8 +213,5 @@ public class InputDataActivity extends AppCompatActivity {
     //    -- View Transition --
     //--------------------------------------------------------------//
 
-    public static Intent createIntent(Context context) {
-        Intent i = new Intent(context, InputDataActivity.class);
-        return i;
-    }
+
 }
