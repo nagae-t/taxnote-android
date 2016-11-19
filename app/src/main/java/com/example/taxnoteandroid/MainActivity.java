@@ -1,18 +1,21 @@
 package com.example.taxnoteandroid;
 
+import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
 import com.example.taxnoteandroid.dataManager.DefaultDataInstaller;
+import com.example.taxnoteandroid.databinding.ActivityMainBinding;
 
 public class MainActivity extends AppCompatActivity {
+
+    private ActivityMainBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,7 +23,8 @@ public class MainActivity extends AppCompatActivity {
 
         DefaultDataInstaller.installDefaultUserAndCategories(this);
 
-        setContentView(R.layout.activity_main);
+//        setContentView(R.layout.activity_main);
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
         setBottomNavigation();
     }
 
@@ -32,10 +36,12 @@ public class MainActivity extends AppCompatActivity {
     private void setBottomNavigation() {
 
         // Set pager
-        final ViewPager viewPager   = (ViewPager) findViewById(R.id.pager);
+//        final ViewPager viewPager   = (ViewPager) findViewById(R.id.pager);
         TabPagerAdapter adapter     = new TabPagerAdapter(getSupportFragmentManager());
-        viewPager.setAdapter(adapter);
-        viewPager.beginFakeDrag();
+//        viewPager.setAdapter(adapter);
+//        viewPager.beginFakeDrag();
+        binding.pager.setAdapter(adapter);
+        binding.pager.beginFakeDrag();
 
         BottomNavigationView bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_navigation);
 
@@ -44,13 +50,16 @@ public class MainActivity extends AppCompatActivity {
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.tab1:
-                        viewPager.setCurrentItem(0);
+//                        viewPager.setCurrentItem(0);
+                        binding.pager.setCurrentItem(0);
                         break;
                     case R.id.tab2:
-                        viewPager.setCurrentItem(1);
+                        //                        viewPager.setCurrentItem(1);
+                        binding.pager.setCurrentItem(1);
                         break;
                     case R.id.tab3:
-                        viewPager.setCurrentItem(2);
+                        //                        viewPager.setCurrentItem(2);
+                        binding.pager.setCurrentItem(2);
                         break;
                 }
                 return false;
