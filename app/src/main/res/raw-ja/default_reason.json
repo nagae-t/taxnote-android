@@ -15,7 +15,7 @@
     "details": "交通費・宿泊費など"
   },
   {
-    "name": "消耗品",
+    "name": "消耗品費",
     "isExpense": true,
     "details": "日用品・事務機器など"
   },

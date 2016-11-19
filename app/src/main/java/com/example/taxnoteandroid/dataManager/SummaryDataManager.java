@@ -1,13 +1,14 @@
 package com.example.taxnoteandroid.dataManager;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.example.taxnoteandroid.BuildConfig;
+import com.example.taxnoteandroid.model.OrmaDatabase;
+import com.example.taxnoteandroid.model.Project;
 import com.example.taxnoteandroid.model.Reason;
 import com.example.taxnoteandroid.model.Summary;
 import com.example.taxnoteandroid.model.Summary_Schema;
-import com.example.taxnoteandroid.model.OrmaDatabase;
-import com.example.taxnoteandroid.model.Project;
 import com.github.gfx.android.orma.AccessThreadConstraint;
 
 import java.util.List;
@@ -53,7 +54,11 @@ public class SummaryDataManager {
         ProjectDataManager projectDataManager   = new ProjectDataManager(context);
         Project project                         = projectDataManager.findCurrentProjectWithContext(context);
 
-        List summaries = ormaDatabase.selectFromSummary().where(Summary_Schema.INSTANCE.deleted.getQualifiedName() + " = 0")
+        // @@
+        Log.d("test", ormaDatabase.selectFromSummary().toList().toString());
+
+        List summaries = ormaDatabase.selectFromSummary()
+                .where(Summary_Schema.INSTANCE.deleted.getQualifiedName() + " = 0")
                 .and()
                 .reasonEq(reason)
                 .and()

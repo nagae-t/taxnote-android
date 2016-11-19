@@ -53,7 +53,6 @@ public class ExpenseInEntryTabFragment extends Fragment {
         isExpense = getArguments().getBoolean(EXTRA_ISEXPENSE);
     }
 
-    // QQ ここではonCreateView使ってるけど、SummaryActivityでは使ってないのはなぜ？
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 

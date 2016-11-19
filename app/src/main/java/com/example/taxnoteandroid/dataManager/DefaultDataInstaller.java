@@ -73,7 +73,8 @@ public class DefaultDataInstaller {
             reason.uuid     = UUID.randomUUID().toString();
             reason.project  = project;
 
-            reasonDataManager.save(reason);
+            long id = reasonDataManager.save(reason);
+            reason.id = id;
 
             // Set summary data related to reason name
             setDefaultSummaryData(context, project, reason);
@@ -117,10 +118,9 @@ public class DefaultDataInstaller {
 
         // Catch reason name from summary list
         for (int i = 0, size = summaries.size(); i < size; i++) {
-
+//
             if (reason.name.equals(summaries.get(i).reasonName)) {
 
-                //QQ ここはあってると思うんだけど
                 // Save summary
                 List<String> summaryStrings = summaries.get(i).summary;
                 saveSummaryFromSummaryStrings(summaryStrings, context, project, reason);
