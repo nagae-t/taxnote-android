@@ -187,8 +187,8 @@ public class InputDataActivity extends AppCompatActivity {
         Project project = projectDataManager.findCurrentProjectWithContext(this);
 
         Entry entry = new Entry();
-        entry.date  = System.currentTimeMillis();
-        entry.updated = entry.date;
+        entry.date  = date;
+        entry.updated = System.currentTimeMillis();
         entry.isExpense = isExpense;
         entry.price = price;
         entry.memo  = ((EditText) findViewById(R.id.memo)).getText().toString();
