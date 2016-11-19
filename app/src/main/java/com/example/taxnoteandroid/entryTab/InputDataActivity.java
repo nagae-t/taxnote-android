@@ -5,15 +5,19 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.taxnoteandroid.R;
 import com.example.taxnoteandroid.dataManager.EntryDataManager;
+import com.example.taxnoteandroid.dataManager.ProjectDataManager;
 import com.example.taxnoteandroid.model.Account;
 import com.example.taxnoteandroid.model.Entry;
+import com.example.taxnoteandroid.model.Project;
 import com.example.taxnoteandroid.model.Reason;
 import com.example.taxnoteandroid.model.Summary;
 
@@ -169,10 +173,29 @@ public class InputDataActivity extends AppCompatActivity {
 
         EntryDataManager entryDataManager = new EntryDataManager(InputDataActivity.this);
 
+        String text = textView.getText().toString().replace(",", "");
+
+        if (TextUtils.isEmpty(text)) {
+//            Toast.makeText(this, "空文字です", Toast.LENGTH_SHORT).show();
+//            Snackbar.make(findViewById(R.id.activity_input_data), "空文字です", Snackbar.LENGTH_INDEFINITE).show();
+            return;
+        }
+
+        long price  = Long.parseLong(text);
+
+        ProjectDataManager projectDataManager = new ProjectDataManager(this);
+        Project project = projectDataManager.findCurrentProjectWithContext(this);
+
         Entry entry = new Entry();
-        entry.price = 1000;
-        entry.memo  = "memo";
+        entry.date  = System.currentTimeMillis();
+        entry.updated = entry.date;
+        entry.isExpense = isExpense;
+        entry.price = price;
+        entry.memo  = ((EditText) findViewById(R.id.memo)).getText().toString();
         entry.uuid  = UUID.randomUUID().toString();
+        entry.project = project;
+        entry.reason = reason;
+        entry.account = account;
         long id     = entryDataManager.save(entry);
 
         // Success

@@ -35,7 +35,7 @@ public class Entry {
     public String uuid;
 
     @Column
-    public String memo;
+    public String memo = "";
 
 
     // HasOne Relation

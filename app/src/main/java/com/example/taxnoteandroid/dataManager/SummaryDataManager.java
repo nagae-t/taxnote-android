@@ -55,7 +55,7 @@ public class SummaryDataManager {
         Project project                         = projectDataManager.findCurrentProjectWithContext(context);
 
         // @@
-        Log.d("test", ormaDatabase.selectFromSummary().toList().toString());
+//        Log.d("test", ormaDatabase.selectFromSummary().toList().toString());
 
         List summaries = ormaDatabase.selectFromSummary()
                 .where(Summary_Schema.INSTANCE.deleted.getQualifiedName() + " = 0")
