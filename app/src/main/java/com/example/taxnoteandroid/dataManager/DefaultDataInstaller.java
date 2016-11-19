@@ -104,7 +104,6 @@ public class DefaultDataInstaller {
         }
     }
 
-    //@@
     private static void setDefaultSummaryData(Context context, Project project, Reason reason) {
 
         Type type = new TypeToken<List<DefaultSummary>>() {
@@ -121,6 +120,7 @@ public class DefaultDataInstaller {
 
             if (reason.name.equals(summaries.get(i).reasonName)) {
 
+                //QQ ここはあってると思うんだけど
                 // Save summary
                 List<String> summaryStrings = summaries.get(i).summary;
                 saveSummaryFromSummaryStrings(summaryStrings, context, project, reason);

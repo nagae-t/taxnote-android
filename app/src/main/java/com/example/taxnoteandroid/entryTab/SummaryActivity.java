@@ -88,6 +88,7 @@ public class SummaryActivity extends AppCompatActivity {
         });
     }
 
+    //QQ ここでSummaryが表示されてない、
     private void setSummaryList(Reason reason){
 
         // Get summary list
