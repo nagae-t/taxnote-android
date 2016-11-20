@@ -38,7 +38,7 @@ public class InputDataActivity extends AppCompatActivity {
     public Summary summary;
     public long date;
 
-    private DecimalFormat format = new DecimalFormat("#,###.##");
+    private DecimalFormat formatForPriceStyle = new DecimalFormat("#,###.##");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -115,7 +115,10 @@ public class InputDataActivity extends AppCompatActivity {
                 return;
             }
 
-            textView.setText(format.format(Long.parseLong(text + price)));
+            Long currentPrice   = Long.parseLong(text + price);
+            String priceString  = formatForPriceStyle.format(currentPrice);
+
+            textView.setText(priceString);
         }
     }
 

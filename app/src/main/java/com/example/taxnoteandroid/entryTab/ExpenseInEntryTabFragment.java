@@ -26,7 +26,7 @@ import java.util.List;
 
 public class ExpenseInEntryTabFragment extends Fragment {
 
-    private static final String EXTRA_ISEXPENSE = "isExpense";
+    private static final String EXTRA_IS_EXPENSE = "isExpense";
 
     public boolean isExpense = true;
     private Account account;
@@ -41,7 +41,7 @@ public class ExpenseInEntryTabFragment extends Fragment {
 
         // Set value on bundle
         Bundle args = new Bundle();
-        args.putBoolean(EXTRA_ISEXPENSE, isExpense);
+        args.putBoolean(EXTRA_IS_EXPENSE, isExpense);
         fragment.setArguments(args);
 
         return fragment;
@@ -50,7 +50,7 @@ public class ExpenseInEntryTabFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        isExpense = getArguments().getBoolean(EXTRA_ISEXPENSE);
+        isExpense = getArguments().getBoolean(EXTRA_IS_EXPENSE);
     }
 
     @Override

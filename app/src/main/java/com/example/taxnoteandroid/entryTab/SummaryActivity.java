@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -89,14 +88,13 @@ public class SummaryActivity extends AppCompatActivity {
         });
     }
 
-    //QQ ここでSummaryが表示されてない、
     private void setSummaryList(Reason reason){
 
         // Get summary list
         SummaryDataManager summaryDataManager   = new SummaryDataManager(this);
         List<Summary> summaries                 = summaryDataManager.findAllWithReason(reason, this);
 
-        Log.d("test", summaries.toString());
+//        Log.d("test", summaries.toString());
 
         ListView listView = (ListView) findViewById(R.id.reason_list_view);
 

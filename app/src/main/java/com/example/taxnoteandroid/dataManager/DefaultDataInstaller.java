@@ -118,7 +118,7 @@ public class DefaultDataInstaller {
 
         // Catch reason name from summary list
         for (int i = 0, size = summaries.size(); i < size; i++) {
-//
+
             if (reason.name.equals(summaries.get(i).reasonName)) {
 
                 // Save summary

@@ -1,7 +1,6 @@
 package com.example.taxnoteandroid.dataManager;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.example.taxnoteandroid.BuildConfig;
 import com.example.taxnoteandroid.model.OrmaDatabase;
@@ -53,9 +52,6 @@ public class SummaryDataManager {
         // Get the current project
         ProjectDataManager projectDataManager   = new ProjectDataManager(context);
         Project project                         = projectDataManager.findCurrentProjectWithContext(context);
-
-        // @@
-//        Log.d("test", ormaDatabase.selectFromSummary().toList().toString());
 
         List summaries = ormaDatabase.selectFromSummary()
                 .where(Summary_Schema.INSTANCE.deleted.getQualifiedName() + " = 0")
