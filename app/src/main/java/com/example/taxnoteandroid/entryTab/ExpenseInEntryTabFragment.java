@@ -137,7 +137,7 @@ public class ExpenseInEntryTabFragment extends Fragment {
             // getItemでcallのViewにbindしたいデータ型を取得できる
             Reason reason = getItem(position);
 
-            TextView textView = (TextView) view.findViewById(R.id.text);
+            TextView textView = (TextView) view.findViewById(R.id.price_text_view);
             textView.setText(reason.name);
             TextView details = (TextView) view.findViewById(R.id.details);
             if (TextUtils.isEmpty(reason.details)) {

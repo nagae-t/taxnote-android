@@ -28,8 +28,7 @@ import java.util.UUID;
 
 public class InputDataActivity extends AppCompatActivity {
 
-    private TextView textView;
-
+    private TextView priceTextView;
     private static final String EXTRA_IS_EXPENSE = "isExpense";
     private static final String EXTRA_DATE       = "date";
     public boolean isExpense;
@@ -37,8 +36,8 @@ public class InputDataActivity extends AppCompatActivity {
     public Reason reason;
     public Summary summary;
     public long date;
+    private long currentPrice = 0;
 
-    private DecimalFormat formatForPriceStyle = new DecimalFormat("#,###.##");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,8 +47,57 @@ public class InputDataActivity extends AppCompatActivity {
 
         setIntentData();
         setSaveButton();
+        setPriceInputPart();
+    }
 
-        textView = (TextView) findViewById(R.id.text);
+
+    //--------------------------------------------------------------//
+    //    -- Intent --
+    //--------------------------------------------------------------//
+
+    public static Intent createIntent(Context context, boolean isExpense, long date, Account account, Reason reason, Summary summary) {
+
+        Intent i = new Intent(context, InputDataActivity.class);
+
+        i.putExtra(EXTRA_IS_EXPENSE, isExpense);
+        i.putExtra(Account.class.getName(), Parcels.wrap(account));
+        i.putExtra(Reason.class.getName(), Parcels.wrap(reason));
+        i.putExtra(Summary.class.getName(), Parcels.wrap(summary));
+        i.putExtra(EXTRA_DATE, date);
+
+        return i;
+    }
+
+    private void setIntentData() {
+
+        Intent intent = getIntent();
+
+        isExpense   = intent.getBooleanExtra(EXTRA_IS_EXPENSE, false);
+        date        = intent.getLongExtra(EXTRA_DATE, 0);
+        account     = Parcels.unwrap(intent.getParcelableExtra(Account.class.getName()));
+        reason      = Parcels.unwrap(intent.getParcelableExtra(Reason.class.getName()));
+        summary     = Parcels.unwrap(intent.getParcelableExtra(Summary.class.getName()));
+    }
+
+
+    //--------------------------------------------------------------//
+    //    -- Display Part --
+    //--------------------------------------------------------------//
+
+    private void setSaveButton() {
+
+        TextView saveButton = (TextView) findViewById(R.id.save);
+        saveButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                saveEntry();
+            }
+        });
+    }
+
+    private void setPriceInputPart() {
+
+        priceTextView = (TextView) findViewById(R.id.price_text_view);
 
         OnPriceClickListener onPriceClickListener = new OnPriceClickListener();
         findViewById(R.id.button_0).setOnClickListener(onPriceClickListener);
@@ -106,65 +154,24 @@ public class InputDataActivity extends AppCompatActivity {
                     price = "00";
                     break;
                 case R.id.button_c:
-                    textView.setText("0");
+                    priceTextView.setText("0");
                     return;
             }
 
-            String text = textView.getText().toString().replace(",", "");
+            // Remove "," from price text
+            String text = priceTextView.getText().toString().replace(",", "");
+
             if (text.length() >= 9) {
                 return;
             }
 
-            Long currentPrice   = Long.parseLong(text + price);
-            String priceString  = formatForPriceStyle.format(currentPrice);
+            // Create price string
+            currentPrice                        = Long.parseLong(text + price);
+            DecimalFormat formatForPriceStyle   = new DecimalFormat("#,###.##");
+            String priceString                  = formatForPriceStyle.format(currentPrice);
 
-            textView.setText(priceString);
+            priceTextView.setText(priceString);
         }
-    }
-
-
-    //--------------------------------------------------------------//
-    //    -- Intent --
-    //--------------------------------------------------------------//
-
-    public static Intent createIntent(Context context, boolean isExpense, long date, Account account, Reason reason, Summary summary) {
-
-        Intent i = new Intent(context, InputDataActivity.class);
-
-        i.putExtra(EXTRA_IS_EXPENSE, isExpense);
-        i.putExtra(Account.class.getName(), Parcels.wrap(account));
-        i.putExtra(Reason.class.getName(), Parcels.wrap(reason));
-        i.putExtra(Summary.class.getName(), Parcels.wrap(summary));
-        i.putExtra(EXTRA_DATE, date);
-
-        return i;
-    }
-
-    private void setIntentData() {
-
-        Intent intent = getIntent();
-
-        isExpense   = intent.getBooleanExtra(EXTRA_IS_EXPENSE, false);
-        date        = intent.getLongExtra(EXTRA_DATE, 0);
-        account     = Parcels.unwrap(intent.getParcelableExtra(Account.class.getName()));
-        reason      = Parcels.unwrap(intent.getParcelableExtra(Reason.class.getName()));
-        summary     = Parcels.unwrap(intent.getParcelableExtra(Summary.class.getName()));
-    }
-
-
-    //--------------------------------------------------------------//
-    //    -- Display Part --
-    //--------------------------------------------------------------//
-
-    private void setSaveButton() {
-
-        TextView saveButton = (TextView) findViewById(R.id.save);
-        saveButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                saveEntry();
-            }
-        });
     }
 
 
@@ -176,31 +183,37 @@ public class InputDataActivity extends AppCompatActivity {
 
         EntryDataManager entryDataManager = new EntryDataManager(InputDataActivity.this);
 
-        String text = textView.getText().toString().replace(",", "");
+        String text = priceTextView.getText().toString().replace(",", "");
 
         if (TextUtils.isEmpty(text)) {
-//            Toast.makeText(this, "空文字です", Toast.LENGTH_SHORT).show();
-//            Snackbar.make(findViewById(R.id.activity_input_data), "空文字です", Snackbar.LENGTH_INDEFINITE).show();
+//            Toast.makeText(this, "数字を", Toast.LENGTH_SHORT).show();
+//            Snackbar.make(findViewById(R.id.activity_input_data), "@数字を入力してください", Snackbar.LENGTH_INDEFINITE).show();
+
+            // Show error message
+            new AlertDialog.Builder(this)
+                    .setTitle("@エラー")
+                    .setMessage("@数字を入力してください")
+                    .setPositiveButton("OK", null)
+                    .show();
             return;
         }
-
-        long price  = Long.parseLong(text);
 
         ProjectDataManager projectDataManager = new ProjectDataManager(this);
         Project project = projectDataManager.findCurrentProjectWithContext(this);
 
-        Entry entry = new Entry();
-        entry.date  = date;
-        entry.updated = System.currentTimeMillis();
+        Entry entry     = new Entry();
+        entry.date      = date;
+        entry.updated   = System.currentTimeMillis();
         entry.isExpense = isExpense;
-        entry.price = price;
-        entry.memo  = ((EditText) findViewById(R.id.memo)).getText().toString();
-        entry.uuid  = UUID.randomUUID().toString();
-        entry.project = project;
-        entry.reason = reason;
-        entry.account = account;
-        long id     = entryDataManager.save(entry);
+        entry.price     = currentPrice;
+        entry.memo      = ((EditText) findViewById(R.id.memo)).getText().toString();
+        entry.uuid      = UUID.randomUUID().toString();
+        entry.project   = project;
+        entry.reason    = reason;
+        entry.account   = account;
+        long id         = entryDataManager.save(entry);
 
+        // QQなんかここ遅い　サクサク感がない。。
         // Success
         if (EntryDataManager.isSaveSuccess(id)) {
 

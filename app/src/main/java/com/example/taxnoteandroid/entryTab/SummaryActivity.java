@@ -130,7 +130,7 @@ public class SummaryActivity extends AppCompatActivity {
             // getItemでcallのViewにbindしたいデータ型を取得できる
             Summary summary = getItem(position);
 
-            TextView textView = (TextView) v.findViewById(R.id.text);
+            TextView textView = (TextView) v.findViewById(R.id.price_text_view);
             textView.setText(summary.name);
 
             return v;
