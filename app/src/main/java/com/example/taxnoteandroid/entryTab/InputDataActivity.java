@@ -46,6 +46,8 @@ public class InputDataActivity extends AppCompatActivity {
         setContentView(R.layout.activity_input_data);
 
         setIntentData();
+        setTitle();
+        setSummary();
         setSaveButton();
         setPriceInputPart();
     }
@@ -83,6 +85,27 @@ public class InputDataActivity extends AppCompatActivity {
     //--------------------------------------------------------------//
     //    -- Display Part --
     //--------------------------------------------------------------//
+
+    private void setTitle() {
+
+        String title;
+
+        if (isExpense) {
+            title = reason.name + "/" + account.name;
+        } else {
+            title = account.name + "/" + reason.name;
+        }
+
+        setTitle(title);
+    }
+
+    private void setSummary() {
+
+        if (summary != null) {
+            EditText memoField = (EditText) findViewById(R.id.memo);
+            memoField.setText(summary.name);
+        }
+    }
 
     private void setSaveButton() {
 
