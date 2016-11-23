@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Taxnote Android</string>
+    <string name="app_name">Taxnote</string>
 
     <!-- : Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
@@ -12,10 +12,6 @@
     <string name="History">仕訳帳</string>
     <string name="Settings">設定</string>
 
-    <string name="Blank1Fragment_date">日付</string>
-    <string name="Blank1Fragment_cash">支払い方法</string>
-    <string name="Blank1Fragment_select">選択</string>
-
     <string name="SummaryActivity_no_select">備考を選択しない</string>
     <string name="SummaryActivity_nex">次へ進む</string>
     <string name="SummaryActivity_select">備考を選択</string>
@@ -24,4 +20,22 @@
     <string name="MainActivity_entry_tab">Entry</string>
     <string name="MainActivity_history_tab">History</string>
     <string name="MainActivity_settings_tab">Settings</string>
+
+
+    //--------------------------------------------------------------//
+    //    -- Error Message --
+    //--------------------------------------------------------------//
+
+    <string name="Error">エラー</string>
+    <string name="please_enter_price">金額を入力してください。</string>
+
+
+    //--------------------------------------------------------------//
+    //    -- Entry Tab --
+    //--------------------------------------------------------------//
+
+    <string name="entry_tab_fragment_date">日付</string>
+    <string name="entry_tab_fragment_account">支払い方法</string>
+    <string name="entry_tab_fragment_select_reason">科目を選択</string>
+
 </resources>

@@ -9,7 +9,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="#666666"
-        android:text="@string/Blank1Fragment_date" />
+        android:paddingLeft="16dp"
+        android:text="@string/entry_tab_fragment_date" />
 
     <TextView
         android:id="@+id/date"
@@ -22,7 +23,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="#666666"
-        android:text="@string/Blank1Fragment_cash" />
+        android:paddingLeft="16dp"
+        android:text="@string/entry_tab_fragment_account" />
 
     <TextView
         android:id="@+id/account_text_view"
@@ -35,7 +37,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="#666666"
-        android:text="@string/Blank1Fragment_select" />
+        android:paddingLeft="16dp"
+        android:text="@string/entry_tab_fragment_select_reason" />
 
     <ListView
         android:id="@+id/reason_list_view"

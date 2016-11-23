@@ -214,8 +214,8 @@ public class InputDataActivity extends AppCompatActivity {
 
             // Show error message
             new AlertDialog.Builder(this)
-                    .setTitle("@エラー")
-                    .setMessage("@数字を入力してください")
+                    .setTitle(getResources().getString(R.string.Error))
+                    .setMessage(getResources().getString(R.string.please_enter_price))
                     .setPositiveButton("OK", null)
                     .show();
             return;
