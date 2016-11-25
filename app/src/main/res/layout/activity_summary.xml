@@ -11,12 +11,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="#666666"
+        android:paddingLeft="16dp"
         android:text="@string/SummaryActivity_no_select" />
 
     <TextView
         android:id="@+id/next"
         android:layout_width="match_parent"
         android:layout_height="@dimen/takasa"
+        android:paddingLeft="16dp"
         android:gravity="center_vertical"
         android:text="@string/SummaryActivity_nex" />
 
@@ -24,6 +26,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="#666666"
+        android:paddingLeft="16dp"
         android:text="@string/SummaryActivity_select" />
 
     <ListView

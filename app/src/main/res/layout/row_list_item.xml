@@ -12,16 +12,17 @@
     android:paddingTop="8dp">
 
     <TextView
+        style="@style/standard_font_size"
         android:id="@+id/price_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="20sp"
         tools:text="test" />
 
     <TextView
         android:id="@+id/details"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textSize="10sp"
         android:textColor="#999999"
         tools:text="test" />
 </LinearLayout>
