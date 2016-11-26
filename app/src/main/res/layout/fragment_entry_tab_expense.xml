@@ -27,6 +27,7 @@
         android:text="@string/entry_tab_fragment_account" />
 
     <TextView
+        style="@style/standard_font_size"
         android:id="@+id/account_text_view"
         android:layout_width="match_parent"
         android:layout_height="48dp"

@@ -15,6 +15,7 @@
         android:text="@string/SummaryActivity_no_select" />
 
     <TextView
+        style="@style/standard_font_size"
         android:id="@+id/next"
         android:layout_width="match_parent"
         android:layout_height="@dimen/takasa"

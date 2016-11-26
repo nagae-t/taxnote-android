@@ -5,4 +5,6 @@
     android:gravity="center"
     android:minHeight="48dp"
     android:orientation="vertical"
+    style="@style/standard_font_size"
+    android:textColor="@color/main_color"
     android:text="@string/SummaryActivity_footer" />
