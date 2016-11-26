@@ -2,6 +2,7 @@ package com.example.taxnoteandroid;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -9,6 +10,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.taxnoteandroid.dataManager.EntryDataManager;
+import com.example.taxnoteandroid.databinding.RowHistoryCellBinding;
+import com.example.taxnoteandroid.databinding.RowHistorySectionHeaderBinding;
 import com.example.taxnoteandroid.model.Entry;
 
 import java.util.ArrayList;
@@ -84,6 +87,11 @@ public class HistoryTabFragment extends Fragment {
         Log.d("test", map2.toString());
         Log.d("test", items.toString());
 
+        RecyclerView recyclerView = (RecyclerView) v.findViewById(R.id.history);
+        HistoryAdapter historyAdapter = new HistoryAdapter(items);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.setAdapter(historyAdapter);
+
         return v;
     }
 
@@ -124,14 +132,14 @@ public class HistoryTabFragment extends Fragment {
         }
     }
 
-    class HistoryAdaper extends RecyclerView.Adapter<BindingHolder> {
+    class HistoryAdapter extends RecyclerView.Adapter<BindingHolder> {
 
         private static final int VIEW_ITEM_HEADER = 1;
         private static final int VIEW_ITEM_CELL = 2;
 
         private List<Item> items;
 
-        public HistoryAdaper(List<Item> items) {
+        public HistoryAdapter(List<Item> items) {
             this.items = items;
         }
 
@@ -148,7 +156,21 @@ public class HistoryTabFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(BindingHolder holder, int position) {
-            switch ()
+            switch (holder.getItemViewType()) {
+                case VIEW_ITEM_HEADER: {
+                    RowHistorySectionHeaderBinding binding = (RowHistorySectionHeaderBinding) holder.binding;
+                    Item item = items.get(position);
+                    binding.name.setText(item.header.date);
+                    binding.price.setText(item.header.sum + "");
+                }
+                break;
+                case VIEW_ITEM_CELL: {
+                    RowHistoryCellBinding binding = (RowHistoryCellBinding) holder.binding;
+                    Item item = items.get(position);
+                    binding.price.setText(item.cell.entry.price + "");
+                }
+                break;
+            }
         }
 
         @Override
