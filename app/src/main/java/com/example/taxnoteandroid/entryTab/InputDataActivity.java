@@ -109,6 +109,8 @@ public class InputDataActivity extends AppCompatActivity {
 
     private void setSaveButton() {
 
+        //QQ ここボタンを押した感のあるアニメーションがほしい
+
         TextView saveButton = (TextView) findViewById(R.id.save);
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -236,7 +238,6 @@ public class InputDataActivity extends AppCompatActivity {
         entry.account   = account;
         long id         = entryDataManager.save(entry);
 
-        // QQなんかここ遅い　サクサク感がない。。
         // Success
         if (EntryDataManager.isSaveSuccess(id)) {
 

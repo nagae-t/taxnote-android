@@ -46,6 +46,7 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:minHeight="48dp"
+        android:textColor="@color/primary"
         android:text="仕訳帳に記録"
         android:textSize="22sp" />
 
