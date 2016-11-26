@@ -47,4 +47,23 @@ public class Entry {
 
     @Column(indexed = true)
     public Account account;
+
+    @Override
+    public String toString() {
+        return "Entry{" +
+                "id=" + id +
+                ", date=" + date +
+                ", updated=" + updated +
+                ", price=" + price +
+                ", deleted=" + deleted +
+                ", isExpense=" + isExpense +
+                ", needSave=" + needSave +
+                ", needSync=" + needSync +
+                ", uuid='" + uuid + '\'' +
+                ", memo='" + memo + '\'' +
+                ", project=" + project +
+                ", reason=" + reason +
+                ", account=" + account +
+                '}';
+    }
 }

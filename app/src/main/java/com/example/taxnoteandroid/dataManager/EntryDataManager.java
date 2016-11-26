@@ -4,8 +4,12 @@ import android.content.Context;
 
 import com.example.taxnoteandroid.BuildConfig;
 import com.example.taxnoteandroid.model.Entry;
+import com.example.taxnoteandroid.model.Entry_Schema;
 import com.example.taxnoteandroid.model.OrmaDatabase;
 import com.github.gfx.android.orma.AccessThreadConstraint;
+import com.github.gfx.android.orma.OrderSpec;
+
+import java.util.List;
 
 public class EntryDataManager {
 
@@ -40,6 +44,10 @@ public class EntryDataManager {
 
     public Entry findByUuid(String uuid) {
         return ormaDatabase.selectFromEntry().where("uuid = ?", uuid).valueOrNull();
+    }
+
+    public List<Entry> findAll() {
+        return ormaDatabase.selectFromEntry().orderBy(Entry_Schema.INSTANCE.date.getQualifiedName() + " " + OrderSpec.DESC).toList();
     }
 
 
