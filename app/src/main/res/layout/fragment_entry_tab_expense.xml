@@ -6,10 +6,7 @@
     tools:context="com.example.taxnoteandroid.entryTab.ExpenseInEntryTabFragment">
 
     <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#666666"
-        android:paddingLeft="16dp"
+        style="@style/section_header"
         android:text="@string/entry_tab_fragment_date" />
 
     <TextView
@@ -20,10 +17,7 @@
         tools:text="2016年10月16日 木" />
 
     <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#666666"
-        android:paddingLeft="16dp"
+        style="@style/section_header"
         android:text="@string/entry_tab_fragment_account" />
 
     <TextView
@@ -35,10 +29,7 @@
         tools:text="Cash" />
 
     <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#666666"
-        android:paddingLeft="16dp"
+        style="@style/section_header"
         android:text="@string/entry_tab_fragment_select_reason" />
 
     <ListView
