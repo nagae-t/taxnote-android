@@ -18,9 +18,7 @@
         tools:text="300,000,000" />
 
     <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="#000000" />
+        style="@style/horizontal_line" />
 
     <EditText
         android:id="@+id/memo"
@@ -36,9 +34,7 @@
         android:textSize="12sp" />
 
     <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="#000000" />
+        style="@style/horizontal_line" />
 
     <TextView
         android:id="@+id/save"
