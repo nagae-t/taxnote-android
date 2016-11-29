@@ -132,7 +132,7 @@ public class ExpenseInEntryTabFragment extends Fragment {
         public View getView(int position, View convertView, ViewGroup parent) {
             // getViewでListViewの1つのセルを作る
             // inflateでViewにする
-            View view = layoutInflater.inflate(R.layout.row_list_item, null);
+            View view = layoutInflater.inflate(R.layout.row_reason_list_item, null);
 
             // getItemでcallのViewにbindしたいデータ型を取得できる
             Reason reason = getItem(position);
@@ -140,6 +140,7 @@ public class ExpenseInEntryTabFragment extends Fragment {
             TextView textView = (TextView) view.findViewById(R.id.price_text_view);
             textView.setText(reason.name);
             TextView details = (TextView) view.findViewById(R.id.details);
+
             if (TextUtils.isEmpty(reason.details)) {
                 details.setVisibility(View.GONE);
             } else {

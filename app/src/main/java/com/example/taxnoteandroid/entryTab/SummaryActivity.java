@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -125,15 +126,24 @@ public class SummaryActivity extends AppCompatActivity {
         public View getView(int position, View convertView, ViewGroup parent) {
             // getViewでListViewの1つのセルを作る
             // inflateでViewにする
-            View v = layoutInflater.inflate(R.layout.row_list_item, null);
+            View view = layoutInflater.inflate(R.layout.row_reason_list_item, null);
 
             // getItemでcallのViewにbindしたいデータ型を取得できる
             Summary summary = getItem(position);
 
-            TextView textView = (TextView) v.findViewById(R.id.price_text_view);
+            TextView textView = (TextView) view.findViewById(R.id.price_text_view);
             textView.setText(summary.name);
 
-            return v;
+            TextView details = (TextView) view.findViewById(R.id.details);
+
+            if (TextUtils.isEmpty(reason.details)) {
+                details.setVisibility(View.GONE);
+            } else {
+                details.setText(reason.details);
+                details.setVisibility(View.VISIBLE);
+            }
+
+            return view;
         }
     }
 

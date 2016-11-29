@@ -20,6 +20,51 @@
     "details": "日用品・事務機器など"
   },
   {
+    "name": "広告宣伝費",
+    "isExpense": true,
+    "details": "事業・商品の広告・PR費用"
+  },
+  {
+    "name": "支払手数料",
+    "isExpense": true,
+    "details": "振込手数料・専門家報酬など"
+  },
+  {
+    "name": "荷造運賃",
+    "isExpense": true,
+    "details": "商品の発送費用"
+  },
+  {
+    "name": "雑費",
+    "isExpense": true,
+    "details": "臨時的・または少額の支出"
+  },
+  {
+    "name": "地代家賃",
+    "isExpense": true,
+    "details": "事務所・店舗・駐車場など"
+  },
+  {
+    "name": "水道光熱費",
+    "isExpense": true,
+    "details": "電気・ガス・水道など"
+  },
+  {
+    "name": "通信費",
+    "isExpense": true,
+    "details": "電話・ネット・郵便など"
+  },
+  {
+    "name": "損害保険料",
+    "isExpense": true,
+    "details": "各種保険料など"
+  },
+  {
+    "name": "事業主貸",
+    "isExpense": true,
+    "details": ""
+  },
+  {
     "name": "売上高",
     "isExpense": false,
     "details": "本業による収入"
