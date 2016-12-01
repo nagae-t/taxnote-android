@@ -8,7 +8,7 @@
     tools:context="com.example.taxnoteandroid.entryTab.InputDataActivity">
 
     <TextView
-        android:id="@+id/price_text_view"
+        android:id="@+id/title"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"

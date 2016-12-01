@@ -122,7 +122,7 @@ public class InputDataActivity extends AppCompatActivity {
 
     private void setPriceInputPart() {
 
-        priceTextView = (TextView) findViewById(R.id.price_text_view);
+        priceTextView = (TextView) findViewById(R.id.title);
 
         OnPriceClickListener onPriceClickListener = new OnPriceClickListener();
         findViewById(R.id.button_0).setOnClickListener(onPriceClickListener);
