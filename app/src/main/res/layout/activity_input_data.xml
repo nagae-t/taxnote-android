@@ -13,6 +13,7 @@
         android:layout_height="0dp"
         android:layout_weight="1"
         android:gravity="center"
+        android:hint="0"
         android:textColor="#000000"
         android:textSize="60sp"
         tools:text="300,000,000" />
