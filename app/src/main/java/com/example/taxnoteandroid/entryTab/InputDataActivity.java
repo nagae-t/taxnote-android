@@ -179,7 +179,7 @@ public class InputDataActivity extends AppCompatActivity {
                     price = "00";
                     break;
                 case R.id.button_c:
-                    priceTextView.setText("0");
+                    priceTextView.setText(null);
                     return;
             }
 

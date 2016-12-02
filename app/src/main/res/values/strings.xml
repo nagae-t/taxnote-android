@@ -38,4 +38,11 @@
     <string name="entry_tab_fragment_account">支払い方法</string>
     <string name="entry_tab_fragment_select_reason">科目を選択</string>
 
+
+    //--------------------------------------------------------------//
+    //    -- Date --
+    //--------------------------------------------------------------//
+
+    <string name="date_string_today">今日</string>
+
 </resources>

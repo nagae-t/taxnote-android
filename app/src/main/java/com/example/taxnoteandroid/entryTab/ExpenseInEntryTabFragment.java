@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
+import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,6 +30,7 @@ public class ExpenseInEntryTabFragment extends Fragment {
     private static final String EXTRA_IS_EXPENSE = "isExpense";
 
     public boolean isExpense = true;
+    public  long    date;
     private Account account;
 
     public ExpenseInEntryTabFragment() {
@@ -50,7 +52,10 @@ public class ExpenseInEntryTabFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        isExpense = getArguments().getBoolean(EXTRA_IS_EXPENSE);
+
+        // Set default values
+        isExpense   = getArguments().getBoolean(EXTRA_IS_EXPENSE);
+        date        = System.currentTimeMillis();
     }
 
     @Override
@@ -59,6 +64,7 @@ public class ExpenseInEntryTabFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_entry_tab_expense, container, false);
 
+        setDateView(view);
         setAccountView(view);
         setReasonList(view);
 
@@ -69,7 +75,39 @@ public class ExpenseInEntryTabFragment extends Fragment {
     public void onResume() {
         super.onResume();
 
+        loadCurrentDate();
         loadCurrentAccount();
+    }
+
+
+    //--------------------------------------------------------------//
+    //    -- Date Part --
+    //--------------------------------------------------------------//
+
+    private void setDateView(View view) {
+
+        view.findViewById(R.id.date_text_view).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+
+            }
+        });
+    }
+
+    private void loadCurrentDate() {
+
+
+        String dateString = getResources().getString(R.string.date_string_today);
+
+        if (!DateUtils.isToday(date)) {
+
+            //QQQ ここで、dateを 2016年12月21日 水 とかの表示に変換したい、英語の場合も
+            dateString = "";
+        }
+
+
+        ((TextView) getView().findViewById(R.id.date_text_view)).setText(dateString);
     }
 
 
@@ -112,7 +150,7 @@ public class ExpenseInEntryTabFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                 Reason reason = (Reason) adapterView.getItemAtPosition(position);
-                startActivity(SummaryActivity.createIntent(getContext(), isExpense, System.currentTimeMillis(), account, reason));
+                startActivity(SummaryActivity.createIntent(getContext(), isExpense, date, account, reason));
             }
         });
     }
