@@ -104,7 +104,7 @@ public class ExpenseInEntryTabFragment extends Fragment {
 
         // Show the date if it is not today
         if (!DateUtils.isToday(date)) {
-            SimpleDateFormat simpleDateFormat   = new SimpleDateFormat(getResources().getString(R.string.date_string_format));
+            SimpleDateFormat simpleDateFormat   = new SimpleDateFormat(getResources().getString(R.string.date_string_format_to_year));
             dateString                          = simpleDateFormat.format(date);
         }
 

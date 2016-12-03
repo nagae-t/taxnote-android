@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.text.format.DateUtils;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.EditText;
@@ -24,6 +25,7 @@ import com.example.taxnoteandroid.model.Summary;
 import org.parceler.Parcels;
 
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.UUID;
 
 public class InputDataActivity extends AppCompatActivity {
@@ -89,11 +91,18 @@ public class InputDataActivity extends AppCompatActivity {
     private void setTitle() {
 
         String title;
+        String dateString = getResources().getString(R.string.date_string_today);
+
+        // Show the date if it is not today
+        if (!DateUtils.isToday(date)) {
+            SimpleDateFormat simpleDateFormat    = new SimpleDateFormat(getResources().getString(R.string.date_string_format_to_month));
+            dateString                           = simpleDateFormat.format(date);
+        }
 
         if (isExpense) {
-            title = reason.name + "/" + account.name;
+            title = dateString + " " + reason.name + "/" + account.name;
         } else {
-            title = account.name + "/" + reason.name;
+            title = dateString + " " + account.name + "/" + reason.name;
         }
 
         setTitle(title);
