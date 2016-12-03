@@ -22,6 +22,7 @@ import com.example.taxnoteandroid.dataManager.ReasonDataManager;
 import com.example.taxnoteandroid.model.Account;
 import com.example.taxnoteandroid.model.Reason;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 
@@ -97,15 +98,15 @@ public class ExpenseInEntryTabFragment extends Fragment {
 
     private void loadCurrentDate() {
 
-
         String dateString = getResources().getString(R.string.date_string_today);
 
+        //QQQ 今日、もしくは2016年3月14日 土　とかの表示はこれであってるかな？
+
+        // Show the date if it is not today
         if (!DateUtils.isToday(date)) {
-
-            //QQQ ここで、dateを 2016年12月21日 水 とかの表示に変換したい、英語の場合も
-            dateString = "";
+            SimpleDateFormat simpleDateFormat   = new SimpleDateFormat(getResources().getString(R.string.date_string_format));
+            dateString                          = simpleDateFormat.format(date);
         }
-
 
         ((TextView) getView().findViewById(R.id.date_text_view)).setText(dateString);
     }
