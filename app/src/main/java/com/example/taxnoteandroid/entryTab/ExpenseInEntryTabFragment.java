@@ -5,9 +5,11 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.PopupMenu;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -144,7 +146,8 @@ public class ExpenseInEntryTabFragment extends Fragment {
         ReasonDataManager reasonDataManager = new ReasonDataManager(getContext());
         final List<Reason> reasons = reasonDataManager.findAllWithIsExpense(isExpense, getContext());
 
-        listView.setAdapter(new ListAdapter(getContext(), reasons));
+        ListAdapter adapter = new ListAdapter(getContext(), reasons);
+        listView.setAdapter(adapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
@@ -163,10 +166,12 @@ public class ExpenseInEntryTabFragment extends Fragment {
     class ListAdapter extends ArrayAdapter<Reason> {
 
         private LayoutInflater layoutInflater;
+        private final ReasonDataManager reasonDataManager;
 
         public ListAdapter(Context context, List<Reason> texts) {
             super(context, 0, texts);
             layoutInflater = LayoutInflater.from(context);
+            reasonDataManager = new ReasonDataManager(context);
         }
 
         @NonNull
@@ -177,11 +182,35 @@ public class ExpenseInEntryTabFragment extends Fragment {
             View view = layoutInflater.inflate(R.layout.row_list_with_details_item, null);
 
             // getItemでcallのViewにbindしたいデータ型を取得できる
-            Reason reason = getItem(position);
+            final Reason reason = getItem(position);
 
             TextView textView = (TextView) view.findViewById(R.id.title);
             textView.setText(reason.name);
             TextView details = (TextView) view.findViewById(R.id.details);
+            View menu = view.findViewById(R.id.menu);
+
+            final PopupMenu popup = new PopupMenu(parent.getContext(), menu);
+            popup.getMenuInflater().inflate(R.menu.menu_entry, popup.getMenu());
+            popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                @Override
+                public boolean onMenuItemClick(MenuItem item) {
+                    switch (item.getItemId()) {
+                        case R.id.delete:
+                            long deleted = reasonDataManager.delete(reason.id);
+                            if (deleted != 0) {
+                                remove(reason);
+                            }
+                            break;
+                    }
+                    return true;
+                }
+            });
+            menu.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    popup.show();
+                }
+            });
 
             if (TextUtils.isEmpty(reason.details)) {
                 details.setVisibility(View.GONE);
