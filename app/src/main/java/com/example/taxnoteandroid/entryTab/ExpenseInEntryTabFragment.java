@@ -1,10 +1,12 @@
 package com.example.taxnoteandroid.entryTab;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.PopupMenu;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
@@ -14,18 +16,22 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.example.taxnoteandroid.CategorySelectActivity;
 import com.example.taxnoteandroid.R;
 import com.example.taxnoteandroid.dataManager.AccountDataManager;
+import com.example.taxnoteandroid.dataManager.ProjectDataManager;
 import com.example.taxnoteandroid.dataManager.ReasonDataManager;
 import com.example.taxnoteandroid.model.Account;
+import com.example.taxnoteandroid.model.Project;
 import com.example.taxnoteandroid.model.Reason;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.UUID;
 
 
 public class ExpenseInEntryTabFragment extends Fragment {
@@ -143,10 +149,10 @@ public class ExpenseInEntryTabFragment extends Fragment {
 
         ListView listView = (ListView) view.findViewById(R.id.reason_list_view);
 
-        ReasonDataManager reasonDataManager = new ReasonDataManager(getContext());
+        final ReasonDataManager reasonDataManager = new ReasonDataManager(getContext());
         final List<Reason> reasons = reasonDataManager.findAllWithIsExpense(isExpense, getContext());
 
-        ListAdapter adapter = new ListAdapter(getContext(), reasons);
+        final ListAdapter adapter = new ListAdapter(getContext(), reasons);
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -160,6 +166,50 @@ public class ExpenseInEntryTabFragment extends Fragment {
         View v = LayoutInflater.from(getContext()).inflate(R.layout.listview_footer, null);
         ((TextView) v).setText("勘定科目を追加");
         listView.addFooterView(v);
+        v.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                final Context context = getContext();
+                final View entryInputView = LayoutInflater.from(context).inflate(R.layout.dialog_entry_add, null);
+                new AlertDialog.Builder(context)
+                        .setView(entryInputView)
+                        .setTitle("勘定科目を追加")
+                        .setPositiveButton("完了", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                EditText editText = (EditText) entryInputView.findViewById(R.id.edit);
+                                String reasonName = editText.getText().toString();
+
+                                ProjectDataManager projectDataManager = new ProjectDataManager(context);
+                                Project project = projectDataManager.findCurrentProjectWithContext(context);
+
+                                List<Reason> reasonList = reasonDataManager.findAllWithIsExpense(isExpense, context);
+
+                                Reason reason = new Reason();
+                                reason.name = reasonName;
+                                reason.uuid = UUID.randomUUID().toString();
+                                if (reasonList.isEmpty()) {
+                                    reason.order = 0;
+                                } else {
+                                    reason.order = reasonList.get(reasonList.size() - 1).order + 1;
+                                }
+                                reason.isExpense = isExpense;
+                                reason.project = project;
+                                reason.details = "";
+
+                                // @@ 保存チェック
+                                long id = reasonDataManager.save(reason);
+                                reason.id = id;
+
+                                adapter.add(reason);
+
+                                dialogInterface.dismiss();
+                            }
+                        })
+                        .setNegativeButton("キャンセル", null)
+                        .show();
+            }
+        });
     }
 
     // https://material.google.com/components/lists.html#
