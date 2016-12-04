@@ -156,7 +156,7 @@ public class ExpenseInEntryTabFragment extends Fragment {
         });
 
         //@@@
-        //QQreasonのフッター、勘定科目を追加ボタンをつけたい
+        //QQreasonのフッター、勘定科目を追加ボタンをつけたいyo
 //        listView.addFooterView(getLayoutInflater().inflate(R.layout.listview_footer, null));
     }
 
