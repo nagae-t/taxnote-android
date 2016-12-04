@@ -20,6 +20,11 @@
     "details": "日用品・事務機器など"
   },
   {
+    "name": "新聞図書費",
+    "isExpense": true,
+    "details": "雑誌・書籍など"
+  },
+  {
     "name": "広告宣伝費",
     "isExpense": true,
     "details": "事業・商品の広告・PR費用"

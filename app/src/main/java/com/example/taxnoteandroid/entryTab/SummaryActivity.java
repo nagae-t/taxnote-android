@@ -107,6 +107,7 @@ public class SummaryActivity extends AppCompatActivity {
                 startInputDataActivity(summary);
             }
         });
+
         listView.addFooterView(getLayoutInflater().inflate(R.layout.listview_footer, null));
     }
 

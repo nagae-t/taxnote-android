@@ -118,8 +118,6 @@ public class InputDataActivity extends AppCompatActivity {
 
     private void setSaveButton() {
 
-        //QQ ここボタンを押した感のあるアニメーションがほしい
-
         TextView saveButton = (TextView) findViewById(R.id.save);
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -220,8 +218,6 @@ public class InputDataActivity extends AppCompatActivity {
         String text = priceTextView.getText().toString().replace(",", "");
 
         if (TextUtils.isEmpty(text)) {
-//            Toast.makeText(this, "数字を", Toast.LENGTH_SHORT).show();
-//            Snackbar.make(findViewById(R.id.activity_input_data), "@数字を入力してください", Snackbar.LENGTH_INDEFINITE).show();
 
             // Show error message
             new AlertDialog.Builder(this)

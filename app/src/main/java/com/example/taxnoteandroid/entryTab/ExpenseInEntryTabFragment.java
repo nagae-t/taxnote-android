@@ -154,6 +154,10 @@ public class ExpenseInEntryTabFragment extends Fragment {
                 startActivity(SummaryActivity.createIntent(getContext(), isExpense, date, account, reason));
             }
         });
+
+        //@@@
+        //QQreasonのフッター、勘定科目を追加ボタンをつけたい
+//        listView.addFooterView(getLayoutInflater().inflate(R.layout.listview_footer, null));
     }
 
     // https://material.google.com/components/lists.html#
