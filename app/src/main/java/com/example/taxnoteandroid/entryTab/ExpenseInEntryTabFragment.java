@@ -100,8 +100,6 @@ public class ExpenseInEntryTabFragment extends Fragment {
 
         String dateString = getResources().getString(R.string.date_string_today);
 
-        //QQQ 今日、もしくは2016年3月14日 土　とかの表示はこれであってるかな？
-
         // Show the date if it is not today
         if (!DateUtils.isToday(date)) {
             SimpleDateFormat simpleDateFormat   = new SimpleDateFormat(getResources().getString(R.string.date_string_format_to_year));
@@ -156,8 +154,9 @@ public class ExpenseInEntryTabFragment extends Fragment {
         });
 
         //@@@
-        //QQreasonのフッター、勘定科目を追加ボタンをつけたいyo
-//        listView.addFooterView(getLayoutInflater().inflate(R.layout.listview_footer, null));
+        View v = LayoutInflater.from(getContext()).inflate(R.layout.listview_footer, null);
+        ((TextView) v).setText("勘定科目を追加");
+        listView.addFooterView(v);
     }
 
     // https://material.google.com/components/lists.html#
