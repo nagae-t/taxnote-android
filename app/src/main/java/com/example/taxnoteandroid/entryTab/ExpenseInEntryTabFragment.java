@@ -166,6 +166,7 @@ public class ExpenseInEntryTabFragment extends Fragment {
         View v = LayoutInflater.from(getContext()).inflate(R.layout.listview_footer, null);
         ((TextView) v).setText("勘定科目を追加");
         listView.addFooterView(v);
+
         v.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -227,20 +228,18 @@ public class ExpenseInEntryTabFragment extends Fragment {
         @NonNull
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            // getViewでListViewの1つのセルを作る
-            // inflateでViewにする
+
             View view = layoutInflater.inflate(R.layout.row_list_with_details_item, null);
 
-            // getItemでcallのViewにbindしたいデータ型を取得できる
             final Reason reason = getItem(position);
 
             TextView textView = (TextView) view.findViewById(R.id.title);
             textView.setText(reason.name);
             TextView details = (TextView) view.findViewById(R.id.details);
-            View menu = view.findViewById(R.id.menu);
+            View menu = view.findViewById(R.id.menu_right);
 
             final PopupMenu popup = new PopupMenu(parent.getContext(), menu);
-            popup.getMenuInflater().inflate(R.menu.menu_entry, popup.getMenu());
+            popup.getMenuInflater().inflate(R.menu.menu_category_right, popup.getMenu());
             popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                 @Override
                 public boolean onMenuItemClick(MenuItem item) {
@@ -255,6 +254,7 @@ public class ExpenseInEntryTabFragment extends Fragment {
                     return true;
                 }
             });
+
             menu.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -268,7 +268,16 @@ public class ExpenseInEntryTabFragment extends Fragment {
                 details.setText(reason.details);
                 details.setVisibility(View.VISIBLE);
             }
+
             return view;
         }
     }
+
+    //@@@
+    //ここでreason追加のコードだけ書き出してみる
+    //--------------------------------------------------------------//
+    //    -- Add a New Reason --
+    //--------------------------------------------------------------//
+
+
 }

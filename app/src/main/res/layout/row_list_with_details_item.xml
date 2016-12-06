@@ -26,12 +26,12 @@
         tools:text="test" />
 
     <ImageView
-        android:id="@+id/menu"
+        android:id="@+id/menu_right"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:paddingLeft="16dp"
         android:paddingRight="16dp"
         android:src="@drawable/ic_more_vert_black_24dp"
-        android:tint="#999999" />
+        android:tint="@color/divider" />
 </RelativeLayout>
