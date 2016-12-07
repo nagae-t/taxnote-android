@@ -162,55 +162,8 @@ public class ExpenseInEntryTabFragment extends Fragment {
             }
         });
 
-        //@@@
-        View v = LayoutInflater.from(getContext()).inflate(R.layout.listview_footer, null);
-        ((TextView) v).setText("勘定科目を追加");
-        listView.addFooterView(v);
+        setAddNewButton(listView,adapter);
 
-        v.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                final Context context = getContext();
-                final View entryInputView = LayoutInflater.from(context).inflate(R.layout.dialog_entry_add, null);
-                new AlertDialog.Builder(context)
-                        .setView(entryInputView)
-                        .setTitle("勘定科目を追加")
-                        .setPositiveButton("完了", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                EditText editText = (EditText) entryInputView.findViewById(R.id.edit);
-                                String reasonName = editText.getText().toString();
-
-                                ProjectDataManager projectDataManager = new ProjectDataManager(context);
-                                Project project = projectDataManager.findCurrentProjectWithContext(context);
-
-                                List<Reason> reasonList = reasonDataManager.findAllWithIsExpense(isExpense, context);
-
-                                Reason reason = new Reason();
-                                reason.name = reasonName;
-                                reason.uuid = UUID.randomUUID().toString();
-                                if (reasonList.isEmpty()) {
-                                    reason.order = 0;
-                                } else {
-                                    reason.order = reasonList.get(reasonList.size() - 1).order + 1;
-                                }
-                                reason.isExpense = isExpense;
-                                reason.project = project;
-                                reason.details = "";
-
-                                // @@ 保存チェック
-                                long id = reasonDataManager.save(reason);
-                                reason.id = id;
-
-                                adapter.add(reason);
-
-                                dialogInterface.dismiss();
-                            }
-                        })
-                        .setNegativeButton("キャンセル", null)
-                        .show();
-            }
-        });
     }
 
     // https://material.google.com/components/lists.html#
@@ -276,8 +229,61 @@ public class ExpenseInEntryTabFragment extends Fragment {
     //@@@
     //ここでreason追加のコードだけ書き出してみる
     //--------------------------------------------------------------//
-    //    -- Add a New Reason --
+    //    -- Add A New One --
     //--------------------------------------------------------------//
 
+    private void setAddNewButton(ListView listView, final ListAdapter adapter) {
 
+        //@@@
+        View v = LayoutInflater.from(getContext()).inflate(R.layout.listview_footer, null);
+        ((TextView) v).setText(getResources().getString(R.string.list_view_add_reason));
+        listView.addFooterView(v);
+
+        v.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                final Context context = getContext();
+                final View entryInputView = LayoutInflater.from(context).inflate(R.layout.dialog_entry_add, null);
+                new AlertDialog.Builder(context)
+                        .setView(entryInputView)
+                        .setTitle(getResources().getString(R.string.list_view_add_reason))
+                        .setPositiveButton(getResources().getString(R.string.done), new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                EditText editText = (EditText) entryInputView.findViewById(R.id.edit);
+                                String reasonName = editText.getText().toString();
+
+                                ProjectDataManager projectDataManager   = new ProjectDataManager(context);
+                                Project project                         = projectDataManager.findCurrentProjectWithContext(context);
+
+                                ReasonDataManager reasonDataManager = new ReasonDataManager(getContext());
+                                List<Reason> reasonList             = reasonDataManager.findAllWithIsExpense(isExpense, context);
+
+                                Reason reason = new Reason();
+                                reason.name = reasonName;
+                                reason.uuid = UUID.randomUUID().toString();
+
+                                if (reasonList.isEmpty()) {
+                                    reason.order = 0;
+                                } else {
+                                    reason.order = reasonList.get(reasonList.size() - 1).order + 1;
+                                }
+                                reason.isExpense = isExpense;
+                                reason.project = project;
+                                reason.details = "";
+
+                                // @@ 保存チェック
+                                long id = reasonDataManager.save(reason);
+                                reason.id = id;
+
+                                adapter.add(reason);
+
+                                dialogInterface.dismiss();
+                            }
+                        })
+                        .setNegativeButton(getResources().getString(R.string.cancel), null)
+                        .show();
+            }
+        });
+    }
 }
