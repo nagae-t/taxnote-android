@@ -82,6 +82,12 @@ public abstract class RecyclerArrayAdapter<T, VH extends RecyclerView.ViewHolder
         notifyItemInserted(position);
     }
 
+    public void add(int position, @NonNull T object) {
+        synchronized (lock) {
+            objects.add(position, object);
+        }
+    }
+
     /**
      * Adds the specified Collection at the end of the array.
      *

@@ -33,6 +33,9 @@ import com.example.taxnoteandroid.databinding.RowListWithDetailsItemBinding;
 import com.example.taxnoteandroid.model.Account;
 import com.example.taxnoteandroid.model.Project;
 import com.example.taxnoteandroid.model.Reason;
+import com.h6ah4i.android.widget.advrecyclerview.draggable.DraggableItemAdapter;
+import com.h6ah4i.android.widget.advrecyclerview.draggable.ItemDraggableRange;
+import com.h6ah4i.android.widget.advrecyclerview.draggable.RecyclerViewDragDropManager;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -159,6 +162,12 @@ public class ExpenseInEntryTabFragment extends Fragment {
         final ReasonDataManager reasonDataManager = new ReasonDataManager(getContext());
         final List<Reason> reasons = reasonDataManager.findAllWithIsExpense(isExpense, getContext());
 
+        RecyclerViewDragDropManager dragMgr = new RecyclerViewDragDropManager();
+
+        dragMgr.setInitiateOnTouch(true);
+        dragMgr.setInitiateOnMove(false);
+        dragMgr.setInitiateOnLongPress(true);
+
         //@@@
         reasonListAdapter = new ListAdapter(getContext());
         reasonListAdapter.addAll(reasons);
@@ -171,15 +180,18 @@ public class ExpenseInEntryTabFragment extends Fragment {
         });
         recyclerView.addItemDecoration(new DividerDecoration(getContext()));
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        recyclerView.setAdapter(reasonListAdapter);
+        recyclerView.setAdapter(dragMgr.createWrappedAdapter(reasonListAdapter));
+
+        dragMgr.attachRecyclerView(recyclerView);
     }
 
-    class ListAdapter extends FooterRecyclerArrayAdapter<Reason> {
+    class ListAdapter extends FooterRecyclerArrayAdapter<Reason> implements DraggableItemAdapter<BindingHolder<ViewDataBinding>> {
 
         private final ReasonDataManager reasonDataManager;
         private OnItemClickRecyclerAdapterListener onItemClickRecyclerAdapterListener;
 
         public ListAdapter(Context context) {
+            setHasStableIds(true);
             reasonDataManager = new ReasonDataManager(context);
         }
 
@@ -325,6 +337,28 @@ public class ExpenseInEntryTabFragment extends Fragment {
 
         public void setOnItemClickRecyclerAdapterListener(OnItemClickRecyclerAdapterListener onItemClickRecyclerAdapterListener) {
             this.onItemClickRecyclerAdapterListener = onItemClickRecyclerAdapterListener;
+        }
+
+        @Override
+        public boolean onCheckCanStartDrag(BindingHolder<ViewDataBinding> holder, int position, int x, int y) {
+            return true;
+        }
+
+        @Override
+        public ItemDraggableRange onGetItemDraggableRange(BindingHolder<ViewDataBinding> holder, int position) {
+            return null;
+        }
+
+        @Override
+        public void onMoveItem(int fromPosition, int toPosition) {
+            Reason movedItem = getItem(fromPosition);
+            add(toPosition, movedItem);
+            notifyItemMoved(fromPosition, toPosition);
+        }
+
+        @Override
+        public boolean onCheckCanDrop(int draggingPosition, int dropPosition) {
+            return true;
         }
     }
 
