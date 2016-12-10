@@ -155,8 +155,6 @@ public class ExpenseInEntryTabFragment extends Fragment {
         final List<Reason> reasons = reasonDataManager.findAllWithIsExpense(isExpense, getContext());
 
         //@@@
-        //QQ 更新したい時リロードしたいから、こうしたけどいい？
-//        final ListAdapter adapter = new ListAdapter(getContext(), reasons);
         reasonListAdapter = new ListAdapter(getContext(), reasons);
 
 
@@ -187,7 +185,7 @@ public class ExpenseInEntryTabFragment extends Fragment {
 
         @NonNull
         @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
+        public View getView(final int position, View convertView, ViewGroup parent) {
 
             View view = layoutInflater.inflate(R.layout.row_list_with_details_item, null);
 
@@ -210,7 +208,7 @@ public class ExpenseInEntryTabFragment extends Fragment {
                         //@@@
                         case R.id.rename:
 
-                            renameReason(reason.id);
+                            renameReason(reason, position);
                             break;
 
                         case R.id.delete:
@@ -265,14 +263,15 @@ public class ExpenseInEntryTabFragment extends Fragment {
     //    -- Rename --
     //--------------------------------------------------------------//
 
-    private void renameReason(final long id) {
+    private void renameReason(final Reason reason, final int position) {
 
         final Context context = getContext();
         final View textInputView = LayoutInflater.from(context).inflate(R.layout.dialog_text_input, null);
 
+        final EditText editText = (EditText) textInputView.findViewById(R.id.edit);
+        editText.setText(reason.name);
 
         //@@
-        // QQここで、現在のreasonNameをまずtextに表示したい
         new AlertDialog.Builder(context)
                 .setView(textInputView)
                 .setTitle(getResources().getString(R.string.list_view_rename))
@@ -280,15 +279,17 @@ public class ExpenseInEntryTabFragment extends Fragment {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
 
-                        EditText editText = (EditText) textInputView.findViewById(R.id.edit);
+
                         String reasonName = editText.getText().toString();
 
                         ReasonDataManager reasonDataManager = new ReasonDataManager(getContext());
-                        reasonDataManager.updateName(id, reasonName);
+                        reasonDataManager.updateName(reason.id, reasonName);
 
-
-                        //QQ ここでreason Listをリロードしたいんだけど
-                        reasonListAdapter.notifyDataSetChanged();
+                        Reason oldReason = reasonListAdapter.getItem(position);
+                        if (oldReason != null) {
+                            oldReason.name = reasonName;
+                            reasonListAdapter.notifyDataSetChanged();
+                        }
 
                         dialogInterface.dismiss();
                     }
