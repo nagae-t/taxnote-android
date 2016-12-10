@@ -24,6 +24,9 @@
     <string name="done">完了</string>
     <string name="cancel">キャンセル</string>
 
+    <string name="delete_confirm_message">削除していいですか？</string>
+
+
 
     //--------------------------------------------------------------//
     //    -- Error Message --
@@ -56,6 +59,7 @@
     //--------------------------------------------------------------//
 
     <string name="list_view_add_reason">勘定科目を追加</string>
+    <string name="list_view_rename">科目名を変更</string>
 
 
 

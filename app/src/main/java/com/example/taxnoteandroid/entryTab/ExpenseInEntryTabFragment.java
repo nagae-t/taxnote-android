@@ -41,6 +41,8 @@ public class ExpenseInEntryTabFragment extends Fragment {
     public boolean isExpense = true;
     public  long    date;
     private Account account;
+    private ListAdapter reasonListAdapter;
+
 
     public ExpenseInEntryTabFragment() {
         // Required empty public constructor
@@ -134,8 +136,8 @@ public class ExpenseInEntryTabFragment extends Fragment {
 
     private void loadCurrentAccount() {
 
-        AccountDataManager accountDataManager   = new AccountDataManager(getContext());
-        account                         = accountDataManager.findCurrentSelectedAccount(getContext(), isExpense);
+        AccountDataManager accountDataManager = new AccountDataManager(getContext());
+        account                               = accountDataManager.findCurrentSelectedAccount(getContext(), isExpense);
 
         ((TextView) getView().findViewById(R.id.account_text_view)).setText(account.name);
     }
@@ -152,8 +154,13 @@ public class ExpenseInEntryTabFragment extends Fragment {
         final ReasonDataManager reasonDataManager = new ReasonDataManager(getContext());
         final List<Reason> reasons = reasonDataManager.findAllWithIsExpense(isExpense, getContext());
 
-        final ListAdapter adapter = new ListAdapter(getContext(), reasons);
-        listView.setAdapter(adapter);
+        //@@@
+        //QQ 更新したい時リロードしたいから、こうしたけどいい？
+//        final ListAdapter adapter = new ListAdapter(getContext(), reasons);
+        reasonListAdapter = new ListAdapter(getContext(), reasons);
+
+
+        listView.setAdapter(reasonListAdapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
@@ -162,7 +169,7 @@ public class ExpenseInEntryTabFragment extends Fragment {
             }
         });
 
-        setAddNewButton(listView,adapter);
+        setAddNewButton(listView,reasonListAdapter);
 
     }
 
@@ -192,16 +199,43 @@ public class ExpenseInEntryTabFragment extends Fragment {
             View menu = view.findViewById(R.id.menu_right);
 
             final PopupMenu popup = new PopupMenu(parent.getContext(), menu);
+
+            //QQなんかエラーがでとる
             popup.getMenuInflater().inflate(R.menu.menu_category_right, popup.getMenu());
             popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                 @Override
                 public boolean onMenuItemClick(MenuItem item) {
                     switch (item.getItemId()) {
+
+                        //@@@
+                        case R.id.rename:
+
+                            renameReason(reason.id);
+                            break;
+
                         case R.id.delete:
-                            long deleted = reasonDataManager.delete(reason.id);
-                            if (deleted != 0) {
-                                remove(reason);
-                            }
+
+                            // Confirm dialog
+                            new AlertDialog.Builder(getContext())
+                                    .setTitle(reason.name)
+                                    .setMessage(getResources().getString(R.string.delete_confirm_message))
+                                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialogInterface, int i) {
+
+                                            //@@
+                                            //QQ すでに科目を使って入力している場合どうするか 入力したデータ消さないと、削除しないようにする？
+
+                                            long deleted = reasonDataManager.delete(reason.id);
+                                            if (deleted != 0) {
+                                                remove(reason);
+                                            }
+
+                                            dialogInterface.dismiss();
+                                        }
+                                    })
+                                    .setNegativeButton(getResources().getString(R.string.cancel), null)
+                                    .show();
                             break;
                     }
                     return true;
@@ -226,15 +260,50 @@ public class ExpenseInEntryTabFragment extends Fragment {
         }
     }
 
-    //@@@
-    //ここでreason追加のコードだけ書き出してみる
+
     //--------------------------------------------------------------//
-    //    -- Add A New One --
+    //    -- Rename --
+    //--------------------------------------------------------------//
+
+    private void renameReason(final long id) {
+
+        final Context context = getContext();
+        final View textInputView = LayoutInflater.from(context).inflate(R.layout.dialog_text_input, null);
+
+
+        //@@
+        // QQここで、現在のreasonNameをまずtextに表示したい
+        new AlertDialog.Builder(context)
+                .setView(textInputView)
+                .setTitle(getResources().getString(R.string.list_view_rename))
+                .setPositiveButton(getResources().getString(R.string.done), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                        EditText editText = (EditText) textInputView.findViewById(R.id.edit);
+                        String reasonName = editText.getText().toString();
+
+                        ReasonDataManager reasonDataManager = new ReasonDataManager(getContext());
+                        reasonDataManager.updateName(id, reasonName);
+
+
+                        //QQ ここでreason Listをリロードしたいんだけど
+                        reasonListAdapter.notifyDataSetChanged();
+
+                        dialogInterface.dismiss();
+                    }
+                })
+                .setNegativeButton(getResources().getString(R.string.cancel), null)
+                .show();
+    }
+
+
+    //--------------------------------------------------------------//
+    //    -- Add A New --
     //--------------------------------------------------------------//
 
     private void setAddNewButton(ListView listView, final ListAdapter adapter) {
 
-        //@@@
         View v = LayoutInflater.from(getContext()).inflate(R.layout.listview_footer, null);
         ((TextView) v).setText(getResources().getString(R.string.list_view_add_reason));
         listView.addFooterView(v);
@@ -243,14 +312,15 @@ public class ExpenseInEntryTabFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 final Context context = getContext();
-                final View entryInputView = LayoutInflater.from(context).inflate(R.layout.dialog_entry_add, null);
+                final View textInputView = LayoutInflater.from(context).inflate(R.layout.dialog_text_input, null);
                 new AlertDialog.Builder(context)
-                        .setView(entryInputView)
+                        .setView(textInputView)
                         .setTitle(getResources().getString(R.string.list_view_add_reason))
                         .setPositiveButton(getResources().getString(R.string.done), new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
-                                EditText editText = (EditText) entryInputView.findViewById(R.id.edit);
+
+                                EditText editText = (EditText) textInputView.findViewById(R.id.edit);
                                 String reasonName = editText.getText().toString();
 
                                 ProjectDataManager projectDataManager   = new ProjectDataManager(context);

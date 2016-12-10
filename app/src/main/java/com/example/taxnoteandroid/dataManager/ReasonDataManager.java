@@ -79,6 +79,10 @@ public class ReasonDataManager {
     //    -- Update --
     //--------------------------------------------------------------//
 
+    public int updateName(long id, String name) {
+        return ormaDatabase.updateReason().idEq(id).name(name).execute();
+    }
+
     public int updateReason(Reason reason) {
         return ormaDatabase.updateReason().idEq(reason.id).execute();
     }
