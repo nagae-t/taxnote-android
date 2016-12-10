@@ -2,29 +2,34 @@ package com.example.taxnoteandroid.entryTab;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.databinding.ViewDataBinding;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
+import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
-import android.widget.ListView;
 import android.widget.TextView;
 
+import com.example.taxnoteandroid.BindingHolder;
 import com.example.taxnoteandroid.CategorySelectActivity;
+import com.example.taxnoteandroid.DividerDecoration;
+import com.example.taxnoteandroid.FooterRecyclerArrayAdapter;
+import com.example.taxnoteandroid.OnItemClickRecyclerAdapterListener;
 import com.example.taxnoteandroid.R;
 import com.example.taxnoteandroid.dataManager.AccountDataManager;
 import com.example.taxnoteandroid.dataManager.ProjectDataManager;
 import com.example.taxnoteandroid.dataManager.ReasonDataManager;
+import com.example.taxnoteandroid.databinding.ListviewFooterBinding;
+import com.example.taxnoteandroid.databinding.RowListWithDetailsItemBinding;
 import com.example.taxnoteandroid.model.Account;
 import com.example.taxnoteandroid.model.Project;
 import com.example.taxnoteandroid.model.Reason;
@@ -149,54 +154,59 @@ public class ExpenseInEntryTabFragment extends Fragment {
 
     private void setReasonList(View view) {
 
-        ListView listView = (ListView) view.findViewById(R.id.reason_list_view);
+        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.reason_list);
 
         final ReasonDataManager reasonDataManager = new ReasonDataManager(getContext());
         final List<Reason> reasons = reasonDataManager.findAllWithIsExpense(isExpense, getContext());
 
         //@@@
-        reasonListAdapter = new ListAdapter(getContext(), reasons);
-
-
-        listView.setAdapter(reasonListAdapter);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        reasonListAdapter = new ListAdapter(getContext());
+        reasonListAdapter.addAll(reasons);
+        reasonListAdapter.setOnItemClickRecyclerAdapterListener(new OnItemClickRecyclerAdapterListener() {
             @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                Reason reason = (Reason) adapterView.getItemAtPosition(position);
+            public void onItemClick(View view, int position) {
+                Reason reason = reasonListAdapter.getItem(position);
                 startActivity(SummaryActivity.createIntent(getContext(), isExpense, date, account, reason));
             }
         });
-
-        setAddNewButton(listView,reasonListAdapter);
-
+        recyclerView.addItemDecoration(new DividerDecoration(getContext()));
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.setAdapter(reasonListAdapter);
     }
 
-    // https://material.google.com/components/lists.html#
-    class ListAdapter extends ArrayAdapter<Reason> {
+    class ListAdapter extends FooterRecyclerArrayAdapter<Reason> {
 
-        private LayoutInflater layoutInflater;
         private final ReasonDataManager reasonDataManager;
+        private OnItemClickRecyclerAdapterListener onItemClickRecyclerAdapterListener;
 
-        public ListAdapter(Context context, List<Reason> texts) {
-            super(context, 0, texts);
-            layoutInflater = LayoutInflater.from(context);
+        public ListAdapter(Context context) {
             reasonDataManager = new ReasonDataManager(context);
         }
 
-        @NonNull
         @Override
-        public View getView(final int position, View convertView, ViewGroup parent) {
+        protected BindingHolder<ViewDataBinding> onCreateItemViewHolder(ViewGroup parent, int viewType) {
+            return new BindingHolder<>(parent.getContext(), parent, R.layout.row_list_with_details_item);
+        }
 
-            View view = layoutInflater.inflate(R.layout.row_list_with_details_item, null);
+        @Override
+        protected void onBindItemViewHolder(BindingHolder<ViewDataBinding> holder, final int position) {
+            RowListWithDetailsItemBinding binding = (RowListWithDetailsItemBinding) holder.binding;
 
             final Reason reason = getItem(position);
 
-            TextView textView = (TextView) view.findViewById(R.id.title);
-            textView.setText(reason.name);
-            TextView details = (TextView) view.findViewById(R.id.details);
-            View menu = view.findViewById(R.id.menu_right);
+            final View rootView = binding.getRoot();
+            if (onItemClickRecyclerAdapterListener != null) {
+                rootView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        onItemClickRecyclerAdapterListener.onItemClick(rootView, position);
+                    }
+                });
+            }
 
-            final PopupMenu popup = new PopupMenu(parent.getContext(), menu);
+            binding.title.setText(reason.name);
+
+            final PopupMenu popup = new PopupMenu(rootView.getContext(), binding.menuRight);
 
             //QQなんかエラーがでとる
             popup.getMenuInflater().inflate(R.menu.menu_category_right, popup.getMenu());
@@ -240,7 +250,7 @@ public class ExpenseInEntryTabFragment extends Fragment {
                 }
             });
 
-            menu.setOnClickListener(new View.OnClickListener() {
+            binding.menuRight.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     popup.show();
@@ -248,16 +258,75 @@ public class ExpenseInEntryTabFragment extends Fragment {
             });
 
             if (TextUtils.isEmpty(reason.details)) {
-                details.setVisibility(View.GONE);
+                binding.details.setVisibility(View.GONE);
             } else {
-                details.setText(reason.details);
-                details.setVisibility(View.VISIBLE);
+                binding.details.setText(reason.details);
+                binding.details.setVisibility(View.VISIBLE);
             }
+        }
 
-            return view;
+        @Override
+        protected void onBindFooterItemViewHolder(BindingHolder<ViewDataBinding> holder, int position) {
+            ListviewFooterBinding binding = (ListviewFooterBinding) holder.binding;
+            binding.text.setText(getResources().getString(R.string.list_view_add_reason));
+            binding.text.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    final Context context = getContext();
+                    final View textInputView = LayoutInflater.from(context).inflate(R.layout.dialog_text_input, null);
+                    new AlertDialog.Builder(context)
+                            .setView(textInputView)
+                            .setTitle(getResources().getString(R.string.list_view_add_reason))
+                            .setPositiveButton(getResources().getString(R.string.done), new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+
+                                    EditText editText = (EditText) textInputView.findViewById(R.id.edit);
+                                    String reasonName = editText.getText().toString();
+
+                                    ProjectDataManager projectDataManager = new ProjectDataManager(context);
+                                    Project project = projectDataManager.findCurrentProjectWithContext(context);
+
+                                    ReasonDataManager reasonDataManager = new ReasonDataManager(getContext());
+                                    List<Reason> reasonList = reasonDataManager.findAllWithIsExpense(isExpense, context);
+
+                                    Reason reason = new Reason();
+                                    reason.name = reasonName;
+                                    reason.uuid = UUID.randomUUID().toString();
+
+                                    if (reasonList.isEmpty()) {
+                                        reason.order = 0;
+                                    } else {
+                                        reason.order = reasonList.get(reasonList.size() - 1).order + 1;
+                                    }
+                                    reason.isExpense = isExpense;
+                                    reason.project = project;
+                                    reason.details = "";
+
+                                    // @@ 保存チェック
+                                    long id = reasonDataManager.save(reason);
+                                    reason.id = id;
+
+                                    add(reason);
+
+                                    dialogInterface.dismiss();
+                                }
+                            })
+                            .setNegativeButton(getResources().getString(R.string.cancel), null)
+                            .show();
+                }
+            });
+        }
+
+        @Override
+        public int getFooterLayoutId() {
+            return R.layout.listview_footer;
+        }
+
+        public void setOnItemClickRecyclerAdapterListener(OnItemClickRecyclerAdapterListener onItemClickRecyclerAdapterListener) {
+            this.onItemClickRecyclerAdapterListener = onItemClickRecyclerAdapterListener;
         }
     }
-
 
     //--------------------------------------------------------------//
     //    -- Rename --
@@ -296,65 +365,5 @@ public class ExpenseInEntryTabFragment extends Fragment {
                 })
                 .setNegativeButton(getResources().getString(R.string.cancel), null)
                 .show();
-    }
-
-
-    //--------------------------------------------------------------//
-    //    -- Add A New --
-    //--------------------------------------------------------------//
-
-    private void setAddNewButton(ListView listView, final ListAdapter adapter) {
-
-        View v = LayoutInflater.from(getContext()).inflate(R.layout.listview_footer, null);
-        ((TextView) v).setText(getResources().getString(R.string.list_view_add_reason));
-        listView.addFooterView(v);
-
-        v.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                final Context context = getContext();
-                final View textInputView = LayoutInflater.from(context).inflate(R.layout.dialog_text_input, null);
-                new AlertDialog.Builder(context)
-                        .setView(textInputView)
-                        .setTitle(getResources().getString(R.string.list_view_add_reason))
-                        .setPositiveButton(getResources().getString(R.string.done), new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-
-                                EditText editText = (EditText) textInputView.findViewById(R.id.edit);
-                                String reasonName = editText.getText().toString();
-
-                                ProjectDataManager projectDataManager   = new ProjectDataManager(context);
-                                Project project                         = projectDataManager.findCurrentProjectWithContext(context);
-
-                                ReasonDataManager reasonDataManager = new ReasonDataManager(getContext());
-                                List<Reason> reasonList             = reasonDataManager.findAllWithIsExpense(isExpense, context);
-
-                                Reason reason = new Reason();
-                                reason.name = reasonName;
-                                reason.uuid = UUID.randomUUID().toString();
-
-                                if (reasonList.isEmpty()) {
-                                    reason.order = 0;
-                                } else {
-                                    reason.order = reasonList.get(reasonList.size() - 1).order + 1;
-                                }
-                                reason.isExpense = isExpense;
-                                reason.project = project;
-                                reason.details = "";
-
-                                // @@ 保存チェック
-                                long id = reasonDataManager.save(reason);
-                                reason.id = id;
-
-                                adapter.add(reason);
-
-                                dialogInterface.dismiss();
-                            }
-                        })
-                        .setNegativeButton(getResources().getString(R.string.cancel), null)
-                        .show();
-            }
-        });
     }
 }
