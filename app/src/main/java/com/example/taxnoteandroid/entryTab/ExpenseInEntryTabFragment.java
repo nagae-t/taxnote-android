@@ -220,7 +220,6 @@ public class ExpenseInEntryTabFragment extends Fragment {
 
             final PopupMenu popup = new PopupMenu(rootView.getContext(), binding.menuRight);
 
-            //QQなんかエラーがでとる
             popup.getMenuInflater().inflate(R.menu.menu_category_right, popup.getMenu());
             popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                 @Override
@@ -229,33 +228,11 @@ public class ExpenseInEntryTabFragment extends Fragment {
 
                         //@@@
                         case R.id.rename:
-
                             renameReason(reason, position);
                             break;
 
                         case R.id.delete:
-
-                            // Confirm dialog
-                            new AlertDialog.Builder(getContext())
-                                    .setTitle(reason.name)
-                                    .setMessage(getResources().getString(R.string.delete_confirm_message))
-                                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialogInterface, int i) {
-
-                                            //@@
-                                            //QQ すでに科目を使って入力している場合どうするか 入力したデータ消さないと、削除しないようにする？
-
-                                            long deleted = reasonDataManager.delete(reason.id);
-                                            if (deleted != 0) {
-                                                remove(reason);
-                                            }
-
-                                            dialogInterface.dismiss();
-                                        }
-                                    })
-                                    .setNegativeButton(getResources().getString(R.string.cancel), null)
-                                    .show();
+                            deleteReason(reason);
                             break;
                     }
                     return true;
@@ -275,6 +252,29 @@ public class ExpenseInEntryTabFragment extends Fragment {
                 binding.details.setText(reason.details);
                 binding.details.setVisibility(View.VISIBLE);
             }
+        }
+
+        private void deleteReason(final Reason reason) {
+
+            // Confirm dialog
+            new AlertDialog.Builder(getContext())
+                    .setTitle(reason.name)
+                    .setMessage(getResources().getString(R.string.delete_confirm_message))
+                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+
+                            //LL すでに科目を使って入力している場合どうするか 入力したデータ消さないと、削除しないようにする？
+                            long deleted = reasonDataManager.delete(reason.id);
+                            if (deleted != 0) {
+                                remove(reason);
+                            }
+
+                            dialogInterface.dismiss();
+                        }
+                    })
+                    .setNegativeButton(getResources().getString(R.string.cancel), null)
+                    .show();
         }
 
         @Override
@@ -382,7 +382,6 @@ public class ExpenseInEntryTabFragment extends Fragment {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
 
-
                         String reasonName = editText.getText().toString();
 
                         ReasonDataManager reasonDataManager = new ReasonDataManager(getContext());
@@ -400,4 +399,5 @@ public class ExpenseInEntryTabFragment extends Fragment {
                 .setNegativeButton(getResources().getString(R.string.cancel), null)
                 .show();
     }
+    
 }
