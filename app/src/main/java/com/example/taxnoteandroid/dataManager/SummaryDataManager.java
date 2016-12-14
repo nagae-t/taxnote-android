@@ -70,7 +70,9 @@ public class SummaryDataManager {
     //    -- Update --
     //--------------------------------------------------------------//
 
-
+    public int updateName(long id, String name) {
+        return ormaDatabase.updateSummary().idEq(id).name(name).execute();
+    }
 
 
     //--------------------------------------------------------------//

@@ -21,12 +21,12 @@ import com.example.taxnoteandroid.model.Project;
 
 import java.util.List;
 
-public class CategorySelectActivity extends AppCompatActivity {
+public class AccountSelectActivity extends AppCompatActivity {
 
     private static final String EXTRA_ISEXPENSE = "EXTRA_ISEXPENSE";
 
     public static Intent createIntent(Context context, boolean isExpense) {
-        Intent i = new Intent(context, CategorySelectActivity.class);
+        Intent i = new Intent(context, AccountSelectActivity.class);
         i.putExtra(EXTRA_ISEXPENSE, isExpense);
         return i;
     }
@@ -51,9 +51,9 @@ public class CategorySelectActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                 Account account = (Account) adapterView.getItemAtPosition(position);
-                String uuid = SharedPreferencesManager.getUuidForCurrentProject(CategorySelectActivity.this);
+                String uuid = SharedPreferencesManager.getUuidForCurrentProject(AccountSelectActivity.this);
 
-                ProjectDataManager projectDataManager = new ProjectDataManager(CategorySelectActivity.this);
+                ProjectDataManager projectDataManager = new ProjectDataManager(AccountSelectActivity.this);
                 Project project = projectDataManager.findByUuid(uuid);
 
                 if (isExpense) {

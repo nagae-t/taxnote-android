@@ -20,7 +20,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.example.taxnoteandroid.BindingHolder;
-import com.example.taxnoteandroid.CategorySelectActivity;
+import com.example.taxnoteandroid.AccountSelectActivity;
 import com.example.taxnoteandroid.DividerDecoration;
 import com.example.taxnoteandroid.FooterRecyclerArrayAdapter;
 import com.example.taxnoteandroid.OnItemClickRecyclerAdapterListener;
@@ -137,7 +137,7 @@ public class ExpenseInEntryTabFragment extends Fragment {
         view.findViewById(R.id.account_text_view).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(CategorySelectActivity.createIntent(getContext(), isExpense));
+                startActivity(AccountSelectActivity.createIntent(getContext(), isExpense));
             }
         });
     }
@@ -399,5 +399,5 @@ public class ExpenseInEntryTabFragment extends Fragment {
                 .setNegativeButton(getResources().getString(R.string.cancel), null)
                 .show();
     }
-    
+
 }

@@ -83,11 +83,7 @@ public class ReasonDataManager {
         return ormaDatabase.updateReason().idEq(id).name(name).execute();
     }
 
-    public int updateReason(Reason reason) {
-        return ormaDatabase.updateReason().idEq(reason.id).execute();
-    }
-
-
+    
     //--------------------------------------------------------------//
     //    -- Delete --
     //--------------------------------------------------------------//

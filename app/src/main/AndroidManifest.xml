@@ -17,7 +17,7 @@
         </activity>
         <activity android:name=".entryTab.SummaryActivity" />
         <activity android:name=".entryTab.InputDataActivity" />
-        <activity android:name=".CategorySelectActivity"></activity>
+        <activity android:name=".AccountSelectActivity"></activity>
     </application>
 
 </manifest>

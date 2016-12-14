@@ -96,7 +96,9 @@ public class AccountDataManager {
     //    -- Update --
     //--------------------------------------------------------------//
 
-
+    public int updateName(long id, String name) {
+        return ormaDatabase.updateAccount().idEq(id).name(name).execute();
+    }
 
 
     //--------------------------------------------------------------//
