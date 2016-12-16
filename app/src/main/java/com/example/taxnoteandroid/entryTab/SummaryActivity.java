@@ -5,7 +5,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.databinding.ViewDataBinding;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -16,11 +15,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
-import android.widget.ListView;
-import android.widget.TextView;
 
 import com.example.taxnoteandroid.BindingHolder;
 import com.example.taxnoteandroid.DividerDecoration;
@@ -28,14 +23,13 @@ import com.example.taxnoteandroid.FooterRecyclerArrayAdapter;
 import com.example.taxnoteandroid.OnItemClickRecyclerAdapterListener;
 import com.example.taxnoteandroid.R;
 import com.example.taxnoteandroid.dataManager.ProjectDataManager;
-import com.example.taxnoteandroid.dataManager.ReasonDataManager;
 import com.example.taxnoteandroid.dataManager.SummaryDataManager;
 import com.example.taxnoteandroid.databinding.ListviewFooterBinding;
 import com.example.taxnoteandroid.databinding.RowListWithDetailsItemBinding;
 import com.example.taxnoteandroid.model.Account;
 import com.example.taxnoteandroid.model.Project;
-import com.example.taxnoteandroid.model.Summary;
 import com.example.taxnoteandroid.model.Reason;
+import com.example.taxnoteandroid.model.Summary;
 import com.h6ah4i.android.widget.advrecyclerview.draggable.DraggableItemAdapter;
 import com.h6ah4i.android.widget.advrecyclerview.draggable.ItemDraggableRange;
 import com.h6ah4i.android.widget.advrecyclerview.draggable.RecyclerViewDragDropManager;
@@ -130,14 +124,12 @@ public class SummaryActivity extends AppCompatActivity {
         dragMgr.setInitiateOnMove(false);
         dragMgr.setInitiateOnLongPress(true);
 
-        //QQ@@@ ここでエラー
         summaryListAdapter = new ListAdapter(this);
         summaryListAdapter.addAll(summaries);
         summaryListAdapter.setOnItemClickRecyclerAdapterListener(new OnItemClickRecyclerAdapterListener() {
             @Override
             public void onItemClick(View view, int position) {
 
-                //QQ@@@ リサイクルビューに変更中
                 Summary summary = summaryListAdapter.getItem(position);
                 startInputDataActivity(summary);
             }
@@ -149,7 +141,7 @@ public class SummaryActivity extends AppCompatActivity {
         dragMgr.attachRecyclerView(recyclerView);
     }
 
-    class ListAdapter extends FooterRecyclerArrayAdapter<Reason> implements DraggableItemAdapter<BindingHolder<ViewDataBinding>> {
+    class ListAdapter extends FooterRecyclerArrayAdapter<Summary> implements DraggableItemAdapter<BindingHolder<ViewDataBinding>> {
 
         private final SummaryDataManager summaryDataManager;
         private OnItemClickRecyclerAdapterListener onItemClickRecyclerAdapterListener;
@@ -259,32 +251,30 @@ public class SummaryActivity extends AppCompatActivity {
                                 public void onClick(DialogInterface dialogInterface, int i) {
 
                                     EditText editText = (EditText) textInputView.findViewById(R.id.edit);
-                                    String reasonName = editText.getText().toString();
+                                    String newName = editText.getText().toString();
 
                                     ProjectDataManager projectDataManager = new ProjectDataManager(context);
                                     Project project = projectDataManager.findCurrentProjectWithContext(context);
 
-                                    ReasonDataManager reasonDataManager = new ReasonDataManager(SummaryActivity.this);
-                                    List<Reason> reasonList = reasonDataManager.findAllWithIsExpense(isExpense, context);
+                                    SummaryDataManager summaryDataManager = new SummaryDataManager(SummaryActivity.this);
+                                    List<Summary> summaryList = summaryDataManager.findAllWithReason(reason, context);
 
-                                    Reason reason = new Reason();
-                                    reason.name = reasonName;
-                                    reason.uuid = UUID.randomUUID().toString();
+                                    Summary summary = new Summary();
+                                    summary.name = newName;
+                                    summary.uuid = UUID.randomUUID().toString();
 
-                                    if (reasonList.isEmpty()) {
-                                        reason.order = 0;
+                                    if (summaryList.isEmpty()) {
+                                        summary.order = 0;
                                     } else {
-                                        reason.order = reasonList.get(reasonList.size() - 1).order + 1;
+                                        summary.order = summaryList.get(summaryList.size() - 1).order + 1;
                                     }
-                                    reason.isExpense = isExpense;
-                                    reason.project = project;
-                                    reason.details = "";
+                                    summary.project = project;
 
                                     // @@ 保存チェック
-                                    long id = reasonDataManager.save(reason);
-                                    reason.id = id;
+                                    long id = summaryDataManager.save(summary);
+                                    summary.id = id;
 
-                                    add(reason);
+                                    add(summary);
 
                                     dialogInterface.dismiss();
                                 }
@@ -316,7 +306,7 @@ public class SummaryActivity extends AppCompatActivity {
 
         @Override
         public void onMoveItem(int fromPosition, int toPosition) {
-            Reason movedItem = getItem(fromPosition);
+            Summary movedItem = getItem(fromPosition);
             add(toPosition, movedItem);
             notifyItemMoved(fromPosition, toPosition);
         }
@@ -352,10 +342,9 @@ public class SummaryActivity extends AppCompatActivity {
                         SummaryDataManager summaryDataManager = new SummaryDataManager(SummaryActivity.this);
                         summaryDataManager.updateName(summary.id, newName);
 
-                        //@@＠ここでエラー
-                        Summary oldSummmary = summaryListAdapter.getItem(position);
-                        if (oldSummmary != null) {
-                            oldSummmary.name = newName;
+                        Summary oldSummary = summaryListAdapter.getItem(position);
+                        if (oldSummary != null) {
+                            oldSummary.name = newName;
                             summaryListAdapter.notifyDataSetChanged();
                         }
 
