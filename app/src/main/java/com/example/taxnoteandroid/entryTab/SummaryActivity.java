@@ -130,14 +130,14 @@ public class SummaryActivity extends AppCompatActivity {
         dragMgr.setInitiateOnMove(false);
         dragMgr.setInitiateOnLongPress(true);
 
-        //@@@ ここでエラー
+        //QQ@@@ ここでエラー
         summaryListAdapter = new ListAdapter(this);
         summaryListAdapter.addAll(summaries);
         summaryListAdapter.setOnItemClickRecyclerAdapterListener(new OnItemClickRecyclerAdapterListener() {
             @Override
             public void onItemClick(View view, int position) {
 
-                //@@@ リサイクルビューに変更中
+                //QQ@@@ リサイクルビューに変更中
                 Summary summary = summaryListAdapter.getItem(position);
                 startInputDataActivity(summary);
             }
@@ -229,7 +229,7 @@ public class SummaryActivity extends AppCompatActivity {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
 
-                            //LL すでに科目を使って入力している場合どうするか 入力したデータ消さないと、削除しないようにする？
+                            //@@ すでに科目を使って入力している場合どうするか 入力したデータ消さないと、削除しないようにする？
                             long deleted = summaryDataManager.delete(summary.id);
                             if (deleted != 0) {
                                 remove(summary);
@@ -340,7 +340,6 @@ public class SummaryActivity extends AppCompatActivity {
         final EditText editText = (EditText) textInputView.findViewById(R.id.edit);
         editText.setText(summary.name);
 
-        //@@@
         new AlertDialog.Builder(context)
                 .setView(textInputView)
                 .setTitle(getResources().getString(R.string.list_view_rename))

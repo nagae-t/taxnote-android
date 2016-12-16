@@ -5,40 +5,27 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.databinding.ViewDataBinding;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
-import android.widget.ListView;
-import android.widget.TextView;
 
 import com.example.taxnoteandroid.dataManager.AccountDataManager;
 import com.example.taxnoteandroid.dataManager.ProjectDataManager;
-import com.example.taxnoteandroid.dataManager.ReasonDataManager;
 import com.example.taxnoteandroid.dataManager.SharedPreferencesManager;
-import com.example.taxnoteandroid.dataManager.SummaryDataManager;
 import com.example.taxnoteandroid.databinding.ListviewFooterBinding;
 import com.example.taxnoteandroid.databinding.RowListWithDetailsItemBinding;
-import com.example.taxnoteandroid.entryTab.SummaryActivity;
 import com.example.taxnoteandroid.model.Account;
 import com.example.taxnoteandroid.model.Project;
-import com.example.taxnoteandroid.model.Reason;
-import com.example.taxnoteandroid.model.Summary;
 import com.h6ah4i.android.widget.advrecyclerview.draggable.DraggableItemAdapter;
 import com.h6ah4i.android.widget.advrecyclerview.draggable.ItemDraggableRange;
 import com.h6ah4i.android.widget.advrecyclerview.draggable.RecyclerViewDragDropManager;
-
-import org.parceler.Parcels;
 
 import java.util.List;
 import java.util.UUID;
@@ -69,63 +56,6 @@ public class AccountSelectActivity extends AppCompatActivity {
 
         setIntentData();
         setAccountList();
-
-
-//        ListView listView = (ListView) findViewById(R.id.list);
-//
-//        AccountDataManager accountDataManager = new AccountDataManager(this);
-//
-//        List<Account> accounts = accountDataManager.findAllWithIsExpense(isExpense, this);
-//
-//        CategorySelectAdapter categorySelectAdapter = new CategorySelectAdapter(this, accounts);
-//        listView.setAdapter(categorySelectAdapter);
-//
-//        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-//
-//
-//                Account account = (Account) adapterView.getItemAtPosition(position);
-//                String uuid = SharedPreferencesManager.getUuidForCurrentProject(AccountSelectActivity.this);
-//
-//                ProjectDataManager projectDataManager = new ProjectDataManager(AccountSelectActivity.this);
-//                Project project = projectDataManager.findByUuid(uuid);
-//
-//                if (isExpense) {
-//                    project.accountUuidForExpense = account.uuid;
-//                    projectDataManager.updateAccountUuidForExpense(project);
-//                } else {
-//                    project.accountUuidForIncome = account.uuid;
-//                    projectDataManager.updateAccountUuidForIncome(project);
-//                }
-//
-//                finish();
-//            }
-//        });
-    }
-
-    class CategorySelectAdapter extends ArrayAdapter<Account> {
-
-        private LayoutInflater layoutInflater;
-
-        public CategorySelectAdapter(Context context, List<Account> accounts) {
-            super(context, 0, accounts);
-            layoutInflater = LayoutInflater.from(context);
-        }
-
-        @NonNull
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            View view = layoutInflater.inflate(R.layout.row_category_select, null);
-
-            Account account = getItem(position);
-
-            TextView textView = (TextView) view.findViewById(R.id.category);
-
-            textView.setText(account.name);
-
-            return view;
-        }
     }
 
 
@@ -279,11 +209,8 @@ public class AccountSelectActivity extends AppCompatActivity {
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
 
-                                    //@@@
-                                    //新しいアカウント追加画面
-
                                     EditText editText = (EditText) textInputView.findViewById(R.id.edit);
-                                    String reasonName = editText.getText().toString();
+                                    String newName = editText.getText().toString();
 
                                     ProjectDataManager projectDataManager = new ProjectDataManager(context);
                                     Project project = projectDataManager.findCurrentProjectWithContext(context);
@@ -291,24 +218,23 @@ public class AccountSelectActivity extends AppCompatActivity {
                                     AccountDataManager accountDataManager = new AccountDataManager(AccountSelectActivity.this);
                                     List<Account> accountList = accountDataManager.findAllWithIsExpense(isExpense, context);
 
-                                    Reason reason = new Reason();
-                                    reason.name = reasonName;
-                                    reason.uuid = UUID.randomUUID().toString();
+                                    Account account = new Account();
+                                    account.name = newName;
+                                    account.uuid = UUID.randomUUID().toString();
 
                                     if (accountList.isEmpty()) {
-                                        reason.order = 0;
+                                        account.order = 0;
                                     } else {
-                                        reason.order = accountList.get(accountList.size() - 1).order + 1;
+                                        account.order = accountList.get(accountList.size() - 1).order + 1;
                                     }
-                                    reason.isExpense = isExpense;
-                                    reason.project = project;
-                                    reason.details = "";
+                                    account.isExpense = isExpense;
+                                    account.project = project;
 
                                     // @@ 保存チェック
-                                    long id = accountDataManager.save(reason);
-                                    reason.id = id;
+                                    long id = accountDataManager.save(account);
+                                    account.id = id;
 
-                                    add(reason);
+                                    add(account);
 
                                     dialogInterface.dismiss();
                                 }
@@ -340,7 +266,7 @@ public class AccountSelectActivity extends AppCompatActivity {
 
         @Override
         public void onMoveItem(int fromPosition, int toPosition) {
-            Reason movedItem = getItem(fromPosition);
+            Account movedItem = getItem(fromPosition);
             add(toPosition, movedItem);
             notifyItemMoved(fromPosition, toPosition);
         }
@@ -358,13 +284,12 @@ public class AccountSelectActivity extends AppCompatActivity {
 
     private void renameAccount(final Account account, final int position) {
 
-        final Context context = SummaryActivity.this;
+        final Context context = AccountSelectActivity.this;
         final View textInputView = LayoutInflater.from(context).inflate(R.layout.dialog_text_input, null);
 
         final EditText editText = (EditText) textInputView.findViewById(R.id.edit);
-        editText.setText(summary.name);
+        editText.setText(account.name);
 
-        //@@@
         new AlertDialog.Builder(context)
                 .setView(textInputView)
                 .setTitle(getResources().getString(R.string.list_view_rename))
@@ -374,14 +299,13 @@ public class AccountSelectActivity extends AppCompatActivity {
 
                         String newName = editText.getText().toString();
 
-                        SummaryDataManager summaryDataManager = new SummaryDataManager(SummaryActivity.this);
-                        summaryDataManager.updateName(summary.id, newName);
+                        AccountDataManager accountDataManager = new AccountDataManager(AccountSelectActivity.this);
+                        accountDataManager.updateName(account.id, newName);
 
-                        //@@＠ここでエラー
-                        Summary oldSummmary = summaryListAdapter.getItem(position);
-                        if (oldSummmary != null) {
-                            oldSummmary.name = newName;
-                            summaryListAdapter.notifyDataSetChanged();
+                        Account oldAccount = accountListAdapter.getItem(position);
+                        if (oldAccount != null) {
+                            oldAccount.name = newName;
+                            accountListAdapter.notifyDataSetChanged();
                         }
 
                         dialogInterface.dismiss();

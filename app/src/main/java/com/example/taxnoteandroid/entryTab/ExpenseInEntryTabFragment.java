@@ -168,7 +168,6 @@ public class ExpenseInEntryTabFragment extends Fragment {
         dragMgr.setInitiateOnMove(false);
         dragMgr.setInitiateOnLongPress(true);
 
-        //@@@
         reasonListAdapter = new ListAdapter(getContext());
         reasonListAdapter.addAll(reasons);
         reasonListAdapter.setOnItemClickRecyclerAdapterListener(new OnItemClickRecyclerAdapterListener() {
@@ -226,7 +225,6 @@ public class ExpenseInEntryTabFragment extends Fragment {
                 public boolean onMenuItemClick(MenuItem item) {
                     switch (item.getItemId()) {
 
-                        //@@@
                         case R.id.rename:
                             renameReason(reason, position);
                             break;
@@ -374,7 +372,6 @@ public class ExpenseInEntryTabFragment extends Fragment {
         final EditText editText = (EditText) textInputView.findViewById(R.id.edit);
         editText.setText(reason.name);
 
-        //@@
         new AlertDialog.Builder(context)
                 .setView(textInputView)
                 .setTitle(getResources().getString(R.string.list_view_rename))

@@ -34,7 +34,6 @@ public class ReasonDataManager {
         return ormaDatabase.insertIntoReason(reason);
     }
 
-    // @@ 他のもの作る
     public void saveAll(final List<Reason> reasons) {
         ormaDatabase.transactionSync(new Runnable() {
             @Override
