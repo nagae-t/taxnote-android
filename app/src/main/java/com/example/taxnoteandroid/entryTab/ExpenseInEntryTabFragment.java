@@ -19,8 +19,8 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.example.taxnoteandroid.BindingHolder;
 import com.example.taxnoteandroid.AccountSelectActivity;
+import com.example.taxnoteandroid.BindingHolder;
 import com.example.taxnoteandroid.DividerDecoration;
 import com.example.taxnoteandroid.FooterRecyclerArrayAdapter;
 import com.example.taxnoteandroid.OnItemClickRecyclerAdapterListener;

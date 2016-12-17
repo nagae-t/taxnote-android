@@ -52,7 +52,7 @@ public class AccountSelectActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_category_select);
+        setContentView(R.layout.activity_account_select);
 
         setIntentData();
         setAccountList();
@@ -65,7 +65,7 @@ public class AccountSelectActivity extends AppCompatActivity {
 
     private void setAccountList() {
 
-        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.reason_list_view);
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.account_list);
 
         // Get list
         AccountDataManager accountDataManager = new AccountDataManager(this);

@@ -160,7 +160,6 @@ public class SummaryActivity extends AppCompatActivity {
         protected void onBindItemViewHolder(BindingHolder<ViewDataBinding> holder, final int position) {
             RowListWithDetailsItemBinding binding = (RowListWithDetailsItemBinding) holder.binding;
 
-            //QQ @@@ここでエラー
             final Summary summary = getItem(position);
 
             final View rootView = binding.getRoot();
@@ -183,7 +182,6 @@ public class SummaryActivity extends AppCompatActivity {
                 public boolean onMenuItemClick(MenuItem item) {
                     switch (item.getItemId()) {
 
-                        //@@@
                         case R.id.rename:
                             renameSummary(summary, position);
                             break;
