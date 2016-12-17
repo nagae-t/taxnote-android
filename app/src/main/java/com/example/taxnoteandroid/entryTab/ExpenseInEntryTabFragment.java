@@ -21,6 +21,7 @@ import android.widget.TextView;
 
 import com.example.taxnoteandroid.AccountSelectActivity;
 import com.example.taxnoteandroid.BindingHolder;
+import com.example.taxnoteandroid.DatePickerDialogFragment;
 import com.example.taxnoteandroid.DividerDecoration;
 import com.example.taxnoteandroid.FooterRecyclerArrayAdapter;
 import com.example.taxnoteandroid.OnItemClickRecyclerAdapterListener;
@@ -28,6 +29,7 @@ import com.example.taxnoteandroid.R;
 import com.example.taxnoteandroid.dataManager.AccountDataManager;
 import com.example.taxnoteandroid.dataManager.ProjectDataManager;
 import com.example.taxnoteandroid.dataManager.ReasonDataManager;
+import com.example.taxnoteandroid.databinding.FragmentEntryTabExpenseBinding;
 import com.example.taxnoteandroid.databinding.ListviewFooterBinding;
 import com.example.taxnoteandroid.databinding.RowListWithDetailsItemBinding;
 import com.example.taxnoteandroid.model.Account;
@@ -38,6 +40,7 @@ import com.h6ah4i.android.widget.advrecyclerview.draggable.ItemDraggableRange;
 import com.h6ah4i.android.widget.advrecyclerview.draggable.RecyclerViewDragDropManager;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.List;
 import java.util.UUID;
 
@@ -47,9 +50,10 @@ public class ExpenseInEntryTabFragment extends Fragment {
     private static final String EXTRA_IS_EXPENSE = "isExpense";
 
     public boolean isExpense = true;
-    public  long    date;
+    public long date;
     private Account account;
     private ListAdapter reasonListAdapter;
+    private FragmentEntryTabExpenseBinding binding;
 
 
     public ExpenseInEntryTabFragment() {
@@ -73,17 +77,17 @@ public class ExpenseInEntryTabFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         // Set default values
-        isExpense   = getArguments().getBoolean(EXTRA_IS_EXPENSE);
-        date        = System.currentTimeMillis();
+        isExpense = getArguments().getBoolean(EXTRA_IS_EXPENSE);
+        date = System.currentTimeMillis();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_entry_tab_expense, container, false);
+        binding = FragmentEntryTabExpenseBinding.inflate(inflater, container, false);
+        View view = binding.getRoot();
 
-        setDateView(view);
+        setDateView();
         setAccountView(view);
         setReasonList(view);
 
@@ -103,13 +107,19 @@ public class ExpenseInEntryTabFragment extends Fragment {
     //    -- Date Part --
     //--------------------------------------------------------------//
 
-    private void setDateView(View view) {
-
-        view.findViewById(R.id.date_text_view).setOnClickListener(new View.OnClickListener() {
+    private void setDateView() {
+        binding.dateTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-
+                DatePickerDialogFragment fragment = DatePickerDialogFragment.newInstance(date, "aaa");
+                fragment.setOnDateSetListener(new DatePickerDialogFragment.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(Calendar calendar) {
+                        date = calendar.getTimeInMillis();
+                        loadCurrentDate();
+                    }
+                });
+                fragment.show(getFragmentManager(), DatePickerDialogFragment.class.getName());
             }
         });
     }
@@ -120,8 +130,8 @@ public class ExpenseInEntryTabFragment extends Fragment {
 
         // Show the date if it is not today
         if (!DateUtils.isToday(date)) {
-            SimpleDateFormat simpleDateFormat   = new SimpleDateFormat(getResources().getString(R.string.date_string_format_to_year));
-            dateString                          = simpleDateFormat.format(date);
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat(getResources().getString(R.string.date_string_format_to_year));
+            dateString = simpleDateFormat.format(date);
         }
 
         ((TextView) getView().findViewById(R.id.date_text_view)).setText(dateString);
@@ -145,7 +155,7 @@ public class ExpenseInEntryTabFragment extends Fragment {
     private void loadCurrentAccount() {
 
         AccountDataManager accountDataManager = new AccountDataManager(getContext());
-        account                               = accountDataManager.findCurrentSelectedAccount(getContext(), isExpense);
+        account = accountDataManager.findCurrentSelectedAccount(getContext(), isExpense);
 
         ((TextView) getView().findViewById(R.id.account_text_view)).setText(account.name);
     }
