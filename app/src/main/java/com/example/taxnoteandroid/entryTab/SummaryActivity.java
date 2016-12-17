@@ -26,6 +26,7 @@ import com.example.taxnoteandroid.dataManager.ProjectDataManager;
 import com.example.taxnoteandroid.dataManager.SummaryDataManager;
 import com.example.taxnoteandroid.databinding.ListviewFooterBinding;
 import com.example.taxnoteandroid.databinding.RowListWithDetailsItemBinding;
+import com.example.taxnoteandroid.databinding.RowSummaryItemBinding;
 import com.example.taxnoteandroid.model.Account;
 import com.example.taxnoteandroid.model.Project;
 import com.example.taxnoteandroid.model.Reason;
@@ -42,7 +43,7 @@ import java.util.UUID;
 public class SummaryActivity extends AppCompatActivity {
 
     private static final String EXTRA_IS_EXPENSE = "isExpense";
-    private static final String EXTRA_DATE       = "date";
+    private static final String EXTRA_DATE = "date";
     public boolean isExpense;
     public Account account;
     public Reason reason;
@@ -82,10 +83,10 @@ public class SummaryActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
 
-        isExpense   = intent.getBooleanExtra(EXTRA_IS_EXPENSE, false);
-        date        = intent.getLongExtra(EXTRA_DATE, 0);
-        account     = Parcels.unwrap(intent.getParcelableExtra(Account.class.getName()));
-        reason      = Parcels.unwrap(intent.getParcelableExtra(Reason.class.getName()));
+        isExpense = intent.getBooleanExtra(EXTRA_IS_EXPENSE, false);
+        date = intent.getLongExtra(EXTRA_DATE, 0);
+        account = Parcels.unwrap(intent.getParcelableExtra(Account.class.getName()));
+        reason = Parcels.unwrap(intent.getParcelableExtra(Reason.class.getName()));
     }
 
 
@@ -115,8 +116,8 @@ public class SummaryActivity extends AppCompatActivity {
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.reason_list_view);
 
         // Get summary list
-        final SummaryDataManager summaryDataManager   = new SummaryDataManager(this);
-        final List<Summary> summaries                 = summaryDataManager.findAllWithReason(reason, this);
+        final SummaryDataManager summaryDataManager = new SummaryDataManager(this);
+        final List<Summary> summaries = summaryDataManager.findAllWithReason(reason, this);
 
         RecyclerViewDragDropManager dragMgr = new RecyclerViewDragDropManager();
 
@@ -153,12 +154,12 @@ public class SummaryActivity extends AppCompatActivity {
 
         @Override
         protected BindingHolder<ViewDataBinding> onCreateItemViewHolder(ViewGroup parent, int viewType) {
-            return new BindingHolder<>(parent.getContext(), parent, R.layout.row_list_with_details_item);
+            return new BindingHolder<>(parent.getContext(), parent, R.layout.row_summary_item);
         }
 
         @Override
         protected void onBindItemViewHolder(BindingHolder<ViewDataBinding> holder, final int position) {
-            RowListWithDetailsItemBinding binding = (RowListWithDetailsItemBinding) holder.binding;
+            RowSummaryItemBinding binding = (RowSummaryItemBinding) holder.binding;
 
             final Summary summary = getItem(position);
 
@@ -200,13 +201,6 @@ public class SummaryActivity extends AppCompatActivity {
                     popup.show();
                 }
             });
-
-            if (TextUtils.isEmpty(reason.details)) {
-                binding.details.setVisibility(View.GONE);
-            } else {
-                binding.details.setText(reason.details);
-                binding.details.setVisibility(View.VISIBLE);
-            }
         }
 
         private void deleteSummary(final Summary summary) {

@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -44,6 +45,7 @@ public class HistoryTabFragment extends Fragment {
 
         List<Item> items = new ArrayList<>();
         Map<String, List<Entry>> map2 = new LinkedHashMap<>();
+        // 入力日ごとにグルーピング
         for (Entry entry : entries) {
             Calendar calendar = Calendar.getInstance();
             calendar.setTimeInMillis(entry.date);
@@ -52,6 +54,7 @@ public class HistoryTabFragment extends Fragment {
             int m = calendar.get(Calendar.MONTH);
             int d = calendar.get(Calendar.DAY_OF_MONTH);
 
+            // 入力日をyyyymmddで文字列化してる
             StringBuilder sb = new StringBuilder().append(y).append(m).append(d);
             String date = sb.toString();
 
@@ -66,15 +69,20 @@ public class HistoryTabFragment extends Fragment {
             }
         }
 
+        // RecyclerViewに渡すためにMapをListに変換する
+        // Itemって中にheaderかCellかで分けて入れてる
         for (Map.Entry<String, List<Entry>> e : map2.entrySet()) {
             Item headerItem = new Item();
             Header header = new Header();
             headerItem.header = header;
             header.date = e.getKey();
+            // ここにformat済みの文字列を入れるといいかも
+//            header.formatDate =
 
             items.add(headerItem);
 
             for (Entry entry : e.getValue()) {
+                // @@ 今+=してるけど後から合計処理を書き直す
                 header.sum += entry.price;
                 Item cellItem = new Item();
                 Cell cell = new Cell();
@@ -110,6 +118,7 @@ public class HistoryTabFragment extends Fragment {
 
     class Header {
         String date;
+        String formatDate;
         long sum;
 
         @Override
@@ -160,6 +169,7 @@ public class HistoryTabFragment extends Fragment {
                 case VIEW_ITEM_HEADER: {
                     RowHistorySectionHeaderBinding binding = (RowHistorySectionHeaderBinding) holder.binding;
                     Item item = items.get(position);
+                    // dataをformatDateに変えればOKそう
                     binding.name.setText(item.header.date);
                     binding.price.setText(item.header.sum + "");
                 }
@@ -167,6 +177,13 @@ public class HistoryTabFragment extends Fragment {
                 case VIEW_ITEM_CELL: {
                     RowHistoryCellBinding binding = (RowHistoryCellBinding) holder.binding;
                     Item item = items.get(position);
+                    binding.name.setText("AAAA" + "/" + "AAAA");
+                    if (TextUtils.isEmpty(item.cell.entry.memo)) {
+                        binding.memo.setVisibility(View.GONE);
+                    } else {
+                        binding.memo.setVisibility(View.VISIBLE);
+                        binding.memo.setText(item.cell.entry.memo);
+                    }
                     binding.price.setText(item.cell.entry.price + "");
                 }
                 break;
