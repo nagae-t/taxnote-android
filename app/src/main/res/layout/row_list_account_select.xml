@@ -19,11 +19,21 @@
             android:layout_height="wrap_content"
             tools:text="test" />
 
+        <TextView
+            android:id="@+id/details"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/title"
+            android:textColor="#999999"
+            android:textSize="10sp"
+            tools:text="test" />
+
         <ImageView
             android:id="@+id/menu_right"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
             android:paddingLeft="16dp"
             android:paddingRight="16dp"
             android:src="@drawable/ic_more_vert_black_24dp"

@@ -121,6 +121,8 @@ public class AccountSelectActivity extends AppCompatActivity {
 
         @Override
         protected BindingHolder<ViewDataBinding> onCreateItemViewHolder(ViewGroup parent, int viewType) {
+
+            //@@@ ここのlayout変える
             return new BindingHolder<>(parent.getContext(), parent, R.layout.row_list_with_details_item);
         }
 

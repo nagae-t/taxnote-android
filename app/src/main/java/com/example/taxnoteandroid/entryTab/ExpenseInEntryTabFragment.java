@@ -108,6 +108,7 @@ public class ExpenseInEntryTabFragment extends Fragment {
     //--------------------------------------------------------------//
 
     private void setDateView() {
+
         binding.dateTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -211,6 +212,7 @@ public class ExpenseInEntryTabFragment extends Fragment {
 
         @Override
         protected void onBindItemViewHolder(BindingHolder<ViewDataBinding> holder, final int position) {
+
             RowListWithDetailsItemBinding binding = (RowListWithDetailsItemBinding) holder.binding;
 
             final Reason reason = getItem(position);

@@ -10,7 +10,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -25,7 +24,6 @@ import com.example.taxnoteandroid.R;
 import com.example.taxnoteandroid.dataManager.ProjectDataManager;
 import com.example.taxnoteandroid.dataManager.SummaryDataManager;
 import com.example.taxnoteandroid.databinding.ListviewFooterBinding;
-import com.example.taxnoteandroid.databinding.RowListWithDetailsItemBinding;
 import com.example.taxnoteandroid.databinding.RowSummaryItemBinding;
 import com.example.taxnoteandroid.model.Account;
 import com.example.taxnoteandroid.model.Project;
@@ -113,7 +111,7 @@ public class SummaryActivity extends AppCompatActivity {
 
     private void setSummaryList(Reason reason) {
 
-        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.reason_list_view);
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.summary_list);
 
         // Get summary list
         final SummaryDataManager summaryDataManager = new SummaryDataManager(this);

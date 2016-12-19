@@ -177,6 +177,8 @@ public class HistoryTabFragment extends Fragment {
                 case VIEW_ITEM_CELL: {
                     RowHistoryCellBinding binding = (RowHistoryCellBinding) holder.binding;
                     Item item = items.get(position);
+
+                    //@@ ここ科目を表示
                     binding.name.setText("AAAA" + "/" + "AAAA");
                     if (TextUtils.isEmpty(item.cell.entry.memo)) {
                         binding.memo.setVisibility(View.GONE);
