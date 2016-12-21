@@ -23,6 +23,10 @@ import java.util.Map;
 
 
 public class HistoryTabFragment extends Fragment {
+
+    private RecyclerView recyclerView;
+
+
     public HistoryTabFragment() {
         // Required empty public constructor
     }
@@ -36,7 +40,27 @@ public class HistoryTabFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
+        //QQ ここはリサイクラービューを生成するだけにして、 on resumeで load history dataをしてるけどいいかな？
         View v = inflater.inflate(R.layout.fragment_history_tab, container, false);
+        recyclerView = (RecyclerView) v.findViewById(R.id.history);
+
+        return v;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        loadHistoryData();
+    }
+
+
+    //--------------------------------------------------------------//
+    //    -- History View --
+    //--------------------------------------------------------------//
+
+    private void loadHistoryData() {
 
         EntryDataManager entryDataManager = new EntryDataManager(getContext());
         Log.d("test", entryDataManager.findAll().toString());
@@ -92,18 +116,12 @@ public class HistoryTabFragment extends Fragment {
             }
         }
 
-        Log.d("test", map2.toString());
-        Log.d("test", items.toString());
-
-        RecyclerView recyclerView = (RecyclerView) v.findViewById(R.id.history);
         HistoryAdapter historyAdapter = new HistoryAdapter(items);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(historyAdapter);
-
-        return v;
     }
 
-    class Item {
+        class Item {
         Header header;
         Cell cell;
 

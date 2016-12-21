@@ -46,6 +46,7 @@ public class EntryDataManager {
         return ormaDatabase.selectFromEntry().where("uuid = ?", uuid).valueOrNull();
     }
 
+    //@@ あとでproject指定もいれる
     public List<Entry> findAll() {
         return ormaDatabase.selectFromEntry().orderBy(Entry_Schema.INSTANCE.date.getQualifiedName() + " " + OrderSpec.DESC).toList();
     }
