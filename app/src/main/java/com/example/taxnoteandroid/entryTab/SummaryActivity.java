@@ -351,7 +351,7 @@ public class SummaryActivity extends AppCompatActivity {
     //--------------------------------------------------------------//
 
     private void startInputDataActivity(Summary summary) {
-        startActivityForResult(InputDataActivity.createIntent(SummaryActivity.this, isExpense, System.currentTimeMillis(), account, reason, summary), 1);
+        startActivityForResult(InputDataActivity.createIntent(SummaryActivity.this, isExpense, date, account, reason, summary), 1);
     }
 
     @Override

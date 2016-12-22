@@ -183,7 +183,9 @@ public class HistoryTabFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(BindingHolder holder, int position) {
+
             switch (holder.getItemViewType()) {
+
                 case VIEW_ITEM_HEADER: {
                     RowHistorySectionHeaderBinding binding = (RowHistorySectionHeaderBinding) holder.binding;
                     Item item = items.get(position);
@@ -192,12 +194,21 @@ public class HistoryTabFragment extends Fragment {
                     binding.price.setText(item.header.sum + "");
                 }
                 break;
+
                 case VIEW_ITEM_CELL: {
+
                     RowHistoryCellBinding binding = (RowHistoryCellBinding) holder.binding;
                     Item item = items.get(position);
 
-                    //@@ ここ科目を表示
-                    binding.name.setText("AAAA" + "/" + "AAAA");
+
+                    //@@@ここがばぐってしまった
+                    if (item.cell.entry.isExpense) {
+                        binding.name.setText(item.cell.entry.reason + " / " + item.cell.entry.account);
+                    } else {
+                        binding.name.setText(item.cell.entry.account + " / " + item.cell.entry.reason);
+                    }
+
+
                     if (TextUtils.isEmpty(item.cell.entry.memo)) {
                         binding.memo.setVisibility(View.GONE);
                     } else {
