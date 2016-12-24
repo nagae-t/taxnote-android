@@ -14,6 +14,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.taxnoteandroid.R;
+import com.example.taxnoteandroid.ValueConverter;
 import com.example.taxnoteandroid.dataManager.EntryDataManager;
 import com.example.taxnoteandroid.dataManager.ProjectDataManager;
 import com.example.taxnoteandroid.model.Account;
@@ -24,7 +25,6 @@ import com.example.taxnoteandroid.model.Summary;
 
 import org.parceler.Parcels;
 
-import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.UUID;
 
@@ -199,8 +199,8 @@ public class InputDataActivity extends AppCompatActivity {
 
             // Create price string
             currentPrice                        = Long.parseLong(text + price);
-            DecimalFormat formatForPriceStyle   = new DecimalFormat("#,###.##");
-            String priceString                  = formatForPriceStyle.format(currentPrice);
+            ValueConverter valueConverter       = new ValueConverter();
+            String priceString                  = valueConverter.formatPrice(currentPrice);
 
             priceTextView.setText(priceString);
         }

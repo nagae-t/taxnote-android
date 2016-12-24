@@ -200,8 +200,6 @@ public class HistoryTabFragment extends Fragment {
                     RowHistoryCellBinding binding = (RowHistoryCellBinding) holder.binding;
                     Item item = items.get(position);
 
-
-                    //@@@ここがばぐってしまった
                     if (item.cell.entry.isExpense) {
                         binding.name.setText(item.cell.entry.reason.name + " / " + item.cell.entry.account.name);
                     } else {
@@ -215,7 +213,15 @@ public class HistoryTabFragment extends Fragment {
                         binding.memo.setVisibility(View.VISIBLE);
                         binding.memo.setText(item.cell.entry.memo);
                     }
-                    binding.price.setText(item.cell.entry.price + "");
+
+                    //@@@ ここで赤くしたりする
+                    // Create price string
+                    ValueConverter valueConverter       = new ValueConverter();
+                    String priceString                  = valueConverter.formatPriceWithSymbol(item.cell.entry.price, item.cell.entry.isExpense);
+                    binding.price.setText(priceString);
+
+
+//                    binding.price.setText(item.cell.entry.price + "");
                 }
                 break;
             }
