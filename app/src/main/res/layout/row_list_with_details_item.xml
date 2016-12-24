@@ -13,20 +13,17 @@
         android:paddingTop="8dp">
 
         <TextView
+            style="@style/standard_font_style"
             android:id="@+id/title"
-            style="@style/standard_font_size"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             tools:text="test" />
 
         <TextView
+            style="@style/detail_text_style"
             android:id="@+id/details"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:layout_below="@+id/title"
-            android:textColor="#999999"
-            android:textSize="10sp"
-            tools:text="test" />
+            tools:text="detail" />
 
         <ImageView
             android:id="@+id/menu_right"

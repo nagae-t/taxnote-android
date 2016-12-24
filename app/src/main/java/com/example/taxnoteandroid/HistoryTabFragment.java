@@ -203,9 +203,9 @@ public class HistoryTabFragment extends Fragment {
 
                     //@@@ここがばぐってしまった
                     if (item.cell.entry.isExpense) {
-                        binding.name.setText(item.cell.entry.reason + " / " + item.cell.entry.account);
+                        binding.name.setText(item.cell.entry.reason.name + " / " + item.cell.entry.account.name);
                     } else {
-                        binding.name.setText(item.cell.entry.account + " / " + item.cell.entry.reason);
+                        binding.name.setText(item.cell.entry.account.name + " / " + item.cell.entry.reason.name);
                     }
 
 

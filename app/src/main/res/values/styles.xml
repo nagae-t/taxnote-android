@@ -16,8 +16,17 @@
         <item name="android:paddingRight">16dp</item>
     </style>
 
-    <style name="standard_font_size">
+    <style name="standard_font_style">
         <item name="android:textSize">16dp</item>
+    </style>
+
+    <style name="detail_text_style">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">10dp</item>
+        <item name="android:textColor">#999999</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:maxLines">1</item>
     </style>
 
     <style name="section_header">
