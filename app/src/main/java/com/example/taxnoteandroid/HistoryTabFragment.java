@@ -68,7 +68,7 @@ public class HistoryTabFragment extends Fragment {
 
         List<Entry> entries = entryDataManager.findAll();
 
-        List<Item> items = new ArrayList<>();
+        final List<Item> items = new ArrayList<>();
         Map<String, List<Entry>> map2 = new LinkedHashMap<>();
         // 入力日ごとにグルーピング
         for (Entry entry : entries) {
@@ -128,6 +128,13 @@ public class HistoryTabFragment extends Fragment {
         }
 
         HistoryAdapter historyAdapter = new HistoryAdapter(items);
+        historyAdapter.setOnItemClickRecyclerAdapterListener(new OnItemClickRecyclerAdapterListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                Item item = items.get(position);
+                startActivity(EntryEditActivity.createIntent(getContext(), item.cell.entry));
+            }
+        });
         recyclerView.setAdapter(historyAdapter);
     }
 
@@ -175,9 +182,14 @@ public class HistoryTabFragment extends Fragment {
         private static final int VIEW_ITEM_CELL = 2;
 
         private List<Item> items;
+        private OnItemClickRecyclerAdapterListener onItemClickRecyclerAdapterListener;
 
         public HistoryAdapter(List<Item> items) {
             this.items = items;
+        }
+
+        public void setOnItemClickRecyclerAdapterListener(OnItemClickRecyclerAdapterListener onItemClickRecyclerAdapterListener) {
+            this.onItemClickRecyclerAdapterListener = onItemClickRecyclerAdapterListener;
         }
 
         @Override
@@ -192,7 +204,7 @@ public class HistoryTabFragment extends Fragment {
         }
 
         @Override
-        public void onBindViewHolder(BindingHolder holder, int position) {
+        public void onBindViewHolder(BindingHolder holder, final int position) {
 
             switch (holder.getItemViewType()) {
 
@@ -209,6 +221,15 @@ public class HistoryTabFragment extends Fragment {
 
                     RowHistoryCellBinding binding = (RowHistoryCellBinding) holder.binding;
                     Item item = items.get(position);
+
+                    binding.getRoot().setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if (onItemClickRecyclerAdapterListener != null) {
+                                onItemClickRecyclerAdapterListener.onItemClick(v, position);
+                            }
+                        }
+                    });
 
                     if (item.cell.entry.isExpense) {
                         binding.name.setText(item.cell.entry.reason.name + " / " + item.cell.entry.account.name);

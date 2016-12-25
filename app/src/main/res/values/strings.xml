@@ -27,9 +27,8 @@
     <string name="delete_confirm_message">削除していいですか？</string>
 
 
-
     //--------------------------------------------------------------//
-    //    -- Error Message --
+    // -- Error Message --
     //--------------------------------------------------------------//
 
     <string name="Error">エラー</string>
@@ -37,16 +36,18 @@
 
 
     //--------------------------------------------------------------//
-    //    -- Entry Tab --
+    // -- Entry Tab --
     //--------------------------------------------------------------//
 
     <string name="entry_tab_fragment_date">日付</string>
     <string name="entry_tab_fragment_account">支払い方法</string>
+    //@@//
+    <string name="entry_tab_fragment_account2">受け取り方法</string>
     <string name="entry_tab_fragment_select_reason">科目を選択</string>
 
 
     //--------------------------------------------------------------//
-    //    -- Date --
+    // -- Date --
     //--------------------------------------------------------------//
 
     <string name="date_string_today">今日</string>
@@ -55,12 +56,11 @@
 
 
     //--------------------------------------------------------------//
-    //    -- List View --
+    // -- List View --
     //--------------------------------------------------------------//
 
     <string name="list_view_add_reason">勘定科目を追加</string>
     <string name="list_view_rename">科目名を変更</string>
-
 
 
 </resources>

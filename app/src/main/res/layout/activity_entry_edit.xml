@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="entry"
+            type="com.example.taxnoteandroid.model.Entry" />
+    </data>
+
+    <LinearLayout
+        android:id="@+id/activity_entry_edit"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        tools:context="com.example.taxnoteandroid.EntryEditActivity">
+
+        <TextView
+            style="@style/section_header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="日付" />
+
+        <TextView
+            android:id="@+id/date"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+
+        <TextView
+            style="@style/section_header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@{entry.isExpense ? @string/entry_tab_fragment_account : @string/entry_tab_fragment_account2}" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+
+        <TextView
+            style="@style/section_header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="勘定科目" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+
+        <TextView
+            style="@style/section_header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="備考" />
+
+        <TextView
+            android:id="@+id/memo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@{entry.memo}" />
+
+        <TextView
+            style="@style/section_header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="金額" />
+
+        <TextView
+            android:id="@+id/price"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+
+        <Button
+            android:id="@+id/delete"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@null"
+            android:text="削除する" />
+    </LinearLayout>
+</layout>
