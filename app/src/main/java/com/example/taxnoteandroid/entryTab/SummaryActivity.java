@@ -24,7 +24,7 @@ import com.example.taxnoteandroid.R;
 import com.example.taxnoteandroid.dataManager.ProjectDataManager;
 import com.example.taxnoteandroid.dataManager.SummaryDataManager;
 import com.example.taxnoteandroid.databinding.ListviewFooterBinding;
-import com.example.taxnoteandroid.databinding.RowSummaryItemBinding;
+import com.example.taxnoteandroid.databinding.RowSummaryCellBinding;
 import com.example.taxnoteandroid.model.Account;
 import com.example.taxnoteandroid.model.Project;
 import com.example.taxnoteandroid.model.Reason;
@@ -152,12 +152,12 @@ public class SummaryActivity extends AppCompatActivity {
 
         @Override
         protected BindingHolder<ViewDataBinding> onCreateItemViewHolder(ViewGroup parent, int viewType) {
-            return new BindingHolder<>(parent.getContext(), parent, R.layout.row_summary_item);
+            return new BindingHolder<>(parent.getContext(), parent, R.layout.row_summary_cell);
         }
 
         @Override
         protected void onBindItemViewHolder(BindingHolder<ViewDataBinding> holder, final int position) {
-            RowSummaryItemBinding binding = (RowSummaryItemBinding) holder.binding;
+            RowSummaryCellBinding binding = (RowSummaryCellBinding) holder.binding;
 
             final Summary summary = getItem(position);
 
