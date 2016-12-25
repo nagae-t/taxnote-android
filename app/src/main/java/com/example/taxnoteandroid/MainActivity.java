@@ -42,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
 //        viewPager.beginFakeDrag();
         binding.pager.setAdapter(adapter);
         binding.pager.beginFakeDrag();
+        binding.pager.setOffscreenPageLimit(adapter.getCount());
 
         BottomNavigationView bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_navigation);
 
