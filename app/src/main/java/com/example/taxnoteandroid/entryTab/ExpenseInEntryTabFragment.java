@@ -35,8 +35,6 @@ import com.example.taxnoteandroid.databinding.RowListWithDetailsItemBinding;
 import com.example.taxnoteandroid.model.Account;
 import com.example.taxnoteandroid.model.Project;
 import com.example.taxnoteandroid.model.Reason;
-import com.h6ah4i.android.widget.advrecyclerview.draggable.DraggableItemAdapter;
-import com.h6ah4i.android.widget.advrecyclerview.draggable.ItemDraggableRange;
 import com.h6ah4i.android.widget.advrecyclerview.draggable.RecyclerViewDragDropManager;
 
 import java.text.SimpleDateFormat;
@@ -190,12 +188,13 @@ public class ExpenseInEntryTabFragment extends Fragment {
         });
         recyclerView.addItemDecoration(new DividerDecoration(getContext()));
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        recyclerView.setAdapter(dragMgr.createWrappedAdapter(reasonListAdapter));
-
-        dragMgr.attachRecyclerView(recyclerView);
+        recyclerView.setAdapter(reasonListAdapter);
+//        recyclerView.setAdapter(dragMgr.createWrappedAdapter(reasonListAdapter));
+//
+//        dragMgr.attachRecyclerView(recyclerView);
     }
 
-    class ListAdapter extends FooterRecyclerArrayAdapter<Reason> implements DraggableItemAdapter<BindingHolder<ViewDataBinding>> {
+    class ListAdapter extends FooterRecyclerArrayAdapter<Reason> /**implements DraggableItemAdapter<BindingHolder<ViewDataBinding>>**/ {
 
         private final ReasonDataManager reasonDataManager;
         private OnItemClickRecyclerAdapterListener onItemClickRecyclerAdapterListener;
@@ -259,9 +258,10 @@ public class ExpenseInEntryTabFragment extends Fragment {
             if (TextUtils.isEmpty(reason.details)) {
                 binding.details.setVisibility(View.GONE);
             } else {
-                binding.details.setText(reason.details);
                 binding.details.setVisibility(View.VISIBLE);
             }
+
+            binding.details.setText(reason.details);
         }
 
         private void deleteReason(final Reason reason) {
@@ -349,27 +349,27 @@ public class ExpenseInEntryTabFragment extends Fragment {
             this.onItemClickRecyclerAdapterListener = onItemClickRecyclerAdapterListener;
         }
 
-        @Override
-        public boolean onCheckCanStartDrag(BindingHolder<ViewDataBinding> holder, int position, int x, int y) {
-            return true;
-        }
-
-        @Override
-        public ItemDraggableRange onGetItemDraggableRange(BindingHolder<ViewDataBinding> holder, int position) {
-            return null;
-        }
-
-        @Override
-        public void onMoveItem(int fromPosition, int toPosition) {
-            Reason movedItem = getItem(fromPosition);
-            add(toPosition, movedItem);
-            notifyItemMoved(fromPosition, toPosition);
-        }
-
-        @Override
-        public boolean onCheckCanDrop(int draggingPosition, int dropPosition) {
-            return true;
-        }
+//        @Override
+//        public boolean onCheckCanStartDrag(BindingHolder<ViewDataBinding> holder, int position, int x, int y) {
+//            return true;
+//        }
+//
+//        @Override
+//        public ItemDraggableRange onGetItemDraggableRange(BindingHolder<ViewDataBinding> holder, int position) {
+//            return null;
+//        }
+//
+//        @Override
+//        public void onMoveItem(int fromPosition, int toPosition) {
+//            Reason movedItem = getItem(fromPosition);
+//            add(toPosition, movedItem);
+//            notifyItemMoved(fromPosition, toPosition);
+//        }
+//
+//        @Override
+//        public boolean onCheckCanDrop(int draggingPosition, int dropPosition) {
+//            return true;
+//        }
     }
 
 

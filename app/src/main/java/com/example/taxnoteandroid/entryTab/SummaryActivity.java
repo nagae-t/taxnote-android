@@ -29,8 +29,6 @@ import com.example.taxnoteandroid.model.Account;
 import com.example.taxnoteandroid.model.Project;
 import com.example.taxnoteandroid.model.Reason;
 import com.example.taxnoteandroid.model.Summary;
-import com.h6ah4i.android.widget.advrecyclerview.draggable.DraggableItemAdapter;
-import com.h6ah4i.android.widget.advrecyclerview.draggable.ItemDraggableRange;
 import com.h6ah4i.android.widget.advrecyclerview.draggable.RecyclerViewDragDropManager;
 
 import org.parceler.Parcels;
@@ -135,12 +133,13 @@ public class SummaryActivity extends AppCompatActivity {
         });
         recyclerView.addItemDecoration(new DividerDecoration(this));
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(dragMgr.createWrappedAdapter(summaryListAdapter));
-
-        dragMgr.attachRecyclerView(recyclerView);
+        recyclerView.setAdapter(summaryListAdapter);
+//        recyclerView.setAdapter(dragMgr.createWrappedAdapter(summaryListAdapter));
+//
+//        dragMgr.attachRecyclerView(recyclerView);
     }
 
-    class ListAdapter extends FooterRecyclerArrayAdapter<Summary> implements DraggableItemAdapter<BindingHolder<ViewDataBinding>> {
+    class ListAdapter extends FooterRecyclerArrayAdapter<Summary> /**implements DraggableItemAdapter<BindingHolder<ViewDataBinding>>**/ {
 
         private final SummaryDataManager summaryDataManager;
         private OnItemClickRecyclerAdapterListener onItemClickRecyclerAdapterListener;
@@ -285,27 +284,27 @@ public class SummaryActivity extends AppCompatActivity {
             this.onItemClickRecyclerAdapterListener = onItemClickRecyclerAdapterListener;
         }
 
-        @Override
-        public boolean onCheckCanStartDrag(BindingHolder<ViewDataBinding> holder, int position, int x, int y) {
-            return true;
-        }
-
-        @Override
-        public ItemDraggableRange onGetItemDraggableRange(BindingHolder<ViewDataBinding> holder, int position) {
-            return null;
-        }
-
-        @Override
-        public void onMoveItem(int fromPosition, int toPosition) {
-            Summary movedItem = getItem(fromPosition);
-            add(toPosition, movedItem);
-            notifyItemMoved(fromPosition, toPosition);
-        }
-
-        @Override
-        public boolean onCheckCanDrop(int draggingPosition, int dropPosition) {
-            return true;
-        }
+//        @Override
+//        public boolean onCheckCanStartDrag(BindingHolder<ViewDataBinding> holder, int position, int x, int y) {
+//            return true;
+//        }
+//
+//        @Override
+//        public ItemDraggableRange onGetItemDraggableRange(BindingHolder<ViewDataBinding> holder, int position) {
+//            return null;
+//        }
+//
+//        @Override
+//        public void onMoveItem(int fromPosition, int toPosition) {
+//            Summary movedItem = getItem(fromPosition);
+//            add(toPosition, movedItem);
+//            notifyItemMoved(fromPosition, toPosition);
+//        }
+//
+//        @Override
+//        public boolean onCheckCanDrop(int draggingPosition, int dropPosition) {
+//            return true;
+//        }
     }
 
 
