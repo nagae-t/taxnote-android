@@ -199,8 +199,7 @@ public class InputDataActivity extends AppCompatActivity {
 
             // Create price string
             currentPrice                        = Long.parseLong(text + price);
-            ValueConverter valueConverter       = new ValueConverter();
-            String priceString                  = valueConverter.formatPrice(currentPrice);
+            String priceString                  = ValueConverter.formatPrice(currentPrice);
 
             priceTextView.setText(priceString);
         }

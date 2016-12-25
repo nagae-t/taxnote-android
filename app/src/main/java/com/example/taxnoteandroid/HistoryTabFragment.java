@@ -42,9 +42,9 @@ public class HistoryTabFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        //QQ ここはリサイクラービューを生成するだけにして、 on resumeで load history dataをしてるけどいいかな？
         View v = inflater.inflate(R.layout.fragment_history_tab, container, false);
         recyclerView = (RecyclerView) v.findViewById(R.id.history);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         return v;
     }
@@ -128,7 +128,6 @@ public class HistoryTabFragment extends Fragment {
         }
 
         HistoryAdapter historyAdapter = new HistoryAdapter(items);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(historyAdapter);
     }
 
@@ -226,8 +225,7 @@ public class HistoryTabFragment extends Fragment {
                     }
 
                     // Create price string
-                    ValueConverter valueConverter       = new ValueConverter();
-                    String priceString                  = valueConverter.formatPriceWithSymbol(item.cell.entry.price, item.cell.entry.isExpense);
+                    String priceString                  = ValueConverter.formatPriceWithSymbol(item.cell.entry.price, item.cell.entry.isExpense);
                     binding.price.setText(priceString);
 
                     // Set price color

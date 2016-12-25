@@ -6,10 +6,9 @@ import java.text.DecimalFormat;
  * Created by umemotonon on 2016/12/24.
  */
 
-//QQ ここクラスメソッドで作りたいんやけど。。どうでしょ？
 public class ValueConverter {
 
-    public String formatPrice(long price) {
+    public static String formatPrice(long price) {
 
         DecimalFormat formatForPriceStyle   = new DecimalFormat("#,###.##");
         String priceString                  = formatForPriceStyle.format(price);
@@ -17,7 +16,7 @@ public class ValueConverter {
         return priceString;
     }
 
-    public String formatPriceWithSymbol(long price, boolean isExpense) {
+    public static String formatPriceWithSymbol(long price, boolean isExpense) {
 
         DecimalFormat formatForPriceStyle   = new DecimalFormat("#,###.##");
         String priceString                  = formatForPriceStyle.format(price);
