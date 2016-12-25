@@ -108,20 +108,16 @@ public class HistoryTabFragment extends Fragment {
 
             for (Entry entry : e.getValue()) {
 
-
-                // @@@ 今+=してるけど後から合計処理を書き直す
                 if (entry.isExpense) {
                     header.sum -= entry.price;
                 } else {
                     header.sum += entry.price;
                 }
 
-
                 // Create price string
+                //@@@ sumをstring表示にして変更
 //                ValueConverter valueConverter       = new ValueConverter();
 //                header.sum                = valueConverter.formatPrice(header.sum);
-
-
 
                 Item cellItem = new Item();
                 Cell cell = new Cell();
