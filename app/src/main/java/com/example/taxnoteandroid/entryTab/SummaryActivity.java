@@ -250,6 +250,7 @@ public class SummaryActivity extends AppCompatActivity {
                                     List<Summary> summaryList = summaryDataManager.findAllWithReason(reason, context);
 
                                     Summary summary = new Summary();
+                                    summary.reason = reason;
                                     summary.name = newName;
                                     summary.uuid = UUID.randomUUID().toString();
 
