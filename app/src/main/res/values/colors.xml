@@ -11,4 +11,5 @@
     <color name="divider">#BDBDBD</color>
     <color name="horizontal_line">#D7D7D7</color>
     <color name="header_background">#EDEDED</color>
+    <color name="expense">#ff6666</color>
 </resources>

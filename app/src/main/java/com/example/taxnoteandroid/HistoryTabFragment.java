@@ -2,6 +2,7 @@ package com.example.taxnoteandroid;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -106,8 +107,22 @@ public class HistoryTabFragment extends Fragment {
             items.add(headerItem);
 
             for (Entry entry : e.getValue()) {
-                // @@ 今+=してるけど後から合計処理を書き直す
-                header.sum += entry.price;
+
+
+                // @@@ 今+=してるけど後から合計処理を書き直す
+                if (entry.isExpense) {
+                    header.sum -= entry.price;
+                } else {
+                    header.sum += entry.price;
+                }
+
+
+                // Create price string
+//                ValueConverter valueConverter       = new ValueConverter();
+//                header.sum                = valueConverter.formatPrice(header.sum);
+
+
+
                 Item cellItem = new Item();
                 Cell cell = new Cell();
                 cellItem.cell = cell;
@@ -214,14 +229,17 @@ public class HistoryTabFragment extends Fragment {
                         binding.memo.setText(item.cell.entry.memo);
                     }
 
-                    //@@@ ここで赤くしたりする
                     // Create price string
                     ValueConverter valueConverter       = new ValueConverter();
                     String priceString                  = valueConverter.formatPriceWithSymbol(item.cell.entry.price, item.cell.entry.isExpense);
                     binding.price.setText(priceString);
 
-
-//                    binding.price.setText(item.cell.entry.price + "");
+                    // Set price color
+                    if (item.cell.entry.isExpense) {
+                        binding.price.setTextColor(ContextCompat.getColor(getContext(), R.color.expense));
+                    } else  {
+                        binding.price.setTextColor(ContextCompat.getColor(getContext(), R.color.primary));
+                    }
                 }
                 break;
             }
