@@ -20,7 +20,7 @@ import com.example.taxnoteandroid.dataManager.AccountDataManager;
 import com.example.taxnoteandroid.dataManager.ProjectDataManager;
 import com.example.taxnoteandroid.dataManager.SharedPreferencesManager;
 import com.example.taxnoteandroid.databinding.ListviewFooterBinding;
-import com.example.taxnoteandroid.databinding.RowListWithDetailsItemBinding;
+import com.example.taxnoteandroid.databinding.RowAccountCellBinding;
 import com.example.taxnoteandroid.model.Account;
 import com.example.taxnoteandroid.model.Project;
 import com.h6ah4i.android.widget.advrecyclerview.draggable.DraggableItemAdapter;
@@ -121,14 +121,12 @@ public class AccountSelectActivity extends AppCompatActivity {
 
         @Override
         protected BindingHolder<ViewDataBinding> onCreateItemViewHolder(ViewGroup parent, int viewType) {
-
-            //@@@ ここのlayout変える
-            return new BindingHolder<>(parent.getContext(), parent, R.layout.row_list_with_details_item);
+            return new BindingHolder<>(parent.getContext(), parent, R.layout.row_account_cell);
         }
 
         @Override
         protected void onBindItemViewHolder(BindingHolder<ViewDataBinding> holder, final int position) {
-            RowListWithDetailsItemBinding binding = (RowListWithDetailsItemBinding) holder.binding;
+            RowAccountCellBinding binding = (RowAccountCellBinding) holder.binding;
 
             final Account account = getItem(position);
 
