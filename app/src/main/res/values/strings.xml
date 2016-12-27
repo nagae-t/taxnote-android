@@ -41,7 +41,7 @@
 
     <string name="entry_tab_fragment_date">日付</string>
     <string name="entry_tab_fragment_account">支払い方法</string>
-    //@@//
+    //@@リファクタする//
     <string name="entry_tab_fragment_account2">受け取り方法</string>
     <string name="entry_tab_fragment_select_reason">科目を選択</string>
 

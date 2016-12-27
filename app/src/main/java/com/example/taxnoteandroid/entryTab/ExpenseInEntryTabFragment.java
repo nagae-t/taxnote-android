@@ -81,8 +81,12 @@ public class ExpenseInEntryTabFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
         // Inflate the layout for this fragment
         binding = FragmentEntryTabExpenseBinding.inflate(inflater, container, false);
+
+        binding.setIsExpense(isExpense);
+
         View view = binding.getRoot();
 
         setDateView();

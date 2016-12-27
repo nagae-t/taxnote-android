@@ -1,6 +1,12 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <data>
+        <variable
+            name="isExpense"
+            type="boolean" />
+    </data>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -21,7 +27,7 @@
 
         <TextView
             style="@style/section_header"
-            android:text="@string/entry_tab_fragment_account" />
+            android:text="@{isExpense ? @string/entry_tab_fragment_account : @string/entry_tab_fragment_account2}" />
 
         <TextView
             android:id="@+id/account_text_view"
