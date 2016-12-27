@@ -101,23 +101,22 @@ public class HistoryTabFragment extends Fragment {
             Header header = new Header();
             headerItem.header = header;
             header.date = e.getKey();
+
             // ここにformat済みの文字列を入れるといいかも
 //            header.formatDate =
 
             items.add(headerItem);
 
+            long totalPrice = 0;
+
             for (Entry entry : e.getValue()) {
 
+                // Calculate total price
                 if (entry.isExpense) {
-                    header.sum -= entry.price;
+                    totalPrice -= entry.price;
                 } else {
-                    header.sum += entry.price;
+                    totalPrice += entry.price;
                 }
-
-                // Create price string
-                //@@@ sumをstring表示にして変更
-//                ValueConverter valueConverter       = new ValueConverter();
-//                header.sum                = valueConverter.formatPrice(header.sum);
 
                 Item cellItem = new Item();
                 Cell cell = new Cell();
@@ -125,6 +124,9 @@ public class HistoryTabFragment extends Fragment {
                 cell.entry = entry;
                 items.add(cellItem);
             }
+
+            // Format the totalPrice
+            header.sum = ValueConverter.formatPrice(totalPrice);
         }
 
         HistoryAdapter historyAdapter = new HistoryAdapter(items);
@@ -154,7 +156,7 @@ public class HistoryTabFragment extends Fragment {
     class Header {
         String date;
         String formatDate;
-        long sum;
+        String sum;
 
         @Override
         public String toString() {
@@ -213,7 +215,8 @@ public class HistoryTabFragment extends Fragment {
                     Item item = items.get(position);
                     // dataをformatDateに変えればOKそう
                     binding.name.setText(item.header.date);
-                    binding.price.setText(item.header.sum + "");
+
+                    binding.price.setText(item.header.sum);
                 }
                 break;
 

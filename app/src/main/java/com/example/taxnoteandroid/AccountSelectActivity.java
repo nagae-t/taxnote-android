@@ -136,6 +136,7 @@ public class AccountSelectActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View view) {
                         onItemClickRecyclerAdapterListener.onItemClick(rootView, position);
+
                     }
                 });
             }
