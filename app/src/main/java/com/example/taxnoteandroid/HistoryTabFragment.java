@@ -6,7 +6,6 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,8 +15,8 @@ import com.example.taxnoteandroid.databinding.RowHistoryCellBinding;
 import com.example.taxnoteandroid.databinding.RowHistorySectionHeaderBinding;
 import com.example.taxnoteandroid.model.Entry;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -64,33 +63,29 @@ public class HistoryTabFragment extends Fragment {
     private void loadHistoryData() {
 
         EntryDataManager entryDataManager = new EntryDataManager(getContext());
-        Log.d("test", entryDataManager.findAll().toString());
+
+//        Log.d("test", entryDataManager.findAll().toString());
 
         List<Entry> entries = entryDataManager.findAll();
 
         final List<Item> items = new ArrayList<>();
         Map<String, List<Entry>> map2 = new LinkedHashMap<>();
+
         // 入力日ごとにグルーピング
         for (Entry entry : entries) {
-            Calendar calendar = Calendar.getInstance();
-            calendar.setTimeInMillis(entry.date);
 
-            int y = calendar.get(Calendar.YEAR);
-            int m = calendar.get(Calendar.MONTH);
-            int d = calendar.get(Calendar.DAY_OF_MONTH);
+            // Format date to string
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat(getResources().getString(R.string.date_string_format_to_month));
+            String dateString = simpleDateFormat.format(entry.date);
 
-            // 入力日をyyyymmddで文字列化してる
-            StringBuilder sb = new StringBuilder().append(y).append(m).append(d);
-            String date = sb.toString();
-
-            if (!map2.containsKey(date)) {
+            if (!map2.containsKey(dateString)) {
                 List<Entry> entryList = new ArrayList<>();
                 entryList.add(entry);
-                map2.put(date, entryList);
+                map2.put(dateString, entryList);
             } else {
-                List<Entry> entryList = map2.get(date);
+                List<Entry> entryList = map2.get(dateString);
                 entryList.add(entry);
-                map2.put(date, entryList);
+                map2.put(dateString, entryList);
             }
         }
 
@@ -101,9 +96,6 @@ public class HistoryTabFragment extends Fragment {
             Header header = new Header();
             headerItem.header = header;
             header.date = e.getKey();
-
-            // ここにformat済みの文字列を入れるといいかも
-//            header.formatDate =
 
             items.add(headerItem);
 
@@ -155,7 +147,6 @@ public class HistoryTabFragment extends Fragment {
 
     class Header {
         String date;
-        String formatDate;
         String sum;
 
         @Override
@@ -213,9 +204,7 @@ public class HistoryTabFragment extends Fragment {
                 case VIEW_ITEM_HEADER: {
                     RowHistorySectionHeaderBinding binding = (RowHistorySectionHeaderBinding) holder.binding;
                     Item item = items.get(position);
-                    // dataをformatDateに変えればOKそう
                     binding.name.setText(item.header.date);
-
                     binding.price.setText(item.header.sum);
                 }
                 break;
