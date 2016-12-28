@@ -37,6 +37,21 @@ public class AccountSelectActivity extends AppCompatActivity {
     private AccountSelectActivity.ListAdapter accountListAdapter;
 
 
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_account_select);
+
+        setIntentData();
+        setTitle();
+        setAccountList();
+    }
+
+
+    //--------------------------------------------------------------//
+    //    -- Intent --
+    //--------------------------------------------------------------//
+
     public static Intent createIntent(Context context, boolean isExpense) {
         Intent i = new Intent(context, AccountSelectActivity.class);
         i.putExtra(EXTRA_ISEXPENSE, isExpense);
@@ -49,13 +64,18 @@ public class AccountSelectActivity extends AppCompatActivity {
         isExpense       = intent.getBooleanExtra(EXTRA_ISEXPENSE, false);
     }
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_account_select);
 
-        setIntentData();
-        setAccountList();
+    //--------------------------------------------------------------//
+    //    -- Display Part --
+    //--------------------------------------------------------------//
+
+    private void setTitle() {
+
+        if (isExpense) {
+            setTitle(getResources().getString(R.string.entry_tab_fragment_account));
+        } else {
+            setTitle(getResources().getString(R.string.entry_tab_fragment_account2));
+        }
     }
 
 
