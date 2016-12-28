@@ -114,7 +114,8 @@ public class ExpenseInEntryTabFragment extends Fragment {
         binding.dateTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                DatePickerDialogFragment fragment = DatePickerDialogFragment.newInstance(date, "aaa");
+
+                DatePickerDialogFragment fragment = DatePickerDialogFragment.newInstance(date, getResources().getString(R.string.entry_tab_fragment_date));
                 fragment.setOnDateSetListener(new DatePickerDialogFragment.OnDateSetListener() {
                     @Override
                     public void onDateSet(Calendar calendar) {
