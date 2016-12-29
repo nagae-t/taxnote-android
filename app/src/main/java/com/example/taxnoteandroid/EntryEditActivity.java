@@ -24,6 +24,15 @@ public class EntryEditActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        setIntentAndBiding();
+    }
+
+
+    private void setIntentAndBiding() {
+
+        //@@@ entryを表示していく
+
         binding = DataBindingUtil.setContentView(this, R.layout.activity_entry_edit);
         Intent intent = getIntent();
         Entry entry = Parcels.unwrap(intent.getParcelableExtra(Entry.class.getName()));
