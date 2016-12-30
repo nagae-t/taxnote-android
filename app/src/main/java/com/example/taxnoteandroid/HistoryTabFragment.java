@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.taxnoteandroid.dataManager.EntryDataManager;
+import com.example.taxnoteandroid.databinding.FragmentHistoryTabBinding;
 import com.example.taxnoteandroid.databinding.RowHistoryCellBinding;
 import com.example.taxnoteandroid.databinding.RowHistorySectionHeaderBinding;
 import com.example.taxnoteandroid.model.Entry;
@@ -24,8 +25,7 @@ import java.util.Map;
 
 public class HistoryTabFragment extends Fragment {
 
-    private RecyclerView recyclerView;
-
+    private FragmentHistoryTabBinding binding;
 
     public HistoryTabFragment() {
         // Required empty public constructor
@@ -40,12 +40,10 @@ public class HistoryTabFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        binding = FragmentHistoryTabBinding.inflate(inflater,container, false);
+        binding.history.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        View v = inflater.inflate(R.layout.fragment_history_tab, container, false);
-        recyclerView = (RecyclerView) v.findViewById(R.id.history);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-
-        return v;
+        return binding.getRoot();
     }
 
     @Override
@@ -67,6 +65,14 @@ public class HistoryTabFragment extends Fragment {
 //        Log.d("test", entryDataManager.findAll().toString());
 
         List<Entry> entries = entryDataManager.findAll();
+
+        if (entries == null || entries.isEmpty()) {
+            binding.empty.setText("Empty");// @@ XMLの方で文字列指定する
+            binding.empty.setVisibility(View.VISIBLE);
+            return;
+        } else {
+            binding.empty.setVisibility(View.GONE);
+        }
 
         final List<Item> items = new ArrayList<>();
         Map<String, List<Entry>> map2 = new LinkedHashMap<>();
@@ -129,7 +135,7 @@ public class HistoryTabFragment extends Fragment {
                 startActivity(EntryEditActivity.createIntent(getContext(), item.cell.entry));
             }
         });
-        recyclerView.setAdapter(historyAdapter);
+        binding.history.setAdapter(historyAdapter);
     }
 
         class Item {
