@@ -6,24 +6,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:clickable="true"
-        android:gravity="center_vertical"
         android:minHeight="48dp"
         android:paddingBottom="8dp"
         android:paddingLeft="16dp"
         android:paddingTop="8dp">
-
-        <TextView
-            style="@style/standard_font_style"
-            android:id="@+id/title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            tools:text="test" />
-
-        <TextView
-            style="@style/detail_text_style"
-            android:id="@+id/details"
-            android:layout_below="@+id/title"
-            tools:text="detail" />
 
         <ImageView
             android:id="@+id/menu_right"
@@ -35,5 +21,27 @@
             android:paddingRight="16dp"
             android:src="@drawable/ic_more_vert_black_24dp"
             android:tint="@color/divider" />
+
+        <!-- layout_toStartOf:指定のViewの左側にViewを配置する -->
+        <!-- start = left. end = right. RTL対応のためのもの -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toStartOf="@id/menu_right"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/title"
+                style="@style/standard_font_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="test" />
+
+            <TextView
+                android:id="@+id/details"
+                style="@style/detail_text_style"
+                tools:text="detail" />
+        </LinearLayout>
     </RelativeLayout>
 </layout>
