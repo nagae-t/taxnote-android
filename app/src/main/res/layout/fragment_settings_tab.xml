@@ -1,13 +1,69 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="com.example.taxnoteandroid.SettingsTabFragment">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <!-- @@ 色調整する -->
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:background="#dddddd"
+        android:orientation="vertical"
+        tools:context="com.example.taxnoteandroid.SettingsTabFragment">
 
-</FrameLayout>
+        <TextView
+            android:id="@+id/upgrade"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:background="#ffffffff"
+            android:gravity="center_vertical"
+            android:minHeight="48dp"
+            android:paddingEnd="16dp"
+            android:paddingStart="16dp"
+            android:text="アップグレード" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:background="#ffffffff"
+            android:gravity="center_vertical"
+            android:minHeight="48dp"
+            android:paddingEnd="16dp"
+            android:paddingStart="16dp"
+            android:text="要望・質問を送る" />
+
+        <TextView
+            android:id="@+id/help"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#ffffffff"
+            android:gravity="center_vertical"
+            android:minHeight="48dp"
+            android:paddingEnd="16dp"
+            android:paddingStart="16dp"
+            android:text="ヘルプ・よくある質問" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:background="#ffffffff"
+            android:gravity="center"
+            android:minHeight="48dp"
+            android:orientation="horizontal"
+            android:paddingEnd="16dp"
+            android:paddingStart="16dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="バージョン" />
+
+            <TextView
+                android:id="@+id/version"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+    </LinearLayout>
+</layout>
