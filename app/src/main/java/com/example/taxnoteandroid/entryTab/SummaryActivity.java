@@ -145,7 +145,7 @@ public class SummaryActivity extends AppCompatActivity {
         private OnItemClickRecyclerAdapterListener onItemClickRecyclerAdapterListener;
 
         public ListAdapter(Context context) {
-            setHasStableIds(true);
+//            setHasStableIds(true);
             summaryDataManager = new SummaryDataManager(context);
         }
 

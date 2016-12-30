@@ -205,7 +205,7 @@ public class ExpenseInEntryTabFragment extends Fragment {
         private OnItemClickRecyclerAdapterListener onItemClickRecyclerAdapterListener;
 
         public ListAdapter(Context context) {
-            setHasStableIds(true);
+//            setHasStableIds(true);
             reasonDataManager = new ReasonDataManager(context);
         }
 
