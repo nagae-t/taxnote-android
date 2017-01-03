@@ -12,6 +12,12 @@
     <string name="History">仕訳帳</string>
     <string name="Settings">設定</string>
 
+    <string name="Details">備考</string>
+    <string name="Price">金額</string>
+    <string name="Delete">削除する</string>
+
+
+
     <string name="SummaryActivity_no_select">備考を選択しない</string>
     <string name="SummaryActivity_nex">次へ進む</string>
     <string name="SummaryActivity_select">備考を選択</string>

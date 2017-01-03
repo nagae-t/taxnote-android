@@ -10,6 +10,8 @@
 
     <LinearLayout
         android:id="@+id/activity_entry_edit"
+
+        style="@style/standard_font_style"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
@@ -19,10 +21,11 @@
             style="@style/section_header"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="日付" />
+            android:text="@string/entry_tab_fragment_date" />
 
         <TextView
             android:id="@+id/date"
+            android:gravity="center"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1" />
@@ -34,6 +37,8 @@
             android:text="@{entry.isExpense ? @string/entry_tab_fragment_account : @string/entry_tab_fragment_account2}" />
 
         <TextView
+            android:id="@+id/account"
+            android:gravity="center"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -43,9 +48,11 @@
             style="@style/section_header"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="勘定科目" />
+            android:text="@string/entry_tab_fragment_select_reason" />
 
         <TextView
+            android:id="@+id/reason"
+            android:gravity="center"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@{entry.reason.name}"
@@ -55,10 +62,11 @@
             style="@style/section_header"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="備考" />
+            android:text="@string/Details" />
 
         <TextView
             android:id="@+id/memo"
+            android:gravity="center"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -68,9 +76,10 @@
             style="@style/section_header"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="金額" />
+            android:text="@string/Price" />
 
         <TextView
+            android:gravity="center"
             android:id="@+id/price"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -83,6 +92,6 @@
             android:layout_weight="1"
             android:textColor="@color/expense"
             android:background="@null"
-            android:text="削除する" />
+            android:text="@string/Delete" />
     </LinearLayout>
 </layout>
