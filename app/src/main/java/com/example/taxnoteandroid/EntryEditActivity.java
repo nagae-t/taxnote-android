@@ -22,39 +22,61 @@ public class EntryEditActivity extends AppCompatActivity {
     private Entry entry;
 
 
-    public static Intent createIntent(Context context, Entry entry) {
-        Intent i = new Intent(context, EntryEditActivity.class);
-        i.putExtra(Entry.class.getName(), Parcels.wrap(entry));
-        return i;
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setIntentAndBinding();
-
-        setDateView();
-        setAccountView();
-        setPriceView();
+        setViews();
     }
 
     @Override
     public void onResume() {
         super.onResume();
 
-        loadCurrentDate();
-        loadCurrentPrice();
+        loadData();
+    }
+
+
+    //--------------------------------------------------------------//
+    //    -- Intent --
+    //--------------------------------------------------------------//
+
+    public static Intent createIntent(Context context, Entry entry) {
+        Intent i = new Intent(context, EntryEditActivity.class);
+        i.putExtra(Entry.class.getName(), Parcels.wrap(entry));
+        return i;
     }
 
     private void setIntentAndBinding() {
-
-        //@@@ entryを表示していく
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_entry_edit);
         Intent intent = getIntent();
         entry = Parcels.unwrap(intent.getParcelableExtra(Entry.class.getName()));
         binding.setEntry(entry);
+    }
+
+
+    //--------------------------------------------------------------//
+    //    -- Display Part --
+    //--------------------------------------------------------------//
+
+    private void setViews() {
+
+        setDateView();
+        setAccountView();
+        setReasonView();
+        setMemoView();
+        setPriceView();
+    }
+
+    private void loadData() {
+
+        loadCurrentDate();
+        loadCurrentAccount();
+        loadCurrentReason();
+        loadCurrentMemo();
+        loadCurrentPrice();
     }
 
 
@@ -108,18 +130,56 @@ public class EntryEditActivity extends AppCompatActivity {
             public void onClick(View view) {
 
                 //@@@ Account Edit Activity作るひつようあり
-                startActivity(AccountSelectActivity.createIntent(EntryEditActivity.this, entry.isExpense));
+//                startActivity(EntryEditActivity.createIntent(EntryEditActivity.this, entry.isExpense));
             }
         });
     }
 
-//    private void loadCurrentAccount() {
-//
-//        AccountDataManager accountDataManager = new AccountDataManager(getContext());
-//        account = accountDataManager.findCurrentSelectedAccount(getContext(), isExpense);
-//
-//        ((TextView) getView().findViewById(R.id.account_text_view)).setText(account.name);
-//    }
+    private void loadCurrentAccount() {
+        binding.account.setText(entry.account.name);
+    }
+
+
+    //--------------------------------------------------------------//
+    //    -- Reason --
+    //--------------------------------------------------------------//
+
+    private void setReasonView() {
+
+        binding.reason.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                //@@@ Account Edit Activity作るひつようあり
+//                startActivity(EntryEditActivity.createIntent(EntryEditActivity.this, entry.isExpense));
+            }
+        });
+    }
+
+    private void loadCurrentReason() {
+        binding.account.setText(entry.reason.name);
+    }
+
+
+    //--------------------------------------------------------------//
+    //    -- Memo --
+    //--------------------------------------------------------------//
+
+    private void setMemoView() {
+
+        binding.memo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                //@@@ Account Edit Activity作るひつようあり
+//                startActivity(EntryEditActivity.createIntent(EntryEditActivity.this, entry.isExpense));
+            }
+        });
+    }
+
+    private void loadCurrentMemo() {
+        binding.memo.setText(entry.memo);
+    }
 
 
     //--------------------------------------------------------------//
