@@ -31,7 +31,7 @@ public class EntryEditActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setIntentAndBinding();
+        setIntent();
         setViews();
     }
 
@@ -53,12 +53,11 @@ public class EntryEditActivity extends AppCompatActivity {
         return i;
     }
 
-    private void setIntentAndBinding() {
+    private void setIntent() {
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_entry_edit);
         Intent intent = getIntent();
         entry = Parcels.unwrap(intent.getParcelableExtra(Entry.class.getName()));
-        binding.setEntry(entry);
         entryUuid = entry.uuid;
     }
 
@@ -79,13 +78,12 @@ public class EntryEditActivity extends AppCompatActivity {
 
     private void loadData() {
 
-        //@@ここでentryを読み込む
+        // Load the latest entry
         EntryDataManager entryDataManager = new EntryDataManager(EntryEditActivity.this);
         entry = entryDataManager.findByUuid(entryUuid);
 
+        binding.setEntry(entry);
         loadCurrentDate();
-        loadCurrentAccount();
-        loadCurrentReason();
         loadCurrentMemo();
         loadCurrentPrice();
     }
@@ -144,13 +142,6 @@ public class EntryEditActivity extends AppCompatActivity {
         });
     }
 
-    private void loadCurrentAccount() {
-
-        //@@@
-        //QQ ここなぜか戻ってきた時にreasonの名前になっちゃう
-        binding.account.setText(entry.account.name);
-    }
-
 
     //--------------------------------------------------------------//
     //    -- Reason --
@@ -164,10 +155,6 @@ public class EntryEditActivity extends AppCompatActivity {
                 startActivity(AccountEditActivity.createIntent(EntryEditActivity.this, entry.isExpense, false, entry.id));
             }
         });
-    }
-
-    private void loadCurrentReason() {
-        binding.account.setText(entry.reason.name);
     }
 
 
