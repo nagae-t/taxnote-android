@@ -14,41 +14,5 @@
         android:id="@+id/pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
-
-    <!--<TextView-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:background="#666666"-->
-    <!--android:text="@string/Blank1Fragment_date" />-->
-
-    <!--<TextView-->
-    <!--android:id="@+id/date"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="48dp"-->
-    <!--android:gravity="center"-->
-    <!--tools:text="2016年10月16日 木" />-->
-
-    <!--<TextView-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:background="#666666"-->
-    <!--android:text="@string/Blank1Fragment_cash" />-->
-
-    <!--<TextView-->
-    <!--android:id="@+id/cash"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="48dp"-->
-    <!--android:gravity="center"-->
-    <!--tools:text="Cash" />-->
-
-    <!--<TextView-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:background="#666666"-->
-    <!--android:text="@string/Blank1Fragment_select" />-->
-
-    <!--<ListView-->
-    <!--android:id="@+id/list"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="match_parent" />-->
+    
 </LinearLayout>
