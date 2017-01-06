@@ -81,9 +81,7 @@ public class EntryEditActivity extends AppCompatActivity {
 
         //@@ここでentryを読み込む
         EntryDataManager entryDataManager = new EntryDataManager(EntryEditActivity.this);
-
-        //@@落ちるからコメントアウト
-//        entry = entryDataManager.findByUuid(entryUuid);
+        entry = entryDataManager.findByUuid(entryUuid);
 
         loadCurrentDate();
         loadCurrentAccount();
