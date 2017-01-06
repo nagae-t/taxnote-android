@@ -11,7 +11,6 @@
         style="@style/section_header"
         android:text="@string/SummaryActivity_no_select" />
 
-    <!--QQこのセレクターなんできかへんの？なんでなん？-->
     <TextView
         android:background="@drawable/selector_background_colors"
         style="@style/standard_font_style"
@@ -27,7 +26,6 @@
         android:text="@string/SummaryActivity_select" />
 
     <android.support.v7.widget.RecyclerView
-        android:background="@drawable/selector_background_colors"
         android:id="@+id/summary_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
