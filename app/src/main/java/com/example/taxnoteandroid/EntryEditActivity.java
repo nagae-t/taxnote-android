@@ -24,6 +24,7 @@ public class EntryEditActivity extends AppCompatActivity {
 
     private ActivityEntryEditBinding binding;
     private Entry entry;
+    private String entryUuid;
 
 
     @Override
@@ -58,6 +59,7 @@ public class EntryEditActivity extends AppCompatActivity {
         Intent intent = getIntent();
         entry = Parcels.unwrap(intent.getParcelableExtra(Entry.class.getName()));
         binding.setEntry(entry);
+        entryUuid = entry.uuid;
     }
 
 
@@ -76,6 +78,12 @@ public class EntryEditActivity extends AppCompatActivity {
     }
 
     private void loadData() {
+
+        //@@ここでentryを読み込む
+        EntryDataManager entryDataManager = new EntryDataManager(EntryEditActivity.this);
+
+        //@@落ちるからコメントアウト
+//        entry = entryDataManager.findByUuid(entryUuid);
 
         loadCurrentDate();
         loadCurrentAccount();
