@@ -5,7 +5,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#dddddd"
+        android:background="@color/header_background"
         android:orientation="vertical"
         tools:context="com.example.taxnoteandroid.SettingsTabFragment">
 

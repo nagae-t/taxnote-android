@@ -194,8 +194,8 @@ public class ExpenseInEntryTabFragment extends Fragment {
         recyclerView.addItemDecoration(new DividerDecoration(getContext()));
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(reasonListAdapter);
+
 //        recyclerView.setAdapter(dragMgr.createWrappedAdapter(reasonListAdapter));
-//
 //        dragMgr.attachRecyclerView(recyclerView);
     }
 

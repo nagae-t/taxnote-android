@@ -67,7 +67,8 @@ public class HistoryTabFragment extends Fragment {
         List<Entry> entries = entryDataManager.findAll();
 
         if (entries == null || entries.isEmpty()) {
-            binding.empty.setText("Empty");// @@ XMLの方で文字列指定する
+
+            binding.empty.setText(getResources().getString(R.string.history_data_empty));
             binding.empty.setVisibility(View.VISIBLE);
             return;
         } else {

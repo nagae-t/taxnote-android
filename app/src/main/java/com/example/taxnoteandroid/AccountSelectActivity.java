@@ -23,7 +23,7 @@ import com.example.taxnoteandroid.databinding.ListviewFooterBinding;
 import com.example.taxnoteandroid.databinding.RowAccountCellBinding;
 import com.example.taxnoteandroid.model.Account;
 import com.example.taxnoteandroid.model.Project;
-import com.h6ah4i.android.widget.advrecyclerview.draggable.RecyclerViewDragDropManager;
+//import com.h6ah4i.android.widget.advrecyclerview.draggable.RecyclerViewDragDropManager;
 
 import java.util.List;
 import java.util.UUID;
@@ -89,11 +89,12 @@ public class AccountSelectActivity extends AppCompatActivity {
         AccountDataManager accountDataManager = new AccountDataManager(this);
         List<Account> accounts = accountDataManager.findAllWithIsExpense(isExpense, this);
 
-        RecyclerViewDragDropManager dragMgr = new RecyclerViewDragDropManager();
-
-        dragMgr.setInitiateOnTouch(true);
-        dragMgr.setInitiateOnMove(false);
-        dragMgr.setInitiateOnLongPress(true);
+        //QQ これdragのやつ消してるのに、バグってるんだけどなんでやろ。。
+//        RecyclerViewDragDropManager dragMgr = new RecyclerViewDragDropManager();
+//
+//        dragMgr.setInitiateOnTouch(true);
+//        dragMgr.setInitiateOnMove(false);
+//        dragMgr.setInitiateOnLongPress(true);
 
         accountListAdapter = new ListAdapter(this);
         accountListAdapter.addAll(accounts);
@@ -121,11 +122,13 @@ public class AccountSelectActivity extends AppCompatActivity {
 
         recyclerView.addItemDecoration(new DividerDecoration(this));
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setAdapter(accountListAdapter);
 
 //        recyclerView.setAdapter(dragMgr.createWrappedAdapter(accountListAdapter));
 //        dragMgr.attachRecyclerView(recyclerView);
     }
 
+//    class ListAdapter extends FooterRecyclerArrayAdapter<Account> implements DraggableItemAdapter<BindingHolder<ViewDataBinding>> {
     class ListAdapter extends FooterRecyclerArrayAdapter<Account> /**implements DraggableItemAdapter<BindingHolder<ViewDataBinding>>**/ {
 
         private final AccountDataManager accountDataManager;
