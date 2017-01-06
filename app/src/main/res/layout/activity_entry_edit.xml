@@ -10,7 +10,6 @@
 
     <LinearLayout
         android:id="@+id/activity_entry_edit"
-
         style="@style/standard_font_style"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -24,6 +23,7 @@
             android:text="@string/entry_tab_fragment_date" />
 
         <TextView
+            android:background="@drawable/selector_background_colors"
             android:id="@+id/date"
             android:gravity="center"
             android:layout_width="match_parent"
@@ -37,6 +37,7 @@
             android:text="@{entry.isExpense ? @string/entry_tab_fragment_account : @string/entry_tab_fragment_account2}" />
 
         <TextView
+            android:background="@drawable/selector_background_colors"
             android:id="@+id/account"
             android:gravity="center"
             android:layout_width="match_parent"
@@ -51,6 +52,7 @@
             android:text="@string/entry_tab_fragment_select_reason" />
 
         <TextView
+            android:background="@drawable/selector_background_colors"
             android:id="@+id/reason"
             android:gravity="center"
             android:layout_width="match_parent"
@@ -65,6 +67,7 @@
             android:text="@string/Details" />
 
         <TextView
+            android:background="@drawable/selector_background_colors"
             android:id="@+id/memo"
             android:gravity="center"
             android:layout_width="match_parent"
@@ -79,6 +82,7 @@
             android:text="@string/Price" />
 
         <TextView
+            android:background="@drawable/selector_background_colors"
             android:gravity="center"
             android:id="@+id/price"
             android:layout_width="match_parent"
