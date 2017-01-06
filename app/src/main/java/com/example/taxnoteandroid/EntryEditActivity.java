@@ -133,14 +133,15 @@ public class EntryEditActivity extends AppCompatActivity {
         binding.account.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                //@@@ Account Edit Activity作るひつようあり
-//                startActivity(EntryEditActivity.createIntent(EntryEditActivity.this, entry.isExpense));
+                startActivity(AccountEditActivity.createIntent(EntryEditActivity.this, entry.isExpense, true, entry.id));
             }
         });
     }
 
     private void loadCurrentAccount() {
+
+        //@@@
+        //QQ ここなぜか戻ってきた時にreasonの名前になっちゃう
         binding.account.setText(entry.account.name);
     }
 
@@ -154,9 +155,7 @@ public class EntryEditActivity extends AppCompatActivity {
         binding.reason.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                //@@@ Account Edit Activity作るひつようあり
-//                startActivity(EntryEditActivity.createIntent(EntryEditActivity.this, entry.isExpense));
+                startActivity(AccountEditActivity.createIntent(EntryEditActivity.this, entry.isExpense, false, entry.id));
             }
         });
     }

@@ -3,9 +3,11 @@ package com.example.taxnoteandroid.dataManager;
 import android.content.Context;
 
 import com.example.taxnoteandroid.BuildConfig;
+import com.example.taxnoteandroid.model.Account;
 import com.example.taxnoteandroid.model.Entry;
 import com.example.taxnoteandroid.model.Entry_Schema;
 import com.example.taxnoteandroid.model.OrmaDatabase;
+import com.example.taxnoteandroid.model.Reason;
 import com.github.gfx.android.orma.AccessThreadConstraint;
 import com.github.gfx.android.orma.OrderSpec;
 
@@ -55,6 +57,22 @@ public class EntryDataManager {
     //--------------------------------------------------------------//
     //    -- Update --
     //--------------------------------------------------------------//
+
+    public int updateDate(long id, long date) {
+        return ormaDatabase.updateEntry().idEq(id).date(date).execute();
+    }
+
+    public int updateAccount(long id, Account account) {
+        return ormaDatabase.updateEntry().idEq(id).account(account).execute();
+    }
+
+    public int updateReason(long id, Reason reason) {
+        return ormaDatabase.updateEntry().idEq(id).reason(reason).execute();
+    }
+
+    public int updateMemo(long id, String memo) {
+        return ormaDatabase.updateEntry().idEq(id).memo(memo).execute();
+    }
 
     public int updatePrice(long id, long price) {
         return ormaDatabase.updateEntry().idEq(id).price(price).execute();
