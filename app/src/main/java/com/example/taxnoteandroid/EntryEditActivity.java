@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.format.DateUtils;
 import android.view.View;
+import android.widget.EditText;
 
 import com.example.taxnoteandroid.databinding.ActivityEntryEditBinding;
 import com.example.taxnoteandroid.model.Entry;
@@ -166,6 +167,11 @@ public class EntryEditActivity extends AppCompatActivity {
     //--------------------------------------------------------------//
 
     private void setMemoView() {
+
+        EditText memoField = (EditText) findViewById(R.id.memo);
+        memoField.setText(entry.memo);
+
+        //QQ ここエントリーを編集した時に、データをセーブしたい。
 
         binding.memo.setOnClickListener(new View.OnClickListener() {
             @Override
