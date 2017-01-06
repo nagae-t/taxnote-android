@@ -60,17 +60,13 @@ public class HistoryTabFragment extends Fragment {
 
     private void loadHistoryData() {
 
-        EntryDataManager entryDataManager = new EntryDataManager(getContext());
-
-//        Log.d("test", entryDataManager.findAll().toString());
-
-        List<Entry> entries = entryDataManager.findAll();
+        EntryDataManager entryDataManager   = new EntryDataManager(getContext());
+        List<Entry> entries                 = entryDataManager.findAll();
 
         if (entries == null || entries.isEmpty()) {
 
             binding.empty.setText(getResources().getString(R.string.history_data_empty));
             binding.empty.setVisibility(View.VISIBLE);
-            return;
         } else {
             binding.empty.setVisibility(View.GONE);
         }

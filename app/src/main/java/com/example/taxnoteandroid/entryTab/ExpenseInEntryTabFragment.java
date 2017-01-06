@@ -275,7 +275,7 @@ public class ExpenseInEntryTabFragment extends Fragment {
             new AlertDialog.Builder(getContext())
                     .setTitle(reason.name)
                     .setMessage(getResources().getString(R.string.delete_confirm_message))
-                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    .setPositiveButton(getResources().getString(R.string.Delete), new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
 

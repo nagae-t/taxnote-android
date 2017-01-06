@@ -1,14 +1,17 @@
 package com.example.taxnoteandroid;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.format.DateUtils;
 import android.view.View;
 import android.widget.EditText;
 
+import com.example.taxnoteandroid.dataManager.EntryDataManager;
 import com.example.taxnoteandroid.databinding.ActivityEntryEditBinding;
 import com.example.taxnoteandroid.model.Entry;
 
@@ -69,6 +72,7 @@ public class EntryEditActivity extends AppCompatActivity {
         setReasonView();
         setMemoView();
         setPriceView();
+        setDeleteView();
     }
 
     private void loadData() {
@@ -209,5 +213,44 @@ public class EntryEditActivity extends AppCompatActivity {
         // Create price string
         String priceString = ValueConverter.formatPriceWithSymbol(entry.price, entry.isExpense);
         binding.price.setText(priceString);
+    }
+
+
+    //--------------------------------------------------------------//
+    //    -- Delete --
+    //--------------------------------------------------------------//
+
+    private void setDeleteView() {
+
+        binding.delete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showDeleteDialog();
+            }
+        });
+    }
+
+    private void showDeleteDialog() {
+
+        // Confirm dialog
+        new AlertDialog.Builder(EntryEditActivity.this)
+                .setTitle(null)
+                .setMessage(getResources().getString(R.string.delete_confirm_message))
+                .setPositiveButton(getResources().getString(R.string.Delete), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                        EntryDataManager entryDataManager = new EntryDataManager(EntryEditActivity.this);
+                        long deleted = entryDataManager.delete(entry.id);
+
+                        if (deleted != 0) {
+                            finish();
+                        }
+
+                        dialogInterface.dismiss();
+                    }
+                })
+                .setNegativeButton(getResources().getString(R.string.cancel), null)
+                .show();
     }
 }
