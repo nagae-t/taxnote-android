@@ -15,7 +15,9 @@ import android.widget.TextView;
 
 import com.example.taxnoteandroid.dataManager.AccountDataManager;
 import com.example.taxnoteandroid.dataManager.EntryDataManager;
+import com.example.taxnoteandroid.dataManager.ReasonDataManager;
 import com.example.taxnoteandroid.model.Account;
+import com.example.taxnoteandroid.model.Reason;
 
 import java.util.List;
 
@@ -40,7 +42,7 @@ public class AccountEditActivity extends AppCompatActivity {
         if (isAccount) {
             setAccountList();
         } else {
-
+            setReasonList();
         }
     }
 
@@ -81,8 +83,6 @@ public class AccountEditActivity extends AppCompatActivity {
     }
 
 
-    //QQ Reasonも同じようにもうひとつコードかけばいいかな？
-    //@@ 続きをやる Reasonも
     //--------------------------------------------------------------//
     //    -- Account List --
     //--------------------------------------------------------------//
@@ -93,7 +93,7 @@ public class AccountEditActivity extends AppCompatActivity {
 
         // Get account list
         AccountDataManager accountDataManager   = new AccountDataManager(this);
-        List<Account> accounts                   = accountDataManager.findAllWithIsExpense(isExpense, this);
+        List<Account> accounts                  = accountDataManager.findAllWithIsExpense(isExpense, this);
 
         CategorySelectAdapter categorySelectAdapter = new CategorySelectAdapter(this, accounts);
         listView.setAdapter(categorySelectAdapter);
@@ -138,4 +138,59 @@ public class AccountEditActivity extends AppCompatActivity {
         }
     }
 
+
+    //--------------------------------------------------------------//
+    //    -- Reason List --
+    //--------------------------------------------------------------//
+
+    private void setReasonList() {
+
+        final ListView listView = (ListView) findViewById(R.id.list);
+
+        // Get account list
+        ReasonDataManager reasonDataManager   = new ReasonDataManager(this);
+        final List<Reason> reasons            = reasonDataManager.findAllWithIsExpense(isExpense, this);
+
+        ReasonSelectAdapter reasonSelectAdapter = new ReasonSelectAdapter(this, reasons);
+        listView.setAdapter(reasonSelectAdapter);
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+
+                Reason reason = (Reason) (listView.getItemAtPosition(position));
+
+                // Update account
+                EntryDataManager entryDataManager   = new EntryDataManager(AccountEditActivity.this);
+                long updated                        = entryDataManager.updateReason(entryId, reason);
+
+                if (updated != 0) {
+                    finish();
+                }
+            }
+        });
+    }
+
+    class ReasonSelectAdapter extends ArrayAdapter<Reason> {
+
+        private LayoutInflater layoutInflater;
+
+        private ReasonSelectAdapter(Context context, List<Reason> reasons) {
+            super(context, 0, reasons);
+            layoutInflater = LayoutInflater.from(context);
+        }
+
+        @NonNull
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+
+            View view           = layoutInflater.inflate(R.layout.row_category_select, null);
+            Reason reason       = getItem(position);
+            TextView textView   = (TextView) view.findViewById(R.id.category);
+
+            textView.setText(reason.name);
+
+            return view;
+        }
+    }
 }
