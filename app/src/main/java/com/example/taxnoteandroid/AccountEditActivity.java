@@ -34,6 +34,8 @@ public class AccountEditActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        // @@ Reasonとaccountは画面を分ける
+
         setContentView(R.layout.activity_account_edit);
 
         setIntentData();
