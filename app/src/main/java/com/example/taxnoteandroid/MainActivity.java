@@ -12,7 +12,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.example.taxnoteandroid.dataManager.DefaultDataInstaller;
+import com.example.taxnoteandroid.dataManager.EntryDataManager;
 import com.example.taxnoteandroid.databinding.ActivityMainBinding;
+import com.example.taxnoteandroid.model.Entry;
+
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -55,9 +59,25 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.csv:
+                EntryDataManager entryDataManager = new EntryDataManager(this);
+                List<Entry> entries = entryDataManager.findAll();
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public static String join(CharSequence delimiter, List<Entry> entries) {
+        StringBuilder sb = new StringBuilder();
+        boolean firstTime = true;
+//        for (Object token: tokens) {
+//            if (firstTime) {
+//                firstTime = false;
+//            } else {
+//                sb.append(delimiter);
+//            }
+//            sb.append(token);
+//        }
+        return sb.toString();
     }
 
     //--------------------------------------------------------------//
