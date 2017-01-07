@@ -134,8 +134,8 @@ public class SummaryActivity extends AppCompatActivity {
         recyclerView.addItemDecoration(new DividerDecoration(this));
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(summaryListAdapter);
+        
 //        recyclerView.setAdapter(dragMgr.createWrappedAdapter(summaryListAdapter));
-//
 //        dragMgr.attachRecyclerView(recyclerView);
     }
 
@@ -260,13 +260,13 @@ public class SummaryActivity extends AppCompatActivity {
                                     }
                                     summary.project = project;
 
-                                    // @@ 保存チェック
                                     long id = summaryDataManager.save(summary);
-                                    summary.id = id;
 
-                                    add(summary);
-
-                                    dialogInterface.dismiss();
+                                    if (id != 0) {
+                                        summary.id = id;
+                                        add(summary);
+                                        dialogInterface.dismiss();
+                                    }
                                 }
                             })
                             .setNegativeButton(getResources().getString(R.string.cancel), null)
