@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.format.DateUtils;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 
@@ -166,6 +167,40 @@ public class EntryEditActivity extends AppCompatActivity {
 
         EditText memoField = (EditText) findViewById(R.id.memo);
         memoField.setText(entry.memo);
+
+        final View textInputView = LayoutInflater.from(this).inflate(R.layout.dialog_text_input, null);
+
+        final EditText editText = (EditText) textInputView.findViewById(R.id.edit);
+        editText.setText(entry.memo);
+
+        new AlertDialog.Builder(this)
+                .setView(textInputView)
+                .setTitle(getString(R.string.list_view_rename))
+                .setPositiveButton(getResources().getString(R.string.done), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        String memo = editText.getText().toString();
+
+                        // @@ entryの更新
+
+                        binding.memo.setText(memo);
+
+                        // @@ 残りはやる
+//
+//                        ReasonDataManager reasonDataManager = new ReasonDataManager(getContext());
+//                        reasonDataManager.updateName(reason.id, reasonName);
+//
+//                        Reason oldReason = reasonListAdapter.getItem(position);
+//                        if (oldReason != null) {
+//                            oldReason.name = reasonName;
+//                            reasonListAdapter.notifyDataSetChanged();
+//                        }
+//
+//                        dialogInterface.dismiss();
+                    }
+                })
+                .setNegativeButton(getResources().getString(R.string.cancel), null)
+                .show();
 
         //QQ ここエントリーを編集した時に、データをセーブしたい。
 
