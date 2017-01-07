@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
 import android.view.MenuItem;
 
 import com.example.taxnoteandroid.dataManager.DefaultDataInstaller;
@@ -28,6 +29,36 @@ public class MainActivity extends AppCompatActivity {
         setBottomNavigation();
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        switch (binding.pager.getCurrentItem()) {
+            case 0:
+                menu.findItem(R.id.csv).setVisible(false);
+                break;
+            case 1:
+                menu.findItem(R.id.csv).setVisible(true);
+                break;
+            case 2:
+                menu.findItem(R.id.csv).setVisible(false);
+                break;
+        }
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.csv:
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
     //--------------------------------------------------------------//
     //    -- Bottom Navigation --
@@ -63,6 +94,7 @@ public class MainActivity extends AppCompatActivity {
                         binding.pager.setCurrentItem(2);
                         break;
                 }
+                invalidateOptionsMenu();
                 return true;
             }
         });
