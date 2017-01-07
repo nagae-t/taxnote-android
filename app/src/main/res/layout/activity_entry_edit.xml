@@ -66,26 +66,14 @@
             android:layout_height="wrap_content"
             android:text="@string/Details" />
 
-        <!--//QQここのレイアウトができまへんのや。。-->
-        <EditText
-            android:id="@+id/memo"
+        <TextView
             android:background="@drawable/selector_background_colors"
+            android:id="@+id/memo"
+            android:gravity="center"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:maxLines="1"
-            android:inputType="text"
-            android:hint="備考の入力はここをタップ"
-            android:textSize="12sp" />
-
-        <!--<TextView-->
-            <!--android:background="@drawable/selector_background_colors"-->
-            <!--android:id="@+id/memo"-->
-            <!--android:gravity="center"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_weight="1"-->
-            <!--android:text="@{entry.memo}" />-->
+            android:layout_weight="1"
+            android:text="@{entry.memo}" />
 
         <TextView
             style="@style/section_header"

@@ -10,8 +10,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.EditText;
 
 import com.example.taxnoteandroid.dataManager.EntryDataManager;
@@ -44,9 +42,9 @@ public class EntryEditActivity extends AppCompatActivity {
 
         loadData();
 
-        Animation animation = AnimationUtils.loadAnimation(this, R.anim.animation_text_move);
-        binding.date.setAnimation(animation);
-        animation.start();
+//        Animation animation = AnimationUtils.loadAnimation(this, R.anim.animation_text_move);
+//        binding.date.setAnimation(animation);
+//        animation.start();
     }
 
 
@@ -86,12 +84,11 @@ public class EntryEditActivity extends AppCompatActivity {
     private void loadData() {
 
         // Load the latest entry
-        EntryDataManager entryDataManager = new EntryDataManager(EntryEditActivity.this);
-        entry = entryDataManager.findByUuid(entryUuid);
+        EntryDataManager entryDataManager   = new EntryDataManager(EntryEditActivity.this);
+        entry                               = entryDataManager.findByUuid(entryUuid);
 
         binding.setEntry(entry);
         loadCurrentDate();
-        loadCurrentMemo();
         loadCurrentPrice();
     }
 
@@ -110,12 +107,19 @@ public class EntryEditActivity extends AppCompatActivity {
                 fragment.setOnDateSetListener(new DatePickerDialogFragment.OnDateSetListener() {
                     @Override
                     public void onDateSet(Calendar calendar) {
+
                         entry.date = calendar.getTimeInMillis();
-                        loadCurrentDate();
+
+                        // Update
+                        EntryDataManager entryDataManager   = new EntryDataManager(EntryEditActivity.this);
+                        long updated                        = entryDataManager.updateDate(entry.id,entry.date);
+
+                        if (updated != 0) {
+                            loadCurrentDate();
+                        }
                     }
                 });
 
-                // @@ あとやる
                 fragment.show(getSupportFragmentManager(), DatePickerDialogFragment.class.getName());
             }
         });
@@ -171,57 +175,41 @@ public class EntryEditActivity extends AppCompatActivity {
 
     private void setMemoView() {
 
-        EditText memoField = (EditText) findViewById(R.id.memo);
-        memoField.setText(entry.memo);
-
-        final View textInputView = LayoutInflater.from(this).inflate(R.layout.dialog_text_input, null);
-
-        final EditText editText = (EditText) textInputView.findViewById(R.id.edit);
+        final View textInputView    = LayoutInflater.from(this).inflate(R.layout.dialog_text_input, null);
+        final EditText editText     = (EditText) textInputView.findViewById(R.id.edit);
         editText.setText(entry.memo);
 
-        //QQ ここエントリーを編集した時に、データをセーブしたい。
-
+        //QQ 二回めのタップで落ちる
+        //エラーメッセージは The specified child already has a parent. You must call removeView() on the child's parent first
         binding.memo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
                 new AlertDialog.Builder(EntryEditActivity.this)
                         .setView(textInputView)
-                        .setTitle(getString(R.string.list_view_rename))
+                        .setTitle(getString(R.string.Details))
                         .setPositiveButton(getResources().getString(R.string.done), new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
+
+                                // Get the input string
                                 String memo = editText.getText().toString();
 
-                                // @@ entryの更新
+                                // Update
+                                EntryDataManager entryDataManager   = new EntryDataManager(EntryEditActivity.this);
+                                long updated                        = entryDataManager.updateMemo(entry.id,memo);
 
-                                binding.memo.setText(memo);
+                                if (updated != 0) {
 
-                                // @@ 残りはやる
-//
-//                        ReasonDataManager reasonDataManager = new ReasonDataManager(getContext());
-//                        reasonDataManager.updateName(reason.id, reasonName);
-//
-//                        Reason oldReason = reasonListAdapter.getItem(position);
-//                        if (oldReason != null) {
-//                            oldReason.name = reasonName;
-//                            reasonListAdapter.notifyDataSetChanged();
-//                        }
-//
-//                        dialogInterface.dismiss();
+                                    // Update displayed memo
+                                    binding.memo.setText(memo);
+                                }
                             }
                         })
                         .setNegativeButton(getResources().getString(R.string.cancel), null)
                         .show();
-
-                //@@@ Account Edit Activity作るひつようあり
-//                startActivity(EntryEditActivity.createIntent(EntryEditActivity.this, entry.isExpense));
             }
         });
-    }
-
-    private void loadCurrentMemo() {
-        binding.memo.setText(entry.memo);
     }
 
 
@@ -235,7 +223,6 @@ public class EntryEditActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                //QQ ここでPrice edit activity作りたい
 
             }
         });
