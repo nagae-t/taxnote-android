@@ -134,7 +134,7 @@ public class SummaryActivity extends AppCompatActivity {
         recyclerView.addItemDecoration(new DividerDecoration(this));
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(summaryListAdapter);
-        
+
 //        recyclerView.setAdapter(dragMgr.createWrappedAdapter(summaryListAdapter));
 //        dragMgr.attachRecyclerView(recyclerView);
     }
