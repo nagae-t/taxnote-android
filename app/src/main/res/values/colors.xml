@@ -12,6 +12,6 @@
     <color name="horizontal_line">#D7D7D7</color>
     <color name="header_background">#EDEDED</color>
     <color name="expense">#ff6666</color>
-    <color name="selector_pressed_true">#c7c7c7</color>
+    <color name="selector_pressed_true">#D3D3D3</color>
     <color name="selector_pressed_false">#ffffff</color>
 </resources>
