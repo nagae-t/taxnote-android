@@ -173,19 +173,25 @@ public class EntryEditActivity extends AppCompatActivity {
         final EditText editText = (EditText) textInputView.findViewById(R.id.edit);
         editText.setText(entry.memo);
 
-        new AlertDialog.Builder(this)
-                .setView(textInputView)
-                .setTitle(getString(R.string.list_view_rename))
-                .setPositiveButton(getResources().getString(R.string.done), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        String memo = editText.getText().toString();
+        //QQ ここエントリーを編集した時に、データをセーブしたい。
 
-                        // @@ entryの更新
+        binding.memo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
 
-                        binding.memo.setText(memo);
+                new AlertDialog.Builder(this)
+                        .setView(textInputView)
+                        .setTitle(getString(R.string.list_view_rename))
+                        .setPositiveButton(getResources().getString(R.string.done), new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                String memo = editText.getText().toString();
 
-                        // @@ 残りはやる
+                                // @@ entryの更新
+
+                                binding.memo.setText(memo);
+
+                                // @@ 残りはやる
 //
 //                        ReasonDataManager reasonDataManager = new ReasonDataManager(getContext());
 //                        reasonDataManager.updateName(reason.id, reasonName);
@@ -197,16 +203,10 @@ public class EntryEditActivity extends AppCompatActivity {
 //                        }
 //
 //                        dialogInterface.dismiss();
-                    }
-                })
-                .setNegativeButton(getResources().getString(R.string.cancel), null)
-                .show();
-
-        //QQ ここエントリーを編集した時に、データをセーブしたい。
-
-        binding.memo.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+                            }
+                        })
+                        .setNegativeButton(getResources().getString(R.string.cancel), null)
+                        .show();
 
                 //@@@ Account Edit Activity作るひつようあり
 //                startActivity(EntryEditActivity.createIntent(EntryEditActivity.this, entry.isExpense));
