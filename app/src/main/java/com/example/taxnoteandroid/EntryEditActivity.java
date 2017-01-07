@@ -109,8 +109,8 @@ public class EntryEditActivity extends AppCompatActivity {
                     }
                 });
 
-                //QQここセットしかた
-//                fragment.show(getFragmentManager(), DatePickerDialogFragment.class.getName());
+                // @@ あとやる
+                fragment.show(getSupportFragmentManager(), DatePickerDialogFragment.class.getName());
             }
         });
     }
