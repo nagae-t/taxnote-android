@@ -89,7 +89,6 @@ public class AccountSelectActivity extends AppCompatActivity {
         AccountDataManager accountDataManager = new AccountDataManager(this);
         List<Account> accounts = accountDataManager.findAllWithIsExpense(isExpense, this);
 
-        //QQ これdragのやつ消してるのに、バグってるんだけどなんでやろ。。
 //        RecyclerViewDragDropManager dragMgr = new RecyclerViewDragDropManager();
 //
 //        dragMgr.setInitiateOnTouch(true);
@@ -136,7 +135,7 @@ public class AccountSelectActivity extends AppCompatActivity {
         private OnItemClickRecyclerAdapterListener onItemClickRecyclerAdapterListener;
 
         public ListAdapter(Context context) {
-            setHasStableIds(true);
+//            setHasStableIds(true);
             accountDataManager = new AccountDataManager(context);
         }
 

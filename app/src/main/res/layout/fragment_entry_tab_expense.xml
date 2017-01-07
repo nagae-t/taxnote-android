@@ -7,8 +7,6 @@
             type="boolean" />
     </data>
 
-    <!--QQこれなんで一括で効かないんやろか？        -->
-    <!--android:background="@drawable/selector_background_colors"-->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
