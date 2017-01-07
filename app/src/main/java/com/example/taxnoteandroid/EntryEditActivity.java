@@ -10,6 +10,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.EditText;
 
 import com.example.taxnoteandroid.dataManager.EntryDataManager;
@@ -41,6 +43,10 @@ public class EntryEditActivity extends AppCompatActivity {
         super.onResume();
 
         loadData();
+
+        Animation animation = AnimationUtils.loadAnimation(this, R.anim.animation_text_move);
+        binding.date.setAnimation(animation);
+        animation.start();
     }
 
 
@@ -179,7 +185,7 @@ public class EntryEditActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                new AlertDialog.Builder(this)
+                new AlertDialog.Builder(EntryEditActivity.this)
                         .setView(textInputView)
                         .setTitle(getString(R.string.list_view_rename))
                         .setPositiveButton(getResources().getString(R.string.done), new DialogInterface.OnClickListener() {
