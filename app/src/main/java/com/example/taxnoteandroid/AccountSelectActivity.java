@@ -201,7 +201,7 @@ public class AccountSelectActivity extends AppCompatActivity {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
 
-                            //LL すでに科目を使って入力している場合どうするか 入力したデータ消さないと、削除しないようにする？
+                            //@@ すでに科目を使って入力している場合どうするか 入力したデータ消さないと、削除しないようにする？
                             long deleted = accountDataManager.delete(account.id);
                             if (deleted != 0) {
                                 remove(account);
@@ -251,13 +251,14 @@ public class AccountSelectActivity extends AppCompatActivity {
                                     account.isExpense = isExpense;
                                     account.project = project;
 
-                                    // @@ 保存チェック
                                     long id = accountDataManager.save(account);
-                                    account.id = id;
 
-                                    add(account);
-
-                                    dialogInterface.dismiss();
+                                    //QQ ここの保存チェックって、 != -1でいいのかな？ updateは != 0でやってるけど
+                                    if (id != -1 ) {
+                                        account.id = id;
+                                        add(account);
+                                        dialogInterface.dismiss();
+                                    }
                                 }
                             })
                             .setNegativeButton(getResources().getString(R.string.cancel), null)
