@@ -25,7 +25,7 @@ public class AccountEditActivity extends AppCompatActivity {
 
     private static final String EXTRA_IS_EXPENSE    = "EXTRA_IS_EXPENSE";
     private static final String EXTRA_IS_ACCOUNT    = "EXTRA_IS_ACCOUNT";
-    private static final String EXTRA_IS_ENTRY_ID   = "EXTRA_IS_ENTRY_ID";
+    private static final String EXTRA_ENTRY_ID      = "EXTRA_ENTRY_ID";
     public boolean isExpense;
     public boolean isAccount;
     public long entryId;
@@ -34,10 +34,7 @@ public class AccountEditActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // @@ Reasonとaccountは画面を分ける
-
         setContentView(R.layout.activity_account_edit);
-
         setIntentData();
         setTitle();
 
@@ -58,7 +55,7 @@ public class AccountEditActivity extends AppCompatActivity {
         Intent i = new Intent(context, AccountEditActivity.class);
         i.putExtra(EXTRA_IS_EXPENSE, isExpense);
         i.putExtra(EXTRA_IS_ACCOUNT, isAccount);
-        i.putExtra(EXTRA_IS_ENTRY_ID, entryId);
+        i.putExtra(EXTRA_ENTRY_ID, entryId);
         return i;
     }
 
@@ -67,7 +64,7 @@ public class AccountEditActivity extends AppCompatActivity {
         Intent intent   = getIntent();
         isExpense       = intent.getBooleanExtra(EXTRA_IS_EXPENSE, false);
         isAccount       = intent.getBooleanExtra(EXTRA_IS_ACCOUNT, false);
-        entryId         = intent.getLongExtra(EXTRA_IS_ENTRY_ID, 0);
+        entryId         = intent.getLongExtra(EXTRA_ENTRY_ID, 0);
     }
 
 

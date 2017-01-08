@@ -21,22 +21,6 @@
     <View
         style="@style/horizontal_line" />
 
-    <EditText
-        android:id="@+id/memo"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@null"
-        android:gravity="center"
-        android:maxLines="1"
-        android:inputType="text"
-        android:hint="@string/tap_here_to_set_details"
-        android:minHeight="40dp"
-        android:textColor="@android:color/darker_gray"
-        android:textSize="12sp" />
-
-    <View
-        style="@style/horizontal_line" />
-
     <TextView
         android:id="@+id/save"
         android:layout_width="match_parent"
@@ -44,7 +28,7 @@
         android:gravity="center"
         android:minHeight="48dp"
         android:textColor="@drawable/text_button_colors"
-        android:text="@string/save_data"
+        android:text="@string/Update"
         android:textSize="22sp" />
 
     <LinearLayout

@@ -11,7 +11,7 @@
     <string name="Entry">入力</string>
     <string name="History">仕訳帳</string>
     <string name="Settings">設定</string>
-
+    <string name="Update">更新</string>
     <string name="Details">備考</string>
     <string name="Price">金額</string>
     <string name="Delete">削除する</string>
@@ -41,6 +41,7 @@
     <string name="please_enter_price">金額を入力してください。</string>
     <string name="history_data_empty">入力タブからデータを入力してください。</string>
 
+
     //--------------------------------------------------------------//
     // -- Entry Tab --
     //--------------------------------------------------------------//
@@ -49,6 +50,8 @@
     <string name="entry_tab_fragment_account">支払い方法</string>
     <string name="entry_tab_fragment_account2">受け取り方法</string>
     <string name="entry_tab_fragment_select_reason">科目を選択</string>
+    <string name="tap_here_to_set_details">備考の入力はここをタップ</string>
+    <string name="save_data">仕訳帳に記録</string>
 
 
     //--------------------------------------------------------------//

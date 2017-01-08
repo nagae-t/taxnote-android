@@ -222,8 +222,7 @@ public class EntryEditActivity extends AppCompatActivity {
         binding.price.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-
+                startActivity(PriceEditActivity.createIntent(EntryEditActivity.this, entry.price, entry.id));
             }
         });
     }
