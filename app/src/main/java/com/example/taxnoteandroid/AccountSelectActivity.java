@@ -17,11 +17,13 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 
 import com.example.taxnoteandroid.dataManager.AccountDataManager;
+import com.example.taxnoteandroid.dataManager.EntryDataManager;
 import com.example.taxnoteandroid.dataManager.ProjectDataManager;
 import com.example.taxnoteandroid.dataManager.SharedPreferencesManager;
 import com.example.taxnoteandroid.databinding.ListviewFooterBinding;
 import com.example.taxnoteandroid.databinding.RowAccountCellBinding;
 import com.example.taxnoteandroid.model.Account;
+import com.example.taxnoteandroid.model.Entry;
 import com.example.taxnoteandroid.model.Project;
 //import com.h6ah4i.android.widget.advrecyclerview.draggable.RecyclerViewDragDropManager;
 
@@ -193,6 +195,21 @@ public class AccountSelectActivity extends AppCompatActivity {
 
         private void deleteAccount(final Account account) {
 
+            // Check if Entry data has this account already
+            EntryDataManager entryDataManager   = new EntryDataManager(AccountSelectActivity.this);
+            Entry entry                         = entryDataManager.hasAccountInEntryData(account);
+
+            if (entry != null) {
+
+                // Show error message
+                new AlertDialog.Builder(AccountSelectActivity.this)
+                        .setTitle(getResources().getString(R.string.Error))
+                        .setMessage(getResources().getString(R.string.using_this_account_in_entry_already))
+                        .setPositiveButton("OK", null)
+                        .show();
+                return;
+            }
+
             // Confirm dialog
             new AlertDialog.Builder(AccountSelectActivity.this)
                     .setTitle(account.name)
@@ -201,7 +218,6 @@ public class AccountSelectActivity extends AppCompatActivity {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
 
-                            //@@ すでに科目を使って入力している場合どうするか 入力したデータ消さないと、削除しないようにする？
                             long deleted = accountDataManager.delete(account.id);
                             if (deleted != 0) {
                                 remove(account);

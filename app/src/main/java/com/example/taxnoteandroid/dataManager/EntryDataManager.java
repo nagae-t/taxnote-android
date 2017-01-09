@@ -19,7 +19,8 @@ public class EntryDataManager {
     private OrmaDatabase ormaDatabase;
 
     public EntryDataManager(Context context) {
-        // Ormaの初期設定
+
+        // Init Orma
         ormaDatabase = OrmaDatabase.builder(context)
                 .trace(BuildConfig.DEBUG)
                 .writeOnMainThread(AccessThreadConstraint.NONE)
@@ -53,7 +54,7 @@ public class EntryDataManager {
 
         ProjectDataManager projectDataManager   = new ProjectDataManager(context);
         Project project                         = projectDataManager.findCurrentProjectWithContext(context);
-        
+
         List reasons = ormaDatabase.selectFromEntry().
                 where(Entry_Schema.INSTANCE.deleted.getQualifiedName() + " = 0")
                 .and()
@@ -62,6 +63,14 @@ public class EntryDataManager {
                 .toList();
 
         return reasons;
+    }
+
+    public Entry hasReasonInEntryData(Reason reason) {
+        return ormaDatabase.selectFromEntry().and().reasonEq(reason).valueOrNull();
+    }
+
+    public Entry hasAccountInEntryData(Account account) {
+        return ormaDatabase.selectFromEntry().and().accountEq(account).valueOrNull();
     }
 
 

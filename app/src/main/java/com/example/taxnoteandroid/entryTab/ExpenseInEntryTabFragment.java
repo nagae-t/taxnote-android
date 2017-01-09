@@ -27,12 +27,14 @@ import com.example.taxnoteandroid.FooterRecyclerArrayAdapter;
 import com.example.taxnoteandroid.OnItemClickRecyclerAdapterListener;
 import com.example.taxnoteandroid.R;
 import com.example.taxnoteandroid.dataManager.AccountDataManager;
+import com.example.taxnoteandroid.dataManager.EntryDataManager;
 import com.example.taxnoteandroid.dataManager.ProjectDataManager;
 import com.example.taxnoteandroid.dataManager.ReasonDataManager;
 import com.example.taxnoteandroid.databinding.FragmentEntryTabExpenseBinding;
 import com.example.taxnoteandroid.databinding.ListviewFooterBinding;
 import com.example.taxnoteandroid.databinding.RowListWithDetailsItemBinding;
 import com.example.taxnoteandroid.model.Account;
+import com.example.taxnoteandroid.model.Entry;
 import com.example.taxnoteandroid.model.Project;
 import com.example.taxnoteandroid.model.Reason;
 import com.h6ah4i.android.widget.advrecyclerview.draggable.RecyclerViewDragDropManager;
@@ -271,6 +273,21 @@ public class ExpenseInEntryTabFragment extends Fragment {
 
         private void deleteReason(final Reason reason) {
 
+            // Check if Entry data has this reason already
+            EntryDataManager entryDataManager   = new EntryDataManager(getContext());
+            Entry entry                         = entryDataManager.hasReasonInEntryData(reason);
+
+            if (entry != null) {
+
+                // Show error message
+                new AlertDialog.Builder(getContext())
+                        .setTitle(getResources().getString(R.string.Error))
+                        .setMessage(getResources().getString(R.string.using_this_account_in_entry_already))
+                        .setPositiveButton("OK", null)
+                        .show();
+                return;
+            }
+
             // Confirm dialog
             new AlertDialog.Builder(getContext())
                     .setTitle(reason.name)
@@ -279,7 +296,6 @@ public class ExpenseInEntryTabFragment extends Fragment {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
 
-                            //LL すでに科目を使って入力している場合どうするか 入力したデータ消さないと、削除しないようにする？
                             long deleted = reasonDataManager.delete(reason.id);
                             if (deleted != 0) {
                                 remove(reason);
@@ -414,5 +430,10 @@ public class ExpenseInEntryTabFragment extends Fragment {
                 .setNegativeButton(getResources().getString(R.string.cancel), null)
                 .show();
     }
+
+
+    //--------------------------------------------------------------//
+    //    -- Delete --
+    //--------------------------------------------------------------//
 
 }

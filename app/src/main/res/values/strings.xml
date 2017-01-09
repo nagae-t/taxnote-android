@@ -40,6 +40,7 @@
     <string name="Error">エラー</string>
     <string name="please_enter_price">金額を入力してください。</string>
     <string name="history_data_empty">入力タブからデータを入力してください。</string>
+    <string name="using_this_account_in_entry_already">指定した科目を使用した記録があります。まず、仕訳帳から該当する記録を削除してください。</string>
 
 
     //--------------------------------------------------------------//
