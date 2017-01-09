@@ -53,6 +53,7 @@
     <string name="entry_tab_fragment_select_reason">科目を選択</string>
     <string name="tap_here_to_set_details">備考の入力はここをタップ</string>
     <string name="save_data">仕訳帳に記録</string>
+    <string name="delete_done">削除しました。</string>
 
 
     //--------------------------------------------------------------//

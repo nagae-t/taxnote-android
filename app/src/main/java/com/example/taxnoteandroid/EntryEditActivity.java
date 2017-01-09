@@ -214,7 +214,6 @@ public class EntryEditActivity extends AppCompatActivity {
 
                                 if (updated != 0) {
 
-                                    // Show update dialog
                                     DialogManager.showToast(EntryEditActivity.this, memo);
 
                                     // Update displayed memo
@@ -279,6 +278,8 @@ public class EntryEditActivity extends AppCompatActivity {
                         long deleted = entryDataManager.delete(entry.id);
 
                         if (deleted != 0) {
+
+                            DialogManager.showToast(EntryEditActivity.this, getResources().getString(R.string.delete_done));
                             finish();
                         }
 
