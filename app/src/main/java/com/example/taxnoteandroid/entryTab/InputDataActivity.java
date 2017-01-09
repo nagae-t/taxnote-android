@@ -245,18 +245,19 @@ public class InputDataActivity extends AppCompatActivity {
         // Success
         if (EntryDataManager.isSaveSuccess(id)) {
 
-            showSavingDoneToast();
-
-            // 処理が正常に終わったりしたら、呼び出された画面にたいしてOKだったと伝えるためにsetResultする
+            showSavingDoneToast(entry);
             setResult(RESULT_OK);
             finish();
+
         } else {
+
             // Show error message
             new AlertDialog.Builder(this)
-                    .setTitle("title")
-                    .setMessage("message")
+                    .setTitle(getResources().getString(R.string.Error))
+                    .setMessage(null)
                     .setPositiveButton("OK", null)
                     .show();
+            return;
         }
     }
 
@@ -265,13 +266,19 @@ public class InputDataActivity extends AppCompatActivity {
     //    -- Pop View --
     //--------------------------------------------------------------//
 
-    private void showSavingDoneToast() {
+    private void showSavingDoneToast(Entry entry) {
 
-        //@@ ここにチェックマークの画像を追加
-        Toast toast = Toast.makeText(InputDataActivity.this, "Hogehoge", Toast.LENGTH_SHORT);
+        String message;
+        String priceString = ValueConverter.formatPrice(entry.price);
 
+        if (entry.isExpense) {
+            message =  entry.reason.name + " / " + entry.account.name + " :" + priceString;
+        } else {
+            message = entry.account.name + " / " + entry.reason.name + " :" + priceString;
+        }
+
+        Toast toast = Toast.makeText(InputDataActivity.this, message, Toast.LENGTH_SHORT);
         toast.setGravity(Gravity.CENTER, 0, 0);
-        toast.setView(getLayoutInflater().inflate(R.layout.toast_save, null));
         toast.show();
     }
 
