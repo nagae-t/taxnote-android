@@ -7,6 +7,7 @@ import com.example.taxnoteandroid.model.Account;
 import com.example.taxnoteandroid.model.Entry;
 import com.example.taxnoteandroid.model.Entry_Schema;
 import com.example.taxnoteandroid.model.OrmaDatabase;
+import com.example.taxnoteandroid.model.Project;
 import com.example.taxnoteandroid.model.Reason;
 import com.github.gfx.android.orma.AccessThreadConstraint;
 import com.github.gfx.android.orma.OrderSpec;
@@ -48,9 +49,19 @@ public class EntryDataManager {
         return ormaDatabase.selectFromEntry().where(Entry_Schema.INSTANCE.uuid.getQualifiedName() + " = ?", uuid).valueOrNull();
     }
 
-    //@@ あとでproject指定もいれる
-    public List<Entry> findAll() {
-        return ormaDatabase.selectFromEntry().orderBy(Entry_Schema.INSTANCE.date.getQualifiedName() + " " + OrderSpec.DESC).toList();
+    public List<Entry> findAll(Context context) {
+
+        ProjectDataManager projectDataManager   = new ProjectDataManager(context);
+        Project project                         = projectDataManager.findCurrentProjectWithContext(context);
+        
+        List reasons = ormaDatabase.selectFromEntry().
+                where(Entry_Schema.INSTANCE.deleted.getQualifiedName() + " = 0")
+                .and()
+                .projectEq(project)
+                .orderBy(Entry_Schema.INSTANCE.date.getQualifiedName() + " " + OrderSpec.DESC)
+                .toList();
+
+        return reasons;
     }
 
 

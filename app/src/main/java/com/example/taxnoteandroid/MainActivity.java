@@ -60,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.csv:
                 EntryDataManager entryDataManager = new EntryDataManager(this);
-                List<Entry> entries = entryDataManager.findAll();
+                List<Entry> entries = entryDataManager.findAll(this);
                 break;
         }
         return super.onOptionsItemSelected(item);
