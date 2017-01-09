@@ -7,14 +7,13 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
-import android.view.Gravity;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.example.taxnoteandroid.Library.DialogManager;
+import com.example.taxnoteandroid.Library.ValueConverter;
 import com.example.taxnoteandroid.R;
-import com.example.taxnoteandroid.ValueConverter;
 import com.example.taxnoteandroid.dataManager.EntryDataManager;
 import com.example.taxnoteandroid.dataManager.ProjectDataManager;
 import com.example.taxnoteandroid.model.Account;
@@ -245,7 +244,7 @@ public class InputDataActivity extends AppCompatActivity {
         // Success
         if (EntryDataManager.isSaveSuccess(id)) {
 
-            showSavingDoneToast(entry);
+            DialogManager.showInputDataToast(this, entry);
             setResult(RESULT_OK);
             finish();
 
@@ -259,27 +258,6 @@ public class InputDataActivity extends AppCompatActivity {
                     .show();
             return;
         }
-    }
-
-
-    //--------------------------------------------------------------//
-    //    -- Pop View --
-    //--------------------------------------------------------------//
-
-    private void showSavingDoneToast(Entry entry) {
-
-        String message;
-        String priceString = ValueConverter.formatPrice(entry.price);
-
-        if (entry.isExpense) {
-            message =  entry.reason.name + " / " + entry.account.name + " :" + priceString;
-        } else {
-            message = entry.account.name + " / " + entry.reason.name + " :" + priceString;
-        }
-
-        Toast toast = Toast.makeText(InputDataActivity.this, message, Toast.LENGTH_SHORT);
-        toast.setGravity(Gravity.CENTER, 0, 0);
-        toast.show();
     }
 
 

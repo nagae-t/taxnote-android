@@ -12,6 +12,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 
+import com.example.taxnoteandroid.Library.DialogManager;
+import com.example.taxnoteandroid.Library.ValueConverter;
 import com.example.taxnoteandroid.dataManager.EntryDataManager;
 import com.example.taxnoteandroid.databinding.ActivityEntryEditBinding;
 import com.example.taxnoteandroid.model.Entry;
@@ -112,9 +114,14 @@ public class EntryEditActivity extends AppCompatActivity {
 
                         // Update
                         EntryDataManager entryDataManager   = new EntryDataManager(EntryEditActivity.this);
-                        long updated                        = entryDataManager.updateDate(entry.id,entry.date);
+                        long updated                        = entryDataManager.updateDate(entry.id, entry.date);
 
                         if (updated != 0) {
+
+                            // Show update dialog
+                            String dateString = formatDate(entry.date);
+                            DialogManager.showToast(EntryEditActivity.this, dateString);
+
                             loadCurrentDate();
                         }
                     }
@@ -125,16 +132,22 @@ public class EntryEditActivity extends AppCompatActivity {
         });
     }
 
-    private void loadCurrentDate() {
+    private String formatDate(Long date) {
 
         String dateString = getResources().getString(R.string.date_string_today);
 
         // Show the date if it is not today
-        if (!DateUtils.isToday(entry.date)) {
+        if (!DateUtils.isToday(date)) {
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat(getResources().getString(R.string.date_string_format_to_year));
-            dateString = simpleDateFormat.format(entry.date);
+            dateString = simpleDateFormat.format(date);
         }
 
+        return dateString;
+    }
+
+    private void loadCurrentDate() {
+
+        String dateString = formatDate(entry.date);
         binding.date.setText(dateString);
     }
 
@@ -197,9 +210,12 @@ public class EntryEditActivity extends AppCompatActivity {
 
                                 // Update
                                 EntryDataManager entryDataManager   = new EntryDataManager(EntryEditActivity.this);
-                                long updated                        = entryDataManager.updateMemo(entry.id,memo);
+                                long updated                        = entryDataManager.updateMemo(entry.id, memo);
 
                                 if (updated != 0) {
+
+                                    // Show update dialog
+                                    DialogManager.showToast(EntryEditActivity.this, memo);
 
                                     // Update displayed memo
                                     binding.memo.setText(memo);

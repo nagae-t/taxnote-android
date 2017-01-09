@@ -13,6 +13,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.example.taxnoteandroid.Library.DialogManager;
 import com.example.taxnoteandroid.dataManager.AccountDataManager;
 import com.example.taxnoteandroid.dataManager.EntryDataManager;
 import com.example.taxnoteandroid.dataManager.ReasonDataManager;
@@ -108,6 +109,10 @@ public class AccountEditActivity extends AppCompatActivity {
                 long updated                        = entryDataManager.updateAccount(entryId, account);
 
                 if (updated != 0) {
+
+                    // Show update dialog
+                    DialogManager.showToast(AccountEditActivity.this, account.name);
+
                     finish();
                 }
             }
@@ -164,6 +169,10 @@ public class AccountEditActivity extends AppCompatActivity {
                 long updated                        = entryDataManager.updateReason(entryId, reason);
 
                 if (updated != 0) {
+
+                    // Show update dialog
+                    DialogManager.showToast(AccountEditActivity.this, reason.name);
+
                     finish();
                 }
             }

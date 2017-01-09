@@ -9,6 +9,8 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
 
+import com.example.taxnoteandroid.Library.DialogManager;
+import com.example.taxnoteandroid.Library.ValueConverter;
 import com.example.taxnoteandroid.dataManager.EntryDataManager;
 
 public class PriceEditActivity extends AppCompatActivity {
@@ -161,9 +163,9 @@ public class PriceEditActivity extends AppCompatActivity {
 
     private void saveEntry() {
 
-        String text = priceTextView.getText().toString().replace(",", "");
+        String priceText = priceTextView.getText().toString().replace(",", "");
 
-        if (TextUtils.isEmpty(text)) {
+        if (TextUtils.isEmpty(priceText)) {
 
             // Show error message
             new AlertDialog.Builder(this)
@@ -176,9 +178,14 @@ public class PriceEditActivity extends AppCompatActivity {
 
         // Update
         EntryDataManager entryDataManager   = new EntryDataManager(PriceEditActivity.this);
-        long updated                        = entryDataManager.updatePrice(entryId,currentPrice);
+        long updated                        = entryDataManager.updatePrice(entryId, currentPrice);
 
         if (updated != 0) {
+
+            // Show update dialog
+            String priceString = ValueConverter.formatPrice(currentPrice);
+            DialogManager.showToast(PriceEditActivity.this, priceString);
+
             finish();
         }
     }
