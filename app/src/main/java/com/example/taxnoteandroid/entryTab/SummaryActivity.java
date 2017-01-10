@@ -19,6 +19,7 @@ import android.widget.EditText;
 import com.example.taxnoteandroid.BindingHolder;
 import com.example.taxnoteandroid.DividerDecoration;
 import com.example.taxnoteandroid.FooterRecyclerArrayAdapter;
+import com.example.taxnoteandroid.Library.DialogManager;
 import com.example.taxnoteandroid.OnItemClickRecyclerAdapterListener;
 import com.example.taxnoteandroid.R;
 import com.example.taxnoteandroid.dataManager.ProjectDataManager;
@@ -242,6 +243,11 @@ public class SummaryActivity extends AppCompatActivity {
                                     EditText editText = (EditText) textInputView.findViewById(R.id.edit);
                                     String newName = editText.getText().toString();
 
+                                    // Check empty
+                                    if (newName.isEmpty()) {
+                                        return;
+                                    }
+
                                     ProjectDataManager projectDataManager = new ProjectDataManager(context);
                                     Project project = projectDataManager.findCurrentProjectWithContext(context);
 
@@ -262,10 +268,14 @@ public class SummaryActivity extends AppCompatActivity {
 
                                     long id = summaryDataManager.save(summary);
 
-                                    if (id != 0) {
+                                    // Success
+                                    if (id != -1) {
+
                                         summary.id = id;
                                         add(summary);
                                         dialogInterface.dismiss();
+
+                                        DialogManager.showToast(context,newName);
                                     }
                                 }
                             })

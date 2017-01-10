@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 
+import com.example.taxnoteandroid.Library.DialogManager;
 import com.example.taxnoteandroid.dataManager.AccountDataManager;
 import com.example.taxnoteandroid.dataManager.EntryDataManager;
 import com.example.taxnoteandroid.dataManager.ProjectDataManager;
@@ -249,6 +250,11 @@ public class AccountSelectActivity extends AppCompatActivity {
                                     EditText editText = (EditText) textInputView.findViewById(R.id.edit);
                                     String newName = editText.getText().toString();
 
+                                    // Check empty
+                                    if (newName.isEmpty()) {
+                                        return;
+                                    }
+
                                     ProjectDataManager projectDataManager = new ProjectDataManager(context);
                                     Project project = projectDataManager.findCurrentProjectWithContext(context);
 
@@ -270,10 +276,14 @@ public class AccountSelectActivity extends AppCompatActivity {
                                     long id = accountDataManager.save(account);
 
                                     //QQ ここの保存チェックって、 != -1でいいのかな？ updateは != 0でやってるけど
-                                    if (id != -1 ) {
+                                    // Success
+                                    if (id != -1) {
+
                                         account.id = id;
                                         add(account);
                                         dialogInterface.dismiss();
+
+                                        DialogManager.showToast(context,newName);
                                     }
                                 }
                             })

@@ -24,6 +24,7 @@ import com.example.taxnoteandroid.BindingHolder;
 import com.example.taxnoteandroid.DatePickerDialogFragment;
 import com.example.taxnoteandroid.DividerDecoration;
 import com.example.taxnoteandroid.FooterRecyclerArrayAdapter;
+import com.example.taxnoteandroid.Library.DialogManager;
 import com.example.taxnoteandroid.OnItemClickRecyclerAdapterListener;
 import com.example.taxnoteandroid.R;
 import com.example.taxnoteandroid.dataManager.AccountDataManager;
@@ -310,13 +311,16 @@ public class ExpenseInEntryTabFragment extends Fragment {
 
         @Override
         protected void onBindFooterItemViewHolder(BindingHolder<ViewDataBinding> holder, int position) {
+
             ListviewFooterBinding binding = (ListviewFooterBinding) holder.binding;
             binding.text.setText(getResources().getString(R.string.list_view_add_reason));
             binding.text.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+
                     final Context context = getContext();
                     final View textInputView = LayoutInflater.from(context).inflate(R.layout.dialog_text_input, null);
+
                     new AlertDialog.Builder(context)
                             .setView(textInputView)
                             .setTitle(getResources().getString(R.string.list_view_add_reason))
@@ -325,7 +329,12 @@ public class ExpenseInEntryTabFragment extends Fragment {
                                 public void onClick(DialogInterface dialogInterface, int i) {
 
                                     EditText editText = (EditText) textInputView.findViewById(R.id.edit);
-                                    String reasonName = editText.getText().toString();
+                                    String newName = editText.getText().toString();
+
+                                    // Check empty
+                                    if (newName.isEmpty()) {
+                                        return;
+                                    }
 
                                     ProjectDataManager projectDataManager = new ProjectDataManager(context);
                                     Project project = projectDataManager.findCurrentProjectWithContext(context);
@@ -334,7 +343,7 @@ public class ExpenseInEntryTabFragment extends Fragment {
                                     List<Reason> reasonList = reasonDataManager.findAllWithIsExpense(isExpense, context);
 
                                     Reason reason = new Reason();
-                                    reason.name = reasonName;
+                                    reason.name = newName;
                                     reason.uuid = UUID.randomUUID().toString();
 
                                     if (reasonList.isEmpty()) {
@@ -346,17 +355,34 @@ public class ExpenseInEntryTabFragment extends Fragment {
                                     reason.project = project;
                                     reason.details = "";
 
-                                    // @@ 保存チェック
                                     long id = reasonDataManager.save(reason);
-                                    reason.id = id;
 
-                                    add(reason);
+                                    // Success
+                                    if (id != -1) {
 
-                                    dialogInterface.dismiss();
+                                        reason.id = id;
+                                        add(reason);
+                                        dialogInterface.dismiss();
+
+                                        DialogManager.showToast(context,newName);
+                                    }
+
+
+                                        //@@@テキストエディットの続き
+//                                    InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+//                                    imm.hideSoftInputFromWindow(textInputView.getWindowToken(), 0);
+
                                 }
                             })
                             .setNegativeButton(getResources().getString(R.string.cancel), null)
                             .show();
+
+//                    textInputView.requestFocus();
+//                    InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+//                    imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+
+//                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+//                    imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
                 }
             });
         }
