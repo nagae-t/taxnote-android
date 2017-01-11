@@ -1,13 +1,7 @@
 package com.example.taxnoteandroid.Library;
 
-import android.text.format.DateUtils;
-
-import com.example.taxnoteandroid.model.Entry_Schema;
-import com.github.gfx.android.orma.OrderSpec;
-
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 
 /**
  * Created by umemotonon on 2016/12/24.
@@ -51,7 +45,7 @@ public class EntryLimitManager {
 //                .toList();
 
 
-
+        return true;
     }
 
 

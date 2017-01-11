@@ -1,27 +1,46 @@
 <resources>
-    <string name="app_name">Taxnote Android</string>
 
-    <!-- : Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorPrimaryDark">@color/primary_dark</item>
+        <item name="colorAccent">@color/accent</item>
+        <item name="android:textColorPrimary">@color/primary_text</item>
+        <item name="android:textColorSecondary">@color/secondary_text</item>
+    </style>
 
+    <style name="ListItemStyle">
+        <item name="android:minHeight">48dp</item>
+        <item name="android:paddingLeft">16dp</item>
+        <item name="android:paddingRight">16dp</item>
+    </style>
 
-    <string name="Expense">支出</string>
-    <string name="Income">収入</string>
+    <style name="standard_font_style">
+        <item name="android:textSize">16dp</item>
+    </style>
 
-    <string name="Entry">入力</string>
-    <string name="History">仕訳帳</string>
-    <string name="Settings">設定</string>
+    <style name="detail_text_style">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">10dp</item>
+        <item name="android:textColor">#999999</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:maxLines">1</item>
+    </style>
 
-    <string name="Blank1Fragment_date">日付</string>
-    <string name="Blank1Fragment_cash">支払い方法</string>
-    <string name="Blank1Fragment_select">選択</string>
+    <style name="section_header">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">@color/header_background</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:paddingLeft">16dp</item>
+    </style>
 
-    <string name="SummaryActivity_no_select">備考を選択しない</string>
-    <string name="SummaryActivity_nex">次へ進む</string>
-    <string name="SummaryActivity_select">備考を選択</string>
-    <string name="SummaryActivity_footer">備考を追加</string>
+    <style name="horizontal_line">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">1dp</item>
+        <item name="android:background">@color/horizontal_line</item>
+    </style>
 
-    <string name="MainActivity_entry_tab">Entry</string>
-    <string name="MainActivity_history_tab">History</string>
-    <string name="MainActivity_settings_tab">Settings</string>
 </resources>
