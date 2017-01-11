@@ -3,7 +3,6 @@ package com.example.taxnoteandroid;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
@@ -165,14 +164,9 @@ public class PriceEditActivity extends AppCompatActivity {
 
         String priceText = priceTextView.getText().toString().replace(",", "");
 
+        // Empty check
         if (TextUtils.isEmpty(priceText)) {
-
-            // Show error message
-            new AlertDialog.Builder(this)
-                    .setTitle(getResources().getString(R.string.Error))
-                    .setMessage(getResources().getString(R.string.please_enter_price))
-                    .setPositiveButton("OK", null)
-                    .show();
+            DialogManager.showOKOnlyAlert(this, getResources().getString(R.string.Error), getResources().getString(R.string.please_enter_price));
             return;
         }
 

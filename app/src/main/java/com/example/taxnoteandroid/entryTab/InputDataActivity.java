@@ -3,7 +3,6 @@ package com.example.taxnoteandroid.entryTab;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
@@ -215,14 +214,9 @@ public class InputDataActivity extends AppCompatActivity {
 
         String text = priceTextView.getText().toString().replace(",", "");
 
+        // Empty check
         if (TextUtils.isEmpty(text)) {
-
-            // Show error message
-            new AlertDialog.Builder(this)
-                    .setTitle(getResources().getString(R.string.Error))
-                    .setMessage(getResources().getString(R.string.please_enter_price))
-                    .setPositiveButton("OK", null)
-                    .show();
+            DialogManager.showOKOnlyAlert(this, getResources().getString(R.string.Error), getResources().getString(R.string.please_enter_price));
             return;
         }
 
@@ -249,14 +243,7 @@ public class InputDataActivity extends AppCompatActivity {
             finish();
 
         } else {
-
-            // Show error message
-            new AlertDialog.Builder(this)
-                    .setTitle(getResources().getString(R.string.Error))
-                    .setMessage(null)
-                    .setPositiveButton("OK", null)
-                    .show();
-            return;
+            DialogManager.showOKOnlyAlert(this, getResources().getString(R.string.Error), null);
         }
     }
 

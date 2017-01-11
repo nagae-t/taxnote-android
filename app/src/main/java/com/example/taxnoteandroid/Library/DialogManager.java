@@ -1,6 +1,7 @@
 package com.example.taxnoteandroid.Library;
 
 import android.content.Context;
+import android.support.v7.app.AlertDialog;
 import android.view.Gravity;
 import android.widget.Toast;
 
@@ -28,11 +29,19 @@ public class DialogManager {
         toast.show();
     }
 
-
     public static void showToast(Context context, String title) {
 
         Toast toast = Toast.makeText(context, title, Toast.LENGTH_SHORT);
         toast.setGravity(Gravity.CENTER, 0, 0);
         toast.show();
+    }
+
+    public static void showOKOnlyAlert(Context context, String title, String message) {
+
+        new AlertDialog.Builder(context)
+                .setTitle(title)
+                .setMessage(message)
+                .setPositiveButton("OK", null)
+                .show();
     }
 }
