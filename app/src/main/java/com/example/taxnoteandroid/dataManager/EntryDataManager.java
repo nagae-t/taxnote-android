@@ -55,14 +55,14 @@ public class EntryDataManager {
         ProjectDataManager projectDataManager   = new ProjectDataManager(context);
         Project project                         = projectDataManager.findCurrentProjectWithContext(context);
 
-        List reasons = ormaDatabase.selectFromEntry().
+        List entries = ormaDatabase.selectFromEntry().
                 where(Entry_Schema.INSTANCE.deleted.getQualifiedName() + " = 0")
                 .and()
                 .projectEq(project)
                 .orderBy(Entry_Schema.INSTANCE.date.getQualifiedName() + " " + OrderSpec.DESC)
                 .toList();
 
-        return reasons;
+        return entries;
     }
 
     public Entry hasReasonInEntryData(Reason reason) {
