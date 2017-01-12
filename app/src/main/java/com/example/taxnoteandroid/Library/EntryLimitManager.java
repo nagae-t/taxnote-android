@@ -1,8 +1,5 @@
 package com.example.taxnoteandroid.Library;
 
-import java.util.Calendar;
-import java.util.Date;
-
 /**
  * Created by umemotonon on 2016/12/24.
  */
@@ -15,37 +12,39 @@ public class EntryLimitManager {
 
     public static boolean limitNewEntryForFreeUsersWithDate(long date) {
 
-
-        if (taxnotePlusIsActive) {
-            return false;
-        }
-
-
-        Calendar cal = Calendar.getInstance();
-
-        Date javaDate = new Date(date * 1000);
-        cal.setTime(javaDate);
-
-        cal.set(Calendar.HOUR_OF_DAY, 0); // ! clear would not reset the hour of day !
-        cal.clear(Calendar.MINUTE);
-        cal.clear(Calendar.SECOND);
-        cal.clear(Calendar.MILLISECOND);
-
-        // get start of the month
-        cal.set(Calendar.DAY_OF_MONTH, 1);
-        System.out.println("Start of the month:       " + cal.getTime());
-        System.out.println("... in milliseconds:      " + cal.getTimeInMillis());
-
-        //QQここ、dateの絞り方
-//        List entries = ormaDatabase.selectFromEntry().
-//                where(Entry_Schema.INSTANCE.deleted.getQualifiedName() + " = 0")
-//                .and()
-//                .projectEq(project)
-//                .orderBy(Entry_Schema.INSTANCE.date.getQualifiedName() + " " + OrderSpec.DESC)
-//                .toList();
-
-
         return true;
+
+
+//        if (taxnotePlusIsActive) {
+//            return false;
+//        }
+//
+//
+//        Calendar cal = Calendar.getInstance();
+//
+//        Date javaDate = new Date(date * 1000);
+//        cal.setTime(javaDate);
+//
+//        cal.set(Calendar.HOUR_OF_DAY, 0); // ! clear would not reset the hour of day !
+//        cal.clear(Calendar.MINUTE);
+//        cal.clear(Calendar.SECOND);
+//        cal.clear(Calendar.MILLISECOND);
+//
+//        // get start of the month
+//        cal.set(Calendar.DAY_OF_MONTH, 1);
+//        System.out.println("Start of the month:       " + cal.getTime());
+//        System.out.println("... in milliseconds:      " + cal.getTimeInMillis());
+//
+//        //QQここ、dateの絞り方
+////        List entries = ormaDatabase.selectFromEntry().
+////                where(Entry_Schema.INSTANCE.deleted.getQualifiedName() + " = 0")
+////                .and()
+////                .projectEq(project)
+////                .orderBy(Entry_Schema.INSTANCE.date.getQualifiedName() + " " + OrderSpec.DESC)
+////                .toList();
+//
+//
+//        return true;
     }
 
 

@@ -1,5 +1,6 @@
 package com.example.taxnoteandroid;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -18,6 +19,7 @@ public class SettingsTabFragment extends Fragment {
     }
 
     public static SettingsTabFragment newInstance() {
+
         SettingsTabFragment fragment = new SettingsTabFragment();
         Bundle args = new Bundle();
         fragment.setArguments(args);
@@ -26,10 +28,44 @@ public class SettingsTabFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        binding = FragmentSettingsTabBinding.inflate(inflater, container, false);
 
+        binding = FragmentSettingsTabBinding.inflate(inflater, container, false);
         binding.version.setText(BuildConfig.VERSION_NAME);
+
+        setViews();
 
         return binding.getRoot();
     }
+
+
+    //--------------------------------------------------------------//
+    //    -- Display Part --
+    //--------------------------------------------------------------//
+
+    private void setViews() {
+        setUpgradeView();
+    }
+
+
+
+
+    //--------------------------------------------------------------//
+    //    -- Upgrade --
+    //--------------------------------------------------------------//
+
+
+    private void setUpgradeView() {
+
+        binding.upgrade.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Intent intent = new Intent(getContext(), UpgradeActivity.class);
+                startActivity(intent);
+            }
+        });
+    }
+
+
+
 }

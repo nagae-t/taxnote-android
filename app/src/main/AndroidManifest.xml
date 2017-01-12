@@ -2,6 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.taxnoteandroid">
 
+    <!--App Billing-->
+    <uses-permission android:name="com.android.vending.BILLING" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -20,6 +23,7 @@
         <activity android:name=".EntryEditActivity" />
         <activity android:name=".PriceEditActivity" />
         <activity android:name=".AccountEditActivity" />
+        <activity android:name=".UpgradeActivity" />
     </application>
 
 </manifest>

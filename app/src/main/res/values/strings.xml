@@ -16,8 +16,6 @@
     <string name="Price">金額</string>
     <string name="Delete">削除する</string>
 
-
-
     <string name="SummaryActivity_no_select">備考を選択しない</string>
     <string name="SummaryActivity_nex">次へ進む</string>
     <string name="SummaryActivity_select">備考を選択</string>
@@ -71,6 +69,22 @@
 
     <string name="list_view_add_reason">科目を追加</string>
     <string name="list_view_rename">科目名を変更</string>
+
+
+    //--------------------------------------------------------------//
+    // -- Settings --
+    //--------------------------------------------------------------//
+
+    <string name="benefits_of_upgrade">アップグレードの特典</string>
+    <string name="taxnote_plus">Taxnoteプラス</string>
+    <string name="restore_purchases">以前の購入を復元</string>
+    <string name="frequently_asked_questions">ヘルプ・よくある質問</string>
+    <string name="ask_questions_or_request">要望・質問を送る</string>
+    <string name="version">バージョン</string>
+    <string name="upgrade_to_plus_unlock_the_limit">無料版ではそれぞれの月に15件までしか入力できません。もしよければ無制限に記録できるTaxnoteプラスをご検討ください。</string>
+    <string name="go_to_upgrade_screen">アップグレード画面へ</string>
+    <string name="upgrade">アップグレード</string>
+
 
 
 </resources>

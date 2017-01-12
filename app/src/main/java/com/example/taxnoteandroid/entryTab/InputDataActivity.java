@@ -1,8 +1,10 @@
 package com.example.taxnoteandroid.entryTab;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
@@ -11,8 +13,10 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.example.taxnoteandroid.Library.DialogManager;
+import com.example.taxnoteandroid.Library.EntryLimitManager;
 import com.example.taxnoteandroid.Library.ValueConverter;
 import com.example.taxnoteandroid.R;
+import com.example.taxnoteandroid.UpgradeActivity;
 import com.example.taxnoteandroid.dataManager.EntryDataManager;
 import com.example.taxnoteandroid.dataManager.ProjectDataManager;
 import com.example.taxnoteandroid.model.Account;
@@ -210,6 +214,14 @@ public class InputDataActivity extends AppCompatActivity {
 
     private void saveEntry() {
 
+        boolean limitNewEntry = EntryLimitManager.limitNewEntryForFreeUsersWithDate(date);
+
+        // Entry limit for free users check
+        if (limitNewEntry) {
+            showUpgradeSuggest();
+            return;
+        }
+
         EntryDataManager entryDataManager = new EntryDataManager(InputDataActivity.this);
 
         String text = priceTextView.getText().toString().replace(",", "");
@@ -245,6 +257,27 @@ public class InputDataActivity extends AppCompatActivity {
         } else {
             DialogManager.showOKOnlyAlert(this, getResources().getString(R.string.Error), null);
         }
+    }
+
+    private void showUpgradeSuggest() {
+
+        // Confirm dialog
+        new AlertDialog.Builder(this)
+                .setTitle(getResources().getString(R.string.upgrade))
+                .setMessage(getResources().getString(R.string.upgrade_to_plus_unlock_the_limit))
+                .setPositiveButton(getResources().getString(R.string.go_to_upgrade_screen), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                        // Show upgrade activity
+                        Intent intent = new Intent(InputDataActivity.this, UpgradeActivity.class);
+                        startActivity(intent);
+
+                        dialogInterface.dismiss();
+                    }
+                })
+                .setNegativeButton(getResources().getString(R.string.cancel), null)
+                .show();
     }
 
 

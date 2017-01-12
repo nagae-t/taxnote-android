@@ -10,65 +10,39 @@
 
         <TextView
             style="@style/standard_font_style"
-            android:background="@drawable/selector_background_colors"
             android:id="@+id/upgrade"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
+            android:background="#ffffffff"
             android:gravity="center_vertical"
             android:minHeight="48dp"
             android:paddingEnd="16dp"
             android:paddingStart="16dp"
-            android:text="@string/benefits_of_upgrade" />
+            android:text="Taxnoteプラス" />
 
         <TextView
-            style="@style/standard_font_style"
-            android:background="@drawable/selector_background_colors"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:gravity="center_vertical"
-            android:minHeight="48dp"
-            android:paddingEnd="16dp"
-            android:paddingStart="16dp"
-            android:text="@string/ask_questions_or_request" />
-
-        <TextView
-            style="@style/standard_font_style"
-            android:background="@drawable/selector_background_colors"
-            android:id="@+id/help"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:minHeight="48dp"
-            android:paddingEnd="16dp"
-            android:paddingStart="16dp"
-            android:text="@string/frequently_asked_questions" />
-
-        <LinearLayout
             style="@style/standard_font_style"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:background="#ffffffff"
-            android:gravity="center"
+            android:gravity="center_vertical"
             android:minHeight="48dp"
-            android:orientation="horizontal"
             android:paddingEnd="16dp"
-            android:paddingStart="16dp">
+            android:paddingStart="16dp"
+            android:text="以前の購入を復元" />
 
-            <TextView
-                style="@style/standard_font_style"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/version" />
-
-            <TextView
-                style="@style/standard_font_style"
-                android:id="@+id/version"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-        </LinearLayout>
+        <TextView
+            style="@style/standard_font_style"
+            android:id="@+id/help"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#ffffffff"
+            android:gravity="center_vertical"
+            android:minHeight="48dp"
+            android:paddingEnd="16dp"
+            android:paddingStart="16dp"
+            android:text="ヘルプ・よくある質問" />
     </LinearLayout>
 </layout>
