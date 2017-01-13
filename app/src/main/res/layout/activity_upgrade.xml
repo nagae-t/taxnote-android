@@ -9,40 +9,40 @@
         tools:context="com.example.taxnoteandroid.SettingsTabFragment">
 
         <TextView
+            android:background="@drawable/selector_background_colors"
             style="@style/standard_font_style"
-            android:id="@+id/upgrade"
+            android:id="@+id/upgrade_to_plus"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:background="#ffffffff"
             android:gravity="center_vertical"
             android:minHeight="48dp"
             android:paddingEnd="16dp"
             android:paddingStart="16dp"
-            android:text="Taxnoteプラス" />
+            android:text="@string/taxnote_plus" />
 
         <TextView
+            android:background="@drawable/selector_background_colors"
             style="@style/standard_font_style"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:background="#ffffffff"
             android:gravity="center_vertical"
             android:minHeight="48dp"
             android:paddingEnd="16dp"
             android:paddingStart="16dp"
-            android:text="以前の購入を復元" />
+            android:text="@string/restore_purchases" />
 
         <TextView
+            android:background="@drawable/selector_background_colors"
             style="@style/standard_font_style"
             android:id="@+id/help"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#ffffffff"
             android:gravity="center_vertical"
             android:minHeight="48dp"
             android:paddingEnd="16dp"
             android:paddingStart="16dp"
-            android:text="ヘルプ・よくある質問" />
+            android:text="@string/frequently_asked_questions" />
     </LinearLayout>
 </layout>
