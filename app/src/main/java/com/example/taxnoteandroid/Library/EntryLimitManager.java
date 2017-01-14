@@ -1,5 +1,8 @@
 package com.example.taxnoteandroid.Library;
 
+import java.util.Calendar;
+import java.util.Date;
+
 /**
  * Created by umemotonon on 2016/12/24.
  */
@@ -11,24 +14,25 @@ public class EntryLimitManager {
 
 
     public static boolean limitNewEntryForFreeUsersWithDate(long date) {
-
-        return true;
-
-
 //        if (taxnotePlusIsActive) {
 //            return false;
 //        }
 //
 //
-//        Calendar cal = Calendar.getInstance();
+        Calendar cal = Calendar.getInstance();
+        Date javaDate = new Date(date);
+        cal.setTime(javaDate);
+        cal.set(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), 0, 0, 0, 0);
+
+////        cal.get(Calendar.MONTH);
+////
 //
-//        Date javaDate = new Date(date * 1000);
-//        cal.setTime(javaDate);
-//
-//        cal.set(Calendar.HOUR_OF_DAY, 0); // ! clear would not reset the hour of day !
+////
+//        cal.clear(Calendar.HOUR_OF_DAY); // ! clear would not reset the hour of day !
 //        cal.clear(Calendar.MINUTE);
 //        cal.clear(Calendar.SECOND);
 //        cal.clear(Calendar.MILLISECOND);
+        System.out.println("... in milliseconds:      " + cal.toString());
 //
 //        // get start of the month
 //        cal.set(Calendar.DAY_OF_MONTH, 1);
@@ -45,6 +49,7 @@ public class EntryLimitManager {
 //
 //
 //        return true;
+        return true;
     }
 
 
