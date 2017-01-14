@@ -45,6 +45,8 @@ public class UpgradeActivity extends AppCompatActivity implements BillingProcess
     private void setViews() {
         setTitle();
         setUpgradeToTaxnotePlusView();
+        setRestorePurchasesView();
+        setHelpView();
     }
 
     private void setTitle() {
@@ -57,6 +59,26 @@ public class UpgradeActivity extends AppCompatActivity implements BillingProcess
             @Override
             public void onClick(View view) {
                 billingProcessor.purchase(UpgradeActivity.this, TAXNOTE_PLUS_ID);
+
+            }
+        });
+    }
+
+    private void setRestorePurchasesView() {
+
+        binding.restorePurchases.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                billingProcessor.loadOwnedPurchasesFromGoogle();
+            }
+        });
+    }
+
+    private void setHelpView() {
+
+        binding.help.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
 
             }
         });

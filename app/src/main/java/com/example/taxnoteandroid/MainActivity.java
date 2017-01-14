@@ -1,5 +1,6 @@
 package com.example.taxnoteandroid;
 
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -12,11 +13,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.example.taxnoteandroid.dataManager.DefaultDataInstaller;
-import com.example.taxnoteandroid.dataManager.EntryDataManager;
 import com.example.taxnoteandroid.databinding.ActivityMainBinding;
-import com.example.taxnoteandroid.model.Entry;
-
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -43,13 +40,13 @@ public class MainActivity extends AppCompatActivity {
     public boolean onPrepareOptionsMenu(Menu menu) {
         switch (binding.pager.getCurrentItem()) {
             case 0:
-                menu.findItem(R.id.csv).setVisible(false);
+                menu.findItem(R.id.data_export).setVisible(false);
                 break;
             case 1:
-                menu.findItem(R.id.csv).setVisible(true);
+                menu.findItem(R.id.data_export).setVisible(true);
                 break;
             case 2:
-                menu.findItem(R.id.csv).setVisible(false);
+                menu.findItem(R.id.data_export).setVisible(false);
                 break;
         }
         return super.onPrepareOptionsMenu(menu);
@@ -58,27 +55,15 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.csv:
-                EntryDataManager entryDataManager = new EntryDataManager(this);
-                List<Entry> entries = entryDataManager.findAll(this);
+
+            case R.id.data_export:
+                Intent intent = new Intent(this, DataExportActivity.class);
+                startActivity(intent);
                 break;
         }
         return super.onOptionsItemSelected(item);
     }
 
-    public static String join(CharSequence delimiter, List<Entry> entries) {
-        StringBuilder sb = new StringBuilder();
-        boolean firstTime = true;
-//        for (Object token: tokens) {
-//            if (firstTime) {
-//                firstTime = false;
-//            } else {
-//                sb.append(delimiter);
-//            }
-//            sb.append(token);
-//        }
-        return sb.toString();
-    }
 
     //--------------------------------------------------------------//
     //    -- Bottom Navigation --

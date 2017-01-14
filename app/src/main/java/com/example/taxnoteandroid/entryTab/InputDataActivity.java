@@ -217,10 +217,10 @@ public class InputDataActivity extends AppCompatActivity {
         boolean limitNewEntry = EntryLimitManager.limitNewEntryForFreeUsersWithDate(date);
 
         // Entry limit for free users check
-        if (limitNewEntry) {
-            showUpgradeSuggest();
-            return;
-        }
+//        if (limitNewEntry) {
+//            showUpgradeSuggest();
+//            return;
+//        }
 
         EntryDataManager entryDataManager = new EntryDataManager(InputDataActivity.this);
 

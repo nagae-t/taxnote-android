@@ -86,5 +86,24 @@
     <string name="upgrade">アップグレード</string>
 
 
+    //--------------------------------------------------------------//
+    // -- Data Export --
+    //--------------------------------------------------------------//
+
+    <string name="data_export">データ出力</string>
+    <string name="data_export_range">出力する期間</string>
+    <string name="data_export_all_range">すべての期間</string>
+    <string name="data_export_custom_range">指定した期間</string>
+    <string name="data_export_begin_date">開始</string>
+    <string name="data_export_end_date">終了</string>
+    <string name="character_code">文字コード</string>
+    <string name="character_code_uff8">UTF8</string>
+    <string name="character_code_shiftjis">ShiftJIS</string>
+    <string name="csv_format">CSV (Excelなどの表計算ソフト)</string>
+    <string name="yayoi_format">弥生会計・やよいの青色申告</string>
+    <string name="freee_format">freee</string>
+    <string name="mfcloud_format">MFクラウド</string>
+
+
 
 </resources>
