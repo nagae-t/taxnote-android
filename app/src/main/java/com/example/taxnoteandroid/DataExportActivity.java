@@ -81,7 +81,6 @@ public class DataExportActivity extends AppCompatActivity {
 
     }
 
-    //QQ Pickerの作り方これでよいかな？
     private void selectCharacterCode() {
 
         CharSequence codes[] = new CharSequence[] {"UTF8", "ShiftJIS"};

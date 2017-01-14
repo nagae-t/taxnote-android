@@ -187,16 +187,12 @@ public class EntryEditActivity extends AppCompatActivity {
     //--------------------------------------------------------------//
 
     private void setMemoView() {
-
-        final View textInputView    = LayoutInflater.from(this).inflate(R.layout.dialog_text_input, null);
-        final EditText editText     = (EditText) textInputView.findViewById(R.id.edit);
-        editText.setText(entry.memo);
-
-        //QQ 二回めのタップで落ちる
-        //エラーメッセージは The specified child already has a parent. You must call removeView() on the child's parent first
         binding.memo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                final View textInputView    = LayoutInflater.from(EntryEditActivity.this).inflate(R.layout.dialog_text_input, null);
+                final EditText editText     = (EditText) textInputView.findViewById(R.id.edit);
+                editText.setText(entry.memo);
 
                 new AlertDialog.Builder(EntryEditActivity.this)
                         .setView(textInputView)
@@ -216,7 +212,8 @@ public class EntryEditActivity extends AppCompatActivity {
 
                                     DialogManager.showToast(EntryEditActivity.this, memo);
 
-                                    // Update displayed memo
+                                    entry.memo = memo;
+//                                    // Update displayed memo
                                     binding.memo.setText(memo);
                                 }
                             }
