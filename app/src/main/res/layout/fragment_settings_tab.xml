@@ -9,7 +9,7 @@
         tools:context="com.example.taxnoteandroid.SettingsTabFragment">
 
         <TextView
-            style="@style/standard_font_style"
+            style="@style/font_style_standard"
             android:background="@drawable/selector_background_colors"
             android:id="@+id/upgrade"
             android:layout_width="match_parent"
@@ -22,7 +22,7 @@
             android:text="@string/benefits_of_upgrade" />
 
         <TextView
-            style="@style/standard_font_style"
+            style="@style/font_style_standard"
             android:background="@drawable/selector_background_colors"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -33,8 +33,12 @@
             android:paddingStart="16dp"
             android:text="@string/ask_questions_or_request" />
 
+        <android.support.v4.widget.Space
+            android:layout_width="match_parent"
+            android:layout_height="1dp" />
+
         <TextView
-            style="@style/standard_font_style"
+            style="@style/font_style_standard"
             android:background="@drawable/selector_background_colors"
             android:id="@+id/help"
             android:layout_width="match_parent"
@@ -46,7 +50,7 @@
             android:text="@string/frequently_asked_questions" />
 
         <LinearLayout
-            style="@style/standard_font_style"
+            style="@style/font_style_standard"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
@@ -58,15 +62,17 @@
             android:paddingStart="16dp">
 
             <TextView
-                style="@style/standard_font_style"
+                style="@style/font_style_standard"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="@string/version" />
 
             <TextView
-                style="@style/standard_font_style"
+                style="@style/font_style_standard"
+                android:textColor="@color/text_gray"
                 android:id="@+id/version"
+                tools:text="1.4.5"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
         </LinearLayout>

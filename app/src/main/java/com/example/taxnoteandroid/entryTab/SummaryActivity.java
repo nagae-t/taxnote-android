@@ -211,7 +211,6 @@ public class SummaryActivity extends AppCompatActivity {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
 
-                            //@@ すでに科目を使って入力している場合どうするか 入力したデータ消さないと、削除しないようにする？
                             long deleted = summaryDataManager.delete(summary.id);
                             if (deleted != 0) {
                                 remove(summary);

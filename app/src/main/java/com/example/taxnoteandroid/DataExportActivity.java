@@ -36,6 +36,7 @@ public class DataExportActivity extends AppCompatActivity {
         setCharacterCodeView();
         setHelpView();
 
+        //@@ラジオチェック
         binding.exportRadioGroup.check(R.id.freee_format); // 選択するものを変える
         binding.exportRadioGroup.getCheckedRadioButtonId(); // チェック済みのViewのidが取れる
 
@@ -85,8 +86,9 @@ public class DataExportActivity extends AppCompatActivity {
 
         CharSequence codes[] = new CharSequence[] {"UTF8", "ShiftJIS"};
 
+        //@@選択したコードを書く
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle(getResources().getString(R.string.character_code));
+        builder.setTitle(getResources().getString(R.string.character_code_select_please));
         builder.setItems(codes, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {

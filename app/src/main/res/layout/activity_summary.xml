@@ -13,7 +13,7 @@
 
     <TextView
         android:background="@drawable/selector_background_colors"
-        style="@style/standard_font_style"
+        style="@style/font_style_standard"
         android:id="@+id/next"
         android:layout_width="match_parent"
         android:layout_height="@dimen/takasa"

@@ -72,10 +72,7 @@ public class MainActivity extends AppCompatActivity {
     private void setBottomNavigation() {
 
         // Set pager
-//        final ViewPager viewPager   = (ViewPager) findViewById(R.id.pager);
         TabPagerAdapter adapter     = new TabPagerAdapter(getSupportFragmentManager());
-//        viewPager.setAdapter(adapter);
-//        viewPager.beginFakeDrag();
         binding.pager.setAdapter(adapter);
         binding.pager.beginFakeDrag();
         binding.pager.setOffscreenPageLimit(adapter.getCount());
@@ -86,22 +83,19 @@ public class MainActivity extends AppCompatActivity {
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                // @@ titleをstringsにする
+
                 switch (item.getItemId()) {
                     case R.id.tab1:
-//                        viewPager.setCurrentItem(0);
                         binding.pager.setCurrentItem(0, false);
-                        setTitle("入力");
+                        setTitle(getString(R.string.Entry));
                         break;
                     case R.id.tab2:
-                        //                        viewPager.setCurrentItem(1);
                         binding.pager.setCurrentItem(1, false);
-                        setTitle("仕訳帳");
+                        setTitle(getString(R.string.History));
                         break;
                     case R.id.tab3:
-                        //                        viewPager.setCurrentItem(2);
                         binding.pager.setCurrentItem(2, false);
-                        setTitle("設定");
+                        setTitle(getString(R.string.Settings));
                         break;
                 }
                 invalidateOptionsMenu();

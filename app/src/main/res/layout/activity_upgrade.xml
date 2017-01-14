@@ -8,33 +8,33 @@
         android:orientation="vertical"
         tools:context="com.example.taxnoteandroid.SettingsTabFragment">
 
-        <!-- @@ あとから変える-->
-        <TextView
-            style="@style/standard_font_style"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:gravity="center_vertical"
-            android:paddingStart="16dp"
-            android:text="買えよ!!"
-            android:textColor="@color/primary" />
+
+        <!--header example-->
+        <!--<TextView-->
+            <!--style="@style/standard_font_style"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginTop="16dp"-->
+            <!--android:gravity="center_vertical"-->
+            <!--android:paddingStart="16dp"-->
+            <!--android:text="買えよ!!"-->
+            <!--android:textColor="@color/primary" />-->
 
         <TextView
             android:background="@drawable/selector_background_colors"
-            style="@style/standard_font_style"
+            style="@style/font_style_standard"
             android:id="@+id/upgrade_to_plus"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="16dp"
             android:gravity="center_vertical"
             android:minHeight="48dp"
             android:paddingEnd="16dp"
             android:paddingStart="16dp"
             android:text="@string/taxnote_plus" />
 
-        <!-- @@ あとから変える-->
         <TextView
-            style="@style/standard_font_style"
+            style="@style/font_style_footer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
@@ -42,11 +42,11 @@
             android:gravity="center_vertical"
             android:paddingEnd="16dp"
             android:paddingStart="16dp"
-            android:text="みんな買おうね☆" />
+            android:text="@string/taxnote_plus_descriptions" />
 
         <TextView
             android:background="@drawable/selector_background_colors"
-            style="@style/standard_font_style"
+            style="@style/font_style_standard"
             android:id="@+id/restore_purchases"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -57,9 +57,13 @@
             android:paddingStart="16dp"
             android:text="@string/restore_purchases" />
 
+        <android.support.v4.widget.Space
+            android:layout_width="match_parent"
+            android:layout_height="1dp" />
+
         <TextView
             android:background="@drawable/selector_background_colors"
-            style="@style/standard_font_style"
+            style="@style/font_style_standard"
             android:id="@+id/help"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

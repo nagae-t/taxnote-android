@@ -16,7 +16,7 @@
         <item name="android:paddingRight">16dp</item>
     </style>
 
-    <style name="standard_font_style">
+    <style name="font_style_standard">
         <item name="android:textSize">16dp</item>
     </style>
 

@@ -3,7 +3,7 @@
 
     <TextView
         android:id="@+id/text"
-        style="@style/standard_font_style"
+        style="@style/font_style_standard"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"

@@ -23,11 +23,12 @@
         <activity android:name=".EntryEditActivity" />
         <activity android:name=".PriceEditActivity" />
         <activity android:name=".AccountEditActivity" />
-        <!-- @@ 他のlabelもつける -->
         <activity
             android:name=".UpgradeActivity"
             android:label="@string/benefits_of_upgrade" />
-        <activity android:name=".DataExportActivity" />
+        <activity
+            android:name=".DataExportActivity"
+            android:label="@string/data_export"/>
     </application>
 
 </manifest>

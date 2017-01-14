@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- @@ durationを変更して速さを調整する -->
+<!-- durationを変更して速さを調整する -->
 <translate xmlns:android="http://schemas.android.com/apk/res/android"
     android:duration="300"
     android:fillAfter="true"

@@ -7,9 +7,11 @@
         android:background="@color/header_background"
         android:orientation="vertical">
 
+
+        <!--Data Export Button-->
         <TextView
             android:background="@drawable/selector_background_colors"
-            style="@style/standard_font_style"
+            style="@style/font_style_standard"
             android:gravity="center"
             android:id="@+id/data_export_button"
             android:layout_width="match_parent"
@@ -19,12 +21,15 @@
             android:paddingEnd="16dp"
             android:paddingStart="16dp"
             android:textColor="@color/primary"
-            android:text="@string/data_export" />
+            android:text="@string/data_export_start" />
 
+
+        <!--Export Range Button-->
+        <!--Character Code Button-->
         <LinearLayout
             android:id="@+id/data_export_range_button"
             android:background="@drawable/selector_background_colors"
-            style="@style/standard_font_style"
+            style="@style/font_style_standard"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
@@ -34,14 +39,14 @@
             android:paddingStart="16dp">
 
             <TextView
-                style="@style/standard_font_style"
+                style="@style/font_style_standard"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="@string/data_export_range" />
 
             <TextView
-                style="@style/standard_font_style"
+                style="@style/font_style_standard"
                 android:id="@+id/data_export_range_button_right"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -49,14 +54,13 @@
                 android:text="すべての期間" />
         </LinearLayout>
 
-        <!-- @@ あとで全部に線付ける -->
         <android.support.v4.widget.Space
             android:layout_width="match_parent"
             android:layout_height="1dp" />
 
         <LinearLayout
             android:background="@drawable/selector_background_colors"
-            style="@style/standard_font_style"
+            style="@style/font_style_standard"
             android:id="@+id/character_code_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -66,14 +70,14 @@
             android:paddingStart="16dp">
 
             <TextView
-                style="@style/standard_font_style"
+                style="@style/font_style_standard"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="@string/character_code" />
 
             <TextView
-                style="@style/standard_font_style"
+                style="@style/font_style_standard"
                 android:id="@+id/character_code_button_right"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -81,7 +85,14 @@
                 android:text="@string/character_code_uff8" />
         </LinearLayout>
 
+
+        <!--Select Range-->
+        <!--CSV Button-->
+        <!--Yayoi Button-->
+        <!--freee Button-->
+        <!--MFCloud Button-->
         <RadioGroup
+            android:layout_marginTop="16dp"
             android:id="@+id/export_radio_group"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -91,7 +102,7 @@
 
             <RadioButton
                 android:id="@+id/csv_format"
-                style="@style/standard_font_style"
+                style="@style/font_style_standard"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
@@ -105,7 +116,7 @@
 
             <RadioButton
                 android:id="@+id/yayoi_format"
-                style="@style/standard_font_style"
+                style="@style/font_style_standard"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/selector_background_colors"
@@ -117,7 +128,7 @@
 
             <RadioButton
                 android:id="@+id/freee_format"
-                style="@style/standard_font_style"
+                style="@style/font_style_standard"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/selector_background_colors"
@@ -129,7 +140,7 @@
 
             <RadioButton
                 android:id="@+id/mfcloud_format"
-                style="@style/standard_font_style"
+                style="@style/font_style_standard"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/selector_background_colors"
@@ -140,9 +151,11 @@
                 android:text="@string/mfcloud_format" />
         </RadioGroup>
 
+
+        <!--Help Button-->
         <TextView
             android:background="@drawable/selector_background_colors"
-            style="@style/standard_font_style"
+            style="@style/font_style_standard"
             android:id="@+id/data_export_help"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

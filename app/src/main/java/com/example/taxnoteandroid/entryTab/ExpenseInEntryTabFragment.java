@@ -367,8 +367,7 @@ public class ExpenseInEntryTabFragment extends Fragment {
                                         DialogManager.showToast(context,newName);
                                     }
 
-
-                                        //@@@テキストエディットの続き
+                                    //QQテキストエディットでキーボードハイライト
 //                                    InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
 //                                    imm.hideSoftInputFromWindow(textInputView.getWindowToken(), 0);
 

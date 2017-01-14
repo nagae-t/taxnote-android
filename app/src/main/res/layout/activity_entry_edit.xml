@@ -10,7 +10,7 @@
 
     <LinearLayout
         android:id="@+id/activity_entry_edit"
-        style="@style/standard_font_style"
+        style="@style/font_style_standard"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
