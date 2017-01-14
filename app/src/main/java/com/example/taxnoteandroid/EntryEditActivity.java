@@ -190,6 +190,15 @@ public class EntryEditActivity extends AppCompatActivity {
         binding.memo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+// 複雑なXMLのレイアウトを作り出す時に便利
+//                AsyncLayoutInflater asyncLayoutInflater = new AsyncLayoutInflater(EntryEditActivity.this);
+//                asyncLayoutInflater.inflate(R.layout.dialog_text_input, null, new AsyncLayoutInflater.OnInflateFinishedListener() {
+//                    @Override
+//                    public void onInflateFinished(View view, int resid, ViewGroup parent) {
+//
+//                    }
+//                });
+
                 final View textInputView    = LayoutInflater.from(EntryEditActivity.this).inflate(R.layout.dialog_text_input, null);
                 final EditText editText     = (EditText) textInputView.findViewById(R.id.edit);
                 editText.setText(entry.memo);
