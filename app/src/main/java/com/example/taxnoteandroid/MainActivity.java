@@ -79,24 +79,29 @@ public class MainActivity extends AppCompatActivity {
         binding.pager.setAdapter(adapter);
         binding.pager.beginFakeDrag();
         binding.pager.setOffscreenPageLimit(adapter.getCount());
+        setTitle("入力");
 
         BottomNavigationView bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_navigation);
 
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                // @@ titleをstringsにする
                 switch (item.getItemId()) {
                     case R.id.tab1:
 //                        viewPager.setCurrentItem(0);
-                        binding.pager.setCurrentItem(0);
+                        binding.pager.setCurrentItem(0, false);
+                        setTitle("入力");
                         break;
                     case R.id.tab2:
                         //                        viewPager.setCurrentItem(1);
-                        binding.pager.setCurrentItem(1);
+                        binding.pager.setCurrentItem(1, false);
+                        setTitle("仕訳帳");
                         break;
                     case R.id.tab3:
                         //                        viewPager.setCurrentItem(2);
-                        binding.pager.setCurrentItem(2);
+                        binding.pager.setCurrentItem(2, false);
+                        setTitle("設定");
                         break;
                 }
                 invalidateOptionsMenu();

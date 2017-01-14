@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.RadioGroup;
 
 import com.example.taxnoteandroid.databinding.ActivityDataExportBinding;
 
@@ -34,6 +35,20 @@ public class DataExportActivity extends AppCompatActivity {
         setTitle();
         setCharacterCodeView();
         setHelpView();
+
+        binding.exportRadioGroup.check(R.id.freee_format); // 選択するものを変える
+        binding.exportRadioGroup.getCheckedRadioButtonId(); // チェック済みのViewのidが取れる
+
+        binding.exportRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                switch (checkedId) {
+                    case R.id.csv_format:
+                        // かく
+                        break;
+                }
+            }
+        });
     }
 
     private void setTitle() {

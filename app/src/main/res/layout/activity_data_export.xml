@@ -5,8 +5,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/header_background"
-        android:orientation="vertical"
-        tools:context="com.example.taxnoteandroid.SettingsTabFragment">
+        android:orientation="vertical">
 
         <TextView
             android:background="@drawable/selector_background_colors"
@@ -50,17 +49,17 @@
                 android:text="すべての期間" />
         </LinearLayout>
 
-        <!--QQここをくっつけたい-->
+        <!-- @@ あとで全部に線付ける -->
+        <android.support.v4.widget.Space
+            android:layout_width="match_parent"
+            android:layout_height="1dp" />
 
         <LinearLayout
             android:background="@drawable/selector_background_colors"
             style="@style/standard_font_style"
-
             android:id="@+id/character_code_button"
-
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
             android:gravity="center_vertical"
             android:minHeight="48dp"
             android:paddingEnd="16dp"
@@ -82,55 +81,64 @@
                 android:text="@string/character_code_uff8" />
         </LinearLayout>
 
-
-        <TextView
-            android:background="@drawable/selector_background_colors"
-            style="@style/standard_font_style"
-            android:id="@+id/csv_format"
+        <RadioGroup
+            android:id="@+id/export_radio_group"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:gravity="center_vertical"
-            android:minHeight="48dp"
-            android:paddingEnd="16dp"
-            android:paddingStart="16dp"
-            android:text="@string/csv_format" />
-
-        <TextView
             android:background="@drawable/selector_background_colors"
-            style="@style/standard_font_style"
-            android:id="@+id/yayoi_format"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:minHeight="48dp"
-            android:paddingEnd="16dp"
-            android:paddingStart="16dp"
-            android:text="@string/yayoi_format" />
+            android:orientation="vertical"
+            android:paddingStart="8dp">
 
-        <TextView
-            android:background="@drawable/selector_background_colors"
-            style="@style/standard_font_style"
-            android:id="@+id/freee_format"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:minHeight="48dp"
-            android:paddingEnd="16dp"
-            android:paddingStart="16dp"
-            android:text="@string/freee_format" />
+            <RadioButton
+                android:id="@+id/csv_format"
+                style="@style/standard_font_style"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/selector_background_colors"
+                android:checked="true"
+                android:gravity="center_vertical"
+                android:minHeight="48dp"
+                android:paddingEnd="16dp"
+                android:paddingStart="16dp"
+                android:text="@string/csv_format" />
 
-        <TextView
-            android:background="@drawable/selector_background_colors"
-            style="@style/standard_font_style"
-            android:id="@+id/mfcloud_format"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:minHeight="48dp"
-            android:paddingEnd="16dp"
-            android:paddingStart="16dp"
-            android:text="@string/mfcloud_format" />
+            <RadioButton
+                android:id="@+id/yayoi_format"
+                style="@style/standard_font_style"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/selector_background_colors"
+                android:gravity="center_vertical"
+                android:minHeight="48dp"
+                android:paddingEnd="16dp"
+                android:paddingStart="16dp"
+                android:text="@string/yayoi_format" />
+
+            <RadioButton
+                android:id="@+id/freee_format"
+                style="@style/standard_font_style"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/selector_background_colors"
+                android:gravity="center_vertical"
+                android:minHeight="48dp"
+                android:paddingEnd="16dp"
+                android:paddingStart="16dp"
+                android:text="@string/freee_format" />
+
+            <RadioButton
+                android:id="@+id/mfcloud_format"
+                style="@style/standard_font_style"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/selector_background_colors"
+                android:gravity="center_vertical"
+                android:minHeight="48dp"
+                android:paddingEnd="16dp"
+                android:paddingStart="16dp"
+                android:text="@string/mfcloud_format" />
+        </RadioGroup>
 
         <TextView
             android:background="@drawable/selector_background_colors"

@@ -275,7 +275,6 @@ public class AccountSelectActivity extends AppCompatActivity {
 
                                     long id = accountDataManager.save(account);
 
-                                    //QQ ここの保存チェックって、 != -1でいいのかな？ updateは != 0でやってるけど
                                     // Success
                                     if (id != -1) {
 

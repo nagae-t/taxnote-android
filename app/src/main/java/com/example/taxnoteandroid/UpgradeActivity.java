@@ -43,14 +43,9 @@ public class UpgradeActivity extends AppCompatActivity implements BillingProcess
     //--------------------------------------------------------------//
 
     private void setViews() {
-        setTitle();
         setUpgradeToTaxnotePlusView();
         setRestorePurchasesView();
         setHelpView();
-    }
-
-    private void setTitle() {
-        setTitle(getResources().getString(R.string.benefits_of_upgrade));
     }
 
     private void setUpgradeToTaxnotePlusView() {
