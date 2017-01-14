@@ -1,5 +1,6 @@
 package com.example.taxnoteandroid;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -41,8 +42,10 @@ public class HistoryTabFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        Context context = getContext();
         binding = FragmentHistoryTabBinding.inflate(inflater,container, false);
-        binding.history.setLayoutManager(new LinearLayoutManager(getContext()));
+        binding.history.setLayoutManager(new LinearLayoutManager(context));
+        binding.history.addItemDecoration(new DividerDecoration(context));
 
         return binding.getRoot();
     }
