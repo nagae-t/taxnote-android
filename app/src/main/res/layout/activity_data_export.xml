@@ -55,6 +55,9 @@
         <LinearLayout
             android:background="@drawable/selector_background_colors"
             style="@style/standard_font_style"
+
+            android:id="@+id/character_code_button"
+
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
@@ -72,7 +75,7 @@
 
             <TextView
                 style="@style/standard_font_style"
-                android:id="@+id/version"
+                android:id="@+id/character_code_button_right"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/divider"
