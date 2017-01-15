@@ -105,7 +105,7 @@ public class EntryEditActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                DatePickerDialogFragment fragment = DatePickerDialogFragment.newInstance(entry.date, getResources().getString(R.string.entry_tab_fragment_date));
+                DatePickerDialogFragment fragment = DatePickerDialogFragment.newInstance(entry.date, null);
                 fragment.setOnDateSetListener(new DatePickerDialogFragment.OnDateSetListener() {
                     @Override
                     public void onDateSet(Calendar calendar) {
@@ -138,7 +138,7 @@ public class EntryEditActivity extends AppCompatActivity {
 
         // Show the date if it is not today
         if (!DateUtils.isToday(date)) {
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat(getResources().getString(R.string.date_string_format_to_year));
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat(getResources().getString(R.string.date_string_format_to_year_month_day_weekday));
             dateString = simpleDateFormat.format(date);
         }
 
@@ -222,7 +222,7 @@ public class EntryEditActivity extends AppCompatActivity {
                                     DialogManager.showToast(EntryEditActivity.this, memo);
 
                                     entry.memo = memo;
-//                                    // Update displayed memo
+                                    // Update displayed memo
                                     binding.memo.setText(memo);
                                 }
                             }

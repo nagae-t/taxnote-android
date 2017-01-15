@@ -97,7 +97,7 @@ public class InputDataActivity extends AppCompatActivity {
 
         // Show the date if it is not today
         if (!DateUtils.isToday(date)) {
-            SimpleDateFormat simpleDateFormat    = new SimpleDateFormat(getResources().getString(R.string.date_string_format_to_month));
+            SimpleDateFormat simpleDateFormat    = new SimpleDateFormat(getResources().getString(R.string.date_string_format_to_month_day));
             dateString                           = simpleDateFormat.format(date);
         }
 

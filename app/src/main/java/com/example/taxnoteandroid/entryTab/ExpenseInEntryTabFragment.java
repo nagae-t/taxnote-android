@@ -118,7 +118,7 @@ public class ExpenseInEntryTabFragment extends Fragment {
             @Override
             public void onClick(View view) {
 
-                DatePickerDialogFragment fragment = DatePickerDialogFragment.newInstance(date, getResources().getString(R.string.entry_tab_fragment_date));
+                DatePickerDialogFragment fragment = DatePickerDialogFragment.newInstance(date, null);
                 fragment.setOnDateSetListener(new DatePickerDialogFragment.OnDateSetListener() {
                     @Override
                     public void onDateSet(Calendar calendar) {
@@ -137,7 +137,7 @@ public class ExpenseInEntryTabFragment extends Fragment {
 
         // Show the date if it is not today
         if (!DateUtils.isToday(date)) {
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat(getResources().getString(R.string.date_string_format_to_year));
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat(getResources().getString(R.string.date_string_format_to_year_month_day_weekday));
             dateString = simpleDateFormat.format(date);
         }
 

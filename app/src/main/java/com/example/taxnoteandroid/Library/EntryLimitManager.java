@@ -24,6 +24,11 @@ public class EntryLimitManager {
         cal.setTime(javaDate);
         cal.set(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), 0, 0, 0, 0);
 
+        //@@
+        // Taxnoteでは、それぞれの月ごとに15件まで無料版で入力できて、有料版になるとその制限がなくなる
+        // このアルゴリズムを書きたい
+        //　dateで取ってきた日付の月の最初の日付時刻と、月の最後の日付時刻を撮りたい。
+
 ////        cal.get(Calendar.MONTH);
 ////
 //

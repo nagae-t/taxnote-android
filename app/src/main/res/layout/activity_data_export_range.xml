@@ -14,7 +14,7 @@ xmlns:tools="http://schemas.android.com/tools">
     <!--Last Month Range Button-->
     <!--Custom Range Button-->
     <RadioGroup
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="20dp"
         android:id="@+id/export_range_radio_group"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -74,6 +74,17 @@ xmlns:tools="http://schemas.android.com/tools">
     </RadioGroup>
 
 
+
+    <TextView
+    style="@style/font_style_footer"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="20dp"
+    android:gravity="center_vertical"
+    android:paddingStart="16dp"
+    android:text="@string/data_export_custom_range"
+    android:textColor="@color/secondary_text" />
+
     <!--Export Range Begin Button-->
     <!--Export Range End Button-->
     <LinearLayout
@@ -82,7 +93,7 @@ xmlns:tools="http://schemas.android.com/tools">
         style="@style/font_style_standard"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="5dp"
         android:gravity="center_vertical"
         android:minHeight="48dp"
         android:paddingEnd="16dp"

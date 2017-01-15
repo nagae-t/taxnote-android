@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.RadioGroup;
 
+import com.example.taxnoteandroid.Library.DialogManager;
 import com.example.taxnoteandroid.dataManager.SharedPreferencesManager;
 import com.example.taxnoteandroid.databinding.ActivityDataExportBinding;
 
@@ -112,10 +113,12 @@ public class DataExportActivity extends AppCompatActivity {
                     case 0:
                         SharedPreferencesManager.saveCurrentCharacterCode(DataExportActivity.this, "UTF8");
                         binding.characterCodeButtonRight.setText("UTF8");
+                        DialogManager.showToast(DataExportActivity.this, "UTF8");
                         break;
                     case 1:
                         SharedPreferencesManager.saveCurrentCharacterCode(DataExportActivity.this, "ShiftJIS");
                         binding.characterCodeButtonRight.setText("ShiftJIS");
+                        DialogManager.showToast(DataExportActivity.this, "ShiftJIS");
                         break;
                 }
             }

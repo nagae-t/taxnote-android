@@ -83,7 +83,7 @@ public class SharedPreferencesManager {
     }
 
     public static long getDateRangeBeginDate(Context context) {
-        return getSharedPreferences(context).getLong(EXPORT_RANGE_BEGIN_DATE, 0);
+        return getSharedPreferences(context).getLong(EXPORT_RANGE_BEGIN_DATE, System.currentTimeMillis());
     }
 
     public static boolean saveDateRangeEndDate(Context context, long beginDate) {
@@ -91,6 +91,6 @@ public class SharedPreferencesManager {
     }
 
     public static long getDateRangeEndDate(Context context) {
-        return getSharedPreferences(context).getLong(EXPORT_RANGE_END_DATE, 0);
+        return getSharedPreferences(context).getLong(EXPORT_RANGE_END_DATE, System.currentTimeMillis());
     }
 }

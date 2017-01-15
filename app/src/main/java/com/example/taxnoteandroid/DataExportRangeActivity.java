@@ -1,12 +1,18 @@
 package com.example.taxnoteandroid;
 
 import android.databinding.DataBindingUtil;
+import android.icu.text.SimpleDateFormat;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 import android.widget.RadioGroup;
 
+import com.example.taxnoteandroid.Library.DialogManager;
+import com.example.taxnoteandroid.dataManager.EntryDataManager;
 import com.example.taxnoteandroid.dataManager.SharedPreferencesManager;
 import com.example.taxnoteandroid.databinding.ActivityDataExportRangeBinding;
+
+import java.util.Calendar;
 
 public class DataExportRangeActivity extends AppCompatActivity {
 
@@ -31,6 +37,7 @@ public class DataExportRangeActivity extends AppCompatActivity {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_data_export_range);
 
         setSelectDateRangeTypeRadioGroup();
+        setCustomDateRangeView();
     }
 
 
@@ -91,11 +98,78 @@ public class DataExportRangeActivity extends AppCompatActivity {
     private void setCustomDateRangeView() {
 
         //@@@いまここやってる
-        long exportRange = SharedPreferencesManager.getDateRangeBeginDate(DataExportRangeActivity.this);
+        // Get saved date
+        final long dateRangeBeginDate = SharedPreferencesManager.getDateRangeBeginDate(DataExportRangeActivity.this);
+        final long dateRangeEndDate = SharedPreferencesManager.getDateRangeEndDate(DataExportRangeActivity.this);
 
+        //QQ ここエラー直したい
+        final SimpleDateFormat simpleDateFormat = new SimpleDateFormat(getResources().getString(R.string.date_string_format_to_year_month_day));
+        String beginDateString = simpleDateFormat.format(dateRangeBeginDate);
+        String endDateString = simpleDateFormat.format(dateRangeEndDate);
 
-//            SimpleDateFormat simpleDateFormat = new SimpleDateFormat(getResources().getString(R.string.date_string_format_to_year));
-//            dateString = simpleDateFormat.format(date);
+        // Set date string
+        binding.dataExportBeginDateRight.setText(beginDateString);
+        binding.dataExportEndDateRight.setText(endDateString);
 
+        binding.dataExportBeginDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                // Show date picker
+                DatePickerDialogFragment fragment = DatePickerDialogFragment.newInstance(dateRangeBeginDate, null);
+
+                fragment.setOnDateSetListener(new DatePickerDialogFragment.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(Calendar calendar) {
+
+                        // Save new date
+                        long newDate = calendar.getTimeInMillis();
+                        SharedPreferencesManager.saveDateRangeBeginDate(DataExportRangeActivity.this, newDate);
+
+                        // Update view
+                        String dateString = simpleDateFormat.format(newDate);
+                        binding.dataExportBeginDateRight.setText(dateString);
+
+                        DialogManager.showToast(DataExportRangeActivity.this, dateString);
+
+                        // Change date range type
+                        binding.exportRangeRadioGroup.check(R.id.data_export_custom_range);
+                        SharedPreferencesManager.saveExportRangeType(DataExportRangeActivity.this, "custom");
+                    }
+                });
+                fragment.show(getSupportFragmentManager(), DatePickerDialogFragment.class.getName());
+            }
+        });
+
+        binding.dataExportEndDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                // Show date picker
+                DatePickerDialogFragment fragment = DatePickerDialogFragment.newInstance(dateRangeEndDate, null);
+
+                fragment.setOnDateSetListener(new DatePickerDialogFragment.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(Calendar calendar) {
+
+                        // Save new date
+                        long newDate = calendar.getTimeInMillis();
+                        SharedPreferencesManager.saveDateRangeEndDate(DataExportRangeActivity.this, newDate);
+
+                        // Update view
+                        String dateString = simpleDateFormat.format(newDate);
+                        binding.dataExportEndDateRight.setText(dateString);
+
+                        DialogManager.showToast(DataExportRangeActivity.this, dateString);
+
+                        // Change date range type
+                        binding.exportRangeRadioGroup.check(R.id.data_export_custom_range);
+                        SharedPreferencesManager.saveExportRangeType(DataExportRangeActivity.this, "custom");
+                    }
+                });
+                fragment.show(getSupportFragmentManager(), DatePickerDialogFragment.class.getName());
+            }
+        });
 
     }
+}

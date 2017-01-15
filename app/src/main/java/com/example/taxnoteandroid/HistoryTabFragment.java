@@ -82,7 +82,7 @@ public class HistoryTabFragment extends Fragment {
         for (Entry entry : entries) {
 
             // Format date to string
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat(getResources().getString(R.string.date_string_format_to_month));
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat(getResources().getString(R.string.date_string_format_to_month_day));
             String dateString = simpleDateFormat.format(entry.date);
 
             if (!map2.containsKey(dateString)) {
