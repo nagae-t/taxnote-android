@@ -40,7 +40,7 @@ public class DataExportRangeActivity extends AppCompatActivity {
 
     private void setSelectDateRangeTypeRadioGroup() {
 
-        String exportRange = SharedPreferencesManager.getCurrentExportRange(DataExportRangeActivity.this);
+        String exportRange = SharedPreferencesManager.getExportRangeType(DataExportRangeActivity.this);
 
         if (exportRange.equals("all")) {
             binding.exportRangeRadioGroup.check(R.id.data_export_all_range);
@@ -64,22 +64,38 @@ public class DataExportRangeActivity extends AppCompatActivity {
                 switch (checkedId) {
 
                     case R.id.data_export_all_range:
-                        SharedPreferencesManager.saveCurrentExportRange(DataExportRangeActivity.this, "all");
+                        SharedPreferencesManager.saveExportRangeType(DataExportRangeActivity.this, "all");
                         break;
 
                     case R.id.data_export_this_month:
-                        SharedPreferencesManager.saveCurrentExportRange(DataExportRangeActivity.this, "this_month");
+                        SharedPreferencesManager.saveExportRangeType(DataExportRangeActivity.this, "this_month");
                         break;
 
                     case R.id.data_export_last_month:
-                        SharedPreferencesManager.saveCurrentExportRange(DataExportRangeActivity.this, "last_month");
+                        SharedPreferencesManager.saveExportRangeType(DataExportRangeActivity.this, "last_month");
                         break;
 
                     case R.id.data_export_custom_range:
-                        SharedPreferencesManager.saveCurrentExportRange(DataExportRangeActivity.this, "custom");
+                        SharedPreferencesManager.saveExportRangeType(DataExportRangeActivity.this, "custom");
                         break;
                 }
             }
         });
     }
-}
+
+
+    //--------------------------------------------------------------//
+    //    -- Set Custom Date Range --
+    //--------------------------------------------------------------//
+
+    private void setCustomDateRangeView() {
+
+        //@@@いまここやってる
+        long exportRange = SharedPreferencesManager.getDateRangeBeginDate(DataExportRangeActivity.this);
+
+
+//            SimpleDateFormat simpleDateFormat = new SimpleDateFormat(getResources().getString(R.string.date_string_format_to_year));
+//            dateString = simpleDateFormat.format(date);
+
+
+    }

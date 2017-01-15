@@ -53,7 +53,7 @@ public class DataExportActivity extends AppCompatActivity {
 
     private void setExportRangeView() {
 
-        String exportRange = SharedPreferencesManager.getCurrentExportRange(DataExportActivity.this);
+        String exportRange = SharedPreferencesManager.getExportRangeType(DataExportActivity.this);
 
         if (exportRange.equals("all")) {
             binding.dataExportRangeButtonRight.setText(getResources().getString(R.string.data_export_all_range));

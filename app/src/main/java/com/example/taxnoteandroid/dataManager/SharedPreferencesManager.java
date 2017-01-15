@@ -10,6 +10,9 @@ public class SharedPreferencesManager {
     private static final String UUID_FOR_CURRENT_KEY            = "UUID_FOR_CURRENT_KEY";
     private static final String CHARACTER_CODE_FOR_CURRENT_KEY  = "CHARACTER_CODE_FOR_CURRENT_KEY";
     private static final String EXPORT_FORMAT_FOR_CURRENT_KEY   = "EXPORT_FORMAT_FOR_CURRENT_KEY";
+    private static final String EXPORT_RANGE_TYPE_KEY           = "EXPORT_RANGE_TYPE_KEY";
+    private static final String EXPORT_RANGE_BEGIN_DATE         = "EXPORT_RANGE_BEGIN_DATE";
+    private static final String EXPORT_RANGE_END_DATE           = "EXPORT_RANGE_END_DATE";
 
 
     //--------------------------------------------------------------//
@@ -67,11 +70,27 @@ public class SharedPreferencesManager {
         return getSharedPreferences(context).getString(EXPORT_FORMAT_FOR_CURRENT_KEY, "csv");
     }
 
-    public static boolean saveCurrentExportRange(Context context, String exportRange) {
-        return getSharedPreferences(context).edit().putString(EXPORT_FORMAT_FOR_CURRENT_KEY, exportRange).commit();
+    public static boolean saveExportRangeType(Context context, String exportRange) {
+        return getSharedPreferences(context).edit().putString(EXPORT_RANGE_TYPE_KEY, exportRange).commit();
     }
 
-    public static String getCurrentExportRange(Context context) {
-        return getSharedPreferences(context).getString(EXPORT_FORMAT_FOR_CURRENT_KEY, "all");
+    public static String getExportRangeType(Context context) {
+        return getSharedPreferences(context).getString(EXPORT_RANGE_TYPE_KEY, "all");
+    }
+
+    public static boolean saveDateRangeBeginDate(Context context, long beginDate) {
+        return getSharedPreferences(context).edit().putLong(EXPORT_RANGE_BEGIN_DATE, beginDate).commit();
+    }
+
+    public static long getDateRangeBeginDate(Context context) {
+        return getSharedPreferences(context).getLong(EXPORT_RANGE_BEGIN_DATE, 0);
+    }
+
+    public static boolean saveDateRangeEndDate(Context context, long beginDate) {
+        return getSharedPreferences(context).edit().putLong(EXPORT_RANGE_END_DATE, beginDate).commit();
+    }
+
+    public static long getDateRangeEndDate(Context context) {
+        return getSharedPreferences(context).getLong(EXPORT_RANGE_END_DATE, 0);
     }
 }
