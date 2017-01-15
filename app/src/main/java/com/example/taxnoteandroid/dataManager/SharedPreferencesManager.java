@@ -5,9 +5,12 @@ import android.content.SharedPreferences;
 
 public class SharedPreferencesManager {
 
-    private static final String PREF_NAME                   = "pref";
-    private static final String IS_DEFAULT_DATABASE_SET_KEY = "IS_DEFAULT_DATABASE_SET_KEY";
-    private static final String UUID_FOR_CURRENT_KEY        = "UUID_FOR_CURRENT_KEY";
+    private static final String PREF_NAME                       = "pref";
+    private static final String IS_DEFAULT_DATABASE_SET_KEY     = "IS_DEFAULT_DATABASE_SET_KEY";
+    private static final String UUID_FOR_CURRENT_KEY            = "UUID_FOR_CURRENT_KEY";
+    private static final String CHARACTER_CODE_FOR_CURRENT_KEY  = "CHARACTER_CODE_FOR_CURRENT_KEY";
+    private static final String EXPORT_FORMAT_FOR_CURRENT_KEY   = "EXPORT_FORMAT_FOR_CURRENT_KEY";
+
 
 
     //--------------------------------------------------------------//
@@ -43,4 +46,26 @@ public class SharedPreferencesManager {
     public static String getUuidForCurrentProject(Context context) {
         return getSharedPreferences(context).getString(UUID_FOR_CURRENT_KEY, "");
     }
+
+
+    //--------------------------------------------------------------//
+    //    -- Data Export --
+    //--------------------------------------------------------------//
+
+    public static boolean saveCurrentCharacterCode(Context context, String characterCode) {
+        return getSharedPreferences(context).edit().putString(CHARACTER_CODE_FOR_CURRENT_KEY, characterCode).commit();
+    }
+
+    public static String getCurrentCharacterCode(Context context) {
+        return getSharedPreferences(context).getString(CHARACTER_CODE_FOR_CURRENT_KEY, "UTF8");
+    }
+
+    public static boolean saveCurrentExportFormat(Context context, String exportFormat) {
+        return getSharedPreferences(context).edit().putString(EXPORT_FORMAT_FOR_CURRENT_KEY, exportFormat).commit();
+    }
+
+    public static String getCurrentExportFormat(Context context) {
+        return getSharedPreferences(context).getString(EXPORT_FORMAT_FOR_CURRENT_KEY, "csv");
+    }
+
 }
