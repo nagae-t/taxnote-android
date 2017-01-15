@@ -12,7 +12,6 @@ public class SharedPreferencesManager {
     private static final String EXPORT_FORMAT_FOR_CURRENT_KEY   = "EXPORT_FORMAT_FOR_CURRENT_KEY";
 
 
-
     //--------------------------------------------------------------//
     //    -- Init --
     //--------------------------------------------------------------//
@@ -68,4 +67,11 @@ public class SharedPreferencesManager {
         return getSharedPreferences(context).getString(EXPORT_FORMAT_FOR_CURRENT_KEY, "csv");
     }
 
+    public static boolean saveCurrentExportRange(Context context, String exportRange) {
+        return getSharedPreferences(context).edit().putString(EXPORT_FORMAT_FOR_CURRENT_KEY, exportRange).commit();
+    }
+
+    public static String getCurrentExportRange(Context context) {
+        return getSharedPreferences(context).getString(EXPORT_FORMAT_FOR_CURRENT_KEY, "all");
+    }
 }

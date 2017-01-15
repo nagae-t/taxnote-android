@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.taxnoteandroid">
 
-    <!--App Billing-->
+    <!-- App Billing -->
     <uses-permission android:name="com.android.vending.BILLING" />
 
     <application
@@ -14,6 +14,7 @@
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -28,7 +29,10 @@
             android:label="@string/benefits_of_upgrade" />
         <activity
             android:name=".DataExportActivity"
-            android:label="@string/data_export"/>
+            android:label="@string/data_export" />
+        <activity
+            android:name=".DataExportRangeActivity"
+            android:label="@string/data_export_range" />
     </application>
 
 </manifest>

@@ -96,6 +96,8 @@
     <string name="data_export_start">データを出力する</string>
     <string name="data_export_range">出力する期間</string>
     <string name="data_export_all_range">すべての期間</string>
+    <string name="data_export_this_month">今月</string>
+    <string name="data_export_last_month">先月</string>
     <string name="data_export_custom_range">指定した期間</string>
     <string name="data_export_begin_date">開始</string>
     <string name="data_export_end_date">終了</string>
@@ -107,7 +109,7 @@
     <string name="yayoi_format">弥生会計・やよいの青色申告</string>
     <string name="freee_format">freee</string>
     <string name="mfcloud_format">MFクラウド</string>
-
+    <string name="title_activity_data_export_range">DataExportRangeActivity</string>
 
 
 </resources>

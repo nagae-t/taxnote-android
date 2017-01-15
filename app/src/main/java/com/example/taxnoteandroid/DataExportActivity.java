@@ -1,6 +1,7 @@
 package com.example.taxnoteandroid;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
@@ -25,6 +26,12 @@ public class DataExportActivity extends AppCompatActivity {
         setViews();
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        setExportRangeView();
+    }
+
 
     //--------------------------------------------------------------//
     //    -- Display Part --
@@ -33,11 +40,46 @@ public class DataExportActivity extends AppCompatActivity {
     private void setViews() {
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_data_export);
+
         setCharacterCodeView();
         setSelectFormatRadioGroup();
         setHelpView();
     }
 
+
+    //--------------------------------------------------------------//
+    //    -- Export Range --
+    //--------------------------------------------------------------//
+
+    private void setExportRangeView() {
+
+        String exportRange = SharedPreferencesManager.getCurrentExportRange(DataExportActivity.this);
+
+        if (exportRange.equals("all")) {
+            binding.dataExportRangeButtonRight.setText(getResources().getString(R.string.data_export_all_range));
+        }
+
+        if (exportRange.equals("this_month")) {
+            binding.dataExportRangeButtonRight.setText(getResources().getString(R.string.data_export_this_month));
+        }
+
+        if (exportRange.equals("last_month")) {
+            binding.dataExportRangeButtonRight.setText(getResources().getString(R.string.data_export_last_month));
+        }
+
+        if (exportRange.equals("custom")) {
+            binding.dataExportRangeButtonRight.setText(getResources().getString(R.string.data_export_custom_range));
+        }
+
+        binding.dataExportRangeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Intent intent = new Intent(DataExportActivity.this, DataExportRangeActivity.class);
+                startActivity(intent);
+            }
+        });
+    }
 
     //--------------------------------------------------------------//
     //    -- Character Code --
