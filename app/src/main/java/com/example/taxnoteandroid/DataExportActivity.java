@@ -88,16 +88,43 @@ public class DataExportActivity extends AppCompatActivity {
 
     private void setSelectFormatRadioGroup() {
 
-        //@@ラジオチェック
-        binding.exportRadioGroup.check(R.id.freee_format); // 選択するものを変える
-        binding.exportRadioGroup.getCheckedRadioButtonId(); // チェック済みのViewのidが取れる
+        String exportFormat = SharedPreferencesManager.getCurrentExportFormat(DataExportActivity.this);
+
+        if (exportFormat.equals("csv")) {
+            binding.exportRadioGroup.check(R.id.csv_format);
+        }
+
+        if (exportFormat.equals("yayoi")) {
+            binding.exportRadioGroup.check(R.id.yayoi_format);
+        }
+
+        if (exportFormat.equals("freee")) {
+            binding.exportRadioGroup.check(R.id.freee_format);
+        }
+
+        if (exportFormat.equals("mfcloud")) {
+            binding.exportRadioGroup.check(R.id.mfcloud_format);
+        }
 
         binding.exportRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 switch (checkedId) {
+
                     case R.id.csv_format:
-                        // かく
+                        SharedPreferencesManager.saveCurrentExportFormat(DataExportActivity.this, "csv");
+                        break;
+
+                    case R.id.yayoi_format:
+                        SharedPreferencesManager.saveCurrentExportFormat(DataExportActivity.this, "yayoi");
+                        break;
+
+                    case R.id.freee_format:
+                        SharedPreferencesManager.saveCurrentExportFormat(DataExportActivity.this, "freee");
+                        break;
+
+                    case R.id.mfcloud_format:
+                        SharedPreferencesManager.saveCurrentExportFormat(DataExportActivity.this, "mfcloud");
                         break;
                 }
             }
