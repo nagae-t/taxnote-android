@@ -11,7 +11,8 @@
         android:paddingStart="16dp">
 
         <TextView
-            android:id="@+id/price" 
+            android:id="@+id/price"
+            android:textColor="@color/text_gray"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
@@ -19,6 +20,7 @@
 
         <TextView
             android:id="@+id/name"
+            android:textColor="@color/text_gray"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_toStartOf="@id/price"

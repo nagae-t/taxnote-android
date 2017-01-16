@@ -25,9 +25,15 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
+
+    // Do not update to 'com.android.Support:appcompat-v7:25.1.0' for Helpshift crash issue
+//    https://code.google.com/p/android/issues/detail?id=230415
     compile 'com.android.support:appcompat-v7:25.0.1'
+
     compile 'com.android.support:design:25.0.1'
     compile 'com.android.support:support-v4:25.0.1'
+
+    // Helpshift
 
     // In-App Billing v3 Library
     compile 'com.anjlab.android.iab.v3:library:1.0.+'

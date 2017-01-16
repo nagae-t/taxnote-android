@@ -97,7 +97,6 @@ public class DataExportRangeActivity extends AppCompatActivity {
 
     private void setCustomDateRangeView() {
 
-        //@@@いまここやってる
         // Get saved date
         final long dateRangeBeginDate = SharedPreferencesManager.getDateRangeBeginDate(DataExportRangeActivity.this);
         final long dateRangeEndDate = SharedPreferencesManager.getDateRangeEndDate(DataExportRangeActivity.this);
