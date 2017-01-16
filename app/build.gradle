@@ -29,11 +29,13 @@ dependencies {
     // Do not update to 'com.android.Support:appcompat-v7:25.1.0' for Helpshift crash issue
 //    https://code.google.com/p/android/issues/detail?id=230415
     compile 'com.android.support:appcompat-v7:25.0.1'
-
     compile 'com.android.support:design:25.0.1'
     compile 'com.android.support:support-v4:25.0.1'
+    compile 'com.android.support:recyclerview-v7:25.0.1'
+    compile 'com.android.support:cardview-v7:25.0.1'
 
     // Helpshift
+    compile 'com.helpshift:android-helpshift-aar:4.8.0'
 
     // In-App Billing v3 Library
     compile 'com.anjlab.android.iab.v3:library:1.0.+'
