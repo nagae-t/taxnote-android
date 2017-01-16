@@ -65,7 +65,7 @@ public class HistoryTabFragment extends Fragment {
     private void loadHistoryData() {
 
         EntryDataManager entryDataManager   = new EntryDataManager(getContext());
-        List<Entry> entries                 = entryDataManager.findAll(getContext());
+        List<Entry> entries                 = entryDataManager.findAll(getContext(), null);
 
         if (entries == null || entries.isEmpty()) {
 

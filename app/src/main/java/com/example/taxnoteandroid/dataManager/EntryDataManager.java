@@ -50,18 +50,36 @@ public class EntryDataManager {
         return ormaDatabase.selectFromEntry().where(Entry_Schema.INSTANCE.uuid.getQualifiedName() + " = ?", uuid).valueOrNull();
     }
 
-    public List<Entry> findAll(Context context) {
+    public List<Entry> findAll(Context context, long[] startAndEndDate) {
 
         ProjectDataManager projectDataManager   = new ProjectDataManager(context);
         Project project                         = projectDataManager.findCurrentProjectWithContext(context);
 
-        List entries = ormaDatabase.selectFromEntry().
-                where(Entry_Schema.INSTANCE.deleted.getQualifiedName() + " = 0")
-                .and()
-                .projectEq(project)
-                .orderBy(Entry_Schema.INSTANCE.date.getQualifiedName() + " " + OrderSpec.DESC)
-                .toList();
+        List entries;
 
+        if (startAndEndDate != null) {
+
+            // Get entries filtered within startDate and endDate
+            long startDate  = startAndEndDate[0];
+            long endDate    = startAndEndDate[1];
+
+            entries = ormaDatabase.selectFromEntry().
+                    where(Entry_Schema.INSTANCE.deleted.getQualifiedName() + " = 0")
+                    .projectEq(project)
+                    .where(Entry_Schema.INSTANCE.date.getQualifiedName() + " > " + startDate)
+                    .where(Entry_Schema.INSTANCE.date.getQualifiedName() + " < " + endDate)
+                    .orderBy(Entry_Schema.INSTANCE.date.getQualifiedName() + " " + OrderSpec.DESC)
+                    .toList();
+        } else {
+
+            entries = ormaDatabase.selectFromEntry().
+                    where(Entry_Schema.INSTANCE.deleted.getQualifiedName() + " = 0")
+                    .projectEq(project)
+                    .orderBy(Entry_Schema.INSTANCE.date.getQualifiedName() + " " + OrderSpec.DESC)
+                    .toList();
+        }
+
+        //QQこのエラーなおしたい
         return entries;
     }
 
