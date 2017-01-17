@@ -2,27 +2,16 @@ package com.example.taxnoteandroid.dataManager;
 
 import android.content.Context;
 
-import com.example.taxnoteandroid.BuildConfig;
 import com.example.taxnoteandroid.TaxNoteApplication;
-import com.example.taxnoteandroid.model.Recurring;
 import com.example.taxnoteandroid.model.OrmaDatabase;
-import com.github.gfx.android.orma.AccessThreadConstraint;
+import com.example.taxnoteandroid.model.Recurring;
 
 public class RecurringDataManager {
 
     private OrmaDatabase ormaDatabase;
 
     public RecurringDataManager(Context context) {
-
-      // Ormaの初期設定
-
-      ormaDatabase = TaxNoteApplication.getOrmaDatabase(); // 2017/01/17 E.Nozaki
-
-//      ormaDatabase = OrmaDatabase.builder(context)
-//                .trace(BuildConfig.DEBUG)
-//                .writeOnMainThread(AccessThreadConstraint.NONE)
-//                .readOnMainThread(AccessThreadConstraint.NONE)
-//                .build();
+      ormaDatabase = TaxNoteApplication.getOrmaDatabase();
     }
 
 

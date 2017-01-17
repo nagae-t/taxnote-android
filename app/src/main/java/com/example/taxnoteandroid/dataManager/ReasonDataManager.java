@@ -2,13 +2,11 @@ package com.example.taxnoteandroid.dataManager;
 
 import android.content.Context;
 
-import com.example.taxnoteandroid.BuildConfig;
 import com.example.taxnoteandroid.TaxNoteApplication;
 import com.example.taxnoteandroid.model.OrmaDatabase;
 import com.example.taxnoteandroid.model.Project;
 import com.example.taxnoteandroid.model.Reason;
 import com.example.taxnoteandroid.model.Reason_Schema;
-import com.github.gfx.android.orma.AccessThreadConstraint;
 import com.github.gfx.android.orma.Inserter;
 
 import java.util.List;
@@ -18,15 +16,7 @@ public class ReasonDataManager {
     private OrmaDatabase ormaDatabase;
 
     public ReasonDataManager(Context context) {
-        // Ormaの初期設定
-
-      ormaDatabase = TaxNoteApplication.getOrmaDatabase(); // 2017/01/17 E.Nozaki
-
-//      ormaDatabase = OrmaDatabase.builder(context)
-//                .trace(BuildConfig.DEBUG)
-//                .writeOnMainThread(AccessThreadConstraint.NONE)
-//                .readOnMainThread(AccessThreadConstraint.NONE)
-//                .build();
+      ormaDatabase = TaxNoteApplication.getOrmaDatabase();
     }
 
 
