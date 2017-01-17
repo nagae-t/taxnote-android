@@ -1,17 +1,16 @@
 package com.example.taxnoteandroid;
 
 import android.databinding.DataBindingUtil;
-import android.icu.text.SimpleDateFormat;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.RadioGroup;
 
 import com.example.taxnoteandroid.Library.DialogManager;
-import com.example.taxnoteandroid.dataManager.EntryDataManager;
 import com.example.taxnoteandroid.dataManager.SharedPreferencesManager;
 import com.example.taxnoteandroid.databinding.ActivityDataExportRangeBinding;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 public class DataExportRangeActivity extends AppCompatActivity {
@@ -101,7 +100,6 @@ public class DataExportRangeActivity extends AppCompatActivity {
         final long dateRangeBeginDate = SharedPreferencesManager.getDateRangeBeginDate(DataExportRangeActivity.this);
         final long dateRangeEndDate = SharedPreferencesManager.getDateRangeEndDate(DataExportRangeActivity.this);
 
-        //QQ ここエラー直したい
         final SimpleDateFormat simpleDateFormat = new SimpleDateFormat(getResources().getString(R.string.date_string_format_to_year_month_day));
         String beginDateString = simpleDateFormat.format(dateRangeBeginDate);
         String endDateString = simpleDateFormat.format(dateRangeEndDate);

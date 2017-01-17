@@ -59,9 +59,9 @@
     //--------------------------------------------------------------//
 
     <string name="date_string_today">今日</string>
-    <string name="date_string_format_to_year_month_day_weekday">yyyy年M月d日 E</string>
-    <string name="date_string_format_to_year_month_day">yyyy年M月d日</string>
-    <string name="date_string_format_to_month_day">M月d日</string>
+    <string name="date_string_format_to_year_month_day_weekday">yyyy年MM月dd日 E</string>
+    <string name="date_string_format_to_year_month_day">yyyy年MM月dd日</string>
+    <string name="date_string_format_to_month_day">MM月dd日</string>
 
 
     //--------------------------------------------------------------//

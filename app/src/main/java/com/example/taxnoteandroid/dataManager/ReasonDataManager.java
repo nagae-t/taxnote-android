@@ -75,7 +75,7 @@ public class ReasonDataManager {
     public int updateName(long id, String name) {
         return ormaDatabase.updateReason().idEq(id).name(name).execute();
     }
-
+    
     
     //--------------------------------------------------------------//
     //    -- Delete --
