@@ -2,7 +2,9 @@ package com.example.taxnoteandroid.entryTab;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.databinding.ViewDataBinding;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -10,13 +12,16 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.taxnoteandroid.AccountSelectActivity;
@@ -176,7 +181,13 @@ public class ExpenseInEntryTabFragment extends Fragment {
 
         RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.reason_list);
 
-        final ReasonDataManager reasonDataManager = new ReasonDataManager(getContext());
+        // 2017/01/17 E.Nozaki
+        // Attach recyclerView to ItemTouchHelper so that you can drag and drop the items in order to change the order.
+        ItemTouchHelper.Callback callback = new ItemTouchHelperCallback();
+        ItemTouchHelper helper = new ItemTouchHelper(callback);
+        helper.attachToRecyclerView(recyclerView);
+
+      final ReasonDataManager reasonDataManager = new ReasonDataManager(getContext());
         final List<Reason> reasons = reasonDataManager.findAllWithIsExpense(isExpense, getContext());
 
         RecyclerViewDragDropManager dragMgr = new RecyclerViewDragDropManager();
@@ -214,7 +225,7 @@ public class ExpenseInEntryTabFragment extends Fragment {
 
         @Override
         protected BindingHolder<ViewDataBinding> onCreateItemViewHolder(ViewGroup parent, int viewType) {
-            return new BindingHolder<>(parent.getContext(), parent, R.layout.row_list_with_details_item);
+          return new BindingHolder<>(parent.getContext(), parent, R.layout.row_list_with_details_item);
         }
 
         @Override
@@ -461,4 +472,122 @@ public class ExpenseInEntryTabFragment extends Fragment {
     //    -- Delete --
     //--------------------------------------------------------------//
 
+  //--------------------------------------------------------------//
+  //    -- Change orders of Reason list --
+  //--------------------------------------------------------------//
+
+  public class ItemTouchHelperCallback extends ItemTouchHelper.Callback{
+    @Override
+    public int getMovementFlags(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder){
+      int flags_drag  = ItemTouchHelper.UP | ItemTouchHelper.DOWN | ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT; // Catch actions for moving an item toward up, down, left and right.
+      int flags_swipe = 0; // Ignore actions for swiping an item.
+      return makeMovementFlags(flags_drag, flags_swipe);
+    }
+
+    @Override
+    public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target){
+      int position_from = viewHolder.getAdapterPosition();
+      int position_to   = target.getAdapterPosition();
+      Log.d(getClass().getSimpleName(), "---------------------------------");
+      Log.d(getClass().getSimpleName(), "position_from = " + position_from);
+      Log.d(getClass().getSimpleName(), "position_to = " + position_to);
+      return false;
+    }
+
+    @Override
+    public void onSelectedChanged(RecyclerView.ViewHolder holder, int action){
+
+      super.onSelectedChanged(holder, action);
+
+      try {
+        if(holder!=null){
+          if(action==ItemTouchHelper.ACTION_STATE_DRAG){
+            Log.d(getClass().getSimpleName(), "ドラッグされました。");
+          }
+        }
+      }
+      catch(Exception e){
+        e.printStackTrace();
+      }
+    }
+
+    @Override
+    public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction){
+    }
+  }
+
+  public class MyViewHolder extends RecyclerView.ViewHolder{
+
+    public Reason reason;
+
+    public MyViewHolder(View view){
+      super(view); // ここにリスト項目のトップレベルのGUIコンポーネントを指定する。
+    }
+
+    public void setReason(final Reason reason){
+      this.reason = reason;
+    }
+
+    public void onItemSelected()
+    {
+      if(this.itemView!=null){
+        this.itemView.setBackgroundColor(Color.YELLOW); // TODO Do something else to highlight the item that is dragged.
+      }
+    }
+
+    public void onItemClear(){
+      if(this.itemView!=null){
+        this.itemView.setBackgroundColor(Color.TRANSPARENT); // TODO Do something else to highlight the item that is dragged.
+      }
+    }
+  }
+
+  private class MyRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
+
+    ReasonDataManager reasonDataManager;
+    List<Reason> reasonList;
+
+    @Override
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position){
+      Log.d(getClass().getSimpleName(), "onBindViewHolder() position = " + position);
+    }
+
+    public MyRecyclerViewAdapter(){
+      reasonDataManager = new ReasonDataManager(getContext());
+      reasonList = reasonDataManager.findAllWithIsExpense(isExpense, getContext());
+    }
+
+    @Override
+    public int getItemCount(){
+      if(reasonList!=null){
+        reasonList.size();
+      }
+      return 0;
+    }
+
+    @Override
+    public MyViewHolder onCreateViewHolder(ViewGroup parent, int type){
+      try{
+        View view = null; // getActivity().getLayoutInflater(R.layout.row_list_with_details_item, new LinearLayout(getActivity()));
+        view.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view){
+              try{
+              }catch(Exception e){
+                e.printStackTrace();
+              }
+            }
+          });
+
+        MyViewHolder holder = new MyViewHolder(view);
+
+        return holder;
+      }
+      catch(Exception e){
+        e.printStackTrace();
+      }
+
+      return null;
+    }
+  }
 }
