@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.taxnoteandroid.databinding.FragmentSettingsTabBinding;
+import com.helpshift.support.Support;
 
 
 public class SettingsTabFragment extends Fragment {
@@ -44,15 +45,13 @@ public class SettingsTabFragment extends Fragment {
 
     private void setViews() {
         setUpgradeView();
+        setHelpViews();
     }
-
-
 
 
     //--------------------------------------------------------------//
     //    -- Upgrade --
     //--------------------------------------------------------------//
-
 
     private void setUpgradeView() {
 
@@ -67,5 +66,26 @@ public class SettingsTabFragment extends Fragment {
     }
 
 
+    //--------------------------------------------------------------//
+    //    -- Help --
+    //--------------------------------------------------------------//
+
+    private void setHelpViews() {
+
+        binding.hsSendMessageBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Support.showConversation(getActivity());
+            }
+        });
+
+        binding.help.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+//                Support.showFAQs(getActivity());
+                Support.showFAQSection(getActivity(),"22");
+            }
+        });
+    }
 
 }

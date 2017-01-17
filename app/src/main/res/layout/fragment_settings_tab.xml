@@ -23,6 +23,7 @@
 
         <TextView
             style="@style/font_style_standard"
+            android:id="@+id/hs__sendMessageBtn"
             android:background="@drawable/selector_background_colors"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
