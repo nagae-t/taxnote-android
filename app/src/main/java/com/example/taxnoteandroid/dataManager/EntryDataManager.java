@@ -3,6 +3,7 @@ package com.example.taxnoteandroid.dataManager;
 import android.content.Context;
 
 import com.example.taxnoteandroid.BuildConfig;
+import com.example.taxnoteandroid.TaxNoteApplication;
 import com.example.taxnoteandroid.model.Account;
 import com.example.taxnoteandroid.model.Entry;
 import com.example.taxnoteandroid.model.Entry_Schema;
@@ -21,11 +22,14 @@ public class EntryDataManager {
     public EntryDataManager(Context context) {
 
         // Init Orma
-        ormaDatabase = OrmaDatabase.builder(context)
-                .trace(BuildConfig.DEBUG)
-                .writeOnMainThread(AccessThreadConstraint.NONE)
-                .readOnMainThread(AccessThreadConstraint.NONE)
-                .build();
+
+      ormaDatabase = TaxNoteApplication.getOrmaDatabase(); // 2017/01/17 E.Nozaki
+
+//      ormaDatabase = OrmaDatabase.builder(context)
+//                .trace(BuildConfig.DEBUG)
+//                .writeOnMainThread(AccessThreadConstraint.NONE)
+//                .readOnMainThread(AccessThreadConstraint.NONE)
+//                .build();
     }
 
 

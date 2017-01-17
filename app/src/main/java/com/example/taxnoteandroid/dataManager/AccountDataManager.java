@@ -3,6 +3,7 @@ package com.example.taxnoteandroid.dataManager;
 import android.content.Context;
 
 import com.example.taxnoteandroid.BuildConfig;
+import com.example.taxnoteandroid.TaxNoteApplication;
 import com.example.taxnoteandroid.model.Account;
 import com.example.taxnoteandroid.model.Account_Schema;
 import com.example.taxnoteandroid.model.OrmaDatabase;
@@ -13,15 +14,19 @@ import java.util.List;
 
 public class AccountDataManager {
 
-    private OrmaDatabase ormaDatabase;
+  private OrmaDatabase ormaDatabase;
 
     public AccountDataManager(Context context) {
-        // Ormaの初期設定
-        ormaDatabase = OrmaDatabase.builder(context)
-                .trace(BuildConfig.DEBUG)
-                .writeOnMainThread(AccessThreadConstraint.NONE)
-                .readOnMainThread(AccessThreadConstraint.NONE)
-                .build();
+
+      // Ormaの初期設定
+
+      ormaDatabase = TaxNoteApplication.getOrmaDatabase(); // 2017/01/17 E.Nozaki
+
+//        ormaDatabase = OrmaDatabase.builder(context)
+//                .trace(BuildConfig.DEBUG)
+//                .writeOnMainThread(AccessThreadConstraint.NONE)
+//                .readOnMainThread(AccessThreadConstraint.NONE)
+//                .build();
     }
 
 
