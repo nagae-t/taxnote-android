@@ -2,7 +2,7 @@ package com.example.taxnoteandroid.dataManager;
 
 import android.content.Context;
 
-import com.example.taxnoteandroid.TaxNoteApplication;
+import com.example.taxnoteandroid.TaxnoteApplication;
 import com.example.taxnoteandroid.model.OrmaDatabase;
 import com.example.taxnoteandroid.model.Recurring;
 
@@ -11,7 +11,7 @@ public class RecurringDataManager {
     private OrmaDatabase ormaDatabase;
 
     public RecurringDataManager(Context context) {
-      ormaDatabase = TaxNoteApplication.getOrmaDatabase();
+      ormaDatabase = TaxnoteApplication.getOrmaDatabase();
     }
 
 

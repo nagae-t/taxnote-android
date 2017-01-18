@@ -14,7 +14,7 @@ import com.helpshift.support.Support;
  * Created by Eiichi on 2017/01/17.
  */
 
-public class TaxNoteApplication extends Application
+public class TaxnoteApplication extends Application
 {
   private static OrmaDatabase ormaDatabase = null;
 
@@ -24,7 +24,7 @@ public class TaxNoteApplication extends Application
     super.onCreate();
 
     // Orma database
-    TaxNoteApplication.ormaDatabase = OrmaDatabase.builder(getApplicationContext())
+    TaxnoteApplication.ormaDatabase = OrmaDatabase.builder(getApplicationContext())
       .trace(BuildConfig.DEBUG)
       .writeOnMainThread(AccessThreadConstraint.NONE)
       .readOnMainThread(AccessThreadConstraint.NONE)

@@ -72,7 +72,7 @@ public class SettingsTabFragment extends Fragment {
 
     private void setHelpViews() {
 
-        binding.hsSendMessageBtn.setOnClickListener(new View.OnClickListener() {
+        binding.sendMessageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Support.showConversation(getActivity());
@@ -82,7 +82,6 @@ public class SettingsTabFragment extends Fragment {
         binding.help.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                Support.showFAQs(getActivity());
                 Support.showFAQSection(getActivity(),"22");
             }
         });

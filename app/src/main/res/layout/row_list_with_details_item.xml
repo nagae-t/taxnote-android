@@ -8,12 +8,12 @@
         android:background="@drawable/selector_background_colors"
         android:clickable="true"
         android:minHeight="48dp"
-        android:paddingBottom="8dp"
-        android:paddingLeft="16dp"
-        android:paddingTop="8dp">
+        android:paddingLeft="16dp">
 
         <ImageView
             android:id="@+id/menu_right"
+            android:minWidth="48dp"
+            android:minHeight="48dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
@@ -37,11 +37,13 @@
                 style="@style/font_style_standard"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:paddingTop="8dp"
                 tools:text="test" />
 
             <TextView
                 android:id="@+id/details"
                 style="@style/detail_text_style"
+                android:paddingBottom="8dp"
                 tools:text="detail" />
         </LinearLayout>
     </RelativeLayout>
