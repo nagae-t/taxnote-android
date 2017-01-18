@@ -3,7 +3,6 @@ package com.example.taxnoteandroid.entryTab;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.databinding.DataBindingUtil;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -20,7 +19,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.taxnoteandroid.AccountSelectActivity;
@@ -111,6 +109,10 @@ public class ExpenseInEntryTabFragment extends Fragment {
     loadCurrentAccount();
   }
 
+  //--------------------------------------------------------------//
+  //    -- Reason List --
+  //--------------------------------------------------------------//
+
   private void setReasonList(View view) {
 
     // Adapter
@@ -169,15 +171,15 @@ public class ExpenseInEntryTabFragment extends Fragment {
 
       ArrayList<Reason> list = new ArrayList<Reason>();
 
-      for(int i=0;i<size;i++){
+      for (int i = 0; i < size; i++) {
         if(i==position_to)   list.add(reasonList.get(position_from));
         if(i!=position_from) list.add(reasonList.get(i));
       }
 
       reasonList = list;
 
-      for(int i=0;i<size;i++){
-        reasonDataManager.updateOrder(reasonList.get(i).id, i); // Update database
+      for ( int i = 0; i < size; i++ ) {
+          reasonDataManager.updateOrder(reasonList.get(i).id, i); // Update database
       }
 
       adapter.notifyItemMoved(position_from, position_to);
@@ -223,6 +225,7 @@ public class ExpenseInEntryTabFragment extends Fragment {
     }
   }
 
+
   //--------------------------------------------------------------//
   //    -- Date Part --
   //--------------------------------------------------------------//
@@ -259,6 +262,7 @@ public class ExpenseInEntryTabFragment extends Fragment {
     ((TextView) getView().findViewById(R.id.date_text_view)).setText(dateString);
   }
 
+
   //--------------------------------------------------------------//
   //    -- Account Part --
   //--------------------------------------------------------------//
@@ -280,6 +284,7 @@ public class ExpenseInEntryTabFragment extends Fragment {
 
     ((TextView) getView().findViewById(R.id.account_text_view)).setText(account.name);
   }
+
 
   //--------------------------------------------------------------//
   //    -- Reason List Adapter --
@@ -350,6 +355,7 @@ public class ExpenseInEntryTabFragment extends Fragment {
       this.notifyDataSetChanged();
     }
   }
+
 
   //--------------------------------------------------------------//
   //    -- Reason List View Holder --
@@ -467,10 +473,11 @@ public class ExpenseInEntryTabFragment extends Fragment {
                 DialogManager.showToast(context, newName);
               }
             }finally{
-              KeyboardUtil.hideKeyboard(getActivity(), editText); // 2017/01/17 E.Nozaki Hide software keyboard.
+              KeyboardUtil.hideKeyboard(getActivity(), editText);
             }
           }
         })
+
         .setNegativeButton(getResources().getString(R.string.cancel), new DialogInterface.OnClickListener(){
           @Override
           public void onClick(DialogInterface dialogInterface, int i){
@@ -498,6 +505,7 @@ public class ExpenseInEntryTabFragment extends Fragment {
       return true;
     }
   }
+
 
   //--------------------------------------------------------------//
   //    -- Rename --
@@ -547,6 +555,7 @@ public class ExpenseInEntryTabFragment extends Fragment {
 
     KeyboardUtil.showKeyboard(getActivity(), textInputView); // 2017/01/17 E.Nozaki Show software keyboard.
   }
+
 
   //--------------------------------------------------------------//
   //    -- Delete --

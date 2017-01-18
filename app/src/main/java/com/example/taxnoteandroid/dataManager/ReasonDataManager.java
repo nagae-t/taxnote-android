@@ -85,6 +85,7 @@ public class ReasonDataManager {
         return ormaDatabase.deleteFromReason().idEq(id).execute();
     }
 
+
   //--------------------------------------------------------------//
   //    -- Change order --
   //--------------------------------------------------------------//
