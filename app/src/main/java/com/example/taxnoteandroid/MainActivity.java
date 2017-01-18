@@ -14,6 +14,7 @@ import android.view.MenuItem;
 
 import com.example.taxnoteandroid.dataManager.DefaultDataInstaller;
 import com.example.taxnoteandroid.databinding.ActivityMainBinding;
+import com.example.taxnoteandroid.entryTab.EntryTabFragment;
 
 public class MainActivity extends AppCompatActivity {
 

@@ -1,4 +1,4 @@
-package com.example.taxnoteandroid;
+package com.example.taxnoteandroid.entryTab;
 
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
@@ -10,7 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.taxnoteandroid.entryTab.ExpenseInEntryTabFragment;
+import com.example.taxnoteandroid.R;
 
 
 public class EntryTabFragment extends Fragment {
@@ -48,9 +48,9 @@ public class EntryTabFragment extends Fragment {
         public Fragment getItem(int position) {
             switch (position) {
                 case 0:
-                    return ExpenseInEntryTabFragment.newInstance(true);
+                    return EntryTabReasonSelectFragment.newInstance(true);
                 case 1:
-                    return ExpenseInEntryTabFragment.newInstance(false);
+                    return EntryTabReasonSelectFragment.newInstance(false);
             }
             return EntryTabFragment.newInstance();
         }

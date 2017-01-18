@@ -30,7 +30,7 @@ import com.example.taxnoteandroid.dataManager.AccountDataManager;
 import com.example.taxnoteandroid.dataManager.EntryDataManager;
 import com.example.taxnoteandroid.dataManager.ProjectDataManager;
 import com.example.taxnoteandroid.dataManager.ReasonDataManager;
-import com.example.taxnoteandroid.databinding.FragmentEntryTabExpenseBinding;
+import com.example.taxnoteandroid.databinding.FragmentEntryTabReasonSelectBinding;
 import com.example.taxnoteandroid.databinding.ListviewFooterBinding;
 import com.example.taxnoteandroid.databinding.RowListWithDetailsItemBinding;
 import com.example.taxnoteandroid.model.Account;
@@ -45,7 +45,7 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.UUID;
 
-public class ExpenseInEntryTabFragment extends Fragment {
+public class EntryTabReasonSelectFragment extends Fragment {
 
   private static final String EXTRA_IS_EXPENSE = "isExpense";
 
@@ -56,17 +56,17 @@ public class ExpenseInEntryTabFragment extends Fragment {
   public long date;
   private Account account;
   private MyRecyclerViewAdapter adapter;
-  private FragmentEntryTabExpenseBinding binding;
+  private FragmentEntryTabReasonSelectBinding binding;
   private ReasonDataManager reasonDataManager = new ReasonDataManager(getContext());
   private List<Reason> reasonList;
 
-  public ExpenseInEntryTabFragment() {
+  public EntryTabReasonSelectFragment() {
     // Required empty public constructor
   }
 
-  public static ExpenseInEntryTabFragment newInstance(boolean isExpense) {
+  public static EntryTabReasonSelectFragment newInstance(boolean isExpense) {
 
-    ExpenseInEntryTabFragment fragment = new ExpenseInEntryTabFragment();
+    EntryTabReasonSelectFragment fragment = new EntryTabReasonSelectFragment();
 
     // Set value on bundle
     Bundle args = new Bundle();
@@ -89,7 +89,7 @@ public class ExpenseInEntryTabFragment extends Fragment {
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
     // Inflate the layout for this fragment
-    binding = FragmentEntryTabExpenseBinding.inflate(inflater, container, false);
+    binding = FragmentEntryTabReasonSelectBinding.inflate(inflater, container, false);
     binding.setIsExpense(isExpense);
 
     View view = binding.getRoot();
