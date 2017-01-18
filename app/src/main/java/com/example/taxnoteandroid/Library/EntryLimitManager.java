@@ -44,11 +44,6 @@ public class EntryLimitManager {
         Calendar calendar = Calendar.getInstance(TimeZone.getDefault());
 
         calendar.setTimeInMillis(date);
-
-        //QQ これ消していいかな？
-        int year = calendar.get(Calendar.YEAR);           // TODO 2017/01/17 E.Nozaki 消していいです！
-        int month = calendar.get(Calendar.DAY_OF_MONTH); // TODO 2017/01/17 E.Nozaki 消していいです！
-
         calendar.set(Calendar.DATE, 1);
         calendar.set(Calendar.HOUR_OF_DAY, 0);
         calendar.set(Calendar.MINUTE, 0);

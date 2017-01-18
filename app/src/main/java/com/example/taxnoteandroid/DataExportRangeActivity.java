@@ -13,6 +13,11 @@ import com.example.taxnoteandroid.databinding.ActivityDataExportRangeBinding;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
+import static com.example.taxnoteandroid.TaxnoteConsts.EXPORT_RANGE_TYPE_ALL;
+import static com.example.taxnoteandroid.TaxnoteConsts.EXPORT_RANGE_TYPE_CUSTOM;
+import static com.example.taxnoteandroid.TaxnoteConsts.EXPORT_RANGE_TYPE_LAST_MONTH;
+import static com.example.taxnoteandroid.TaxnoteConsts.EXPORT_RANGE_TYPE_THIS_MONTH;
+
 public class DataExportRangeActivity extends AppCompatActivity {
 
     private ActivityDataExportRangeBinding binding;
@@ -48,19 +53,19 @@ public class DataExportRangeActivity extends AppCompatActivity {
 
         String exportRange = SharedPreferencesManager.getExportRangeType(DataExportRangeActivity.this);
 
-        if (exportRange.equals("all")) {
+        if (exportRange.equals(EXPORT_RANGE_TYPE_ALL)) {
             binding.exportRangeRadioGroup.check(R.id.data_export_all_range);
         }
 
-        if (exportRange.equals("this_month")) {
+        if (exportRange.equals(EXPORT_RANGE_TYPE_THIS_MONTH)) {
             binding.exportRangeRadioGroup.check(R.id.data_export_this_month);
         }
 
-        if (exportRange.equals("last_month")) {
+        if (exportRange.equals(EXPORT_RANGE_TYPE_LAST_MONTH)) {
             binding.exportRangeRadioGroup.check(R.id.data_export_last_month);
         }
 
-        if (exportRange.equals("custom")) {
+        if (exportRange.equals(EXPORT_RANGE_TYPE_CUSTOM)) {
             binding.exportRangeRadioGroup.check(R.id.data_export_custom_range);
         }
 
@@ -70,19 +75,19 @@ public class DataExportRangeActivity extends AppCompatActivity {
                 switch (checkedId) {
 
                     case R.id.data_export_all_range:
-                        SharedPreferencesManager.saveExportRangeType(DataExportRangeActivity.this, "all");
+                        SharedPreferencesManager.saveExportRangeType(DataExportRangeActivity.this, EXPORT_RANGE_TYPE_ALL);
                         break;
 
                     case R.id.data_export_this_month:
-                        SharedPreferencesManager.saveExportRangeType(DataExportRangeActivity.this, "this_month");
+                        SharedPreferencesManager.saveExportRangeType(DataExportRangeActivity.this, EXPORT_RANGE_TYPE_THIS_MONTH);
                         break;
 
                     case R.id.data_export_last_month:
-                        SharedPreferencesManager.saveExportRangeType(DataExportRangeActivity.this, "last_month");
+                        SharedPreferencesManager.saveExportRangeType(DataExportRangeActivity.this, EXPORT_RANGE_TYPE_LAST_MONTH);
                         break;
 
                     case R.id.data_export_custom_range:
-                        SharedPreferencesManager.saveExportRangeType(DataExportRangeActivity.this, "custom");
+                        SharedPreferencesManager.saveExportRangeType(DataExportRangeActivity.this, EXPORT_RANGE_TYPE_CUSTOM);
                         break;
                 }
             }
@@ -97,12 +102,12 @@ public class DataExportRangeActivity extends AppCompatActivity {
     private void setCustomDateRangeView() {
 
         // Get saved date
-        final long dateRangeBeginDate = SharedPreferencesManager.getDateRangeBeginDate(DataExportRangeActivity.this);
-        final long dateRangeEndDate = SharedPreferencesManager.getDateRangeEndDate(DataExportRangeActivity.this);
+        final long dateRangeBeginDate   = SharedPreferencesManager.getDateRangeBeginDate(DataExportRangeActivity.this);
+        final long dateRangeEndDate     = SharedPreferencesManager.getDateRangeEndDate(DataExportRangeActivity.this);
 
         final SimpleDateFormat simpleDateFormat = new SimpleDateFormat(getResources().getString(R.string.date_string_format_to_year_month_day));
-        String beginDateString = simpleDateFormat.format(dateRangeBeginDate);
-        String endDateString = simpleDateFormat.format(dateRangeEndDate);
+        String beginDateString                  = simpleDateFormat.format(dateRangeBeginDate);
+        String endDateString                    = simpleDateFormat.format(dateRangeEndDate);
 
         // Set date string
         binding.dataExportBeginDateRight.setText(beginDateString);
@@ -131,7 +136,7 @@ public class DataExportRangeActivity extends AppCompatActivity {
 
                         // Change date range type
                         binding.exportRangeRadioGroup.check(R.id.data_export_custom_range);
-                        SharedPreferencesManager.saveExportRangeType(DataExportRangeActivity.this, "custom");
+                        SharedPreferencesManager.saveExportRangeType(DataExportRangeActivity.this, EXPORT_RANGE_TYPE_CUSTOM);
                     }
                 });
                 fragment.show(getSupportFragmentManager(), DatePickerDialogFragment.class.getName());
@@ -161,7 +166,7 @@ public class DataExportRangeActivity extends AppCompatActivity {
 
                         // Change date range type
                         binding.exportRangeRadioGroup.check(R.id.data_export_custom_range);
-                        SharedPreferencesManager.saveExportRangeType(DataExportRangeActivity.this, "custom");
+                        SharedPreferencesManager.saveExportRangeType(DataExportRangeActivity.this, EXPORT_RANGE_TYPE_CUSTOM);
                     }
                 });
                 fragment.show(getSupportFragmentManager(), DatePickerDialogFragment.class.getName());

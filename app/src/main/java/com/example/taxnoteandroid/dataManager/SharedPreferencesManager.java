@@ -3,6 +3,10 @@ package com.example.taxnoteandroid.dataManager;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import static com.example.taxnoteandroid.TaxnoteConsts.EXPORT_CHARACTER_CODE_UTF8;
+import static com.example.taxnoteandroid.TaxnoteConsts.EXPORT_FORMAT_TYPE_CSV;
+import static com.example.taxnoteandroid.TaxnoteConsts.EXPORT_RANGE_TYPE_ALL;
+
 public class SharedPreferencesManager {
 
     private static final String PREF_NAME                       = "pref";
@@ -59,7 +63,7 @@ public class SharedPreferencesManager {
     }
 
     public static String getCurrentCharacterCode(Context context) {
-        return getSharedPreferences(context).getString(CHARACTER_CODE_FOR_CURRENT_KEY, "UTF8");
+        return getSharedPreferences(context).getString(CHARACTER_CODE_FOR_CURRENT_KEY, EXPORT_CHARACTER_CODE_UTF8);
     }
 
     public static boolean saveCurrentExportFormat(Context context, String exportFormat) {
@@ -67,7 +71,7 @@ public class SharedPreferencesManager {
     }
 
     public static String getCurrentExportFormat(Context context) {
-        return getSharedPreferences(context).getString(EXPORT_FORMAT_FOR_CURRENT_KEY, "csv");
+        return getSharedPreferences(context).getString(EXPORT_FORMAT_FOR_CURRENT_KEY, EXPORT_FORMAT_TYPE_CSV);
     }
 
     public static boolean saveExportRangeType(Context context, String exportRange) {
@@ -75,7 +79,7 @@ public class SharedPreferencesManager {
     }
 
     public static String getExportRangeType(Context context) {
-        return getSharedPreferences(context).getString(EXPORT_RANGE_TYPE_KEY, "all");
+        return getSharedPreferences(context).getString(EXPORT_RANGE_TYPE_KEY, EXPORT_RANGE_TYPE_ALL);
     }
 
     public static boolean saveDateRangeBeginDate(Context context, long beginDate) {

@@ -361,7 +361,8 @@ public class ExpenseInEntryTabFragment extends Fragment {
   //    -- Reason List View Holder --
   //--------------------------------------------------------------//
 
-  public class MyViewHolder extends RecyclerView.ViewHolder implements PopupMenu.OnMenuItemClickListener{
+  public class MyViewHolder extends RecyclerView.ViewHolder implements PopupMenu.OnMenuItemClickListener {
+
     public int position;
     public Reason reason;
     public View button_right;

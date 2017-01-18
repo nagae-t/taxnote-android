@@ -13,6 +13,17 @@ import com.example.taxnoteandroid.Library.DialogManager;
 import com.example.taxnoteandroid.dataManager.SharedPreferencesManager;
 import com.example.taxnoteandroid.databinding.ActivityDataExportBinding;
 
+import static com.example.taxnoteandroid.TaxnoteConsts.EXPORT_CHARACTER_CODE_SHIFTJIS;
+import static com.example.taxnoteandroid.TaxnoteConsts.EXPORT_CHARACTER_CODE_UTF8;
+import static com.example.taxnoteandroid.TaxnoteConsts.EXPORT_FORMAT_TYPE_CSV;
+import static com.example.taxnoteandroid.TaxnoteConsts.EXPORT_FORMAT_TYPE_FREEE;
+import static com.example.taxnoteandroid.TaxnoteConsts.EXPORT_FORMAT_TYPE_MFCLOUD;
+import static com.example.taxnoteandroid.TaxnoteConsts.EXPORT_FORMAT_TYPE_YAYOI;
+import static com.example.taxnoteandroid.TaxnoteConsts.EXPORT_RANGE_TYPE_ALL;
+import static com.example.taxnoteandroid.TaxnoteConsts.EXPORT_RANGE_TYPE_CUSTOM;
+import static com.example.taxnoteandroid.TaxnoteConsts.EXPORT_RANGE_TYPE_LAST_MONTH;
+import static com.example.taxnoteandroid.TaxnoteConsts.EXPORT_RANGE_TYPE_THIS_MONTH;
+
 
 public class DataExportActivity extends AppCompatActivity {
 
@@ -56,19 +67,19 @@ public class DataExportActivity extends AppCompatActivity {
 
         String exportRange = SharedPreferencesManager.getExportRangeType(DataExportActivity.this);
 
-        if (exportRange.equals("all")) {
+        if (exportRange.equals(EXPORT_RANGE_TYPE_ALL)) {
             binding.dataExportRangeButtonRight.setText(getResources().getString(R.string.data_export_all_range));
         }
 
-        if (exportRange.equals("this_month")) {
+        if (exportRange.equals(EXPORT_RANGE_TYPE_THIS_MONTH)) {
             binding.dataExportRangeButtonRight.setText(getResources().getString(R.string.data_export_this_month));
         }
 
-        if (exportRange.equals("last_month")) {
+        if (exportRange.equals(EXPORT_RANGE_TYPE_LAST_MONTH)) {
             binding.dataExportRangeButtonRight.setText(getResources().getString(R.string.data_export_last_month));
         }
 
-        if (exportRange.equals("custom")) {
+        if (exportRange.equals(EXPORT_RANGE_TYPE_CUSTOM)) {
             binding.dataExportRangeButtonRight.setText(getResources().getString(R.string.data_export_custom_range));
         }
 
@@ -101,7 +112,7 @@ public class DataExportActivity extends AppCompatActivity {
 
     private void showCharacterCodePicker() {
 
-        CharSequence codes[] = new CharSequence[] {"UTF8", "ShiftJIS"};
+        CharSequence codes[] = new CharSequence[] {EXPORT_CHARACTER_CODE_UTF8, EXPORT_CHARACTER_CODE_SHIFTJIS};
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(getResources().getString(R.string.character_code_select_please));
@@ -111,14 +122,14 @@ public class DataExportActivity extends AppCompatActivity {
 
                 switch (which) {
                     case 0:
-                        SharedPreferencesManager.saveCurrentCharacterCode(DataExportActivity.this, "UTF8");
-                        binding.characterCodeButtonRight.setText("UTF8");
-                        DialogManager.showToast(DataExportActivity.this, "UTF8");
+                        SharedPreferencesManager.saveCurrentCharacterCode(DataExportActivity.this, EXPORT_CHARACTER_CODE_UTF8);
+                        binding.characterCodeButtonRight.setText(EXPORT_CHARACTER_CODE_UTF8);
+                        DialogManager.showToast(DataExportActivity.this, EXPORT_CHARACTER_CODE_UTF8);
                         break;
                     case 1:
-                        SharedPreferencesManager.saveCurrentCharacterCode(DataExportActivity.this, "ShiftJIS");
-                        binding.characterCodeButtonRight.setText("ShiftJIS");
-                        DialogManager.showToast(DataExportActivity.this, "ShiftJIS");
+                        SharedPreferencesManager.saveCurrentCharacterCode(DataExportActivity.this, EXPORT_CHARACTER_CODE_SHIFTJIS);
+                        binding.characterCodeButtonRight.setText(EXPORT_CHARACTER_CODE_SHIFTJIS);
+                        DialogManager.showToast(DataExportActivity.this, EXPORT_CHARACTER_CODE_SHIFTJIS);
                         break;
                 }
             }
@@ -135,19 +146,19 @@ public class DataExportActivity extends AppCompatActivity {
 
         String exportFormat = SharedPreferencesManager.getCurrentExportFormat(DataExportActivity.this);
 
-        if (exportFormat.equals("csv")) {
+        if (exportFormat.equals(EXPORT_FORMAT_TYPE_CSV)) {
             binding.exportRadioGroup.check(R.id.csv_format);
         }
 
-        if (exportFormat.equals("yayoi")) {
+        if (exportFormat.equals(EXPORT_FORMAT_TYPE_YAYOI)) {
             binding.exportRadioGroup.check(R.id.yayoi_format);
         }
 
-        if (exportFormat.equals("freee")) {
+        if (exportFormat.equals(EXPORT_FORMAT_TYPE_FREEE)) {
             binding.exportRadioGroup.check(R.id.freee_format);
         }
 
-        if (exportFormat.equals("mfcloud")) {
+        if (exportFormat.equals(EXPORT_FORMAT_TYPE_MFCLOUD)) {
             binding.exportRadioGroup.check(R.id.mfcloud_format);
         }
 
@@ -157,19 +168,19 @@ public class DataExportActivity extends AppCompatActivity {
                 switch (checkedId) {
 
                     case R.id.csv_format:
-                        SharedPreferencesManager.saveCurrentExportFormat(DataExportActivity.this, "csv");
+                        SharedPreferencesManager.saveCurrentExportFormat(DataExportActivity.this, EXPORT_FORMAT_TYPE_CSV);
                         break;
 
                     case R.id.yayoi_format:
-                        SharedPreferencesManager.saveCurrentExportFormat(DataExportActivity.this, "yayoi");
+                        SharedPreferencesManager.saveCurrentExportFormat(DataExportActivity.this, EXPORT_FORMAT_TYPE_YAYOI);
                         break;
 
                     case R.id.freee_format:
-                        SharedPreferencesManager.saveCurrentExportFormat(DataExportActivity.this, "freee");
+                        SharedPreferencesManager.saveCurrentExportFormat(DataExportActivity.this, EXPORT_FORMAT_TYPE_FREEE);
                         break;
 
                     case R.id.mfcloud_format:
-                        SharedPreferencesManager.saveCurrentExportFormat(DataExportActivity.this, "mfcloud");
+                        SharedPreferencesManager.saveCurrentExportFormat(DataExportActivity.this, EXPORT_FORMAT_TYPE_MFCLOUD);
                         break;
                 }
             }
