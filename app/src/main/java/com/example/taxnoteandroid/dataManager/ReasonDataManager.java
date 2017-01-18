@@ -2,7 +2,7 @@ package com.example.taxnoteandroid.dataManager;
 
 import android.content.Context;
 
-import com.example.taxnoteandroid.TaxNoteApplication;
+import com.example.taxnoteandroid.TaxnoteApplication;
 import com.example.taxnoteandroid.model.OrmaDatabase;
 import com.example.taxnoteandroid.model.Project;
 import com.example.taxnoteandroid.model.Reason;
@@ -16,7 +16,7 @@ public class ReasonDataManager {
     private OrmaDatabase ormaDatabase;
 
     public ReasonDataManager(Context context) {
-      ormaDatabase = TaxNoteApplication.getOrmaDatabase();
+      ormaDatabase = TaxnoteApplication.getOrmaDatabase();
     }
 
 
@@ -84,4 +84,12 @@ public class ReasonDataManager {
     public int delete(long id) {
         return ormaDatabase.deleteFromReason().idEq(id).execute();
     }
+
+  //--------------------------------------------------------------//
+  //    -- Change order --
+  //--------------------------------------------------------------//
+
+  public int updateOrder(long id, int order) {
+    return ormaDatabase.updateReason().idEq(id).order(order).execute(); // 2017/01/17 E.Nozaki
+  }
 }
