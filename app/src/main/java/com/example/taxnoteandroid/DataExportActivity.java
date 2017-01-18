@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.RadioGroup;
 
+import com.example.taxnoteandroid.Library.DataExportManager;
 import com.example.taxnoteandroid.Library.DialogManager;
 import com.example.taxnoteandroid.dataManager.SharedPreferencesManager;
 import com.example.taxnoteandroid.databinding.ActivityDataExportBinding;
@@ -53,9 +54,25 @@ public class DataExportActivity extends AppCompatActivity {
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_data_export);
 
+        setExportButton();
         setCharacterCodeView();
         setSelectFormatRadioGroup();
         setHelpView();
+    }
+
+
+    //--------------------------------------------------------------//
+    //    -- Export Button --
+    //--------------------------------------------------------------//
+
+    private void setExportButton() {
+
+        binding.dataExportButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                DataExportManager.export(DataExportActivity.this);
+            }
+        });
     }
 
 
