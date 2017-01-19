@@ -23,5 +23,6 @@ public interface TaxnoteConsts{
 
     String EXPORT_CHARACTER_CODE_UTF8       = "UTF8";
     String EXPORT_CHARACTER_CODE_SHIFTJIS   = "ShiftJIS";
+
 }
 

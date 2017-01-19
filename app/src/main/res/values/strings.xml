@@ -78,7 +78,8 @@
 
     <string name="benefits_of_upgrade">アップグレードの特典</string>
     <string name="taxnote_plus">Taxnoteプラス</string>
-    <string name="taxnote_plus_descriptions">それぞれの月において、15件の入力制限がなくなります。お支払いは一回限りで継続課金ではありません。</string>
+    <string name="upgraded_already">購入済み</string>
+    <string name="taxnote_plus_descriptions">それぞれの月において、15件の入力制限がなくなります。お支払いは一回限りで継続課金ではありません。機種変更時は[以前の購入を復元]ボタンから無料で復元できます。</string>
 
     <string name="restore_purchases">以前の購入を復元</string>
     <string name="frequently_asked_questions">ヘルプ・よくある質問</string>

@@ -17,6 +17,7 @@ public class SharedPreferencesManager {
     private static final String EXPORT_RANGE_TYPE_KEY           = "EXPORT_RANGE_TYPE_KEY";
     private static final String EXPORT_RANGE_BEGIN_DATE         = "EXPORT_RANGE_BEGIN_DATE";
     private static final String EXPORT_RANGE_END_DATE           = "EXPORT_RANGE_END_DATE";
+    private static final String TAXNOTE_PLUS_IS_ACTIVE          = "TAXNOTE_PLUS_IS_ACTIVE";
 
 
     //--------------------------------------------------------------//
@@ -96,5 +97,18 @@ public class SharedPreferencesManager {
 
     public static long getDateRangeEndDate(Context context) {
         return getSharedPreferences(context).getLong(EXPORT_RANGE_END_DATE, System.currentTimeMillis());
+    }
+
+
+    //--------------------------------------------------------------//
+    //    -- Upgrade --
+    //--------------------------------------------------------------//
+
+    public static boolean saveTaxnotePlusStatus(Context context) {
+        return getSharedPreferences(context).edit().putBoolean(TAXNOTE_PLUS_IS_ACTIVE, true).commit();
+    }
+
+    public static boolean taxnotePlusIsActive(Context context) {
+        return getSharedPreferences(context).getBoolean(TAXNOTE_PLUS_IS_ACTIVE, false);
     }
 }

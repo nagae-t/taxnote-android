@@ -20,18 +20,33 @@
             <!--android:text="買えよ!!"-->
             <!--android:textColor="@color/primary" />-->
 
-        <TextView
-            android:background="@drawable/selector_background_colors"
+        <LinearLayout
             style="@style/font_style_standard"
             android:id="@+id/upgrade_to_plus"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:gravity="center_vertical"
+            android:background="#ffffffff"
+            android:gravity="center"
             android:minHeight="48dp"
+            android:orientation="horizontal"
             android:paddingEnd="16dp"
-            android:paddingStart="16dp"
-            android:text="@string/taxnote_plus" />
+            android:paddingStart="16dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/taxnote_plus" />
+
+            <TextView
+                android:textColor="@color/text_gray"
+                android:id="@+id/upgraded"
+                tools:text="購入済み"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+
 
         <TextView
             style="@style/font_style_footer"

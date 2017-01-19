@@ -54,7 +54,6 @@ public class UpgradeActivity extends AppCompatActivity implements BillingProcess
             @Override
             public void onClick(View view) {
                 billingProcessor.purchase(UpgradeActivity.this, TAXNOTE_PLUS_ID);
-
             }
         });
     }
