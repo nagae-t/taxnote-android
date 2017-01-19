@@ -97,6 +97,8 @@ public class UpgradeActivity extends AppCompatActivity implements BillingProcess
     //    -- Upgrade --
     //--------------------------------------------------------------//
 
+    //QQ 一回購入したら、次回は一瞬で呼ばれて、購入のダイアログがでなくなる
+    // テストする時はしょうがないのかな。googleplayのキャッシュの問題かな
     private void upgradeToTaxnotePlus() {
 
         final boolean taxnotePlusIsActive = SharedPreferencesManager.taxnotePlusIsActive(this);
