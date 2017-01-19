@@ -21,7 +21,6 @@
             <!--android:textColor="@color/primary" />-->
 
         <LinearLayout
-            style="@style/font_style_standard"
             android:id="@+id/upgrade_to_plus"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -34,12 +33,14 @@
             android:paddingStart="16dp">
 
             <TextView
+                style="@style/font_style_standard"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="@string/taxnote_plus" />
 
             <TextView
+                style="@style/font_style_standard"
                 android:textColor="@color/text_gray"
                 android:id="@+id/upgraded"
                 tools:text="購入済み"

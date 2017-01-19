@@ -3,6 +3,7 @@ package com.example.taxnoteandroid.Library;
 import android.content.Context;
 
 import com.example.taxnoteandroid.dataManager.EntryDataManager;
+import com.example.taxnoteandroid.dataManager.SharedPreferencesManager;
 import com.example.taxnoteandroid.model.Entry;
 
 import java.util.Calendar;
@@ -15,11 +16,12 @@ import java.util.TimeZone;
 
 public class EntryLimitManager {
 
-    private static final boolean taxnotePlusIsActive        = false;
-    private static final long limitNumberOfEntryPerMonth    = 15;
+    private static final long limitNumberOfEntryPerMonth    = 3;
 
 
     public static boolean limitNewEntryForFreeUsersWithDate(Context context, long date) {
+
+        final boolean taxnotePlusIsActive = SharedPreferencesManager.taxnotePlusIsActive(context);
 
         if (taxnotePlusIsActive) {
             return false;
