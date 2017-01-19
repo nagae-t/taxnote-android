@@ -30,10 +30,6 @@ public class TaxnoteApplication extends Application
       .readOnMainThread(AccessThreadConstraint.NONE)
       .build();
 
-
-    // You initialize the library by calling Core.install(APPLICATION, API_KEY, DOMAIN,
-    // APP_ID) in your application's onCreate()
-
     // Helpshift
     Core.init(All.getInstance());
     InstallConfig installConfig = new InstallConfig.Builder()

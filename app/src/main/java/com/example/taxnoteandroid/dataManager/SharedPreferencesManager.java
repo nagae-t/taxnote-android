@@ -33,8 +33,8 @@ public class SharedPreferencesManager {
     //    -- Default Data Install --
     //--------------------------------------------------------------//
 
-    public static boolean saveDefaultDatabaseSet(Context context) {
-        return getSharedPreferences(context).edit().putBoolean(IS_DEFAULT_DATABASE_SET_KEY, true).commit();
+    public static void saveDefaultDatabaseSet(Context context) {
+        getSharedPreferences(context).edit().putBoolean(IS_DEFAULT_DATABASE_SET_KEY, true).apply();
     }
 
     public static boolean isDefaultDataBaseSet(Context context) {
@@ -46,8 +46,8 @@ public class SharedPreferencesManager {
     //    -- Current Project Uuid --
     //--------------------------------------------------------------//
 
-    public static boolean saveUuidForCurrentProject(Context context, String uuid) {
-        return getSharedPreferences(context).edit().putString(UUID_FOR_CURRENT_KEY, uuid).commit();
+    public static void saveUuidForCurrentProject(Context context, String uuid) {
+        getSharedPreferences(context).edit().putString(UUID_FOR_CURRENT_KEY, uuid).apply();
     }
 
     public static String getUuidForCurrentProject(Context context) {
@@ -59,40 +59,40 @@ public class SharedPreferencesManager {
     //    -- Data Export --
     //--------------------------------------------------------------//
 
-    public static boolean saveCurrentCharacterCode(Context context, String characterCode) {
-        return getSharedPreferences(context).edit().putString(CHARACTER_CODE_FOR_CURRENT_KEY, characterCode).commit();
+    public static void saveCurrentCharacterCode(Context context, String characterCode) {
+        getSharedPreferences(context).edit().putString(CHARACTER_CODE_FOR_CURRENT_KEY, characterCode).apply();
     }
 
     public static String getCurrentCharacterCode(Context context) {
         return getSharedPreferences(context).getString(CHARACTER_CODE_FOR_CURRENT_KEY, EXPORT_CHARACTER_CODE_UTF8);
     }
 
-    public static boolean saveCurrentExportFormat(Context context, String exportFormat) {
-        return getSharedPreferences(context).edit().putString(EXPORT_FORMAT_FOR_CURRENT_KEY, exportFormat).commit();
+    public static void saveCurrentExportFormat(Context context, String exportFormat) {
+        getSharedPreferences(context).edit().putString(EXPORT_FORMAT_FOR_CURRENT_KEY, exportFormat).apply();
     }
 
     public static String getCurrentExportFormat(Context context) {
         return getSharedPreferences(context).getString(EXPORT_FORMAT_FOR_CURRENT_KEY, EXPORT_FORMAT_TYPE_CSV);
     }
 
-    public static boolean saveExportRangeType(Context context, String exportRange) {
-        return getSharedPreferences(context).edit().putString(EXPORT_RANGE_TYPE_KEY, exportRange).commit();
+    public static void saveExportRangeType(Context context, String exportRange) {
+        getSharedPreferences(context).edit().putString(EXPORT_RANGE_TYPE_KEY, exportRange).apply();
     }
 
     public static String getExportRangeType(Context context) {
         return getSharedPreferences(context).getString(EXPORT_RANGE_TYPE_KEY, EXPORT_RANGE_TYPE_ALL);
     }
 
-    public static boolean saveDateRangeBeginDate(Context context, long beginDate) {
-        return getSharedPreferences(context).edit().putLong(EXPORT_RANGE_BEGIN_DATE, beginDate).commit();
+    public static void saveDateRangeBeginDate(Context context, long beginDate) {
+        getSharedPreferences(context).edit().putLong(EXPORT_RANGE_BEGIN_DATE, beginDate).apply();
     }
 
     public static long getDateRangeBeginDate(Context context) {
         return getSharedPreferences(context).getLong(EXPORT_RANGE_BEGIN_DATE, System.currentTimeMillis());
     }
 
-    public static boolean saveDateRangeEndDate(Context context, long beginDate) {
-        return getSharedPreferences(context).edit().putLong(EXPORT_RANGE_END_DATE, beginDate).commit();
+    public static void saveDateRangeEndDate(Context context, long beginDate) {
+        getSharedPreferences(context).edit().putLong(EXPORT_RANGE_END_DATE, beginDate).apply();
     }
 
     public static long getDateRangeEndDate(Context context) {

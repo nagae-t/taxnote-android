@@ -60,13 +60,7 @@ public class UpgradeActivity extends AppCompatActivity implements BillingProcess
         binding.upgradeToPlus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                if (!taxnotePlusIsActive) {
-
-                    if (googlePlayPurchaseIsAvailable) {
-                        billingProcessor.purchase(UpgradeActivity.this, TAXNOTE_PLUS_ID);
-                    }
-                }
+                upgradeToTaxnotePlus();
             }
         });
 
@@ -100,6 +94,24 @@ public class UpgradeActivity extends AppCompatActivity implements BillingProcess
 
 
     //--------------------------------------------------------------//
+    //    -- Upgrade --
+    //--------------------------------------------------------------//
+
+    private void upgradeToTaxnotePlus() {
+
+        final boolean taxnotePlusIsActive = SharedPreferencesManager.taxnotePlusIsActive(this);
+
+        if (!taxnotePlusIsActive) {
+
+            if (googlePlayPurchaseIsAvailable) {
+                billingProcessor.purchase(UpgradeActivity.this, TAXNOTE_PLUS_ID);
+            }
+        }
+    }
+
+
+
+    //--------------------------------------------------------------//
     //    -- IBillingHandler --
     //--------------------------------------------------------------//
 
@@ -129,13 +141,17 @@ public class UpgradeActivity extends AppCompatActivity implements BillingProcess
         if (productId.equals(TAXNOTE_PLUS_ID)) {
 
             // Upgrade to Taxnote Plus
-            SharedPreferencesManager.saveTaxnotePlusStatus(this);
-            binding.upgraded.setText(getResources().getString(R.string.upgraded_already));
+            boolean success = SharedPreferencesManager.saveTaxnotePlusStatus(this);
 
-            // Show dialog message
-            String title    = getResources().getString(R.string.taxnote_plus);
-            String message  = getResources().getString(R.string.thanks_for_purchase);
-            DialogManager.showOKOnlyAlert(this, title, message);
+            if (success) {
+
+                binding.upgraded.setText(getResources().getString(R.string.upgraded_already));
+
+                // Show dialog message
+                String title    = getResources().getString(R.string.taxnote_plus);
+                String message  = getResources().getString(R.string.thanks_for_purchase);
+                DialogManager.showOKOnlyAlert(this, title, message);
+            }
         }
     }
 
