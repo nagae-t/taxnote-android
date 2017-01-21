@@ -98,6 +98,10 @@ public class MainActivity extends AppCompatActivity {
                         binding.pager.setCurrentItem(2, false);
                         setTitle(getString(R.string.Settings));
                         break;
+                    case R.id.tab4:
+                        binding.pager.setCurrentItem(2, false);
+                        setTitle(getString(R.string.Settings));
+                        break;
                 }
                 invalidateOptionsMenu();
                 return true;
@@ -119,6 +123,8 @@ public class MainActivity extends AppCompatActivity {
                 case 1:
                     return HistoryTabFragment.newInstance();
                 case 2:
+                    return ReportFragment.newInstance();
+                case 3:
                     return SettingsTabFragment.newInstance();
             }
             return EntryTabFragment.newInstance();
@@ -136,6 +142,9 @@ public class MainActivity extends AppCompatActivity {
                     return getString(R.string.Entry);
                 case 1:
                     return getString(R.string.History);
+                case 3:
+                    // @@ stringに変える
+                    return "損益表";
                 case 2:
                     return getString(R.string.Settings);
             }
