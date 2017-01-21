@@ -142,6 +142,12 @@ public class UpgradeActivity extends AppCompatActivity implements BillingProcess
 
         if (productId.equals(TAXNOTE_PLUS_ID)) {
 
+
+            //QQ これ、どうやって、すでに購入履歴があったかを判断すればよいやろうか。
+            // 無料でアップグレードされましたよと表示したい。
+//            details.purchaseInfo.purchaseData
+
+
             // Upgrade to Taxnote Plus
             boolean success = SharedPreferencesManager.saveTaxnotePlusStatus(this);
 

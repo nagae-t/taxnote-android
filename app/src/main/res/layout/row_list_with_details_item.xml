@@ -10,6 +10,8 @@
         android:minHeight="48dp"
         android:paddingLeft="16dp">
 
+        <!--@@ テキストの高さのずれ 後回し-->
+
         <ImageView
             android:id="@+id/menu_right"
             android:minWidth="48dp"

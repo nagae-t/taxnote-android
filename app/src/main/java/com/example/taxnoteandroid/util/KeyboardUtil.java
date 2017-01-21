@@ -27,9 +27,9 @@ public class KeyboardUtil{
     }
   }
 
-  public static void showKeyboard(final Activity activity, final View view)
-  {
-    if(activity==null){
+  public static void showKeyboard(final Activity activity, final View view)  {
+
+    if (activity == null) {
       return;
     }
 
