@@ -37,7 +37,7 @@ import com.example.taxnoteandroid.model.Account;
 import com.example.taxnoteandroid.model.Entry;
 import com.example.taxnoteandroid.model.Project;
 import com.example.taxnoteandroid.model.Reason;
-import com.example.taxnoteandroid.util.KeyboardUtil;
+import com.example.taxnoteandroid.Library.KeyboardUtil;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
