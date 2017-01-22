@@ -26,7 +26,6 @@ public class MainActivity extends AppCompatActivity {
 
         DefaultDataInstaller.installDefaultUserAndCategories(this);
 
-//        setContentView(R.layout.activity_main);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
         setBottomNavigation();
     }
@@ -73,11 +72,13 @@ public class MainActivity extends AppCompatActivity {
     private void setBottomNavigation() {
 
         // Set pager
-        TabPagerAdapter adapter     = new TabPagerAdapter(getSupportFragmentManager());
+        TabPagerAdapter adapter = new TabPagerAdapter(getSupportFragmentManager());
         binding.pager.setAdapter(adapter);
         binding.pager.beginFakeDrag();
         binding.pager.setOffscreenPageLimit(adapter.getCount());
-        setTitle("入力");
+
+        // Set the default title
+        setTitle(getString(R.string.Entry));
 
         BottomNavigationView bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_navigation);
 
@@ -96,10 +97,10 @@ public class MainActivity extends AppCompatActivity {
                         break;
                     case R.id.tab3:
                         binding.pager.setCurrentItem(2, false);
-                        setTitle(getString(R.string.Settings));
+                        setTitle(getString(R.string.report));
                         break;
                     case R.id.tab4:
-                        binding.pager.setCurrentItem(2, false);
+                        binding.pager.setCurrentItem(3, false);
                         setTitle(getString(R.string.Settings));
                         break;
                 }
@@ -132,7 +133,7 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public int getCount() {
-            return 3;
+            return 4;
         }
 
         @Override
@@ -142,10 +143,9 @@ public class MainActivity extends AppCompatActivity {
                     return getString(R.string.Entry);
                 case 1:
                     return getString(R.string.History);
-                case 3:
-                    // @@ stringに変える
-                    return "損益表";
                 case 2:
+                    return getString(R.string.report);
+                case 3:
                     return getString(R.string.Settings);
             }
             return super.getPageTitle(position);

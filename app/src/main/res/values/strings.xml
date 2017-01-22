@@ -10,6 +10,7 @@
 
     <string name="Entry">入力</string>
     <string name="History">仕訳帳</string>
+    <string name="report">損益表</string>
     <string name="Settings">設定</string>
     <string name="Update">更新</string>
     <string name="Details">備考</string>
@@ -52,6 +53,7 @@
     <string name="tap_here_to_set_details">備考の入力はここをタップ</string>
     <string name="save_data">仕訳帳に記録</string>
     <string name="delete_done">削除しました。</string>
+    <string name="delete_done_after_title">を削除しました。</string>
 
 
     //--------------------------------------------------------------//

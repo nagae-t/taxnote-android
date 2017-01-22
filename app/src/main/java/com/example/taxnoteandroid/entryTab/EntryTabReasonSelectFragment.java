@@ -587,8 +587,12 @@ public class EntryTabReasonSelectFragment extends Fragment {
         @Override
         public void onClick(DialogInterface dialogInterface, int i) {
           dialogInterface.dismiss();
+
           reasonDataManager.delete(reason.id);
           adapter.onReasonDataManagerChanged();
+
+          String message = reason.name + getResources().getString(R.string.delete_done_after_title);
+          DialogManager.showToast(getActivity(), message);
         }
       })
       .setNegativeButton(getResources().getString(R.string.cancel), null)
