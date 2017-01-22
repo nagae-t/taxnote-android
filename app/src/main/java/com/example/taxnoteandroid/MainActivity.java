@@ -15,6 +15,7 @@ import android.view.MenuItem;
 import com.example.taxnoteandroid.dataManager.DefaultDataInstaller;
 import com.example.taxnoteandroid.databinding.ActivityMainBinding;
 import com.example.taxnoteandroid.entryTab.EntryTabFragment;
+import com.helpshift.support.Support;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -39,13 +40,24 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         switch (binding.pager.getCurrentItem()) {
+
             case 0:
+                menu.findItem(R.id.help_in_entry_tab).setVisible(true);
                 menu.findItem(R.id.data_export).setVisible(false);
                 break;
+
             case 1:
+                menu.findItem(R.id.help_in_entry_tab).setVisible(false);
                 menu.findItem(R.id.data_export).setVisible(true);
                 break;
+
             case 2:
+                menu.findItem(R.id.help_in_entry_tab).setVisible(false);
+                menu.findItem(R.id.data_export).setVisible(false);
+                break;
+
+            case 3:
+                menu.findItem(R.id.help_in_entry_tab).setVisible(false);
                 menu.findItem(R.id.data_export).setVisible(false);
                 break;
         }
@@ -55,6 +67,10 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+
+            case R.id.help_in_entry_tab:
+                Support.showFAQSection(this,"22");
+                break;
 
             case R.id.data_export:
                 Intent intent = new Intent(this, DataExportActivity.class);

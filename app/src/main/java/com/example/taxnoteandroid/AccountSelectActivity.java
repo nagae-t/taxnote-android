@@ -118,6 +118,8 @@ public class AccountSelectActivity extends AppCompatActivity {
                     projectDataManager.updateAccountUuidForIncome(project);
                 }
 
+                DialogManager.showToast(AccountSelectActivity.this, account.name);
+
                 finish();
             }
         });

@@ -105,7 +105,7 @@ public class EntryTabReasonSelectFragment extends Fragment {
   public void onResume() {
     super.onResume();
 
-    loadCurrentDate();
+    loadCurrentDateWithToast(false);
     loadCurrentAccount();
   }
 
@@ -241,7 +241,7 @@ public class EntryTabReasonSelectFragment extends Fragment {
           @Override
           public void onDateSet(Calendar calendar) {
             date = calendar.getTimeInMillis();
-            loadCurrentDate();
+            loadCurrentDateWithToast(true);
           }
         });
         fragment.show(getFragmentManager(), DatePickerDialogFragment.class.getName());
@@ -249,17 +249,21 @@ public class EntryTabReasonSelectFragment extends Fragment {
     });
   }
 
-  private void loadCurrentDate() {
+  private void loadCurrentDateWithToast(boolean showToast) {
 
-    String dateString = getResources().getString(R.string.date_string_today);
+      String dateString = getResources().getString(R.string.date_string_today);
 
-    // Show the date if it is not today
-    if (!DateUtils.isToday(date)) {
-      SimpleDateFormat simpleDateFormat = new SimpleDateFormat(getResources().getString(R.string.date_string_format_to_year_month_day_weekday));
-      dateString = simpleDateFormat.format(date);
-    }
+      // Show the date if it is not today
+      if (!DateUtils.isToday(date)) {
+          SimpleDateFormat simpleDateFormat = new SimpleDateFormat(getResources().getString(R.string.date_string_format_to_year_month_day_weekday));
+          dateString = simpleDateFormat.format(date);
+      }
 
-    ((TextView) getView().findViewById(R.id.date_text_view)).setText(dateString);
+      if (showToast) {
+          DialogManager.showToast(getActivity(), dateString);
+      }
+
+      ((TextView) getView().findViewById(R.id.date_text_view)).setText(dateString);
   }
 
 
@@ -534,10 +538,14 @@ public class EntryTabReasonSelectFragment extends Fragment {
             reasonDataManager.updateName(reason.id, reasonName);
 
             Reason oldReason = adapter.getItem(position);
+
             if (oldReason != null) {
+
               oldReason.name = reasonName;
               reasonDataManager.updateName(reason.id, reasonName);
               adapter.onReasonDataManagerChanged();
+
+              DialogManager.showToast(getActivity(), reasonName);
             }
           }finally{
             KeyboardUtil.hideKeyboard(getActivity(), editText); // 2017/01/17 E.Nozaki Hide software keyboard.
