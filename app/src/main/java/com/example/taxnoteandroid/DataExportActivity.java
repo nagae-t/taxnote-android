@@ -13,6 +13,7 @@ import com.example.taxnoteandroid.Library.DataExportManager;
 import com.example.taxnoteandroid.Library.DialogManager;
 import com.example.taxnoteandroid.dataManager.SharedPreferencesManager;
 import com.example.taxnoteandroid.databinding.ActivityDataExportBinding;
+import com.helpshift.support.Support;
 
 import static com.example.taxnoteandroid.TaxnoteConsts.EXPORT_CHARACTER_CODE_SHIFTJIS;
 import static com.example.taxnoteandroid.TaxnoteConsts.EXPORT_CHARACTER_CODE_UTF8;
@@ -214,7 +215,7 @@ public class DataExportActivity extends AppCompatActivity {
         binding.dataExportHelp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                Support.showFAQSection(DataExportActivity.this,"36");
             }
         });
     }

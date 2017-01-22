@@ -11,6 +11,7 @@ import com.anjlab.android.iab.v3.TransactionDetails;
 import com.example.taxnoteandroid.Library.DialogManager;
 import com.example.taxnoteandroid.dataManager.SharedPreferencesManager;
 import com.example.taxnoteandroid.databinding.ActivityUpgradeBinding;
+import com.helpshift.support.Support;
 
 
 public class UpgradeActivity extends AppCompatActivity implements BillingProcessor.IBillingHandler {
@@ -74,10 +75,7 @@ public class UpgradeActivity extends AppCompatActivity implements BillingProcess
         binding.restorePurchases.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                if (googlePlayPurchaseIsAvailable) {
-                    billingProcessor.loadOwnedPurchasesFromGoogle();
-                }
+                restorePurchases();
             }
         });
     }
@@ -87,7 +85,7 @@ public class UpgradeActivity extends AppCompatActivity implements BillingProcess
         binding.help.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                Support.showSingleFAQ(UpgradeActivity.this,"108");
             }
         });
     }
@@ -97,8 +95,6 @@ public class UpgradeActivity extends AppCompatActivity implements BillingProcess
     //    -- Upgrade --
     //--------------------------------------------------------------//
 
-    //QQ 一回購入したら、次回は一瞬で呼ばれて、購入のダイアログがでなくなる
-    // テストする時はしょうがないのかな。googleplayのキャッシュの問題かな
     private void upgradeToTaxnotePlus() {
 
         final boolean taxnotePlusIsActive = SharedPreferencesManager.taxnotePlusIsActive(this);
@@ -106,11 +102,71 @@ public class UpgradeActivity extends AppCompatActivity implements BillingProcess
         if (!taxnotePlusIsActive) {
 
             if (googlePlayPurchaseIsAvailable) {
-                billingProcessor.purchase(UpgradeActivity.this, TAXNOTE_PLUS_ID);
+
+                if (billingProcessor.isPurchased(TAXNOTE_PLUS_ID)) {
+                    showRestoreTaxnotePlusSuccessDialong();
+                } else {
+                    billingProcessor.purchase(UpgradeActivity.this, TAXNOTE_PLUS_ID);
+                }
             }
         }
     }
 
+    private void restorePurchases() {
+
+        final boolean taxnotePlusIsActive = SharedPreferencesManager.taxnotePlusIsActive(this);
+
+        if (!taxnotePlusIsActive) {
+
+            //@@ここあとでちゃんとテストしないと、キャッシュがない時の動作がわからない
+            billingProcessor.loadOwnedPurchasesFromGoogle();
+
+            if (billingProcessor.isPurchased(TAXNOTE_PLUS_ID)) {
+                showRestoreTaxnotePlusSuccessDialong();
+            } else {
+                showNoPurchaseHistoryDialong();
+            }
+        }
+    }
+
+    private void showRestoreTaxnotePlusSuccessDialong() {
+
+        // Upgrade to Taxnote Plus
+        boolean success = SharedPreferencesManager.saveTaxnotePlusStatus(this);
+
+        if (success) {
+
+            binding.upgraded.setText(getResources().getString(R.string.upgraded_already));
+
+            // Show dialog message
+            String title    = getResources().getString(R.string.taxnote_plus);
+            String message  = getResources().getString(R.string.upgrade_restored_success_message);
+            DialogManager.showOKOnlyAlert(this, title, message);
+        }
+    }
+
+    private void showUpgradeToTaxnotePlusSuccessDialong() {
+
+        // Upgrade to Taxnote Plus
+        boolean success = SharedPreferencesManager.saveTaxnotePlusStatus(this);
+
+        if (success) {
+
+            binding.upgraded.setText(getResources().getString(R.string.upgraded_already));
+
+            // Show dialog message
+            String title    = getResources().getString(R.string.taxnote_plus);
+            String message  = getResources().getString(R.string.thanks_for_purchase);
+            DialogManager.showOKOnlyAlert(this, title, message);
+        }
+    }
+
+    private void showNoPurchaseHistoryDialong() {
+
+        String title    = getResources().getString(R.string.Error);
+        String message  = getResources().getString(R.string.upgrade_no_purchase_history_message);
+        DialogManager.showOKOnlyAlert(this, title, message);
+    }
 
 
     //--------------------------------------------------------------//
@@ -123,9 +179,6 @@ public class UpgradeActivity extends AppCompatActivity implements BillingProcess
 
     @Override
     public void onBillingInitialized() {
-        /*
-         * Called when BillingProcessor was initialized and it's ready to purchase
-         */
 
         boolean isOneTimePurchaseSupported = billingProcessor.isOneTimePurchaseSupported();
 
@@ -136,30 +189,9 @@ public class UpgradeActivity extends AppCompatActivity implements BillingProcess
 
     @Override
     public void onProductPurchased(String productId, TransactionDetails details) {
-        /*
-         * Called when requested PRODUCT ID was successfully purchased
-         */
 
         if (productId.equals(TAXNOTE_PLUS_ID)) {
-
-
-            //QQ これ、どうやって、すでに購入履歴があったかを判断すればよいやろうか。
-            // 無料でアップグレードされましたよと表示したい。
-//            details.purchaseInfo.purchaseData
-
-
-            // Upgrade to Taxnote Plus
-            boolean success = SharedPreferencesManager.saveTaxnotePlusStatus(this);
-
-            if (success) {
-
-                binding.upgraded.setText(getResources().getString(R.string.upgraded_already));
-
-                // Show dialog message
-                String title    = getResources().getString(R.string.taxnote_plus);
-                String message  = getResources().getString(R.string.thanks_for_purchase);
-                DialogManager.showOKOnlyAlert(this, title, message);
-            }
+            showUpgradeToTaxnotePlusSuccessDialong();
         }
     }
 
