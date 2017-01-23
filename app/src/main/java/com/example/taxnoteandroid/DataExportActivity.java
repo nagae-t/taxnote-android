@@ -1,5 +1,6 @@
 package com.example.taxnoteandroid;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
@@ -70,7 +71,11 @@ public class DataExportActivity extends AppCompatActivity {
         binding.dataExportButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                DataExportManager.export(DataExportActivity.this);
+
+                // 2017/01/20 E.Nozaki
+                String format = SharedPreferencesManager.getCurrentExportFormat(DataExportActivity.this);
+                DataExportManager manager = new DataExportManager(format);
+                manager.export(DataExportActivity.this); // Generate CSV file and send it by email.
             }
         });
     }
