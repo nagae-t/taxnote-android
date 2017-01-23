@@ -25,19 +25,18 @@ import com.example.taxnoteandroid.AccountSelectActivity;
 import com.example.taxnoteandroid.DatePickerDialogFragment;
 import com.example.taxnoteandroid.DividerDecoration;
 import com.example.taxnoteandroid.Library.DialogManager;
+import com.example.taxnoteandroid.Library.KeyboardUtil;
 import com.example.taxnoteandroid.R;
 import com.example.taxnoteandroid.dataManager.AccountDataManager;
 import com.example.taxnoteandroid.dataManager.EntryDataManager;
 import com.example.taxnoteandroid.dataManager.ProjectDataManager;
 import com.example.taxnoteandroid.dataManager.ReasonDataManager;
-import com.example.taxnoteandroid.databinding.FragmentEntryTabReasonSelectBinding;
 import com.example.taxnoteandroid.databinding.ListviewFooterBinding;
 import com.example.taxnoteandroid.databinding.RowListWithDetailsItemBinding;
 import com.example.taxnoteandroid.model.Account;
 import com.example.taxnoteandroid.model.Entry;
 import com.example.taxnoteandroid.model.Project;
 import com.example.taxnoteandroid.model.Reason;
-import com.example.taxnoteandroid.Library.KeyboardUtil;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -56,7 +55,7 @@ public class EntryTabReasonSelectFragment extends Fragment {
   public long date;
   private Account account;
   private MyRecyclerViewAdapter adapter;
-  private FragmentEntryTabReasonSelectBinding binding;
+  private com.example.taxnoteandroid.databinding.FragmentEntryTabReasonSelectBinding binding;
   private ReasonDataManager reasonDataManager = new ReasonDataManager(getContext());
   private List<Reason> reasonList;
 
@@ -88,8 +87,8 @@ public class EntryTabReasonSelectFragment extends Fragment {
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-    // Inflate the layout for this fragment
-    binding = FragmentEntryTabReasonSelectBinding.inflate(inflater, container, false);
+    /* Inflate the layout for this fragment */
+    binding = com.example.taxnoteandroid.databinding.FragmentEntryTabReasonSelectBinding.inflate(inflater, container, false);
     binding.setIsExpense(isExpense);
 
     View view = binding.getRoot();
