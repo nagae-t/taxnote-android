@@ -12,8 +12,8 @@ import java.io.PrintWriter;
  * Created by Eiichi on 2017/01/18.
  */
 
-public class FileUtil
-{
+public class FileUtil  {
+  
   public static void saveCSV(String path, String name)
   {
     PrintWriter writer = null;
