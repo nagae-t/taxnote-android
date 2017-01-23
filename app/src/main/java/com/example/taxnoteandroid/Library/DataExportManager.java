@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Environment;
-import android.support.v4.provider.DocumentFile;
 import android.widget.Toast;
 
 import com.example.taxnoteandroid.TaxnoteConsts;
@@ -16,7 +15,6 @@ import com.example.taxnoteandroid.model.Entry;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
@@ -367,18 +365,4 @@ public class DataExportManager implements TaxnoteConsts {
 
         return start_end;
     }
-
-//    public static String join(CharSequence delimiter, List<Entry> entries) {
-//        StringBuilder sb = new StringBuilder();
-//        boolean firstTime = true;
-////        for (Object token: tokens) {
-////            if (firstTime) {
-////                firstTime = false;
-////            } else {
-////                sb.append(delimiter);
-////            }
-////            sb.append(token);
-////        }
-//        return sb.toString();
-//    }
 }

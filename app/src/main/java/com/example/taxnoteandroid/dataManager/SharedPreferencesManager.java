@@ -19,6 +19,8 @@ public class SharedPreferencesManager {
     private static final String EXPORT_RANGE_END_DATE           = "EXPORT_RANGE_END_DATE";
     private static final String TAXNOTE_PLUS_IS_ACTIVE          = "TAXNOTE_PLUS_IS_ACTIVE";
 
+    private static final String HELP_FIRST_LAUNCH_KEY         = "HELP_FIRST_LAUNCH_KEY";
+
 
     //--------------------------------------------------------------//
     //    -- Init --
@@ -110,5 +112,18 @@ public class SharedPreferencesManager {
 
     public static boolean taxnotePlusIsActive(Context context) {
         return getSharedPreferences(context).getBoolean(TAXNOTE_PLUS_IS_ACTIVE, false);
+    }
+
+
+    //--------------------------------------------------------------//
+    //    -- Help Message --
+    //--------------------------------------------------------------//
+
+    public static void saveFirstLaunchMessage1Done(Context context) {
+        getSharedPreferences(context).edit().putBoolean(HELP_FIRST_LAUNCH_KEY, true).apply();
+    }
+
+    public static boolean isFirstLaunchMessage1Done(Context context) {
+        return getSharedPreferences(context).getBoolean(HELP_FIRST_LAUNCH_KEY, false);
     }
 }
