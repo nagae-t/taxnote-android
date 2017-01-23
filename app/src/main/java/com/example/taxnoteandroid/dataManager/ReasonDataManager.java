@@ -2,7 +2,7 @@ package com.example.taxnoteandroid.dataManager;
 
 import android.content.Context;
 
-import com.example.taxnoteandroid.TaxnoteApplication;
+import com.example.taxnoteandroid.TaxnoteApp;
 import com.example.taxnoteandroid.model.OrmaDatabase;
 import com.example.taxnoteandroid.model.Project;
 import com.example.taxnoteandroid.model.Reason;
@@ -16,7 +16,7 @@ public class ReasonDataManager {
     private OrmaDatabase ormaDatabase;
 
     public ReasonDataManager(Context context) {
-      ormaDatabase = TaxnoteApplication.getOrmaDatabase();
+      ormaDatabase = TaxnoteApp.getOrmaDatabase();
     }
 
 
