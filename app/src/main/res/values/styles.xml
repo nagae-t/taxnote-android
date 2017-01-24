@@ -18,6 +18,7 @@
 
     <style name="font_style_standard">
         <item name="android:textSize">16dp</item>
+        <item name="android:maxLines">1</item>
     </style>
 
     <style name="font_style_footer">
@@ -25,6 +26,17 @@
         <item name="android:textColor">@color/text_gray</item>
     </style>
 
+    <style name="cell_list_view_basic">
+        <item name="android:layout_centerVertical">true</item>
+        <item name="android:textSize">16dp</item>
+        <item name="android:background">@drawable/selector_background_colors</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:minHeight">55dp</item>
+        <item name="android:paddingLeft">16dp</item>
+        <item name="android:clickable">true</item>
+        <item name="android:maxLines">1</item>
+    </style>
 
     <style name="detail_text_style">
         <item name="android:layout_width">wrap_content</item>

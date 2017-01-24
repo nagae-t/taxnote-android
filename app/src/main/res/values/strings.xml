@@ -1,13 +1,9 @@
 <resources>
+
+
     <string name="app_name">Taxnote</string>
-
-    <!-- : Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-
-
     <string name="Expense">支出</string>
     <string name="Income">収入</string>
-
     <string name="Entry">入力</string>
     <string name="History">仕訳帳</string>
     <string name="report">損益表</string>
@@ -31,6 +27,14 @@
     <string name="cancel">キャンセル</string>
 
     <string name="delete_confirm_message">削除していいですか？</string>
+
+
+    //--------------------------------------------------------------//
+    // -- Value --
+    //--------------------------------------------------------------//
+
+
+    <string name="height_category_select">55dp</string>
 
 
     //--------------------------------------------------------------//

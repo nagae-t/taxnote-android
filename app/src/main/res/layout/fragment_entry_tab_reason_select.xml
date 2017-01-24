@@ -22,7 +22,7 @@
             android:background="@drawable/selector_background_colors"
             android:id="@+id/date_text_view"
             android:layout_width="match_parent"
-            android:layout_height="48dp"
+            android:layout_height="55dp"
             android:gravity="center"
             tools:text="2016年10月16日 木" />
 
@@ -35,7 +35,7 @@
             android:id="@+id/account_text_view"
             style="@style/font_style_standard"
             android:layout_width="match_parent"
-            android:layout_height="48dp"
+            android:layout_height="55dp"
             android:gravity="center"
             tools:text="Cash" />
 

@@ -3,14 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <RelativeLayout
-        android:background="@drawable/selector_background_colors"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:clickable="true"
-        android:minHeight="48dp"
-        android:paddingBottom="8dp"
-        android:paddingLeft="16dp"
-        android:paddingTop="8dp">
+        style="@style/cell_list_view_basic"
+        >
 
         <TextView
             android:id="@+id/title"
@@ -22,6 +16,8 @@
 
         <ImageView
             android:id="@+id/menu_right"
+            android:minWidth="55dp"
+            android:minHeight="55dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
