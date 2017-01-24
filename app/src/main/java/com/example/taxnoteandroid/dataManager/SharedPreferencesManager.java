@@ -19,8 +19,9 @@ public class SharedPreferencesManager {
     private static final String EXPORT_RANGE_END_DATE           = "EXPORT_RANGE_END_DATE";
     private static final String TAXNOTE_PLUS_IS_ACTIVE          = "TAXNOTE_PLUS_IS_ACTIVE";
 
-    private static final String HELP_FIRST_LAUNCH_KEY         = "HELP_FIRST_LAUNCH_KEY";
-
+    private static final String HELP_FIRST_LAUNCH_KEY           = "HELP_FIRST_LAUNCH_KEY";
+    private static final String HELP_SELECT_SUMMARY_KEY         = "HELP_SELECT_SUMMARY_KEY";
+    private static final String HELP_SELECT_REGISTER_KEY        = "HELP_SELECT_REGISTER_KEY";
 
     //--------------------------------------------------------------//
     //    -- Init --
@@ -119,11 +120,27 @@ public class SharedPreferencesManager {
     //    -- Help Message --
     //--------------------------------------------------------------//
 
-    public static void saveFirstLaunchMessage1Done(Context context) {
+    public static void saveFirstLaunchMessageDone(Context context) {
         getSharedPreferences(context).edit().putBoolean(HELP_FIRST_LAUNCH_KEY, true).apply();
     }
 
-    public static boolean isFirstLaunchMessage1Done(Context context) {
+    public static boolean isFirstLaunchMessageDone(Context context) {
         return getSharedPreferences(context).getBoolean(HELP_FIRST_LAUNCH_KEY, false);
+    }
+
+    public static void saveSelectSummaryMessageDone(Context context) {
+        getSharedPreferences(context).edit().putBoolean(HELP_SELECT_SUMMARY_KEY, true).apply();
+    }
+
+    public static boolean isSelectSummaryMessageDone(Context context) {
+        return getSharedPreferences(context).getBoolean(HELP_SELECT_SUMMARY_KEY, false);
+    }
+
+    public static void saveSelectRegisterMessageDone(Context context) {
+        getSharedPreferences(context).edit().putBoolean(HELP_SELECT_REGISTER_KEY, true).apply();
+    }
+
+    public static boolean isSelectRegisterMessageDone(Context context) {
+        return getSharedPreferences(context).getBoolean(HELP_SELECT_REGISTER_KEY, false);
     }
 }

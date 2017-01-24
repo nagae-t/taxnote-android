@@ -97,7 +97,7 @@ public class EntryTabReasonSelectFragment extends Fragment {
     setAccountView(view);
     setReasonList(view);
 
-    return view;
+      return view;
   }
 
   @Override

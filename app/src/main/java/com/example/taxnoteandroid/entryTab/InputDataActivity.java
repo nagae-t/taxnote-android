@@ -54,6 +54,8 @@ public class InputDataActivity extends AppCompatActivity {
         setSummary();
         setSaveButton();
         setPriceInputPart();
+
+        DialogManager.showTapRegisterMessage(InputDataActivity.this);
     }
 
 

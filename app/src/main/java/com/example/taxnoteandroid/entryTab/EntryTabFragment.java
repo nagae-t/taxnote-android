@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.taxnoteandroid.Library.DialogManager;
 import com.example.taxnoteandroid.R;
 
 
@@ -34,6 +35,8 @@ public class EntryTabFragment extends Fragment {
         final ViewPager viewPager = (ViewPager) v.findViewById(R.id.pager);
         viewPager.setAdapter(new TabPagerAdapter(getChildFragmentManager()));
         tabLayout.setupWithViewPager(viewPager);
+
+        DialogManager.showFirstLaunchMessage(getActivity());
 
         return v;
     }

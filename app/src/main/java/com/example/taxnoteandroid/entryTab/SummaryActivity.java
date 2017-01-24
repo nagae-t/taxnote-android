@@ -57,6 +57,8 @@ public class SummaryActivity extends AppCompatActivity {
         setTitle(reason.name);
         setNextButton();
         setSummaryList(reason);
+
+        DialogManager.showSelectSummaryMessage(SummaryActivity.this);
     }
 
 

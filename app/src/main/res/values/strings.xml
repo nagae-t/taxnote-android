@@ -121,4 +121,24 @@
     <string name="title_activity_data_export_range">DataExportRangeActivity</string>
 
 
+    //--------------------------------------------------------------//
+    // -- Help Message --
+    //--------------------------------------------------------------//
+
+    <string name="AlertView_firstIntroTitle">Taxnoteとは</string>
+    <string name="AlertView_firstIntroMessage">確定申告に使える帳簿を入力するアプリです。</string>
+    <string name="AlertView_secondIntroTitle">青色申告(複式簿記)の方</string>
+    <string name="AlertView_secondIntroMessage">入力したデータはExcelや会計ソフトに取り込めます。</string>
+    <string name="AlertView_thirdIntroTitle">白色・青色申告(簡易簿記)の方</string>
+    <string name="AlertView_thirdIntroMessage">Taxnoteのみで完結。簡単なのでオススメ。</string>
+    <string name="AlertView_letsbegin">まずは、接待交際費などをタップ</string>
+    <string name="AlertView_entryDone">入力完了！</string>
+    <string name="AlertView_tapHistory">仕訳帳タブから編集できます。</string>
+    <string name="AlertView_inputPrice">金額を入力して「仕訳帳に記録」をタップ</string>
+    <string name="AlertView_selectSummary">備考をタップ</string>
+
+
+
+
+
 </resources>
