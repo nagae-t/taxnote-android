@@ -7,6 +7,7 @@ import android.view.Gravity;
 import android.widget.Toast;
 
 import com.example.taxnoteandroid.R;
+import com.example.taxnoteandroid.dataManager.SharedPreferencesManager;
 import com.example.taxnoteandroid.model.Entry;
 
 /**
@@ -59,12 +60,12 @@ public class DialogManager {
     //@@@　いまここ、最初のメッセージやってる
     public static void showFirstLaunchMessage(final Context context) {
 
-//        // Show the dialog only one time
-//        if (SharedPreferencesManager.isFirstLaunchMessageDone(context)) {
-//            return;
-//        }
-//
-//        SharedPreferencesManager.saveFirstLaunchMessageDone(context);
+        // Show the dialog only one time
+        if (SharedPreferencesManager.isFirstLaunchMessageDone(context)) {
+            return;
+        }
+
+        SharedPreferencesManager.saveFirstLaunchMessageDone(context);
 
         new AlertDialog.Builder(context)
                 .setTitle(context.getString(R.string.AlertView_firstIntroTitle))
@@ -130,12 +131,12 @@ public class DialogManager {
 
     public static void showSelectSummaryMessage(final Context context) {
 
-//        // Show the dialog only one time
-//        if (SharedPreferencesManager.isSelectSummaryMessageDone(context)) {
-//            return;
-//        }
-//
-//        SharedPreferencesManager.saveSelectSummaryMessageDone(context);
+        // Show the dialog only one time
+        if (SharedPreferencesManager.isSelectSummaryMessageDone(context)) {
+            return;
+        }
+
+        SharedPreferencesManager.saveSelectSummaryMessageDone(context);
 
         new AlertDialog.Builder(context)
                 .setTitle(context.getString(R.string.AlertView_selectSummary))
@@ -152,16 +153,41 @@ public class DialogManager {
 
     public static void showTapRegisterMessage(final Context context) {
 
-//        // Show the dialog only one time
-//        if (SharedPreferencesManager.isSelectRegisterMessageDone(context)) {
-//            return;
-//        }
-//
-//        SharedPreferencesManager.saveSelectRegisterMessageDone(context);
+        // Show the dialog only one time
+        if (SharedPreferencesManager.isSelectRegisterMessageDone(context)) {
+            return;
+        }
+
+        SharedPreferencesManager.saveSelectRegisterMessageDone(context);
 
         new AlertDialog.Builder(context)
                 .setTitle(context.getString(R.string.AlertView_inputPrice))
                 .setMessage(null)
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                        dialogInterface.dismiss();
+                    }
+                })
+                .show();
+    }
+
+    public static void showHistoryTabHelpMessage(final Context context) {
+
+        if (!SharedPreferencesManager.isFirstRegisterDone(context)) {
+            return;
+        }
+
+        if (SharedPreferencesManager.isHistoryTabHelpDone(context)) {
+            return;
+        }
+
+        SharedPreferencesManager.saveHistoryTabHelpDone(context);
+
+        new AlertDialog.Builder(context)
+                .setTitle(context.getString(R.string.AlertView_entryDone))
+                .setMessage(context.getString(R.string.AlertView_tapHistory))
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {

@@ -18,10 +18,12 @@ public class SharedPreferencesManager {
     private static final String EXPORT_RANGE_BEGIN_DATE         = "EXPORT_RANGE_BEGIN_DATE";
     private static final String EXPORT_RANGE_END_DATE           = "EXPORT_RANGE_END_DATE";
     private static final String TAXNOTE_PLUS_IS_ACTIVE          = "TAXNOTE_PLUS_IS_ACTIVE";
-
     private static final String HELP_FIRST_LAUNCH_KEY           = "HELP_FIRST_LAUNCH_KEY";
     private static final String HELP_SELECT_SUMMARY_KEY         = "HELP_SELECT_SUMMARY_KEY";
     private static final String HELP_SELECT_REGISTER_KEY        = "HELP_SELECT_REGISTER_KEY";
+    private static final String HELP_FIRST_REGISTER_DONE_KEY    = "HELP_FIRST_REGISTER_DONE_KEY";
+    private static final String HELP_HISTORY_TAB_KEY            = "HELP_HISTORY_TAB_KEY";
+
 
     //--------------------------------------------------------------//
     //    -- Init --
@@ -142,5 +144,21 @@ public class SharedPreferencesManager {
 
     public static boolean isSelectRegisterMessageDone(Context context) {
         return getSharedPreferences(context).getBoolean(HELP_SELECT_REGISTER_KEY, false);
+    }
+
+    public static void saveFirstRegisterDone(Context context) {
+        getSharedPreferences(context).edit().putBoolean(HELP_FIRST_REGISTER_DONE_KEY, true).apply();
+    }
+
+    public static boolean isFirstRegisterDone(Context context) {
+        return getSharedPreferences(context).getBoolean(HELP_FIRST_REGISTER_DONE_KEY, false);
+    }
+
+    public static void saveHistoryTabHelpDone(Context context) {
+        getSharedPreferences(context).edit().putBoolean(HELP_HISTORY_TAB_KEY, true).apply();
+    }
+
+    public static boolean isHistoryTabHelpDone(Context context) {
+        return getSharedPreferences(context).getBoolean(HELP_HISTORY_TAB_KEY, false);
     }
 }

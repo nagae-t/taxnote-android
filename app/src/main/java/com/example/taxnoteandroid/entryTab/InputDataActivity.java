@@ -19,6 +19,7 @@ import com.example.taxnoteandroid.R;
 import com.example.taxnoteandroid.UpgradeActivity;
 import com.example.taxnoteandroid.dataManager.EntryDataManager;
 import com.example.taxnoteandroid.dataManager.ProjectDataManager;
+import com.example.taxnoteandroid.dataManager.SharedPreferencesManager;
 import com.example.taxnoteandroid.model.Account;
 import com.example.taxnoteandroid.model.Entry;
 import com.example.taxnoteandroid.model.Project;
@@ -251,6 +252,8 @@ public class InputDataActivity extends AppCompatActivity {
 
         // Success
         if (EntryDataManager.isSaveSuccess(id)) {
+
+            SharedPreferencesManager.saveFirstRegisterDone(InputDataActivity.this);
 
             DialogManager.showInputDataToast(this, entry);
             setResult(RESULT_OK);
