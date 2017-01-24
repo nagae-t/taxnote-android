@@ -137,18 +137,14 @@ public class SummaryActivity extends AppCompatActivity {
         recyclerView.addItemDecoration(new DividerDecoration(this));
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(summaryListAdapter);
-
-//        recyclerView.setAdapter(dragMgr.createWrappedAdapter(summaryListAdapter));
-//        dragMgr.attachRecyclerView(recyclerView);
     }
 
-    class ListAdapter extends FooterRecyclerArrayAdapter<Summary> /**implements DraggableItemAdapter<BindingHolder<ViewDataBinding>>**/ {
+    class ListAdapter extends FooterRecyclerArrayAdapter<Summary> {
 
         private final SummaryDataManager summaryDataManager;
         private OnItemClickRecyclerAdapterListener onItemClickRecyclerAdapterListener;
 
         public ListAdapter(Context context) {
-//            setHasStableIds(true);
             summaryDataManager = new SummaryDataManager(context);
         }
 
@@ -216,6 +212,9 @@ public class SummaryActivity extends AppCompatActivity {
                             long deleted = summaryDataManager.delete(summary.id);
                             if (deleted != 0) {
                                 remove(summary);
+
+                                String message = summary.name + getResources().getString(R.string.delete_done_after_title);
+                                DialogManager.showToast(SummaryActivity.this, message);
                             }
 
                             dialogInterface.dismiss();
@@ -294,28 +293,6 @@ public class SummaryActivity extends AppCompatActivity {
         public void setOnItemClickRecyclerAdapterListener(OnItemClickRecyclerAdapterListener onItemClickRecyclerAdapterListener) {
             this.onItemClickRecyclerAdapterListener = onItemClickRecyclerAdapterListener;
         }
-
-//        @Override
-//        public boolean onCheckCanStartDrag(BindingHolder<ViewDataBinding> holder, int position, int x, int y) {
-//            return true;
-//        }
-//
-//        @Override
-//        public ItemDraggableRange onGetItemDraggableRange(BindingHolder<ViewDataBinding> holder, int position) {
-//            return null;
-//        }
-//
-//        @Override
-//        public void onMoveItem(int fromPosition, int toPosition) {
-//            Summary movedItem = getItem(fromPosition);
-//            add(toPosition, movedItem);
-//            notifyItemMoved(fromPosition, toPosition);
-//        }
-//
-//        @Override
-//        public boolean onCheckCanDrop(int draggingPosition, int dropPosition) {
-//            return true;
-//        }
     }
 
 
@@ -347,6 +324,8 @@ public class SummaryActivity extends AppCompatActivity {
                         if (oldSummary != null) {
                             oldSummary.name = newName;
                             summaryListAdapter.notifyDataSetChanged();
+
+                            DialogManager.showToast(SummaryActivity.this, newName);
                         }
 
                         dialogInterface.dismiss();

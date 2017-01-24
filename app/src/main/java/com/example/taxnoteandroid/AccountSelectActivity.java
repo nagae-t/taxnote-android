@@ -112,7 +112,6 @@ public class AccountSelectActivity extends AppCompatActivity {
                 }
 
                 DialogManager.showToast(AccountSelectActivity.this, account.name);
-
                 finish();
             }
         });
