@@ -619,6 +619,8 @@ public class EntryTabReasonSelectFragment extends Fragment {
 
     private void checkHelpshiftReplyMessage() {
 
+        //QQ ここ二回呼ばれちゃう
+
         // Check if the helpshit reply message exists
         if (Support.getNotificationCount() != 0) {
 
@@ -629,8 +631,8 @@ public class EntryTabReasonSelectFragment extends Fragment {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
 
-                            dialogInterface.dismiss();
                             Support.showConversation(getActivity());
+                            dialogInterface.dismiss();
                         }
                     })
                     .show();
