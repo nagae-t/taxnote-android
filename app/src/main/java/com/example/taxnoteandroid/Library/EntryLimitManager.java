@@ -16,7 +16,7 @@ import java.util.TimeZone;
 
 public class EntryLimitManager {
 
-    private static final long limitNumberOfEntryPerMonth    = 3;
+    private static final long limitNumberOfEntryPerMonth    = 15;
 
 
     public static boolean limitNewEntryForFreeUsersWithDate(Context context, long date) {

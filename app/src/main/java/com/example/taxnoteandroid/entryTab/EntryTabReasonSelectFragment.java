@@ -31,6 +31,7 @@ import com.example.taxnoteandroid.dataManager.AccountDataManager;
 import com.example.taxnoteandroid.dataManager.EntryDataManager;
 import com.example.taxnoteandroid.dataManager.ProjectDataManager;
 import com.example.taxnoteandroid.dataManager.ReasonDataManager;
+import com.example.taxnoteandroid.databinding.FragmentEntryTabReasonSelectBinding;
 import com.example.taxnoteandroid.databinding.ListviewFooterBinding;
 import com.example.taxnoteandroid.databinding.RowListWithDetailsItemBinding;
 import com.example.taxnoteandroid.model.Account;
@@ -47,569 +48,563 @@ import java.util.UUID;
 
 public class EntryTabReasonSelectFragment extends Fragment {
 
-  private static final String EXTRA_IS_EXPENSE = "isExpense";
+    private static final String EXTRA_IS_EXPENSE = "isExpense";
 
-  private static final int TYPE_REASON = 0;
-  private static final int TYPE_FOOTER = 1;
+    private static final int TYPE_REASON = 0;
+    private static final int TYPE_FOOTER = 1;
 
-  public boolean isExpense = true;
-  public long date;
-  private Account account;
-  private MyRecyclerViewAdapter adapter;
-  private com.example.taxnoteandroid.databinding.FragmentEntryTabReasonSelectBinding binding;
-  private ReasonDataManager reasonDataManager = new ReasonDataManager(getContext());
-  private List<Reason> reasonList;
+    public boolean isExpense = true;
+    public long date;
+    private Account account;
+    private MyRecyclerViewAdapter adapter;
+    private FragmentEntryTabReasonSelectBinding binding;
+    private ReasonDataManager reasonDataManager = new ReasonDataManager(getContext());
+    private List<Reason> reasonList;
 
-  public EntryTabReasonSelectFragment() {
-    // Required empty public constructor
-  }
+    public EntryTabReasonSelectFragment() {
+        // Required empty public constructor
+    }
 
-  public static EntryTabReasonSelectFragment newInstance(boolean isExpense) {
+    public static EntryTabReasonSelectFragment newInstance(boolean isExpense) {
 
-    EntryTabReasonSelectFragment fragment = new EntryTabReasonSelectFragment();
+        EntryTabReasonSelectFragment fragment = new EntryTabReasonSelectFragment();
 
-    // Set value on bundle
-    Bundle args = new Bundle();
-    args.putBoolean(EXTRA_IS_EXPENSE, isExpense);
-    fragment.setArguments(args);
+        // Set value on bundle
+        Bundle args = new Bundle();
+        args.putBoolean(EXTRA_IS_EXPENSE, isExpense);
+        fragment.setArguments(args);
 
-    return fragment;
-  }
-
-  @Override
-  public void onCreate(@Nullable Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-
-    // Set default values
-    isExpense = getArguments().getBoolean(EXTRA_IS_EXPENSE);
-    date = System.currentTimeMillis();
-  }
-
-  @Override
-  public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
-    /* Inflate the layout for this fragment */
-    binding = com.example.taxnoteandroid.databinding.FragmentEntryTabReasonSelectBinding.inflate(inflater, container, false);
-    binding.setIsExpense(isExpense);
-
-    View view = binding.getRoot();
-
-    setDateView();
-    setAccountView(view);
-    setReasonList(view);
-
-      return view;
-  }
-
-  @Override
-  public void onResume() {
-    super.onResume();
-
-    loadCurrentDateWithToast(false);
-    loadCurrentAccount();
-
-      // Message dialog
-      DialogManager.showHistoryTabHelpMessage(getActivity());
-      checkHelpshiftReplyMessage();
-  }
-
-
-  //--------------------------------------------------------------//
-  //    -- Reason List --
-  //--------------------------------------------------------------//
-
-  private void setReasonList(View view) {
-
-    // Adapter
-    adapter = new MyRecyclerViewAdapter();
-
-    // RecyclerView
-    RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.reason_list);
-    recyclerView.addItemDecoration(new DividerDecoration(getContext()));
-    recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-    recyclerView.setAdapter(adapter); // 2017/01/17 E.Nozaki recyclerView.setAdapter(reasonListAdapter);
-
-    // Attach recyclerView to ItemTouchHelper so that you can drag and drop the items in order to change the order.
-    ItemTouchHelper.Callback callback = new ItemTouchHelperCallback();
-    ItemTouchHelper helper = new ItemTouchHelper(callback);
-    helper.attachToRecyclerView(recyclerView);
-  }
-
-  public class ItemTouchHelperCallback extends ItemTouchHelper.Callback{
-    @Override
-    public int getMovementFlags(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder){
-      int flags_drag  = ItemTouchHelper.UP | ItemTouchHelper.DOWN | ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT; // Catch actions for moving an item toward up, down, left and right.
-      int flags_swipe = 0; // Ignore actions for swiping an item.
-      return makeMovementFlags(flags_drag, flags_swipe);
+        return fragment;
     }
 
     @Override
-    public boolean isLongPressDragEnabled() {
-      return true;
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        // Set default values
+        isExpense = getArguments().getBoolean(EXTRA_IS_EXPENSE);
+        date = System.currentTimeMillis();
     }
 
     @Override
-    public boolean isItemViewSwipeEnabled() {
-      return false;
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
+        // Inflate the layout for this fragment
+        binding = FragmentEntryTabReasonSelectBinding.inflate(inflater, container, false);
+        binding.setIsExpense(isExpense);
+
+        View view = binding.getRoot();
+
+        setDateView();
+        setAccountView(view);
+        setReasonList(view);
+
+        return view;
     }
 
     @Override
-    public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target){
+    public void onStart() {
+        super.onStart();
 
-      int position_from = viewHolder.getAdapterPosition();
-      int position_to   = target.getAdapterPosition();
-
-      Log.d(getClass().getSimpleName(), "---------------------------------");
-      Log.d(getClass().getSimpleName(), "position_from = " + position_from);
-      Log.d(getClass().getSimpleName(), "position_to = " + position_to);
-
-      int size = reasonList.size();
-
-      if(position_from<0 || size<=position_from ||
-         position_to  <0 || size<=position_to){
-        return false;
-      }
-
-      if(position_from==position_to){
-        return false;
-      }
-
-      ArrayList<Reason> list = new ArrayList<Reason>();
-
-      for (int i = 0; i < size; i++) {
-        if(i==position_to)   list.add(reasonList.get(position_from));
-        if(i!=position_from) list.add(reasonList.get(i));
-      }
-
-      reasonList = list;
-
-      for ( int i = 0; i < size; i++ ) {
-          reasonDataManager.updateOrder(reasonList.get(i).id, i); // Update database
-      }
-
-      adapter.notifyItemMoved(position_from, position_to);
-
-      return true;
     }
 
     @Override
-    public void onSelectedChanged(RecyclerView.ViewHolder holder, int action){
+    public void onResume() {
+        super.onResume();
 
-      super.onSelectedChanged(holder, action);
+        loadCurrentDateWithToast(false);
+        loadCurrentAccount();
 
-      try {
-        if(holder!=null){
-          if(action==ItemTouchHelper.ACTION_STATE_DRAG){
-//            holder.itemView.setBackgroundColor(Color.YELLOW); // TODO Do something else to highlight the item that is dragged.
-          }
-        }
-      }
-      catch(Exception e){
-        e.printStackTrace();
-      }
+        DialogManager.showHistoryTabHelpMessage(getActivity());
+        checkHelpshiftReplyMessage();
     }
 
-    @Override
-    public void clearView(RecyclerView view, RecyclerView.ViewHolder holder){
 
-      super.clearView(view, holder);
+    //--------------------------------------------------------------//
+    //    -- Reason List --
+    //--------------------------------------------------------------//
 
-      try {
-        if(holder!=null){
-//          holder.itemView.setBackgroundColor(Color.TRANSPARENT); // TODO Do something else to clear highlight the item that is dragged.
-        }
-      }
-      catch(Exception e){
-        e.printStackTrace();
-      }
+    private void setReasonList(View view) {
+
+        // Adapter
+        adapter = new MyRecyclerViewAdapter();
+
+        // RecyclerView
+        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.reason_list);
+        recyclerView.addItemDecoration(new DividerDecoration(getContext()));
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.setAdapter(adapter); // 2017/01/17 E.Nozaki recyclerView.setAdapter(reasonListAdapter);
+
+        // Attach recyclerView to ItemTouchHelper so that you can drag and drop the items in order to change the order.
+        ItemTouchHelper.Callback callback = new ItemTouchHelperCallback();
+        ItemTouchHelper helper = new ItemTouchHelper(callback);
+        helper.attachToRecyclerView(recyclerView);
     }
 
-    @Override
-    public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction){
-      // Do nothing here since swiping action is not supported by this app.
-    }
-  }
 
+    //--------------------------------------------------------------//
+    //    -- Date Part --
+    //--------------------------------------------------------------//
 
-  //--------------------------------------------------------------//
-  //    -- Date Part --
-  //--------------------------------------------------------------//
+    private void setDateView() {
 
-  private void setDateView() {
-
-    binding.dateTextView.setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View view) {
-
-        DatePickerDialogFragment fragment = DatePickerDialogFragment.newInstance(date, null);
-        fragment.setOnDateSetListener(new DatePickerDialogFragment.OnDateSetListener() {
-          @Override
-          public void onDateSet(Calendar calendar) {
-            date = calendar.getTimeInMillis();
-            loadCurrentDateWithToast(true);
-          }
-        });
-        fragment.show(getFragmentManager(), DatePickerDialogFragment.class.getName());
-      }
-    });
-  }
-
-  private void loadCurrentDateWithToast(boolean showToast) {
-
-      String dateString = getResources().getString(R.string.date_string_today);
-
-      // Show the date if it is not today
-      if (!DateUtils.isToday(date)) {
-          SimpleDateFormat simpleDateFormat = new SimpleDateFormat(getResources().getString(R.string.date_string_format_to_year_month_day_weekday));
-          dateString = simpleDateFormat.format(date);
-      }
-
-      if (showToast) {
-          DialogManager.showToast(getActivity(), dateString);
-      }
-
-      ((TextView) getView().findViewById(R.id.date_text_view)).setText(dateString);
-  }
-
-
-  //--------------------------------------------------------------//
-  //    -- Account Part --
-  //--------------------------------------------------------------//
-
-  private void setAccountView(View view) {
-
-    view.findViewById(R.id.account_text_view).setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View view) {
-        startActivity(AccountSelectActivity.createIntent(getContext(), isExpense));
-      }
-    });
-  }
-
-  private void loadCurrentAccount() {
-
-    AccountDataManager accountDataManager = new AccountDataManager(getContext());
-    account = accountDataManager.findCurrentSelectedAccount(getContext(), isExpense);
-
-    ((TextView) getView().findViewById(R.id.account_text_view)).setText(account.name);
-  }
-
-
-  //--------------------------------------------------------------//
-  //    -- Reason List Adapter --
-  //--------------------------------------------------------------//
-
-  private class MyRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
-
-    public MyRecyclerViewAdapter(){
-      onReasonDataManagerChanged();
-    }
-
-    @Override
-    public int getItemViewType(int position){
-      if(position<reasonList.size()){
-        return TYPE_REASON;
-      }else{
-        return TYPE_FOOTER;
-      }
-    }
-
-    private Reason getItem(int position){
-      if(reasonList!=null && position<reasonList.size()){
-        return reasonList.get(position);
-      }
-      return null;
-    }
-
-    @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position){
-      Reason reason = getItem(position);
-      MyViewHolder h = (MyViewHolder)holder;
-      h.setReason(position, getItem(position));
-    }
-
-    @Override
-    public int getItemCount(){
-      if(reasonList!=null){
-        return reasonList.size() + 1; // Add 1 for footer.
-      }
-      return 1;
-    }
-
-    @Override
-    public MyViewHolder onCreateViewHolder(ViewGroup parent, int type){
-      try{
-        View view = null;
-
-        if(type==TYPE_REASON){
-          view = LayoutInflater.from(getContext()).inflate(R.layout.row_list_with_details_item, null);
-        }else if(type==TYPE_FOOTER){
-          view = LayoutInflater.from(getContext()).inflate(R.layout.listview_footer, null);
-        }
-
-        view.setLayoutParams(new RecyclerView.LayoutParams(RecyclerView.LayoutParams.MATCH_PARENT, RecyclerView.LayoutParams.WRAP_CONTENT));
-        MyViewHolder holder = new MyViewHolder(view);
-
-        return holder;
-      }
-      catch(Exception e){
-        e.printStackTrace();
-      }
-
-      return null;
-    }
-
-    public void onReasonDataManagerChanged(){
-      reasonList = reasonDataManager.findAllWithIsExpense(isExpense, getContext());
-      this.notifyDataSetChanged();
-    }
-  }
-
-
-  //--------------------------------------------------------------//
-  //    -- Reason List View Holder --
-  //--------------------------------------------------------------//
-
-  public class MyViewHolder extends RecyclerView.ViewHolder implements PopupMenu.OnMenuItemClickListener {
-
-    public int position;
-    public Reason reason;
-    public View button_right;
-
-    public MyViewHolder(View view){
-      super(view);
-    }
-
-    public void setReason(final int position, final Reason reason){
-      try{
-        this.position = position;
-        this.reason = reason;
-
-        Object obj = DataBindingUtil.bind(this.itemView);
-
-        if(obj instanceof RowListWithDetailsItemBinding){
-          RowListWithDetailsItemBinding binding = (RowListWithDetailsItemBinding) obj;
-          binding.title.setText(reason.name);
-          binding.details.setText(reason.details);
-          binding.details.setVisibility(TextUtils.isEmpty(reason.details) ? View.GONE : View.VISIBLE);
-          this.itemView.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View view){
-              onClick_Reason(view);
-            }
-          });
-
-          final PopupMenu popup = new PopupMenu(getContext(), binding.menuRight);
-          popup.getMenuInflater().inflate(R.menu.menu_category_right, popup.getMenu());
-          popup.setOnMenuItemClickListener(this);
-          binding.menuRight.setOnClickListener(new View.OnClickListener() {
+        binding.dateTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-              popup.show();
+
+                DatePickerDialogFragment fragment = DatePickerDialogFragment.newInstance(date, null);
+                fragment.setOnDateSetListener(new DatePickerDialogFragment.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(Calendar calendar) {
+                        date = calendar.getTimeInMillis();
+                        loadCurrentDateWithToast(true);
+                    }
+                });
+                fragment.show(getFragmentManager(), DatePickerDialogFragment.class.getName());
             }
-          });
+        });
+    }
+
+    private void loadCurrentDateWithToast(boolean showToast) {
+
+        String dateString = getResources().getString(R.string.date_string_today);
+
+        // Show the date if it is not today
+        if (!DateUtils.isToday(date)) {
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat(getResources().getString(R.string.date_string_format_to_year_month_day_weekday));
+            dateString = simpleDateFormat.format(date);
         }
-        else if(obj instanceof ListviewFooterBinding){
-          this.itemView.setOnClickListener(new View.OnClickListener(){
+
+        if (showToast) {
+            DialogManager.showToast(getActivity(), dateString);
+        }
+
+        ((TextView) getView().findViewById(R.id.date_text_view)).setText(dateString);
+    }
+
+    private void setAccountView(View view) {
+
+        view.findViewById(R.id.account_text_view).setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view){
-              onClick_Footer(view);
+            public void onClick(View view) {
+                startActivity(AccountSelectActivity.createIntent(getContext(), isExpense));
             }
-          });
-          ListviewFooterBinding binding = (ListviewFooterBinding) obj;
-          binding.text.setText(getResources().getString(R.string.list_view_add_reason));
-        }
-      }
-      catch(Exception e)
-      {
-        e.printStackTrace();
-      }
+        });
     }
 
-    public void onClick_Reason(View view){
-      startActivity(SummaryActivity.createIntent(getContext(), isExpense, date, account, reason));
+
+    //--------------------------------------------------------------//
+    //    -- Account Part --
+    //--------------------------------------------------------------//
+
+    private void loadCurrentAccount() {
+
+        AccountDataManager accountDataManager = new AccountDataManager(getContext());
+        account = accountDataManager.findCurrentSelectedAccount(getContext(), isExpense);
+
+        ((TextView) getView().findViewById(R.id.account_text_view)).setText(account.name);
     }
 
-    public void onClick_Footer(View view){
-      final Context context = getContext();
-      final View textInputView = LayoutInflater.from(context).inflate(R.layout.dialog_text_input, null);
 
-      new AlertDialog.Builder(context)
-        .setView(textInputView)
-        .setTitle(getResources().getString(R.string.list_view_add_reason))
-        .setPositiveButton(getResources().getString(R.string.done), new DialogInterface.OnClickListener()
-        {
-          @Override
-          public void onClick(DialogInterface dialogInterface, int i)
-          {
-            EditText editText = (EditText) textInputView.findViewById(R.id.edit);
+    //--------------------------------------------------------------//
+    //    -- Rename --
+    //--------------------------------------------------------------//
 
-            try{
-              String newName = editText.getText().toString();
+    private void renameReason(final Reason reason, final int position) {
 
-              // Check empty
-              if(newName.isEmpty()){
-                return;
-              }
+        final Context context = getContext();
+        final View textInputView = LayoutInflater.from(context).inflate(R.layout.dialog_text_input, null);
+        final EditText editText = (EditText) textInputView.findViewById(R.id.edit);
+        editText.setText(reason.name);
 
-              ProjectDataManager projectDataManager = new ProjectDataManager(context);
-              Project project = projectDataManager.findCurrentProjectWithContext(context);
+        new AlertDialog.Builder(context)
+                .setView(textInputView)
+                .setTitle(getResources().getString(R.string.list_view_rename))
+                .setPositiveButton(getResources().getString(R.string.done), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
 
-              List<Reason> reasonList = reasonDataManager.findAllWithIsExpense(isExpense, context);
+                        try {
+                            String reasonName = editText.getText().toString();
 
-              Reason reason = new Reason();
-              reason.name = newName;
-              reason.uuid = UUID.randomUUID().toString();
+                            KeyboardUtil.hideKeyboard(getActivity(), editText); // 2017/01/24 E.Nozaki Hide software keyboard.
 
-              if(reasonList.isEmpty()){
-                reason.order = 0;
-              }
-              else{
-                reason.order = reasonList.get(reasonList.size() - 1).order + 1;
-              }
-              reason.isExpense = isExpense;
-              reason.project = project;
-              reason.details = "";
+                            ReasonDataManager reasonDataManager = new ReasonDataManager(getContext());
+                            reasonDataManager.updateName(reason.id, reasonName);
 
-              long id = reasonDataManager.save(reason);
+                            Reason oldReason = adapter.getItem(position);
 
-              // Success
-              if(id!=-1){
+                            if (oldReason != null) {
 
-                reason.id = id;
-                adapter.notifyDataSetChanged();
-                dialogInterface.dismiss();
+                                oldReason.name = reasonName;
+                                reasonDataManager.updateName(reason.id, reasonName);
+                                adapter.onReasonDataManagerChanged();
 
-                DialogManager.showToast(context, newName);
-              }
-            }finally{
-              KeyboardUtil.hideKeyboard(getActivity(), editText);
-            }
-          }
-        })
-
-        .setNegativeButton(getResources().getString(R.string.cancel), new DialogInterface.OnClickListener(){
-          @Override
-          public void onClick(DialogInterface dialogInterface, int i){
-            EditText editText = (EditText) textInputView.findViewById(R.id.edit);
-            KeyboardUtil.hideKeyboard(getActivity(), editText); // 2017/01/17 E.Nozaki Hide software keyboard.
-          }
-        })
-        .show();
+                                DialogManager.showToast(getActivity(), reasonName);
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                })
+                .setNegativeButton(getResources().getString(R.string.cancel), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        EditText editText = (EditText) textInputView.findViewById(R.id.edit);
+                        KeyboardUtil.hideKeyboard(getActivity(), editText); // 2017/01/24 E.Nozaki Hide software keyboard.
+                    }
+                })
+                .show();
 
         KeyboardUtil.showKeyboard(getActivity(), textInputView); // 2017/01/17 E.Nozaki Show software keyboard.
     }
 
-    @Override
-    public boolean onMenuItemClick(MenuItem item){
-      switch (item.getItemId()) {
+    //--------------------------------------------------------------//
+    //    -- Delete --
+    //--------------------------------------------------------------//
 
-        case R.id.rename:
-          renameReason(reason, position);
-          break;
+    private void deleteReason(final Reason reason) {
 
-        case R.id.delete:
-          deleteReason(reason);
-          break;
-      }
-      return true;
+        // Check if Entry data has this reason already
+        EntryDataManager entryDataManager = new EntryDataManager(getContext());
+        Entry entry = entryDataManager.hasReasonInEntryData(reason);
+
+        if (entry != null) {
+
+            // Show error message
+            new AlertDialog.Builder(getContext())
+                    .setTitle(getResources().getString(R.string.Error))
+                    .setMessage(getResources().getString(R.string.using_this_account_in_entry_already))
+                    .setPositiveButton("OK", null)
+                    .show();
+            return;
+        }
+
+        // Confirm dialog
+        new AlertDialog.Builder(getContext())
+                .setTitle(reason.name)
+                .setMessage(getResources().getString(R.string.delete_confirm_message))
+                .setPositiveButton(getResources().getString(R.string.Delete), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                        dialogInterface.dismiss();
+                        reasonDataManager.delete(reason.id);
+                        adapter.onReasonDataManagerChanged();
+
+                        String message = reason.name + getResources().getString(R.string.delete_done_after_title);
+                        DialogManager.showToast(getActivity(), message);
+                    }
+                })
+                .setNegativeButton(getResources().getString(R.string.cancel), null)
+                .show();
     }
-  }
 
+    //--------------------------------------------------------------//
+    //    -- Reason List View Holder --
+    //--------------------------------------------------------------//
 
-  //--------------------------------------------------------------//
-  //    -- Rename --
-  //--------------------------------------------------------------//
-
-  private void renameReason(final Reason reason, final int position) {
-
-    final Context context = getContext();
-    final View textInputView = LayoutInflater.from(context).inflate(R.layout.dialog_text_input, null);
-
-    final EditText editText = (EditText) textInputView.findViewById(R.id.edit);
-    editText.setText(reason.name);
-
-    new AlertDialog.Builder(context)
-      .setView(textInputView)
-      .setTitle(getResources().getString(R.string.list_view_rename))
-      .setPositiveButton(getResources().getString(R.string.done), new DialogInterface.OnClickListener() {
+    public class ItemTouchHelperCallback extends ItemTouchHelper.Callback {
         @Override
-        public void onClick(DialogInterface dialogInterface, int i) {
+        public int getMovementFlags(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
+            int flags_drag = ItemTouchHelper.UP | ItemTouchHelper.DOWN | ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT; // Catch actions for moving an item toward up, down, left and right.
+            int flags_swipe = 0; // Ignore actions for swiping an item.
+            return makeMovementFlags(flags_drag, flags_swipe);
+        }
 
-          try{
-            String reasonName = editText.getText().toString();
+        @Override
+        public boolean isLongPressDragEnabled() {
+            return true;
+        }
 
-            ReasonDataManager reasonDataManager = new ReasonDataManager(getContext());
-            reasonDataManager.updateName(reason.id, reasonName);
+        @Override
+        public boolean isItemViewSwipeEnabled() {
+            return false;
+        }
 
-            Reason oldReason = adapter.getItem(position);
+        @Override
+        public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
 
-            if (oldReason != null) {
+            int position_from = viewHolder.getAdapterPosition();
+            int position_to = target.getAdapterPosition();
 
-              oldReason.name = reasonName;
-              reasonDataManager.updateName(reason.id, reasonName);
-              adapter.onReasonDataManagerChanged();
+            Log.d(getClass().getSimpleName(), "---------------------------------");
+            Log.d(getClass().getSimpleName(), "position_from = " + position_from);
+            Log.d(getClass().getSimpleName(), "position_to = " + position_to);
 
-              DialogManager.showToast(getActivity(), reasonName);
+            int size = reasonList.size();
+
+            if (position_from < 0 || size <= position_from ||
+                    position_to < 0 || size <= position_to) {
+                return false;
             }
-          }finally{
-            KeyboardUtil.hideKeyboard(getActivity(), editText); // 2017/01/17 E.Nozaki Hide software keyboard.
-          }
+
+            if (position_from == position_to) {
+                return false;
+            }
+
+            ArrayList<Reason> list = new ArrayList<Reason>();
+
+            for (int i = 0; i < size; i++) {
+                if (i == position_to) list.add(reasonList.get(position_from));
+                if (i != position_from) list.add(reasonList.get(i));
+            }
+
+            reasonList = list;
+
+            for (int i = 0; i < size; i++) {
+                reasonDataManager.updateOrder(reasonList.get(i).id, i); // Update database
+            }
+
+            adapter.notifyItemMoved(position_from, position_to);
+
+            return true;
         }
-      })
-      .setNegativeButton(getResources().getString(R.string.cancel), new DialogInterface.OnClickListener()
-      {
+
         @Override
-        public void onClick(DialogInterface dialogInterface, int i){
-          EditText editText = (EditText) textInputView.findViewById(R.id.edit);
-          KeyboardUtil.hideKeyboard(getActivity(), editText) ; // 2017/01/17 E.Nozaki Hide software keyboard.
+        public void onSelectedChanged(RecyclerView.ViewHolder holder, int action) {
+
+            super.onSelectedChanged(holder, action);
+
+            try {
+                if (holder != null) {
+                    if (action == ItemTouchHelper.ACTION_STATE_DRAG) {
+//            holder.itemView.setBackgroundColor(Color.YELLOW); // TODO Do something else to highlight the item that is dragged.
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
-      })
-      .show();
 
-    KeyboardUtil.showKeyboard(getActivity(), textInputView); // 2017/01/17 E.Nozaki Show software keyboard.
-  }
+        @Override
+        public void clearView(RecyclerView view, RecyclerView.ViewHolder holder) {
 
+            super.clearView(view, holder);
 
-  //--------------------------------------------------------------//
-  //    -- Delete --
-  //--------------------------------------------------------------//
+            try {
+                if (holder != null) {
+//          holder.itemView.setBackgroundColor(Color.TRANSPARENT); // TODO Do something else to clear highlight the item that is dragged.
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
 
-  private void deleteReason(final Reason reason) {
-
-    // Check if Entry data has this reason already
-    EntryDataManager entryDataManager   = new EntryDataManager(getContext());
-    Entry entry                         = entryDataManager.hasReasonInEntryData(reason);
-
-    if (entry != null) {
-
-      // Show error message
-      new AlertDialog.Builder(getContext())
-        .setTitle(getResources().getString(R.string.Error))
-        .setMessage(getResources().getString(R.string.using_this_account_in_entry_already))
-        .setPositiveButton("OK", null)
-        .show();
-      return;
+        @Override
+        public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+            // Do nothing here since swiping action is not supported by this app.
+        }
     }
 
-    // Confirm dialog
-    new AlertDialog.Builder(getContext())
-      .setTitle(reason.name)
-      .setMessage(getResources().getString(R.string.delete_confirm_message))
-      .setPositiveButton(getResources().getString(R.string.Delete), new DialogInterface.OnClickListener() {
-        @Override
-        public void onClick(DialogInterface dialogInterface, int i) {
-          dialogInterface.dismiss();
+    //--------------------------------------------------------------//
+    //    -- Reason List Adapter --
+    //--------------------------------------------------------------//
 
-          reasonDataManager.delete(reason.id);
-          adapter.onReasonDataManagerChanged();
+    private class MyRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-          String message = reason.name + getResources().getString(R.string.delete_done_after_title);
-          DialogManager.showToast(getActivity(), message);
+        public MyRecyclerViewAdapter() {
+            onReasonDataManagerChanged();
         }
-      })
-      .setNegativeButton(getResources().getString(R.string.cancel), null)
-      .show();
+
+        @Override
+        public int getItemViewType(int position) {
+            if (position < reasonList.size()) {
+                return TYPE_REASON;
+            } else {
+                return TYPE_FOOTER;
+            }
+        }
+
+        private Reason getItem(int position) {
+            if (reasonList != null && position < reasonList.size()) {
+                return reasonList.get(position);
+            }
+            return null;
+        }
+
+        @Override
+        public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+            MyViewHolder h = (MyViewHolder) holder;
+            h.setReason(position, getItem(position));
+        }
+
+        @Override
+        public int getItemCount() {
+            if (reasonList != null) {
+                return reasonList.size() + 1; // Add 1 for footer.
+            }
+            return 1;
+        }
+
+        @Override
+        public MyViewHolder onCreateViewHolder(ViewGroup parent, int type) {
+            try {
+                View view = null;
+
+                if (type == TYPE_REASON) {
+                    view = LayoutInflater.from(getContext()).inflate(R.layout.row_list_with_details_item, null);
+                } else if (type == TYPE_FOOTER) {
+                    view = LayoutInflater.from(getContext()).inflate(R.layout.listview_footer, null);
+                }
+
+                view.setLayoutParams(new RecyclerView.LayoutParams(RecyclerView.LayoutParams.MATCH_PARENT, RecyclerView.LayoutParams.WRAP_CONTENT));
+                MyViewHolder holder = new MyViewHolder(view);
+
+                return holder;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            return null;
+        }
+
+        public void onReasonDataManagerChanged() {
+            Log.d(this.getClass().getSimpleName() + ":438", "onReasonDataManagerChanged() が呼ばれた。");
+            reasonList = reasonDataManager.findAllWithIsExpense(isExpense, getContext());
+            this.notifyDataSetChanged();
+        }
+    }
+
+    public class MyViewHolder extends RecyclerView.ViewHolder implements PopupMenu.OnMenuItemClickListener {
+
+        public int position;
+        public Reason reason;
+        public View button_right;
+
+        public MyViewHolder(View view) {
+            super(view);
+        }
+
+        public void setReason(final int position, final Reason reason) {
+            try {
+                this.position = position;
+                this.reason = reason;
+
+                Object obj = DataBindingUtil.bind(this.itemView);
+
+                if (obj instanceof RowListWithDetailsItemBinding) {
+                    RowListWithDetailsItemBinding binding = (RowListWithDetailsItemBinding) obj;
+                    binding.title.setText(reason.name);
+                    binding.details.setText(reason.details);
+                    binding.details.setVisibility(TextUtils.isEmpty(reason.details) ? View.GONE : View.VISIBLE);
+                    this.itemView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            onClick_Reason(view);
+                        }
+                    });
+
+                    final PopupMenu popup = new PopupMenu(getContext(), binding.menuRight);
+                    popup.getMenuInflater().inflate(R.menu.menu_category_right, popup.getMenu());
+                    popup.setOnMenuItemClickListener(this);
+                    binding.menuRight.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            popup.show();
+                        }
+                    });
+                } else if (obj instanceof ListviewFooterBinding) {
+                    this.itemView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            onClick_Footer(view);
+                        }
+                    });
+                    ListviewFooterBinding binding = (ListviewFooterBinding) obj;
+                    binding.text.setText(getResources().getString(R.string.list_view_add_reason));
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        public void onClick_Reason(View view) {
+            startActivity(SummaryActivity.createIntent(getContext(), isExpense, date, account, reason));
+        }
+
+        public void onClick_Footer(View view) {
+            final Context context = getContext();
+            final View textInputView = LayoutInflater.from(context).inflate(R.layout.dialog_text_input, null);
+            final EditText editText = (EditText) textInputView.findViewById(R.id.edit); // 2017/01/23 E.Nozaki change the scope for editText since this is the component that should have a focus.
+
+            new AlertDialog.Builder(context)
+                    .setView(textInputView)
+                    .setTitle(getResources().getString(R.string.list_view_add_reason))
+                    .setPositiveButton(getResources().getString(R.string.done), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+
+                            try {
+                                String newName = editText.getText().toString();
+
+                                KeyboardUtil.hideKeyboard(getActivity(), editText); // 2017/01/24 E.Nozaki Hide keyboard.
+
+                                // Check empty
+                                if (newName.isEmpty()) {
+                                    return;
+                                }
+
+                                ProjectDataManager projectDataManager = new ProjectDataManager(context);
+                                Project project = projectDataManager.findCurrentProjectWithContext(context);
+
+                                List<Reason> reasonList = reasonDataManager.findAllWithIsExpense(isExpense, context);
+
+                                Reason reason = new Reason();
+                                reason.name = newName;
+                                reason.uuid = UUID.randomUUID().toString();
+
+                                if (reasonList.isEmpty()) {
+                                    reason.order = 0;
+                                } else {
+                                    reason.order = reasonList.get(reasonList.size() - 1).order + 1;
+                                }
+                                reason.isExpense = isExpense;
+                                reason.project = project;
+                                reason.details = "";
+
+                                long id = reasonDataManager.save(reason);
+
+                                // Success
+                                if (id != -1) {
+
+                                    reason.id = id;
+                                    adapter.onReasonDataManagerChanged(); // 2017/01/23 Bug fixed. Refresh GUI after database is changed.
+                                    dialogInterface.dismiss();
+                                    DialogManager.showToast(context, newName);
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    })
+
+                    .setNegativeButton(getResources().getString(R.string.cancel), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            EditText editText = (EditText) textInputView.findViewById(R.id.edit);
+                            KeyboardUtil.hideKeyboard(getActivity(), editText); // 2017/01/24 E.Nozaki Hide software keyboard.
+                        }
+                    })
+                    .show();
+
+            KeyboardUtil.showKeyboard(getActivity(), editText); // 2017/01/23 E.Nozaki Show software keyboard for editText.
+        }
+
+        @Override
+        public boolean onMenuItemClick(MenuItem item) {
+            switch (item.getItemId()) {
+
+                case R.id.rename:
+                    renameReason(reason, position);
+                    break;
+
+                case R.id.delete:
+                    deleteReason(reason);
+                    break;
+            }
+            return true;
+        }
     }
 
 
@@ -618,8 +613,6 @@ public class EntryTabReasonSelectFragment extends Fragment {
     //--------------------------------------------------------------//
 
     private void checkHelpshiftReplyMessage() {
-
-        //QQ ここ二回呼ばれちゃう
 
         // Check if the helpshit reply message exists
         if (Support.getNotificationCount() != 0) {
@@ -631,8 +624,8 @@ public class EntryTabReasonSelectFragment extends Fragment {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
 
-                            Support.showConversation(getActivity());
                             dialogInterface.dismiss();
+                            Support.showConversation(getActivity());
                         }
                     })
                     .show();
