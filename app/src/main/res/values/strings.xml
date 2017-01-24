@@ -136,8 +136,8 @@
     <string name="AlertView_tapHistory">仕訳帳タブから編集できます。</string>
     <string name="AlertView_inputPrice">金額を入力して「仕訳帳に記録」をタップ</string>
     <string name="AlertView_selectSummary">備考をタップ</string>
-
-
+    <string name="Helpshift_ReplyTitle">返信があります</string>
+    <string name="Helpshift_ReplyMessage">あなたのメッセージに返信が届きました。</string>
 
 
 
