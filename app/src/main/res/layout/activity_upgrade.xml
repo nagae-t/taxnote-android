@@ -27,7 +27,7 @@
             android:layout_marginTop="20dp"
             android:background="#ffffffff"
             android:gravity="center"
-            android:minHeight="48dp"
+            android:minHeight="55dp"
             android:orientation="horizontal"
             android:paddingEnd="16dp"
             android:paddingStart="16dp">
@@ -68,7 +68,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:gravity="center_vertical"
-            android:minHeight="48dp"
+            android:minHeight="55dp"
             android:paddingEnd="16dp"
             android:paddingStart="16dp"
             android:text="@string/restore_purchases" />
@@ -84,7 +84,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
-            android:minHeight="48dp"
+            android:minHeight="55dp"
             android:paddingEnd="16dp"
             android:paddingStart="16dp"
             android:text="@string/frequently_asked_questions" />

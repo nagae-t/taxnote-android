@@ -11,7 +11,7 @@
     </style>
 
     <style name="ListItemStyle">
-        <item name="android:minHeight">48dp</item>
+        <item name="android:minHeight">55dp</item>
         <item name="android:paddingLeft">16dp</item>
         <item name="android:paddingRight">16dp</item>
     </style>
@@ -24,6 +24,19 @@
     <style name="font_style_footer">
         <item name="android:textSize">12dp</item>
         <item name="android:textColor">@color/text_gray</item>
+    </style>
+
+    <style name="cell_right_option">
+        <item name="android:layout_alignParentEnd">true</item>
+        <item name="android:layout_centerVertical">true</item>
+        <item name="android:src">@drawable/ic_more_vert_black_24dp</item>
+        <item name="android:tint">@color/divider</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:minHeight">55dp</item>
+        <item name="android:minWidth">55dp</item>
+        <item name="android:paddingRight">16dp</item>
+        <item name="android:paddingLeft">16dp</item>
     </style>
 
     <style name="cell_list_view_basic">

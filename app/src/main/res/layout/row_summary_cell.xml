@@ -16,15 +16,7 @@
 
         <ImageView
             android:id="@+id/menu_right"
-            android:minWidth="55dp"
-            android:minHeight="55dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp"
-            android:src="@drawable/ic_more_vert_black_24dp"
-            android:tint="@color/divider" />
+            style="@style/cell_right_option"
+            />
     </RelativeLayout>
 </layout>
