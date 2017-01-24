@@ -26,7 +26,6 @@ import com.example.taxnoteandroid.databinding.RowAccountCellBinding;
 import com.example.taxnoteandroid.model.Account;
 import com.example.taxnoteandroid.model.Entry;
 import com.example.taxnoteandroid.model.Project;
-//import com.h6ah4i.android.widget.advrecyclerview.draggable.RecyclerViewDragDropManager;
 
 import java.util.List;
 import java.util.UUID;
@@ -92,12 +91,6 @@ public class AccountSelectActivity extends AppCompatActivity {
         AccountDataManager accountDataManager = new AccountDataManager(this);
         List<Account> accounts = accountDataManager.findAllWithIsExpense(isExpense, this);
 
-//        RecyclerViewDragDropManager dragMgr = new RecyclerViewDragDropManager();
-//
-//        dragMgr.setInitiateOnTouch(true);
-//        dragMgr.setInitiateOnMove(false);
-//        dragMgr.setInitiateOnLongPress(true);
-
         accountListAdapter = new ListAdapter(this);
         accountListAdapter.addAll(accounts);
         accountListAdapter.setOnItemClickRecyclerAdapterListener(new OnItemClickRecyclerAdapterListener() {
@@ -127,20 +120,15 @@ public class AccountSelectActivity extends AppCompatActivity {
         recyclerView.addItemDecoration(new DividerDecoration(this));
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(accountListAdapter);
-
-//        recyclerView.setAdapter(dragMgr.createWrappedAdapter(accountListAdapter));
-//        dragMgr.attachRecyclerView(recyclerView);
     }
 
-//    class ListAdapter extends FooterRecyclerArrayAdapter<Account> implements DraggableItemAdapter<BindingHolder<ViewDataBinding>> {
-    class ListAdapter extends FooterRecyclerArrayAdapter<Account> /**implements DraggableItemAdapter<BindingHolder<ViewDataBinding>>**/ {
+    class ListAdapter extends FooterRecyclerArrayAdapter<Account> {
 
         private final AccountDataManager accountDataManager;
 
         private OnItemClickRecyclerAdapterListener onItemClickRecyclerAdapterListener;
 
         public ListAdapter(Context context) {
-//            setHasStableIds(true);
             accountDataManager = new AccountDataManager(context);
         }
 
@@ -222,8 +210,13 @@ public class AccountSelectActivity extends AppCompatActivity {
                         public void onClick(DialogInterface dialogInterface, int i) {
 
                             long deleted = accountDataManager.delete(account.id);
+
                             if (deleted != 0) {
+
                                 remove(account);
+
+                                String message = account.name + getResources().getString(R.string.delete_done_after_title);
+                                DialogManager.showToast(AccountSelectActivity.this, message);
                             }
 
                             dialogInterface.dismiss();
@@ -302,28 +295,6 @@ public class AccountSelectActivity extends AppCompatActivity {
         public void setOnItemClickRecyclerAdapterListener(OnItemClickRecyclerAdapterListener onItemClickRecyclerAdapterListener) {
             this.onItemClickRecyclerAdapterListener = onItemClickRecyclerAdapterListener;
         }
-
-//        @Override
-//        public boolean onCheckCanStartDrag(BindingHolder<ViewDataBinding> holder, int position, int x, int y) {
-//            return true;
-//        }
-//
-//        @Override
-//        public ItemDraggableRange onGetItemDraggableRange(BindingHolder<ViewDataBinding> holder, int position) {
-//            return null;
-//        }
-//
-//        @Override
-//        public void onMoveItem(int fromPosition, int toPosition) {
-//            Account movedItem = getItem(fromPosition);
-//            add(toPosition, movedItem);
-//            notifyItemMoved(fromPosition, toPosition);
-//        }
-//
-//        @Override
-//        public boolean onCheckCanDrop(int draggingPosition, int dropPosition) {
-//            return true;
-//        }
     }
 
 
@@ -355,6 +326,8 @@ public class AccountSelectActivity extends AppCompatActivity {
                         if (oldAccount != null) {
                             oldAccount.name = newName;
                             accountListAdapter.notifyDataSetChanged();
+
+                                DialogManager.showToast(AccountSelectActivity.this, newName);
                         }
 
                         dialogInterface.dismiss();
