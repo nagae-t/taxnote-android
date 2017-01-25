@@ -8,6 +8,7 @@ import android.os.AsyncTask;
 import android.os.Environment;
 import android.widget.Toast;
 
+import com.example.taxnoteandroid.R;
 import com.example.taxnoteandroid.TaxnoteConsts;
 import com.example.taxnoteandroid.dataManager.EntryDataManager;
 import com.example.taxnoteandroid.dataManager.SharedPreferencesManager;
@@ -18,8 +19,8 @@ import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
 
@@ -29,65 +30,81 @@ import java.util.TimeZone;
 
 public class DataExportManager implements TaxnoteConsts {
 
-    private String MODE = EXPORT_FORMAT_TYPE_CSV;
+    private static String CHARACTER_CODE_UTF_8     = "UTF-8";
+    private static String CHARACTER_CODE_SHIFT_JIS = "Shift_JIS";
 
-    private int size_csv_column = 7; // CSV column size.
+    private Context context        = null;
+    private String mode            = null;
+    private int column_size        = -1; // CSV column size.
+    private String[] column_titles = null;
+    private Column[] columns       = null;
+    private String character_code  = null;
+    private String separator       = ",";
+    private Entry current_entry    = null;
+    private long total_price       = 0;
 
-    private int index_date                = -1; // 日付を出力するコラムのインデックス（一番左なら0、左から5番目なら4を指定）
-    private int index_left_account_name   = -1; // 貸方勘定の項目名を出力するコラムのインデックス（一番左なら0、左から5番目なら4を指定）
-    private int index_left_account_price  = -1; // 貸方勘定の金額を出力するコラムのインデックス（一番左なら0、左から5番目なら4を指定）
-    private int index_right_account_name  = -1; // 借勘定の項目名を出力するコラムのインデックス（一番左なら0、左から5番目なら4を指定）
-    private int index_right_account_price = -1; // 借方勘定の項目名を出力するコラムのインデックス（一番左なら0、左から5番目なら4を指定）
-    private int index_sub_account_name    = -1; // 備考を出力するコラムのインデックス（一番左なら0、左から5番目なら4を指定）
-    private int index_total_price         = -1; // 残高を出力するコラムのインデックス（一番左なら0、左から5番目なら4を指定）
+    public DataExportManager(String mode, String character_code) {
 
-    public DataExportManager(String mode) {
+        this.setMode(mode);
+        this.setCharacterCode(character_code);
+    }
 
-        if(mode.compareTo(EXPORT_FORMAT_TYPE_CSV)==0) {
-            setCsvColumnSize(7); // CSV column size.
-            setIndex_Date(0);
-            setIndex_LeftAccountName(1);
-            setIndex_LeftAccountPrice(2);
-            setIndex_RightAccountName(3);
-            setIndex_RightAccountPrice(4);
-            setIndex_SubAccountName(5);
-            setIndex_TotalPrice(6);
+    private void setMode(String mode) {
+
+        this.mode = mode;
+
+        if(mode.compareTo(EXPORT_FORMAT_TYPE_CSV)==0) { // CSV
+            intColumns(7); // CSV column size.
+            setColumnTitles("日付", "借方勘定", "借方金額", "貸方勘定", "貸方金額", "備考", "残高");
+            setColumn(0, new DateColumn());
+            setColumn(1, new LeftAccountNameColumn());
+            setColumn(2, new LeftAccountPriceColumn());
+            setColumn(3, new RightAccountNameColumn());
+            setColumn(4, new RightAccountPriceColumn());
+            setColumn(5, new SubAccountNameColumn());
+            setColumn(7, new TotalPriceColumn());
+            setSeparator(",");
         }
-        else if(mode.compareTo(EXPORT_FORMAT_TYPE_YAYOI)==0) {
-            // TODO ここに、弥生用の CSV ファイルのフォーマットを指定します。
-            // TODO この作業は、このクラスの仕様が確定した後に行います。
-            setCsvColumnSize(7); // CSV column size.
-            setIndex_Date(0);
-            setIndex_LeftAccountName(1);
-            setIndex_LeftAccountPrice(2);
-            setIndex_RightAccountName(3);
-            setIndex_RightAccountPrice(4);
-            setIndex_SubAccountName(5);
-            setIndex_TotalPrice(6);
+        else if(mode.compareTo(EXPORT_FORMAT_TYPE_YAYOI)==0) { // 弥生
+            intColumns(25); // CSV column size.
+            setColumn(0,  new FixedTextColumn("2000")); // TODO ここには何を出力する？
+            setColumn(3,  new DateColumn());
+            setColumn(4,  new LeftAccountNameColumn());
+            setColumn(7,  new FixedTextColumn("対象外")); // TODO ここには何を出力する？
+            setColumn(8,  new LeftAccountPriceColumn());
+            setColumn(10, new RightAccountNameColumn());
+            setColumn(13, new FixedTextColumn("対象外")); // TODO ここには何を出力する？
+            setColumn(14, new TotalPriceColumn());
+            setColumn(16, new SubAccountNameColumn());
+            setColumn(19, new FixedTextColumn("0")); // TODO ここには何を出力する？
+            setColumn(24, new FixedTextColumn("NO")); // TODO ここには何を出力する？
+            setSeparator("\t");
         }
-        else if(mode.compareTo(EXPORT_FORMAT_TYPE_FREEE)==0) {
-            // TODO ここに、Freee用の CSV ファイルのフォーマットを指定してください。
-            // TODO この作業は、このクラスの仕様が確定した後に行います。
-            setCsvColumnSize(7); // CSV column size.
-            setIndex_Date(0);
-            setIndex_LeftAccountName(1);
-            setIndex_LeftAccountPrice(2);
-            setIndex_RightAccountName(3);
-            setIndex_RightAccountPrice(4);
-            setIndex_SubAccountName(5);
-            setIndex_TotalPrice(6);
+        else if(mode.compareTo(EXPORT_FORMAT_TYPE_FREEE)==0) { // Freee
+            intColumns(14); // CSV column size.
+            setColumnTitles("収支区分", "管理番号", "発生日", "支払期日", "取引先", "勘定科目", "税区分", "金額", "備考", "品目", "メモタグ（複数指定可、カンマ区切り）", "支払日", "支払口座" , "支払金額");
+            setColumn(0,  new ExpenseDivisionColumn());
+            setColumn(2,  new DateColumn());
+            setColumn(5,  new LeftAccountPriceColumn());
+            setColumn(6,  new FixedTextColumn("対象外")); // TODO ここには何を出力する？
+            setColumn(7,  new LeftAccountNameColumn());
+            setColumn(8,  new SubAccountNameColumn());
+            setColumn(11, new DateColumn()); // TODO ここには何を出力する？
+            setColumn(12, new RightAccountNameColumn());
+            setColumn(13, new RightAccountPriceColumn()); // TODO ここには何を出力する？
+            setSeparator(",");
         }
-        else if(mode.compareTo(EXPORT_FORMAT_TYPE_MFCLOUD)==0) {
-            // TODO ここに、MS Cloud用の CSV ファイルのフォーマットを指定してください。
-            // TODO この作業は、このクラスの仕様が確定した後に行います。
-            setCsvColumnSize(7); // CSV column size.
-            setIndex_Date(0);
-            setIndex_LeftAccountName(1);
-            setIndex_LeftAccountPrice(2);
-            setIndex_RightAccountName(3);
-            setIndex_RightAccountPrice(4);
-            setIndex_SubAccountName(5);
-            setIndex_TotalPrice(6);
+        else if(mode.compareTo(EXPORT_FORMAT_TYPE_MFCLOUD)==0) { // MF Could
+            intColumns(13); // CSV column size.
+            setColumnTitles("取引No", "取引日", "借方勘定科目", "借方補助科目", "借方税区分", "借方金額(円)", "貸方勘定科目", "貸方補助科目", "貸方税区分", "貸方金額(円)", "備考", "仕訳メモ");
+            setColumn(0,  new IndexColumn()); // TODO ここには何を出力する？
+            setColumn(1,  new DateColumn());
+            setColumn(2,  new LeftAccountNameColumn());
+            setColumn(5,  new LeftAccountPriceColumn());
+            setColumn(6,  new RightAccountNameColumn());
+            setColumn(9,  new RightAccountPriceColumn());
+            setColumn(10, new SubAccountNameColumn());
+            setSeparator(",");
         }
         else {
             throw new RuntimeException("Invalid Mode : " + mode);
@@ -95,6 +112,8 @@ public class DataExportManager implements TaxnoteConsts {
     }
 
     public void export(final Context context) {
+
+        this.context = context;
 
         final ProgressDialog dialog = new ProgressDialog(context);
         dialog.setMessage("CSVファイルの出力");
@@ -132,46 +151,35 @@ public class DataExportManager implements TaxnoteConsts {
         PrintWriter writer = null;
 
         try {
-            File file = new File(Environment.getExternalStorageDirectory(), "Taxnote/" + System.currentTimeMillis() + "/taxnote_BasicCSV_AllDate_utf8.csv");
+            File file = getOutputFile();
             if(file.getParentFile().exists()==false) file.getParentFile().mkdirs(); // If parent folder doesn't exist, create it.
             stream_out = new FileOutputStream(file);
-            writer = new PrintWriter(new OutputStreamWriter(stream_out,"UTF-8"));
-
-            long total = 0;
+            writer = new PrintWriter(new OutputStreamWriter(stream_out, character_code));
 
             List<Entry> entries = getSelectedRangeEntries(context); // Get a list of Entry.
 
-            String[] csv_line = new String[size_csv_column];
-
             // Output column titles.
 
-            csv_line[index_date]                = "日付";
-            csv_line[index_left_account_name]   = "借方勘定";
-            csv_line[index_left_account_price]  = "借方金額";
-            csv_line[index_right_account_name]  = "貸方勘定";
-            csv_line[index_right_account_price] = "貸方金額";
-            csv_line[index_sub_account_name]    = "備考";
-            csv_line[index_total_price]         = "残高";
-
-            writer.append(getCSVString(csv_line, ",") + "\n");
+            if(column_titles!=null) {
+                writer.append(getCSVString(column_titles, separator) + "\n");
+            }
 
             // Out put data rows.
 
+            String[] line = new String[column_size];
+
             for(Entry entry : entries) {
 
-                resetArray(csv_line);
+                setCurrentEntry(entry);
+                resetArray(line);
 
-                total = (entry.isExpense ? -entry.price : entry.price);
+                for(int i=0;i<line.length;i++) {
+                    if(columns[i]!=null) {
+                        line[i] = columns[i].getValue();
+                    }
+                }
 
-                csv_line[index_date]                = new Date(entry.date).toString();
-                csv_line[index_left_account_name]   = (entry.isExpense ? entry.reason.name : entry.account.name);
-                csv_line[index_left_account_price]  = Long.toString(entry.price);
-                csv_line[index_right_account_name]  = (entry.isExpense ? entry.account.name : entry.reason.name);
-                csv_line[index_right_account_price] = Long.toString(entry.price);
-                csv_line[index_sub_account_name]    = entry.memo;
-                csv_line[index_total_price]         = Long.toString(total);
-
-                writer.append(getCSVString(csv_line, ",") + "\n");
+                writer.append(getCSVString(line, ",") + "\n");
             }
 
             return file;
@@ -201,14 +209,65 @@ public class DataExportManager implements TaxnoteConsts {
         return null;
     }
 
-    public void resetArray(String[] array) {
+    private File getOutputFile() {
+
+        String file_name = "taxnote";
+
+        // Mode
+
+        if(mode.compareTo(EXPORT_FORMAT_TYPE_CSV)==0) { // CSV
+            file_name += "_BasicCSV";
+        }
+        else if(mode.compareTo(EXPORT_FORMAT_TYPE_YAYOI)==0) { // 弥生
+            file_name += "_Yayoi";
+        }
+        else if(mode.compareTo(EXPORT_FORMAT_TYPE_FREEE)==0) { // Freee
+            file_name += "_Free";
+        }
+        else if(mode.compareTo(EXPORT_FORMAT_TYPE_MFCLOUD)==0) { // MF Could
+            file_name += "_MFCloud";
+        }
+        else {
+            throw new RuntimeException("Invalid Mode : " + mode);
+        }
+
+        // Period
+
+        file_name += "_AllDate";
+
+        // Character code
+
+        if(this.character_code.compareTo(CHARACTER_CODE_UTF_8)==0) {
+            file_name += "_utf8";
+        }
+        else if(this.character_code.compareTo(CHARACTER_CODE_SHIFT_JIS)==0) {
+            file_name += "_shift_jis";
+        }
+
+        // File extension
+
+        if(mode.compareTo(EXPORT_FORMAT_TYPE_YAYOI)==0) { // 弥生
+            file_name += ".txt";
+        } else {
+            file_name += ".csv";
+        }
+
+        return new File(Environment.getExternalStorageDirectory(), "Taxnote/" + System.currentTimeMillis() + "/" + file_name);
+    }
+
+    private void setCurrentEntry(Entry entry) {
+        current_entry = entry;
+        total_price = (entry.isExpense ? -entry.price : entry.price);
+    }
+
+    private void resetArray(String[] array) {
 
         for(int i=0;i<array.length;i++) {
             array[i] = null;
         }
     }
 
-    public String getCSVString(String[] array, String separator) {
+    private String getCSVString(String[] array, String separator) {
 
         StringBuilder builder = new StringBuilder();
 
@@ -238,38 +297,6 @@ public class DataExportManager implements TaxnoteConsts {
         intent.setType("text/plain");
         intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(file));
         context.startActivity(intent);
-    }
-
-    public void setCsvColumnSize(int size_csv_column) {
-      this.size_csv_column = size_csv_column;
-    }
-
-    public void setIndex_Date(int index_date) {
-      this.index_date = index_date;
-    }
-
-    public void setIndex_LeftAccountName(int index_left_account_name) {
-        this.index_left_account_name = index_left_account_name;
-    }
-
-    public void setIndex_LeftAccountPrice(int index_left_account_price) {
-       this.index_left_account_price = index_left_account_price;
-    }
-
-    public void setIndex_RightAccountName(int index_right_account_name) {
-        this.index_right_account_name = index_right_account_name;
-    }
-
-    public void setIndex_RightAccountPrice(int index_right_account_price) {
-        this.index_right_account_price = index_right_account_price;
-    }
-
-    public void setIndex_SubAccountName(int index_sub_account_name) {
-        this.index_sub_account_name = index_sub_account_name;
-    }
-
-    public void setIndex_TotalPrice(int index_total_price) {
-        this.index_total_price = index_total_price;
     }
 
     public List<Entry> getSelectedRangeEntries(Context context) {
@@ -364,5 +391,125 @@ public class DataExportManager implements TaxnoteConsts {
         long[] start_end = {beginDate, endDate};
 
         return start_end;
+    }
+
+    private void intColumns(int column_size) {
+        this.column_size   = column_size;
+        this.columns       = new Column[column_size];
+        this.column_titles = null;
+    }
+
+    private void setColumnTitles(String... column_titles) {
+        this.column_titles = column_titles;
+    }
+
+    private void setSeparator(String separator) {
+        this.separator = separator;
+    }
+
+    private void setColumn(int index, Column column) {
+        this.columns[index] = column;
+    }
+
+    private abstract class Column {
+        public abstract String getValue();
+    }
+
+    private class DateColumn extends Column{
+
+        SimpleDateFormat simpleDateFormat = null;
+
+        @Override
+        public String getValue() {
+
+            if(simpleDateFormat==null) {
+                simpleDateFormat = new SimpleDateFormat(context.getResources().getString(R.string.date_string_format_to_month_day));
+            }
+
+            return simpleDateFormat.format(current_entry.date);
+        }
+    }
+
+    private class LeftAccountNameColumn extends Column{
+        @Override
+        public String getValue() {
+            return (current_entry.isExpense ? current_entry.reason.name : current_entry.account.name);
+        }
+    }
+
+    private class LeftAccountPriceColumn extends Column{
+        @Override
+        public String getValue() {
+            return Long.toString(current_entry.price);
+        }
+    }
+
+    private class RightAccountNameColumn extends Column {
+        @Override
+        public String getValue() {
+            return (current_entry.isExpense ? current_entry.account.name : current_entry.reason.name);
+        }
+    }
+
+    private class RightAccountPriceColumn extends Column {
+        @Override
+        public String getValue() {
+            return Long.toString(current_entry.price);
+        }
+    }
+
+    private class SubAccountNameColumn extends Column {
+        @Override
+        public String getValue() {
+            return current_entry.memo;
+        }
+    }
+
+    private class TotalPriceColumn extends Column {
+        @Override
+        public String getValue() {
+            return Long.toString(total_price);
+        }
+    }
+
+    private class ExpenseDivisionColumn extends Column{
+        @Override
+        public String getValue() {
+            return (current_entry.isExpense ? "支出" : "収入");
+        }
+    }
+
+    private class FixedTextColumn extends Column{
+
+        private String text = null;
+
+        public FixedTextColumn(String text) {
+            this.text = text;
+        }
+
+        @Override
+        public String getValue() {
+            return text;
+        }
+    }
+
+    private class IndexColumn extends Column{
+        @Override
+        public String getValue() {
+            return Long.toString(current_entry.id);
+        }
+    }
+
+    private void setCharacterCode(String code) {
+
+        if(code.compareTo(EXPORT_CHARACTER_CODE_UTF8)==0) {
+            this.character_code = CHARACTER_CODE_UTF_8;
+        }
+        else if(code.compareTo(EXPORT_CHARACTER_CODE_SHIFTJIS)==0) {
+            this.character_code = CHARACTER_CODE_SHIFT_JIS;
+        }
+        else {
+            throw new RuntimeException("Invalid Character Code : " + code);
+        }
     }
 }

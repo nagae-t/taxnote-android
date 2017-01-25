@@ -75,7 +75,8 @@ public class DataExportActivity extends AppCompatActivity {
 
                 // 2017/01/20 E.Nozaki
                 String format = SharedPreferencesManager.getCurrentExportFormat(DataExportActivity.this);
-                DataExportManager manager = new DataExportManager(format);
+                String characterCode = SharedPreferencesManager.getCurrentCharacterCode(DataExportActivity.this);
+                DataExportManager manager = new DataExportManager(format, characterCode);
                 manager.export(DataExportActivity.this); // Generate CSV file and send it by email.
             }
         });
