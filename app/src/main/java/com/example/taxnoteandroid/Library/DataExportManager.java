@@ -3,6 +3,7 @@ package com.example.taxnoteandroid.Library;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Environment;
@@ -23,6 +24,8 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
 import java.util.TimeZone;
+
+import static java.net.Proxy.Type.HTTP;
 
 /**
  * Created by umemotonon on 2016/12/24.
@@ -62,7 +65,7 @@ public class DataExportManager implements TaxnoteConsts {
             setColumn(3, new RightAccountNameColumn());
             setColumn(4, new RightAccountPriceColumn());
             setColumn(5, new SubAccountNameColumn());
-            setColumn(7, new TotalPriceColumn());
+            setColumn(6, new TotalPriceColumn()); // 2017/01/25 インデックスの指定を 7 → 6 に変更。
             setSeparator(",");
         }
         else if(mode.compareTo(EXPORT_FORMAT_TYPE_YAYOI)==0) { // 弥生
@@ -233,7 +236,7 @@ public class DataExportManager implements TaxnoteConsts {
 
         // Period
 
-        file_name += "_AllDate";
+        file_name += "_AllDate"; // TODO ここで、指定された期間にあった文字列をセットするようにします。
 
         // Character code
 
@@ -289,14 +292,24 @@ public class DataExportManager implements TaxnoteConsts {
 
     private void sendFileByEmail(Context context, File file) {
 
-        Intent intent = new Intent();
+        Intent intent = new Intent(android.content.Intent.ACTION_SEND);
         intent.setAction(Intent.ACTION_SEND);
-        intent.putExtra(Intent.EXTRA_EMAIL, new String[] {"eiichi.nozaki@gmail.com"}); // TODO ここに送信先メールアドレスを指定します。
-        intent.putExtra(Intent.EXTRA_SUBJECT, "Taxnote");
-        intent.putExtra(Intent.EXTRA_TEXT, "これは Taxnote から送信したファイルです。");
-        intent.setType("text/plain");
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.setType("vnd.android.cursor.item/email"); // 2017/01/25 E.Nozaki intent.setType("text/plain");
+        intent.putExtra(android.content.Intent.EXTRA_EMAIL, new String[] {"eiichi.nozaki@gmail.com"}); // TODO ここに送信先メールアドレスを指定します。
+        intent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Taxnote");
+        intent.putExtra(android.content.Intent.EXTRA_TEXT, "これは Taxnote から送信したファイルです。");
         intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(file));
-        context.startActivity(intent);
+
+        List activities = context.getPackageManager().queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY);
+
+        if(activities!=null && activities.size()>0) { // 2017/01/25 Check if there is available mailer.
+            context.startActivity(intent);
+        } else {
+            Toast.makeText(context, "有効なメーラーがありません。", Toast.LENGTH_LONG);
+        }
+
+        context.startActivity(Intent.createChooser(intent, "メールを送信"));
     }
 
     public List<Entry> getSelectedRangeEntries(Context context) {
