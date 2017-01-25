@@ -7,7 +7,6 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Environment;
-import android.widget.Toast;
 
 import com.example.taxnoteandroid.R;
 import com.example.taxnoteandroid.TaxnoteConsts;
@@ -22,6 +21,7 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.List;
 import java.util.TimeZone;
 
@@ -194,9 +194,10 @@ public class DataExportManager implements TaxnoteConsts {
                 if (file != null) {
                     sendFileByEmail(context, file);
                 } else {
-                    Toast.makeText(context, "エラーが発生しました。CSVファイルを出力できません。", Toast.LENGTH_LONG);
-                }
 
+                    //@@ メッセージかえる
+                    DialogManager.showOKOnlyAlert(context, context.getString(R.string.Error), "CSVファイルを出力できません。");
+                }
             }
         };
 
@@ -346,9 +347,9 @@ public class DataExportManager implements TaxnoteConsts {
         intent.setAction(Intent.ACTION_SEND);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.setType("vnd.android.cursor.item/email"); // 2017/01/25 E.Nozaki intent.setType("text/plain");
-        intent.putExtra(android.content.Intent.EXTRA_EMAIL, new String[]{"eiichi.nozaki@gmail.com"}); // TODO ここに送信先メールアドレスを指定します。
+        intent.putExtra(android.content.Intent.EXTRA_EMAIL, new String[]{""}); // TODO ここに送信先メールアドレスを指定します。
         intent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Taxnote");
-        intent.putExtra(android.content.Intent.EXTRA_TEXT, "これは Taxnote から送信したファイルです。");
+        intent.putExtra(android.content.Intent.EXTRA_TEXT, "これはTaxnoteから送信したファイルです。");
         intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(file));
 
         List activities = context.getPackageManager().queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY);
@@ -357,8 +358,8 @@ public class DataExportManager implements TaxnoteConsts {
             context.startActivity(intent);
         } else {
 
-            //@@ alertdialogにかえる
-            Toast.makeText(context, "有効なメーラーがありません。", Toast.LENGTH_LONG);
+            //@@メッセージを変更する
+            DialogManager.showOKOnlyAlert(context, context.getString(R.string.Error), "有効なメーラーがありません");
         }
 
         context.startActivity(Intent.createChooser(intent, "メールを送信"));
@@ -397,6 +398,9 @@ public class DataExportManager implements TaxnoteConsts {
                 entries = entryDataManager.findAll(context, null);
                 break;
         }
+
+        //@@@ QQ ひっくり返したい
+        Collections.reverse(entries);
 
         return entries;
     }
@@ -442,7 +446,7 @@ public class DataExportManager implements TaxnoteConsts {
         public String getValue() {
 
             if (simpleDateFormat == null) {
-                simpleDateFormat = new SimpleDateFormat(context.getResources().getString(R.string.date_string_format_to_month_day));
+                simpleDateFormat = new SimpleDateFormat(context.getResources().getString(R.string.date_string_format_to_year_month_day));
             }
 
             return simpleDateFormat.format(current_entry.date);

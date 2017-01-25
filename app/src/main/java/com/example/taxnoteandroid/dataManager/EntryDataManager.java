@@ -69,7 +69,7 @@ public class EntryDataManager {
                     where(Entry_Schema.INSTANCE.deleted.getQualifiedName() + " = 0")
                     .projectEq(project)
                     .orderBy(Entry_Schema.INSTANCE.date.getQualifiedName() + " " + OrderSpec.DESC)
-                    .orderBy(Entry_Schema.INSTANCE.id.getQualifiedName() + " " + OrderSpec.DESC)
+                    .orderBy(Entry_Schema.INSTANCE.updated.getQualifiedName() + " " + OrderSpec.DESC)
                     .toList();
         }
 
