@@ -69,13 +69,16 @@ public class EntryDataManager {
                     .where(Entry_Schema.INSTANCE.date.getQualifiedName() + " > " + startDate)
                     .where(Entry_Schema.INSTANCE.date.getQualifiedName() + " < " + endDate)
                     .orderBy(Entry_Schema.INSTANCE.date.getQualifiedName() + " " + orderSpec)
+                    .orderBy(Entry_Schema.INSTANCE.updated.getQualifiedName() + " " + orderSpec)
                     .toList();
-        } else {
 
+
+        } else {
+            
             entries = ormaDatabase.selectFromEntry().
                     where(Entry_Schema.INSTANCE.deleted.getQualifiedName() + " = 0")
                     .projectEq(project)
-                    .orderBy(Entry_Schema.INSTANCE.date.getQualifiedName() + " " + OrderSpec.DESC)
+                    .orderBy(Entry_Schema.INSTANCE.date.getQualifiedName() + " " + orderSpec)
                     .orderBy(Entry_Schema.INSTANCE.updated.getQualifiedName() + " " + orderSpec)
                     .toList();
         }

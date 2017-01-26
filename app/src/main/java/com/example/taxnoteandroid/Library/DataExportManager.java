@@ -21,7 +21,6 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.List;
 import java.util.TimeZone;
 
@@ -347,8 +346,10 @@ public class DataExportManager implements TaxnoteConsts {
         intent.setAction(Intent.ACTION_SEND);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.setType("vnd.android.cursor.item/email"); // 2017/01/25 E.Nozaki intent.setType("text/plain");
-        intent.putExtra(android.content.Intent.EXTRA_EMAIL, new String[]{""}); // TODO ここに送信先メールアドレスを指定します。
+        intent.putExtra(android.content.Intent.EXTRA_EMAIL, new String[]{""});
         intent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Taxnote");
+
+        //@@あとで変更する
         intent.putExtra(android.content.Intent.EXTRA_TEXT, "これはTaxnoteから送信したファイルです。");
         intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(file));
 
@@ -398,9 +399,6 @@ public class DataExportManager implements TaxnoteConsts {
                 entries = entryDataManager.findAll(context, null, true);
                 break;
         }
-
-        //@@@ QQ ひっくり返したい
-        Collections.reverse(entries);
 
         return entries;
     }
