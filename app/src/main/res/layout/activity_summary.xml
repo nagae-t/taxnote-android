@@ -16,7 +16,7 @@
         style="@style/font_style_standard"
         android:id="@+id/next"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/takasa"
+        android:layout_height="@dimen/summary_next_height"
         android:paddingLeft="16dp"
         android:gravity="center_vertical"
         android:text="@string/SummaryActivity_nex" />
