@@ -31,7 +31,7 @@ public class ReportContentFragment extends Fragment {
 
         Context context = getContext();
         EntryDataManager entryDataManager = new EntryDataManager(context);
-        entryDataManager.findAll(context, null);
+        entryDataManager.findAll(context, null, false);
 
         return binding.getRoot();
     }

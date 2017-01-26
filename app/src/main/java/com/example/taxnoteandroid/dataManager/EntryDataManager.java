@@ -43,12 +43,19 @@ public class EntryDataManager {
         return ormaDatabase.selectFromEntry().where(Entry_Schema.INSTANCE.uuid.getQualifiedName() + " = ?", uuid).valueOrNull();
     }
 
-    public List<Entry> findAll(Context context, long[] startAndEndDate) {
+    public List<Entry> findAll(Context context, long[] startAndEndDate, Boolean asc) {
 
         ProjectDataManager projectDataManager   = new ProjectDataManager(context);
         Project project                         = projectDataManager.findCurrentProjectWithContext(context);
 
         List entries;
+        String orderSpec;
+
+        if (asc) {
+            orderSpec = OrderSpec.ASC;
+        } else {
+            orderSpec = OrderSpec.DESC;
+        }
 
         if (startAndEndDate != null) {
 
@@ -61,7 +68,7 @@ public class EntryDataManager {
                     .projectEq(project)
                     .where(Entry_Schema.INSTANCE.date.getQualifiedName() + " > " + startDate)
                     .where(Entry_Schema.INSTANCE.date.getQualifiedName() + " < " + endDate)
-                    .orderBy(Entry_Schema.INSTANCE.date.getQualifiedName() + " " + OrderSpec.DESC)
+                    .orderBy(Entry_Schema.INSTANCE.date.getQualifiedName() + " " + orderSpec)
                     .toList();
         } else {
 
@@ -69,7 +76,7 @@ public class EntryDataManager {
                     where(Entry_Schema.INSTANCE.deleted.getQualifiedName() + " = 0")
                     .projectEq(project)
                     .orderBy(Entry_Schema.INSTANCE.date.getQualifiedName() + " " + OrderSpec.DESC)
-                    .orderBy(Entry_Schema.INSTANCE.updated.getQualifiedName() + " " + OrderSpec.DESC)
+                    .orderBy(Entry_Schema.INSTANCE.updated.getQualifiedName() + " " + orderSpec)
                     .toList();
         }
 
