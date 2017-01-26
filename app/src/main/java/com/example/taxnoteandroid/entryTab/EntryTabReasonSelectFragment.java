@@ -596,6 +596,10 @@ public class EntryTabReasonSelectFragment extends Fragment {
         public boolean onMenuItemClick(MenuItem item) {
             switch (item.getItemId()) {
 
+                case R.id.reorder:
+                    showHowToReorderMessage();
+                    break;
+
                 case R.id.rename:
                     renameReason(reason, position);
                     break;
@@ -612,6 +616,20 @@ public class EntryTabReasonSelectFragment extends Fragment {
     //--------------------------------------------------------------//
     //    -- Help --
     //--------------------------------------------------------------//
+
+    private void showHowToReorderMessage() {
+
+        new AlertDialog.Builder(getActivity())
+                .setTitle(getString(R.string.reorder_how_to_title))
+                .setMessage(getString(R.string.reorder_how_to_message))
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                    }
+                })
+                .show();
+    }
 
     private void checkHelpshiftReplyMessage() {
 
