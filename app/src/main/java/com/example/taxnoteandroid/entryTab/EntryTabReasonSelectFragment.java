@@ -3,6 +3,7 @@ package com.example.taxnoteandroid.entryTab;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.databinding.DataBindingUtil;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -369,7 +370,7 @@ public class EntryTabReasonSelectFragment extends Fragment {
             try {
                 if (holder != null) {
                     if (action == ItemTouchHelper.ACTION_STATE_DRAG) {
-//            holder.itemView.setBackgroundColor(Color.YELLOW); // TODO Do something else to highlight the item that is dragged.
+                        holder.itemView.setBackgroundColor(Color.LTGRAY);
                     }
                 }
             } catch (Exception e) {
@@ -384,7 +385,7 @@ public class EntryTabReasonSelectFragment extends Fragment {
 
             try {
                 if (holder != null) {
-//          holder.itemView.setBackgroundColor(Color.TRANSPARENT); // TODO Do something else to clear highlight the item that is dragged.
+                    holder.itemView.setBackgroundColor(Color.TRANSPARENT);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
