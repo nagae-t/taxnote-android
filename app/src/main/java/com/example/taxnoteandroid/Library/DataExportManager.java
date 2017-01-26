@@ -446,7 +446,7 @@ public class DataExportManager implements TaxnoteConsts {
         public String getValue() {
 
             if (simpleDateFormat == null) {
-                simpleDateFormat = new SimpleDateFormat(context.getResources().getString(R.string.date_string_format_to_year_month_day));
+                simpleDateFormat = new SimpleDateFormat(context.getResources().getString(R.string.date_string_format_for_export));
             }
 
             return simpleDateFormat.format(current_entry.date);

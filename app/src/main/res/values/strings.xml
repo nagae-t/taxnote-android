@@ -69,6 +69,8 @@
     <string name="date_string_format_to_year_month_day_weekday">yyyy年M月d日 E</string>
     <string name="date_string_format_to_year_month_day">yyyy年M月d日</string>
     <string name="date_string_format_to_month_day">M月d日</string>
+    <string name="date_string_format_for_export">yyyy/MM/dd</string>
+
 
 
     //--------------------------------------------------------------//
