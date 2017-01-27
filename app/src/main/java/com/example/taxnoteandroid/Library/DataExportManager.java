@@ -279,7 +279,6 @@ public class DataExportManager implements TaxnoteConsts {
         String file_name = "taxnote";
 
         // Mode
-
         if (mode.compareTo(EXPORT_FORMAT_TYPE_CSV) == 0) { // CSV
             file_name += "_BasicCSV";
         } else if (mode.compareTo(EXPORT_FORMAT_TYPE_YAYOI) == 0) { // 弥生
@@ -293,19 +292,24 @@ public class DataExportManager implements TaxnoteConsts {
         }
 
         // Period
-
         file_name += "_AllDate"; // TODO ここで、指定された期間にあった文字列をセットするようにします。
 
         // Character code
-
-        if (this.character_code.compareTo(CHARACTER_CODE_UTF_8) == 0) {
-            file_name += "_utf8";
-        } else if (this.character_code.compareTo(CHARACTER_CODE_SHIFT_JIS) == 0) {
+        if (mode.compareTo(EXPORT_FORMAT_TYPE_CSV) == 0) { // CSV
+            if (this.character_code.compareTo(CHARACTER_CODE_UTF_8) == 0) {
+                file_name += "_utf8";
+            } else if (this.character_code.compareTo(CHARACTER_CODE_SHIFT_JIS) == 0) {
+                file_name += "_shift_jis";
+            }
+        } else if (mode.compareTo(EXPORT_FORMAT_TYPE_YAYOI) == 0) { // 弥生
             file_name += "_shift_jis";
+        } else if (mode.compareTo(EXPORT_FORMAT_TYPE_FREEE) == 0) { // Freee
+            file_name += "_utf8";
+        } else if (mode.compareTo(EXPORT_FORMAT_TYPE_MFCLOUD) == 0) { // MF Could
+            file_name += "_utf8";
         }
 
         // File extension
-
         if (mode.compareTo(EXPORT_FORMAT_TYPE_YAYOI) == 0) { // 弥生
             file_name += ".txt";
         } else {
@@ -430,14 +434,25 @@ public class DataExportManager implements TaxnoteConsts {
 
     private void setCharacterCode(String code) {
 
-        //@@弥生はSHIFTJIS、freeeとMFクラウドはUTF8で固定
+        if (mode.compareTo(EXPORT_FORMAT_TYPE_CSV) == 0) { // CSV
 
-        if (code.compareTo(EXPORT_CHARACTER_CODE_UTF8) == 0) {
-            this.character_code = CHARACTER_CODE_UTF_8;
-        } else if (code.compareTo(EXPORT_CHARACTER_CODE_SHIFTJIS) == 0) {
+            if (code.compareTo(EXPORT_CHARACTER_CODE_UTF8) == 0) {
+                this.character_code = CHARACTER_CODE_UTF_8;
+            } else if (code.compareTo(EXPORT_CHARACTER_CODE_SHIFTJIS) == 0) {
+                this.character_code = CHARACTER_CODE_SHIFT_JIS;
+            }
+
+        } else if (mode.compareTo(EXPORT_FORMAT_TYPE_YAYOI) == 0) { // 弥生
             this.character_code = CHARACTER_CODE_SHIFT_JIS;
+
+        } else if (mode.compareTo(EXPORT_FORMAT_TYPE_FREEE) == 0) { // Freee
+            this.character_code = CHARACTER_CODE_UTF_8;
+
+        } else if (mode.compareTo(EXPORT_FORMAT_TYPE_MFCLOUD) == 0) { // MF Could
+            this.character_code = CHARACTER_CODE_UTF_8;
+
         } else {
-            throw new RuntimeException("Invalid Character Code : " + code);
+            throw new RuntimeException("Invalid Mode : " + mode);
         }
     }
 

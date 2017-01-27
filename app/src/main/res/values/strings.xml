@@ -116,8 +116,8 @@
     <string name="data_export_custom_range">指定した期間</string>
     <string name="data_export_begin_date">開始</string>
     <string name="data_export_end_date">終了</string>
-    <string name="character_code">文字コード</string>
-    <string name="character_code_select_please">文字コードを選択してください</string>
+    <string name="character_code">文字コード（CSV専用）</string>
+    <string name="character_code_select_please">文字コードを選択（CSVのみ有効）</string>
     <string name="character_code_uff8">UTF8</string>
     <string name="character_code_shiftjis">ShiftJIS</string>
     <string name="csv_format">CSV (Excelなどの表計算ソフト)</string>
