@@ -292,7 +292,17 @@ public class DataExportManager implements TaxnoteConsts {
         }
 
         // Period
-        file_name += "_AllDate"; // TODO ここで、指定された期間にあった文字列をセットするようにします。
+        String exportRangeType = SharedPreferencesManager.getExportRangeType(context);
+
+        if (exportRangeType.equals(EXPORT_RANGE_TYPE_ALL)) {
+            file_name += "_AllDate";
+        } else if (exportRangeType.equals(EXPORT_RANGE_TYPE_THIS_MONTH)) {
+            file_name += "_ThisMonth";
+        } else if (exportRangeType.equals(EXPORT_RANGE_TYPE_LAST_MONTH)) {
+            file_name += "_LastMonth";
+        } else {
+            file_name += getCustomDateRangeStrings();
+        }
 
         // Character code
         if (mode.compareTo(EXPORT_FORMAT_TYPE_CSV) == 0) { // CSV
@@ -317,6 +327,21 @@ public class DataExportManager implements TaxnoteConsts {
         }
 
         return new File(Environment.getExternalStorageDirectory(), "Taxnote/" + System.currentTimeMillis() + "/" + file_name);
+    }
+
+    private String getCustomDateRangeStrings() {
+
+        long[] startAndEndDate = getCustomStartAndEndDate(context);
+
+        long startDate  = startAndEndDate[0];
+        long endDate    = startAndEndDate[1];
+
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(context.getResources().getString(R.string.date_string_format_for_custom_range));
+
+        String startDateString  = simpleDateFormat.format(startDate);
+        String endDateString    = simpleDateFormat.format(endDate);
+
+        return "_" + startDateString + "~" + endDateString;
     }
 
     private void setCurrentEntry(Entry entry) {
@@ -377,7 +402,7 @@ public class DataExportManager implements TaxnoteConsts {
         context.startActivity(Intent.createChooser(intent, "メールを送信"));
     }
 
-    public List<Entry> getSelectedRangeEntries(Context context) {
+    private List<Entry> getSelectedRangeEntries(Context context) {
 
         List<Entry> entries;
         long[] start_end;
