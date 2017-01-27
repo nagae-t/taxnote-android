@@ -154,8 +154,8 @@ public class DataExportManager implements TaxnoteConsts {
 
         } else if (mode.compareTo(EXPORT_FORMAT_TYPE_MFCLOUD) == 0) { // MF Could
             intColumns(13); // CSV column size.
-            setColumnTitles("取引No", "取引日", "借方勘定科目", "借方補助科目", "借方税区分", "借方金額(円)", "貸方勘定科目", "貸方補助科目", "貸方税区分", "貸方金額(円)", "備考", "仕訳メモ");
-            setColumn(0, new IndexColumn()); // TODO ここには何を出力する？
+            setColumnTitles("取引No", "取引日", "借方勘定科目", "借方補助科目", "借方税区分", "借方金額(円)", "貸方勘定科目", "貸方補助科目", "貸方税区分", "貸方金額(円)", "備考", "仕訳メモ", "");
+            setColumn(0, new IndexColumn());
             setColumn(1, new DateColumn());
             setColumn(2, new LeftAccountNameColumn());
             setColumn(5, new LeftAccountPriceColumn());
