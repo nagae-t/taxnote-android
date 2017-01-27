@@ -1,3 +1,4 @@
 <resources>
     <dimen name="summary_next_height">170dp</dimen>
+    <dimen name="font_size_standard">16sp</dimen>
 </resources>

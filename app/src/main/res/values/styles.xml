@@ -17,7 +17,7 @@
     </style>
 
     <style name="font_style_standard">
-        <item name="android:textSize">16dp</item>
+        <item name="android:textSize">@dimen/font_size_standard</item>
         <item name="android:maxLines">1</item>
     </style>
 

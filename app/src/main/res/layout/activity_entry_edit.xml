@@ -28,6 +28,7 @@
             android:gravity="center"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textSize = "@dimen/font_size_standard"
             android:layout_weight="1" />
 
         <TextView
@@ -43,6 +44,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:textSize = "@dimen/font_size_standard"
             android:text="@{entry.account.name}"/>
 
         <TextView
@@ -57,6 +59,7 @@
             android:gravity="center"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textSize = "@dimen/font_size_standard"
             android:text="@{entry.reason.name}"
             android:layout_weight="1" />
 
@@ -73,6 +76,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:textSize = "@dimen/font_size_standard"
             android:text="@{entry.memo}" />
 
         <TextView
@@ -85,6 +89,7 @@
             android:background="@drawable/selector_background_colors"
             android:gravity="center"
             android:id="@+id/price"
+            android:textSize = "@dimen/font_size_standard"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1" />
@@ -94,6 +99,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:textSize = "@dimen/font_size_standard"
             android:textColor="@color/expense"
             android:background="@null"
             android:text="@string/Delete" />

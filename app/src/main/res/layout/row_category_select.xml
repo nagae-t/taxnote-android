@@ -1,12 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     style="@style/ListItemStyle"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center_vertical"
+    android:minHeight="@dimen/cell_height_standard"
     android:orientation="vertical">
 
     <TextView
+        tools:text="test"
+        android:textSize="@dimen/font_size_standard"
         android:id="@+id/category"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />

@@ -92,7 +92,7 @@
     <string name="upgrade_no_purchase_history_message">お使いのGoogleアカウントにはTaxnoteプラスの購入履歴がありませんでした。</string>
 
     <string name="upgraded_already">購入済み</string>
-    <string name="taxnote_plus_descriptions">それぞれの月において、15件の入力制限がなくなります。お支払いは一回限りで継続課金ではありません。機種変更時は[以前の購入を復元]ボタンから無料で復元できます。</string>
+    <string name="taxnote_plus_descriptions">月15件の入力制限がなくなります。お支払いは一回払いなので一度購入すればずっと使い続けられます。機種変更時は[以前の購入を復元]ボタンから無料で復元できます。</string>
 
     <string name="restore_purchases">以前の購入を復元</string>
     <string name="frequently_asked_questions">ヘルプ・よくある質問</string>

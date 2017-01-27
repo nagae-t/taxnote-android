@@ -5,4 +5,6 @@
 
     <dimen name="summary_next_height">170dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
+    <dimen name="font_size_standard">16sp</dimen>
+    <dimen name="cell_height_standard">55dp</dimen>
 </resources>
