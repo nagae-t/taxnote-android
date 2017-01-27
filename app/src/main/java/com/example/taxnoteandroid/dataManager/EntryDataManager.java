@@ -74,7 +74,7 @@ public class EntryDataManager {
 
 
         } else {
-            
+
             entries = ormaDatabase.selectFromEntry().
                     where(Entry_Schema.INSTANCE.deleted.getQualifiedName() + " = 0")
                     .projectEq(project)

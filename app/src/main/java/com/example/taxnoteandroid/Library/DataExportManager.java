@@ -423,6 +423,8 @@ public class DataExportManager implements TaxnoteConsts {
 
     private void setCharacterCode(String code) {
 
+        //@@弥生はSHIFTJIS、freeeとMFクラウドはUTF8で固定
+
         if (code.compareTo(EXPORT_CHARACTER_CODE_UTF8) == 0) {
             this.character_code = CHARACTER_CODE_UTF_8;
         } else if (code.compareTo(EXPORT_CHARACTER_CODE_SHIFTJIS) == 0) {
