@@ -71,8 +71,6 @@ public class EntryDataManager {
                     .orderBy(Entry_Schema.INSTANCE.date.getQualifiedName() + " " + orderSpec)
                     .orderBy(Entry_Schema.INSTANCE.updated.getQualifiedName() + " " + orderSpec)
                     .toList();
-
-
         } else {
 
             entries = ormaDatabase.selectFromEntry().

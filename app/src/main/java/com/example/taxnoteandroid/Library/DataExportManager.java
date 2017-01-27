@@ -139,11 +139,16 @@ public class DataExportManager implements TaxnoteConsts {
             setSeparator("\t");
 
         } else if (mode.compareTo(EXPORT_FORMAT_TYPE_FREEE) == 0) { // Freee
+
             intColumns(14); // CSV column size.
             setColumnTitles("収支区分", "管理番号", "発生日", "支払期日", "取引先", "勘定科目", "税区分", "金額", "備考", "品目", "メモタグ（複数指定可、カンマ区切り）", "支払日", "支払口座", "支払金額");
             setColumn(0, new ExpenseDivisionColumn());
             setColumn(2, new DateColumn());
+
+            //@@ここが入れ替わるから相談
             setColumn(5, new LeftAccountPriceColumn());
+
+
             setColumn(6, new FixedTextColumn("対象外")); // TODO ここには何を出力する？
             setColumn(7, new LeftAccountNameColumn());
             setColumn(8, new SubAccountNameColumn());
