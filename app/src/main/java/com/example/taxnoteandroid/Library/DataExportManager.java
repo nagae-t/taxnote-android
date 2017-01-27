@@ -124,18 +124,19 @@ public class DataExportManager implements TaxnoteConsts {
             setSeparator(",");
 
         } else if (mode.compareTo(EXPORT_FORMAT_TYPE_YAYOI) == 0) { // 弥生
+
             intColumns(25); // CSV column size.
-            setColumn(0, new FixedTextColumn("2000")); // TODO ここには何を出力する？
+            setColumn(0, new FixedTextColumn("2000"));
             setColumn(3, new DateColumn());
             setColumn(4, new LeftAccountNameColumn());
-            setColumn(7, new FixedTextColumn("対象外")); // TODO ここには何を出力する？
+            setColumn(7, new FixedTextColumn("対象外"));
             setColumn(8, new LeftAccountPriceColumn());
             setColumn(10, new RightAccountNameColumn());
-            setColumn(13, new FixedTextColumn("対象外")); // TODO ここには何を出力する？
-            setColumn(14, new TotalPriceColumn());
+            setColumn(13, new FixedTextColumn("対象外"));
+            setColumn(14, new RightAccountPriceColumn());
             setColumn(16, new SubAccountNameColumn());
-            setColumn(19, new FixedTextColumn("0")); // TODO ここには何を出力する？
-            setColumn(24, new FixedTextColumn("NO")); // TODO ここには何を出力する？
+            setColumn(19, new FixedTextColumn("0"));
+            setColumn(24, new FixedTextColumn("NO"));
             setSeparator("\t");
 
         } else if (mode.compareTo(EXPORT_FORMAT_TYPE_FREEE) == 0) { // Freee
@@ -158,6 +159,7 @@ public class DataExportManager implements TaxnoteConsts {
             setSeparator(",");
 
         } else if (mode.compareTo(EXPORT_FORMAT_TYPE_MFCLOUD) == 0) { // MF Could
+
             intColumns(13); // CSV column size.
             setColumnTitles("取引No", "取引日", "借方勘定科目", "借方補助科目", "借方税区分", "借方金額(円)", "貸方勘定科目", "貸方補助科目", "貸方税区分", "貸方金額(円)", "備考", "仕訳メモ", "");
             setColumn(0, new IndexColumn());
