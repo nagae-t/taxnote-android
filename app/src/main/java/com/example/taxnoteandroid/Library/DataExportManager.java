@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Environment;
 
 import com.example.taxnoteandroid.R;
 import com.example.taxnoteandroid.TaxnoteConsts;
@@ -216,7 +215,7 @@ public class DataExportManager implements TaxnoteConsts {
         PrintWriter writer = null;
 
         try {
-            File file = getOutputFile();
+            File file = getOutputFile(context);
             if (file.getParentFile().exists() == false)
                 file.getParentFile().mkdirs(); // If parent folder doesn't exist, create it.
             stream_out = new FileOutputStream(file);
@@ -274,7 +273,7 @@ public class DataExportManager implements TaxnoteConsts {
         return null;
     }
 
-    private File getOutputFile() {
+    private File getOutputFile(Context context) {
 
         String file_name = "taxnote";
 
@@ -326,7 +325,7 @@ public class DataExportManager implements TaxnoteConsts {
             file_name += ".csv";
         }
 
-        return new File(Environment.getExternalStorageDirectory(), "Taxnote/" + System.currentTimeMillis() + "/" + file_name);
+        return new File(context.getCacheDir(), "Taxnote/" + System.currentTimeMillis() + "/" + file_name);
     }
 
     private String getCustomDateRangeStrings() {
@@ -387,6 +386,9 @@ public class DataExportManager implements TaxnoteConsts {
 
         //@@あとで変更する
         intent.putExtra(android.content.Intent.EXTRA_TEXT, "これはTaxnoteから送信したファイルです。");
+        // TODO FileProviderを使えばいけるかも。
+        // https://developer.android.com/reference/android/support/v4/content/FileProvider.html
+        // https://developer.android.com/about/versions/nougat/android-7.0-changes.html#perm
         intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(file));
 
         List activities = context.getPackageManager().queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY);
