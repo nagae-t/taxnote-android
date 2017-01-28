@@ -41,6 +41,7 @@
         android:orientation="horizontal">
 
         <Button
+            android:layout_margin="1dp"
             android:id="@+id/button_7"
             android:text="7"
             android:textColor="#FFFFFF"
@@ -51,6 +52,7 @@
             android:layout_weight="1" />
 
         <Button
+            android:layout_margin="1dp"
             android:textColor="#FFFFFF"
             android:background="@color/secondary_text"
             android:id="@+id/button_8"
@@ -61,6 +63,7 @@
             android:layout_weight="1" />
 
         <Button
+            android:layout_margin="1dp"
             android:textColor="#FFFFFF"
             android:background="@color/secondary_text"
             android:id="@+id/button_9"
@@ -78,6 +81,7 @@
         android:orientation="horizontal">
 
         <Button
+            android:layout_margin="1dp"
             android:textColor="#FFFFFF"
             android:background="@color/secondary_text"
             android:id="@+id/button_4"
@@ -88,6 +92,7 @@
             android:layout_weight="1" />
 
         <Button
+            android:layout_margin="1dp"
             android:textColor="#FFFFFF"
             android:background="@color/secondary_text"
             android:id="@+id/button_5"
@@ -98,6 +103,7 @@
             android:layout_weight="1" />
 
         <Button
+            android:layout_margin="1dp"
             android:textColor="#FFFFFF"
             android:background="@color/secondary_text"
             android:id="@+id/button_6"
@@ -115,6 +121,7 @@
         android:orientation="horizontal">
 
         <Button
+            android:layout_margin="1dp"
             android:textColor="#FFFFFF"
             android:background="@color/secondary_text"
             android:id="@+id/button_1"
@@ -125,6 +132,7 @@
             android:layout_weight="1" />
 
         <Button
+            android:layout_margin="1dp"
             android:textColor="#FFFFFF"
             android:background="@color/secondary_text"
             android:id="@+id/button_2"
@@ -135,6 +143,7 @@
             android:layout_weight="1" />
 
         <Button
+            android:layout_margin="1dp"
             android:textColor="#FFFFFF"
             android:background="@color/secondary_text"
             android:id="@+id/button_3"
@@ -152,9 +161,9 @@
         android:orientation="horizontal">
 
         <Button
+            android:layout_margin="1dp"
             android:textColor="#FFFFFF"
             android:background="@color/secondary_text"
-
             android:id="@+id/button_00"
             android:text="00"
             android:textSize="25sp"
@@ -163,9 +172,9 @@
             android:layout_weight="1" />
 
         <Button
+            android:layout_margin="1dp"
             android:textColor="#FFFFFF"
             android:background="@color/secondary_text"
-
             android:id="@+id/button_0"
             android:text="0"
             android:textSize="25sp"
@@ -174,9 +183,9 @@
             android:layout_weight="1" />
 
         <Button
+            android:layout_margin="1dp"
             android:textColor="#FFFFFF"
             android:background="@color/secondary_text"
-
             android:id="@+id/button_c"
             android:text="c"
             android:textSize="25sp"
