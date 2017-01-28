@@ -8,9 +8,9 @@ android {
     defaultConfig {
         applicationId "com.nonume.taxnote"
         minSdkVersion 19
-        targetSdkVersion 22
-        versionCode 4
-        versionName "0.04"
+        targetSdkVersion 25
+        versionCode 6
+        versionName "0.06"
     }
     dataBinding {
         enabled true
@@ -57,4 +57,5 @@ dependencies {
     apt 'org.parceler:parceler:1.1.6'
 
     testCompile 'junit:junit:4.12'
+    compile 'com.google.android.gms:play-services-appindexing:8.4.0'
 }
