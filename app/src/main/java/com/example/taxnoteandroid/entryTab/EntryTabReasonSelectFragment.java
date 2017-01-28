@@ -32,6 +32,7 @@ import com.example.taxnoteandroid.dataManager.AccountDataManager;
 import com.example.taxnoteandroid.dataManager.EntryDataManager;
 import com.example.taxnoteandroid.dataManager.ProjectDataManager;
 import com.example.taxnoteandroid.dataManager.ReasonDataManager;
+import com.example.taxnoteandroid.dataManager.SharedPreferencesManager;
 import com.example.taxnoteandroid.databinding.FragmentEntryTabReasonSelectBinding;
 import com.example.taxnoteandroid.databinding.ListviewFooterBinding;
 import com.example.taxnoteandroid.databinding.RowListWithDetailsItemBinding;
@@ -120,6 +121,20 @@ public class EntryTabReasonSelectFragment extends Fragment {
         checkHelpshiftReplyMessage();
     }
 
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+
+        if (this.isVisible()) {
+            if (isVisibleToUser) {
+
+                // Sync selected date between expense and income tabs
+                date = SharedPreferencesManager.getCurrentSelectedDate(getActivity());
+                loadCurrentDateWithToast(false);
+            }
+        }
+    }
+
 
     //--------------------------------------------------------------//
     //    -- Reason List --
@@ -159,6 +174,9 @@ public class EntryTabReasonSelectFragment extends Fragment {
                     public void onDateSet(Calendar calendar) {
                         date = calendar.getTimeInMillis();
                         loadCurrentDateWithToast(true);
+
+                        // Save selected date
+                        SharedPreferencesManager.saveCurrentSelectedDate(getActivity(),date);
                     }
                 });
                 fragment.show(getFragmentManager(), DatePickerDialogFragment.class.getName());

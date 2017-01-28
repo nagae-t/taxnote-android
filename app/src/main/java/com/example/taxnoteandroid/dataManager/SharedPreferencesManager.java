@@ -24,6 +24,7 @@ public class SharedPreferencesManager {
     private static final String HELP_SELECT_REGISTER_KEY        = "HELP_SELECT_REGISTER_KEY";
     private static final String HELP_FIRST_REGISTER_DONE_KEY    = "HELP_FIRST_REGISTER_DONE_KEY";
     private static final String HELP_HISTORY_TAB_KEY            = "HELP_HISTORY_TAB_KEY";
+    private static final String DATE_CURRENT_SELECTED           = "DATE_CURRENT_SELECTED";
 
 
     //--------------------------------------------------------------//
@@ -58,6 +59,19 @@ public class SharedPreferencesManager {
 
     public static String getUuidForCurrentProject(Context context) {
         return getSharedPreferences(context).getString(UUID_FOR_CURRENT_KEY, "");
+    }
+
+
+    //--------------------------------------------------------------//
+    //    -- Current Date --
+    //--------------------------------------------------------------//
+
+    public static void saveCurrentSelectedDate(Context context, long selectedDate) {
+        getSharedPreferences(context).edit().putLong(DATE_CURRENT_SELECTED, selectedDate).apply();
+    }
+
+    public static long getCurrentSelectedDate(Context context) {
+        return getSharedPreferences(context).getLong(DATE_CURRENT_SELECTED, System.currentTimeMillis());
     }
 
 

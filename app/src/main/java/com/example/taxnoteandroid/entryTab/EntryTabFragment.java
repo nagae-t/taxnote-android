@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 
 import com.example.taxnoteandroid.Library.DialogManager;
 import com.example.taxnoteandroid.R;
+import com.example.taxnoteandroid.dataManager.SharedPreferencesManager;
 
 
 public class EntryTabFragment extends Fragment {
@@ -35,6 +36,9 @@ public class EntryTabFragment extends Fragment {
         final ViewPager viewPager = (ViewPager) v.findViewById(R.id.pager);
         viewPager.setAdapter(new TabPagerAdapter(getChildFragmentManager()));
         tabLayout.setupWithViewPager(viewPager);
+
+        // Reset selected date
+        SharedPreferencesManager.saveCurrentSelectedDate(getActivity(),System.currentTimeMillis());
 
         DialogManager.showFirstLaunchMessage(getActivity());
 
