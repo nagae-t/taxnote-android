@@ -12,28 +12,45 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
+        <activity
+            android:name=".MainActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".entryTab.SummaryActivity" />
-        <activity android:name=".entryTab.InputDataActivity" />
-        <activity android:name=".AccountSelectActivity" />
-        <activity android:name=".EntryEditActivity" />
-        <activity android:name=".PriceEditActivity" />
-        <activity android:name=".AccountEditActivity" />
+        <activity
+            android:name=".entryTab.SummaryActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".entryTab.InputDataActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".AccountSelectActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".EntryEditActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".PriceEditActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".AccountEditActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".UpgradeActivity"
-            android:label="@string/benefits_of_upgrade" />
+            android:label="@string/benefits_of_upgrade"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".DataExportActivity"
-            android:label="@string/data_export" />
+            android:label="@string/data_export"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".DataExportRangeActivity"
-            android:label="@string/data_export_range" /><!-- ATTENTION: This was auto-generated to add Google Play services to your project for
+            android:label="@string/data_export_range"
+            android:screenOrientation="portrait" /><!-- ATTENTION: This was auto-generated to add Google Play services to your project for
      App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information. -->
         <meta-data
             android:name="com.google.android.gms.version"
