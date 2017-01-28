@@ -38,7 +38,7 @@ dependencies {
     compile 'com.helpshift:android-helpshift-aar:4.8.0'
 
     // In-App Billing v3 Library
-    compile 'com.anjlab.android.iab.v3:library:1.0.+'
+    compile 'com.anjlab.android.iab.v3:library:1.0.38'
 
     // Advanced RecyclerView
     compile('com.h6ah4i.android.widget.advrecyclerview:advrecyclerview:0.10.2@aar') {
