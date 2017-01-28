@@ -13,14 +13,16 @@ import com.example.taxnoteandroid.databinding.FragmentReportContentBinding;
 
 public class ReportContentFragment extends Fragment {
 
+    private static final String EXTRA_MODE = "EXTRA_MODE";
     private FragmentReportContentBinding binding;
 
     public ReportContentFragment() {
     }
 
-    public static ReportContentFragment newInstance() {
+    public static ReportContentFragment newInstance(ReportFragment.Mode mode) {
         ReportContentFragment fragment = new ReportContentFragment();
         Bundle args = new Bundle();
+        args.putSerializable(EXTRA_MODE, mode);
         fragment.setArguments(args);
         return fragment;
     }
@@ -28,6 +30,13 @@ public class ReportContentFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentReportContentBinding.inflate(inflater, container, false);
+
+        ReportFragment.Mode mode = (ReportFragment.Mode) getArguments().getSerializable(EXTRA_MODE);
+
+        //
+        if (mode == ReportFragment.Mode.YEAR) {
+
+        }
 
         Context context = getContext();
         EntryDataManager entryDataManager = new EntryDataManager(context);
