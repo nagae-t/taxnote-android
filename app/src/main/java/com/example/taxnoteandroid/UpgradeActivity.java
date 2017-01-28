@@ -1,7 +1,6 @@
 package com.example.taxnoteandroid;
 
 import android.databinding.DataBindingUtil;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -12,14 +11,8 @@ import com.anjlab.android.iab.v3.TransactionDetails;
 import com.example.taxnoteandroid.Library.DialogManager;
 import com.example.taxnoteandroid.dataManager.SharedPreferencesManager;
 import com.example.taxnoteandroid.databinding.ActivityUpgradeBinding;
-import com.google.android.gms.appindexing.Action;
-import com.google.android.gms.appindexing.AppIndex;
-import com.google.android.gms.appindexing.Thing;
-import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.gson.Gson;
 import com.helpshift.support.Support;
-
-import java.text.SimpleDateFormat;
 
 
 public class UpgradeActivity extends AppCompatActivity implements BillingProcessor.IBillingHandler {
@@ -30,14 +23,9 @@ public class UpgradeActivity extends AppCompatActivity implements BillingProcess
     private static final String LICENSE_KEY_OF_GOOGLE_PLAY = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAiqf39c7TtSqe9FV2Xz/Xa2S6dexgD2k5qK1ZnC7uCctI2J+Y8GW1oG2S5wN/zdxB5nlkP/a94GiAZqmxhLknVFqRMq32f4zuT2M8mGxFmCMpqQbvYgI2hDXY0xS7c0EITHNPykTRAqS1tgjuHRDWrNjfae7FuvIEJMe4h41tbYAAdKh8Uv+sv3cVmmTXn2j+Ep42XhE1moLug26orCS7IfKAJjAiRK5lzCaCF3mNqPcjogxjG425P44oVT8Ewnx4+N9qbfkzQueCqkw4mD4UdBABCefjZ6t+N2+ZEwGreV/nu5P7kXOsDZp9SGlNB99rL21Xnpzc+QDQvUkBXlNTWQIDAQAB";
 //    private static final String TAXNOTE_PLUS_ID = "taxnote.plus";
 
-    private static final String TAXNOTE_PLUS_ID = "taxnote.plus.subscription";
+    private static final String TAXNOTE_PLUS_ID = "taxnotetest";
 
     private boolean googlePlayPurchaseIsAvailable = false;
-    /**
-     * ATTENTION: This was auto-generated to implement the App Indexing API.
-     * See https://g.co/AppIndexing/AndroidStudio for more information.
-     */
-    private GoogleApiClient client;
 
 
     @Override
@@ -48,10 +36,8 @@ public class UpgradeActivity extends AppCompatActivity implements BillingProcess
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_upgrade);
         initBillingProcessor();
+        billingProcessor.loadOwnedPurchasesFromGoogle();
         setViews();
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
     @Override
@@ -136,29 +122,70 @@ public class UpgradeActivity extends AppCompatActivity implements BillingProcess
         }
     }
 
+    private void updateTaxnotePlusSubscriptionStatus(TransactionDetails details) {
+
+        //@@@
+        // ここでexipreTimeをセーぶしたりする
+        Gson gson = new Gson();
+
+        // JSONからStringへの変換
+//        String str = gson.fromJson(details.purchaseInfo.responseData, String.class);
+        System.out.println("String: " + details.purchaseInfo.responseData);
+
+
+//        // JSONから配列への変換
+//        int[] array = gson.fromJson(details.purchaseInfo.responseData, int[].class);
+//        System.out.println("int[]: " + array[0] + ",　" + array[1] + ",　" + array[2]);
+//
+//
+//        long expiryTime =  array[2];
+//
+//
+//        SharedPreferencesManager.saveTaxnotePlusExpireDate(this, expiryTime);
+
+
+
+        showUpgradeToTaxnotePlusSuccessDialong();
+
+
+
+//        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(getResources().getString(R.string.date_string_format_for_custom_range));
+//        String expireString  = simpleDateFormat.format(expiryTime);
+//
+//
+//        DialogManager.showOKOnlyAlert(this,"ExpireTime",expireString);
+//
+//        DialogManager.showOKOnlyAlert(this,"json",str);
+    }
+
     private void restorePurchases() {
 
-        final boolean taxnotePlusIsActive = SharedPreferencesManager.taxnotePlusIsActive(this);
+        //@@@
+        TransactionDetails details = billingProcessor.getSubscriptionTransactionDetails(TAXNOTE_PLUS_ID);
+        updateTaxnotePlusSubscriptionStatus(details);
 
-        if (!taxnotePlusIsActive) {
 
-            //@@ここあとでちゃんとテストしないと、キャッシュがない時の動作がわからない
-            billingProcessor.loadOwnedPurchasesFromGoogle();
-
-            if (billingProcessor.isPurchased(TAXNOTE_PLUS_ID)) {
-                showRestoreTaxnotePlusSuccessDialong();
-            } else {
-                showNoPurchaseHistoryDialong();
-            }
-        }
+//        final boolean taxnotePlusIsActive = SharedPreferencesManager.taxnotePlusIsActive(this);
+//
+//        if (!taxnotePlusIsActive) {
+//
+//            if (billingProcessor.isSubscribed(TAXNOTE_PLUS_ID)) {
+//                showRestoreTaxnotePlusSuccessDialong();
+//            } else {
+//
+//
+//
+//                showNoPurchaseHistoryDialog();
+//            }
+//        }
     }
 
     private void showRestoreTaxnotePlusSuccessDialong() {
 
         // Upgrade to Taxnote Plus
-        boolean success = SharedPreferencesManager.saveTaxnotePlusStatus(this);
+        boolean active = SharedPreferencesManager.taxnotePlusIsActive(this);
 
-        if (success) {
+        if (active) {
 
             binding.upgraded.setText(getResources().getString(R.string.upgraded_already));
 
@@ -172,9 +199,9 @@ public class UpgradeActivity extends AppCompatActivity implements BillingProcess
     private void showUpgradeToTaxnotePlusSuccessDialong() {
 
         // Upgrade to Taxnote Plus
-        boolean success = SharedPreferencesManager.saveTaxnotePlusStatus(this);
+        boolean active = SharedPreferencesManager.taxnotePlusIsActive(this);
 
-        if (success) {
+        if (active) {
 
             binding.upgraded.setText(getResources().getString(R.string.upgraded_already));
 
@@ -185,7 +212,7 @@ public class UpgradeActivity extends AppCompatActivity implements BillingProcess
         }
     }
 
-    private void showNoPurchaseHistoryDialong() {
+    private void showNoPurchaseHistoryDialog() {
 
         String title = getResources().getString(R.string.Error);
         String message = getResources().getString(R.string.upgrade_no_purchase_history_message);
@@ -216,30 +243,8 @@ public class UpgradeActivity extends AppCompatActivity implements BillingProcess
 
         if (productId.equals(TAXNOTE_PLUS_ID)) {
 
+            updateTaxnotePlusSubscriptionStatus(details);
 
-            //@@@
-            // ここでexipreTimeをセーぶしたりする
-            Gson gson = new Gson();
-
-            // JSONからStringへの変換
-            String str = gson.fromJson(details.purchaseInfo.responseData, String.class);
-            System.out.println("String: " + str);
-
-
-            // JSONから配列への変換
-            int[] array = gson.fromJson(details.purchaseInfo.responseData, int[].class);
-            System.out.println("int[]: " + array[0] + ",　" + array[1] + ",　" + array[2]);
-
-
-            long expiryTime =  array[2];
-
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat(getResources().getString(R.string.date_string_format_for_custom_range));
-            String expireString  = simpleDateFormat.format(expiryTime);
-
-
-            DialogManager.showOKOnlyAlert(this,"ExpireTime",expireString);
-
-            DialogManager.showOKOnlyAlert(this,"json",str);
 
 
 //            https://developers.google.com/android-publisher/api-ref/purchases/subscriptions?hl=ja
@@ -283,9 +288,6 @@ public class UpgradeActivity extends AppCompatActivity implements BillingProcess
 //            data.developerPayload = json.optString("developerPayload");
 //            data.purchaseToken = json.getString("purchaseToken");
 //            data.autoRenewing = json.optBoolean("autoRenewing");
-
-
-            showUpgradeToTaxnotePlusSuccessDialong();
         }
     }
 
@@ -314,41 +316,5 @@ public class UpgradeActivity extends AppCompatActivity implements BillingProcess
          * Called when purchase history was restored and the list of all owned PRODUCT ID's
          * was loaded from Google Play
          */
-    }
-
-    /**
-     * ATTENTION: This was auto-generated to implement the App Indexing API.
-     * See https://g.co/AppIndexing/AndroidStudio for more information.
-     */
-    public Action getIndexApiAction() {
-        Thing object = new Thing.Builder()
-                .setName("Upgrade Page") // TODO: Define a title for the content shown.
-                // TODO: Make sure this auto-generated URL is correct.
-                .setUrl(Uri.parse("http://[ENTER-YOUR-URL-HERE]"))
-                .build();
-        return new Action.Builder(Action.TYPE_VIEW)
-                .setObject(object)
-                .setActionStatus(Action.STATUS_TYPE_COMPLETED)
-                .build();
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        client.connect();
-        AppIndex.AppIndexApi.start(client, getIndexApiAction());
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        AppIndex.AppIndexApi.end(client, getIndexApiAction());
-        client.disconnect();
     }
 }

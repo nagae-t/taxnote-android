@@ -18,6 +18,7 @@ public class SharedPreferencesManager {
     private static final String EXPORT_RANGE_BEGIN_DATE         = "EXPORT_RANGE_BEGIN_DATE";
     private static final String EXPORT_RANGE_END_DATE           = "EXPORT_RANGE_END_DATE";
     private static final String TAXNOTE_PLUS_IS_ACTIVE          = "TAXNOTE_PLUS_IS_ACTIVE";
+    private static final String TAXNOTE_PLUS_IS_EXPIRE_DATE     = "TAXNOTE_PLUS_IS_EXPIRE_DATE";
     private static final String HELP_FIRST_LAUNCH_KEY           = "HELP_FIRST_LAUNCH_KEY";
     private static final String HELP_SELECT_SUMMARY_KEY         = "HELP_SELECT_SUMMARY_KEY";
     private static final String HELP_SELECT_REGISTER_KEY        = "HELP_SELECT_REGISTER_KEY";
@@ -109,12 +110,27 @@ public class SharedPreferencesManager {
     //    -- Upgrade --
     //--------------------------------------------------------------//
 
-    public static boolean saveTaxnotePlusStatus(Context context) {
-        return getSharedPreferences(context).edit().putBoolean(TAXNOTE_PLUS_IS_ACTIVE, true).commit();
+//    public static boolean saveTaxnotePlusStatus(Context context) {
+//        return getSharedPreferences(context).edit().putBoolean(TAXNOTE_PLUS_IS_ACTIVE, true).commit();
+//    }
+//
+//    public static boolean taxnotePlusIsActive(Context context) {
+//        return getSharedPreferences(context).getBoolean(TAXNOTE_PLUS_IS_ACTIVE, false);
+//    }
+
+    public static void saveTaxnotePlusExpireDate(Context context, long ExpireDate) {
+        getSharedPreferences(context).edit().putLong(TAXNOTE_PLUS_IS_EXPIRE_DATE, ExpireDate).apply();
+    }
+
+    public static long getTaxnotePlusExpireDate(Context context) {
+        return getSharedPreferences(context).getLong(TAXNOTE_PLUS_IS_EXPIRE_DATE, 0);
     }
 
     public static boolean taxnotePlusIsActive(Context context) {
-        return getSharedPreferences(context).getBoolean(TAXNOTE_PLUS_IS_ACTIVE, false);
+
+        long expireDate = getTaxnotePlusExpireDate(context);
+        long now        = System.currentTimeMillis();
+        return expireDate > now;
     }
 
 
