@@ -125,6 +125,13 @@
     <string name="freee_format">freee</string>
     <string name="mfcloud_format">MFクラウド</string>
     <string name="title_activity_data_export_range">DataExportRangeActivity</string>
+    <string name="data_export_cant_make_csv">CSVファイルを出力できません。</string>
+    <string name="data_export_no_valid_mailer">有効なメーラーがありません。</string>
+    <string name="data_export_mail_title">Taxnoteデータ出力</string>
+    <string name="data_export_mail_message_csv">このデータはエクセルやGoogleスプレッドシートなどの表計算ソフトに取り込めるcsv形式です。\n\n文字化けする時はこちらを参考にしてください。\nhttps://goo.gl/JRvqvO</string>
+    <string name="data_export_mail_message_yayoi">Windows版の弥生会計・やよいの青色申告、またはWeb版のやよいの青色申告オンラインにインポートできます。このデータをパソコンのデスクトップなどにダウンロードし、お使いのソフトへインポートしてください。\n\n説明動画や詳しい解説はこちら。\nhttps://goo.gl/XoSwFZ</string>
+    <string name="data_export_mail_message_mfcloud">MFクラウド会計・確定申告にインポートできます。このデータをパソコンのデスクトップなどにダウンロードし、MFクラウドへインポートしてください。\n\n説明動画や詳しい解説はこちら。\nhttps://goo.gl/xt7aK2</string>
+    <string name="data_export_mail_message_freee">クラウド会計ソフトfreeeにインポートできます。このデータをパソコンのデスクトップなどにダウンロードし、freeeへインポートしてください。\n\n説明動画や詳しい解説はこちら。\nhttps://goo.gl/PFDe8U</string>
 
 
     //--------------------------------------------------------------//

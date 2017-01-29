@@ -175,8 +175,9 @@ public class DataExportManager implements TaxnoteConsts {
 
         this.context = context;
 
+        // Progress dialog
         final ProgressDialog dialog = new ProgressDialog(context);
-        dialog.setMessage("CSVファイルの出力");
+        dialog.setMessage(context.getString(R.string.data_export));
         dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         dialog.setCancelable(false);
         dialog.show();
@@ -196,9 +197,7 @@ public class DataExportManager implements TaxnoteConsts {
                 if (file != null) {
                     sendFileByEmail(context, file);
                 } else {
-
-                    //@@ メッセージかえる
-                    DialogManager.showOKOnlyAlert(context, context.getString(R.string.Error), "CSVファイルを出力できません。");
+                    DialogManager.showOKOnlyAlert(context, context.getString(R.string.Error), context.getString(R.string.data_export_cant_make_csv));
                 }
             }
         };
@@ -381,10 +380,10 @@ public class DataExportManager implements TaxnoteConsts {
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.setType("vnd.android.cursor.item/email"); // 2017/01/25 E.Nozaki intent.setType("text/plain");
         intent.putExtra(android.content.Intent.EXTRA_EMAIL, new String[]{""});
-        intent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Taxnote");
 
-        //@@あとで変更する
-        intent.putExtra(android.content.Intent.EXTRA_TEXT, "これはTaxnoteから送信したファイルです。");
+        intent.putExtra(android.content.Intent.EXTRA_SUBJECT, context.getString(R.string.data_export_mail_title));
+        intent.putExtra(android.content.Intent.EXTRA_TEXT, getBodyMessage());
+
         // TODO FileProviderを使えばいけるかも。
         // https://developer.android.com/reference/android/support/v4/content/FileProvider.html
         // https://developer.android.com/about/versions/nougat/android-7.0-changes.html#perm
@@ -395,12 +394,28 @@ public class DataExportManager implements TaxnoteConsts {
         if (activities != null && activities.size() > 0) { // 2017/01/25 Check if there is available mailer.
             context.startActivity(intent);
         } else {
-
-            //@@メッセージを変更する
-            DialogManager.showOKOnlyAlert(context, context.getString(R.string.Error), "有効なメーラーがありません");
+            DialogManager.showOKOnlyAlert(context, context.getString(R.string.Error), context.getString(R.string.data_export_no_valid_mailer));
         }
 
-        context.startActivity(Intent.createChooser(intent, "メールを送信"));
+        context.startActivity(Intent.createChooser(intent, context.getString(R.string.data_export)));
+    }
+
+    private String getBodyMessage() {
+
+        String message;
+
+        // Set message
+        if (mode.compareTo(EXPORT_FORMAT_TYPE_YAYOI) == 0) {
+            message = context.getString(R.string.data_export_mail_message_yayoi);
+        } else if (mode.compareTo(EXPORT_FORMAT_TYPE_FREEE) == 0) {
+            message = context.getString(R.string.data_export_mail_message_freee);
+        } else if (mode.compareTo(EXPORT_FORMAT_TYPE_MFCLOUD) == 0) {
+            message = context.getString(R.string.data_export_mail_message_mfcloud);
+        } else {
+            message = context.getString(R.string.data_export_mail_message_csv);
+        }
+
+        return message;
     }
 
     private List<Entry> getSelectedRangeEntries(Context context) {
