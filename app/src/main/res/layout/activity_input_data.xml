@@ -202,7 +202,6 @@
             android:layout_height="match_parent"
             android:layout_weight="1" />
 
-        <!-- @@ 他もmarginで調整する -->
         <Button
             android:textColor="#FFFFFF"
             android:background="@color/secondary_text"

@@ -146,7 +146,6 @@ public class UpgradeActivity extends AppCompatActivity implements BillingProcess
 
     private void restorePurchases() {
 
-        //@@@
         if (!UpgradeManger.taxnotePlusIsActive(this)) {
 
             TransactionDetails details = billingProcessor.getSubscriptionTransactionDetails(TAXNOTE_PLUS_ID);

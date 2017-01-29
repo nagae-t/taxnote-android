@@ -57,7 +57,6 @@ public class DialogManager {
                 .show();
     }
 
-    //@@@　いまここ、最初のメッセージやってる
     public static void showFirstLaunchMessage(final Context context) {
 
         // Show the dialog only one time
