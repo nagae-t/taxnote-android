@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Environment;
 
 import com.example.taxnoteandroid.R;
 import com.example.taxnoteandroid.TaxnoteConsts;
@@ -144,17 +145,13 @@ public class DataExportManager implements TaxnoteConsts {
             setColumnTitles("収支区分", "管理番号", "発生日", "支払期日", "取引先", "勘定科目", "税区分", "金額", "備考", "品目", "メモタグ（複数指定可、カンマ区切り）", "支払日", "支払口座", "支払金額");
             setColumn(0, new ExpenseDivisionColumn());
             setColumn(2, new DateColumn());
-
-            //@@ここが入れ替わるから相談
-            setColumn(5, new LeftAccountPriceColumn());
-
-
-            setColumn(6, new FixedTextColumn("対象外")); // TODO ここには何を出力する？
-            setColumn(7, new LeftAccountNameColumn());
+            setColumn(5, new ReasonNameColumn());
+            setColumn(6, new FixedTextColumn("対象外"));
+            setColumn(7, new LeftAccountPriceColumn());
             setColumn(8, new SubAccountNameColumn());
-            setColumn(11, new DateColumn()); // TODO ここには何を出力する？
-            setColumn(12, new RightAccountNameColumn());
-            setColumn(13, new RightAccountPriceColumn()); // TODO ここには何を出力する？
+            setColumn(11, new DateColumn());
+            setColumn(12, new AccountNameColumn());
+            setColumn(13, new RightAccountPriceColumn());
             setSeparator(",");
 
         } else if (mode.compareTo(EXPORT_FORMAT_TYPE_MFCLOUD) == 0) { // MF Could
@@ -325,7 +322,9 @@ public class DataExportManager implements TaxnoteConsts {
             file_name += ".csv";
         }
 
-        return new File(context.getCacheDir(), "Taxnote/" + System.currentTimeMillis() + "/" + file_name);
+        return new File(Environment.getExternalStorageDirectory(), "Taxnote/" + System.currentTimeMillis() + "/" + file_name);
+
+//        return new File(context.getCacheDir(), "Taxnote/" + System.currentTimeMillis() + "/" + file_name);
     }
 
     private String getCustomDateRangeStrings() {
@@ -441,6 +440,11 @@ public class DataExportManager implements TaxnoteConsts {
         return entries;
     }
 
+
+    //--------------------------------------------------------------//
+    //    -- Set Column --
+    //--------------------------------------------------------------//
+
     private void intColumns(int column_size) {
         this.column_size = column_size;
         this.columns = new Column[column_size];
@@ -506,6 +510,20 @@ public class DataExportManager implements TaxnoteConsts {
         @Override
         public String getValue() {
             return (current_entry.isExpense ? current_entry.reason.name : current_entry.account.name);
+        }
+    }
+
+    private class ReasonNameColumn extends Column {
+        @Override
+        public String getValue() {
+            return (current_entry.reason.name);
+        }
+    }
+
+    private class AccountNameColumn extends Column {
+        @Override
+        public String getValue() {
+            return (current_entry.account.name);
         }
     }
 
