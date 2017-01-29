@@ -18,7 +18,7 @@ public class SharedPreferencesManager {
     private static final String EXPORT_RANGE_BEGIN_DATE         = "EXPORT_RANGE_BEGIN_DATE";
     private static final String EXPORT_RANGE_END_DATE           = "EXPORT_RANGE_END_DATE";
     private static final String TAXNOTE_PLUS_IS_ACTIVE          = "TAXNOTE_PLUS_IS_ACTIVE";
-    private static final String TAXNOTE_PLUS_IS_EXPIRE_DATE     = "TAXNOTE_PLUS_IS_EXPIRE_DATE";
+    private static final String TAXNOTE_PLUS_PURCHASE_TIME      = "TAXNOTE_PLUS_PURCHASE_TIME";
     private static final String HELP_FIRST_LAUNCH_KEY           = "HELP_FIRST_LAUNCH_KEY";
     private static final String HELP_SELECT_SUMMARY_KEY         = "HELP_SELECT_SUMMARY_KEY";
     private static final String HELP_SELECT_REGISTER_KEY        = "HELP_SELECT_REGISTER_KEY";
@@ -132,19 +132,12 @@ public class SharedPreferencesManager {
 //        return getSharedPreferences(context).getBoolean(TAXNOTE_PLUS_IS_ACTIVE, false);
 //    }
 
-    public static void saveTaxnotePlusExpireDate(Context context, long ExpireDate) {
-        getSharedPreferences(context).edit().putLong(TAXNOTE_PLUS_IS_EXPIRE_DATE, ExpireDate).apply();
+    public static void saveTaxnotePlusPurchaseTime(Context context, long purchaseTime) {
+        getSharedPreferences(context).edit().putLong(TAXNOTE_PLUS_PURCHASE_TIME, purchaseTime).apply();
     }
 
-    public static long getTaxnotePlusExpireDate(Context context) {
-        return getSharedPreferences(context).getLong(TAXNOTE_PLUS_IS_EXPIRE_DATE, 0);
-    }
-
-    public static boolean taxnotePlusIsActive(Context context) {
-
-        long expireDate = getTaxnotePlusExpireDate(context);
-        long now        = System.currentTimeMillis();
-        return expireDate > now;
+    public static long getTaxnotePlusPurchaseTime(Context context) {
+        return getSharedPreferences(context).getLong(TAXNOTE_PLUS_PURCHASE_TIME, 0);
     }
 
 

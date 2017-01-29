@@ -9,10 +9,13 @@ import com.anjlab.android.iab.v3.BillingProcessor;
 import com.anjlab.android.iab.v3.Constants;
 import com.anjlab.android.iab.v3.TransactionDetails;
 import com.example.taxnoteandroid.Library.DialogManager;
+import com.example.taxnoteandroid.Library.UpgradeManger;
 import com.example.taxnoteandroid.dataManager.SharedPreferencesManager;
 import com.example.taxnoteandroid.databinding.ActivityUpgradeBinding;
-import com.google.gson.Gson;
 import com.helpshift.support.Support;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
 
 public class UpgradeActivity extends AppCompatActivity implements BillingProcessor.IBillingHandler {
@@ -55,13 +58,14 @@ public class UpgradeActivity extends AppCompatActivity implements BillingProcess
 
     private void setViews() {
         setUpgradeToTaxnotePlusView();
-        setRestorePurchasesView();
+//        setRestorePurchasesView();
         setHelpView();
+
+        //@@@
+        showTestDialog();
     }
 
     private void setUpgradeToTaxnotePlusView() {
-
-        final boolean taxnotePlusIsActive = SharedPreferencesManager.taxnotePlusIsActive(this);
 
         binding.upgradeToPlus.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -70,20 +74,20 @@ public class UpgradeActivity extends AppCompatActivity implements BillingProcess
             }
         });
 
-        if (taxnotePlusIsActive) {
-            binding.upgraded.setText(getResources().getString(R.string.upgraded_already));
+        if (UpgradeManger.taxnotePlusIsActive(this)) {
+            binding.upgraded.setText(getResources().getString(R.string.upgrade_is_active));
         }
     }
 
-    private void setRestorePurchasesView() {
-
-        binding.restorePurchases.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                restorePurchases();
-            }
-        });
-    }
+//    private void setRestorePurchasesView() {
+//
+//        binding.restorePurchases.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                restorePurchases();
+//            }
+//        });
+//    }
 
     private void setHelpView() {
 
@@ -100,94 +104,63 @@ public class UpgradeActivity extends AppCompatActivity implements BillingProcess
     //    -- Upgrade --
     //--------------------------------------------------------------//
 
-    private void upgradeToTaxnotePlus() {
+    private void showTestDialog() {
 
-        final boolean taxnotePlusIsActive = SharedPreferencesManager.taxnotePlusIsActive(this);
+        long purchaseTime = SharedPreferencesManager.getTaxnotePlusPurchaseTime(this);
 
-        if (!taxnotePlusIsActive) {
+        // Get expireTime
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(purchaseTime);
 
-            if (googlePlayPurchaseIsAvailable) {
+//        calendar.add(Calendar.YEAR, 1);
 
-                if (billingProcessor.isSubscribed(TAXNOTE_PLUS_ID)) {
-//                if (billingProcessor.isPurchased(TAXNOTE_PLUS_ID)) {
+        calendar.add(Calendar.HOUR, 24);
 
-                    showRestoreTaxnotePlusSuccessDialong();
-                } else {
+        long expireTime = calendar.getTimeInMillis();
 
-                    billingProcessor.subscribe(UpgradeActivity.this, TAXNOTE_PLUS_ID);
 
-//                    billingProcessor.purchase(UpgradeActivity.this, TAXNOTE_PLUS_ID);
-                }
-            }
-        }
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy_MM_dd_hh_mm_ss");
+        String purchaseTimeString = simpleDateFormat.format(purchaseTime);
+
+        String expireTimeString = simpleDateFormat.format(expireTime);
+
+        String title = "purchase Time = " + purchaseTimeString;
+        String message = "expire Time = " + expireTimeString;
+
+        DialogManager.showOKOnlyAlert(this,title,message);
+
     }
 
-    private void updateTaxnotePlusSubscriptionStatus(TransactionDetails details) {
+    private void upgradeToTaxnotePlus() {
 
-        //@@@
-        // ここでexipreTimeをセーぶしたりする
-        Gson gson = new Gson();
-
-        // JSONからStringへの変換
-//        String str = gson.fromJson(details.purchaseInfo.responseData, String.class);
-        System.out.println("String: " + details.purchaseInfo.responseData);
-
-
-//        // JSONから配列への変換
-//        int[] array = gson.fromJson(details.purchaseInfo.responseData, int[].class);
-//        System.out.println("int[]: " + array[0] + ",　" + array[1] + ",　" + array[2]);
-//
-//
-//        long expiryTime =  array[2];
-//
-//
-//        SharedPreferencesManager.saveTaxnotePlusExpireDate(this, expiryTime);
-
-
-
-        showUpgradeToTaxnotePlusSuccessDialong();
-
-
-
-//        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(getResources().getString(R.string.date_string_format_for_custom_range));
-//        String expireString  = simpleDateFormat.format(expiryTime);
-//
-//
-//        DialogManager.showOKOnlyAlert(this,"ExpireTime",expireString);
-//
-//        DialogManager.showOKOnlyAlert(this,"json",str);
+        if (googlePlayPurchaseIsAvailable) {
+            billingProcessor.subscribe(UpgradeActivity.this, TAXNOTE_PLUS_ID);
+            restorePurchases();
+        }
     }
 
     private void restorePurchases() {
 
         //@@@
-        TransactionDetails details = billingProcessor.getSubscriptionTransactionDetails(TAXNOTE_PLUS_ID);
-        updateTaxnotePlusSubscriptionStatus(details);
+        if (!UpgradeManger.taxnotePlusIsActive(this)) {
 
+            TransactionDetails details = billingProcessor.getSubscriptionTransactionDetails(TAXNOTE_PLUS_ID);
 
-//        final boolean taxnotePlusIsActive = SharedPreferencesManager.taxnotePlusIsActive(this);
-//
-//        if (!taxnotePlusIsActive) {
-//
-//            if (billingProcessor.isSubscribed(TAXNOTE_PLUS_ID)) {
-//                showRestoreTaxnotePlusSuccessDialong();
-//            } else {
-//
-//
-//
-//                showNoPurchaseHistoryDialog();
-//            }
-//        }
+            if (details != null) {
+                UpgradeManger.updateTaxnotePlusSubscriptionStatus(this, details);
+
+                if (UpgradeManger.taxnotePlusIsActive(this)) {
+                    binding.upgraded.setText(getResources().getString(R.string.upgrade_is_active));
+                }
+            }
+        }
     }
 
     private void showRestoreTaxnotePlusSuccessDialong() {
 
-        // Upgrade to Taxnote Plus
-        boolean active = SharedPreferencesManager.taxnotePlusIsActive(this);
+        if (UpgradeManger.taxnotePlusIsActive(this)) {
 
-        if (active) {
-
-            binding.upgraded.setText(getResources().getString(R.string.upgraded_already));
+            binding.upgraded.setText(getResources().getString(R.string.upgrade_is_active));
 
             // Show dialog message
             String title = getResources().getString(R.string.taxnote_plus);
@@ -198,12 +171,9 @@ public class UpgradeActivity extends AppCompatActivity implements BillingProcess
 
     private void showUpgradeToTaxnotePlusSuccessDialong() {
 
-        // Upgrade to Taxnote Plus
-        boolean active = SharedPreferencesManager.taxnotePlusIsActive(this);
+        if (UpgradeManger.taxnotePlusIsActive(this)) {
 
-        if (active) {
-
-            binding.upgraded.setText(getResources().getString(R.string.upgraded_already));
+            binding.upgraded.setText(getResources().getString(R.string.upgrade_is_active));
 
             // Show dialog message
             String title = getResources().getString(R.string.taxnote_plus);
@@ -243,51 +213,8 @@ public class UpgradeActivity extends AppCompatActivity implements BillingProcess
 
         if (productId.equals(TAXNOTE_PLUS_ID)) {
 
-            updateTaxnotePlusSubscriptionStatus(details);
-
-
-
-//            https://developers.google.com/android-publisher/api-ref/purchases/subscriptions?hl=ja
-//            {
-//                "kind": "androidpublisher#subscriptionPurchase",
-//                    "startTimeMillis": long,
-//                "expiryTimeMillis": long,
-//                "autoRenewing": boolean,
-//                "priceCurrencyCode": string,
-//                    "priceAmountMicros": long,
-//                "countryCode": string,
-//                    "developerPayload": string,
-//                    "paymentState": integer,
-//                    "cancelReason": integer
-//            }
-
-
-
-//            JSONObject json = null;
-//
-//
-//            try {
-//                json = new JSONObject(responseData);
-//            } catch (JSONException e) {
-//                e.printStackTrace();
-//            }
-//
-//
-//            json.opt()
-//
-//            long expiryTime = json.opt("expiryTimeMillis");
-
-
-//            PurchaseData data = new PurchaseData();
-//            data.orderId = json.optString("orderId");
-//            data.packageName = json.optString("packageName");
-//            data.productId = json.optString("productId");
-//            long purchaseTimeMillis = json.optLong("purchaseTime", 0);
-//            data.purchaseTime = purchaseTimeMillis != 0 ? new Date(purchaseTimeMillis) : null;
-//            data.purchaseState = PurchaseState.values()[json.optInt("purchaseState", 1)];
-//            data.developerPayload = json.optString("developerPayload");
-//            data.purchaseToken = json.getString("purchaseToken");
-//            data.autoRenewing = json.optBoolean("autoRenewing");
+            UpgradeManger.updateTaxnotePlusSubscriptionStatus(this, details);
+            showUpgradeToTaxnotePlusSuccessDialong();
         }
     }
 
