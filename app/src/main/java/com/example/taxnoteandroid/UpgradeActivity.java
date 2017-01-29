@@ -114,9 +114,11 @@ public class UpgradeActivity extends AppCompatActivity implements BillingProcess
 
 //        calendar.add(Calendar.YEAR, 1);
 
-        calendar.add(Calendar.HOUR, 24);
+        calendar.add(Calendar.YEAR, 1);
 
         long expireTime = calendar.getTimeInMillis();
+
+        long now = System.currentTimeMillis();
 
 
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy_MM_dd_hh_mm_ss");
@@ -124,8 +126,11 @@ public class UpgradeActivity extends AppCompatActivity implements BillingProcess
 
         String expireTimeString = simpleDateFormat.format(expireTime);
 
+        String nowString = simpleDateFormat.format(now);
+
+
         String title = "purchase Time = " + purchaseTimeString;
-        String message = "expire Time = " + expireTimeString;
+        String message = "expire Time = " + expireTimeString + ": now = " + nowString;
 
         DialogManager.showOKOnlyAlert(this,title,message);
 

@@ -23,9 +23,9 @@ public class UpgradeManger {
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(purchaseTime);
 
-//        calendar.add(Calendar.YEAR, 1);
+        calendar.add(Calendar.YEAR, 1);
 
-        calendar.add(Calendar.HOUR, 24);
+//        calendar.add(Calendar.HOUR, 24);
 
         long expireTime = calendar.getTimeInMillis();
 
