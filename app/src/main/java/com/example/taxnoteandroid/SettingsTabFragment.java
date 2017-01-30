@@ -3,6 +3,7 @@ package com.example.taxnoteandroid;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.ShareCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,6 +47,7 @@ public class SettingsTabFragment extends Fragment {
     private void setViews() {
         setUpgradeView();
         setHelpViews();
+        setShareButton();
     }
 
 
@@ -85,6 +87,30 @@ public class SettingsTabFragment extends Fragment {
                 Support.showFAQSection(getActivity(),"22");
             }
         });
+    }
+
+
+    //--------------------------------------------------------------//
+    //    -- Share --
+    //--------------------------------------------------------------//
+
+    private void setShareButton() {
+
+        binding.shareTaxnoteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                ShareCompat.IntentBuilder builder = ShareCompat.IntentBuilder.from(getActivity());
+
+                builder.setChooserTitle(getString(R.string.share_taxnote));
+                builder.setSubject(getString(R.string.share_taxnote_title));
+                builder.setText(getString(R.string.share_taxnote_message));
+
+                builder.setType("text/plain");
+                builder.startChooser();
+            }
+        });
+
     }
 
 }

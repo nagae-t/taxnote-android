@@ -96,6 +96,11 @@
     <string name="upgrade_to_plus_unlock_the_limit">無料版ではそれぞれの月に15件までしか入力できません。もしよければ無制限に記録できるTaxnoteプラスをご検討ください。</string>
     <string name="go_to_upgrade_screen">アップグレード画面へ</string>
     <string name="upgrade">アップグレード</string>
+    <string name="share_taxnote">Taxnoteをシェアする</string>
+
+    <string name="share_taxnote_title">この会計アプリ便利。</string>
+    <string name="share_taxnote_message">この会計アプリ便利。https://play.google.com/store/apps/details?id=com.nonume.taxnote</string>
+
 
 
     //--------------------------------------------------------------//
@@ -154,13 +159,11 @@
     // -- Help Message --
     //--------------------------------------------------------------//
 
-
-    <!--config.setTitle(R.string.my_own_title);-->
-    <!--config.setMessage(R.string.my_own_message);-->
-    <!--config.setYesButtonText(R.string.my_own_rate);-->
-    <!--config.setNoButtonText(R.string.my_own_thanks);-->
-    <!--config.setCancelButtonText(R.string.my_own_cancel);-->
-
+    <string name="rate_app_title">レビューのお願い</string>
+    <string name="rate_app_message">こんにちは、Taxnoteを開発している梅本です。ストアのレビューは全て読んでいるので、よければアプリへの要望を書いてもらえませんか？\n\n例えば、気に入ってて変えて欲しくないところ、今後の要望などを書いてもらえれば。\n\nもちろん一言メッセージや、星をつけるだけでも嬉しいです。\n\n良いレビューが増えるとDL数が増えやすく、開発が継続できるので、気がむいた時にどうぞよろしくお願いします。(ストア画面を下にスクロールするとレビュー画面があります)</string>
+    <string name="rate_app_yes_button">レビューを書く</string>
+    <string name="rate_app_no_button">やらない</string>
+    <string name="rate_app_cancel_button">あとで</string>
 
 
 

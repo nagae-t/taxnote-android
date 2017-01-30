@@ -186,13 +186,13 @@ public class MainActivity extends AppCompatActivity {
         RateThisApp.onStart(this);
         RateThisApp.showRateDialogIfNeeded(this);
 
-        //@@@
-//        RateThisApp.Config config = new RateThisApp.Config();
-//        config.setTitle(R.string.my_own_title);
-//        config.setMessage(R.string.my_own_message);
-//        config.setYesButtonText(R.string.my_own_rate);
-//        config.setNoButtonText(R.string.my_own_thanks);
-//        config.setCancelButtonText(R.string.my_own_cancel);
-//        RateThisApp.init(config);
+        // Custom message
+        RateThisApp.Config config = new RateThisApp.Config();
+        config.setTitle(R.string.rate_app_title);
+        config.setMessage(R.string.rate_app_message);
+        config.setYesButtonText(R.string.rate_app_yes_button);
+        config.setNoButtonText(R.string.rate_app_no_button);
+        config.setCancelButtonText(R.string.rate_app_cancel_button);
+        RateThisApp.init(config);
     }
 }

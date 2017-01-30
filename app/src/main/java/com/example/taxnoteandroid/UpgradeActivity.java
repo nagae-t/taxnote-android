@@ -1,7 +1,9 @@
 package com.example.taxnoteandroid;
 
+import android.content.DialogInterface;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
@@ -13,6 +15,7 @@ import com.example.taxnoteandroid.Library.UpgradeManger;
 import com.example.taxnoteandroid.dataManager.SharedPreferencesManager;
 import com.example.taxnoteandroid.databinding.ActivityUpgradeBinding;
 import com.helpshift.support.Support;
+import com.kobakei.ratethisapp.RateThisApp;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -147,16 +150,25 @@ public class UpgradeActivity extends AppCompatActivity implements BillingProcess
         }
     }
 
-    private void showUpgradeToTaxnotePlusSuccessDialong() {
+    private void showUpgradeToTaxnotePlusSuccessDialog() {
 
         if (UpgradeManger.taxnotePlusIsActive(this)) {
 
             binding.upgraded.setText(getResources().getString(R.string.upgrade_is_active));
 
             // Show dialog message
-            String title = getResources().getString(R.string.taxnote_plus);
-            String message = getResources().getString(R.string.thanks_for_purchase);
-            DialogManager.showOKOnlyAlert(this, title, message);
+            new AlertDialog.Builder(this)
+                    .setTitle(getResources().getString(R.string.taxnote_plus))
+                    .setMessage(getResources().getString(R.string.thanks_for_purchase))
+                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+
+                            // Ask rating
+                            RateThisApp.showRateDialog(UpgradeActivity.this);
+                        }
+                    })
+                    .show();
         }
     }
 
@@ -185,7 +197,7 @@ public class UpgradeActivity extends AppCompatActivity implements BillingProcess
         if (productId.equals(TAXNOTE_PLUS_ID)) {
 
             UpgradeManger.updateTaxnotePlusSubscriptionStatus(this, details);
-            showUpgradeToTaxnotePlusSuccessDialong();
+            showUpgradeToTaxnotePlusSuccessDialog();
         }
     }
 
