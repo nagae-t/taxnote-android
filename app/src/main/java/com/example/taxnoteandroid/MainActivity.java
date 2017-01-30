@@ -16,10 +16,18 @@ import com.example.taxnoteandroid.dataManager.DefaultDataInstaller;
 import com.example.taxnoteandroid.databinding.ActivityMainBinding;
 import com.example.taxnoteandroid.entryTab.EntryTabFragment;
 import com.helpshift.support.Support;
+import com.kobakei.ratethisapp.RateThisApp;
 
 public class MainActivity extends AppCompatActivity {
 
     private ActivityMainBinding binding;
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        setRateThisApp();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -166,5 +174,25 @@ public class MainActivity extends AppCompatActivity {
             }
             return super.getPageTitle(position);
         }
+    }
+
+
+    //--------------------------------------------------------------//
+    //    -- Rate Library --
+    //--------------------------------------------------------------//
+
+    private void setRateThisApp() {
+
+        RateThisApp.onStart(this);
+        RateThisApp.showRateDialogIfNeeded(this);
+
+        //@@@
+//        RateThisApp.Config config = new RateThisApp.Config();
+//        config.setTitle(R.string.my_own_title);
+//        config.setMessage(R.string.my_own_message);
+//        config.setYesButtonText(R.string.my_own_rate);
+//        config.setNoButtonText(R.string.my_own_thanks);
+//        config.setCancelButtonText(R.string.my_own_cancel);
+//        RateThisApp.init(config);
     }
 }

@@ -150,6 +150,18 @@
     <string name="reorder_how_to_message">勘定科目をしばらくタップし続けると色が変わるので、そのまま押し続けながら上下に移動させてください。</string>
 
 
+    //--------------------------------------------------------------//
+    // -- Help Message --
+    //--------------------------------------------------------------//
+
+
+    <!--config.setTitle(R.string.my_own_title);-->
+    <!--config.setMessage(R.string.my_own_message);-->
+    <!--config.setYesButtonText(R.string.my_own_rate);-->
+    <!--config.setNoButtonText(R.string.my_own_thanks);-->
+    <!--config.setCancelButtonText(R.string.my_own_cancel);-->
+
+
 
 
 </resources>
