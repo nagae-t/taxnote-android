@@ -88,13 +88,8 @@
     <string name="benefits_of_upgrade">アップグレードの特典</string>
     <string name="taxnote_plus">Taxnoteプラス</string>
     <string name="thanks_for_purchase">ご購入ありがとうございます！機種変更時の復元や有効期限の確認などもこちらのボタンをタップしてください。</string>
-    <string name="upgrade_restored_success_message">お使いのGoogleアカウントで以前購入したTaxnoteプラスが無料で復元されました。</string>
-    <string name="upgrade_no_purchase_history_message">お使いのGoogleアカウントにはTaxnoteプラスの購入履歴がありませんでした。</string>
-
     <string name="upgrade_is_active">有効</string>
-    <string name="taxnote_plus_descriptions">Taxnoteプラスを購入すると月15件の入力制限が解除されます。一回のお支払いで一年間有効となります。機種変更時の復元、有効期限の確認、自動更新の解約などもこちらのボタンをタップしてください。</string>
-
-    <string name="restore_purchases">以前の購入を復元</string>
+    <string name="taxnote_plus_descriptions">Taxnoteプラスにアップグレードすると月15件の入力制限が解除されます。一回のお支払いで一年間有効となります。機種変更時の復元、有効期限の確認、自動更新の解約などもこちらのボタンをタップしてください。</string>
     <string name="frequently_asked_questions">ヘルプ・よくある質問</string>
     <string name="ask_questions_or_request">要望・質問を送る</string>
     <string name="version">バージョン</string>

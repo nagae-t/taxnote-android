@@ -25,9 +25,7 @@ public class UpgradeActivity extends AppCompatActivity implements BillingProcess
     BillingProcessor billingProcessor;
     private static final String LICENSE_KEY_OF_GOOGLE_PLAY = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAiqf39c7TtSqe9FV2Xz/Xa2S6dexgD2k5qK1ZnC7uCctI2J+Y8GW1oG2S5wN/zdxB5nlkP/a94GiAZqmxhLknVFqRMq32f4zuT2M8mGxFmCMpqQbvYgI2hDXY0xS7c0EITHNPykTRAqS1tgjuHRDWrNjfae7FuvIEJMe4h41tbYAAdKh8Uv+sv3cVmmTXn2j+Ep42XhE1moLug26orCS7IfKAJjAiRK5lzCaCF3mNqPcjogxjG425P44oVT8Ewnx4+N9qbfkzQueCqkw4mD4UdBABCefjZ6t+N2+ZEwGreV/nu5P7kXOsDZp9SGlNB99rL21Xnpzc+QDQvUkBXlNTWQIDAQAB";
 //    private static final String TAXNOTE_PLUS_ID = "taxnote.plus";
-
     private static final String TAXNOTE_PLUS_ID = "taxnotetest";
-
     private boolean googlePlayPurchaseIsAvailable = false;
 
 
@@ -58,11 +56,10 @@ public class UpgradeActivity extends AppCompatActivity implements BillingProcess
 
     private void setViews() {
         setUpgradeToTaxnotePlusView();
-//        setRestorePurchasesView();
         setHelpView();
 
         //@@@
-        showTestDialog();
+//        showTestDialog();
     }
 
     private void setUpgradeToTaxnotePlusView() {
@@ -78,16 +75,6 @@ public class UpgradeActivity extends AppCompatActivity implements BillingProcess
             binding.upgraded.setText(getResources().getString(R.string.upgrade_is_active));
         }
     }
-
-//    private void setRestorePurchasesView() {
-//
-//        binding.restorePurchases.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                restorePurchases();
-//            }
-//        });
-//    }
 
     private void setHelpView() {
 
@@ -160,19 +147,6 @@ public class UpgradeActivity extends AppCompatActivity implements BillingProcess
         }
     }
 
-    private void showRestoreTaxnotePlusSuccessDialong() {
-
-        if (UpgradeManger.taxnotePlusIsActive(this)) {
-
-            binding.upgraded.setText(getResources().getString(R.string.upgrade_is_active));
-
-            // Show dialog message
-            String title = getResources().getString(R.string.taxnote_plus);
-            String message = getResources().getString(R.string.upgrade_restored_success_message);
-            DialogManager.showOKOnlyAlert(this, title, message);
-        }
-    }
-
     private void showUpgradeToTaxnotePlusSuccessDialong() {
 
         if (UpgradeManger.taxnotePlusIsActive(this)) {
@@ -184,13 +158,6 @@ public class UpgradeActivity extends AppCompatActivity implements BillingProcess
             String message = getResources().getString(R.string.thanks_for_purchase);
             DialogManager.showOKOnlyAlert(this, title, message);
         }
-    }
-
-    private void showNoPurchaseHistoryDialog() {
-
-        String title = getResources().getString(R.string.Error);
-        String message = getResources().getString(R.string.upgrade_no_purchase_history_message);
-        DialogManager.showOKOnlyAlert(this, title, message);
     }
 
 
