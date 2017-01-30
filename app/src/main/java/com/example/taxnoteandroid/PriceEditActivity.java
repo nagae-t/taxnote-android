@@ -14,12 +14,25 @@ import com.example.taxnoteandroid.dataManager.EntryDataManager;
 
 public class PriceEditActivity extends AppCompatActivity {
 
-    private TextView priceTextView;
-    private static final String EXTRA_ENTRY_ID      = "EXTRA_ENTRY_ID";
+    private static final String EXTRA_ENTRY_ID = "EXTRA_ENTRY_ID";
     private static final String EXTRA_CURRENT_PRICE = "EXTRA_CURRENT_PRICE";
     public long currentPrice = 0;
     public long entryId;
+    private TextView priceTextView;
 
+    public static Intent createIntent(Context context, long currentPrice, long entryId) {
+
+        Intent i = new Intent(context, PriceEditActivity.class);
+        i.putExtra(EXTRA_CURRENT_PRICE, currentPrice);
+        i.putExtra(EXTRA_ENTRY_ID, entryId);
+
+        return i;
+    }
+
+
+    //--------------------------------------------------------------//
+    //    -- Intent --
+    //--------------------------------------------------------------//
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,25 +46,11 @@ public class PriceEditActivity extends AppCompatActivity {
         setPriceInputPart();
     }
 
-
-    //--------------------------------------------------------------//
-    //    -- Intent --
-    //--------------------------------------------------------------//
-
-    public static Intent createIntent(Context context, long currentPrice, long entryId) {
-
-        Intent i = new Intent(context, PriceEditActivity.class);
-        i.putExtra(EXTRA_CURRENT_PRICE, currentPrice);
-        i.putExtra(EXTRA_ENTRY_ID, entryId);
-
-        return i;
-    }
-
     private void setIntentData() {
 
         Intent intent = getIntent();
-        currentPrice  = intent.getLongExtra(EXTRA_CURRENT_PRICE, 0);
-        entryId       = intent.getLongExtra(EXTRA_ENTRY_ID, 0);
+        currentPrice = intent.getLongExtra(EXTRA_CURRENT_PRICE, 0);
+        entryId = intent.getLongExtra(EXTRA_ENTRY_ID, 0);
     }
 
 
@@ -95,6 +94,35 @@ public class PriceEditActivity extends AppCompatActivity {
         findViewById(R.id.button_00).setOnClickListener(onPriceClickListener);
         findViewById(R.id.button_c).setOnClickListener(onPriceClickListener);
     }
+
+    private void saveEntry() {
+
+        String priceText = priceTextView.getText().toString().replace(",", "");
+
+        // Empty check
+        if (TextUtils.isEmpty(priceText)) {
+            DialogManager.showOKOnlyAlert(this, getResources().getString(R.string.Error), getResources().getString(R.string.please_enter_price));
+            return;
+        }
+
+        // Update
+        EntryDataManager entryDataManager = new EntryDataManager(PriceEditActivity.this);
+        long updated = entryDataManager.updatePrice(entryId, currentPrice);
+
+        if (updated != 0) {
+
+            // Show update dialog
+            String priceString = ValueConverter.formatPrice(currentPrice);
+            DialogManager.showToast(PriceEditActivity.this, priceString);
+
+            finish();
+        }
+    }
+
+
+    //--------------------------------------------------------------//
+    //    -- Handle Data --
+    //--------------------------------------------------------------//
 
     private class OnPriceClickListener implements View.OnClickListener {
 
@@ -148,39 +176,10 @@ public class PriceEditActivity extends AppCompatActivity {
             }
 
             // Create price string
-            currentPrice                        = Long.parseLong(text + price);
-            String priceString                  = ValueConverter.formatPrice(currentPrice);
+            currentPrice = Long.parseLong(text + price);
+            String priceString = ValueConverter.formatPrice(currentPrice);
 
             priceTextView.setText(priceString);
-        }
-    }
-
-
-    //--------------------------------------------------------------//
-    //    -- Handle Data --
-    //--------------------------------------------------------------//
-
-    private void saveEntry() {
-
-        String priceText = priceTextView.getText().toString().replace(",", "");
-
-        // Empty check
-        if (TextUtils.isEmpty(priceText)) {
-            DialogManager.showOKOnlyAlert(this, getResources().getString(R.string.Error), getResources().getString(R.string.please_enter_price));
-            return;
-        }
-
-        // Update
-        EntryDataManager entryDataManager   = new EntryDataManager(PriceEditActivity.this);
-        long updated                        = entryDataManager.updatePrice(entryId, currentPrice);
-
-        if (updated != 0) {
-
-            // Show update dialog
-            String priceString = ValueConverter.formatPrice(currentPrice);
-            DialogManager.showToast(PriceEditActivity.this, priceString);
-
-            finish();
         }
     }
 

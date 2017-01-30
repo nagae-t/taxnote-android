@@ -12,10 +12,10 @@ import java.util.List;
 
 public class AccountDataManager {
 
-  private OrmaDatabase ormaDatabase;
+    private OrmaDatabase ormaDatabase;
 
     public AccountDataManager(Context context) {
-      ormaDatabase = TaxnoteApp.getOrmaDatabase();
+        ormaDatabase = TaxnoteApp.getOrmaDatabase();
     }
 
 
@@ -23,12 +23,12 @@ public class AccountDataManager {
     //    -- Create --
     //--------------------------------------------------------------//
 
-    public long save(Account account) {
-        return ormaDatabase.insertIntoAccount(account);
-    }
-
     public static boolean isSaveSuccess(long id) {
         return id != -1;
+    }
+
+    public long save(Account account) {
+        return ormaDatabase.insertIntoAccount(account);
     }
 
 
@@ -43,8 +43,8 @@ public class AccountDataManager {
     public List<Account> findAllWithIsExpense(boolean isExpense, Context context) {
 
         // Get the current project
-        ProjectDataManager projectDataManager   = new ProjectDataManager(context);
-        Project project                         = projectDataManager.findCurrentProjectWithContext(context);
+        ProjectDataManager projectDataManager = new ProjectDataManager(context);
+        Project project = projectDataManager.findCurrentProjectWithContext(context);
 
         List accounts = ormaDatabase.selectFromAccount().where(Account_Schema.INSTANCE.deleted.getQualifiedName() + " = 0  AND "
                         + Account_Schema.INSTANCE.isExpense.getQualifiedName() + " = ?",
@@ -62,13 +62,13 @@ public class AccountDataManager {
         Account account;
 
         // Get the current project
-        ProjectDataManager projectDataManager   = new ProjectDataManager(context);
-        Project project                         = projectDataManager.findCurrentProjectWithContext(context);
+        ProjectDataManager projectDataManager = new ProjectDataManager(context);
+        Project project = projectDataManager.findCurrentProjectWithContext(context);
 
         // Get the current selected account
         if (isExpense) {
             account = findByUuid(project.accountUuidForExpense);
-        } else  {
+        } else {
             account = findByUuid(project.accountUuidForIncome);
         }
 
@@ -77,7 +77,7 @@ public class AccountDataManager {
         }
 
         // Get the first account from account list
-        List<Account> accounts  = findAllWithIsExpense(isExpense, context);
+        List<Account> accounts = findAllWithIsExpense(isExpense, context);
         if (accounts != null && accounts.size() > 0) {
             account = accounts.get(0);
         }
@@ -101,5 +101,13 @@ public class AccountDataManager {
 
     public int delete(long id) {
         return ormaDatabase.deleteFromAccount().idEq(id).execute();
+    }
+
+    //--------------------------------------------------------------//
+    //    -- Change order --
+    //--------------------------------------------------------------//
+
+    public int updateOrder(long id, int order) {
+        return ormaDatabase.updateAccount().idEq(id).order(order).execute(); // 2017/01/30 E.Nozaki
     }
 }
