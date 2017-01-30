@@ -147,7 +147,7 @@
     <string name="Helpshift_ReplyTitle">返信があります</string>
     <string name="Helpshift_ReplyMessage">あなたのメッセージに返信が届きました。</string>
     <string name="reorder_how_to_title">並び替え方法</string>
-    <string name="reorder_how_to_message">勘定科目をしばらくタップし続けると色が変わるので、そのまま押し続けながら上下に移動させてください。</string>
+    <string name="reorder_how_to_message">科目をしばらくタップし続けると色が変わるので、そのまま押し続けながら上下に移動させてください。</string>
 
 
     //--------------------------------------------------------------//

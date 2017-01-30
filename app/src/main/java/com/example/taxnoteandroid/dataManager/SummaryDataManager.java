@@ -49,9 +49,7 @@ public class SummaryDataManager {
 
         List summaries = ormaDatabase.selectFromSummary()
                 .where(Summary_Schema.INSTANCE.deleted.getQualifiedName() + " = 0")
-                .and()
                 .reasonEq(reason)
-                .and()
                 .projectEq(project)
                 .orderBy(Summary_Schema.INSTANCE.order.getQualifiedName())
                 .toList();
