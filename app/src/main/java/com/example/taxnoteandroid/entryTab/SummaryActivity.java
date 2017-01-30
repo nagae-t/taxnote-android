@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
-import android.databinding.ViewDataBinding;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
@@ -20,26 +19,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 
-import com.example.taxnoteandroid.AccountSelectActivity;
-import com.example.taxnoteandroid.BindingHolder;
 import com.example.taxnoteandroid.DividerDecoration;
-import com.example.taxnoteandroid.FooterRecyclerArrayAdapter;
 import com.example.taxnoteandroid.Library.DialogManager;
 import com.example.taxnoteandroid.Library.KeyboardUtil;
-import com.example.taxnoteandroid.OnItemClickRecyclerAdapterListener;
 import com.example.taxnoteandroid.R;
-import com.example.taxnoteandroid.dataManager.AccountDataManager;
 import com.example.taxnoteandroid.dataManager.ProjectDataManager;
-import com.example.taxnoteandroid.dataManager.SharedPreferencesManager;
 import com.example.taxnoteandroid.dataManager.SummaryDataManager;
 import com.example.taxnoteandroid.databinding.ListviewFooterBinding;
-import com.example.taxnoteandroid.databinding.RowAccountCellBinding;
 import com.example.taxnoteandroid.databinding.RowSummaryCellBinding;
 import com.example.taxnoteandroid.model.Account;
 import com.example.taxnoteandroid.model.Project;
 import com.example.taxnoteandroid.model.Reason;
 import com.example.taxnoteandroid.model.Summary;
-import com.h6ah4i.android.widget.advrecyclerview.draggable.RecyclerViewDragDropManager;
 
 import org.parceler.Parcels;
 
@@ -544,10 +535,6 @@ public class SummaryActivity extends AppCompatActivity {
     //--------------------------------------------------------------//
     //    -- Help --
     //--------------------------------------------------------------//
-
-    // TODO 2017/01/30 E.Nozaki
-    // 下記は、EntryTabReasonSelectFragment.java からコピペしました。
-    // 表示するメッセージを変えた方が良いですかね？
 
     private void showHowToReorderMessage() {
 

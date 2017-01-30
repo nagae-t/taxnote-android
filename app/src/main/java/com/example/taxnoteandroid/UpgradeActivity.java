@@ -61,7 +61,7 @@ public class UpgradeActivity extends AppCompatActivity implements BillingProcess
         setUpgradeToTaxnotePlusView();
         setHelpView();
 
-        //@@@
+        //@@
 //        showTestDialog();
     }
 

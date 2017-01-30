@@ -30,7 +30,6 @@ import com.example.taxnoteandroid.databinding.RowAccountCellBinding;
 import com.example.taxnoteandroid.model.Account;
 import com.example.taxnoteandroid.model.Entry;
 import com.example.taxnoteandroid.model.Project;
-import com.helpshift.support.Support;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -529,10 +528,6 @@ public class AccountSelectActivity extends AppCompatActivity {
     //--------------------------------------------------------------//
     //    -- Help --
     //--------------------------------------------------------------//
-
-    // TODO 2017/01/30 E.Nozaki
-    // 下記は、EntryTabReasonSelectFragment.java からコピペしました。
-    // 表示するメッセージを変えた方が良いですかね？
 
     private void showHowToReorderMessage() {
 
