@@ -26,16 +26,32 @@
 -keep class android.support.v7.** { *; }
 -keep interface android.support.v7.** { *; }
 
+-dontwarn com.google.**
+-keep class com.google.**
+
+
+
 #-dontwarn org.apache.**
 #-dontwarn sun.misc.Unsafe
 #-keep class sun.misc.Unsafe
 
--keep class com.google.**
--dontwarn com.google.**
-
 #-keep sun.misc.Unsafe
-
-
 #-dontwarn org.w3c.dom.bootstrap.DOMImplementationRegistry
 
+
+# Gson
 -keep class com.google.gson.**
+-keepattributes *Annotation*
+-keepattributes Signature
+-keep class sun.misc.Unsafe { *; }
+
+# Crashlitics
+-keep class com.crashlytics.** { *; }
+-dontwarn com.crashlytics.**
+
+# Orma
+# to use ParameterizedType
+-keepattributes Signature
+# Can't find referenced class com.google.gson.Gson, but it is intended
+-dontwarn com.github.gfx.android.orma.gson.**
+-dontwarn com.github.gfx.android.orma.SingleAssociation
