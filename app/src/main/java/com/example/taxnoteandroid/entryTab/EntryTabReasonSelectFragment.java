@@ -105,20 +105,10 @@ public class EntryTabReasonSelectFragment extends Fragment {
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-
-    }
-
-    @Override
     public void onResume() {
         super.onResume();
 
-        loadCurrentDateWithToast(false);
         loadCurrentAccount();
-
-        DialogManager.showHistoryTabHelpMessage(getActivity());
-        checkHelpshiftReplyMessage();
     }
 
     @Override
@@ -131,6 +121,9 @@ public class EntryTabReasonSelectFragment extends Fragment {
                 // Sync selected date between expense and income tabs
                 date = SharedPreferencesManager.getCurrentSelectedDate(getActivity());
                 loadCurrentDateWithToast(false);
+
+                DialogManager.showHistoryTabHelpMessage(getActivity());
+                checkHelpshiftReplyMessage();
             }
         }
     }

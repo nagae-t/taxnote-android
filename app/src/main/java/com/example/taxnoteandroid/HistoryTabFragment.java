@@ -54,7 +54,18 @@ public class HistoryTabFragment extends Fragment {
     public void onResume() {
         super.onResume();
 
-        loadHistoryData();
+//        loadHistoryData();
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+
+        if (this.isVisible()) {
+            if (isVisibleToUser) {
+                loadHistoryData();
+            }
+        }
     }
 
 
