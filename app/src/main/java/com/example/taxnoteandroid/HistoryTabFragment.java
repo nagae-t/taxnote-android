@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 
 import com.example.taxnoteandroid.Library.ValueConverter;
 import com.example.taxnoteandroid.dataManager.EntryDataManager;
+import com.example.taxnoteandroid.dataManager.SharedPreferencesManager;
 import com.example.taxnoteandroid.databinding.FragmentHistoryTabBinding;
 import com.example.taxnoteandroid.databinding.RowHistoryCellBinding;
 import com.example.taxnoteandroid.databinding.RowHistorySectionHeaderBinding;
@@ -53,8 +54,7 @@ public class HistoryTabFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-
-//        loadHistoryData();
+        loadHistoryData();
     }
 
     @Override
@@ -143,6 +143,9 @@ public class HistoryTabFragment extends Fragment {
         historyAdapter.setOnItemClickRecyclerAdapterListener(new OnItemClickRecyclerAdapterListener() {
             @Override
             public void onItemClick(View view, int position) {
+
+                SharedPreferencesManager.saveTapHereHistoryEditDone(getActivity());
+
                 Item item = items.get(position);
                 startActivity(EntryEditActivity.createIntent(getContext(), item.cell.entry));
             }
@@ -241,13 +244,22 @@ public class HistoryTabFragment extends Fragment {
                         }
                     });
 
+                    String nameText;
+
                     if (item.cell.entry.isExpense) {
-                        binding.name.setText(item.cell.entry.reason.name + " / " + item.cell.entry.account.name);
+                        nameText = item.cell.entry.reason.name + " / " + item.cell.entry.account.name;
                     } else {
-                        binding.name.setText(item.cell.entry.account.name + " / " + item.cell.entry.reason.name);
+                        nameText = item.cell.entry.account.name + " / " + item.cell.entry.reason.name;
                     }
 
+                    // Set tap here help
+                    if (!SharedPreferencesManager.isTapHereHistoryEditDone(getActivity())) {
+                        nameText = nameText + " " + getResources().getString(R.string.tap_here);
+                    }
 
+                    binding.name.setText(nameText);
+
+                    // Memo
                     if (TextUtils.isEmpty(item.cell.entry.memo)) {
                         binding.memo.setVisibility(View.GONE);
                     } else {

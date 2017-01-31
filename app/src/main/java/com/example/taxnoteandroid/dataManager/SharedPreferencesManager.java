@@ -17,7 +17,6 @@ public class SharedPreferencesManager {
     private static final String EXPORT_RANGE_TYPE_KEY           = "EXPORT_RANGE_TYPE_KEY";
     private static final String EXPORT_RANGE_BEGIN_DATE         = "EXPORT_RANGE_BEGIN_DATE";
     private static final String EXPORT_RANGE_END_DATE           = "EXPORT_RANGE_END_DATE";
-    private static final String TAXNOTE_PLUS_IS_ACTIVE          = "TAXNOTE_PLUS_IS_ACTIVE";
     private static final String TAXNOTE_PLUS_PURCHASE_TIME      = "TAXNOTE_PLUS_PURCHASE_TIME";
     private static final String HELP_FIRST_LAUNCH_KEY           = "HELP_FIRST_LAUNCH_KEY";
     private static final String HELP_SELECT_SUMMARY_KEY         = "HELP_SELECT_SUMMARY_KEY";
@@ -25,6 +24,7 @@ public class SharedPreferencesManager {
     private static final String HELP_FIRST_REGISTER_DONE_KEY    = "HELP_FIRST_REGISTER_DONE_KEY";
     private static final String HELP_HISTORY_TAB_KEY            = "HELP_HISTORY_TAB_KEY";
     private static final String DATE_CURRENT_SELECTED           = "DATE_CURRENT_SELECTED";
+    private static final String TAP_HERE_HISTORY_DONE_KEY       = "TAP_HERE_HISTORY_DONE_KEY";
 
 
     //--------------------------------------------------------------//
@@ -175,5 +175,13 @@ public class SharedPreferencesManager {
 
     public static boolean isHistoryTabHelpDone(Context context) {
         return getSharedPreferences(context).getBoolean(HELP_HISTORY_TAB_KEY, false);
+    }
+
+    public static void saveTapHereHistoryEditDone(Context context) {
+        getSharedPreferences(context).edit().putBoolean(TAP_HERE_HISTORY_DONE_KEY, true).apply();
+    }
+
+    public static boolean isTapHereHistoryEditDone(Context context) {
+        return getSharedPreferences(context).getBoolean(TAP_HERE_HISTORY_DONE_KEY, false);
     }
 }

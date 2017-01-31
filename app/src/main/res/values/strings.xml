@@ -153,6 +153,7 @@
     <string name="reorder_how_to_title">並び替え方法</string>
     <string name="reorder_how_to_message">科目をしばらくタップし続けると色が変わるので、そのまま押し続けながら上下に移動させてください。</string>
     <string name="help_rename_category_message">この科目は仕訳帳にすでに使われているので、該当する仕訳帳内の科目名も自動的に変更されます。</string>
+    <string name="tap_here">（ここをタップ）</string>
 
 
     //--------------------------------------------------------------//
