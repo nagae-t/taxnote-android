@@ -1,11 +1,13 @@
 package com.example.taxnoteandroid.entryTab;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +15,7 @@ import android.view.ViewGroup;
 import com.example.taxnoteandroid.Library.DialogManager;
 import com.example.taxnoteandroid.R;
 import com.example.taxnoteandroid.dataManager.SharedPreferencesManager;
+import com.helpshift.support.Support;
 
 
 public class EntryTabFragment extends Fragment {
@@ -43,6 +46,18 @@ public class EntryTabFragment extends Fragment {
         DialogManager.showFirstLaunchMessage(getActivity());
 
         return v;
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+
+        if (this.isVisible()) {
+            if (isVisibleToUser) {
+
+                checkHelpshiftReplyMessage();
+            }
+        }
     }
 
     class TabPagerAdapter extends FragmentPagerAdapter {
@@ -76,6 +91,31 @@ public class EntryTabFragment extends Fragment {
                     return getString(R.string.Income);
             }
             return super.getPageTitle(position);
+        }
+    }
+
+
+    //--------------------------------------------------------------//
+    //    -- Help --
+    //--------------------------------------------------------------//
+
+    private void checkHelpshiftReplyMessage() {
+
+        // Check if the Hhelpshit reply message exists
+        if (Support.getNotificationCount() != 0) {
+
+            new AlertDialog.Builder(getActivity())
+                    .setTitle(getString(R.string.Helpshift_ReplyTitle))
+                    .setMessage(getString(R.string.Helpshift_ReplyMessage))
+                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+
+                            dialogInterface.dismiss();
+                            Support.showConversation(getActivity());
+                        }
+                    })
+                    .show();
         }
     }
 }

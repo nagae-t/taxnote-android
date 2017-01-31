@@ -40,7 +40,6 @@ import com.example.taxnoteandroid.model.Account;
 import com.example.taxnoteandroid.model.Entry;
 import com.example.taxnoteandroid.model.Project;
 import com.example.taxnoteandroid.model.Reason;
-import com.helpshift.support.Support;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -109,6 +108,7 @@ public class EntryTabReasonSelectFragment extends Fragment {
         super.onResume();
 
         loadCurrentAccount();
+        DialogManager.showHistoryTabHelpMessage(getActivity());
     }
 
     @Override
@@ -121,9 +121,6 @@ public class EntryTabReasonSelectFragment extends Fragment {
                 // Sync selected date between expense and income tabs
                 date = SharedPreferencesManager.getCurrentSelectedDate(getActivity());
                 loadCurrentDateWithToast(false);
-
-                DialogManager.showHistoryTabHelpMessage(getActivity());
-                checkHelpshiftReplyMessage();
             }
         }
     }
@@ -666,25 +663,5 @@ public class EntryTabReasonSelectFragment extends Fragment {
                     }
                 })
                 .show();
-    }
-
-    private void checkHelpshiftReplyMessage() {
-
-        // Check if the helpshit reply message exists
-        if (Support.getNotificationCount() != 0) {
-
-            new AlertDialog.Builder(getActivity())
-                    .setTitle(getString(R.string.Helpshift_ReplyTitle))
-                    .setMessage(getString(R.string.Helpshift_ReplyMessage))
-                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-
-                            dialogInterface.dismiss();
-                            Support.showConversation(getActivity());
-                        }
-                    })
-                    .show();
-        }
     }
 }
