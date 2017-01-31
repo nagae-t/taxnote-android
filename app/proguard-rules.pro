@@ -18,15 +18,24 @@
 
 
 # QQ ここの設定ワケワカメ
--dontwarn android.support.v4.**
+#-dontwarn android.support.v4.**
 -keep class android.support.v4.** { *; }
 -keep interface android.support.v4.** { *; }
 
--dontwarn android.support.v7.**
+#-dontwarn android.support.v7.**
 -keep class android.support.v7.** { *; }
 -keep interface android.support.v7.** { *; }
 
--dontwarn org.apache.**
+#-dontwarn org.apache.**
+#-dontwarn sun.misc.Unsafe
+#-keep class sun.misc.Unsafe
 
--dontwarn sun.misc.Unsafe
--dontwarn org.w3c.dom.bootstrap.DOMImplementationRegistry
+-keep class com.google.**
+-dontwarn com.google.**
+
+#-keep sun.misc.Unsafe
+
+
+#-dontwarn org.w3c.dom.bootstrap.DOMImplementationRegistry
+
+-keep class com.google.gson.**
