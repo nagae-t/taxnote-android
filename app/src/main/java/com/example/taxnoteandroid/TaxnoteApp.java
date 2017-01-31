@@ -2,6 +2,7 @@ package com.example.taxnoteandroid;
 
 import android.app.Application;
 
+import com.crashlytics.android.Crashlytics;
 import com.example.taxnoteandroid.model.OrmaDatabase;
 import com.github.gfx.android.orma.AccessThreadConstraint;
 import com.helpshift.All;
@@ -9,6 +10,7 @@ import com.helpshift.Core;
 import com.helpshift.InstallConfig;
 import com.helpshift.exceptions.InstallException;
 import com.helpshift.support.Support;
+import io.fabric.sdk.android.Fabric;
 
 /**
  * Created by Eiichi on 2017/01/17.
@@ -22,6 +24,7 @@ public class TaxnoteApp extends Application
   public void onCreate()
   {
     super.onCreate();
+    Fabric.with(this, new Crashlytics());
 
     // Orma database
     TaxnoteApp.ormaDatabase = OrmaDatabase.builder(getApplicationContext())
