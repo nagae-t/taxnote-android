@@ -114,6 +114,32 @@ public class AccountSelectActivity extends AppCompatActivity {
 
     private void renameAccount(final Account account, final int position) {
 
+        // Check if Entry data has this account already
+        EntryDataManager entryDataManager = new EntryDataManager(AccountSelectActivity.this);
+        Entry entry = entryDataManager.hasAccountInEntryData(account);
+
+        if (entry != null) {
+
+            // Show the rename reason help message
+            new AlertDialog.Builder(this)
+                    .setTitle(account.name)
+                    .setMessage(getResources().getString(R.string.help_rename_category_message))
+                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+
+                            showRenameAccountDialog(account, position);
+                            dialogInterface.dismiss();
+                        }
+                    })
+                    .show();
+        } else {
+            showRenameAccountDialog(account, position);
+        }
+    }
+
+    private void showRenameAccountDialog(final Account account, final int position) {
+
         final Context context = AccountSelectActivity.this;
         final View textInputView = LayoutInflater.from(context).inflate(R.layout.dialog_text_input, null);
 
@@ -155,6 +181,7 @@ public class AccountSelectActivity extends AppCompatActivity {
 
         KeyboardUtil.showKeyboard(AccountSelectActivity.this, textInputView); // 2017/01/30 E.Nozaki Show software keyboard.
     }
+
 
     //--------------------------------------------------------------//
     //    -- Delete --

@@ -224,6 +224,32 @@ public class EntryTabReasonSelectFragment extends Fragment {
 
     private void renameReason(final Reason reason, final int position) {
 
+        // Check if Entry data has this reason already
+        EntryDataManager entryDataManager = new EntryDataManager(getContext());
+        Entry entry = entryDataManager.hasReasonInEntryData(reason);
+
+        if (entry != null) {
+
+            // Show the rename reason help message
+            new AlertDialog.Builder(getContext())
+                    .setTitle(reason.name)
+                    .setMessage(getResources().getString(R.string.help_rename_category_message))
+                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+
+                            showRenameReasonDialog(reason, position);
+                            dialogInterface.dismiss();
+                        }
+                    })
+                    .show();
+        } else {
+            showRenameReasonDialog(reason, position);
+        }
+    }
+
+    private void showRenameReasonDialog(final Reason reason, final int position) {
+
         final Context context = getContext();
         final View textInputView = LayoutInflater.from(context).inflate(R.layout.dialog_text_input, null);
         final EditText editText = (EditText) textInputView.findViewById(R.id.edit);

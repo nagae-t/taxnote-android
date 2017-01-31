@@ -124,14 +124,6 @@ public class SharedPreferencesManager {
     //    -- Upgrade --
     //--------------------------------------------------------------//
 
-//    public static boolean saveTaxnotePlusStatus(Context context) {
-//        return getSharedPreferences(context).edit().putBoolean(TAXNOTE_PLUS_IS_ACTIVE, true).commit();
-//    }
-//
-//    public static boolean taxnotePlusIsActive(Context context) {
-//        return getSharedPreferences(context).getBoolean(TAXNOTE_PLUS_IS_ACTIVE, false);
-//    }
-
     public static void saveTaxnotePlusPurchaseTime(Context context, long purchaseTime) {
         getSharedPreferences(context).edit().putLong(TAXNOTE_PLUS_PURCHASE_TIME, purchaseTime).apply();
     }

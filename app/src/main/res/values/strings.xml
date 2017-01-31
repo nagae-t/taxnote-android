@@ -25,7 +25,6 @@
 
     <string name="done">完了</string>
     <string name="cancel">キャンセル</string>
-
     <string name="delete_confirm_message">削除していいですか？</string>
 
 
@@ -153,10 +152,11 @@
     <string name="Helpshift_ReplyMessage">あなたのメッセージに返信が届きました。</string>
     <string name="reorder_how_to_title">並び替え方法</string>
     <string name="reorder_how_to_message">科目をしばらくタップし続けると色が変わるので、そのまま押し続けながら上下に移動させてください。</string>
+    <string name="help_rename_category_message">この科目は仕訳帳にすでに使われているので、該当する仕訳帳内の科目名も自動的に変更されます。</string>
 
 
     //--------------------------------------------------------------//
-    // -- Help Message --
+    // -- Rate --
     //--------------------------------------------------------------//
 
     <string name="rate_app_title">レビューのお願い</string>
