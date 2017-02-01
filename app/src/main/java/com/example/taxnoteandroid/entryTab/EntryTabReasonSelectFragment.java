@@ -109,7 +109,6 @@ public class EntryTabReasonSelectFragment extends Fragment {
 
         loadCurrentDateWithToast(false);
         loadCurrentAccount();
-        DialogManager.showHistoryTabHelpMessage(getActivity());
     }
 
     @Override

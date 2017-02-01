@@ -25,6 +25,7 @@ public class SharedPreferencesManager {
     private static final String HELP_HISTORY_TAB_KEY            = "HELP_HISTORY_TAB_KEY";
     private static final String DATE_CURRENT_SELECTED           = "DATE_CURRENT_SELECTED";
     private static final String TAP_HERE_HISTORY_DONE_KEY       = "TAP_HERE_HISTORY_DONE_KEY";
+    private static final String ASK_ANYTHING_DONE_KEY           = "ASK_ANYTHING_DONE_KEY";
 
 
     //--------------------------------------------------------------//
@@ -183,5 +184,13 @@ public class SharedPreferencesManager {
 
     public static boolean isTapHereHistoryEditDone(Context context) {
         return getSharedPreferences(context).getBoolean(TAP_HERE_HISTORY_DONE_KEY, false);
+    }
+
+    public static void saveAskAnythingMessageDone(Context context) {
+        getSharedPreferences(context).edit().putBoolean(ASK_ANYTHING_DONE_KEY, true).apply();
+    }
+
+    public static boolean isAskAnythingMessageDone(Context context) {
+        return getSharedPreferences(context).getBoolean(ASK_ANYTHING_DONE_KEY, false);
     }
 }

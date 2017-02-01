@@ -36,17 +36,13 @@ public class EntryEditActivity extends AppCompatActivity {
 
         setIntent();
         setViews();
+        setTitle(getResources().getString(R.string.edit_entry));
     }
 
     @Override
     public void onResume() {
         super.onResume();
-
         loadData();
-
-//        Animation animation = AnimationUtils.loadAnimation(this, R.anim.animation_text_move);
-//        binding.date.setAnimation(animation);
-//        animation.start();
     }
 
 

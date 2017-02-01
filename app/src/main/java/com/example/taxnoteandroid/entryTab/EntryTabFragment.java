@@ -49,12 +49,19 @@ public class EntryTabFragment extends Fragment {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        DialogManager.showHistoryTabHelpMessage(getActivity());
+    }
+
+    @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
 
         if (this.isVisible()) {
             if (isVisibleToUser) {
 
+                DialogManager.showAskAnythingMessage(getActivity());
                 checkHelpshiftReplyMessage();
             }
         }
