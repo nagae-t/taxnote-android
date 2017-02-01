@@ -348,6 +348,7 @@ public class AccountSelectActivity extends AppCompatActivity {
 
             accountList = list;
 
+            //TODO ここ聞いてないのを修正
             for (int i = 0; i < size; i++) {
                 accountDataManager.updateOrder(accountList.get(i).id, i); // Update database
             }

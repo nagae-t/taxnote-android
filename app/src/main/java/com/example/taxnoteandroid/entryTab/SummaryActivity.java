@@ -344,6 +344,7 @@ public class SummaryActivity extends AppCompatActivity {
 
             summaryList = list;
 
+            //TODO ここ聞いてないのを修正
             for (int i = 0; i < size; i++) {
                 summaryDataManager.updateOrder(summaryList.get(i).id, i); // Update database
             }
