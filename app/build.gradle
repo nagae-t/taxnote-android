@@ -50,7 +50,7 @@ dependencies {
 
     // Mixpanel
     compile "com.mixpanel.android:mixpanel-android:4.9.3"
-    compile "com.google.android.gms:play-services:9.8.0"
+//    compile "com.google.android.gms:play-services:9.8.0"
 
     // Android-RateThisApp
     compile 'io.github.kobakei:ratethisapp:1.1.1'
