@@ -13,10 +13,14 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.example.taxnoteandroid.dataManager.DefaultDataInstaller;
+import com.example.taxnoteandroid.dataManager.SharedPreferencesManager;
 import com.example.taxnoteandroid.databinding.ActivityMainBinding;
 import com.example.taxnoteandroid.entryTab.EntryTabFragment;
 import com.helpshift.support.Support;
 import com.kobakei.ratethisapp.RateThisApp;
+import com.mixpanel.android.mpmetrics.MixpanelAPI;
+
+import static com.example.taxnoteandroid.TaxnoteConsts.MIXPANEL_TOKEN;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -26,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 
+        setMixpanel();
         setRateThisApp();
     }
 
@@ -178,8 +183,19 @@ public class MainActivity extends AppCompatActivity {
 
 
     //--------------------------------------------------------------//
-    //    -- Rate Library --
+    //    -- Library --
     //--------------------------------------------------------------//
+
+    private void setMixpanel() {
+
+        if (SharedPreferencesManager.isFirstLaunchDone(this)) {
+            return;
+        }
+
+        MixpanelAPI mixpanel = MixpanelAPI.getInstance(this, MIXPANEL_TOKEN);
+        mixpanel.track("First Launch");
+        SharedPreferencesManager.saveFirstLaunchDone(this);
+    }
 
     private void setRateThisApp() {
 

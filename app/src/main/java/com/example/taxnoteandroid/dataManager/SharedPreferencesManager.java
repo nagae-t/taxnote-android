@@ -26,6 +26,8 @@ public class SharedPreferencesManager {
     private static final String DATE_CURRENT_SELECTED           = "DATE_CURRENT_SELECTED";
     private static final String TAP_HERE_HISTORY_DONE_KEY       = "TAP_HERE_HISTORY_DONE_KEY";
     private static final String ASK_ANYTHING_DONE_KEY           = "ASK_ANYTHING_DONE_KEY";
+    private static final String FIRST_LAUNCH_KEY                = "FIRST_LAUNCH_KEY";
+    private static final String TRACK_ENTRY_KEY                 = "TRACK_ENTRY_KEY";
 
 
     //--------------------------------------------------------------//
@@ -192,5 +194,26 @@ public class SharedPreferencesManager {
 
     public static boolean isAskAnythingMessageDone(Context context) {
         return getSharedPreferences(context).getBoolean(ASK_ANYTHING_DONE_KEY, false);
+    }
+
+
+    //--------------------------------------------------------------//
+    //    -- Analytics --
+    //--------------------------------------------------------------//
+
+    public static void saveFirstLaunchDone(Context context) {
+        getSharedPreferences(context).edit().putBoolean(FIRST_LAUNCH_KEY, true).apply();
+    }
+
+    public static boolean isFirstLaunchDone(Context context) {
+        return getSharedPreferences(context).getBoolean(FIRST_LAUNCH_KEY, false);
+    }
+
+    public static void saveTrackEntryCount(Context context, long entryCount) {
+        getSharedPreferences(context).edit().putLong(TRACK_ENTRY_KEY, entryCount).apply();
+    }
+
+    public static long getTrackEntryCount(Context context) {
+        return getSharedPreferences(context).getLong(TRACK_ENTRY_KEY, 0);
     }
 }

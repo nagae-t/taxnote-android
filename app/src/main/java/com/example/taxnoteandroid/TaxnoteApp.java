@@ -10,49 +10,50 @@ import com.helpshift.Core;
 import com.helpshift.InstallConfig;
 import com.helpshift.exceptions.InstallException;
 import com.helpshift.support.Support;
+
 import io.fabric.sdk.android.Fabric;
 
 /**
  * Created by Eiichi on 2017/01/17.
  */
 
-public class TaxnoteApp extends Application
-{
-  private static OrmaDatabase ormaDatabase = null;
+public class TaxnoteApp extends Application {
+    private static OrmaDatabase ormaDatabase = null;
 
-  @Override
-  public void onCreate()
-  {
-    super.onCreate();
-    Fabric.with(this, new Crashlytics());
 
-    // Orma database
-    TaxnoteApp.ormaDatabase = OrmaDatabase.builder(getApplicationContext())
-      .trace(BuildConfig.DEBUG)
-      .writeOnMainThread(AccessThreadConstraint.NONE)
-      .readOnMainThread(AccessThreadConstraint.NONE)
-      .build();
-
-    // Helpshift
-    Core.init(All.getInstance());
-    InstallConfig installConfig = new InstallConfig.Builder()
-            .setEnableInAppNotification(true)
-            .build();
-    try {
-      Core.install(this,
-              "14f761394d47454be7d6db4956f8e4ae",
-              "texttospeech.helpshift.com",
-              "texttospeech_platform_20170117101706929-9d883d52d724719",
-              installConfig);
-    } catch (InstallException e) {
-      android.util.Log.e("Helpshift", "install call : ", e);
+    public static OrmaDatabase getOrmaDatabase() {
+        return ormaDatabase;
     }
-    android.util.Log.d("Helpshift", Support.libraryVersion + " - is the version for gradle");
 
-  }
+    @Override
+    public void onCreate() {
+        super.onCreate();
 
-  public static OrmaDatabase getOrmaDatabase()
-  {
-    return ormaDatabase;
-  }
+        // Fabric
+        Fabric.with(this, new Crashlytics());
+
+        // Orma database
+        TaxnoteApp.ormaDatabase = OrmaDatabase.builder(getApplicationContext())
+                .trace(BuildConfig.DEBUG)
+                .writeOnMainThread(AccessThreadConstraint.NONE)
+                .readOnMainThread(AccessThreadConstraint.NONE)
+                .build();
+
+        // Helpshift
+        Core.init(All.getInstance());
+        InstallConfig installConfig = new InstallConfig.Builder()
+                .setEnableInAppNotification(true)
+                .build();
+        try {
+            Core.install(this,
+                    "14f761394d47454be7d6db4956f8e4ae",
+                    "texttospeech.helpshift.com",
+                    "texttospeech_platform_20170117101706929-9d883d52d724719",
+                    installConfig);
+        } catch (InstallException e) {
+            android.util.Log.e("Helpshift", "install call : ", e);
+        }
+        android.util.Log.d("Helpshift", Support.libraryVersion + " - is the version for gradle");
+
+    }
 }

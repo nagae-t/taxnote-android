@@ -3,6 +3,7 @@ package com.example.taxnoteandroid.entryTab;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -25,23 +26,35 @@ import com.example.taxnoteandroid.model.Entry;
 import com.example.taxnoteandroid.model.Project;
 import com.example.taxnoteandroid.model.Reason;
 import com.example.taxnoteandroid.model.Summary;
+import com.google.android.gms.appindexing.Action;
+import com.google.android.gms.appindexing.AppIndex;
+import com.google.android.gms.appindexing.Thing;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.mixpanel.android.mpmetrics.MixpanelAPI;
 
 import org.parceler.Parcels;
 
 import java.text.SimpleDateFormat;
 import java.util.UUID;
 
+import static com.example.taxnoteandroid.TaxnoteConsts.MIXPANEL_TOKEN;
+
 public class InputDataActivity extends AppCompatActivity {
 
     private TextView priceTextView;
     private static final String EXTRA_IS_EXPENSE = "isExpense";
-    private static final String EXTRA_DATE       = "date";
+    private static final String EXTRA_DATE = "date";
     public boolean isExpense;
     public Account account;
     public Reason reason;
     public Summary summary;
     public long date;
     private long currentPrice = 0;
+    /**
+     * ATTENTION: This was auto-generated to implement the App Indexing API.
+     * See https://g.co/AppIndexing/AndroidStudio for more information.
+     */
+    private GoogleApiClient client;
 
 
     @Override
@@ -57,6 +70,9 @@ public class InputDataActivity extends AppCompatActivity {
         setPriceInputPart();
 
         DialogManager.showTapRegisterMessage(InputDataActivity.this);
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
 
@@ -81,11 +97,11 @@ public class InputDataActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
 
-        isExpense   = intent.getBooleanExtra(EXTRA_IS_EXPENSE, false);
-        date        = intent.getLongExtra(EXTRA_DATE, 0);
-        account     = Parcels.unwrap(intent.getParcelableExtra(Account.class.getName()));
-        reason      = Parcels.unwrap(intent.getParcelableExtra(Reason.class.getName()));
-        summary     = Parcels.unwrap(intent.getParcelableExtra(Summary.class.getName()));
+        isExpense = intent.getBooleanExtra(EXTRA_IS_EXPENSE, false);
+        date = intent.getLongExtra(EXTRA_DATE, 0);
+        account = Parcels.unwrap(intent.getParcelableExtra(Account.class.getName()));
+        reason = Parcels.unwrap(intent.getParcelableExtra(Reason.class.getName()));
+        summary = Parcels.unwrap(intent.getParcelableExtra(Summary.class.getName()));
     }
 
 
@@ -100,8 +116,8 @@ public class InputDataActivity extends AppCompatActivity {
 
         // Show the date if it is not today
         if (!DateUtils.isToday(date)) {
-            SimpleDateFormat simpleDateFormat    = new SimpleDateFormat(getResources().getString(R.string.date_string_format_to_month_day));
-            dateString                           = simpleDateFormat.format(date);
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat(getResources().getString(R.string.date_string_format_to_month_day));
+            dateString = simpleDateFormat.format(date);
         }
 
         if (isExpense) {
@@ -149,6 +165,42 @@ public class InputDataActivity extends AppCompatActivity {
         findViewById(R.id.button_9).setOnClickListener(onPriceClickListener);
         findViewById(R.id.button_00).setOnClickListener(onPriceClickListener);
         findViewById(R.id.button_c).setOnClickListener(onPriceClickListener);
+    }
+
+    /**
+     * ATTENTION: This was auto-generated to implement the App Indexing API.
+     * See https://g.co/AppIndexing/AndroidStudio for more information.
+     */
+    public Action getIndexApiAction() {
+        Thing object = new Thing.Builder()
+                .setName("InputData Page") // TODO: Define a title for the content shown.
+                // TODO: Make sure this auto-generated URL is correct.
+                .setUrl(Uri.parse("http://[ENTER-YOUR-URL-HERE]"))
+                .build();
+        return new Action.Builder(Action.TYPE_VIEW)
+                .setObject(object)
+                .setActionStatus(Action.STATUS_TYPE_COMPLETED)
+                .build();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client.connect();
+        AppIndex.AppIndexApi.start(client, getIndexApiAction());
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        AppIndex.AppIndexApi.end(client, getIndexApiAction());
+        client.disconnect();
     }
 
     private class OnPriceClickListener implements View.OnClickListener {
@@ -203,8 +255,8 @@ public class InputDataActivity extends AppCompatActivity {
             }
 
             // Create price string
-            currentPrice                        = Long.parseLong(text + price);
-            String priceString                  = ValueConverter.formatPrice(currentPrice);
+            currentPrice = Long.parseLong(text + price);
+            String priceString = ValueConverter.formatPrice(currentPrice);
 
             priceTextView.setText(priceString);
         }
@@ -238,21 +290,22 @@ public class InputDataActivity extends AppCompatActivity {
         ProjectDataManager projectDataManager = new ProjectDataManager(this);
         Project project = projectDataManager.findCurrentProjectWithContext(this);
 
-        Entry entry     = new Entry();
-        entry.date      = date;
-        entry.updated   = System.currentTimeMillis();
+        Entry entry = new Entry();
+        entry.date = date;
+        entry.updated = System.currentTimeMillis();
         entry.isExpense = isExpense;
-        entry.price     = currentPrice;
-        entry.memo      = ((EditText) findViewById(R.id.memo)).getText().toString();
-        entry.uuid      = UUID.randomUUID().toString();
-        entry.project   = project;
-        entry.reason    = reason;
-        entry.account   = account;
-        long id         = entryDataManager.save(entry);
+        entry.price = currentPrice;
+        entry.memo = ((EditText) findViewById(R.id.memo)).getText().toString();
+        entry.uuid = UUID.randomUUID().toString();
+        entry.project = project;
+        entry.reason = reason;
+        entry.account = account;
+        long id = entryDataManager.save(entry);
 
         // Success
         if (EntryDataManager.isSaveSuccess(id)) {
 
+            countAndTrackEntry();
             SharedPreferencesManager.saveFirstRegisterDone(InputDataActivity.this);
 
             DialogManager.showInputDataToast(this, entry);
@@ -264,7 +317,22 @@ public class InputDataActivity extends AppCompatActivity {
         }
     }
 
+    private void countAndTrackEntry() {
+
+        long entryCount = SharedPreferencesManager.getTrackEntryCount(this);
+        entryCount++;
+        SharedPreferencesManager.saveTrackEntryCount(this, entryCount);
+
+        if (entryCount == 1 || entryCount % 10 == 0) {
+            MixpanelAPI mixpanel = MixpanelAPI.getInstance(this, MIXPANEL_TOKEN);
+            mixpanel.track("New Entry");
+        }
+    }
+
     private void showUpgradeSuggest() {
+
+        MixpanelAPI mixpanel = MixpanelAPI.getInstance(this, MIXPANEL_TOKEN);
+        mixpanel.track("Entry Limit Reached");
 
         // Confirm dialog
         new AlertDialog.Builder(this)

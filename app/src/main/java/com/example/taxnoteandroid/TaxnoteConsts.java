@@ -24,5 +24,13 @@ public interface TaxnoteConsts{
     String EXPORT_CHARACTER_CODE_UTF8       = "UTF8";
     String EXPORT_CHARACTER_CODE_SHIFTJIS   = "ShiftJIS";
 
+
+    //--------------------------------------------------------------//
+    //    -- Analytics --
+    //--------------------------------------------------------------//
+
+    String MIXPANEL_TOKEN = "92fd4383e584fb7b44554c1060ad467b";
+
+
 }
 
