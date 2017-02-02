@@ -124,10 +124,10 @@ public class MainActivity extends AppCompatActivity {
                         binding.pager.setCurrentItem(1, false);
                         setTitle(getString(R.string.History));
                         break;
-                    case R.id.tab3:
-                        binding.pager.setCurrentItem(2, false);
-                        setTitle(getString(R.string.report));
-                        break;
+//                    case R.id.tab3:
+//                        binding.pager.setCurrentItem(2, false);
+//                        setTitle(getString(R.string.report));
+//                        break;
                     case R.id.tab4:
                         binding.pager.setCurrentItem(3, false);
                         setTitle(getString(R.string.Settings));

@@ -92,7 +92,9 @@ public class DialogManager {
                     public void onClick(DialogInterface dialogInterface, int i) {
 
                         dialogInterface.dismiss();
-                        showFirstLaunchMessage3(context);
+
+                        //@@ 損益表を作った後に有効
+//                        showFirstLaunchMessage3(context);
                     }
                 })
                 .show();
