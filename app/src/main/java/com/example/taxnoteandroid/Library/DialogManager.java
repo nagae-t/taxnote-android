@@ -212,6 +212,8 @@ public class DialogManager {
             return;
         }
 
+        SharedPreferencesManager.saveAskAnythingMessageDone(context);
+
         new AlertDialog.Builder(context)
                 .setTitle(context.getString(R.string.ask_anything_title))
                 .setMessage(context.getString(R.string.ask_anything_message))
@@ -219,7 +221,6 @@ public class DialogManager {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
 
-                        SharedPreferencesManager.saveAskAnythingMessageDone(context);
                         Support.showFAQSection((Activity) context, "22");
                         dialogInterface.dismiss();
                     }
