@@ -18,8 +18,6 @@ import com.helpshift.support.Support;
 import com.kobakei.ratethisapp.RateThisApp;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
 
-import org.json.JSONObject;
-
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
@@ -206,9 +204,9 @@ public class UpgradeActivity extends AppCompatActivity implements BillingProcess
             mixpanel.track("Plus Upgraded");
 
             //QQ JSONOBjectでエラーがでますねん
-            JSONObject props = new JSONObject();
-            props.put("User Status", "Plus");
-            mixpanel.registerSuperProperties(props);
+//            JSONObject props = new JSONObject();
+//            props.put("User Status", "Plus");
+//            mixpanel.registerSuperProperties(props);
         }
     }
 

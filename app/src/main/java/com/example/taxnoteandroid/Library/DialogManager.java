@@ -212,12 +212,10 @@ public class DialogManager {
             return;
         }
 
-        //@@@
-
         new AlertDialog.Builder(context)
                 .setTitle(context.getString(R.string.ask_anything_title))
                 .setMessage(context.getString(R.string.ask_anything_message))
-                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                .setPositiveButton(context.getString(R.string.see_help), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
 
@@ -226,6 +224,7 @@ public class DialogManager {
                         dialogInterface.dismiss();
                     }
                 })
+                .setNegativeButton(context.getString(R.string.cancel), null)
                 .show();
     }
 }

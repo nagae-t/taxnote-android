@@ -38,6 +38,8 @@
 #-keep sun.misc.Unsafe
 #-dontwarn org.w3c.dom.bootstrap.DOMImplementationRegistry
 
+# Mixpanel
+-dontwarn com.mixpanel.**
 
 # Gson
 -keep class com.google.gson.**

@@ -75,6 +75,7 @@ public class SummaryDataManager {
         return ormaDatabase.deleteFromSummary().idEq(id).execute();
     }
 
+
     //--------------------------------------------------------------//
     //    -- Change order --
     //--------------------------------------------------------------//
