@@ -188,11 +188,18 @@ public class MainActivity extends AppCompatActivity {
 
     private void setMixpanel() {
 
+        MixpanelAPI mixpanel = MixpanelAPI.getInstance(this, MIXPANEL_TOKEN);
+
+        //QQ 自分のデバイスだけTrackingを無視したい
+//        // JSONOBjectでエラーがでますねん
+//        JSONObject props = new JSONObject();
+//        props.put("$ignore", "true");
+//        mixpanel.registerSuperProperties(props);
+
         if (SharedPreferencesManager.isFirstLaunchDone(this)) {
             return;
         }
 
-        MixpanelAPI mixpanel = MixpanelAPI.getInstance(this, MIXPANEL_TOKEN);
         mixpanel.track("First Launch");
         SharedPreferencesManager.saveFirstLaunchDone(this);
     }
