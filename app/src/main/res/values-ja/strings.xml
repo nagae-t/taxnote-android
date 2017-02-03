@@ -89,10 +89,8 @@
     <string name="go_to_upgrade_screen">アップグレード画面へ</string>
     <string name="upgrade">アップグレード</string>
     <string name="share_taxnote">Taxnoteをシェアする</string>
-
     <string name="share_taxnote_title">この会計アプリ便利。</string>
     <string name="share_taxnote_message">この会計アプリ便利。https://play.google.com/store/apps/details?id=com.nonume.taxnote</string>
-
 
 
     //--------------------------------------------------------------//
@@ -147,10 +145,8 @@
     <string name="reorder_how_to_message">科目をしばらくタップし続けると色が変わるので、そのまま押し続けながら上下に移動させてください。</string>
     <string name="help_rename_category_message">この科目は仕訳帳にすでに使われているので、該当する仕訳帳内の科目名も自動的に変更されます。</string>
     <string name="tap_here">（ここをタップ）</string>
-
     <string name="ask_anything_title">質問や要望はお気軽に</string>
     <string name="ask_anything_message">こんにちは、Taxnoteを開発している梅本です。アプリの操作で分からない部分や要望がありましたら、ヘルプからお気軽にお問い合わせください。開発からサポートまでやっているので直接お答えできます。</string>
-
     <string name="see_help">ヘルプを見る</string>
 
 
