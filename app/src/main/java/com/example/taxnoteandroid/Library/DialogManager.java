@@ -227,7 +227,6 @@ public class DialogManager {
                         dialogInterface.dismiss();
                     }
                 })
-                .setNegativeButton(context.getString(R.string.cancel), null)
                 .show();
     }
 }

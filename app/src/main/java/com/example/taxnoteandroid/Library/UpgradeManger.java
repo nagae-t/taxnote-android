@@ -2,11 +2,11 @@ package com.example.taxnoteandroid.Library;
 
 import android.content.Context;
 
-import com.anjlab.android.iab.v3.TransactionDetails;
 import com.example.taxnoteandroid.dataManager.SharedPreferencesManager;
 
 import java.util.Calendar;
-import java.util.Date;
+
+//import com.anjlab.android.iab.v3.TransactionDetails;
 
 /**
  * Created by umemotonon on 2017/01/29.
@@ -34,9 +34,9 @@ public class UpgradeManger {
         return expireTime > now;
     }
 
-    public static void updateTaxnotePlusSubscriptionStatus(Context context, TransactionDetails details) {
-
-        Date purchaseTime = details.purchaseInfo.purchaseData.purchaseTime;
-        SharedPreferencesManager.saveTaxnotePlusPurchaseTime(context,purchaseTime.getTime());
-    }
+//    public static void updateTaxnotePlusSubscriptionStatus(Context context, TransactionDetails details) {
+//
+//        Date purchaseTime = details.purchaseInfo.purchaseData.purchaseTime;
+//        SharedPreferencesManager.saveTaxnotePlusPurchaseTime(context,purchaseTime.getTime());
+//    }
 }

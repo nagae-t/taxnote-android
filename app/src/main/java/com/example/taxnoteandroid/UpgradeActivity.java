@@ -1,37 +1,95 @@
 package com.example.taxnoteandroid;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
-import com.anjlab.android.iab.v3.BillingProcessor;
-import com.anjlab.android.iab.v3.Constants;
-import com.anjlab.android.iab.v3.TransactionDetails;
 import com.example.taxnoteandroid.Library.DialogManager;
 import com.example.taxnoteandroid.Library.UpgradeManger;
 import com.example.taxnoteandroid.dataManager.SharedPreferencesManager;
 import com.example.taxnoteandroid.databinding.ActivityUpgradeBinding;
 import com.helpshift.support.Support;
 import com.kobakei.ratethisapp.RateThisApp;
-import com.mixpanel.android.mpmetrics.MixpanelAPI;
+
+import org.solovyev.android.checkout.ActivityCheckout;
+import org.solovyev.android.checkout.BillingRequests;
+import org.solovyev.android.checkout.Checkout;
+import org.solovyev.android.checkout.EmptyRequestListener;
+import org.solovyev.android.checkout.Inventory;
+import org.solovyev.android.checkout.Purchase;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
-import static com.example.taxnoteandroid.TaxnoteConsts.MIXPANEL_TOKEN;
+import javax.annotation.Nonnull;
+
+import static org.solovyev.android.checkout.ProductTypes.SUBSCRIPTION;
 
 
-public class UpgradeActivity extends AppCompatActivity implements BillingProcessor.IBillingHandler {
+//public class UpgradeActivity extends AppCompatActivity implements BillingProcessor.IBillingHandler {
 
-    private ActivityUpgradeBinding binding;
+public class UpgradeActivity extends AppCompatActivity {
 
-    BillingProcessor billingProcessor;
+
+        private ActivityUpgradeBinding binding;
+
+//    BillingProcessor billingProcessor;
     private static final String LICENSE_KEY_OF_GOOGLE_PLAY = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAiqf39c7TtSqe9FV2Xz/Xa2S6dexgD2k5qK1ZnC7uCctI2J+Y8GW1oG2S5wN/zdxB5nlkP/a94GiAZqmxhLknVFqRMq32f4zuT2M8mGxFmCMpqQbvYgI2hDXY0xS7c0EITHNPykTRAqS1tgjuHRDWrNjfae7FuvIEJMe4h41tbYAAdKh8Uv+sv3cVmmTXn2j+Ep42XhE1moLug26orCS7IfKAJjAiRK5lzCaCF3mNqPcjogxjG425P44oVT8Ewnx4+N9qbfkzQueCqkw4mD4UdBABCefjZ6t+N2+ZEwGreV/nu5P7kXOsDZp9SGlNB99rL21Xnpzc+QDQvUkBXlNTWQIDAQAB";
-    private static final String TAXNOTE_PLUS_ID = "testing";
+    private static final String TAXNOTE_PLUS_ID = "sub3";
     private boolean googlePlayPurchaseIsAvailable = false;
+
+
+
+    private class PurchaseListener extends EmptyRequestListener<Purchase> {
+
+        @Override
+        public void onSuccess(@Nonnull Purchase result) {
+
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy_MM_dd_hh_mm_ss");
+            String purchaseTimeString = simpleDateFormat.format(result.time);
+
+            // Show dialog message
+            new AlertDialog.Builder(UpgradeActivity.this)
+                    .setTitle(result.packageName)
+                    .setMessage(purchaseTimeString)
+                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+
+                        }
+                    })
+                    .show();
+
+
+
+            SharedPreferencesManager.saveTaxnotePlusPurchaseTime(UpgradeActivity.this,result.time);
+
+            showUpgradeToTaxnotePlusSuccessDialog();
+        }
+
+        @Override
+        public void onError(int response, @Nonnull Exception e) {
+
+            // Show error dialog
+            String title = getResources().getString(R.string.Error);
+            String message = e.getLocalizedMessage();
+            DialogManager.showOKOnlyAlert(UpgradeActivity.this, title, message);
+        }
+    }
+
+    private class InventoryCallback implements Inventory.Callback {
+        @Override
+        public void onLoaded(Inventory.Products products) {
+            // your code here
+        }
+    }
+
+    private final ActivityCheckout mCheckout = Checkout.forActivity(this, TaxnoteApp.get().getBilling());
+    private Inventory mInventory;
 
 
     @Override
@@ -41,23 +99,40 @@ public class UpgradeActivity extends AppCompatActivity implements BillingProcess
         setContentView(R.layout.activity_upgrade);
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_upgrade);
-        initBillingProcessor();
+//        initBillingProcessor();
         setViews();
+
+
+
+        mCheckout.start();
+        mCheckout.createPurchaseFlow(new PurchaseListener());
+
+        mInventory = mCheckout.makeInventory();
+        mInventory.load(Inventory.Request.create()
+                .loadAllPurchases()
+                .loadSkus(SUBSCRIPTION, TAXNOTE_PLUS_ID), new InventoryCallback());
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        billingProcessor.loadOwnedPurchasesFromGoogle();
+//        billingProcessor.loadOwnedPurchasesFromGoogle();
         restorePurchases();
     }
 
     @Override
     public void onDestroy() {
-        if (billingProcessor != null)
-            billingProcessor.release();
+//        if (billingProcessor != null)
+//            billingProcessor.release();
 
+        mCheckout.stop();
         super.onDestroy();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        mCheckout.onActivityResult(requestCode, resultCode, data);
     }
 
 
@@ -135,25 +210,33 @@ public class UpgradeActivity extends AppCompatActivity implements BillingProcess
 
     private void upgradeToTaxnotePlus() {
 
-        if (googlePlayPurchaseIsAvailable) {
-            billingProcessor.subscribe(UpgradeActivity.this, TAXNOTE_PLUS_ID);
-            restorePurchases();
-        }
+        mCheckout.whenReady(new Checkout.EmptyListener() {
+            @Override
+            public void onReady(BillingRequests requests) {
+                requests.purchase(SUBSCRIPTION, TAXNOTE_PLUS_ID, null, mCheckout.getPurchaseFlow());
+            }
+        });
+
+
+//        if (googlePlayPurchaseIsAvailable) {
+//            billingProcessor.subscribe(UpgradeActivity.this, TAXNOTE_PLUS_ID);
+//            restorePurchases();
+//        }
     }
 
     private void restorePurchases() {
 
         if (!UpgradeManger.taxnotePlusIsActive(this)) {
 
-            TransactionDetails details = billingProcessor.getSubscriptionTransactionDetails(TAXNOTE_PLUS_ID);
-
-            if (details != null) {
-                UpgradeManger.updateTaxnotePlusSubscriptionStatus(this, details);
-
-                if (UpgradeManger.taxnotePlusIsActive(this)) {
-                    binding.upgraded.setText(getResources().getString(R.string.upgrade_is_active));
-                }
-            }
+//            TransactionDetails details = billingProcessor.getSubscriptionTransactionDetails(TAXNOTE_PLUS_ID);
+//
+//            if (details != null) {
+//                UpgradeManger.updateTaxnotePlusSubscriptionStatus(this, details);
+//
+//                if (UpgradeManger.taxnotePlusIsActive(this)) {
+//                    binding.upgraded.setText(getResources().getString(R.string.upgrade_is_active));
+//                }
+//            }
         }
     }
 
@@ -180,94 +263,83 @@ public class UpgradeActivity extends AppCompatActivity implements BillingProcess
     }
 
 
-    //--------------------------------------------------------------//
-    //    -- IBillingHandler --
-    //--------------------------------------------------------------//
-
-    private void initBillingProcessor() {
-        billingProcessor = new BillingProcessor(this, LICENSE_KEY_OF_GOOGLE_PLAY, this);
-    }
-
-    @Override
-    public void onBillingInitialized() {
-
-        boolean isOneTimePurchaseSupported = billingProcessor.isOneTimePurchaseSupported();
-
-        if (isOneTimePurchaseSupported) {
-            googlePlayPurchaseIsAvailable = true;
-        }
-    }
-
-    @Override
-    public void onProductPurchased(String productId, TransactionDetails details) {
-
-        //@@@
-        // Show dialog message
-        new AlertDialog.Builder(this)
-                .setTitle("onProductPurchased")
-                .setMessage("onProductPurchased Called")
-                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-
-                    }
-                })
-                .show();
-
-        if (productId.equals(TAXNOTE_PLUS_ID)) {
-
-            //@@@
-            // Show dialog message
-            new AlertDialog.Builder(this)
-                    .setTitle("onProductPurchased")
-                    .setMessage("onProductPurchased Called With TAXNOTE_PLUS_ID")
-                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-
-                        }
-                    })
-                    .show();
-
-
-
-            UpgradeManger.updateTaxnotePlusSubscriptionStatus(this, details);
-            showUpgradeToTaxnotePlusSuccessDialog();
-
-            MixpanelAPI mixpanel = MixpanelAPI.getInstance(this, MIXPANEL_TOKEN);
-            mixpanel.track("Plus Upgraded");
-
-            //QQ JSONOBjectでエラーがでますねん
-//            JSONObject props = new JSONObject();
-//            props.put("User Status", "Plus");
-//            mixpanel.registerSuperProperties(props);
-        }
-    }
-
-    @Override
-    public void onBillingError(int errorCode, Throwable error) {
-        /*
-         * Called when some error occurred. See Constants class for more details
-         *
-         * Note - this includes handling the case where the user canceled the buy dialog:
-         * errorCode = Constants.BILLING_RESPONSE_RESULT_USER_CANCELED
-         */
-
-        if (errorCode == Constants.BILLING_RESPONSE_RESULT_USER_CANCELED) {
-            return;
-        }
-
-        // Show error dialog
-        String title = getResources().getString(R.string.Error);
-        String message = error.getLocalizedMessage();
-        DialogManager.showOKOnlyAlert(this, title, message);
-    }
-
-    @Override
-    public void onPurchaseHistoryRestored() {
-        /*
-         * Called when purchase history was restored and the list of all owned PRODUCT ID's
-         * was loaded from Google Play
-         */
-    }
+//    //--------------------------------------------------------------//
+//    //    -- IBillingHandler --
+//    //--------------------------------------------------------------//
+//
+//    private void initBillingProcessor() {
+//        billingProcessor = new BillingProcessor(this, LICENSE_KEY_OF_GOOGLE_PLAY, this);
+//    }
+//
+//    @Override
+//    public void onBillingInitialized() {
+//
+//        boolean isOneTimePurchaseSupported = billingProcessor.isOneTimePurchaseSupported();
+//
+//        if (isOneTimePurchaseSupported) {
+//            googlePlayPurchaseIsAvailable = true;
+//        }
+//    }
+//
+//    @Override
+//    public void onProductPurchased(String productId, TransactionDetails details) {
+//
+//
+//
+//        if (productId.equals(TAXNOTE_PLUS_ID)) {
+//
+//            //@@@
+//            // Show dialog message
+//            new AlertDialog.Builder(this)
+//                    .setTitle("onProductPurchased")
+//                    .setMessage("onProductPurchased Called With TAXNOTE_PLUS_ID")
+//                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+//                        @Override
+//                        public void onClick(DialogInterface dialogInterface, int i) {
+//
+//                        }
+//                    })
+//                    .show();
+//
+//
+//
+//            UpgradeManger.updateTaxnotePlusSubscriptionStatus(this, details);
+//            showUpgradeToTaxnotePlusSuccessDialog();
+//
+//            MixpanelAPI mixpanel = MixpanelAPI.getInstance(this, MIXPANEL_TOKEN);
+//            mixpanel.track("Plus Upgraded");
+//
+//            //QQ JSONOBjectでエラーがでますねん
+////            JSONObject props = new JSONObject();
+////            props.put("User Status", "Plus");
+////            mixpanel.registerSuperProperties(props);
+//        }
+//    }
+//
+//    @Override
+//    public void onBillingError(int errorCode, Throwable error) {
+//        /*
+//         * Called when some error occurred. See Constants class for more details
+//         *
+//         * Note - this includes handling the case where the user canceled the buy dialog:
+//         * errorCode = Constants.BILLING_RESPONSE_RESULT_USER_CANCELED
+//         */
+//
+//        if (errorCode == Constants.BILLING_RESPONSE_RESULT_USER_CANCELED) {
+//            return;
+//        }
+//
+//        // Show error dialog
+//        String title = getResources().getString(R.string.Error);
+//        String message = error.getLocalizedMessage();
+//        DialogManager.showOKOnlyAlert(this, title, message);
+//    }
+//
+//    @Override
+//    public void onPurchaseHistoryRestored() {
+//        /*
+//         * Called when purchase history was restored and the list of all owned PRODUCT ID's
+//         * was loaded from Google Play
+//         */
+//    }
 }

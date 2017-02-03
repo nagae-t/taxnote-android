@@ -91,6 +91,7 @@
     <string name="share_taxnote">Taxnoteをシェアする</string>
     <string name="share_taxnote_title">この会計アプリ便利。</string>
     <string name="share_taxnote_message">この会計アプリ便利。https://play.google.com/store/apps/details?id=com.nonume.taxnote</string>
+    <string name="decimal_button">小数点表示（ドル・ユーロなどに）</string>
 
 
     //--------------------------------------------------------------//

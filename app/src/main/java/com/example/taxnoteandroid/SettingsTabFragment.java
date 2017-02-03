@@ -7,8 +7,11 @@ import android.support.v4.app.ShareCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
 
+import com.example.taxnoteandroid.dataManager.SharedPreferencesManager;
 import com.example.taxnoteandroid.databinding.FragmentSettingsTabBinding;
+import com.helpshift.support.Log;
 import com.helpshift.support.Support;
 
 
@@ -46,6 +49,7 @@ public class SettingsTabFragment extends Fragment {
 
     private void setViews() {
         setUpgradeView();
+        setDecimalSwitch();
         setHelpViews();
         setShareButton();
     }
@@ -63,6 +67,32 @@ public class SettingsTabFragment extends Fragment {
 
                 Intent intent = new Intent(getContext(), UpgradeActivity.class);
                 startActivity(intent);
+            }
+        });
+    }
+
+
+    //--------------------------------------------------------------//
+    //    -- Configs --
+    //--------------------------------------------------------------//
+
+    private void setDecimalSwitch() {
+
+        // Set current decimal status
+        boolean decimalStatus = SharedPreferencesManager.getDecimalStatusForCurrentProject(getContext());
+        binding.decimalSwitch.setChecked(decimalStatus);
+
+        binding.decimalSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView,boolean isChecked) {
+
+                SharedPreferencesManager.saveDecimalStatusForCurrentProject(getContext(),isChecked);
+
+                if (isChecked) {
+                    Log.i("Switch", "ON");
+                } else {
+                    Log.i("Switch", "OFF");
+                }
             }
         });
     }
