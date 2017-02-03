@@ -8,12 +8,11 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.BLUETOOTH" />
 
-    <!--&lt;!&ndash;Screen Size&ndash;&gt;-->
-    <!--<supports-screens-->
-        <!--android:smallScreens="true"-->
-        <!--android:normalScreens="true"-->
-        <!--android:largeScreens="false"-->
-        <!--android:xlargeScreens="false" />-->
+    <supports-screens
+        android:smallScreens="true"
+        android:normalScreens="true"
+        android:largeScreens="false"
+        android:xlargeScreens="false" />
 
 
     <application

@@ -24,8 +24,8 @@ android {
         applicationId "com.nonumemo.taxnote"
         minSdkVersion 19
         targetSdkVersion 22
-        versionCode 16
-        versionName "1.00"
+        versionCode 21
+        versionName "1.0.2"
     }
     dataBinding {
         enabled true
