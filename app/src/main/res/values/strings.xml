@@ -1,49 +1,40 @@
 <resources>
 
-
     <string name="app_name">Taxnote</string>
-    <string name="Expense">支出</string>
-    <string name="Income">収入</string>
-    <string name="Entry">入力</string>
-    <string name="History">仕訳帳</string>
-    <string name="report">損益表</string>
-    <string name="Settings">設定</string>
-    <string name="Update">更新する</string>
-    <string name="Details">備考</string>
-    <string name="Price">金額</string>
-    <string name="Delete">削除する</string>
-    <string name="help">ヘルプ</string>
-    <string name="edit_entry">仕訳の編集</string>
+    <string name="Expense">Expense</string>
+    <string name="Income">Income</string>
+    <string name="Entry">Entry</string>
+    <string name="History">History</string>
+    <string name="report">Overview</string>
+    <string name="Settings">Settings</string>
+    <string name="Update">Update</string>
+    <string name="Details">details</string>
+    <string name="Price">Price</string>
+    <string name="Delete">Delete</string>
+    <string name="help">Help</string>
+    <string name="edit_entry">Edit</string>
 
-    <string name="SummaryActivity_no_select">備考を選択しない</string>
-    <string name="SummaryActivity_nex">次へ進む</string>
-    <string name="SummaryActivity_select">備考を選択</string>
-    <string name="SummaryActivity_footer">備考を追加</string>
+    <string name="SummaryActivity_no_select">Skip</string>
+    <string name="SummaryActivity_nex">Skip</string>
+    <string name="SummaryActivity_select">Summary</string>
+    <string name="SummaryActivity_footer">New Summary</string>
 
     <string name="MainActivity_entry_tab">Entry</string>
     <string name="MainActivity_history_tab">History</string>
     <string name="MainActivity_settings_tab">Settings</string>
 
-    <string name="done">完了</string>
-    <string name="cancel">キャンセル</string>
-    <string name="delete_confirm_message">削除していいですか？</string>
-
-
-    //--------------------------------------------------------------//
-    // -- Value --
-    //--------------------------------------------------------------//
-
-
-    <string name="height_category_select">55dp</string>
+    <string name="done">Done</string>
+    <string name="cancel">Cancel</string>
+    <string name="delete_confirm_message">Are you sure to delete it?</string>
 
 
     //--------------------------------------------------------------//
     // -- Error Message --
     //--------------------------------------------------------------//
 
-    <string name="Error">エラー</string>
-    <string name="please_enter_price">金額を入力してください。</string>
-    <string name="history_data_empty">入力タブからデータを入力してください。</string>
+    <string name="Error">Error</string>
+    <string name="please_enter_price">Please enter the price.</string>
+    <string name="history_data_empty">Please enter data from Entry tab.</string>
     <string name="using_this_account_in_entry_already">指定した科目を使用した記録があります。まず、仕訳帳から該当する記録を削除してください。</string>
 
 
