@@ -15,7 +15,9 @@ import com.example.taxnoteandroid.model.Entry;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ReportFragment extends Fragment {
 
@@ -34,7 +36,27 @@ public class ReportFragment extends Fragment {
         binding = FragmentReportBinding.inflate(inflater, container, false);
 
         Context context = getContext();
-        binding.pager.setAdapter(new ReportContentFragmentPagerAdapter(getChildFragmentManager(), Mode.YEAR, Mode.YEAR.getTitles(context)));
+//        binding.pager.setAdapter(new ReportContentFragmentPagerAdapter(getChildFragmentManager(), Mode.YEAR, Mode.YEAR.getTitles(context)));
+
+        EntryDataManager entryDataManager = new EntryDataManager(context);
+        List<Entry> entries = entryDataManager.findAll(context, null, false);
+
+        Map<Calendar, List<Entry>> map = new LinkedHashMap<>();
+        for (Entry entry : entries) {
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTimeInMillis(entry.date);
+            calendar.set(calendar.get(Calendar.YEAR), 0, 0, 0, 0, 0);
+
+            if (map.containsKey(calendar)) {
+                map.get(calendar).add(entry);
+            } else {
+                List<Entry> list = new ArrayList<>();
+                list.add(entry);
+                map.put(calendar, list);
+            }
+        }
+
+        binding.pager.setAdapter(new ReportContentFragmentPagerAdapter2(getChildFragmentManager(), Mode.YEAR, map));
 
         return binding.getRoot();
     }
@@ -124,6 +146,37 @@ public class ReportFragment extends Fragment {
         @Override
         public CharSequence getPageTitle(int position) {
             return titles.get(position);
+        }
+    }
+
+    public class ReportContentFragmentPagerAdapter2 extends FragmentPagerAdapter {
+
+        private final Mode mode;
+        private final Map<Calendar, List<Entry>> map;
+        private final int count;
+        private final Calendar[] calendars;
+
+        public ReportContentFragmentPagerAdapter2(FragmentManager fm, Mode mode, Map<Calendar, List<Entry>> map) {
+            super(fm);
+            this.mode = mode;
+            this.map = map;
+            this.count = map.size();
+            calendars = map.keySet().toArray(new Calendar[map.keySet().size()]);
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            return ReportContentFragment.newInstance(map.get(calendars[position]));
+        }
+
+        @Override
+        public int getCount() {
+            return count;
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return Integer.toString(calendars[position].get(Calendar.YEAR));
         }
     }
 }
