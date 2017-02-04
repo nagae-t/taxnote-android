@@ -146,17 +146,17 @@ public class UpgradeActivity extends AppCompatActivity {
             for (Inventory.Product product : products) {
 
 
-                // Show dialog message
-                new AlertDialog.Builder(UpgradeActivity.this)
-                        .setTitle(product.toString())
-                        .setMessage(product.id)
-                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-
-                            }
-                        })
-                        .show();
+//                // Show dialog message
+//                new AlertDialog.Builder(UpgradeActivity.this)
+//                        .setTitle(product.toString())
+//                        .setMessage(product.id)
+//                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+//                            @Override
+//                            public void onClick(DialogInterface dialogInterface, int i) {
+//
+//                            }
+//                        })
+//                        .show();
             }
         }
     }
@@ -172,25 +172,38 @@ public class UpgradeActivity extends AppCompatActivity {
 
                 for (Inventory.Product product : products) {
 
-                    // Show dialog message
-                    new AlertDialog.Builder(UpgradeActivity.this)
-                            .setTitle(product.toString())
-                            .setMessage(product.id)
-                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialogInterface, int i) {
-
-                                }
-                            })
-                            .show();
+//                    // Show dialog message
+//                    new AlertDialog.Builder(UpgradeActivity.this)
+//                            .setTitle(product.r)
+//                            .setMessage(product.getSku(.id))
+//                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+//                                @Override
+//                                public void onClick(DialogInterface dialogInterface, int i) {
+//
+//                                }
+//                            })
+//                            .show();
 
 
                     Purchase purchase = product.getPurchaseInState(TAXNOTE_PLUS_ID, Purchase.State.PURCHASED);
-
-                    if (purchase.sku.equals(TAXNOTE_PLUS_ID)) {
+//
+                    if (purchase != null) {
                         SharedPreferencesManager.saveTaxnotePlusPurchaseTime(UpgradeActivity.this,purchase.time);
                         showUpgradeToTaxnotePlusSuccessDialog();
+                    } else {
+                        DialogManager.showToast(UpgradeActivity.this, "purchase no");
                     }
+
+
+
+                    for (Purchase purchase1 : product.getPurchases()) {
+
+                        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy_MM_dd_hh_mm_ss");
+                        String purchaseTimeString = simpleDateFormat.format(purchase1.time);
+
+                        DialogManager.showOKOnlyAlert(UpgradeActivity.this, purchase1.packageName, purchaseTimeString);
+                    }
+
                 }
 
 
