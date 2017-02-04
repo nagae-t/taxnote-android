@@ -46,20 +46,20 @@
     <string name="entry_tab_fragment_account">Account</string>
     <string name="entry_tab_fragment_account2">Account</string>
     <string name="entry_tab_fragment_select_reason">Category</string>
-    <string name="tap_here_to_set_details">備考の入力はここをタップ</string>
-    <string name="save_data">仕訳帳に記録</string>
-    <string name="delete_done">削除しました。</string>
-    <string name="delete_done_after_title">を削除しました。</string>
+    <string name="tap_here_to_set_details">Summary</string>
+    <string name="save_data">Register</string>
+    <string name="delete_done">Deleted</string>
+    <string name="delete_done_after_title"> has been deleted.</string>
 
 
     //--------------------------------------------------------------//
     // -- Date --
     //--------------------------------------------------------------//
 
-    <string name="date_string_today">今日</string>
-    <string name="date_string_format_to_year_month_day_weekday">yyyy年M月d日 E</string>
-    <string name="date_string_format_to_year_month_day">yyyy年M月d日</string>
-    <string name="date_string_format_to_month_day">M月d日</string>
+    <string name="date_string_today">Today</string>
+    <string name="date_string_format_to_year_month_day_weekday">yyyy/M/d/ E</string>
+    <string name="date_string_format_to_year_month_day">yyyy/M/d</string>
+    <string name="date_string_format_to_month_day">M/d</string>
     <string name="date_string_format_for_export">yyyy/MM/dd</string>
     <string name="date_string_format_for_custom_range">yyyy_MM_dd</string>
 
@@ -68,25 +68,25 @@
     // -- List View --
     //--------------------------------------------------------------//
 
-    <string name="list_view_add_reason">科目を追加</string>
-    <string name="list_view_rename">科目名を変更</string>
+    <string name="list_view_add_reason">New Category</string>
+    <string name="list_view_rename">Rename</string>
 
 
     //--------------------------------------------------------------//
     // -- Settings --
     //--------------------------------------------------------------//
 
-    <string name="benefits_of_upgrade">アップグレードの特典</string>
-    <string name="taxnote_plus">Taxnoteプラス</string>
+    <string name="benefits_of_upgrade">About Upgrade</string>
+    <string name="taxnote_plus">Taxnote Plus</string>
     <string name="thanks_for_purchase">ご購入ありがとうございます！機種変更時の復元や有効期限の確認などもこちらのボタンをタップしてください。</string>
-    <string name="upgrade_is_active">有効</string>
-    <string name="taxnote_plus_descriptions">Taxnoteプラスにアップグレードすると月15件の入力制限が解除されます。一回のお支払いで一年間有効となります。機種変更時の復元、有効期限の確認、自動更新の解約などもこちらのボタンをタップしてください。</string>
-    <string name="frequently_asked_questions">ヘルプ・よくある質問</string>
-    <string name="ask_questions_or_request">要望・質問を送る</string>
-    <string name="version">バージョン</string>
+    <string name="upgrade_is_active">Active</string>
+    <string name="taxnote_plus_descriptions">With Taxnote Plus, you can unlock 15 entries limit per month.    Taxnoteプラスにアップグレードすると月15件の入力制限が解除されます。一回のお支払いで一年間有効となります。機種変更時の復元、有効期限の確認、自動更新の解約などもこちらのボタンをタップしてください。</string>
+    <string name="frequently_asked_questions">Help</string>
+    <string name="ask_questions_or_request">Send Feedback</string>
+    <string name="version">Version</string>
     <string name="upgrade_to_plus_unlock_the_limit">無料版ではそれぞれの月に15件までしか入力できません。もしよければ無制限に記録できるTaxnoteプラスをご検討ください。</string>
     <string name="go_to_upgrade_screen">アップグレード画面へ</string>
-    <string name="upgrade">アップグレード</string>
+    <string name="upgrade">Upgrade</string>
     <string name="share_taxnote">Taxnoteをシェアする</string>
     <string name="share_taxnote_title">この会計アプリ便利。</string>
     <string name="share_taxnote_message">この会計アプリ便利。https://play.google.com/store/apps/details?id=com.nonume.taxnote</string>
