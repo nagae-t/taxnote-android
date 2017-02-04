@@ -28,7 +28,6 @@ public class SharedPreferencesManager {
     private static final String ASK_ANYTHING_DONE_KEY           = "ASK_ANYTHING_DONE_KEY";
     private static final String FIRST_LAUNCH_KEY                = "FIRST_LAUNCH_KEY";
     private static final String TRACK_ENTRY_KEY                 = "TRACK_ENTRY_KEY";
-    private static final String DECIMAL_STATUS_KEY              = "DECIMAL_STATUS_KEY";
 
 
     //--------------------------------------------------------------//
@@ -63,25 +62,6 @@ public class SharedPreferencesManager {
 
     public static String getUuidForCurrentProject(Context context) {
         return getSharedPreferences(context).getString(UUID_FOR_CURRENT_KEY, "");
-    }
-
-
-    //--------------------------------------------------------------//
-    //    -- Current Decimal Status --
-    //--------------------------------------------------------------//
-
-    public static void saveDecimalStatusForCurrentProject(Context context, boolean decimalStatus) {
-
-        String currentProjectUuid = SharedPreferencesManager.getUuidForCurrentProject(context);
-        String key = DECIMAL_STATUS_KEY + currentProjectUuid;
-        getSharedPreferences(context).edit().putBoolean(key, decimalStatus).apply();
-    }
-
-    public static boolean getDecimalStatusForCurrentProject(Context context) {
-
-        String currentProjectUuid = SharedPreferencesManager.getUuidForCurrentProject(context);
-        String key = DECIMAL_STATUS_KEY + currentProjectUuid;
-        return getSharedPreferences(context).getBoolean(key, false);
     }
 
 

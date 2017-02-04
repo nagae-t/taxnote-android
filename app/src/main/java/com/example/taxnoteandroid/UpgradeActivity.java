@@ -23,7 +23,9 @@ import org.solovyev.android.checkout.Inventory;
 import org.solovyev.android.checkout.Purchase;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 import javax.annotation.Nonnull;
 
@@ -39,57 +41,14 @@ public class UpgradeActivity extends AppCompatActivity {
 
 //    BillingProcessor billingProcessor;
     private static final String LICENSE_KEY_OF_GOOGLE_PLAY = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAiqf39c7TtSqe9FV2Xz/Xa2S6dexgD2k5qK1ZnC7uCctI2J+Y8GW1oG2S5wN/zdxB5nlkP/a94GiAZqmxhLknVFqRMq32f4zuT2M8mGxFmCMpqQbvYgI2hDXY0xS7c0EITHNPykTRAqS1tgjuHRDWrNjfae7FuvIEJMe4h41tbYAAdKh8Uv+sv3cVmmTXn2j+Ep42XhE1moLug26orCS7IfKAJjAiRK5lzCaCF3mNqPcjogxjG425P44oVT8Ewnx4+N9qbfkzQueCqkw4mD4UdBABCefjZ6t+N2+ZEwGreV/nu5P7kXOsDZp9SGlNB99rL21Xnpzc+QDQvUkBXlNTWQIDAQAB";
-    private static final String TAXNOTE_PLUS_ID = "sub3";
+    private static final String TAXNOTE_PLUS_ID = "subb";
     private boolean googlePlayPurchaseIsAvailable = false;
 
 
-
-    private class PurchaseListener extends EmptyRequestListener<Purchase> {
-
-        @Override
-        public void onSuccess(@Nonnull Purchase result) {
-
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy_MM_dd_hh_mm_ss");
-            String purchaseTimeString = simpleDateFormat.format(result.time);
-
-            // Show dialog message
-            new AlertDialog.Builder(UpgradeActivity.this)
-                    .setTitle(result.packageName)
-                    .setMessage(purchaseTimeString)
-                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-
-                        }
-                    })
-                    .show();
-
-
-
-            SharedPreferencesManager.saveTaxnotePlusPurchaseTime(UpgradeActivity.this,result.time);
-
-            showUpgradeToTaxnotePlusSuccessDialog();
-        }
-
-        @Override
-        public void onError(int response, @Nonnull Exception e) {
-
-            // Show error dialog
-            String title = getResources().getString(R.string.Error);
-            String message = e.getLocalizedMessage();
-            DialogManager.showOKOnlyAlert(UpgradeActivity.this, title, message);
-        }
-    }
-
-    private class InventoryCallback implements Inventory.Callback {
-        @Override
-        public void onLoaded(Inventory.Products products) {
-            // your code here
-        }
-    }
-
     private final ActivityCheckout mCheckout = Checkout.forActivity(this, TaxnoteApp.get().getBilling());
     private Inventory mInventory;
+
+    private final List<Inventory.Callback> mInventoryCallbacks = new ArrayList<>();
 
 
     @Override
@@ -111,6 +70,9 @@ public class UpgradeActivity extends AppCompatActivity {
         mInventory.load(Inventory.Request.create()
                 .loadAllPurchases()
                 .loadSkus(SUBSCRIPTION, TAXNOTE_PLUS_ID), new InventoryCallback());
+
+        reloadInventory();
+
     }
 
     @Override
@@ -133,6 +95,110 @@ public class UpgradeActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         mCheckout.onActivityResult(requestCode, resultCode, data);
+    }
+
+    private class PurchaseListener extends EmptyRequestListener<Purchase> {
+
+        @Override
+        public void onSuccess(@Nonnull Purchase result) {
+//
+//            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy_MM_dd_hh_mm_ss");
+//            String purchaseTimeString = simpleDateFormat.format(result.time);
+//
+//            // Show dialog message
+//            new AlertDialog.Builder(UpgradeActivity.this)
+//                    .setTitle(result.packageName)
+//                    .setMessage(purchaseTimeString)
+//                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+//                        @Override
+//                        public void onClick(DialogInterface dialogInterface, int i) {
+//
+//                        }
+//                    })
+//                    .show();
+//
+//
+//
+//            SharedPreferencesManager.saveTaxnotePlusPurchaseTime(UpgradeActivity.this,result.time);
+//
+//            showUpgradeToTaxnotePlusSuccessDialog();
+
+            reloadInventory();
+        }
+
+        @Override
+        public void onError(int response, @Nonnull Exception e) {
+
+            // Show error dialog
+            String title = getResources().getString(R.string.Error);
+            String message = e.getLocalizedMessage();
+            DialogManager.showOKOnlyAlert(UpgradeActivity.this, title, message);
+
+            reloadInventory();
+        }
+    }
+
+    private class InventoryCallback implements Inventory.Callback {
+        @Override
+        public void onLoaded(Inventory.Products products) {
+            // your code here
+
+            for (Inventory.Product product : products) {
+
+
+                // Show dialog message
+                new AlertDialog.Builder(UpgradeActivity.this)
+                        .setTitle(product.toString())
+                        .setMessage(product.id)
+                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+
+                            }
+                        })
+                        .show();
+            }
+        }
+    }
+
+    private void reloadInventory() {
+
+        final Inventory.Request request = Inventory.Request.create();
+        request.loadPurchases(SUBSCRIPTION);
+        request.loadSkus(SUBSCRIPTION, TAXNOTE_PLUS_ID);
+        mCheckout.loadInventory(request, new Inventory.Callback() {
+            @Override
+            public void onLoaded(@Nonnull Inventory.Products products) {
+
+                for (Inventory.Product product : products) {
+
+                    // Show dialog message
+                    new AlertDialog.Builder(UpgradeActivity.this)
+                            .setTitle(product.toString())
+                            .setMessage(product.id)
+                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+
+                                }
+                            })
+                            .show();
+
+
+                    Purchase purchase = product.getPurchaseInState(TAXNOTE_PLUS_ID, Purchase.State.PURCHASED);
+
+                    if (purchase.sku.equals(TAXNOTE_PLUS_ID)) {
+                        SharedPreferencesManager.saveTaxnotePlusPurchaseTime(UpgradeActivity.this,purchase.time);
+                        showUpgradeToTaxnotePlusSuccessDialog();
+                    }
+                }
+
+
+//                for (Inventory.Callback callback : mInventoryCallbacks) {
+//                    callback.onLoaded(products);
+//                }
+            }
+        });
     }
 
 

@@ -56,6 +56,10 @@ public class ProjectDataManager {
         return ormaDatabase.updateProject().idEq(project.id).accountUuidForIncome(project.accountUuidForIncome).execute();
     }
 
+    public int updateDecimal(Project project, boolean decimalStatus) {
+        return ormaDatabase.updateProject().idEq(project.id).decimal(decimalStatus).execute();
+    }
+
 
     //--------------------------------------------------------------//
     //    -- Delete --

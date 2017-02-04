@@ -75,7 +75,11 @@ public class ReasonDataManager {
     public int updateName(long id, String name) {
         return ormaDatabase.updateReason().idEq(id).name(name).execute();
     }
-    
+
+    public int updateOrder(long id, int order) {
+        return ormaDatabase.updateReason().idEq(id).order(order).execute();
+    }
+
     
     //--------------------------------------------------------------//
     //    -- Delete --
@@ -86,11 +90,4 @@ public class ReasonDataManager {
     }
 
 
-  //--------------------------------------------------------------//
-  //    -- Change order --
-  //--------------------------------------------------------------//
-
-  public int updateOrder(long id, int order) {
-    return ormaDatabase.updateReason().idEq(id).order(order).execute(); // 2017/01/17 E.Nozaki
-  }
 }

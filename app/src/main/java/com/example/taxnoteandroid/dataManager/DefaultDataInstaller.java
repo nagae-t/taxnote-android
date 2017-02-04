@@ -15,7 +15,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Type;
 import java.util.List;
-import java.util.Locale;
 import java.util.UUID;
 
 public class DefaultDataInstaller {
@@ -52,13 +51,6 @@ public class DefaultDataInstaller {
         // Save shared preferences
         SharedPreferencesManager.saveUuidForCurrentProject(context, project.uuid);
         SharedPreferencesManager.saveDefaultDatabaseSet(context);
-
-        // Set decimal status
-        if (Locale.getDefault().getCountry().equals("JP")) {
-            SharedPreferencesManager.saveDecimalStatusForCurrentProject(context, false);
-        } else {
-            SharedPreferencesManager.saveDecimalStatusForCurrentProject(context, true);
-        }
     }
 
     private static void setDefaultReasonData(Context context, Project project) {

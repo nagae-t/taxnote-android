@@ -10,10 +10,11 @@ public class ValueConverter {
 
     public static String formatPrice(long price) {
 
-        //QQ ここで 10,000円を 100.00と表示するようにしたい
+        //@@ ここで 10,000円を 100.00と表示するようにしたい
         DecimalFormat formatForPriceStyle   = new DecimalFormat("#,###.##");
-        String priceString                  = formatForPriceStyle.format(price / 100D);
+//        String priceString                  = formatForPriceStyle.format(price / 100D);
 
+        String priceString                  = formatForPriceStyle.format(price);
         return priceString;
     }
 

@@ -9,9 +9,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
 
-import com.example.taxnoteandroid.dataManager.SharedPreferencesManager;
+import com.example.taxnoteandroid.dataManager.ProjectDataManager;
 import com.example.taxnoteandroid.databinding.FragmentSettingsTabBinding;
-import com.helpshift.support.Log;
+import com.example.taxnoteandroid.model.Project;
 import com.helpshift.support.Support;
 
 
@@ -79,20 +79,14 @@ public class SettingsTabFragment extends Fragment {
     private void setDecimalSwitch() {
 
         // Set current decimal status
-        boolean decimalStatus = SharedPreferencesManager.getDecimalStatusForCurrentProject(getContext());
-        binding.decimalSwitch.setChecked(decimalStatus);
+        final ProjectDataManager projectDataManager   = new ProjectDataManager(getActivity());
+        final Project project                         = projectDataManager.findCurrentProjectWithContext(getActivity());
+        binding.decimalSwitch.setChecked(project.decimal);
 
         binding.decimalSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView,boolean isChecked) {
-
-                SharedPreferencesManager.saveDecimalStatusForCurrentProject(getContext(),isChecked);
-
-                if (isChecked) {
-                    Log.i("Switch", "ON");
-                } else {
-                    Log.i("Switch", "OFF");
-                }
+                projectDataManager.updateDecimal(project, isChecked);
             }
         });
     }
