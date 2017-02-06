@@ -25,10 +25,7 @@ public class UpgradeManger {
 
         calendar.add(Calendar.YEAR, 1);
 
-//        calendar.add(Calendar.HOUR, 24);
-
         long expireTime = calendar.getTimeInMillis();
-
         long now = System.currentTimeMillis();
 
         return expireTime > now;
