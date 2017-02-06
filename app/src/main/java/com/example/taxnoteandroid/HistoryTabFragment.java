@@ -136,7 +136,7 @@ public class HistoryTabFragment extends Fragment {
             }
 
             // Format the totalPrice
-            header.sum = ValueConverter.formatPrice(totalPrice);
+            header.sum = ValueConverter.formatPrice(getActivity(), totalPrice);
         }
 
         HistoryAdapter historyAdapter = new HistoryAdapter(items);
@@ -268,7 +268,7 @@ public class HistoryTabFragment extends Fragment {
                     }
 
                     // Create price string
-                    String priceString                  = ValueConverter.formatPriceWithSymbol(item.cell.entry.price, item.cell.entry.isExpense);
+                    String priceString                  = ValueConverter.formatPriceWithSymbol(getActivity() ,item.cell.entry.price, item.cell.entry.isExpense);
                     binding.price.setText(priceString);
 
                     // Set price color

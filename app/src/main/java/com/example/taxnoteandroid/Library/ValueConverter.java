@@ -1,5 +1,9 @@
 package com.example.taxnoteandroid.Library;
 
+import android.content.Context;
+
+import com.example.taxnoteandroid.dataManager.ProjectDataManager;
+
 import java.text.DecimalFormat;
 
 /**
@@ -8,25 +12,34 @@ import java.text.DecimalFormat;
 
 public class ValueConverter {
 
-    public static String formatPrice(long price) {
+    public static String formatPrice(Context context, long price) {
 
-        //@@ ここで 10,000円を 100.00と表示するようにしたい
-        DecimalFormat formatForPriceStyle   = new DecimalFormat("#,###.##");
-//        String priceString                  = formatForPriceStyle.format(price / 100D);
+        ProjectDataManager projectDataManager = new ProjectDataManager(context);
+        boolean decimalStatus = projectDataManager.getDecimalStatusWithContect(context);
+        String priceString;
 
-        Double doublePrice = price / 100D;
+        //@@@
 
-//        String priceString                  = formatForPriceStyle.format(price);
+        if (decimalStatus) {
 
-        String priceString                  = formatForPriceStyle.format(doublePrice);
+            DecimalFormat formatForPriceStyle   = new DecimalFormat("#,##0.00");
+            Double doublePrice                  = price / 100D;
+            priceString                         = formatForPriceStyle.format(doublePrice);
+
+        } else {
+            DecimalFormat formatForPriceStyle   = new DecimalFormat("#,###");
+            priceString                         = formatForPriceStyle.format(price);
+        }
 
         return priceString;
     }
 
-    public static String formatPriceWithSymbol(long price, boolean isExpense) {
+    public static String formatPriceWithSymbol(Context context, long price, boolean isExpense) {
 
-        DecimalFormat formatForPriceStyle   = new DecimalFormat("#,###.##");
-        String priceString                  = formatForPriceStyle.format(price);
+        String priceString = formatPrice(context, price);
+
+//        DecimalFormat formatForPriceStyle   = new DecimalFormat("#,###.##");
+//        String priceString                  = formatForPriceStyle.format(price);
 
         if (isExpense) {
             priceString = "-" + priceString;

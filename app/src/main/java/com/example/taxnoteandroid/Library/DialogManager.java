@@ -25,7 +25,7 @@ public class DialogManager {
     public static void showInputDataToast(Context context, Entry entry) {
 
         String message;
-        String priceString = ValueConverter.formatPrice(entry.price);
+        String priceString = ValueConverter.formatPrice(context ,entry.price);
 
         if (entry.isExpense) {
             message =  entry.reason.name + " / " + entry.account.name + " :" + priceString;

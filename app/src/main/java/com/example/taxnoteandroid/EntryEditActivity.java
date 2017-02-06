@@ -247,7 +247,7 @@ public class EntryEditActivity extends AppCompatActivity {
     private void loadCurrentPrice() {
 
         // Create price string
-        String priceString = ValueConverter.formatPriceWithSymbol(entry.price, entry.isExpense);
+        String priceString = ValueConverter.formatPriceWithSymbol(EntryEditActivity.this, entry.price, entry.isExpense);
         binding.price.setText(priceString);
     }
 

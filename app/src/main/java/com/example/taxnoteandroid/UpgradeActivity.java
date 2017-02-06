@@ -7,7 +7,9 @@ import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
+import android.widget.Toast;
 
 import com.example.taxnoteandroid.Library.DialogManager;
 import com.example.taxnoteandroid.Library.UpgradeManger;
@@ -28,19 +30,13 @@ public class UpgradeActivity extends AppCompatActivity {
 
     private ActivityUpgradeBinding binding;
 
-    private static final String LICENSE_KEY_OF_GOOGLE_PLAY = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAiqf39c7TtSqe9FV2Xz/Xa2S6dexgD2k5qK1ZnC7uCctI2J+Y8GW1oG2S5wN/zdxB5nlkP/a94GiAZqmxhLknVFqRMq32f4zuT2M8mGxFmCMpqQbvYgI2hDXY0xS7c0EITHNPykTRAqS1tgjuHRDWrNjfae7FuvIEJMe4h41tbYAAdKh8Uv+sv3cVmmTXn2j+Ep42XhE1moLug26orCS7IfKAJjAiRK5lzCaCF3mNqPcjogxjG425P44oVT8Ewnx4+N9qbfkzQueCqkw4mD4UdBABCefjZ6t+N2+ZEwGreV/nu5P7kXOsDZp9SGlNB99rL21Xnpzc+QDQvUkBXlNTWQIDAQAB";
+    private static final String LICENSE_KEY_OF_GOOGLE_PLAY = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEArqj6H3BADGx1hwO9Z7VN0k/rUpA84li83denEBFui/bqomHsYd2LKV3DCp7P6D1Saw8xIQx9AIw6ZQZ17Jxlor9r9Wo+E7Ue0NlgEcdbNVIub9S0CHosdE0H4m6LxeZobxZHX8NjnHulZ2pP3s5DpiMspVHq/DEe82raIltcqDqK7pAbVu7qjew33Xr+d2v+CPRFpWplE+RsTsZB2S3dB3eu/Nupgk7WnMVoSStIaJW6clIu44PeEPyAJKs3wCtlmLyMp6x3n3SOk+YdPolEcm1G7Np3o3Eg4pbguzoQ2bf5sxK+b2QfafD7leufIB2dtWPpkiA8srjR3bmDv7X7kwIDAQAB";
     private static final String TAXNOTE_PLUS_ID = "spp";
 
     static final String TAG = "Taxnote";
-
-    private static final String SKU_PREMIUM = "testetes";
-    private static final String SKU_PREMIUM_SUBSCRIPTION = "spp";
-
     private static final int REQUEST_CODE_PURCHASE_PREMIUM = 0;
-    private static final String BILLING_PUBLIC_KEY = LICENSE_KEY_OF_GOOGLE_PLAY;
 
     private IabHelper mBillingHelper;
-    private boolean mIsPremium = false;
 
 
     @Override
@@ -54,13 +50,12 @@ public class UpgradeActivity extends AppCompatActivity {
         setupBilling();
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-
-        restorePurchases();
-        showTestDialog();
-    }
+//    @Override
+//    public void onStart() {
+//        super.onStart();
+//
+////        showTestDialog();
+//    }
 
 
     @Override
@@ -104,13 +99,27 @@ public class UpgradeActivity extends AppCompatActivity {
     private IabHelper.QueryInventoryFinishedListener mGotInventoryListener = new IabHelper.QueryInventoryFinishedListener() {
 
         public void onQueryInventoryFinished(IabResult result, Inventory inventory) {
-            Log.d("billing", "Query inventory finished.");
-            if (result.isFailure()) return;
-            Log.d("billing", "Query inventory was successful.");
-            mIsPremium = inventory.hasPurchase(SKU_PREMIUM);
-            Log.d("billing", "User is " + (mIsPremium ? "PREMIUM" : "NOT PREMIUM"));
 
-            DialogManager.showToast(UpgradeActivity.this, "onQueryInventoryFinished");
+
+            String message = "Query inventory finished + inventory = " + inventory + " result = " + result;
+
+
+            Log.d("billing", message);
+
+
+
+            DialogManager.showToast(UpgradeActivity.this, message);
+
+            DialogManager.showOKOnlyAlert(UpgradeActivity.this, "log", message);
+
+
+
+            if (result.isFailure()) return;
+
+            Log.d("billing", "Query inventory was successful.");
+
+            DialogManager.showToast(UpgradeActivity.this, "Query inventory was successful.");
+            DialogManager.showOKOnlyAlert(UpgradeActivity.this, "log", "Query inventory was successful.");
         }
     };
 
@@ -118,8 +127,14 @@ public class UpgradeActivity extends AppCompatActivity {
 
         public void onIabPurchaseFinished(IabResult result, Purchase purchase) {
 
-            String message = "onIabPurchaseFinished";
+            String message = "onIabPurchaseFinished + purchase = " + purchase + " result = " + result;
             DialogManager.showToast(UpgradeActivity.this, message);
+
+            Toast toast = Toast.makeText(UpgradeActivity.this, message, Toast.LENGTH_LONG);
+            toast.setGravity(Gravity.CENTER, 0, 0);
+            toast.show();
+
+            DialogManager.showOKOnlyAlert(UpgradeActivity.this, "log", message);
 
 
             Log.d("billing", "Purchase finished: " + result + ", purchase: " + purchase);
@@ -127,12 +142,12 @@ public class UpgradeActivity extends AppCompatActivity {
 
             Log.d("billing", "Purchase successful.");
 
-            if (purchase.getSku().equals(SKU_PREMIUM)) {
-
-                Log.d("billing", "Purchase is premium upgrade. Congratulating user.");
-                mIsPremium = true;
-            }
-            if (purchase.getSku().equals(SKU_PREMIUM_SUBSCRIPTION)) {
+//            if (purchase.getSku().equals(SKU_PREMIUM)) {
+//
+//                Log.d("billing", "Purchase is premium upgrade. Congratulating user.");
+//                mIsPremium = true;
+//            }
+            if (purchase.getSku().equals(TAXNOTE_PLUS_ID)) {
 
                 Log.d("billing", "Purchase is new subscribing. Congratulating.");
 
@@ -224,17 +239,10 @@ public class UpgradeActivity extends AppCompatActivity {
 
         if (mBillingHelper.subscriptionsSupported()) {
             try {
-                mBillingHelper.launchSubscriptionPurchaseFlow(UpgradeActivity.this, SKU_PREMIUM_SUBSCRIPTION, REQUEST_CODE_PURCHASE_PREMIUM, mPurchaseFinishedListener);
+                mBillingHelper.launchSubscriptionPurchaseFlow(UpgradeActivity.this, TAXNOTE_PLUS_ID, REQUEST_CODE_PURCHASE_PREMIUM, mPurchaseFinishedListener);
             } catch (IabHelper.IabAsyncInProgressException e) {
                 e.printStackTrace();
             }
-        }
-    }
-
-    private void restorePurchases() {
-
-        if (!UpgradeManger.taxnotePlusIsActive(this)) {
-
         }
     }
 

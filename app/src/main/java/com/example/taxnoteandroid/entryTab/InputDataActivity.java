@@ -152,6 +152,9 @@ public class InputDataActivity extends AppCompatActivity {
 
         priceTextView = (TextView) findViewById(R.id.title);
 
+        String priceString = ValueConverter.formatPrice(InputDataActivity.this ,currentPrice);
+        priceTextView.setHint(priceString);
+
         OnPriceClickListener onPriceClickListener = new OnPriceClickListener();
         findViewById(R.id.button_0).setOnClickListener(onPriceClickListener);
         findViewById(R.id.button_1).setOnClickListener(onPriceClickListener);
@@ -244,6 +247,7 @@ public class InputDataActivity extends AppCompatActivity {
                     break;
                 case R.id.button_c:
                     priceTextView.setText(null);
+                    currentPrice = 0;
                     return;
             }
 
@@ -255,8 +259,9 @@ public class InputDataActivity extends AppCompatActivity {
             }
 
             // Create price string
-            currentPrice = Long.parseLong(text + price);
-            String priceString = ValueConverter.formatPrice(currentPrice);
+            String currentPriceString = Long.toString(currentPrice);
+            currentPrice = Long.parseLong(currentPriceString + price);
+            String priceString = ValueConverter.formatPrice(InputDataActivity.this ,currentPrice);
 
             priceTextView.setText(priceString);
         }

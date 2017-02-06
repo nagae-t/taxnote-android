@@ -77,7 +77,7 @@ public class PriceEditActivity extends AppCompatActivity {
 
         priceTextView = (TextView) findViewById(R.id.title);
 
-        String priceString = ValueConverter.formatPrice(currentPrice);
+        String priceString = ValueConverter.formatPrice(PriceEditActivity.this ,currentPrice);
         priceTextView.setText(priceString);
 
         OnPriceClickListener onPriceClickListener = new OnPriceClickListener();
@@ -112,7 +112,7 @@ public class PriceEditActivity extends AppCompatActivity {
         if (updated != 0) {
 
             // Show update dialog
-            String priceString = ValueConverter.formatPrice(currentPrice);
+            String priceString = ValueConverter.formatPrice(PriceEditActivity.this ,currentPrice);
             DialogManager.showToast(PriceEditActivity.this, priceString);
 
             finish();
@@ -165,6 +165,7 @@ public class PriceEditActivity extends AppCompatActivity {
                     break;
                 case R.id.button_c:
                     priceTextView.setText(null);
+                    currentPrice = 0;
                     return;
             }
 
@@ -176,8 +177,9 @@ public class PriceEditActivity extends AppCompatActivity {
             }
 
             // Create price string
-            currentPrice = Long.parseLong(text + price);
-            String priceString = ValueConverter.formatPrice(currentPrice);
+            String currentPriceString = Long.toString(currentPrice);
+            currentPrice = Long.parseLong(currentPriceString + price);
+            String priceString = ValueConverter.formatPrice(PriceEditActivity.this ,currentPrice);
 
             priceTextView.setText(priceString);
         }
