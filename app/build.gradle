@@ -24,8 +24,8 @@ android {
         applicationId "com.nonumemo.taxnote"
         minSdkVersion 19
         targetSdkVersion 22
-        versionCode 35
-        versionName "1.1.4"
+        versionCode 41
+        versionName "1.2.1"
     }
     dataBinding {
         enabled true
@@ -60,7 +60,7 @@ dependencies {
 
     // In-App Billing v3 Library
 //    compile 'com.anjlab.android.iab.v3:library:1.0.38'
-    compile 'org.solovyev.android:checkout:0.9.4'
+//    compile 'org.solovyev.android:checkout:0.9.4'
 
     // Advanced RecyclerView
     compile('com.h6ah4i.android.widget.advrecyclerview:advrecyclerview:0.10.2@aar') {

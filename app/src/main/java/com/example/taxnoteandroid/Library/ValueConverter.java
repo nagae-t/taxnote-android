@@ -14,7 +14,12 @@ public class ValueConverter {
         DecimalFormat formatForPriceStyle   = new DecimalFormat("#,###.##");
 //        String priceString                  = formatForPriceStyle.format(price / 100D);
 
-        String priceString                  = formatForPriceStyle.format(price);
+        Double doublePrice = price / 100D;
+
+//        String priceString                  = formatForPriceStyle.format(price);
+
+        String priceString                  = formatForPriceStyle.format(doublePrice);
+
         return priceString;
     }
 
