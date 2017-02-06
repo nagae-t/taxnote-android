@@ -1,65 +1,66 @@
 <resources>
 
-    <string name="app_name">Taxnote</string>
-    <string name="Expense">Expense</string>
-    <string name="Income">Income</string>
-    <string name="Entry">Entry</string>
-    <string name="History">History</string>
-    <string name="report">Overview</string>
-    <string name="Settings">Settings</string>
-    <string name="Update">Update</string>
-    <string name="Details">details</string>
-    <string name="Price">Price</string>
-    <string name="Delete">Delete</string>
-    <string name="help">Help</string>
-    <string name="edit_entry">Edit</string>
 
-    <string name="SummaryActivity_no_select">Skip</string>
-    <string name="SummaryActivity_nex">Skip</string>
-    <string name="SummaryActivity_select">Summary</string>
-    <string name="SummaryActivity_footer">New Summary</string>
+    <string name="app_name">Taxnote</string>
+    <string name="Expense">支出</string>
+    <string name="Income">収入</string>
+    <string name="Entry">入力</string>
+    <string name="History">仕訳帳</string>
+    <string name="report">損益表</string>
+    <string name="Settings">設定</string>
+    <string name="Update">更新する</string>
+    <string name="Details">備考</string>
+    <string name="Price">金額</string>
+    <string name="Delete">削除する</string>
+    <string name="help">ヘルプ</string>
+    <string name="edit_entry">仕訳の編集</string>
+
+    <string name="SummaryActivity_no_select">備考を選択しない</string>
+    <string name="SummaryActivity_nex">次へ進む</string>
+    <string name="SummaryActivity_select">備考を選択</string>
+    <string name="SummaryActivity_footer">備考を追加</string>
 
     <string name="MainActivity_entry_tab">Entry</string>
     <string name="MainActivity_history_tab">History</string>
     <string name="MainActivity_settings_tab">Settings</string>
 
-    <string name="done">Done</string>
-    <string name="cancel">Cancel</string>
-    <string name="delete_confirm_message">Are you sure to delete it?</string>
+    <string name="done">完了</string>
+    <string name="cancel">キャンセル</string>
+    <string name="delete_confirm_message">削除していいですか？</string>
 
 
     //--------------------------------------------------------------//
     // -- Error Message --
     //--------------------------------------------------------------//
 
-    <string name="Error">Error</string>
-    <string name="please_enter_price">Please enter the price.</string>
-    <string name="history_data_empty">Please enter data from Entry tab.</string>
-    <string name="using_this_account_in_entry_already">You have records using this account, please delete them from the History.</string>
+    <string name="Error">エラー</string>
+    <string name="please_enter_price">金額を入力してください。</string>
+    <string name="history_data_empty">入力タブからデータを入力してください。</string>
+    <string name="using_this_account_in_entry_already">指定した科目を使用した記録があります。まず、仕訳帳から該当する記録を削除してください。</string>
 
 
     //--------------------------------------------------------------//
     // -- Entry Tab --
     //--------------------------------------------------------------//
 
-    <string name="entry_tab_fragment_date">Date</string>
-    <string name="entry_tab_fragment_account">Account</string>
-    <string name="entry_tab_fragment_account2">Account</string>
-    <string name="entry_tab_fragment_select_reason">Category</string>
-    <string name="tap_here_to_set_details">Summary</string>
-    <string name="save_data">Register</string>
-    <string name="delete_done">Deleted</string>
-    <string name="delete_done_after_title"> has been deleted.</string>
+    <string name="entry_tab_fragment_date">日付</string>
+    <string name="entry_tab_fragment_account">支払い方法</string>
+    <string name="entry_tab_fragment_account2">受け取り方法</string>
+    <string name="entry_tab_fragment_select_reason">科目を選択</string>
+    <string name="tap_here_to_set_details">備考の入力はここをタップ</string>
+    <string name="save_data">仕訳帳に記録</string>
+    <string name="delete_done">削除しました。</string>
+    <string name="delete_done_after_title">を削除しました。</string>
 
 
     //--------------------------------------------------------------//
     // -- Date --
     //--------------------------------------------------------------//
 
-    <string name="date_string_today">Today</string>
-    <string name="date_string_format_to_year_month_day_weekday">yyyy/M/d/ E</string>
-    <string name="date_string_format_to_year_month_day">yyyy/M/d</string>
-    <string name="date_string_format_to_month_day">M/d</string>
+    <string name="date_string_today">今日</string>
+    <string name="date_string_format_to_year_month_day_weekday">yyyy年M月d日 E</string>
+    <string name="date_string_format_to_year_month_day">yyyy年M月d日</string>
+    <string name="date_string_format_to_month_day">M月d日</string>
     <string name="date_string_format_for_export">yyyy/MM/dd</string>
     <string name="date_string_format_for_custom_range">yyyy_MM_dd</string>
 
@@ -68,29 +69,29 @@
     // -- List View --
     //--------------------------------------------------------------//
 
-    <string name="list_view_add_reason">New Category</string>
-    <string name="list_view_rename">Rename</string>
+    <string name="list_view_add_reason">科目を追加</string>
+    <string name="list_view_rename">科目名を変更</string>
 
 
     //--------------------------------------------------------------//
     // -- Settings --
     //--------------------------------------------------------------//
 
-    <string name="benefits_of_upgrade">About Upgrade</string>
-    <string name="taxnote_plus">Taxnote Plus</string>
+    <string name="benefits_of_upgrade">アップグレードの特典</string>
+    <string name="taxnote_plus">Taxnoteプラス</string>
     <string name="thanks_for_purchase">ご購入ありがとうございます！機種変更時の復元や有効期限の確認などもこちらのボタンをタップしてください。</string>
-    <string name="upgrade_is_active">Active</string>
-    <string name="taxnote_plus_descriptions">With Taxnote Plus, you can unlock 15 entries limit per month.    Taxnoteプラスにアップグレードすると月15件の入力制限が解除されます。一回のお支払いで一年間有効となります。機種変更時の復元、有効期限の確認、自動更新の解約などもこちらのボタンをタップしてください。</string>
-    <string name="frequently_asked_questions">Help</string>
-    <string name="ask_questions_or_request">Send Feedback</string>
-    <string name="version">Version</string>
+    <string name="upgrade_is_active">有効</string>
+    <string name="taxnote_plus_descriptions">Taxnoteは無料ですべての機能が使えますが、月15件の入力制限があります。まずは無料版でいろいろ使ってみてください。\n\nTaxnoteプラスにアップグレードすると月15件の入力制限が解除されます。一回のお支払いで一年間有効となります。機種変更時の復元、有効期限の確認、自動更新の解約などもこちらのボタンをタップしてください。</string>
+    <string name="frequently_asked_questions">ヘルプ・よくある質問</string>
+    <string name="ask_questions_or_request">要望・質問を送る</string>
+    <string name="version">バージョン</string>
     <string name="upgrade_to_plus_unlock_the_limit">無料版ではそれぞれの月に15件までしか入力できません。もしよければ無制限に記録できるTaxnoteプラスをご検討ください。</string>
     <string name="go_to_upgrade_screen">アップグレード画面へ</string>
-    <string name="upgrade">Upgrade</string>
+    <string name="upgrade">アップグレード</string>
     <string name="share_taxnote">Taxnoteをシェアする</string>
     <string name="share_taxnote_title">この会計アプリ便利。</string>
     <string name="share_taxnote_message">この会計アプリ便利。https://play.google.com/store/apps/details?id=com.nonume.taxnote</string>
-    <string name="decimal_button">Decimal</string>
+    <string name="decimal_button">小数点表示（ドル・ユーロなどに）</string>
 
 
     //--------------------------------------------------------------//
@@ -145,10 +146,8 @@
     <string name="reorder_how_to_message">科目をしばらくタップし続けると色が変わるので、そのまま押し続けながら上下に移動させてください。</string>
     <string name="help_rename_category_message">この科目は仕訳帳にすでに使われているので、該当する仕訳帳内の科目名も自動的に変更されます。</string>
     <string name="tap_here">（ここをタップ）</string>
-
     <string name="ask_anything_title">質問や要望はお気軽に</string>
     <string name="ask_anything_message">こんにちは、Taxnoteを開発している梅本です。アプリの操作で分からない部分や要望がありましたら、ヘルプからお気軽にお問い合わせください。開発からサポートまでやっているので直接お答えできます。</string>
-
     <string name="see_help">ヘルプを見る</string>
 
 

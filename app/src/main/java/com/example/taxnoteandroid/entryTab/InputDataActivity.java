@@ -50,6 +50,8 @@ public class InputDataActivity extends AppCompatActivity {
     public Summary summary;
     public long date;
     private long currentPrice = 0;
+    private  String dateString;
+
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
      * See https://g.co/AppIndexing/AndroidStudio for more information.
@@ -112,7 +114,7 @@ public class InputDataActivity extends AppCompatActivity {
     private void setTitle() {
 
         String title;
-        String dateString = getResources().getString(R.string.date_string_today);
+        dateString = getResources().getString(R.string.date_string_today);
 
         // Show the date if it is not today
         if (!DateUtils.isToday(date)) {
@@ -313,7 +315,7 @@ public class InputDataActivity extends AppCompatActivity {
             countAndTrackEntry();
             SharedPreferencesManager.saveFirstRegisterDone(InputDataActivity.this);
 
-            DialogManager.showInputDataToast(this, entry);
+            DialogManager.showInputDataToast(this, dateString,entry);
             setResult(RESULT_OK);
             finish();
 

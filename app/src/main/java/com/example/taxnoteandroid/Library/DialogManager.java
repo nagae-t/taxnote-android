@@ -22,15 +22,15 @@ public class DialogManager {
     //    -- Toast --
     //--------------------------------------------------------------//
 
-    public static void showInputDataToast(Context context, Entry entry) {
+    public static void showInputDataToast(Context context, String dateString, Entry entry) {
 
         String message;
         String priceString = ValueConverter.formatPrice(context ,entry.price);
 
         if (entry.isExpense) {
-            message =  entry.reason.name + " / " + entry.account.name + " :" + priceString;
+            message = dateString + " " + entry.reason.name + " / " + entry.account.name + " :" + priceString;
         } else {
-            message = entry.account.name + " / " + entry.reason.name + " :" + priceString;
+            message = dateString + " " + entry.account.name + " / " + entry.reason.name + " :" + priceString;
         }
 
         Toast toast = Toast.makeText(context, message, Toast.LENGTH_SHORT);

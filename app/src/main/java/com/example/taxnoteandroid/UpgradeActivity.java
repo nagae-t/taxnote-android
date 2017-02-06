@@ -22,8 +22,8 @@ import com.kobakei.ratethisapp.RateThisApp;
 public class UpgradeActivity extends AppCompatActivity {
 
     private ActivityUpgradeBinding binding;
-    private static final String LICENSE_KEY_OF_GOOGLE_PLAY = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEArqj6H3BADGx1hwO9Z7VN0k/rUpA84li83denEBFui/bqomHsYd2LKV3DCp7P6D1Saw8xIQx9AIw6ZQZ17Jxlor9r9Wo+E7Ue0NlgEcdbNVIub9S0CHosdE0H4m6LxeZobxZHX8NjnHulZ2pP3s5DpiMspVHq/DEe82raIltcqDqK7pAbVu7qjew33Xr+d2v+CPRFpWplE+RsTsZB2S3dB3eu/Nupgk7WnMVoSStIaJW6clIu44PeEPyAJKs3wCtlmLyMp6x3n3SOk+YdPolEcm1G7Np3o3Eg4pbguzoQ2bf5sxK+b2QfafD7leufIB2dtWPpkiA8srjR3bmDv7X7kwIDAQAB";
-    private static final String TAXNOTE_PLUS_ID = "taxnoteplus.sub";
+    private static final String LICENSE_KEY_OF_GOOGLE_PLAY = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAm+14FzQyLcAO7X2zwFDWXwHDuzN8RA60R71JouG5TO6la3xh0A7uWIQ4Y2k1kvqa/fHRAOble7TxIDsy11GsLjD/2sI+e4p4pE5vDKeY3ARBadcQI7iDc/VVnkzCSrZeoGTYinm+99diGn71cGIlF+7ISnh98Kss1zguKLlY+tCkaDDCe+moghLYTvqVuJg27ShVfxxPpWr4gwMusdSMcbJLR6S4ajeWbEtacGAdEJnzQfuAH6RMnt/ggZa4CFRVbNnJA6Eft/CCQL7GFBwBYnkMfG+Jdr+66BcTHbtPP8cE5WdmjGzDje+iy5HGYyIfqiDTdBs178zgWKUS8TM9QwIDAQAB";
+    private static final String TAXNOTE_PLUS_ID = "taxnote.plus.sub";
     private static final int REQUEST_CODE_PURCHASE_PREMIUM = 0;
     private IabHelper mBillingHelper;
 
