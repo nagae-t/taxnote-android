@@ -28,6 +28,7 @@ public class SharedPreferencesManager {
     private static final String ASK_ANYTHING_DONE_KEY           = "ASK_ANYTHING_DONE_KEY";
     private static final String FIRST_LAUNCH_KEY                = "FIRST_LAUNCH_KEY";
     private static final String TRACK_ENTRY_KEY                 = "TRACK_ENTRY_KEY";
+    private static final String DATA_EXPORT_SUGGEST_KEY         = "DATA_EXPORT_SUGGEST_KEY";
 
 
     //--------------------------------------------------------------//
@@ -194,6 +195,14 @@ public class SharedPreferencesManager {
 
     public static boolean isAskAnythingMessageDone(Context context) {
         return getSharedPreferences(context).getBoolean(ASK_ANYTHING_DONE_KEY, false);
+    }
+
+    public static void saveDataExportSuggestDone(Context context) {
+        getSharedPreferences(context).edit().putBoolean(DATA_EXPORT_SUGGEST_KEY, true).apply();
+    }
+
+    public static boolean isDataExportSuggestDone(Context context) {
+        return getSharedPreferences(context).getBoolean(DATA_EXPORT_SUGGEST_KEY, false);
     }
 
 

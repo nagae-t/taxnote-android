@@ -3,14 +3,19 @@ package com.example.taxnoteandroid.Library;
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.support.v7.app.AlertDialog;
 import android.view.Gravity;
 import android.widget.Toast;
 
+import com.example.taxnoteandroid.DataExportActivity;
 import com.example.taxnoteandroid.R;
+import com.example.taxnoteandroid.dataManager.EntryDataManager;
 import com.example.taxnoteandroid.dataManager.SharedPreferencesManager;
 import com.example.taxnoteandroid.model.Entry;
 import com.helpshift.support.Support;
+
+import java.util.List;
 
 /**
  * Created by umemotonon on 2016/12/24.
@@ -28,9 +33,9 @@ public class DialogManager {
         String priceString = ValueConverter.formatPrice(context ,entry.price);
 
         if (entry.isExpense) {
-            message = dateString + " " + entry.reason.name + " / " + entry.account.name + " :" + priceString;
+            message = dateString + " " + entry.reason.name + " / " + entry.account.name + " " + priceString;
         } else {
-            message = dateString + " " + entry.account.name + " / " + entry.reason.name + " :" + priceString;
+            message = dateString + " " + entry.account.name + " / " + entry.reason.name + " " + priceString;
         }
 
         Toast toast = Toast.makeText(context, message, Toast.LENGTH_SHORT);
@@ -224,6 +229,36 @@ public class DialogManager {
                     public void onClick(DialogInterface dialogInterface, int i) {
 
                         Support.showFAQSection((Activity) context, "22");
+                        dialogInterface.dismiss();
+                    }
+                })
+                .show();
+    }
+
+    public static void showDataExportSuggestMessage(final Context context) {
+
+        if (SharedPreferencesManager.isDataExportSuggestDone(context)) {
+            return;
+        }
+
+        EntryDataManager entryDataManager = new EntryDataManager(context);
+        List<Entry> entries = entryDataManager.findAll(context, null, true);
+
+        if (entries.size() < 3) {
+            return;
+        }
+
+        SharedPreferencesManager.saveDataExportSuggestDone(context);
+
+        new AlertDialog.Builder(context)
+                .setTitle(context.getString(R.string.data_export_suggest_title))
+                .setMessage(context.getString(R.string.data_export_suggest_message))
+                .setPositiveButton(context.getString(R.string.data_export_suggest_button), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                        Intent intent = new Intent(context, DataExportActivity.class);
+                        context.startActivity(intent);
                         dialogInterface.dismiss();
                     }
                 })

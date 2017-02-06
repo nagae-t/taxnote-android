@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.taxnoteandroid.Library.DialogManager;
 import com.example.taxnoteandroid.Library.ValueConverter;
 import com.example.taxnoteandroid.dataManager.EntryDataManager;
 import com.example.taxnoteandroid.dataManager.SharedPreferencesManager;
@@ -51,11 +52,11 @@ public class HistoryTabFragment extends Fragment {
         return binding.getRoot();
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        loadHistoryData();
-    }
+//    @Override
+//    public void onResume() {
+//        super.onResume();
+//        loadHistoryData();
+//    }
 
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
@@ -64,6 +65,7 @@ public class HistoryTabFragment extends Fragment {
         if (this.isVisible()) {
             if (isVisibleToUser) {
                 loadHistoryData();
+                DialogManager.showDataExportSuggestMessage(getActivity());
             }
         }
     }
