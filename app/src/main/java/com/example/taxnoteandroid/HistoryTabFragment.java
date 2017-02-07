@@ -52,11 +52,11 @@ public class HistoryTabFragment extends Fragment {
         return binding.getRoot();
     }
 
-//    @Override
-//    public void onResume() {
-//        super.onResume();
-//        loadHistoryData();
-//    }
+    @Override
+    public void onResume() {
+        super.onResume();
+        loadHistoryData();
+    }
 
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
