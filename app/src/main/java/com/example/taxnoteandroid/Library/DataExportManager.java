@@ -112,15 +112,16 @@ public class DataExportManager implements TaxnoteConsts {
 
         if (mode.compareTo(EXPORT_FORMAT_TYPE_CSV) == 0) { // CSV
 
-            intColumns(7); // CSV column size.
-            setColumnTitles("日付", "借方勘定", "借方金額", "貸方勘定", "貸方金額", "備考", "残高");
+            //@@@ 英語にする時翻訳必要
+            intColumns(6); // CSV column size.
+            setColumnTitles("日付", "借方勘定", "借方金額", "貸方勘定", "貸方金額", "備考");
             setColumn(0, new DateColumn());
             setColumn(1, new LeftAccountNameColumn());
             setColumn(2, new LeftAccountPriceColumn());
             setColumn(3, new RightAccountNameColumn());
             setColumn(4, new RightAccountPriceColumn());
             setColumn(5, new SubAccountNameColumn());
-            setColumn(6, new TotalPriceColumn());
+//            setColumn(6, new TotalPriceColumn());
             setSeparator(",");
 
         } else if (mode.compareTo(EXPORT_FORMAT_TYPE_YAYOI) == 0) { // 弥生
