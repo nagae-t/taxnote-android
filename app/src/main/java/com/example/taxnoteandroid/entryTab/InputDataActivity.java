@@ -9,6 +9,8 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -51,6 +53,7 @@ public class InputDataActivity extends AppCompatActivity {
     public long date;
     private long currentPrice = 0;
     private  String dateString;
+    public boolean pinButton = false;
 
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
@@ -104,6 +107,46 @@ public class InputDataActivity extends AppCompatActivity {
         account = Parcels.unwrap(intent.getParcelableExtra(Account.class.getName()));
         reason = Parcels.unwrap(intent.getParcelableExtra(Reason.class.getName()));
         summary = Parcels.unwrap(intent.getParcelableExtra(Summary.class.getName()));
+    }
+
+
+    //--------------------------------------------------------------//
+    //    -- Menu --
+    //--------------------------------------------------------------//
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        menu.findItem(R.id.pin_button).setVisible(true);
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+
+            case R.id.pin_button:
+                togglePinButton();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void togglePinButton() {
+        
+        if (pinButton) {
+            DialogManager.showToast(this, getResources().getString(R.string.pin_button_off_message));
+            pinButton = false;
+        } else {
+            DialogManager.showToast(this, getResources().getString(R.string.pin_button_on_message));
+            pinButton = true;
+        }
     }
 
 
@@ -316,8 +359,15 @@ public class InputDataActivity extends AppCompatActivity {
             SharedPreferencesManager.saveFirstRegisterDone(InputDataActivity.this);
 
             DialogManager.showInputDataToast(this, dateString,entry);
-            setResult(RESULT_OK);
-            finish();
+
+            // Stay in this screen when pinButton is true
+            if (pinButton) {
+                currentPrice = 0;
+                priceTextView.setText(null);
+            } else {
+                setResult(RESULT_OK);
+                finish();
+            }
 
         } else {
             DialogManager.showOKOnlyAlert(this, getResources().getString(R.string.Error), null);

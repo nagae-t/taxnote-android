@@ -51,6 +51,9 @@
     <string name="save_data">仕訳帳に記録</string>
     <string name="delete_done">削除しました。</string>
     <string name="delete_done_after_title">を削除しました。</string>
+    <string name="pin_button">連続入力</string>
+    <string name="pin_button_on_message">連続入力オン - 日付と科目を固定して連続入力</string>
+    <string name="pin_button_off_message">連続入力オフ</string>
 
 
     //--------------------------------------------------------------//

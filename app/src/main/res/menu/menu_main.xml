@@ -13,4 +13,10 @@
         android:title="@string/help"
         android:visible="false"
         app:showAsAction="always" />
+
+    <item
+        android:id="@+id/pin_button"
+        android:title="@string/pin_button"
+        android:visible="false"
+        app:showAsAction="always" />
 </menu>
