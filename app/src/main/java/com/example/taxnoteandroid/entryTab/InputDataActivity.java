@@ -139,7 +139,7 @@ public class InputDataActivity extends AppCompatActivity {
     }
 
     private void togglePinButton() {
-        
+
         if (pinButton) {
             DialogManager.showToast(this, getResources().getString(R.string.pin_button_off_message));
             pinButton = false;

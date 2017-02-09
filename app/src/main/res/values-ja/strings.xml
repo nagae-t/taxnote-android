@@ -51,6 +51,9 @@
     <string name="save_data">仕訳帳に記録</string>
     <string name="delete_done">削除しました。</string>
     <string name="delete_done_after_title">を削除しました。</string>
+    <string name="pin_button">連続入力</string>
+    <string name="pin_button_on_message">連続入力オン - 日付と科目を固定して連続入力</string>
+    <string name="pin_button_off_message">連続入力オフ</string>
 
 
     //--------------------------------------------------------------//
@@ -150,7 +153,7 @@
     <string name="ask_anything_message">こんにちは、Taxnoteを開発している梅本です。アプリの操作で分からない部分や要望がありましたら、ヘルプからお気軽にお問い合わせください。開発からサポートまでやっているので直接お答えできます。</string>
     <string name="see_help">ヘルプを見る</string>
     <string name="data_export_suggest_title">データの出力</string>
-    <string name="data_export_suggest_message">右上のボタンからデータをエクセル、弥生会計、freee、MFクラウドなどに出力できます。</string>
+    <string name="data_export_suggest_message">右上のボタンから、入力したデータをエクセル、弥生会計、freee、MFクラウドなどに出力できます。</string>
     <string name="data_export_suggest_button">データの出力画面を表示</string>
 
 
