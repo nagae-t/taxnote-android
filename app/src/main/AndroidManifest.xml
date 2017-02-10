@@ -2,18 +2,17 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.taxnoteandroid">
 
-    <!--Permission-->
+    <!-- Permission -->
     <uses-permission android:name="com.android.vending.BILLING" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.BLUETOOTH" />
 
     <supports-screens
-        android:smallScreens="true"
-        android:normalScreens="true"
         android:largeScreens="false"
+        android:normalScreens="true"
+        android:smallScreens="true"
         android:xlargeScreens="false" />
-
 
     <application
         android:name=".TaxnoteApp"
@@ -60,13 +59,22 @@
         <activity
             android:name=".DataExportRangeActivity"
             android:label="@string/data_export_range"
-            android:screenOrientation="portrait" /><!-- ATTENTION: This was auto-generated to add Google Play services to your project for
-     App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information. -->
+            android:screenOrientation="portrait" />
+        <!--
+ ATTENTION: This was auto-generated to add Google Play services to your project for
+     App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information.
+        -->
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="7ea2f586f56027786c190abd3ff3f31a3a1616fc" />
+
+        <activity
+            android:name=".CalculatorActivity"
+            android:label="@string/title_activity_calculator"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
+
 </manifest>

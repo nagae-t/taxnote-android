@@ -20,19 +20,6 @@ public class PriceEditActivity extends AppCompatActivity {
     public long entryId;
     private TextView priceTextView;
 
-    public static Intent createIntent(Context context, long currentPrice, long entryId) {
-
-        Intent i = new Intent(context, PriceEditActivity.class);
-        i.putExtra(EXTRA_CURRENT_PRICE, currentPrice);
-        i.putExtra(EXTRA_ENTRY_ID, entryId);
-
-        return i;
-    }
-
-
-    //--------------------------------------------------------------//
-    //    -- Intent --
-    //--------------------------------------------------------------//
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +31,20 @@ public class PriceEditActivity extends AppCompatActivity {
         setTitle();
         setSaveButton();
         setPriceInputPart();
+    }
+
+
+    //--------------------------------------------------------------//
+    //    -- Intent --
+    //--------------------------------------------------------------//
+
+    public static Intent createIntent(Context context, long currentPrice, long entryId) {
+
+        Intent i = new Intent(context, PriceEditActivity.class);
+        i.putExtra(EXTRA_CURRENT_PRICE, currentPrice);
+        i.putExtra(EXTRA_ENTRY_ID, entryId);
+
+        return i;
     }
 
     private void setIntentData() {

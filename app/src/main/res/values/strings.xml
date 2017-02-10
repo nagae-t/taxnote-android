@@ -179,6 +179,7 @@
     <string name="hs__conversation_detail_error">検索</string>
     <string name="hs__review_message">レビューのお願い</string>
     <string name="hs__review_title">こんにちは、Taxnoteを開発している梅本です。ストアのレビューは全て読んでいるので、よければアプリへの要望を書いてもらえませんか？\n\n例えば、気に入ってて変えて欲しくないところ、今後の要望などを書いてもらえれば。\n\nもちろん一言メッセージや、星をつけるだけでも嬉しいです。\n\n良いレビューが増えるとDL数が増えやすく、開発が継続できるので、気がむいた時にどうぞよろしくお願いします。(ストア画面を下にスクロールするとレビュー画面があります)</string>
+    <string name="title_activity_calculator">CalculatorActivity</string>
 
 
 </resources>
