@@ -22,19 +22,10 @@ import java.util.List;
 
 public class ReportContentFragment extends Fragment {
 
-    private static final String EXTRA_MODE = "EXTRA_MODE";
     private static final String EXTRA_MODE_ = "EXTRA_";
     private FragmentReportContentBinding binding;
 
     public ReportContentFragment() {
-    }
-
-    public static ReportContentFragment newInstance(ReportFragment.Mode mode) {
-        ReportContentFragment fragment = new ReportContentFragment();
-        Bundle args = new Bundle();
-        args.putSerializable(EXTRA_MODE, mode);
-        fragment.setArguments(args);
-        return fragment;
     }
 
     public static ReportContentFragment newInstance(List<Entry> entries) {
@@ -49,13 +40,10 @@ public class ReportContentFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentReportContentBinding.inflate(inflater, container, false);
 
-        ReportFragment.Mode mode = (ReportFragment.Mode) getArguments().getSerializable(EXTRA_MODE);
-
         List<Entry> entries = Parcels.unwrap(getArguments().getParcelable(EXTRA_MODE_));
         Log.d("entries", entries.toString());
 
         List<ReportContentAdapter.Item> items = new ArrayList<>();
-
 
         ReportContentAdapter.Item sectionA = ReportContentAdapter.Item.newInstanceSectionA();
         ReportContentAdapter.Item sectionB = ReportContentAdapter.Item.newInstanceSectionB();
@@ -76,6 +64,8 @@ public class ReportContentFragment extends Fragment {
                 count -= entry.price;
             }
         }
+
+        // @@ 科目の合計はこっちでやる
 
         binding.price.setText(Long.toString(count));
 

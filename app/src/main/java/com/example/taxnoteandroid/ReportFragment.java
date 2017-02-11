@@ -34,18 +34,28 @@ public class ReportFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentReportBinding.inflate(inflater, container, false);
-
         Context context = getContext();
-//        binding.pager.setAdapter(new ReportContentFragmentPagerAdapter(getChildFragmentManager(), Mode.YEAR, Mode.YEAR.getTitles(context)));
 
+        // @@ ボタン押したあとReportGroupingの実装を切り替える
+        ReportGrouping reportGrouping = new ReportDayGrouping();
+        Map<Calendar, List<Entry>> map = createReportDate(context, reportGrouping);
+        binding.pager.setAdapter(new ReportContentFragmentPagerAdapter2(getChildFragmentManager(), reportGrouping, map));
+
+        return binding.getRoot();
+    }
+
+    private Map<Calendar, List<Entry>> createReportDate(Context context, ReportGrouping reportGrouping) {
         EntryDataManager entryDataManager = new EntryDataManager(context);
-        List<Entry> entries = entryDataManager.findAll(context, null, false);
-
+        List<Entry> entries = entryDataManager.findAll(context, null, true);
         Map<Calendar, List<Entry>> map = new LinkedHashMap<>();
         for (Entry entry : entries) {
-            Calendar calendar = Calendar.getInstance();
-            calendar.setTimeInMillis(entry.date);
-            calendar.set(calendar.get(Calendar.YEAR), 0, 0, 0, 0, 0);
+            Calendar calendar = reportGrouping.getGroupingCalendar(entry);
+
+//            for (Calendar c : map.keySet()) {
+//                Log.d("cccc", "calendar : " + calendar.toString());
+//                Log.d("cccc", "c : " + c.toString());
+//                Log.d("cccc", "" + calendar.equals(c));
+//            }
 
             if (map.containsKey(calendar)) {
                 map.get(calendar).add(entry);
@@ -55,110 +65,77 @@ public class ReportFragment extends Fragment {
                 map.put(calendar, list);
             }
         }
-
-        binding.pager.setAdapter(new ReportContentFragmentPagerAdapter2(getChildFragmentManager(), Mode.YEAR, map));
-
-        return binding.getRoot();
+        return map;
     }
 
-    public static class ReportContentConfig {
-        public Mode mode;
-        public List<String> titles;
-        public Calendar calendar;
+    public interface ReportGrouping {
+        Calendar getGroupingCalendar(Entry entry);
+
+        String createTitle(Context context, Calendar calendar);
     }
 
-    public enum Mode2 {
-        YEAR {
-            @Override
-            public ReportContentConfig getReportContentConfig(Context context) {
-                return null;
-            }
-        }, MONTH {
-            @Override
-            public ReportContentConfig getReportContentConfig(Context context) {
-                return null;
-            }
-        }, DAY {
-            @Override
-            public ReportContentConfig getReportContentConfig(Context context) {
-                return null;
-            }
-        };
+    public class ReportYearGrouping implements ReportGrouping {
 
-        public abstract ReportContentConfig getReportContentConfig(Context context);
-    }
-
-    public enum Mode {
-        YEAR {
-            @Override
-            public List<String> getTitles(Context context) {
-                EntryDataManager entryDataManager = new EntryDataManager(context);
-                List<Entry> entries = entryDataManager.findAll(context, null, true);
-                List<String> years = new ArrayList<>();
-                for (Entry entry : entries) {
-                    Calendar calendar = Calendar.getInstance();
-                    calendar.setTimeInMillis(entry.date);
-                    String year = Integer.toString(calendar.get(Calendar.YEAR));
-                    if (!years.contains(year)) {
-                        years.add(year);
-                    }
-                }
-                return years;
-            }
-        }, MONTH {
-            @Override
-            public List<String> getTitles(Context context) {
-                return null;
-            }
-        }, DAY {
-            @Override
-            public List<String> getTitles(Context context) {
-                return null;
-            }
-        };
-
-        public abstract List<String> getTitles(Context context);
-    }
-
-    public class ReportContentFragmentPagerAdapter extends FragmentPagerAdapter {
-
-        private final Mode mode;
-        private final List<String> titles;
-        private final int count;
-
-        public ReportContentFragmentPagerAdapter(FragmentManager fm, Mode mode, List<String> titles) {
-            super(fm);
-            this.mode = mode;
-            this.titles = titles;
-            this.count = titles.size();
+        @Override
+        public Calendar getGroupingCalendar(Entry entry) {
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTimeInMillis(entry.date);
+            calendar.set(calendar.get(Calendar.YEAR), 0, 1, 0, 0, 0);
+            calendar.set(Calendar.MILLISECOND, 0);
+            return calendar;
         }
 
         @Override
-        public Fragment getItem(int position) {
-            return ReportContentFragment.newInstance(mode);
+        public String createTitle(Context context, Calendar c) {
+            return Integer.toString(c.get(Calendar.YEAR));
+        }
+    }
+
+    public class ReportMonthGrouping implements ReportGrouping {
+
+        @Override
+        public Calendar getGroupingCalendar(Entry entry) {
+            Calendar calendar = Calendar.getInstance();
+            calendar.clear();
+            calendar.setTimeInMillis(entry.date);
+            calendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), 1, 0, 0, 0);
+            calendar.set(Calendar.MILLISECOND, 0);
+            return calendar;
         }
 
         @Override
-        public int getCount() {
-            return count;
+        public String createTitle(Context context, Calendar c) {
+            return Integer.toString(c.get(Calendar.YEAR)) + "/" + Integer.toString(c.get(Calendar.MONTH));
+        }
+    }
+
+    public class ReportDayGrouping implements ReportGrouping {
+
+        @Override
+        public Calendar getGroupingCalendar(Entry entry) {
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTimeInMillis(entry.date);
+            calendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DATE), 0, 0, 0);
+            calendar.set(Calendar.MILLISECOND, 0);
+            return calendar;
         }
 
         @Override
-        public CharSequence getPageTitle(int position) {
-            return titles.get(position);
+        public String createTitle(Context context, Calendar c) {
+            return Integer.toString(c.get(Calendar.YEAR)) + "/" + Integer.toString(c.get(Calendar.MONTH)) + "/" + Integer.toString(c.get(Calendar.DATE));
         }
     }
 
     public class ReportContentFragmentPagerAdapter2 extends FragmentPagerAdapter {
 
-        private final Mode mode;
+        private final ReportGrouping reportGrouping;
         private final Map<Calendar, List<Entry>> map;
         private final int count;
         private final Calendar[] calendars;
 
-        public ReportContentFragmentPagerAdapter2(FragmentManager fm, Mode mode, Map<Calendar, List<Entry>> map) {
+        public ReportContentFragmentPagerAdapter2(FragmentManager fm, ReportGrouping reportGrouping, Map<Calendar, List<Entry>> map) {
             super(fm);
-            this.mode = mode;
+            this.reportGrouping = reportGrouping;
             this.map = map;
             this.count = map.size();
             calendars = map.keySet().toArray(new Calendar[map.keySet().size()]);
@@ -176,7 +153,7 @@ public class ReportFragment extends Fragment {
 
         @Override
         public CharSequence getPageTitle(int position) {
-            return Integer.toString(calendars[position].get(Calendar.YEAR));
+            return reportGrouping.createTitle(null, calendars[position]);
         }
     }
 }
