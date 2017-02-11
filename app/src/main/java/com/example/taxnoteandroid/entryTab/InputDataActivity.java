@@ -13,14 +13,13 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.taxnoteandroid.CalculatorActivity;
-import com.example.taxnoteandroid.EntryEditActivity;
 import com.example.taxnoteandroid.Library.DialogManager;
 import com.example.taxnoteandroid.Library.EntryLimitManager;
 import com.example.taxnoteandroid.Library.ValueConverter;
-import com.example.taxnoteandroid.PriceEditActivity;
 import com.example.taxnoteandroid.R;
 import com.example.taxnoteandroid.UpgradeActivity;
 import com.example.taxnoteandroid.dataManager.EntryDataManager;
@@ -76,6 +75,7 @@ public class InputDataActivity extends AppCompatActivity {
         setSummary();
         setSaveButton();
         setPriceInputPart();
+        setCalculatorView();
 
         DialogManager.showTapRegisterMessage(InputDataActivity.this);
         // ATTENTION: This was auto-generated to implement the App Indexing API.
@@ -322,12 +322,6 @@ public class InputDataActivity extends AppCompatActivity {
 
     private void saveEntry() {
 
-        //@@@
-        startActivity(CalculatorActivity.createIntent(InputDataActivity.this, currentPrice));
-
-
-        return;
-
         boolean limitNewEntry = EntryLimitManager.limitNewEntryForFreeUsersWithDate(InputDataActivity.this, date);
 
         // Entry limit for free users check
@@ -426,7 +420,14 @@ public class InputDataActivity extends AppCompatActivity {
 
     private void setCalculatorView() {
 
+        ImageView calculatorButton = (ImageView) findViewById(R.id.calculator_button);
 
+        calculatorButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(CalculatorActivity.createIntent(InputDataActivity.this, currentPrice));
+            }
+        });
     }
 
 }
