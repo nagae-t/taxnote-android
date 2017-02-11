@@ -204,7 +204,7 @@
 
         <Button
             android:textColor="#FFFFFF"
-            android:background="@color/secondary_text"
+            android:background="@drawable/selector_background_button"
             android:layout_margin="1dp"
             android:id="@+id/button_c"
             android:text="c"
