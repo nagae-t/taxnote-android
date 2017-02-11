@@ -41,11 +41,22 @@
         android:layout_weight="0"
         style="@style/horizontal_line" />
 
-    <RelativeLayout
+    <LinearLayout
+        android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
+        <ImageView
+            android:id="@+id/icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:src="@mipmap/ic_launcher" />
+
         <TextView
+            android:paddingStart="-80dp"
             android:id="@+id/save"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -55,15 +66,7 @@
             android:text="@string/save_data"
             android:textColor="@drawable/text_button_colors"
             android:textSize="35sp" />
-
-        <ImageView
-            android:id="@+id/icon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:padding="16dp"
-            android:src="@mipmap/ic_launcher" />
-    </RelativeLayout>
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
