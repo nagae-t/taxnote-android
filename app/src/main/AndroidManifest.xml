@@ -74,7 +74,7 @@
         <activity
             android:name=".CalculatorActivity"
             android:label="@string/title_activity_calculator"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>

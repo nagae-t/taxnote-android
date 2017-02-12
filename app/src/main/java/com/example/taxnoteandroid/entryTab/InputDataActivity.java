@@ -421,19 +421,9 @@ public class InputDataActivity extends AppCompatActivity {
     private void setCalculatorView() {
 
         ImageView calculatorButton = (ImageView) findViewById(R.id.calculator_button);
-
         calculatorButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                startActivity(CalculatorActivity.createIntent(InputDataActivity.this, currentPrice));
-
-
-//                Intent intent = new Intent(InputDataActivity.this, CalculatorActivity.class);
-//                startActivity(intent);
-
-
-//                startActivityForResult(CalculatorActivity.createIntent(InputDataActivity.this, isExpense, date, account, reason, summary), 1);
-
                 startActivity(CalculatorActivity.createIntent(InputDataActivity.this, currentPrice));
             }
         });

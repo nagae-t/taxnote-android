@@ -9,7 +9,6 @@ import android.widget.TextView;
 
 import com.example.taxnoteandroid.Library.DialogManager;
 import com.example.taxnoteandroid.Library.ValueConverter;
-import com.example.taxnoteandroid.entryTab.InputDataActivity;
 
 public class CalculatorActivity extends AppCompatActivity {
 
@@ -35,7 +34,6 @@ public class CalculatorActivity extends AppCompatActivity {
         setContentView(R.layout.activity_calculator);
 
         setIntentData();
-        setTitle();
         setPriceInputPart();
     }
 
@@ -46,7 +44,7 @@ public class CalculatorActivity extends AppCompatActivity {
 
     public static Intent createIntent(Context context, long currentPrice) {
 
-        Intent i = new Intent(context, InputDataActivity.class);
+        Intent i = new Intent(context, CalculatorActivity.class);
         i.putExtra(EXTRA_CURRENT_PRICE, currentPrice);
         return i;
     }
@@ -62,12 +60,6 @@ public class CalculatorActivity extends AppCompatActivity {
     //--------------------------------------------------------------//
     //    -- Display Part --
     //--------------------------------------------------------------//
-
-    private void setTitle() {
-        setTitle(getResources().getString(R.string.Price));
-    }
-
-
 
     private void setPriceInputPart() {
 
