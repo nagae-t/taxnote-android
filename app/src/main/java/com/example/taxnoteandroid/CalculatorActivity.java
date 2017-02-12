@@ -207,7 +207,7 @@ public class CalculatorActivity extends AppCompatActivity {
         // Dismiss the activity
         if (selectedString.equals(EQUAL_SYMBOL)) {
 
-            // Calculate if priceNumber and previousNmber and selectedSymbol are set
+            // Calculate if priceNumber and previousNumber and selectedSymbol are set
             if (priceString != null && previousPriceString != null && selectedSymbol != null) {
                 priceString = calculatePriceStringAndPreviousPriceString(priceString, previousPriceString, selectedSymbol);
             }
@@ -217,6 +217,7 @@ public class CalculatorActivity extends AppCompatActivity {
                 priceString = previousPriceString;
             }
 
+            //@@@ ここで落ちてるみたい
             currentPrice    = Long.parseLong(priceString);
 
             //@@@ priceを受けわたす
@@ -233,11 +234,24 @@ public class CalculatorActivity extends AppCompatActivity {
         }
 
         // Create price string
-        String currentPriceString = Long.toString(currentPrice);
-        currentPrice = Long.parseLong(currentPriceString + priceString);
-        String priceString = ValueConverter.formatPrice(CalculatorActivity.this ,currentPrice);
+        if (priceString == null) {
+            priceString = selectedString;
+        } else {
+            priceString = priceString + selectedString;
+        }
 
+
+        currentPrice = Long.parseLong(priceString);
+        String priceString = ValueConverter.formatPrice(CalculatorActivity.this ,currentPrice);
         priceTextView.setText(priceString);
+
+
+
+
+//        String currentPriceString = Long.toString(currentPrice);
+//        currentPrice = Long.parseLong(currentPriceString + priceString);
+//        String priceString = ValueConverter.formatPrice(CalculatorActivity.this ,currentPrice);
+//        priceTextView.setText(priceString);
     }
 
     private String calculatePriceStringAndPreviousPriceString(String priceString, String previousPriceString, String selectedSymbol) {
