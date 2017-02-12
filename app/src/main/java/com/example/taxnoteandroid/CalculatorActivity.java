@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.example.taxnoteandroid.Library.DialogManager;
 import com.example.taxnoteandroid.Library.ValueConverter;
+import com.example.taxnoteandroid.entryTab.InputDataActivity;
 
 public class CalculatorActivity extends AppCompatActivity {
 
@@ -45,7 +46,7 @@ public class CalculatorActivity extends AppCompatActivity {
 
     public static Intent createIntent(Context context, long currentPrice) {
 
-        Intent i = new Intent(context, PriceEditActivity.class);
+        Intent i = new Intent(context, InputDataActivity.class);
         i.putExtra(EXTRA_CURRENT_PRICE, currentPrice);
         return i;
     }

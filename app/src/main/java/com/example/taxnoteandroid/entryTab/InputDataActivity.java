@@ -425,6 +425,15 @@ public class InputDataActivity extends AppCompatActivity {
         calculatorButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+//                startActivity(CalculatorActivity.createIntent(InputDataActivity.this, currentPrice));
+
+
+//                Intent intent = new Intent(InputDataActivity.this, CalculatorActivity.class);
+//                startActivity(intent);
+
+
+//                startActivityForResult(CalculatorActivity.createIntent(InputDataActivity.this, isExpense, date, account, reason, summary), 1);
+
                 startActivity(CalculatorActivity.createIntent(InputDataActivity.this, currentPrice));
             }
         });
