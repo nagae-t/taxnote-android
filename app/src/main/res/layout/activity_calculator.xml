@@ -102,7 +102,7 @@ tools:context="com.example.taxnoteandroid.CalculatorActivity">
     <Button
         style="@style/input_button"
         android:id="@+id/button_minus"
-        android:text="－"/>
+        android:text="−"/>
 </LinearLayout>
 
 <LinearLayout

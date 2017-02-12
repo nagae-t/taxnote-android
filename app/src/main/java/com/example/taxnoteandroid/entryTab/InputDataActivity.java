@@ -424,9 +424,22 @@ public class InputDataActivity extends AppCompatActivity {
         calculatorButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(CalculatorActivity.createIntent(InputDataActivity.this, currentPrice));
+                startActivityForResult(CalculatorActivity.createIntent(InputDataActivity.this, currentPrice), 1);
             }
         });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == 1 && resultCode == RESULT_OK) {
+
+            // Update price string
+            currentPrice = data.getLongExtra("EXTRA_CURRENT_PRICE", 0);
+            String priceString = ValueConverter.formatPrice(InputDataActivity.this ,currentPrice);
+            priceTextView.setText(priceString);
+        }
     }
 
 }

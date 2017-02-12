@@ -215,14 +215,18 @@ public class CalculatorActivity extends AppCompatActivity {
             // Get priceNumber from previousNumber if priceNumber is nil after tapping symbol
             if (priceString == null) {
                 priceString = previousPriceString;
+
+                if (priceString == null) {
+                    priceString = "0";
+                }
             }
 
-            //@@@ ここで落ちてるみたい
-            currentPrice    = Long.parseLong(priceString);
-
-            //@@@ priceを受けわたす
-
-            DialogManager.showToast(this, priceString);
+            // Send the new price to inputDataActivity and finish
+            currentPrice  = Long.parseLong(priceString);
+            Intent intent = new Intent();
+            intent.putExtra(EXTRA_CURRENT_PRICE, currentPrice);
+            setResult(RESULT_OK, intent);
+            finish();
             return;
         }
 
@@ -262,7 +266,6 @@ public class CalculatorActivity extends AppCompatActivity {
 
 
         if (selectedSymbol.equals(PLUS_SYMBOL)) {
-
             newPriceDoubleNumber = previousPriceDoubleNumber + priceDoubleNumber;
 
         } else if (selectedSymbol.equals(MINUS_SYMBOL)) {
@@ -272,7 +275,6 @@ public class CalculatorActivity extends AppCompatActivity {
             newPriceDoubleNumber = previousPriceDoubleNumber * priceDoubleNumber;
 
         } else if (selectedSymbol.equals(SPLIT_SYMBOL)) {
-
             newPriceDoubleNumber = previousPriceDoubleNumber / priceDoubleNumber;
 
             // @@@ここlongになってない？
@@ -280,7 +282,8 @@ public class CalculatorActivity extends AppCompatActivity {
             newPriceDoubleNumber = Math.round(newPriceDoubleNumber);
         }
 
-        String calculatedPriceString = Double.toString(newPriceDoubleNumber);
+        long priceLongNumber            = (long) newPriceDoubleNumber;
+        String calculatedPriceString    = Long.toString(priceLongNumber);
 
         // Limit max length
         if (calculatedPriceString.length() > 9) {
@@ -310,71 +313,4 @@ public class CalculatorActivity extends AppCompatActivity {
             return false;
         }
     }
-
-
-//    //symbol for calculation is selected
-//    if ([MPValueCalculator selectedStringIsSymbol:selectedString]) {
-//
-//        //save price number and symbol after price number is set and symbol is selected
-//        if (!_previousPriceString) {
-//
-//            //save symbol and price number
-//            _previousPriceString    = _priceString;
-//            _selectedSymbol         = selectedString;
-//            _priceString            = nil;
-//
-//            return;
-//        }
-//
-//        //change selected symbol if current price number is not set
-//        if (!_priceString) {
-//            _selectedSymbol = selectedString;
-//            return;
-//        }
-//
-//        //calculate and display the result
-//        _priceString        = [MPValueCalculator calculatePriceString:_priceString previousPriceString:_previousPriceString symbol:_selectedSymbol];
-//
-//        // Set , separator
-//        _priceField.text        = [KPValueConverter stringWithGroupingSeparatorForPriceString:_priceString];
-//
-//        //save symbol and price number
-//        _previousPriceString    = _priceString;
-//        _selectedSymbol         = selectedString;
-//        _priceString            = nil;
-//
-//        return;
-//    }
-//
-//    //dismiss the view controller
-//    if ([selectedString isEqualToString:@"="]) {
-//
-//        //calculate if priceNumber and previousNmber and selectedSymbol are set
-//        if (_priceString && _previousPriceString && _selectedSymbol) {
-//            _priceString = [MPValueCalculator calculatePriceString:_priceString previousPriceString:_previousPriceString symbol:_selectedSymbol];
-//        }
-//
-//        //get priceNumber from previousNumber if priceNumber is nil after tapping symbol
-//        if (!_priceString) {
-//            _priceString = _previousPriceString;
-//        }
-//
-//        [[NSNotificationCenter defaultCenter] postNotificationName:CalculatorVCDismissedNotification object:self userInfo:nil];
-//        [self dismissViewControllerAnimated:YES completion:nil];
-//        return;
-//    }
-//
-//    //reset all
-//    if ([selectedString isEqualToString:@"c"]) {
-//
-//        _priceString            = nil;
-//        _previousPriceString    = nil;
-//        _selectedSymbol         = nil;
-//    }
-//
-//    // Combine numbers
-//    _priceString        = [KPValueConverter updatePriceString:_priceString inputNumberString:selectedString];
-//
-//    // Set , separator
-//    _priceField.text    = [KPValueConverter stringWithGroupingSeparatorForPriceString:_priceString selectedSymbol:_selectedSymbol];
 }
