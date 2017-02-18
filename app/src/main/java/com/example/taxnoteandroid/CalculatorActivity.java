@@ -13,7 +13,7 @@ import com.example.taxnoteandroid.Library.ValueConverter;
 public class CalculatorActivity extends AppCompatActivity {
 
     private static final String EXTRA_CURRENT_PRICE = "EXTRA_CURRENT_PRICE";
-    private static final String DECIMAL_SYMBOL      = "DECIMAL_SYMBOL";
+    private static final String DECIMAL_SYMBOL      = ".";
     private static final String PLUS_SYMBOL         = "PLUS_SYMBOL";
     private static final String MINUS_SYMBOL        = "MINUS_SYMBOL";
     private static final String MULTIPLE_SYMBOL     = "MULTIPLE_SYMBOL";
@@ -243,6 +243,7 @@ public class CalculatorActivity extends AppCompatActivity {
         } else {
             priceString = priceString + selectedString;
         }
+
 
 
         currentPrice = Long.parseLong(priceString);
