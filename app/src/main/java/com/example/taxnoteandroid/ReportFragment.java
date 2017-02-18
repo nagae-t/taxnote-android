@@ -37,7 +37,7 @@ public class ReportFragment extends Fragment {
         Context context = getContext();
 
         // @@ ボタン押したあとReportGroupingの実装を切り替える
-        ReportGrouping reportGrouping = new ReportDayGrouping();
+        ReportGrouping reportGrouping = new ReportYearGrouping();
         Map<Calendar, List<Entry>> map = createReportDate(context, reportGrouping);
         binding.pager.setAdapter(new ReportContentFragmentPagerAdapter2(getChildFragmentManager(), reportGrouping, map));
 
