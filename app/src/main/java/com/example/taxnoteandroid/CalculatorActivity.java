@@ -192,9 +192,13 @@ public class CalculatorActivity extends AppCompatActivity {
             priceString = calculatePriceStringAndPreviousPriceString(priceString, previousPriceString, selectedSymbol);
 
             // Set text
-            currentPrice    = Long.parseLong(priceString);
-            String text     = ValueConverter.formatPrice(CalculatorActivity.this , currentPrice);
-            priceTextView.setText(text);
+//            currentPrice    = Long.parseLong(priceString);
+//            String text     = ValueConverter.formatPrice(CalculatorActivity.this , currentPrice);
+//            priceTextView.setText(text);
+
+            //@@@
+            priceTextView.setText(priceString);
+
 
             // Save symbol and price number
             previousPriceString = priceString;
@@ -223,6 +227,11 @@ public class CalculatorActivity extends AppCompatActivity {
 
             // Send the new price to inputDataActivity and finish
             currentPrice  = Long.parseLong(priceString);
+
+            //@@@ いまここ、小数点のついたPricecStringをどうやってlongに戻すか
+//            long priceLongNumber            = (long) newPriceDoubleNumber;
+//            String calculatedPriceString    = Long.toString(priceLongNumber);
+
             Intent intent = new Intent();
             intent.putExtra(EXTRA_CURRENT_PRICE, currentPrice);
             setResult(RESULT_OK, intent);
@@ -237,19 +246,28 @@ public class CalculatorActivity extends AppCompatActivity {
             return;
         }
 
+        //@@@
         // Create price string
         if (priceString == null) {
-            priceString = selectedString;
+
+            if (selectedString.equals(DECIMAL_SYMBOL)) {
+                priceString = "0.";
+            } else {
+                priceString = selectedString;
+            }
         } else {
-            priceString = priceString + selectedString;
+
+            if (selectedString.equals(DECIMAL_SYMBOL)) {
+                priceString = priceString + ".";
+            } else {
+                priceString = priceString + selectedString;
+            }
+//            priceString = priceString + selectedString;
         }
 
-
-
-        currentPrice = Long.parseLong(priceString);
-        String priceString = ValueConverter.formatPrice(CalculatorActivity.this ,currentPrice);
+//        currentPrice = Long.parseLong(priceString);
+//        String priceString = ValueConverter.formatPrice(CalculatorActivity.this ,currentPrice);
         priceTextView.setText(priceString);
-
 
 
 
@@ -283,8 +301,13 @@ public class CalculatorActivity extends AppCompatActivity {
             newPriceDoubleNumber = Math.round(newPriceDoubleNumber);
         }
 
-        long priceLongNumber            = (long) newPriceDoubleNumber;
-        String calculatedPriceString    = Long.toString(priceLongNumber);
+        //@@@
+
+        String calculatedPriceString    = Double.toString(newPriceDoubleNumber);
+
+
+//        long priceLongNumber            = (long) newPriceDoubleNumber;
+//        String calculatedPriceString    = Long.toString(priceLongNumber);
 
         // Limit max length
         if (calculatedPriceString.length() > 9) {
