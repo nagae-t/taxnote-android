@@ -9,6 +9,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v7.app.AppCompatActivity;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -217,5 +218,22 @@ public class MainActivity extends AppCompatActivity {
         config.setNoButtonText(R.string.rate_app_no_button);
         config.setCancelButtonText(R.string.rate_app_cancel_button);
         RateThisApp.init(config);
+    }
+
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (binding.pager == null) return super.onKeyDown(keyCode, event);
+
+        // バックキーで「入力」画面に戻るように
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            int currentItem = binding.pager.getCurrentItem();
+            if (currentItem != 0) {
+                BottomNavigationView bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_navigation);
+                bottomNavigationView.findViewById(R.id.tab1).performClick();
+                return false;
+            }
+
+        }
+        return super.onKeyDown(keyCode, event);
+
     }
 }
