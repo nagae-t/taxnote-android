@@ -53,26 +53,34 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
+        MenuItem helpMenu = menu.findItem(R.id.help_in_entry_tab);
+        MenuItem exportMenu = menu.findItem(R.id.data_export);
+        MenuItem searchMenu = menu.findItem(R.id.action_search);
+
         switch (binding.pager.getCurrentItem()) {
 
             case 0:
-                menu.findItem(R.id.help_in_entry_tab).setVisible(true);
-                menu.findItem(R.id.data_export).setVisible(false);
+                helpMenu.setVisible(true);
+                exportMenu.setVisible(false);
+                searchMenu.setVisible(false);
                 break;
 
             case 1:
-                menu.findItem(R.id.help_in_entry_tab).setVisible(false);
-                menu.findItem(R.id.data_export).setVisible(true);
+                helpMenu.setVisible(false);
+                exportMenu.setVisible(true);
+                searchMenu.setVisible(true);
                 break;
 
             case 2:
-                menu.findItem(R.id.help_in_entry_tab).setVisible(false);
-                menu.findItem(R.id.data_export).setVisible(false);
+                helpMenu.setVisible(false);
+                exportMenu.setVisible(false);
+                searchMenu.setVisible(false);
                 break;
 
             case 3:
-                menu.findItem(R.id.help_in_entry_tab).setVisible(false);
-                menu.findItem(R.id.data_export).setVisible(false);
+                helpMenu.setVisible(false);
+                exportMenu.setVisible(false);
+                searchMenu.setVisible(false);
                 break;
         }
         return super.onPrepareOptionsMenu(menu);
@@ -89,6 +97,9 @@ public class MainActivity extends AppCompatActivity {
             case R.id.data_export:
                 Intent intent = new Intent(this, DataExportActivity.class);
                 startActivity(intent);
+                break;
+
+            case R.id.action_search:
                 break;
         }
         return super.onOptionsItemSelected(item);
