@@ -18,6 +18,7 @@ public class EntryDataManager {
     private OrmaDatabase ormaDatabase;
 
     public EntryDataManager(Context context) {
+        // TODO: context が使われていません
       ormaDatabase = TaxnoteApp.getOrmaDatabase();
     }
 

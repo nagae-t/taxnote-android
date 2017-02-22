@@ -6,6 +6,10 @@ import com.github.gfx.android.orma.annotation.Table;
 
 import org.parceler.Parcel;
 
+/**
+ * 支払い方法モデル
+ */
+
 @Parcel
 @Table
 public class Account {
