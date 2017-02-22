@@ -19,6 +19,14 @@ allprojects {
     }
 }
 
+project.ext {
+    minSdkVersion = 19
+    targetSdkVersion = 22
+
+    supportPackageVersion = '25.1.1'
+    playServicesVersion = '10.2.0'
+}
+
 task clean(type: Delete) {
     delete rootProject.buildDir
 }
