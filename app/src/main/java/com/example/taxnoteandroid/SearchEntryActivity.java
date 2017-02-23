@@ -3,16 +3,17 @@ package com.example.taxnoteandroid;
 import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.SearchView;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 
 import com.example.taxnoteandroid.dataManager.EntryDataManager;
 import com.example.taxnoteandroid.databinding.ActivitySearchEntryBinding;
@@ -52,9 +53,6 @@ public class SearchEntryActivity extends AppCompatActivity {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
 
-        // debug search entry
-        List<Entry> entries =  mEntryManager.searchBy("交通");
-        mEntryAdapter.addAll(entries);
         mEntryAdapter.setOnItemClickListener(new CommonEntryRecyclerAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position, Entry entry) {
@@ -68,15 +66,23 @@ public class SearchEntryActivity extends AppCompatActivity {
     private SearchView.OnQueryTextListener onQueryText = new SearchView.OnQueryTextListener() {
         @Override
         public boolean onQueryTextSubmit(String query) {
-//            queryTextSubmit();
+            closeKeyboard(mSearchView);
+            if (query.length() > 0) {
+                new EntrySearchTask().execute(query);
+            } else {
+                mEntryAdapter.clearAllToNotifyData();
+            }
 
             return true;
         }
 
         @Override
         public boolean onQueryTextChange(String newText) {
-//            switchSearchToolView(newText);
-            Log.v("TEST", "onQueryTextChange: " + newText);
+            if (newText.length() > 0) {
+                new EntrySearchTask().execute(newText);
+            } else {
+                mEntryAdapter.clearAllToNotifyData();
+            }
 
             return false;
         }
@@ -107,5 +113,36 @@ public class SearchEntryActivity extends AppCompatActivity {
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void closeKeyboard(View view) {
+        if (view == null) return;
+        InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    }
+
+    /**
+     * 検索処理のタスク
+     */
+    private class EntrySearchTask extends AsyncTask<String, Integer, List<Entry>> {
+
+        @Override
+        protected List<Entry> doInBackground(String... strings) {
+            String word = strings[0];
+            List<Entry> result = mEntryManager.searchBy(word);
+
+            return result;
+        }
+
+        @Override
+        protected void onPostExecute(List<Entry> result) {
+            if (result == null || result.size() == 0) {
+                mEntryAdapter.clearAllToNotifyData();
+                return;
+            }
+
+            mEntryAdapter.setItems(result);
+            mEntryAdapter.notifyDataSetChanged();
+        }
     }
 }

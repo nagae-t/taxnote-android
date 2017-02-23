@@ -49,12 +49,25 @@ public class CommonEntryRecyclerAdapter extends RecyclerView.Adapter<BindingHold
         this.mDataList = entries;
     }
 
+    public void setItems(List<Entry> entries) {
+        mDataList = entries;
+    }
+
     public void add(Entry entry) {
         mDataList.add(entry);
     }
 
     public void addAll(List<Entry> entries) {
         mDataList.addAll(entries);
+    }
+
+    public void clearAll() {
+        mDataList = new ArrayList<>();
+    }
+
+    public void clearAllToNotifyData() {
+        mDataList = new ArrayList<>();
+        notifyDataSetChanged();
     }
 
     @Override
