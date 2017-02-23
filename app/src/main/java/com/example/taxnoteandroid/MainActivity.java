@@ -100,6 +100,7 @@ public class MainActivity extends AppCompatActivity {
                 break;
 
             case R.id.action_search:
+                SearchEntryActivity.start(this);
                 break;
         }
         return super.onOptionsItemSelected(item);
