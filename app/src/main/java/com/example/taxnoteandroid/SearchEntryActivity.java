@@ -7,10 +7,12 @@ import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.example.taxnoteandroid.dataManager.EntryDataManager;
 import com.example.taxnoteandroid.databinding.ActivitySearchEntryBinding;
@@ -28,6 +30,7 @@ public class SearchEntryActivity extends AppCompatActivity {
     private ActivitySearchEntryBinding binding;
     private EntryDataManager mEntryManager;
     private SearchView mSearchView;
+    private CommonEntryRecyclerAdapter mEntryAdapter;
 
     public static void start(Context context) {
         Intent intent = new Intent(context, SearchEntryActivity.class);
@@ -40,14 +43,25 @@ public class SearchEntryActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_search_entry);
+        binding.entries.setLayoutManager(new LinearLayoutManager(this));
+        binding.entries.addItemDecoration(new DividerDecoration(this));
+
         mEntryManager = new EntryDataManager(this);
+        mEntryAdapter = new CommonEntryRecyclerAdapter(this);
 
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
 
         // debug search entry
         List<Entry> entries =  mEntryManager.searchBy("交通");
-        Log.v("TEST", "1 entries size : " + entries.size());
+        mEntryAdapter.addAll(entries);
+        mEntryAdapter.setOnItemClickListener(new CommonEntryRecyclerAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position, Entry entry) {
+                EntryEditActivity.start(getApplicationContext(), entry);
+            }
+        });
+        binding.entries.setAdapter(mEntryAdapter);
 
     }
 
@@ -62,6 +76,7 @@ public class SearchEntryActivity extends AppCompatActivity {
         @Override
         public boolean onQueryTextChange(String newText) {
 //            switchSearchToolView(newText);
+            Log.v("TEST", "onQueryTextChange: " + newText);
 
             return false;
         }
