@@ -8,10 +8,15 @@ import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.example.taxnoteandroid.dataManager.EntryDataManager;
 import com.example.taxnoteandroid.databinding.ActivitySearchEntryBinding;
+import com.example.taxnoteandroid.model.Entry;
+
+import java.util.List;
 
 
 /**
@@ -21,7 +26,7 @@ import com.example.taxnoteandroid.databinding.ActivitySearchEntryBinding;
 public class SearchEntryActivity extends AppCompatActivity {
 
     private ActivitySearchEntryBinding binding;
-
+    private EntryDataManager mEntryManager;
     private SearchView mSearchView;
 
     public static void start(Context context) {
@@ -35,9 +40,15 @@ public class SearchEntryActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_search_entry);
+        mEntryManager = new EntryDataManager(this);
 
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
+
+        // debug search entry
+        List<Entry> entries =  mEntryManager.searchBy("交通");
+        Log.v("TEST", "1 entries size : " + entries.size());
+
     }
 
     private SearchView.OnQueryTextListener onQueryText = new SearchView.OnQueryTextListener() {
