@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
@@ -70,6 +71,9 @@ public class InputDataActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_input_data);
 
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+
         setIntentData();
         setTitle();
         setSummary();
@@ -133,7 +137,9 @@ public class InputDataActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-
+            case android.R.id.home:
+                finish();
+                return true;
             case R.id.pin_button:
                 togglePinButton();
                 break;
