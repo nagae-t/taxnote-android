@@ -225,12 +225,15 @@ public class CalculatorActivity extends AppCompatActivity {
                 }
             }
 
-            // Send the new price to inputDataActivity and finish
-            currentPrice  = Long.parseLong(priceString);
-
             //@@@ いまここ、小数点のついたPricecStringをどうやってlongに戻すか
-//            long priceLongNumber            = (long) newPriceDoubleNumber;
-//            String calculatedPriceString    = Long.toString(priceLongNumber);
+            if (priceString.contains(".")) {
+                DialogManager.showToast(this, getResources().getString(R.string.rounded_decimal_numbers));
+            }
+
+            // Convert double to long
+            double priceDoubleNumber = Double.parseDouble(priceString);
+            priceDoubleNumber = Math.round(priceDoubleNumber);
+            currentPrice = (long) priceDoubleNumber;
 
             Intent intent = new Intent();
             intent.putExtra(EXTRA_CURRENT_PRICE, currentPrice);
@@ -242,7 +245,7 @@ public class CalculatorActivity extends AppCompatActivity {
         // Remove "," from price text
         String text = priceTextView.getText().toString().replace(",", "");
 
-        if (text.length() >= 9) {
+        if (text.length() > 9) {
             return;
         }
 
@@ -262,19 +265,9 @@ public class CalculatorActivity extends AppCompatActivity {
             } else {
                 priceString = priceString + selectedString;
             }
-//            priceString = priceString + selectedString;
         }
 
-//        currentPrice = Long.parseLong(priceString);
-//        String priceString = ValueConverter.formatPrice(CalculatorActivity.this ,currentPrice);
         priceTextView.setText(priceString);
-
-
-
-//        String currentPriceString = Long.toString(currentPrice);
-//        currentPrice = Long.parseLong(currentPriceString + priceString);
-//        String priceString = ValueConverter.formatPrice(CalculatorActivity.this ,currentPrice);
-//        priceTextView.setText(priceString);
     }
 
     private String calculatePriceStringAndPreviousPriceString(String priceString, String previousPriceString, String selectedSymbol) {
@@ -282,40 +275,41 @@ public class CalculatorActivity extends AppCompatActivity {
         double newPriceDoubleNumber = 0;
         double priceDoubleNumber = Double.parseDouble(priceString);
         double previousPriceDoubleNumber = Double.parseDouble(previousPriceString);
-
+        String calculatedPriceString = "";
 
         if (selectedSymbol.equals(PLUS_SYMBOL)) {
-            newPriceDoubleNumber = previousPriceDoubleNumber + priceDoubleNumber;
+            newPriceDoubleNumber    = previousPriceDoubleNumber + priceDoubleNumber;
+//            calculatedPriceString   = Long.toString((long) newPriceDoubleNumber);
 
         } else if (selectedSymbol.equals(MINUS_SYMBOL)) {
-            newPriceDoubleNumber = previousPriceDoubleNumber - priceDoubleNumber;
+            newPriceDoubleNumber    = previousPriceDoubleNumber - priceDoubleNumber;
+//            calculatedPriceString   = Long.toString((long) newPriceDoubleNumber);
 
         } else if (selectedSymbol.equals(MULTIPLE_SYMBOL)) {
-            newPriceDoubleNumber = previousPriceDoubleNumber * priceDoubleNumber;
+            newPriceDoubleNumber        = previousPriceDoubleNumber * priceDoubleNumber;
+//            calculatedPriceString       = Long.toString((long) newPriceDoubleNumber);
 
         } else if (selectedSymbol.equals(SPLIT_SYMBOL)) {
-            newPriceDoubleNumber = previousPriceDoubleNumber / priceDoubleNumber;
-
-            // @@@ここlongになってない？
-            // Round here
-            newPriceDoubleNumber = Math.round(newPriceDoubleNumber);
+            newPriceDoubleNumber    = previousPriceDoubleNumber / priceDoubleNumber;
+//            calculatedPriceString   = Double.toString(newPriceDoubleNumber);
         }
 
-        //@@@
+        calculatedPriceString   = Double.toString(newPriceDoubleNumber);
 
-        String calculatedPriceString    = Double.toString(newPriceDoubleNumber);
+
+        //@@
 
 
 //        long priceLongNumber            = (long) newPriceDoubleNumber;
 //        String calculatedPriceString    = Long.toString(priceLongNumber);
 
         // Limit max length
-        if (calculatedPriceString.length() > 9) {
+            if (calculatedPriceString.length() > 9) {
 
-            // @@@ 翻訳する
-            DialogManager.showOKOnlyAlert(this, "Limit", "Limit Reached");
-            return Double.toString(previousPriceDoubleNumber);
-        }
+                // @@@ 翻訳する
+                DialogManager.showOKOnlyAlert(this, "Limit", "Limit Reached");
+                return Double.toString(previousPriceDoubleNumber);
+            }
 
         return calculatedPriceString;
     }

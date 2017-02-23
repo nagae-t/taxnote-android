@@ -1,6 +1,5 @@
 <resources>
 
-
     <string name="app_name">Taxnote</string>
     <string name="Expense">支出</string>
     <string name="Income">収入</string>
@@ -181,6 +180,14 @@
     <string name="hs__conversation_detail_error">検索</string>
     <string name="hs__review_title">アップデートに関して</string>
     <string name="hs__review_message">こんにちは、Taxnoteを開発している梅本です。今回のアップデートの感想、または今後の要望などあれば遠慮なくお願いします。</string>
+
+
+    //--------------------------------------------------------------//
+    // -- All --
+    //--------------------------------------------------------------//
+
+    <string name="rounded_decimal_numbers">四捨五入しました。</string>
+
 
 
 </resources>
