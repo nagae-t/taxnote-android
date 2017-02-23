@@ -6,6 +6,11 @@ import com.github.gfx.android.orma.annotation.Table;
 
 import org.parceler.Parcel;
 
+/**
+ * 勘定科目選択のモデル
+ *
+ */
+
 @Parcel
 @Table
 public class Reason {

@@ -6,6 +6,10 @@ import com.github.gfx.android.orma.annotation.Table;
 
 import org.parceler.Parcel;
 
+/**
+ * 仕訳帳データを扱うもの
+ */
+
 @Parcel
 @Table
 public class Entry {

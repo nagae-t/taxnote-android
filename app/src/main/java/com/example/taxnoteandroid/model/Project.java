@@ -6,6 +6,10 @@ import com.github.gfx.android.orma.annotation.Table;
 
 import org.parceler.Parcel;
 
+/**
+ * アカウントだ！（全体データの扱いを分けるため）
+ */
+
 @Parcel
 @Table
 public class Project {

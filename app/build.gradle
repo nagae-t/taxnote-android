@@ -22,8 +22,9 @@ android {
 
     defaultConfig {
         applicationId "com.nonapp.taxnote"
-        minSdkVersion 19
-        targetSdkVersion 22
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
+
         versionCode 54
         versionName "1.0.3"
     }
@@ -45,11 +46,12 @@ android {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
 
-    compile 'com.android.support:appcompat-v7:25.1.1'
-    compile 'com.android.support:design:25.1.1'
-    compile 'com.android.support:support-v4:25.1.1'
-    compile 'com.android.support:recyclerview-v7:25.1.1'
-    compile 'com.android.support:cardview-v7:25.1.1'
+    compile "com.android.support:appcompat-v7:${supportPackageVersion}"
+    compile "com.android.support:design:${supportPackageVersion}"
+    compile "com.android.support:support-v4:${supportPackageVersion}"
+    compile "com.android.support:recyclerview-v7:${supportPackageVersion}"
+    compile "com.android.support:cardview-v7:${supportPackageVersion}"
+
 
 
     // Mixpanel
@@ -72,8 +74,8 @@ dependencies {
     }
 
     // Orma
-    compile 'com.github.gfx.android.orma:orma:3.0.1'
-    apt 'com.github.gfx.android.orma:orma-processor:3.0.1'
+    compile 'com.github.gfx.android.orma:orma:4.2.0'
+    apt 'com.github.gfx.android.orma:orma-processor:4.2.0'
 
     // Gson
     compile 'com.google.code.gson:gson:2.8.0'

@@ -12,6 +12,7 @@
     <string name="Price">金額</string>
     <string name="Delete">削除する</string>
     <string name="help">ヘルプ</string>
+    <string name="search">Search</string>
     <string name="edit_entry">仕訳の編集</string>
     <string name="title_activity_calculator">電卓</string>
 

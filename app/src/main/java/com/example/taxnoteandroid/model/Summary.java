@@ -6,6 +6,10 @@ import com.github.gfx.android.orma.annotation.Table;
 
 import org.parceler.Parcel;
 
+/**
+ * 備考（メモ）データ
+ */
+
 @Parcel
 @Table
 public class Summary {

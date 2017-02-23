@@ -11,14 +11,19 @@ import com.example.taxnoteandroid.model.Project;
 import com.example.taxnoteandroid.model.Reason;
 import com.github.gfx.android.orma.OrderSpec;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class EntryDataManager {
 
     private OrmaDatabase ormaDatabase;
+    private Context mContext;
 
     public EntryDataManager(Context context) {
-      ormaDatabase = TaxnoteApp.getOrmaDatabase();
+        ormaDatabase = TaxnoteApp.getOrmaDatabase();
+        mContext = context;
     }
 
 
@@ -82,6 +87,50 @@ public class EntryDataManager {
         }
 
         //QQこのエラーなおしたい
+        return entries;
+    }
+
+    //@@ 未完成
+    public List<Entry> findAll(String word) {
+        ProjectDataManager projectDataManager   = new ProjectDataManager(mContext);
+        Project project                         = projectDataManager.findCurrentProjectWithContext(mContext);
+        List<Entry> entries = new ArrayList<>();
+        String orderSpec = OrderSpec.DESC;
+
+        ormaDatabase.selectFromEntry()
+                .where(Entry_Schema.INSTANCE.deleted.getQualifiedName() + " = 0")
+//                .where(Entry_Schema.INSTANCE.reason.name.intern()
+//                    + " LIKE `%" + word + "%`") <- 失敗
+//                .where(Entry_Schema.INSTANCE.reason.getEscapedName()
+//                    + ".`name` LIKE `%" + word + "%`") <- 失敗
+                .orderBy(Entry_Schema.INSTANCE.date.getQualifiedName() + " " + orderSpec)
+                .toList();
+
+
+        return entries;
+    }
+
+    /**
+     * ワードでEntryデータを検索
+     *
+     * @param word
+     * @return
+     */
+    public List<Entry> searchBy(String word) {
+        List<Entry> entries = new ArrayList<>();
+        List<Entry> searchTargets = findAll(mContext, null, false);
+        for(Entry entry : searchTargets) {
+
+            Pattern wordPattern = Pattern.compile(Pattern.quote(word));
+            Matcher accountNameMatcher = wordPattern.matcher(entry.account.name);
+            Matcher reasonNameMatcher = wordPattern.matcher(entry.reason.name);
+            Matcher memoMatcher = wordPattern.matcher(entry.memo);
+            Matcher priceMatcher = wordPattern.matcher(String.valueOf(entry.price));
+            if (accountNameMatcher.find() || reasonNameMatcher.find()
+                    || memoMatcher.find() || priceMatcher.find()) {
+                entries.add(entry);
+            }
+        }
         return entries;
     }
 

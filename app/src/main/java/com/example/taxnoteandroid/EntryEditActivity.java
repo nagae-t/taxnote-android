@@ -29,6 +29,12 @@ public class EntryEditActivity extends AppCompatActivity {
     private Entry entry;
     private String entryUuid;
 
+    public static void start(Context context, Entry entry) {
+        Intent intent = new Intent(context, EntryEditActivity.class);
+        intent.putExtra(Entry.class.getName(), Parcels.wrap(entry));
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(intent);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
