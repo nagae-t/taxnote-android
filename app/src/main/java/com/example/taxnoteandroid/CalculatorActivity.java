@@ -306,7 +306,7 @@ public class CalculatorActivity extends AppCompatActivity {
         // Limit max length
             if (calculatedPriceString.length() > 9) {
 
-                // @@@ 翻訳する
+                // @@ 翻訳する
                 DialogManager.showOKOnlyAlert(this, "Limit", "Limit Reached");
                 return Double.toString(previousPriceDoubleNumber);
             }
