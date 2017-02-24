@@ -111,6 +111,7 @@ public class ReportFragment extends Fragment {
         Map<Calendar, List<Entry>> map = createReportDate(reportGrouping);
         mPagerAdapter = new ReportContentFragmentPagerAdapter2(getChildFragmentManager(), reportGrouping, map);
         binding.pager.setAdapter(mPagerAdapter);
+        binding.pager.setCurrentItem(mPagerAdapter.getCount()-1);
     }
 
     public interface ReportGrouping {
@@ -150,7 +151,8 @@ public class ReportFragment extends Fragment {
 
         @Override
         public String createTitle(Context context, Calendar c) {
-            return Integer.toString(c.get(Calendar.YEAR)) + "/" + Integer.toString(c.get(Calendar.MONTH));
+            return Integer.toString(c.get(Calendar.YEAR))
+                    + "/" + Integer.toString(c.get(Calendar.MONTH) + 1);
         }
     }
 
@@ -167,7 +169,9 @@ public class ReportFragment extends Fragment {
 
         @Override
         public String createTitle(Context context, Calendar c) {
-            return Integer.toString(c.get(Calendar.YEAR)) + "/" + Integer.toString(c.get(Calendar.MONTH)) + "/" + Integer.toString(c.get(Calendar.DATE));
+            return Integer.toString(c.get(Calendar.YEAR))
+                    + "/" + Integer.toString(c.get(Calendar.MONTH) + 1)
+                    + "/" + Integer.toString(c.get(Calendar.DATE));
         }
     }
 
