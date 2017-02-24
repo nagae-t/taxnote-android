@@ -26,6 +26,7 @@ import com.mixpanel.android.mpmetrics.MixpanelAPI;
 
 import java.lang.reflect.Field;
 
+import static com.example.taxnoteandroid.R.string.report;
 import static com.example.taxnoteandroid.TaxnoteConsts.MIXPANEL_TOKEN;
 
 public class MainActivity extends AppCompatActivity {
@@ -152,6 +153,7 @@ public class MainActivity extends AppCompatActivity {
                     case R.id.tab3:
                         binding.pager.setCurrentItem(2, false);
                         setTitle(getString(R.string.report));
+                        reportReload();
                         break;
                     case R.id.tab4:
                         binding.pager.setCurrentItem(3, false);
@@ -204,6 +206,17 @@ public class MainActivity extends AppCompatActivity {
         reportFragment.switchReportPeriod(type);
     }
 
+    private void reportReload() {
+        if (mTabPagerAdapter == null) return;
+
+        CustomViewPager pager = binding.pager;
+        ReportFragment reportFragment =
+                (ReportFragment) mTabPagerAdapter.instantiateItem(pager, 2);
+        if (reportFragment == null) return;
+
+        reportFragment.reloadData();
+    }
+
     class TabPagerAdapter extends FragmentPagerAdapter {
 
         public TabPagerAdapter(FragmentManager fm) {
@@ -238,7 +251,7 @@ public class MainActivity extends AppCompatActivity {
                 case 1:
                     return getString(R.string.History);
                 case 2:
-                    return getString(R.string.report);
+                    return getString(report);
                 case 3:
                     return getString(R.string.Settings);
             }

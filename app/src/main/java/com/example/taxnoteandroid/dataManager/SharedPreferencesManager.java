@@ -3,6 +3,8 @@ package com.example.taxnoteandroid.dataManager;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.example.taxnoteandroid.ReportFragment;
+
 import static com.example.taxnoteandroid.TaxnoteConsts.EXPORT_CHARACTER_CODE_UTF8;
 import static com.example.taxnoteandroid.TaxnoteConsts.EXPORT_FORMAT_TYPE_CSV;
 import static com.example.taxnoteandroid.TaxnoteConsts.EXPORT_RANGE_TYPE_ALL;
@@ -29,6 +31,7 @@ public class SharedPreferencesManager {
     private static final String FIRST_LAUNCH_KEY                = "FIRST_LAUNCH_KEY";
     private static final String TRACK_ENTRY_KEY                 = "TRACK_ENTRY_KEY";
     private static final String DATA_EXPORT_SUGGEST_KEY         = "DATA_EXPORT_SUGGEST_KEY";
+    private static final String PROFIT_LOSS_REPORT_PERIOD_KEY   = "PROFIT_LOSS_REPORT_PERIOD_KEY";
 
 
     //--------------------------------------------------------------//
@@ -121,6 +124,22 @@ public class SharedPreferencesManager {
 
     public static long getDateRangeEndDate(Context context) {
         return getSharedPreferences(context).getLong(EXPORT_RANGE_END_DATE, System.currentTimeMillis());
+    }
+
+
+
+    //--------------------------------------------------------------//
+    //    -- Profit And Loss Report --
+    //--------------------------------------------------------------//
+
+    // PROFIT_LOSS_REPORT_PERIOD_KEY
+    public static void saveProfitLossReportPeriodType(Context context, int type) {
+        getSharedPreferences(context).edit().putInt(PROFIT_LOSS_REPORT_PERIOD_KEY, type).apply();
+    }
+
+    public static int getProfitLossReportPeriodType(Context context) {
+        return getSharedPreferences(context).getInt(
+                PROFIT_LOSS_REPORT_PERIOD_KEY, ReportFragment.PERIOD_TYPE_YEAR);
     }
 
 
