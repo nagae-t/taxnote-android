@@ -31,6 +31,7 @@ import static com.example.taxnoteandroid.TaxnoteConsts.MIXPANEL_TOKEN;
 public class MainActivity extends AppCompatActivity {
 
     private ActivityMainBinding binding;
+    private TabPagerAdapter mTabPagerAdapter;
 
     @Override
     protected void onStart() {
@@ -105,10 +106,13 @@ public class MainActivity extends AppCompatActivity {
 
             // 損益表のメニューオプションが選択されたとき
             case R.id.divide_by_year:
+                reportSwitchPeriod(ReportFragment.PERIOD_TYPE_YEAR);
                 break;
             case R.id.divide_by_month:
+                reportSwitchPeriod(ReportFragment.PERIOD_TYPE_MONTH);
                 break;
             case R.id.divide_by_day:
+                reportSwitchPeriod(ReportFragment.PERIOD_TYPE_DAY);
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -122,10 +126,10 @@ public class MainActivity extends AppCompatActivity {
     private void setBottomNavigation() {
 
         // Set pager
-        TabPagerAdapter adapter = new TabPagerAdapter(getSupportFragmentManager());
-        binding.pager.setAdapter(adapter);
+        mTabPagerAdapter = new TabPagerAdapter(getSupportFragmentManager());
+        binding.pager.setAdapter(mTabPagerAdapter);
         binding.pager.beginFakeDrag();
-        binding.pager.setOffscreenPageLimit(adapter.getCount());
+        binding.pager.setOffscreenPageLimit(mTabPagerAdapter.getCount());
 
         // Set the default title
         setTitle(getString(R.string.Entry));
@@ -189,6 +193,17 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private void reportSwitchPeriod(int type) {
+        if (mTabPagerAdapter == null) return;
+
+        CustomViewPager pager = binding.pager;
+        ReportFragment reportFragment =
+                (ReportFragment) mTabPagerAdapter.instantiateItem(pager, pager.getCurrentItem());
+        if (reportFragment == null) return;
+
+        reportFragment.switchReportPeriod(type);
+    }
+
     class TabPagerAdapter extends FragmentPagerAdapter {
 
         public TabPagerAdapter(FragmentManager fm) {
@@ -229,6 +244,8 @@ public class MainActivity extends AppCompatActivity {
             }
             return super.getPageTitle(position);
         }
+
+
     }
 
 

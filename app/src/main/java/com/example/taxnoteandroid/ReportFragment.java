@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,11 +24,25 @@ public class ReportFragment extends Fragment {
 
     private FragmentReportBinding binding;
 
+    // レポート期間タイプ別の定義
+    public static final int PERIOD_TYPE_YEAR = 1;
+    public static final int PERIOD_TYPE_MONTH = 2;
+    public static final int PERIOD_TYPE_DAY = 3;
+
+    private static final String KEY_PERIOD_TYPE = "report_period_type";
+
     public ReportFragment() {
     }
 
     public static ReportFragment newInstance() {
         ReportFragment fragment = new ReportFragment();
+        return fragment;
+    }
+
+    public static ReportFragment newInstance(int peroidType) {
+        ReportFragment fragment = new ReportFragment();
+        Bundle args = new Bundle();
+        args.putInt(KEY_PERIOD_TYPE, peroidType);
         return fragment;
     }
 
@@ -66,6 +81,18 @@ public class ReportFragment extends Fragment {
             }
         }
         return map;
+    }
+
+    public void switchReportPeriod(int periodType) {
+        Log.v("TEST", "switchReportPeriod type: " + periodType);
+        switch (periodType) {
+            case PERIOD_TYPE_YEAR:
+                break;
+            case PERIOD_TYPE_MONTH:
+                break;
+            case PERIOD_TYPE_DAY:
+                break;
+        }
     }
 
     public interface ReportGrouping {
