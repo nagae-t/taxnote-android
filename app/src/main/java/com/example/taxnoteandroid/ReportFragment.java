@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,7 +21,9 @@ import java.util.Map;
 
 public class ReportFragment extends Fragment {
 
+    private Context mContext;
     private FragmentReportBinding binding;
+    private ReportContentFragmentPagerAdapter2 mPagerAdapter;
 
     // レポート期間タイプ別の定義
     public static final int PERIOD_TYPE_YEAR = 1;
@@ -36,32 +37,40 @@ public class ReportFragment extends Fragment {
 
     public static ReportFragment newInstance() {
         ReportFragment fragment = new ReportFragment();
+        Bundle args = new Bundle();
+        fragment.setArguments(args);
         return fragment;
     }
 
-    public static ReportFragment newInstance(int peroidType) {
+    public static ReportFragment newInstance(int periodType) {
         ReportFragment fragment = new ReportFragment();
         Bundle args = new Bundle();
-        args.putInt(KEY_PERIOD_TYPE, peroidType);
+        args.putInt(KEY_PERIOD_TYPE, periodType);
+        fragment.setArguments(args);
         return fragment;
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentReportBinding.inflate(inflater, container, false);
-        Context context = getContext();
-
-        // @@ ボタン押したあとReportGroupingの実装を切り替える
-        ReportGrouping reportGrouping = new ReportYearGrouping();
-        Map<Calendar, List<Entry>> map = createReportDate(context, reportGrouping);
-        binding.pager.setAdapter(new ReportContentFragmentPagerAdapter2(getChildFragmentManager(), reportGrouping, map));
 
         return binding.getRoot();
     }
 
-    private Map<Calendar, List<Entry>> createReportDate(Context context, ReportGrouping reportGrouping) {
-        EntryDataManager entryDataManager = new EntryDataManager(context);
-        List<Entry> entries = entryDataManager.findAll(context, null, true);
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        mContext = getActivity().getApplicationContext();
+
+        int periodType = getArguments().getInt(KEY_PERIOD_TYPE, PERIOD_TYPE_YEAR);
+
+        // @@ ボタン押したあとReportGroupingの実装を切り替える
+        switchReportPeriod(periodType);
+    }
+
+    private Map<Calendar, List<Entry>> createReportDate(ReportGrouping reportGrouping) {
+        EntryDataManager entryDataManager = new EntryDataManager(mContext);
+        List<Entry> entries = entryDataManager.findAll(mContext, null, true);
         Map<Calendar, List<Entry>> map = new LinkedHashMap<>();
         for (Entry entry : entries) {
             Calendar calendar = reportGrouping.getGroupingCalendar(entry);
@@ -83,16 +92,25 @@ public class ReportFragment extends Fragment {
         return map;
     }
 
+    /**
+     * 期間別のタイプで表示を切り替える
+     *
+     * @param periodType
+     */
     public void switchReportPeriod(int periodType) {
-        Log.v("TEST", "switchReportPeriod type: " + periodType);
+        // @@ ボタン押したあとReportGroupingの実装を切り替える
+        ReportGrouping reportGrouping = new ReportYearGrouping();
         switch (periodType) {
-            case PERIOD_TYPE_YEAR:
-                break;
             case PERIOD_TYPE_MONTH:
+                reportGrouping = new ReportMonthGrouping();
                 break;
             case PERIOD_TYPE_DAY:
+                reportGrouping = new ReportDayGrouping();
                 break;
         }
+        Map<Calendar, List<Entry>> map = createReportDate(reportGrouping);
+        mPagerAdapter = new ReportContentFragmentPagerAdapter2(getChildFragmentManager(), reportGrouping, map);
+        binding.pager.setAdapter(mPagerAdapter);
     }
 
     public interface ReportGrouping {
