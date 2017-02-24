@@ -19,6 +19,7 @@
     <string name="divide_by_year">By year</string>
     <string name="divide_by_month">By month</string>
     <string name="divide_by_day">By day</string>
+    <string name="total">Total</string>
 
     <string name="SummaryActivity_no_select">備考を選択しない</string>
     <string name="SummaryActivity_nex">次へ進む</string>

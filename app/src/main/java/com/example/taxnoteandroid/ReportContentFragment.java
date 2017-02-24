@@ -1,8 +1,10 @@
 package com.example.taxnoteandroid;
 
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -10,10 +12,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.taxnoteandroid.Library.ValueConverter;
 import com.example.taxnoteandroid.databinding.FragmentReportContentBinding;
-import com.example.taxnoteandroid.databinding.RowReportCategoryBinding;
-import com.example.taxnoteandroid.databinding.RowReportSectionBinding;
-import com.example.taxnoteandroid.databinding.RowReportSumBinding;
+import com.example.taxnoteandroid.databinding.RowHistorySectionHeaderBinding;
+import com.example.taxnoteandroid.databinding.RowSimpleCellBinding;
 import com.example.taxnoteandroid.model.Entry;
 import com.example.taxnoteandroid.model.Reason;
 
@@ -28,6 +30,7 @@ public class ReportContentFragment extends Fragment {
 
     private static final String EXTRA_MODE_ = "EXTRA_";
     private FragmentReportContentBinding binding;
+    private Context mContext;
 
     public ReportContentFragment() {
     }
@@ -43,6 +46,7 @@ public class ReportContentFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentReportContentBinding.inflate(inflater, container, false);
+        mContext = getContext();
 
         List<Entry> entries = Parcels.unwrap(getArguments().getParcelable(EXTRA_MODE_));
         Log.d("entries", entries.toString());
@@ -54,18 +58,18 @@ public class ReportContentFragment extends Fragment {
 
         ReportContentAdapter.Item incomeSum = ReportContentAdapter.Item.newInstanceSumIncome();
         ReportContentAdapter.Item ExpenseSum = ReportContentAdapter.Item.newInstanceSumExpense();
+        ExpenseSum.isExpense = true;
 
         long count = 0;
-
         for (Entry entry : entries) {
             if (entry.isExpense) {
-                // +
-                ExpenseSum.sum += entry.price;
-                count += entry.price;
-            } else {
                 // -
-                incomeSum.sum += entry.price;
+                ExpenseSum.sum += entry.price;
                 count -= entry.price;
+            } else {
+                // +
+                incomeSum.sum += entry.price;
+                count += entry.price;
             }
         }
 
@@ -101,6 +105,7 @@ public class ReportContentFragment extends Fragment {
             Long id = entry.reason.id;
             if (expenseMap.containsKey(id)) {
                 ReportContentAdapter.Item i = expenseMap.get(id);
+                i.isExpense = true;
                 i.sum += entry.price;
             } else {
                 ReportContentAdapter.Item item = ReportContentAdapter.Item.newInstanceCategory(entry.reason);
@@ -123,8 +128,9 @@ public class ReportContentFragment extends Fragment {
             items.add(entry.getValue());
         }
 
-        binding.reportList.setLayoutManager(new LinearLayoutManager(getContext()));
-        binding.reportList.setAdapter(new ReportContentAdapter(items));
+        binding.reportList.setLayoutManager(new LinearLayoutManager(mContext));
+        binding.reportList.setAdapter(new ReportContentAdapter(mContext, items));
+        binding.reportList.addItemDecoration(new DividerDecoration(mContext));
 
 
         return binding.getRoot();
@@ -142,6 +148,7 @@ public class ReportContentFragment extends Fragment {
             private final int viewItemId;
             private long sum;
             private String reasonName;
+            private boolean isExpense;
 
             private Item(int viewItemId) {
                 this.viewItemId = viewItemId;
@@ -168,26 +175,28 @@ public class ReportContentFragment extends Fragment {
                 i.reasonName = reason.name;
                 return i;
             }
+
         }
 
         private List<Item> items;
+        private Context mContext;
 
-        public ReportContentAdapter(List<Item> items) {
+        public ReportContentAdapter(Context context, List<Item> items) {
             this.items = items;
+            this.mContext = context;
         }
 
         @Override
         public BindingHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             switch (viewType) {
                 case Item.VIEW_ITEM_SECTION_INCOME:
-                    return new BindingHolder(parent.getContext(), parent, R.layout.row_report_section);
                 case Item.VIEW_ITEM_SECTION_EXPENSE:
-                    return new BindingHolder(parent.getContext(), parent, R.layout.row_report_section);
+//                    return new BindingHolder(parent.getContext(), parent, R.layout.row_report_section);
+                    return new BindingHolder(parent.getContext(), parent, R.layout.row_history_section_header);
                 case Item.VIEW_ITEM_SUM_INCOME:
                 case Item.VIEW_ITEM_SUM_EXPENSE:
-                    return new BindingHolder(parent.getContext(), parent, R.layout.row_report_sum);
                 case Item.VIEW_ITEM_CATEGORY:
-                    return new BindingHolder(parent.getContext(), parent, R.layout.row_report_category);
+                    return new BindingHolder(parent.getContext(), parent, R.layout.row_simple_cell);
             }
             return null;
         }
@@ -195,33 +204,36 @@ public class ReportContentFragment extends Fragment {
         @Override
         public void onBindViewHolder(BindingHolder holder, final int position) {
             Item item = items.get(position);
-            switch (holder.getItemViewType()) {
+            int viewType = holder.getItemViewType();
+            switch (viewType) {
                 case Item.VIEW_ITEM_SECTION_INCOME: {
-                    RowReportSectionBinding binding = (RowReportSectionBinding) holder.binding;
-                    binding.title.setText(R.string.Income);
+                    RowHistorySectionHeaderBinding headerIncomeBinding = (RowHistorySectionHeaderBinding) holder.binding;
+                    headerIncomeBinding.name.setText(R.string.Income);
                     break;
                 }
                 case Item.VIEW_ITEM_SECTION_EXPENSE: {
-                    RowReportSectionBinding binding = (RowReportSectionBinding) holder.binding;
-                    binding.title.setText(R.string.Expense);
+                    RowHistorySectionHeaderBinding headerExpenseBinding = (RowHistorySectionHeaderBinding) holder.binding;
+                    headerExpenseBinding.name.setText(R.string.Expense);
                     break;
                 }
-                case Item.VIEW_ITEM_SUM_INCOME: {
-                    RowReportSumBinding binding = (RowReportSumBinding) holder.binding;
-                    binding.sum.setText(Long.toString(item.sum));
+                case Item.VIEW_ITEM_SUM_INCOME:
+                case Item.VIEW_ITEM_SUM_EXPENSE:
+                case Item.VIEW_ITEM_CATEGORY:
+                    RowSimpleCellBinding cellBinding = (RowSimpleCellBinding) holder.binding;
+                    String priceString = ValueConverter.formatPriceWithSymbol(
+                            mContext,item.sum, item.isExpense);
+                    cellBinding.price.setText(priceString);
+
+                    int priceColor = (item.isExpense) ? ContextCompat.getColor(mContext, R.color.expense)
+                            : ContextCompat.getColor(mContext, R.color.primary);
+                    cellBinding.price.setTextColor(priceColor);
+
+                    if (viewType == Item.VIEW_ITEM_CATEGORY) {
+                        cellBinding.name.setText(item.reasonName);
+                    } else {
+                        cellBinding.name.setText(mContext.getString(R.string.total));
+                    }
                     break;
-                }
-                case Item.VIEW_ITEM_SUM_EXPENSE: {
-                    RowReportSumBinding binding = (RowReportSumBinding) holder.binding;
-                    binding.sum.setText(Long.toString(item.sum));
-                    break;
-                }
-                case Item.VIEW_ITEM_CATEGORY: {
-                    RowReportCategoryBinding binding = (RowReportCategoryBinding) holder.binding;
-                    binding.name.setText(item.reasonName);
-                    binding.sum.setText(Long.toString(item.sum));
-                    break;
-                }
             }
         }
 

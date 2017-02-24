@@ -19,6 +19,7 @@
     <string name="divide_by_year">年別</string>
     <string name="divide_by_month">月別</string>
     <string name="divide_by_day">日別</string>
+    <string name="total">合計</string>
 
 
     <string name="SummaryActivity_no_select">備考を選択しない</string>
