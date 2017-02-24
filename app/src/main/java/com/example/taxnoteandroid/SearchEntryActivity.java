@@ -32,6 +32,7 @@ public class SearchEntryActivity extends AppCompatActivity {
     private EntryDataManager mEntryManager;
     private SearchView mSearchView;
     private CommonEntryRecyclerAdapter mEntryAdapter;
+    private String mSearchWord;
 
     public static void start(Context context) {
         Intent intent = new Intent(context, SearchEntryActivity.class);
@@ -63,11 +64,20 @@ public class SearchEntryActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        if (mSearchWord != null)
+            new EntrySearchTask().execute(mSearchWord);
+    }
+
     private SearchView.OnQueryTextListener onQueryText = new SearchView.OnQueryTextListener() {
         @Override
         public boolean onQueryTextSubmit(String query) {
             closeKeyboard(mSearchView);
             if (query.length() > 0) {
+                mSearchWord = query;
                 new EntrySearchTask().execute(query);
             } else {
                 mEntryAdapter.clearAllToNotifyData();
@@ -79,6 +89,7 @@ public class SearchEntryActivity extends AppCompatActivity {
         @Override
         public boolean onQueryTextChange(String newText) {
             if (newText.length() > 0) {
+                mSearchWord = newText;
                 new EntrySearchTask().execute(newText);
             } else {
                 mEntryAdapter.clearAllToNotifyData();
