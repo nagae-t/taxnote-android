@@ -15,6 +15,11 @@
     <string name="search">検索</string>
     <string name="edit_entry">仕訳の編集</string>
     <string name="title_activity_calculator">電卓</string>
+    <string name="profit_loss_sort">期間別</string>
+    <string name="divide_by_year">年別</string>
+    <string name="divide_by_month">月別</string>
+    <string name="divide_by_day">日別</string>
+
 
     <string name="SummaryActivity_no_select">備考を選択しない</string>
     <string name="SummaryActivity_nex">次へ進む</string>

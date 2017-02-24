@@ -56,31 +56,26 @@ public class MainActivity extends AppCompatActivity {
         MenuItem helpMenu = menu.findItem(R.id.help_in_entry_tab);
         MenuItem exportMenu = menu.findItem(R.id.data_export);
         MenuItem searchMenu = menu.findItem(R.id.action_search);
+        MenuItem periodDivMenu = menu.findItem(R.id.action_period_div);
+
+        helpMenu.setVisible(false);
+        exportMenu.setVisible(false);
+        searchMenu.setVisible(false);
+        periodDivMenu.setVisible(false);
 
         switch (binding.pager.getCurrentItem()) {
 
             case 0:
                 helpMenu.setVisible(true);
-                exportMenu.setVisible(false);
-                searchMenu.setVisible(false);
                 break;
-
             case 1:
-                helpMenu.setVisible(false);
                 exportMenu.setVisible(true);
                 searchMenu.setVisible(true);
                 break;
-
             case 2:
-                helpMenu.setVisible(false);
-                exportMenu.setVisible(false);
-                searchMenu.setVisible(false);
+                periodDivMenu.setVisible(true);
                 break;
-
             case 3:
-                helpMenu.setVisible(false);
-                exportMenu.setVisible(false);
-                searchMenu.setVisible(false);
                 break;
         }
         return super.onPrepareOptionsMenu(menu);
@@ -137,10 +132,10 @@ public class MainActivity extends AppCompatActivity {
                         binding.pager.setCurrentItem(1, false);
                         setTitle(getString(R.string.History));
                         break;
-//                    case R.id.tab3:
-//                        binding.pager.setCurrentItem(2, false);
-//                        setTitle(getString(R.string.report));
-//                        break;
+                    case R.id.tab3:
+                        binding.pager.setCurrentItem(2, false);
+                        setTitle(getString(R.string.report));
+                        break;
                     case R.id.tab4:
                         binding.pager.setCurrentItem(3, false);
                         setTitle(getString(R.string.Settings));

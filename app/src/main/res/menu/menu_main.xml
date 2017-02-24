@@ -14,7 +14,6 @@
         android:visible="false"
         app:showAsAction="always" />
 
-    <!-- app:actionViewClass="android.support.v7.widget.SearchView" -->
     <item
         android:id="@+id/action_search"
         android:icon="@android:drawable/ic_menu_search"
@@ -27,4 +26,22 @@
         android:title="@string/pin_button"
         android:visible="false"
         app:showAsAction="always" />
+
+
+    <item
+        android:id="@+id/action_period_div"
+        android:title="@string/profit_loss_sort"
+        android:icon="@android:drawable/ic_menu_sort_by_size"
+        android:visible="false"
+        app:showAsAction="always">
+        <menu>
+            <item android:id="@+id/divide_by_year"
+                android:title="@string/divide_by_year" />
+            <item android:id="@+id/divide_by_month"
+                android:title="@string/divide_by_month" />
+            <item android:id="@+id/divide_by_day"
+                android:title="@string/divide_by_day" />
+        </menu>
+    </item>
+
 </menu>
