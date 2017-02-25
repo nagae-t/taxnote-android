@@ -31,7 +31,6 @@
     <item
         android:id="@+id/action_period_div"
         android:title="@string/profit_loss_sort"
-        android:icon="@android:drawable/ic_menu_sort_by_size"
         android:visible="false"
         app:showAsAction="always">
         <menu>

@@ -19,7 +19,6 @@ public class ValueConverter {
         String priceString;
 
         //@@@
-
         if (decimalStatus) {
 
             DecimalFormat formatForPriceStyle   = new DecimalFormat("#,##0.00");

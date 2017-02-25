@@ -15,22 +15,13 @@
     <string name="search">検索</string>
     <string name="edit_entry">仕訳の編集</string>
     <string name="title_activity_calculator">電卓</string>
-    <string name="profit_loss_sort">期間別</string>
-    <string name="divide_by_year">年別</string>
-    <string name="divide_by_month">月別</string>
-    <string name="divide_by_day">日別</string>
-    <string name="total">合計</string>
-
-
     <string name="SummaryActivity_no_select">備考を選択しない</string>
     <string name="SummaryActivity_nex">次へ進む</string>
     <string name="SummaryActivity_select">備考を選択</string>
     <string name="SummaryActivity_footer">備考を追加</string>
-
     <string name="MainActivity_entry_tab">Entry</string>
     <string name="MainActivity_history_tab">History</string>
     <string name="MainActivity_settings_tab">Settings</string>
-
     <string name="done">完了</string>
     <string name="cancel">キャンセル</string>
     <string name="delete_confirm_message">削除していいですか？</string>
@@ -193,6 +184,20 @@
     //--------------------------------------------------------------//
 
     <string name="rounded_decimal_numbers">四捨五入しました。</string>
+
+
+    <string name="profit_loss_sort">期間変更</string>
+    <string name="divide_by_year">年別</string>
+    <string name="divide_by_month">月別</string>
+    <string name="divide_by_day">日別</string>
+    <string name="total">合計</string>
+
+
+    // 新しいstringsは全部この下に書いていってもらえれば、あとから編集するので。
+    // 英語版は後から一気に作るので、とりあえず、ここも全部日本語でOK!
+    // つまり、同じ内容をstrings.xmlの日本語にもコピペするという形っす。
+    // 読んだらこれは消してくださいませ。
+
 
 
 
