@@ -66,7 +66,7 @@
             android:label="@string/search"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".HistoryDetailActivity"
+            android:name=".HistoryListDataActivity"
             android:screenOrientation="portrait" />
         <!--
  ATTENTION: This was auto-generated to add Google Play services to your project for

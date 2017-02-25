@@ -16,7 +16,7 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
 import com.example.taxnoteandroid.dataManager.EntryDataManager;
-import com.example.taxnoteandroid.databinding.ActivitySearchEntryBinding;
+import com.example.taxnoteandroid.databinding.ActivityEntryCommonBinding;
 import com.example.taxnoteandroid.model.Entry;
 
 import java.util.List;
@@ -28,7 +28,7 @@ import java.util.List;
 
 public class SearchEntryActivity extends AppCompatActivity {
 
-    private ActivitySearchEntryBinding binding;
+    private ActivityEntryCommonBinding binding;
     private EntryDataManager mEntryManager;
     private SearchView mSearchView;
     private CommonEntryRecyclerAdapter mEntryAdapter;
@@ -44,7 +44,7 @@ public class SearchEntryActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_search_entry);
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_entry_common);
         binding.entries.setLayoutManager(new LinearLayoutManager(this));
         binding.entries.addItemDecoration(new DividerDecoration(this));
 
