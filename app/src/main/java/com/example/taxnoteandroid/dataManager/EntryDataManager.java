@@ -92,10 +92,11 @@ public class EntryDataManager {
         List<Entry> entries;
         String orderSpec = (asc) ? OrderSpec.ASC : OrderSpec.DESC;
 
+        int expense = (isExpense) ? 1 : 0;
         Entry_Selector selector = ormaDatabase.selectFromEntry().
                 where(Entry_Schema.INSTANCE.deleted.getQualifiedName() + " = 0")
                 .projectEq(project)
-                .where(Entry_Schema.INSTANCE.isExpense.getQualifiedName() + " = " + isExpense);
+                .where(Entry_Schema.INSTANCE.isExpense.getQualifiedName() + " = " + expense);
 
         String schemeData = Entry_Schema.INSTANCE.date.getQualifiedName();
         if (startAndEndDate != null) {

@@ -3,11 +3,11 @@ package com.example.taxnoteandroid;
 import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -17,8 +17,6 @@ import com.example.taxnoteandroid.dataManager.EntryDataManager;
 import com.example.taxnoteandroid.dataManager.SharedPreferencesManager;
 import com.example.taxnoteandroid.databinding.ActivityEntryCommonBinding;
 import com.example.taxnoteandroid.model.Entry;
-
-import org.parceler.Parcels;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -40,7 +38,6 @@ public class HistoryListDataActivity extends AppCompatActivity {
 
     private static final String KEY_TARGET_CALENDAR = "target_calendar";
     private static final String KEY_REASON_NAME = "reason_name";
-    private static final String KEY_ENTRY_DATA = "entry_data";
     private static final String KEY_IS_BALANCE = "is_balance";
     private static final String KEY_IS_EXPENSE = "is_expense";
 
@@ -74,15 +71,6 @@ public class HistoryListDataActivity extends AppCompatActivity {
     }
 
 
-    public static void start(Context context, Calendar targetCalendar, Entry entry) {
-        Intent intent = new Intent(context, HistoryListDataActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        intent.putExtra(KEY_TARGET_CALENDAR, targetCalendar);
-        if (entry != null)
-            intent.putExtra(KEY_ENTRY_DATA, Parcels.wrap(entry));
-        context.startActivity(intent);
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -94,25 +82,26 @@ public class HistoryListDataActivity extends AppCompatActivity {
 
         mEntryManager = new EntryDataManager(this);
         mEntryAdapter = new CommonEntryRecyclerAdapter(this);
+        mEntryAdapter.setOnItemClickListener(new CommonEntryRecyclerAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position, Entry entry) {
+                EntryEditActivity.start(getApplicationContext(), entry);
+            }
+        });
 
         Intent receiptIntent = getIntent();
         Calendar targetCalendar  = (Calendar) receiptIntent.getSerializableExtra(KEY_TARGET_CALENDAR);
         String reasonName = receiptIntent.getStringExtra(KEY_REASON_NAME);
         boolean isBalance = receiptIntent.getBooleanExtra(KEY_IS_BALANCE, false);
         boolean isExpense = receiptIntent.getBooleanExtra(KEY_IS_EXPENSE, false);
-        /*
-        Parcelable entryPar = receiptIntent.getParcelableExtra(KEY_ENTRY_DATA);
-        if (entryPar != null) {
-            Entry entry = Parcels.unwrap(entryPar);
-        } else {
-            reasonName = getString(R.string.History);
-        }*/
 
-        String dateString = getCalendarStringFromPeriodType(targetCalendar);
-        String pageTitle = dateString;
+        String pageTitle = getCalendarStringFromPeriodType(targetCalendar);
         String pageSubTitle = reasonName;
         if (isBalance) {
             pageSubTitle = getString(R.string.History);
+        }
+        if (reasonName == null) {
+            pageSubTitle = (isExpense) ? getString(R.string.Expense) : getString(R.string.Income);
         }
 
         ActionBar actionBar = getSupportActionBar();
@@ -151,86 +140,17 @@ public class HistoryListDataActivity extends AppCompatActivity {
                 break;
         }
 
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(getString(R.string.date_string_format_to_year_month_day_weekday));
-        String startDateString = simpleDateFormat.format(startDate.getTime());
-        String endDateString = simpleDateFormat.format(endDate.getTime());
-        Log.v("TEST", "getStartAndEndDate| start: " + startDateString
-                + ", end: " + endDateString);
+//        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(getString(R.string.date_string_format_to_year_month_day_weekday));
+//        String startDateString = simpleDateFormat.format(startDate.getTime());
+//        String endDateString = simpleDateFormat.format(endDate.getTime());
         long[] result = {startDate.getTimeInMillis(), endDate.getTimeInMillis()};
         return result;
     }
 
     private void loadEntryData(long[] startAndEndDate, boolean isBalance, boolean isExpense) {
-        List<Entry> entries;
-
-        if (isBalance) {
-            Log.v("TEST", "HistoryListData: balance findAll");
-            entries = mEntryManager.findAll(this, startAndEndDate, false);
-        } else {
-            Log.v("TEST", "HistoryListData: findAll "
-                    + ", isExpense: " + isExpense);
-            entries = mEntryManager.findAll(startAndEndDate, isExpense, false);
-        }
-
-        if (entries == null || entries.isEmpty()) {
-            Log.v("TEST", "データが見つからない！！！");
-            return;
-        }
-
-        List<Entry> entryData = new ArrayList<>();
-        Map<String, List<Entry>> map2 = new LinkedHashMap<>();
-
-        // 入力日ごとにグルーピング
-        for (Entry entry : entries) {
-
-            // Format date to string
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat(getResources().getString(R.string.date_string_format_to_year_month_day_weekday));
-            String dateString = simpleDateFormat.format(entry.date);
-
-            if (!map2.containsKey(dateString)) {
-                List<Entry> entryList = new ArrayList<>();
-                entryList.add(entry);
-                map2.put(dateString, entryList);
-            } else {
-                List<Entry> entryList = map2.get(dateString);
-                entryList.add(entry);
-                map2.put(dateString, entryList);
-            }
-        }
-
-        // RecyclerViewに渡すためにMapをListに変換する
-        for (Map.Entry<String, List<Entry>> e : map2.entrySet()) {
-
-            Entry headerItem = new Entry();
-            headerItem.dateString = e.getKey();
-            entryData.add(headerItem);
-
-            long totalPrice = 0;
-
-            for (Entry _entry : e.getValue()) {
-
-                // Calculate total price
-                if (_entry.isExpense) {
-                    totalPrice -= _entry.price;
-                } else {
-                    totalPrice += _entry.price;
-                }
-
-                entryData.add(_entry);
-            }
-
-            // Format the totalPrice
-            headerItem.sumString = ValueConverter.formatPrice(this, totalPrice);
-        }
-
-        mEntryAdapter.addAll(entryData);
-        mEntryAdapter.setOnItemClickListener(new CommonEntryRecyclerAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(View view, int position, Entry entry) {
-                EntryEditActivity.start(getApplicationContext(), entry);
-            }
-        });
-        binding.entries.setAdapter(mEntryAdapter);
+        // Load by multi task.
+        new HistoryDataTask(isBalance, isExpense)
+                .execute(startAndEndDate);
     }
 
     @Override
@@ -253,5 +173,100 @@ public class HistoryListDataActivity extends AppCompatActivity {
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private class HistoryDataTask extends AsyncTask<long[], Integer, List<Entry>> {
+        private boolean isBalance;
+        private boolean isExpense;
+
+        public HistoryDataTask(boolean isBalance, boolean isExpense) {
+            this.isBalance = isBalance;
+            this.isExpense = isExpense;
+        }
+
+        @Override
+        protected List<Entry> doInBackground(long[]... longs) {
+            long[] startEndDate = longs[0];
+            Context context = getApplicationContext();
+
+            List<Entry> entries;
+
+            if (isBalance) {
+                entries = mEntryManager.findAll(context, startEndDate, false);
+            } else {
+                List<Entry> _entries = mEntryManager.findAll(startEndDate, isExpense, false);
+                entries = new ArrayList<>();
+
+                // Filter data by reasonName
+                String reasonName = getIntent().getStringExtra(KEY_REASON_NAME);
+                if (reasonName != null ) {
+                    for (Entry _entry : _entries) {
+                        if (_entry.reason.name.equals(reasonName)) {
+                            entries.add(_entry);
+                        }
+                    }
+                } else {
+                    entries.addAll(_entries);
+                }
+            }
+
+            if (entries == null || entries.isEmpty()) {
+                return entries;
+            }
+
+            List<Entry> entryData = new ArrayList<>();
+            Map<String, List<Entry>> map2 = new LinkedHashMap<>();
+
+            // 入力日ごとにグルーピング
+            for (Entry entry : entries) {
+
+                // Format date to string
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat(getResources().getString(R.string.date_string_format_to_year_month_day_weekday));
+                String dateString = simpleDateFormat.format(entry.date);
+
+                if (!map2.containsKey(dateString)) {
+                    List<Entry> entryList = new ArrayList<>();
+                    entryList.add(entry);
+                    map2.put(dateString, entryList);
+                } else {
+                    List<Entry> entryList = map2.get(dateString);
+                    entryList.add(entry);
+                    map2.put(dateString, entryList);
+                }
+            }
+
+            // RecyclerViewに渡すためにMapをListに変換する
+            for (Map.Entry<String, List<Entry>> e : map2.entrySet()) {
+
+                Entry headerItem = new Entry();
+                headerItem.dateString = e.getKey();
+                entryData.add(headerItem);
+
+                long totalPrice = 0;
+
+                for (Entry _entry : e.getValue()) {
+
+                    // Calculate total price
+                    if (_entry.isExpense) {
+                        totalPrice -= _entry.price;
+                    } else {
+                        totalPrice += _entry.price;
+                    }
+
+                    entryData.add(_entry);
+                }
+
+                // Format the totalPrice
+                headerItem.sumString = ValueConverter.formatPrice(context, totalPrice);
+            }
+
+            return entryData;
+        }
+
+        @Override
+        protected void onPostExecute(List<Entry> result) {
+            mEntryAdapter.addAll(result);
+            binding.entries.setAdapter(mEntryAdapter);
+        }
     }
 }

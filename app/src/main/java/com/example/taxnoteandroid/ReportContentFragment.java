@@ -147,8 +147,19 @@ public class ReportContentFragment extends Fragment {
         }
 
         binding.reportList.setLayoutManager(new LinearLayoutManager(mContext));
-        binding.reportList.setAdapter(new ReportContentAdapter(mContext, items));
         binding.reportList.addItemDecoration(new DividerDecoration(mContext));
+        final ReportContentAdapter adapter = new ReportContentAdapter(mContext, items);
+        adapter.setOnItemClickListener(new ReportContentAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position, ReportContentAdapter.Item item) {
+                String reasonName = null;
+                int viewType = adapter.getItemViewType(position);
+                if (viewType == ReportContentAdapter.Item.VIEW_ITEM_CATEGORY)
+                    reasonName = item.reasonName;
+                HistoryListDataActivity.start(mContext, mTargetCalendar, reasonName, item.isExpense);
+            }
+        });
+        binding.reportList.setAdapter(adapter);
 
 
         return binding.getRoot();
@@ -198,10 +209,29 @@ public class ReportContentFragment extends Fragment {
 
         private List<Item> items;
         private Context mContext;
+        private RecyclerView mRecyclerView;
+
+        public OnItemClickListener mOnItemClickListener;
+
+        public interface OnItemClickListener {
+            void onItemClick(View view, int position, Item item);
+        }
 
         public ReportContentAdapter(Context context, List<Item> items) {
             this.items = items;
             this.mContext = context;
+        }
+
+        @Override
+        public void onAttachedToRecyclerView(RecyclerView recyclerView) {
+            super.onAttachedToRecyclerView(recyclerView);
+            mRecyclerView = recyclerView;
+        }
+
+        @Override
+        public void onDetachedFromRecyclerView(RecyclerView recyclerView) {
+            super.onDetachedFromRecyclerView(recyclerView);
+            mRecyclerView = null;
         }
 
         @Override
@@ -213,14 +243,16 @@ public class ReportContentFragment extends Fragment {
                 case Item.VIEW_ITEM_SUM_INCOME:
                 case Item.VIEW_ITEM_SUM_EXPENSE:
                 case Item.VIEW_ITEM_CATEGORY:
-                    return new BindingHolder(parent.getContext(), parent, R.layout.row_simple_cell);
+                    BindingHolder bindingHolder = new BindingHolder(
+                            parent.getContext(), parent, R.layout.row_simple_cell);
+                    return bindingHolder;
             }
             return null;
         }
 
         @Override
         public void onBindViewHolder(BindingHolder holder, final int position) {
-            Item item = items.get(position);
+            final Item item = items.get(position);
             int viewType = holder.getItemViewType();
             switch (viewType) {
                 case Item.VIEW_ITEM_SECTION_INCOME: {
@@ -245,12 +277,22 @@ public class ReportContentFragment extends Fragment {
                             : ContextCompat.getColor(mContext, R.color.primary);
                     cellBinding.price.setTextColor(priceColor);
 
+                    String reasonName = null;
                     if (viewType == Item.VIEW_ITEM_CATEGORY) {
-                        cellBinding.name.setText(item.reasonName);
+                        reasonName = item.reasonName;
+                        cellBinding.name.setText(reasonName);
                     } else {
                         cellBinding.name.setText(mContext.getString(R.string.total));
                     }
-
+                    cellBinding.getRoot().setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Log.v("TEST", "ReportContentAdapter onClick A");
+                            if (mOnItemClickListener != null) {
+                                mOnItemClickListener.onItemClick(v, position, item);
+                            }
+                        }
+                    });
                     break;
             }
         }
@@ -264,5 +306,10 @@ public class ReportContentFragment extends Fragment {
         public int getItemCount() {
             return items.size();
         }
+
+        public void setOnItemClickListener(final OnItemClickListener listener) {
+            mOnItemClickListener = listener;
+        }
+
     }
 }
