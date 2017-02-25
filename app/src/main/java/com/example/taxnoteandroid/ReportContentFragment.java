@@ -110,11 +110,18 @@ public class ReportContentFragment extends Fragment {
             } else {
                 ReportContentAdapter.Item item = ReportContentAdapter.Item.newInstanceCategory(entry.reason);
                 item.sum += entry.price;
+                item.isExpense = true;
                 expenseMap.put(id, item);
             }
         }
 
-        binding.price.setText(Long.toString(count));
+        // 残高の表示
+        String priceString = ValueConverter.formatPrice(mContext, count);
+        int priceColor = (count < 0) ? ContextCompat.getColor(mContext, R.color.expense)
+                : ContextCompat.getColor(mContext, R.color.primary);
+        priceString = (count > 0) ? "+"+priceString : priceString;
+        binding.price.setText(priceString);
+        binding.price.setTextColor(priceColor);
 
         items.add(incomeSection);
         items.add(incomeSum);
@@ -191,7 +198,6 @@ public class ReportContentFragment extends Fragment {
             switch (viewType) {
                 case Item.VIEW_ITEM_SECTION_INCOME:
                 case Item.VIEW_ITEM_SECTION_EXPENSE:
-//                    return new BindingHolder(parent.getContext(), parent, R.layout.row_report_section);
                     return new BindingHolder(parent.getContext(), parent, R.layout.row_history_section_header);
                 case Item.VIEW_ITEM_SUM_INCOME:
                 case Item.VIEW_ITEM_SUM_EXPENSE:
@@ -219,9 +225,9 @@ public class ReportContentFragment extends Fragment {
                 case Item.VIEW_ITEM_SUM_INCOME:
                 case Item.VIEW_ITEM_SUM_EXPENSE:
                 case Item.VIEW_ITEM_CATEGORY:
+
                     RowSimpleCellBinding cellBinding = (RowSimpleCellBinding) holder.binding;
-                    String priceString = ValueConverter.formatPriceWithSymbol(
-                            mContext,item.sum, item.isExpense);
+                    String priceString = ValueConverter.formatPrice(mContext,item.sum);
                     cellBinding.price.setText(priceString);
 
                     int priceColor = (item.isExpense) ? ContextCompat.getColor(mContext, R.color.expense)
@@ -233,6 +239,7 @@ public class ReportContentFragment extends Fragment {
                     } else {
                         cellBinding.name.setText(mContext.getString(R.string.total));
                     }
+
                     break;
             }
         }
