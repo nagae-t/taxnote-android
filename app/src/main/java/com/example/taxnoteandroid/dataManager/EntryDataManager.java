@@ -117,7 +117,7 @@ public class EntryDataManager {
         return entries;
     }
 
-    //@@ 未完成
+    //@@ 未完成、まだデバッグ中
     public List<Entry> findAll(String word) {
         ProjectDataManager projectDataManager   = new ProjectDataManager(mContext);
         Project project                         = projectDataManager.findCurrentProjectWithContext(mContext);
@@ -127,8 +127,9 @@ public class EntryDataManager {
         // @@ こんなんでいけそう
         // https://github.com/gfx/Android-Orma/search?utf8=%E2%9C%93&q=like
         ormaDatabase.selectFromEntry()
+                .projectEq(project)
                 .where(Entry_Schema.INSTANCE.deleted.getQualifiedName() + " = 0")
-//                .where(Entry_Schema.INSTANCE.reason.name.intern() + " LIKE ?", "% " + word + "%")
+                .where(Entry_Schema.INSTANCE.reason.name + " LIKE ?", "%" + word + "%")
 //                .where(Entry_Schema.INSTANCE.reason.getEscapedName()
 //                    + ".`name` LIKE `%" + word + "%`") <- 失敗
                 .orderBy(Entry_Schema.INSTANCE.date.getQualifiedName() + " " + orderSpec)

@@ -142,6 +142,10 @@ public class SearchEntryActivity extends AppCompatActivity {
             String word = strings[0];
             List<Entry> result = mEntryManager.searchBy(word);
 
+            // debug
+//            List<Entry> _search = mEntryManager.findAll("交通");
+//            Log.v("TEST", "_search size: " + _search.size());
+
             return result;
         }
 
