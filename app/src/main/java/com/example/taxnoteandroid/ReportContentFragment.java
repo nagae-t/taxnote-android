@@ -122,6 +122,12 @@ public class ReportContentFragment extends Fragment {
         priceString = (count > 0) ? "+"+priceString : priceString;
         binding.price.setText(priceString);
         binding.price.setTextColor(priceColor);
+        binding.topBalance.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
 
         items.add(incomeSection);
         items.add(incomeSum);

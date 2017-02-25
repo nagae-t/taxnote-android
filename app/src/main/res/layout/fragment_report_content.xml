@@ -12,6 +12,7 @@
             android:layout_height="wrap_content"
             android:background="@drawable/selector_background_colors">
             <LinearLayout
+                android:id="@+id/top_balance"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"

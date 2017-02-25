@@ -26,7 +26,9 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-
+/**
+ * 仕訳帳の画面
+ */
 public class HistoryTabFragment extends Fragment {
 
     private FragmentHistoryTabBinding binding;

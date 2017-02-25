@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.example.taxnoteandroid.Library.ValueConverter;
 import com.example.taxnoteandroid.dataManager.SharedPreferencesManager;
 import com.example.taxnoteandroid.databinding.RowHistoryCellBinding;
+import com.example.taxnoteandroid.databinding.RowHistorySectionHeaderBinding;
 import com.example.taxnoteandroid.model.Entry;
 
 import java.util.ArrayList;
@@ -26,6 +27,9 @@ public class CommonEntryRecyclerAdapter extends RecyclerView.Adapter<BindingHold
     private Context mContext;
     private RecyclerView mRecyclerView;
     private List<Entry> mDataList;
+
+    private static final int VIEW_ITEM_HEADER = 1;
+    private static final int VIEW_ITEM_CELL = 2;
 
     public OnItemClickListener mOnItemClickListener;
     public OnLongItemClickListener mOnItemLongClickListener;
@@ -47,6 +51,18 @@ public class CommonEntryRecyclerAdapter extends RecyclerView.Adapter<BindingHold
         super();
         this.mContext = context;
         this.mDataList = entries;
+    }
+
+    @Override
+    public void onAttachedToRecyclerView(RecyclerView recyclerView) {
+        super.onAttachedToRecyclerView(recyclerView);
+        mRecyclerView = recyclerView;
+    }
+
+    @Override
+    public void onDetachedFromRecyclerView(RecyclerView recyclerView) {
+        super.onDetachedFromRecyclerView(recyclerView);
+        mRecyclerView = null;
     }
 
     public void setItems(List<Entry> entries) {
@@ -72,53 +88,78 @@ public class CommonEntryRecyclerAdapter extends RecyclerView.Adapter<BindingHold
 
     @Override
     public BindingHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new BindingHolder(parent.getContext(), parent, R.layout.row_history_cell);
+        switch (viewType) {
+            case VIEW_ITEM_HEADER:
+                return new BindingHolder(parent.getContext(), parent, R.layout.row_history_section_header);
+            case VIEW_ITEM_CELL:
+                return new BindingHolder(parent.getContext(), parent, R.layout.row_history_cell);
+        }
+        return null;
     }
 
     @Override
     public void onBindViewHolder(BindingHolder holder, final int position) {
-        RowHistoryCellBinding binding = (RowHistoryCellBinding) holder.binding;
+        int viewType = holder.getItemViewType();
         final Entry entry = mDataList.get(position);
 
-        binding.getRoot().setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mOnItemClickListener != null) {
-                    mOnItemClickListener.onItemClick(v, position, entry);
+        switch (viewType) {
+            case VIEW_ITEM_HEADER:
+                RowHistorySectionHeaderBinding headerBindding = (RowHistorySectionHeaderBinding) holder.binding;
+                headerBindding.name.setText(entry.dateString);
+                headerBindding.price.setText(entry.sumString);
+                break;
+            case VIEW_ITEM_CELL:
+                RowHistoryCellBinding cellBinding = (RowHistoryCellBinding) holder.binding;
+                cellBinding.getRoot().setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (mOnItemClickListener != null) {
+                            mOnItemClickListener.onItemClick(v, position, entry);
+                        }
+                    }
+                });
+
+                // Name
+                String nameText;
+                if (entry.isExpense) {
+                    nameText = entry.reason.name + " / " + entry.account.name;
+                } else {
+                    nameText = entry.account.name + " / " + entry.reason.name;
                 }
-            }
-        });
 
-        // Name
-        String nameText;
-        if (entry.isExpense) {
-            nameText = entry.reason.name + " / " + entry.account.name;
-        } else {
-            nameText = entry.account.name + " / " + entry.reason.name;
+                if (!SharedPreferencesManager.isTapHereHistoryEditDone(mContext)) {
+                    nameText += " " + mContext.getString(R.string.tap_here);
+                }
+                cellBinding.name.setText(nameText);
+
+                // Memo
+                TextView memoTv = cellBinding.memo;
+                if (TextUtils.isEmpty(entry.memo)) {
+                    memoTv.setVisibility(View.GONE);
+                } else {
+                    memoTv.setVisibility(View.VISIBLE);
+                    memoTv.setText(entry.memo);
+                }
+
+                // Create price string
+                String priceString = ValueConverter.formatPriceWithSymbol(mContext ,entry.price, entry.isExpense);
+                cellBinding.price.setText(priceString);
+
+                // Set price color
+                int priceColor = (entry.isExpense) ? ContextCompat.getColor(mContext, R.color.expense)
+                        : ContextCompat.getColor(mContext, R.color.primary);
+                cellBinding.price.setTextColor(priceColor);
+                break;
         }
+    }
 
-        if (!SharedPreferencesManager.isTapHereHistoryEditDone(mContext)) {
-            nameText += " " + mContext.getString(R.string.tap_here);
+    @Override
+    public int getItemViewType(int position) {
+        Entry item = mDataList.get(position);
+        if (item.dateString != null) {
+            return VIEW_ITEM_HEADER;
         }
-        binding.name.setText(nameText);
-
-        // Memo
-        TextView memoTv = binding.memo;
-        if (TextUtils.isEmpty(entry.memo)) {
-            memoTv.setVisibility(View.GONE);
-        } else {
-            memoTv.setVisibility(View.VISIBLE);
-            memoTv.setText(entry.memo);
-        }
-
-        // Create price string
-        String priceString = ValueConverter.formatPriceWithSymbol(mContext ,entry.price, entry.isExpense);
-        binding.price.setText(priceString);
-
-        // Set price color
-        int priceColor = (entry.isExpense) ? ContextCompat.getColor(mContext, R.color.expense)
-                : ContextCompat.getColor(mContext, R.color.primary);
-        binding.price.setTextColor(priceColor);
+        return VIEW_ITEM_CELL;
     }
 
     @Override

@@ -55,6 +55,11 @@ public class Entry {
     @Column(indexed = true)
     public Account account;
 
+    // not column
+    public int viewType;
+    public String dateString;
+    public String sumString;
+
     @Override
     public String toString() {
         return "Entry{" +
