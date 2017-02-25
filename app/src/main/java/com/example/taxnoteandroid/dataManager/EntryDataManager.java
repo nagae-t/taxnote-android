@@ -6,6 +6,7 @@ import com.example.taxnoteandroid.TaxnoteApp;
 import com.example.taxnoteandroid.model.Account;
 import com.example.taxnoteandroid.model.Entry;
 import com.example.taxnoteandroid.model.Entry_Schema;
+import com.example.taxnoteandroid.model.Entry_Selector;
 import com.example.taxnoteandroid.model.OrmaDatabase;
 import com.example.taxnoteandroid.model.Project;
 import com.example.taxnoteandroid.model.Reason;
@@ -53,14 +54,8 @@ public class EntryDataManager {
         ProjectDataManager projectDataManager   = new ProjectDataManager(context);
         Project project                         = projectDataManager.findCurrentProjectWithContext(context);
 
-        List entries;
-        String orderSpec;
-
-        if (asc) {
-            orderSpec = OrderSpec.ASC;
-        } else {
-            orderSpec = OrderSpec.DESC;
-        }
+        List<Entry> entries;
+        String orderSpec = (asc) ? OrderSpec.ASC : OrderSpec.DESC;
 
         if (startAndEndDate != null) {
 
@@ -86,7 +81,38 @@ public class EntryDataManager {
                     .toList();
         }
 
-        //QQこのエラーなおしたい
+        return entries;
+    }
+
+    //@@ 収入・支出別
+    public List<Entry> findAll(long[] startAndEndDate, boolean isExpense, Boolean asc) {
+        ProjectDataManager projectDataManager   = new ProjectDataManager(mContext);
+        Project project                         = projectDataManager.findCurrentProjectWithContext(mContext);
+
+        List<Entry> entries;
+        String orderSpec = (asc) ? OrderSpec.ASC : OrderSpec.DESC;
+
+        Entry_Selector selector = ormaDatabase.selectFromEntry().
+                where(Entry_Schema.INSTANCE.deleted.getQualifiedName() + " = 0")
+                .projectEq(project)
+                .where(Entry_Schema.INSTANCE.isExpense.getQualifiedName() + " = " + isExpense);
+
+        String schemeData = Entry_Schema.INSTANCE.date.getQualifiedName();
+        if (startAndEndDate != null) {
+
+            // Get entries filtered within startDate and endDate
+            long startDate  = startAndEndDate[0];
+            long endDate    = startAndEndDate[1];
+
+            selector = selector
+                    .where(schemeData + " > " + startDate)
+                    .where(schemeData + " < " + endDate);
+        }
+        entries = selector
+                .orderBy(schemeData + " " + orderSpec)
+                .orderBy(Entry_Schema.INSTANCE.updated.getQualifiedName() + " " + orderSpec)
+                .toList();
+
         return entries;
     }
 
