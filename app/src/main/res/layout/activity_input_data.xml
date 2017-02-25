@@ -46,16 +46,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <!--//QQタップ範囲を広げたい-->
         <ImageView
             android:id="@+id/calculator_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            android:tint="@color/primary"
-            android:src="@drawable/ic_calculator_24dp" />
+            android:padding="16dp"
+            android:src="@drawable/ic_calculator_24dp"
+            android:tint="@color/primary" />
 
         <TextView
             android:paddingStart="-56dp"
