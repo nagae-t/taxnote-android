@@ -8,6 +8,7 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.BLUETOOTH" />
 
+    <!-- @@ ここ消せばtablet対応になる -->
     <supports-screens
         android:largeScreens="false"
         android:normalScreens="true"
