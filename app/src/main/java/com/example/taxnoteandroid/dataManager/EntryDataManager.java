@@ -143,11 +143,38 @@ public class EntryDataManager {
      * ワードでEntryデータを検索
      *
      * @param word
+     * @param startEndDate
      * @return
      */
-    public List<Entry> searchBy(String word) {
+    public List<Entry> searchBy(String word, long[] startEndDate) {
         List<Entry> entries = new ArrayList<>();
-        List<Entry> searchTargets = findAll(mContext, null, false);
+        List<Entry> searchTargets = findAll(mContext, startEndDate, false);
+        for(Entry entry : searchTargets) {
+
+            Pattern wordPattern = Pattern.compile(Pattern.quote(word));
+            Matcher accountNameMatcher = wordPattern.matcher(entry.account.name);
+            Matcher reasonNameMatcher = wordPattern.matcher(entry.reason.name);
+            Matcher memoMatcher = wordPattern.matcher(entry.memo);
+            Matcher priceMatcher = wordPattern.matcher(String.valueOf(entry.price));
+            if (accountNameMatcher.find() || reasonNameMatcher.find()
+                    || memoMatcher.find() || priceMatcher.find()) {
+                entries.add(entry);
+            }
+        }
+        return entries;
+    }
+
+    /**
+     * ワード、収入・支出別でEntryデータを検索
+     *
+     * @param word
+     * @param startEndDate
+     * @param isExpense
+     * @return
+     */
+    public List<Entry> searchBy(String word, long[] startEndDate, boolean isExpense) {
+        List<Entry> entries = new ArrayList<>();
+        List<Entry> searchTargets = findAll(startEndDate, isExpense, false);
         for(Entry entry : searchTargets) {
 
             Pattern wordPattern = Pattern.compile(Pattern.quote(word));

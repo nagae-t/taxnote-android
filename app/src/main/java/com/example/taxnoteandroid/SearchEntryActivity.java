@@ -34,9 +34,21 @@ public class SearchEntryActivity extends AppCompatActivity {
     private CommonEntryRecyclerAdapter mEntryAdapter;
     private String mSearchWord;
 
+    private static final String KEY_START_TIME = "start_time";
+    private static final String KEY_END_TIME = "end_time";
+
+
     public static void start(Context context) {
         Intent intent = new Intent(context, SearchEntryActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(intent);
+    }
+
+    public static void start(Context context, long startTime, long endTime) {
+        Intent intent = new Intent(context, SearchEntryActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.putExtra(KEY_START_TIME, startTime);
+        intent.putExtra(KEY_END_TIME, endTime);
         context.startActivity(intent);
     }
 
