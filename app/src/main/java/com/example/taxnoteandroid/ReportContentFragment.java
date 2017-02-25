@@ -73,8 +73,6 @@ public class ReportContentFragment extends Fragment {
             }
         }
 
-        // @@ 科目の合計はこっちでやる
-
         List<Entry> incomeList = new ArrayList<>();
         List<Entry> expenseList = new ArrayList<>();
 

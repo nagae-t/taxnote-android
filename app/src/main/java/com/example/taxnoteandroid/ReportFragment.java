@@ -57,7 +57,7 @@ public class ReportFragment extends Fragment {
 
         int periodType = SharedPreferencesManager.getProfitLossReportPeriodType(mContext);
 
-        // @@ ボタン押したあとReportGroupingの実装を切り替える
+        // ボタン押したあとReportGroupingの実装を切り替える
         switchReportPeriod(periodType);
 
         binding.pager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -116,7 +116,8 @@ public class ReportFragment extends Fragment {
      * @param periodType
      */
     public void switchReportPeriod(int periodType) {
-        // @@ ボタン押したあとReportGroupingの実装を切り替える
+
+        // ボタン押したあとReportGroupingの実装を切り替える
         ReportGrouping reportGrouping = new ReportYearGrouping();
         switch (periodType) {
             case PERIOD_TYPE_MONTH:
