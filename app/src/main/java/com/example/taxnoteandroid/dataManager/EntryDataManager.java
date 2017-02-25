@@ -97,10 +97,11 @@ public class EntryDataManager {
         List<Entry> entries = new ArrayList<>();
         String orderSpec = OrderSpec.DESC;
 
+        // @@ こんなんでいけそう
+        // https://github.com/gfx/Android-Orma/search?utf8=%E2%9C%93&q=like
         ormaDatabase.selectFromEntry()
                 .where(Entry_Schema.INSTANCE.deleted.getQualifiedName() + " = 0")
-//                .where(Entry_Schema.INSTANCE.reason.name.intern()
-//                    + " LIKE `%" + word + "%`") <- 失敗
+//                .where(Entry_Schema.INSTANCE.reason.name.intern() + " LIKE ?", "% " + word + "%")
 //                .where(Entry_Schema.INSTANCE.reason.getEscapedName()
 //                    + ".`name` LIKE `%" + word + "%`") <- 失敗
                 .orderBy(Entry_Schema.INSTANCE.date.getQualifiedName() + " " + orderSpec)
