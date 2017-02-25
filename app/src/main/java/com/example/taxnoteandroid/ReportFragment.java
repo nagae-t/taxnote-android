@@ -46,6 +46,7 @@ public class ReportFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentReportBinding.inflate(inflater, container, false);
+        binding.strip.setTabIndicatorColorResource(R.color.accent);
 
         return binding.getRoot();
     }
