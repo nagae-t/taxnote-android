@@ -10,7 +10,7 @@
         android:title="@string/History" />
     <item
         android:id="@+id/tab3"
-        android:icon="@drawable/ic_list_black_24dp"
+        android:icon="@drawable/ic_report_black"
         android:title="損益表" />
     <item
         android:id="@+id/tab4"
