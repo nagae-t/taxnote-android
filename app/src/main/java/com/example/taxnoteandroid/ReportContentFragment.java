@@ -22,6 +22,7 @@ import com.example.taxnoteandroid.model.Reason;
 import org.parceler.Parcels;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,16 +30,19 @@ import java.util.Map;
 public class ReportContentFragment extends Fragment {
 
     private static final String EXTRA_MODE_ = "EXTRA_";
+    private static final String TARGET_CALENDAR = "TARGET_CALENDAR";
     private FragmentReportContentBinding binding;
     private Context mContext;
+    private Calendar mTargetCalendar;
 
     public ReportContentFragment() {
     }
 
-    public static ReportContentFragment newInstance(List<Entry> entries) {
+    public static ReportContentFragment newInstance(List<Entry> entries, Calendar targetCalendar) {
         ReportContentFragment fragment = new ReportContentFragment();
         Bundle args = new Bundle();
         args.putParcelable(EXTRA_MODE_, Parcels.wrap(entries));
+        args.putSerializable(TARGET_CALENDAR, targetCalendar);
         fragment.setArguments(args);
         return fragment;
     }
@@ -49,7 +53,8 @@ public class ReportContentFragment extends Fragment {
         mContext = getContext();
 
         List<Entry> entries = Parcels.unwrap(getArguments().getParcelable(EXTRA_MODE_));
-        Log.d("entries", entries.toString());
+//        Log.d("entries", entries.toString());
+        mTargetCalendar = (Calendar) getArguments().getSerializable(TARGET_CALENDAR);
 
         List<ReportContentAdapter.Item> items = new ArrayList<>();
 
@@ -125,7 +130,7 @@ public class ReportContentFragment extends Fragment {
         binding.topBalance.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                HistoryListDataActivity.startForBalance(mContext, mTargetCalendar);
             }
         });
 

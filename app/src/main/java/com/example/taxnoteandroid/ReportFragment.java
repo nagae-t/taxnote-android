@@ -142,7 +142,7 @@ public class ReportFragment extends Fragment {
     public interface ReportGrouping {
         Calendar getGroupingCalendar(Entry entry);
 
-        String createTitle(Context context, Calendar calendar);
+        String createTitle(Calendar calendar);
     }
 
     public class ReportYearGrouping implements ReportGrouping {
@@ -157,7 +157,7 @@ public class ReportFragment extends Fragment {
         }
 
         @Override
-        public String createTitle(Context context, Calendar c) {
+        public String createTitle(Calendar c) {
             return Integer.toString(c.get(Calendar.YEAR));
         }
     }
@@ -175,7 +175,7 @@ public class ReportFragment extends Fragment {
         }
 
         @Override
-        public String createTitle(Context context, Calendar c) {
+        public String createTitle(Calendar c) {
             return Integer.toString(c.get(Calendar.YEAR))
                     + "/" + Integer.toString(c.get(Calendar.MONTH) + 1);
         }
@@ -193,7 +193,7 @@ public class ReportFragment extends Fragment {
         }
 
         @Override
-        public String createTitle(Context context, Calendar c) {
+        public String createTitle(Calendar c) {
             return Integer.toString(c.get(Calendar.YEAR))
                     + "/" + Integer.toString(c.get(Calendar.MONTH) + 1)
                     + "/" + Integer.toString(c.get(Calendar.DATE));
@@ -217,7 +217,8 @@ public class ReportFragment extends Fragment {
 
         @Override
         public Fragment getItem(int position) {
-            return ReportContentFragment.newInstance(map.get(calendars[position]));
+            Calendar targetCalender = calendars[position];
+            return ReportContentFragment.newInstance(map.get(targetCalender), targetCalender);
         }
 
         @Override
@@ -227,7 +228,7 @@ public class ReportFragment extends Fragment {
 
         @Override
         public CharSequence getPageTitle(int position) {
-            return reportGrouping.createTitle(null, calendars[position]);
+            return reportGrouping.createTitle(calendars[position]);
         }
 
         @Override
