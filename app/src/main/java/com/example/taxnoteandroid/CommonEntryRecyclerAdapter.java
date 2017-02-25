@@ -175,6 +175,7 @@ public class CommonEntryRecyclerAdapter extends RecyclerView.Adapter<BindingHold
         if (position < 0) return;
 
         Entry item = mDataList.get(position);
+        if (item.dateString != null || item.sumString != null) return;
         if (mOnItemClickListener != null) {
             mOnItemClickListener.onItemClick(v, position, item);
         }
@@ -187,6 +188,7 @@ public class CommonEntryRecyclerAdapter extends RecyclerView.Adapter<BindingHold
         if (position < 0) return false;
 
         Entry item = mDataList.get(position);
+        if (item.dateString != null || item.sumString != null) return false;
         if (mOnItemLongClickListener != null) {
             return mOnItemLongClickListener.onItemLongClick(v, position, item);
         }

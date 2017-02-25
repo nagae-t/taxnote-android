@@ -3,10 +3,7 @@ package com.example.taxnoteandroid;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,8 +13,6 @@ import com.example.taxnoteandroid.Library.ValueConverter;
 import com.example.taxnoteandroid.dataManager.EntryDataManager;
 import com.example.taxnoteandroid.dataManager.SharedPreferencesManager;
 import com.example.taxnoteandroid.databinding.FragmentHistoryTabBinding;
-import com.example.taxnoteandroid.databinding.RowHistoryCellBinding;
-import com.example.taxnoteandroid.databinding.RowHistorySectionHeaderBinding;
 import com.example.taxnoteandroid.model.Entry;
 
 import java.text.SimpleDateFormat;
@@ -32,6 +27,8 @@ import java.util.Map;
 public class HistoryTabFragment extends Fragment {
 
     private FragmentHistoryTabBinding binding;
+    private CommonEntryRecyclerAdapter mEntryAdapter;
+    private Context mContext;
 
     public HistoryTabFragment() {
         // Required empty public constructor
@@ -52,6 +49,14 @@ public class HistoryTabFragment extends Fragment {
         binding.history.addItemDecoration(new DividerDecoration(context));
 
         return binding.getRoot();
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        mContext = getActivity().getApplicationContext();
+
+        mEntryAdapter = new CommonEntryRecyclerAdapter(mContext);
     }
 
     @Override
@@ -78,6 +83,8 @@ public class HistoryTabFragment extends Fragment {
     //--------------------------------------------------------------//
 
     private void loadHistoryData() {
+        if (mEntryAdapter == null)
+            mEntryAdapter = new CommonEntryRecyclerAdapter(mContext);
 
         EntryDataManager entryDataManager   = new EntryDataManager(getContext());
         List<Entry> entries                 = entryDataManager.findAll(getContext(), null, false);
@@ -90,7 +97,7 @@ public class HistoryTabFragment extends Fragment {
             binding.empty.setVisibility(View.GONE);
         }
 
-        final List<Item> items = new ArrayList<>();
+        List<Entry> entryData = new ArrayList<>();
         Map<String, List<Entry>> map2 = new LinkedHashMap<>();
 
         // 入力日ごとにグルーピング
@@ -112,192 +119,39 @@ public class HistoryTabFragment extends Fragment {
         }
 
         // RecyclerViewに渡すためにMapをListに変換する
-        // Itemって中にheaderかCellかで分けて入れてる
         for (Map.Entry<String, List<Entry>> e : map2.entrySet()) {
-            Item headerItem = new Item();
-            Header header = new Header();
-            headerItem.header = header;
-            header.date = e.getKey();
 
-            items.add(headerItem);
+            Entry headerItem = new Entry();
+            headerItem.dateString = e.getKey();
+            entryData.add(headerItem);
 
             long totalPrice = 0;
 
-            for (Entry entry : e.getValue()) {
+            for (Entry _entry : e.getValue()) {
 
                 // Calculate total price
-                if (entry.isExpense) {
-                    totalPrice -= entry.price;
+                if (_entry.isExpense) {
+                    totalPrice -= _entry.price;
                 } else {
-                    totalPrice += entry.price;
+                    totalPrice += _entry.price;
                 }
 
-                Item cellItem = new Item();
-                Cell cell = new Cell();
-                cellItem.cell = cell;
-                cell.entry = entry;
-                items.add(cellItem);
+                entryData.add(_entry);
             }
 
             // Format the totalPrice
-            header.sum = ValueConverter.formatPrice(getActivity(), totalPrice);
+            headerItem.sumString = ValueConverter.formatPrice(getActivity(), totalPrice);
         }
 
-        HistoryAdapter historyAdapter = new HistoryAdapter(items);
-        historyAdapter.setOnItemClickRecyclerAdapterListener(new OnItemClickRecyclerAdapterListener() {
+        mEntryAdapter.addAll(entryData);
+        mEntryAdapter.setOnItemClickListener(new CommonEntryRecyclerAdapter.OnItemClickListener() {
             @Override
-            public void onItemClick(View view, int position) {
-
+            public void onItemClick(View view, int position, Entry entry) {
                 SharedPreferencesManager.saveTapHereHistoryEditDone(getActivity());
-
-                Item item = items.get(position);
-                startActivity(EntryEditActivity.createIntent(getContext(), item.cell.entry));
+                EntryEditActivity.start(mContext, entry);
             }
         });
-        binding.history.setAdapter(historyAdapter);
+        binding.history.setAdapter(mEntryAdapter);
     }
 
-        class Item {
-        Header header;
-        Cell cell;
-
-        @Override
-        public String toString() {
-            return "Item{" +
-                    "header=" + header +
-                    ", cell=" + cell +
-                    '}';
-        }
-    }
-
-    class Header {
-        String date;
-        String sum;
-
-        @Override
-        public String toString() {
-            return "Header{" +
-                    "date='" + date + '\'' +
-                    ", sum=" + sum +
-                    '}';
-        }
-    }
-
-    class Cell {
-        Entry entry;
-
-        @Override
-        public String toString() {
-            return "Cell{" +
-                    "entry=" + entry +
-                    '}';
-        }
-    }
-
-    class HistoryAdapter extends RecyclerView.Adapter<BindingHolder> {
-
-        private static final int VIEW_ITEM_HEADER = 1;
-        private static final int VIEW_ITEM_CELL = 2;
-
-        private List<Item> items;
-        private OnItemClickRecyclerAdapterListener onItemClickRecyclerAdapterListener;
-
-        public HistoryAdapter(List<Item> items) {
-            this.items = items;
-        }
-
-        public void setOnItemClickRecyclerAdapterListener(OnItemClickRecyclerAdapterListener onItemClickRecyclerAdapterListener) {
-            this.onItemClickRecyclerAdapterListener = onItemClickRecyclerAdapterListener;
-        }
-
-        @Override
-        public BindingHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            switch (viewType) {
-                case VIEW_ITEM_HEADER:
-                    return new BindingHolder(parent.getContext(), parent, R.layout.row_history_section_header);
-                case VIEW_ITEM_CELL:
-                    return new BindingHolder(parent.getContext(), parent, R.layout.row_history_cell);
-            }
-            return null;
-        }
-
-        @Override
-        public void onBindViewHolder(BindingHolder holder, final int position) {
-
-            switch (holder.getItemViewType()) {
-
-                case VIEW_ITEM_HEADER: {
-                    RowHistorySectionHeaderBinding binding = (RowHistorySectionHeaderBinding) holder.binding;
-                    Item item = items.get(position);
-                    binding.name.setText(item.header.date);
-                    binding.price.setText(item.header.sum);
-                }
-                break;
-
-                case VIEW_ITEM_CELL: {
-
-                    RowHistoryCellBinding binding = (RowHistoryCellBinding) holder.binding;
-                    Item item = items.get(position);
-
-                    binding.getRoot().setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            if (onItemClickRecyclerAdapterListener != null) {
-                                onItemClickRecyclerAdapterListener.onItemClick(v, position);
-                            }
-                        }
-                    });
-
-                    String nameText;
-
-                    if (item.cell.entry.isExpense) {
-                        nameText = item.cell.entry.reason.name + " / " + item.cell.entry.account.name;
-                    } else {
-                        nameText = item.cell.entry.account.name + " / " + item.cell.entry.reason.name;
-                    }
-
-                    // Set tap here help
-                    if (!SharedPreferencesManager.isTapHereHistoryEditDone(getActivity())) {
-                        nameText = nameText + " " + getResources().getString(R.string.tap_here);
-                    }
-
-                    binding.name.setText(nameText);
-
-                    // Memo
-                    if (TextUtils.isEmpty(item.cell.entry.memo)) {
-                        binding.memo.setVisibility(View.GONE);
-                    } else {
-                        binding.memo.setVisibility(View.VISIBLE);
-                        binding.memo.setText(item.cell.entry.memo);
-                    }
-
-                    // Create price string
-                    String priceString                  = ValueConverter.formatPriceWithSymbol(getActivity() ,item.cell.entry.price, item.cell.entry.isExpense);
-                    binding.price.setText(priceString);
-
-                    // Set price color
-                    if (item.cell.entry.isExpense) {
-                        binding.price.setTextColor(ContextCompat.getColor(getContext(), R.color.expense));
-                    } else  {
-                        binding.price.setTextColor(ContextCompat.getColor(getContext(), R.color.primary));
-                    }
-                }
-                break;
-            }
-        }
-
-        @Override
-        public int getItemViewType(int position) {
-            Item item = items.get(position);
-            if (item.header != null) {
-                return VIEW_ITEM_HEADER;
-            }
-            return VIEW_ITEM_CELL;
-        }
-
-        @Override
-        public int getItemCount() {
-            return items.size();
-        }
-    }
 }
