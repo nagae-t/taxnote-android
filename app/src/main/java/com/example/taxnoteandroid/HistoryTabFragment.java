@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -83,8 +84,10 @@ public class HistoryTabFragment extends Fragment {
     //--------------------------------------------------------------//
 
     private void loadHistoryData() {
-        if (mEntryAdapter == null)
-            mEntryAdapter = new CommonEntryRecyclerAdapter(mContext);
+        if (mEntryAdapter != null) {
+            mEntryAdapter.clearAll();
+        }
+        mEntryAdapter = new CommonEntryRecyclerAdapter(mContext);
 
         EntryDataManager entryDataManager   = new EntryDataManager(getContext());
         List<Entry> entries                 = entryDataManager.findAll(getContext(), null, false);

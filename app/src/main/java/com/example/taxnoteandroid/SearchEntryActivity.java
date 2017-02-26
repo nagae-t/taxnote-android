@@ -152,7 +152,7 @@ public class SearchEntryActivity extends AppCompatActivity {
         @Override
         protected List<Entry> doInBackground(String... strings) {
             String word = strings[0];
-            List<Entry> result = mEntryManager.searchBy(word);
+            List<Entry> result = mEntryManager.searchBy(word, null);
 
             // debug
 //            List<Entry> _search = mEntryManager.findAll("交通");
