@@ -312,7 +312,6 @@ public class ReportContentFragment extends Fragment {
                     cellBinding.getRoot().setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            Log.v("TEST", "ReportContentAdapter onClick A");
                             if (mOnItemClickListener != null) {
                                 mOnItemClickListener.onItemClick(v, position, item);
                             }

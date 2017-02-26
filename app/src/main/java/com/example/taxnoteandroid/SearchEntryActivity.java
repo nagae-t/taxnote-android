@@ -211,10 +211,6 @@ public class SearchEntryActivity extends AppCompatActivity {
                 result = mEntryManager.searchBy(word, mReasonName, startEndDate, mIsExpense);
             }
 
-            // debug
-//            List<Entry> _search = mEntryManager.findAll("交通");
-//            Log.v("TEST", "_search size: " + _search.size());
-
             return result;
         }
 

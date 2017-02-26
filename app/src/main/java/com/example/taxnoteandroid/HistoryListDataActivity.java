@@ -1,17 +1,20 @@
 package com.example.taxnoteandroid;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.example.taxnoteandroid.Library.DialogManager;
 import com.example.taxnoteandroid.Library.ValueConverter;
 import com.example.taxnoteandroid.dataManager.EntryDataManager;
 import com.example.taxnoteandroid.dataManager.SharedPreferencesManager;
@@ -176,9 +179,39 @@ public class HistoryListDataActivity extends AppCompatActivity {
                 break;
             case R.id.action_delete:
                 // TODO: 削除の確認ダイアログを表示
+                showAllDeleteDialog();
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void showAllDeleteDialog() {
+        final Context context = getApplicationContext();
+
+        // Confirm dialog
+        new AlertDialog.Builder(this)
+                .setTitle(null)
+                .setMessage(getString(R.string.delete_this_screen_data_confirm_message))
+                .setPositiveButton(getString(R.string.Delete), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                        List<Entry> dataList = mEntryAdapter.getItems();
+                        for (Entry entry : dataList) {
+                            if (entry.dateString == null)
+                                mEntryManager.delete(entry.id);
+                        }
+                        mEntryAdapter.clearAll();
+                        mEntryAdapter.notifyDataSetChanged();
+                        DialogManager.showToast(context, context.getString(R.string.delete_done));
+                        sendBroadcast(new Intent(MainActivity.BROADCAST_REPORT_RELOAD));
+                        finish();
+
+                        dialogInterface.dismiss();
+                    }
+                })
+                .setNegativeButton(getString(R.string.cancel), null)
+                .show();
     }
 
     private class HistoryDataTask extends AsyncTask<long[], Integer, List<Entry>> {
