@@ -38,6 +38,7 @@ public class HistoryListDataActivity extends AppCompatActivity {
     private boolean mIsExpense;
     private boolean mIsBalance;
     private long[] mStartEndDate;
+    private String mReasonName = null;
 
     private static final String KEY_TARGET_CALENDAR = "target_calendar";
     private static final String KEY_REASON_NAME = "reason_name";
@@ -94,16 +95,16 @@ public class HistoryListDataActivity extends AppCompatActivity {
 
         Intent receiptIntent = getIntent();
         Calendar targetCalendar  = (Calendar) receiptIntent.getSerializableExtra(KEY_TARGET_CALENDAR);
-        String reasonName = receiptIntent.getStringExtra(KEY_REASON_NAME);
+        mReasonName = receiptIntent.getStringExtra(KEY_REASON_NAME);
         mIsBalance = receiptIntent.getBooleanExtra(KEY_IS_BALANCE, false);
         mIsExpense = receiptIntent.getBooleanExtra(KEY_IS_EXPENSE, false);
 
         String pageTitle = getCalendarStringFromPeriodType(targetCalendar);
-        String pageSubTitle = reasonName;
+        String pageSubTitle = mReasonName;
         if (mIsBalance) {
             pageSubTitle = getString(R.string.History);
         }
-        if (reasonName == null) {
+        if (mReasonName == null) {
             pageSubTitle = (mIsExpense) ? getString(R.string.Expense) : getString(R.string.Income);
         }
 
@@ -170,7 +171,7 @@ public class HistoryListDataActivity extends AppCompatActivity {
                     SearchEntryActivity.start(this, mStartEndDate[0], mStartEndDate[1]);
                 } else {
                     SearchEntryActivity.startWithIsExpense(
-                            this, mStartEndDate[0], mStartEndDate[1], mIsExpense);
+                            this, mStartEndDate[0], mStartEndDate[1], mReasonName, mIsExpense);
                 }
                 break;
             case R.id.action_delete:

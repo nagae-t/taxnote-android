@@ -146,7 +146,7 @@ public class EntryDataManager {
      * @param startEndDate
      * @return
      */
-    public List<Entry> searchBy(String word, long[] startEndDate) {
+    public List<Entry> searchBy(String word, String reasonName, long[] startEndDate) {
         List<Entry> entries = new ArrayList<>();
         List<Entry> searchTargets = findAll(mContext, startEndDate, false);
         for(Entry entry : searchTargets) {
@@ -156,9 +156,16 @@ public class EntryDataManager {
             Matcher reasonNameMatcher = wordPattern.matcher(entry.reason.name);
             Matcher memoMatcher = wordPattern.matcher(entry.memo);
             Matcher priceMatcher = wordPattern.matcher(String.valueOf(entry.price));
+
             if (accountNameMatcher.find() || reasonNameMatcher.find()
                     || memoMatcher.find() || priceMatcher.find()) {
-                entries.add(entry);
+
+                if (reasonName != null) {
+                    if (entry.reason.name.equals(reasonName))
+                        entries.add(entry);
+                } else {
+                    entries.add(entry);
+                }
             }
         }
         return entries;
@@ -172,7 +179,7 @@ public class EntryDataManager {
      * @param isExpense
      * @return
      */
-    public List<Entry> searchBy(String word, long[] startEndDate, boolean isExpense) {
+    public List<Entry> searchBy(String word, String reasonName, long[] startEndDate, boolean isExpense) {
         List<Entry> entries = new ArrayList<>();
         List<Entry> searchTargets = findAll(startEndDate, isExpense, false);
         for(Entry entry : searchTargets) {
@@ -182,9 +189,16 @@ public class EntryDataManager {
             Matcher reasonNameMatcher = wordPattern.matcher(entry.reason.name);
             Matcher memoMatcher = wordPattern.matcher(entry.memo);
             Matcher priceMatcher = wordPattern.matcher(String.valueOf(entry.price));
+
             if (accountNameMatcher.find() || reasonNameMatcher.find()
                     || memoMatcher.find() || priceMatcher.find()) {
-                entries.add(entry);
+
+                if (reasonName != null) {
+                    if (entry.reason.name.equals(reasonName))
+                        entries.add(entry);
+                } else {
+                    entries.add(entry);
+                }
             }
         }
         return entries;

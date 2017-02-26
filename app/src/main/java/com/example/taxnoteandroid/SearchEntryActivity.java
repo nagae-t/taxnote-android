@@ -37,8 +37,10 @@ public class SearchEntryActivity extends AppCompatActivity {
     private boolean mIsExpense;
     private long mStartTime = 0;
     private long mEndTime = 0;
+    private String mReasonName;
 
     private static final String KEY_IS_COMMON = "is_common";
+    private static final String KEY_REASON_NAME = "reason_name";
     private static final String KEY_START_TIME = "start_time";
     private static final String KEY_END_TIME = "end_time";
     private static final String KEY_IS_EXPENSE = "is_expense";
@@ -51,6 +53,14 @@ public class SearchEntryActivity extends AppCompatActivity {
         context.startActivity(intent);
     }
 
+    public static void start(Context context, String reasonName) {
+        Intent intent = new Intent(context, SearchEntryActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.putExtra(KEY_IS_COMMON, true);
+        intent.putExtra(KEY_REASON_NAME, reasonName);
+        context.startActivity(intent);
+    }
+
     public static void start(Context context, long startTime, long endTime) {
         Intent intent = new Intent(context, SearchEntryActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -60,13 +70,24 @@ public class SearchEntryActivity extends AppCompatActivity {
         context.startActivity(intent);
     }
 
+    public static void start(Context context, long startTime, long endTime, String reasonName) {
+        Intent intent = new Intent(context, SearchEntryActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.putExtra(KEY_START_TIME, startTime);
+        intent.putExtra(KEY_END_TIME, endTime);
+        intent.putExtra(KEY_REASON_NAME, reasonName);
+        intent.putExtra(KEY_IS_COMMON, true);
+        context.startActivity(intent);
+    }
+
     public static void startWithIsExpense(Context context, long startTime, long endTime,
-                                          boolean isExpense) {
+                                          String reasonName, boolean isExpense) {
         Intent intent = new Intent(context, SearchEntryActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.putExtra(KEY_START_TIME, startTime);
         intent.putExtra(KEY_END_TIME, endTime);
         intent.putExtra(KEY_IS_EXPENSE, isExpense);
+        intent.putExtra(KEY_REASON_NAME, reasonName);
         intent.putExtra(KEY_IS_COMMON, false);
         context.startActivity(intent);
     }
@@ -87,6 +108,7 @@ public class SearchEntryActivity extends AppCompatActivity {
         mIsExpense = intent.getBooleanExtra(KEY_IS_EXPENSE, false);
         mStartTime = intent.getLongExtra(KEY_START_TIME, 0);
         mEndTime = intent.getLongExtra(KEY_END_TIME, 0);
+        mReasonName = intent.getStringExtra(KEY_REASON_NAME);
 
 
         ActionBar actionBar = getSupportActionBar();
@@ -184,9 +206,9 @@ public class SearchEntryActivity extends AppCompatActivity {
                 startEndDate = new long[]{mStartTime, mEndTime};
 
             if (mIsCommon) {
-                result = mEntryManager.searchBy(word, startEndDate);
+                result = mEntryManager.searchBy(word, mReasonName, startEndDate);
             } else {
-                result = mEntryManager.searchBy(word, startEndDate, mIsExpense);
+                result = mEntryManager.searchBy(word, mReasonName, startEndDate, mIsExpense);
             }
 
             // debug
