@@ -168,9 +168,11 @@ public class HistoryListDataActivity extends AppCompatActivity {
             case R.id.action_search:
                 SearchEntryActivity.start(this);
                 break;
-            case R.id.action_delete:
-                // TODO: 削除の確認ダイアログを表示
-                break;
+
+//            //@@ サブミットするので、一時的にコメントアウト
+//            case R.id.action_delete:
+//                // TODO: 削除の確認ダイアログを表示
+//                break;
         }
         return super.onOptionsItemSelected(item);
     }

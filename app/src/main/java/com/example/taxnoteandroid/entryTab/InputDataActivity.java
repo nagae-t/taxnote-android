@@ -14,10 +14,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.taxnoteandroid.CalculatorActivity;
 import com.example.taxnoteandroid.Library.DialogManager;
 import com.example.taxnoteandroid.Library.EntryLimitManager;
 import com.example.taxnoteandroid.Library.ValueConverter;
@@ -79,7 +77,9 @@ public class InputDataActivity extends AppCompatActivity {
         setSummary();
         setSaveButton();
         setPriceInputPart();
-        setCalculatorView();
+
+        //@@ 電卓あとで追加
+//        setCalculatorView();
 
         DialogManager.showTapRegisterMessage(InputDataActivity.this);
         // ATTENTION: This was auto-generated to implement the App Indexing API.
@@ -424,16 +424,17 @@ public class InputDataActivity extends AppCompatActivity {
     //    -- Calculator --
     //--------------------------------------------------------------//
 
-    private void setCalculatorView() {
-
-        ImageView calculatorButton = (ImageView) findViewById(R.id.calculator_button);
-        calculatorButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivityForResult(CalculatorActivity.createIntent(InputDataActivity.this, currentPrice), 1);
-            }
-        });
-    }
+    //@@ 電卓あとで追加
+//    private void setCalculatorView() {
+//
+//        ImageView calculatorButton = (ImageView) findViewById(R.id.calculator_button);
+//        calculatorButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                startActivityForResult(CalculatorActivity.createIntent(InputDataActivity.this, currentPrice), 1);
+//            }
+//        });
+//    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
