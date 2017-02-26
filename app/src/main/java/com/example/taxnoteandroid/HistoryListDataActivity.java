@@ -35,6 +35,9 @@ public class HistoryListDataActivity extends AppCompatActivity {
     private CommonEntryRecyclerAdapter mEntryAdapter;
     private EntryDataManager mEntryManager;
     private int mPeriodType;
+    private boolean mIsExpense;
+    private boolean mIsBalance;
+    private long[] mStartEndDate;
 
     private static final String KEY_TARGET_CALENDAR = "target_calendar";
     private static final String KEY_REASON_NAME = "reason_name";
@@ -92,16 +95,16 @@ public class HistoryListDataActivity extends AppCompatActivity {
         Intent receiptIntent = getIntent();
         Calendar targetCalendar  = (Calendar) receiptIntent.getSerializableExtra(KEY_TARGET_CALENDAR);
         String reasonName = receiptIntent.getStringExtra(KEY_REASON_NAME);
-        boolean isBalance = receiptIntent.getBooleanExtra(KEY_IS_BALANCE, false);
-        boolean isExpense = receiptIntent.getBooleanExtra(KEY_IS_EXPENSE, false);
+        mIsBalance = receiptIntent.getBooleanExtra(KEY_IS_BALANCE, false);
+        mIsExpense = receiptIntent.getBooleanExtra(KEY_IS_EXPENSE, false);
 
         String pageTitle = getCalendarStringFromPeriodType(targetCalendar);
         String pageSubTitle = reasonName;
-        if (isBalance) {
+        if (mIsBalance) {
             pageSubTitle = getString(R.string.History);
         }
         if (reasonName == null) {
-            pageSubTitle = (isExpense) ? getString(R.string.Expense) : getString(R.string.Income);
+            pageSubTitle = (mIsExpense) ? getString(R.string.Expense) : getString(R.string.Income);
         }
 
         ActionBar actionBar = getSupportActionBar();
@@ -109,8 +112,8 @@ public class HistoryListDataActivity extends AppCompatActivity {
         actionBar.setSubtitle(pageSubTitle);
         actionBar.setDisplayHomeAsUpEnabled(true);
 
-        long[] startEndDate = getStartAndEndDate(targetCalendar);
-        loadEntryData(startEndDate, isBalance, isExpense);
+        mStartEndDate = getStartAndEndDate(targetCalendar);
+        loadEntryData(mStartEndDate, mIsBalance, mIsExpense);
     }
 
     private String getCalendarStringFromPeriodType(Calendar c) {
@@ -140,9 +143,6 @@ public class HistoryListDataActivity extends AppCompatActivity {
                 break;
         }
 
-//        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(getString(R.string.date_string_format_to_year_month_day_weekday));
-//        String startDateString = simpleDateFormat.format(startDate.getTime());
-//        String endDateString = simpleDateFormat.format(endDate.getTime());
         long[] result = {startDate.getTimeInMillis(), endDate.getTimeInMillis()};
         return result;
     }
@@ -166,7 +166,12 @@ public class HistoryListDataActivity extends AppCompatActivity {
                 finish();
                 return true;
             case R.id.action_search:
-                SearchEntryActivity.start(this);
+                if (mIsBalance) {
+                    SearchEntryActivity.start(this, mStartEndDate[0], mStartEndDate[1]);
+                } else {
+                    SearchEntryActivity.startWithIsExpense(
+                            this, mStartEndDate[0], mStartEndDate[1], mIsExpense);
+                }
                 break;
             case R.id.action_delete:
                 // TODO: 削除の確認ダイアログを表示
