@@ -23,6 +23,8 @@ import org.parceler.Parcels;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -117,6 +119,9 @@ public class ReportContentFragment extends Fragment {
                 expenseMap.put(id, item);
             }
         }
+        // 収入・支出の順番ソート
+        List<Map.Entry<Long, ReportContentAdapter.Item>> incomeSortList = sortLinkedHashMap(incomeMap);
+        List<Map.Entry<Long, ReportContentAdapter.Item>> expenseSortList = sortLinkedHashMap(expenseMap);
 
         // 残高の表示
         String priceString = ValueConverter.formatPrice(mContext, count);
@@ -134,13 +139,13 @@ public class ReportContentFragment extends Fragment {
 
         items.add(incomeSection);
         items.add(incomeSum);
-        for (Map.Entry<Long, ReportContentAdapter.Item> entry : incomeMap.entrySet()) {
+        for (Map.Entry<Long, ReportContentAdapter.Item> entry : incomeSortList) {
             items.add(entry.getValue());
         }
 
         items.add(ExpenseSection);
         items.add(ExpenseSum);
-        for (Map.Entry<Long, ReportContentAdapter.Item> entry : expenseMap.entrySet()) {
+        for (Map.Entry<Long, ReportContentAdapter.Item> entry : expenseSortList) {
             items.add(entry.getValue());
         }
 
@@ -161,6 +166,28 @@ public class ReportContentFragment extends Fragment {
 
 
         return binding.getRoot();
+    }
+
+    private List<Map.Entry<Long, ReportContentAdapter.Item>> sortLinkedHashMap(Map<Long, ReportContentAdapter.Item> sourceMap) {
+        List<Map.Entry<Long, ReportContentAdapter.Item>> dataList =
+                new ArrayList<>(sourceMap.entrySet());
+        Collections.sort(dataList, new Comparator<Map.Entry<Long, ReportContentAdapter.Item>>() {
+
+            @Override
+            public int compare(Map.Entry<Long, ReportContentAdapter.Item> entry1,
+                               Map.Entry<Long, ReportContentAdapter.Item> entry2) {
+                long entry1sum = entry1.getValue().sum;
+                long entry2sum = entry2.getValue().sum;
+                if (entry1sum < entry2sum) {
+                    return 1;
+                } else if (entry1sum == entry2sum) {
+                    return 0;
+                } else {
+                    return -1;
+                }
+            }
+        });
+        return dataList;
     }
 
     static class ReportContentAdapter extends RecyclerView.Adapter<BindingHolder> {
