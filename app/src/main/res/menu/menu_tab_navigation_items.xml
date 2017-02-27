@@ -11,9 +11,16 @@
     <item
         android:id="@+id/tab3"
         android:icon="@drawable/ic_report_black"
-        android:title="損益表" />
+        android:title="@string/profit_loss_table" />
+
+    <!-- //@@ グラフアイコンを差し替える必要あり -->
     <item
         android:id="@+id/tab4"
+        android:icon="@android:drawable/ic_menu_gallery"
+        android:title="@string/Graph" />
+
+    <item
+        android:id="@+id/tab5"
         android:icon="@drawable/ic_settings_black_24dp"
         android:title="@string/Settings" />
 </menu>

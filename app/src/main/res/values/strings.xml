@@ -194,10 +194,9 @@
 
 
     // 新しいstringsは全部この下に書いていってもらえれば、あとから編集するので。
-    // 英語版は後から一気に作るので、とりあえず、ここも全部日本語でOK!
-    // つまり、同じ内容をstrings.xmlの日本語にもコピペするという形っす。
-    // 読んだらこれは消してくださいませ。
     <string name="delete_this_screen_data_confirm_message">この画面に表示されているデータをすべて削除しますか？</string>
+    <string name="profit_loss_table">損益表</string>
+    <string name="Graph">Graph</string>
 
 
 

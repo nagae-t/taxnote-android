@@ -90,17 +90,19 @@ public class MainActivity extends AppCompatActivity {
 
         switch (binding.pager.getCurrentItem()) {
 
-            case 0:
+            case 0: // 入力
                 helpMenu.setVisible(true);
                 break;
-            case 1:
+            case 1: // 仕訳帳
                 exportMenu.setVisible(true);
                 searchMenu.setVisible(true);
                 break;
-            case 2:
+            case 2: // 損益表
                 periodDivMenu.setVisible(true);
                 break;
-            case 3:
+            case 3: // グラフ
+                break;
+            case 4: // 設定
                 break;
         }
         return super.onPrepareOptionsMenu(menu);
@@ -175,6 +177,10 @@ public class MainActivity extends AppCompatActivity {
                         break;
                     case R.id.tab4:
                         binding.pager.setCurrentItem(3, false);
+                        setTitle(getString(R.string.Graph));
+                        break;
+                    case R.id.tab5:
+                        binding.pager.setCurrentItem(4, false);
                         setTitle(getString(R.string.Settings));
                         break;
                 }
@@ -251,6 +257,8 @@ public class MainActivity extends AppCompatActivity {
                 case 2:
                     return ReportFragment.newInstance();
                 case 3:
+                    return GraphTabFragment.newInstance();
+                case 4:
                     return SettingsTabFragment.newInstance();
             }
             return EntryTabFragment.newInstance();
@@ -258,7 +266,7 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public int getCount() {
-            return 4;
+            return 5;
         }
 
         @Override
@@ -271,6 +279,8 @@ public class MainActivity extends AppCompatActivity {
                 case 2:
                     return getString(report);
                 case 3:
+                    return getString(R.string.Graph);
+                case 4:
                     return getString(R.string.Settings);
             }
             return super.getPageTitle(position);
