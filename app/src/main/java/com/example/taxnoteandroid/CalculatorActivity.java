@@ -225,7 +225,6 @@ public class CalculatorActivity extends AppCompatActivity {
                 }
             }
 
-            //@@@ いまここ、小数点のついたPricecStringをどうやってlongに戻すか
             if (priceString.contains(".")) {
                 DialogManager.showToast(this, getResources().getString(R.string.rounded_decimal_numbers));
             }
@@ -251,7 +250,7 @@ public class CalculatorActivity extends AppCompatActivity {
 
         //@@@
         // Create price string
-        if (priceString == null) {
+        if (priceString == null || priceString.equals("0")) {
 
             if (selectedString.equals(DECIMAL_SYMBOL)) {
                 priceString = "0.";
@@ -261,7 +260,11 @@ public class CalculatorActivity extends AppCompatActivity {
         } else {
 
             if (selectedString.equals(DECIMAL_SYMBOL)) {
-                priceString = priceString + ".";
+
+                if (!priceString.contains(".")) {
+                    priceString = priceString + ".";
+                }
+
             } else {
                 priceString = priceString + selectedString;
             }
