@@ -69,6 +69,10 @@ public class CommonEntryRecyclerAdapter extends RecyclerView.Adapter<BindingHold
         mDataList = entries;
     }
 
+    public List<Entry> getItems() {
+        return mDataList;
+    }
+
     public void add(Entry entry) {
         mDataList.add(entry);
     }

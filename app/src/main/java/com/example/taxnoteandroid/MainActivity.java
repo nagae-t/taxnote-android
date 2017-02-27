@@ -1,6 +1,9 @@
 package com.example.taxnoteandroid;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -34,6 +37,19 @@ public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding binding;
     private TabPagerAdapter mTabPagerAdapter;
 
+    public static final String BROADCAST_REPORT_RELOAD
+            = "broadcast_main_report_reload";
+
+    /**
+     * Broadcast for get new home timeline
+     */
+    private final BroadcastReceiver mReportReloadReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            reportReload();
+        }
+    };
+
     @Override
     protected void onStart() {
         super.onStart();
@@ -45,6 +61,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        registerReceiver(mReportReloadReceiver, new IntentFilter(BROADCAST_REPORT_RELOAD));
 
         DefaultDataInstaller.installDefaultUserAndCategories(this);
 
@@ -314,5 +332,11 @@ public class MainActivity extends AppCompatActivity {
         }
         return super.onKeyDown(keyCode, event);
 
+    }
+
+    @Override
+    protected void onDestroy() {
+        unregisterReceiver(mReportReloadReceiver);
+        super.onDestroy();
     }
 }
