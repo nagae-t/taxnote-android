@@ -36,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
 
     private ActivityMainBinding binding;
     private TabPagerAdapter mTabPagerAdapter;
+    private int mBottomNaviSelected = 0;
 
     public static final String BROADCAST_REPORT_RELOAD
             = "broadcast_main_report_reload";
@@ -101,6 +102,7 @@ public class MainActivity extends AppCompatActivity {
                 periodDivMenu.setVisible(true);
                 break;
             case 3: // グラフ
+                periodDivMenu.setVisible(true);
                 break;
             case 4: // 設定
                 break;
@@ -161,7 +163,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
 
-                switch (item.getItemId()) {
+                int itemId = item.getItemId();
+                mBottomNaviSelected = itemId;
+                switch (itemId) {
                     case R.id.tab1:
                         binding.pager.setCurrentItem(0, false);
                         setTitle(getString(R.string.Entry));
@@ -223,11 +227,13 @@ public class MainActivity extends AppCompatActivity {
         if (mTabPagerAdapter == null) return;
 
         CustomViewPager pager = binding.pager;
-        ReportFragment reportFragment =
-                (ReportFragment) mTabPagerAdapter.instantiateItem(pager, pager.getCurrentItem());
-        if (reportFragment == null) return;
+        if (mBottomNaviSelected == R.id.tab3) {
+            ReportFragment reportFragment =
+                    (ReportFragment) mTabPagerAdapter.instantiateItem(pager, pager.getCurrentItem());
+            if (reportFragment == null) return;
 
-        reportFragment.switchReportPeriod(type);
+            reportFragment.switchReportPeriod(type);
+        }
     }
 
     private void reportReload() {
