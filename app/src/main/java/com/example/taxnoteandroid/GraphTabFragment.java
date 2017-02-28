@@ -169,7 +169,8 @@ public class GraphTabFragment extends Fragment  {
 
     public void reloadData() {
         int periodType = SharedPreferencesManager.getGraphReportPeriodType(mContext);
-        switchDataView(periodType, true);
+        boolean isExpense = SharedPreferencesManager.getGraphReportIsExpenseType(mContext);
+        switchDataView(periodType, isExpense);
     }
 
     public void switchDataView(boolean isExpense) {

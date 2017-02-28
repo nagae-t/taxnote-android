@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.taxnoteandroid.model.Entry;
+import com.github.mikephil.charting.charts.PieChart;
 
 import java.util.List;
 
@@ -19,6 +20,7 @@ public class GraphHistoryRecyclerAdapter extends RecyclerView.Adapter<BindingHol
     private Context mContext;
     private RecyclerView mRecyclerView;
     private List<Entry> mDataList;
+    private PieChart mChart;
 
     public OnItemClickListener mOnItemClickListener;
     public OnLongItemClickListener mOnItemLongClickListener;
