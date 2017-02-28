@@ -110,7 +110,7 @@ public class MainActivity extends AppCompatActivity {
                 periodDivMenu.setVisible(true);
                 isExpenseMenu.setVisible(true);
                 String menuTitle = (mGraphMenuIsExpense)
-                        ? getString(R.string.Expense) : getString(R.string.Income);
+                        ? getString(R.string.Income) : getString(R.string.Expense);
                 isExpenseMenu.setTitle(menuTitle);
                 break;
             case 4: // 設定

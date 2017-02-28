@@ -116,15 +116,15 @@ public class GraphContentFragment extends Fragment implements OnChartValueSelect
 
         @Override
         protected List<Entry> doInBackground(long[]... longs) {
-            Context context = getActivity().getApplicationContext();
             long[] startEndDate = longs[0];
             List<Entry> entryData = new ArrayList<>();
             List<Entry> entries = mEntryManager.findAll(startEndDate, isExpense, false);
 
             Entry entrySum = new Entry();
+            entrySum.viewType = GraphHistoryRecyclerAdapter.VIEW_ITEM_CELL;
             entrySum.titleName = (isExpense) ?
-                    context.getString(R.string.Expense) :
-                    context.getString(R.string.Income);
+                    mContext.getString(R.string.Expense) :
+                    mContext.getString(R.string.Income);
             for (Entry entry : entries) {
                 entrySum.price += entry.price;
             }
@@ -138,6 +138,7 @@ public class GraphContentFragment extends Fragment implements OnChartValueSelect
                     _entry2.price += entry.price;
                 } else {
                     Entry _entry1 = new Entry();
+                    _entry1.viewType = GraphHistoryRecyclerAdapter.VIEW_ITEM_CELL;
                     _entry1.titleName = entry.reason.name;
                     _entry1.price += entry.price;
                     _entry1.isExpense = isExpense;
@@ -183,8 +184,8 @@ public class GraphContentFragment extends Fragment implements OnChartValueSelect
             for (Entry entry : result) {
                 Log.v("TEST", entry.titleName + " : " + entry.price);
             }
-//            mRecyclerAdapter = new GraphHistoryRecyclerAdapter(mContext, result);
-//            binding.recyclerContent.setAdapter(mRecyclerAdapter);
+            mRecyclerAdapter = new GraphHistoryRecyclerAdapter(mContext, result);
+            binding.recyclerContent.setAdapter(mRecyclerAdapter);
         }
     }
 }
