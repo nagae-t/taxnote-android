@@ -34,12 +34,6 @@ public class GraphHistoryRecyclerAdapter extends RecyclerView.Adapter<BindingHol
     private RecyclerView mRecyclerView;
     private List<Entry> mDataList;
     private PieChart mChart;
-    protected String[] mParties = new String[] {
-            "Party A", "Party B", "Party C", "Party D", "Party E", "Party F", "Party G", "Party H",
-            "Party I", "Party J", "Party K", "Party L", "Party M", "Party N", "Party O", "Party P",
-            "Party Q", "Party R", "Party S", "Party T", "Party U", "Party V", "Party W", "Party X",
-            "Party Y", "Party Z"
-    };
 
     public static final int VIEW_ITEM_GRAPH = 1;
     public static final int VIEW_ITEM_CELL = 2;
@@ -180,22 +174,15 @@ public class GraphHistoryRecyclerAdapter extends RecyclerView.Adapter<BindingHol
 
     private void setGraphData() {
         ArrayList<PieEntry> pieEntries = new ArrayList<>();
+        if (mDataList.size() < 3) return;
 
-        // NOTE: The order of the entries when being added to the entries array determines their position around the center of
-        // the chart.
-//        for (int i = 0; i < count ; i++) {
-//            entries.add(new PieEntry((float) ((Math.random() * mult) + mult / 5),
-//                    mParties[i % mParties.length],
-//                    ContextCompat.getDrawable(mContext, android.R.drawable.star_on)));
-//        }
-
-        for (int i=1; i<mDataList.size(); i++) {
+        for (int i=2; i<mDataList.size(); i++) {
             Entry _entry = mDataList.get(i);
             PieEntry pEntry = new PieEntry((float)_entry.price, _entry.titleName);
             pieEntries.add(pEntry);
         }
 
-        PieDataSet dataSet = new PieDataSet(pieEntries, "Election Results");
+        PieDataSet dataSet = new PieDataSet(pieEntries, null);
 
 //        dataSet.setDrawIcons(false);
         dataSet.setDrawValues(false);

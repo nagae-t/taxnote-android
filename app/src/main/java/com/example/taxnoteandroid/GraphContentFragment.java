@@ -122,6 +122,7 @@ public class GraphContentFragment extends Fragment implements OnChartValueSelect
 
             Entry entrySum = new Entry();
             entrySum.viewType = GraphHistoryRecyclerAdapter.VIEW_ITEM_CELL;
+            entrySum.isExpense = isExpense;
             entrySum.titleName = (isExpense) ?
                     mContext.getString(R.string.Expense) :
                     mContext.getString(R.string.Income);
@@ -181,9 +182,6 @@ public class GraphContentFragment extends Fragment implements OnChartValueSelect
         protected void onPostExecute(List<Entry> result) {
             if (result == null || result.size() == 0) return;
 
-            for (Entry entry : result) {
-                Log.v("TEST", entry.titleName + " : " + entry.price);
-            }
             mRecyclerAdapter = new GraphHistoryRecyclerAdapter(mContext, result);
             binding.recyclerContent.setAdapter(mRecyclerAdapter);
         }
