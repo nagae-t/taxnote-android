@@ -10,12 +10,10 @@ import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.RelativeSizeSpan;
 import android.text.style.StyleSpan;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.SeekBar;
-import android.widget.SeekBar.OnSeekBarChangeListener;
-import android.widget.TextView;
 
 import com.example.taxnoteandroid.databinding.FragmentGraphTabBinding;
 import com.github.mikephil.charting.animation.Easing;
@@ -36,24 +34,18 @@ import java.util.ArrayList;
  * Created by b0ne on 2017/02/27.
  */
 
-public class GraphTabFragment extends Fragment implements OnSeekBarChangeListener,
-        OnChartValueSelectedListener {
+public class GraphTabFragment extends Fragment implements OnChartValueSelectedListener {
 
     private Context mContext;
     private FragmentGraphTabBinding binding;
 
     private PieChart mChart;
-    private SeekBar mSeekBarX, mSeekBarY;
-    private TextView tvX, tvY;
     protected String[] mParties = new String[] {
             "Party A", "Party B", "Party C", "Party D", "Party E", "Party F", "Party G", "Party H",
             "Party I", "Party J", "Party K", "Party L", "Party M", "Party N", "Party O", "Party P",
             "Party Q", "Party R", "Party S", "Party T", "Party U", "Party V", "Party W", "Party X",
             "Party Y", "Party Z"
     };
-
-//    protected Typeface mTfRegular;
-//    protected Typeface mTfLight;
 
     public static GraphTabFragment newInstance() {
         GraphTabFragment fragment = new GraphTabFragment();
@@ -64,16 +56,7 @@ public class GraphTabFragment extends Fragment implements OnSeekBarChangeListene
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        Context context = getContext();
         binding = FragmentGraphTabBinding.inflate(inflater, container, false);
-        tvX = binding.tvXMax;
-        tvY = binding.tvYMax;
-
-        mSeekBarX = binding.seekBar1;
-        mSeekBarY = binding.seekBar2;
-        mSeekBarX.setProgress(4);
-        mSeekBarY.setProgress(10);
-
         mChart = binding.chart1;
 
         return binding.getRoot();
@@ -90,7 +73,6 @@ public class GraphTabFragment extends Fragment implements OnSeekBarChangeListene
 
         mChart.setDragDecelerationFrictionCoef(0.95f);
 
-//        mChart.setCenterTextTypeface(mTfLight);
         mChart.setCenterText(generateCenterSpannableText());
 
         mChart.setDrawHoleEnabled(true);
@@ -120,9 +102,6 @@ public class GraphTabFragment extends Fragment implements OnSeekBarChangeListene
         mChart.animateY(1400, Easing.EasingOption.EaseInOutQuad);
         // mChart.spin(2000, 0, 360);
 
-        mSeekBarX.setOnSeekBarChangeListener(this);
-        mSeekBarY.setOnSeekBarChangeListener(this);
-
         Legend l = mChart.getLegend();
         l.setVerticalAlignment(Legend.LegendVerticalAlignment.TOP);
         l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.RIGHT);
@@ -134,7 +113,6 @@ public class GraphTabFragment extends Fragment implements OnSeekBarChangeListene
 
         // entry label styling
         mChart.setEntryLabelColor(Color.WHITE);
-//        mChart.setEntryLabelTypeface(mTfRegular);
         mChart.setEntryLabelTextSize(12f);
 
     }
@@ -148,7 +126,7 @@ public class GraphTabFragment extends Fragment implements OnSeekBarChangeListene
 
         float mult = range;
 
-        ArrayList<PieEntry> entries = new ArrayList<PieEntry>();
+        ArrayList<PieEntry> entries = new ArrayList<>();
 
         // NOTE: The order of the entries when being added to the entries array determines their position around the center of
         // the chart.
@@ -164,12 +142,11 @@ public class GraphTabFragment extends Fragment implements OnSeekBarChangeListene
         dataSet.setDrawValues(false);
 
         dataSet.setSliceSpace(3f);
-//        dataSet.setIconsOffset(new MPPointF(0, 40));
         dataSet.setSelectionShift(5f);
 
         // add a lot of colors
 
-        ArrayList<Integer> colors = new ArrayList<Integer>();
+        ArrayList<Integer> colors = new ArrayList<>();
 
         for (int c : ColorTemplate.VORDIPLOM_COLORS)
             colors.add(c);
@@ -189,13 +166,12 @@ public class GraphTabFragment extends Fragment implements OnSeekBarChangeListene
         colors.add(ColorTemplate.getHoloBlue());
 
         dataSet.setColors(colors);
-        //dataSet.setSelectionShift(0f);
+//        dataSet.setSelectionShift(0f);
 
         PieData data = new PieData(dataSet);
         data.setValueFormatter(new PercentFormatter());
         data.setValueTextSize(11f);
         data.setValueTextColor(Color.WHITE);
-//        data.setValueTypeface(mTfLight);
         mChart.setData(data);
 
         // undo all highlights
@@ -218,7 +194,11 @@ public class GraphTabFragment extends Fragment implements OnSeekBarChangeListene
 
     @Override
     public void onValueSelected(Entry e, Highlight h) {
-
+        if (e == null)
+            return;
+        Log.v("TEST",
+                "Value: " + e.getY() + ", index: " + h.getX()
+                        + ", DataSet index: " + h.getDataSetIndex());
     }
 
     @Override
@@ -226,18 +206,4 @@ public class GraphTabFragment extends Fragment implements OnSeekBarChangeListene
 
     }
 
-    @Override
-    public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-
-    }
-
-    @Override
-    public void onStartTrackingTouch(SeekBar seekBar) {
-
-    }
-
-    @Override
-    public void onStopTrackingTouch(SeekBar seekBar) {
-
-    }
 }
