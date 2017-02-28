@@ -5,6 +5,8 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.content.ContextCompat;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
@@ -15,10 +17,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.taxnoteandroid.dataManager.SharedPreferencesManager;
 import com.example.taxnoteandroid.databinding.FragmentGraphTabBinding;
-import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.PieChart;
-import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
@@ -38,6 +39,7 @@ public class GraphTabFragment extends Fragment implements OnChartValueSelectedLi
 
     private Context mContext;
     private FragmentGraphTabBinding binding;
+    private GraphContentFragmentPagerAdapter mPageAdapter;
 
     private PieChart mChart;
     protected String[] mParties = new String[] {
@@ -57,7 +59,9 @@ public class GraphTabFragment extends Fragment implements OnChartValueSelectedLi
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentGraphTabBinding.inflate(inflater, container, false);
-        mChart = binding.chart1;
+//        mChart = binding.chart1;
+
+        binding.strip.setTabIndicatorColorResource(R.color.accent);
 
         return binding.getRoot();
     }
@@ -67,6 +71,7 @@ public class GraphTabFragment extends Fragment implements OnChartValueSelectedLi
         super.onActivityCreated(savedInstanceState);
         mContext = getActivity().getApplicationContext();
 
+        /*
         mChart.setUsePercentValues(true);
         mChart.getDescription().setEnabled(false);
         mChart.setExtraOffsets(5, 10, 5, 5);
@@ -115,6 +120,10 @@ public class GraphTabFragment extends Fragment implements OnChartValueSelectedLi
         mChart.setEntryLabelColor(Color.WHITE);
         mChart.setEntryLabelTextSize(12f);
 
+        */
+
+
+        int periodType = SharedPreferencesManager.getGraphReportPeriodType(mContext);
     }
 
     @Override
@@ -204,6 +213,29 @@ public class GraphTabFragment extends Fragment implements OnChartValueSelectedLi
     @Override
     public void onNothingSelected() {
 
+    }
+
+
+    private class GraphContentFragmentPagerAdapter extends FragmentStatePagerAdapter {
+
+        public GraphContentFragmentPagerAdapter(FragmentManager fm) {
+            super(fm);
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            return null;
+        }
+
+        @Override
+        public int getCount() {
+            return 0;
+        }
+
+        @Override
+        public int getItemPosition(Object object){
+            return POSITION_NONE;
+        }
     }
 
 }

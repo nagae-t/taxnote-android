@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
+    <!--
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
@@ -18,4 +19,26 @@
 
         </RelativeLayout>
     </LinearLayout>
+    -->
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".GraphTabFragment">
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/pager"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <android.support.v4.view.PagerTabStrip
+                android:id="@+id/strip"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="6dp"
+                android:paddingTop="6dp"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp" />
+        </android.support.v4.view.ViewPager>
+
+    </FrameLayout>
 </layout>
