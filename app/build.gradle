@@ -84,6 +84,9 @@ dependencies {
     compile 'org.parceler:parceler-api:1.1.6'
     apt 'org.parceler:parceler:1.1.6'
 
+    // MPAndroidChart
+    compile 'com.github.PhilJay:MPAndroidChart:v3.0.1'
+
     testCompile 'junit:junit:4.12'
 
     compile 'com.google.android.gms:play-services-appindexing:9.8.0'
