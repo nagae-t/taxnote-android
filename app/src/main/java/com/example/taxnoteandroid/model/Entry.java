@@ -59,6 +59,8 @@ public class Entry {
     public int viewType;
     public String dateString;
     public String sumString;
+    public String reasonName;
+    public String titleName;
 
     @Override
     public String toString() {

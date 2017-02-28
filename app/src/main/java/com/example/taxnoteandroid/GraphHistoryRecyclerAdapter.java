@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import com.example.taxnoteandroid.model.Entry;
 import com.github.mikephil.charting.charts.PieChart;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -37,6 +38,13 @@ public class GraphHistoryRecyclerAdapter extends RecyclerView.Adapter<BindingHol
         super();
 
         this.mContext = context;
+        this.mDataList = new ArrayList<>();
+    }
+    public GraphHistoryRecyclerAdapter(Context context, List<Entry> dataList) {
+        super();
+
+        this.mContext = context;
+        this.mDataList = dataList;
     }
 
 

@@ -38,6 +38,7 @@ public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding binding;
     private TabPagerAdapter mTabPagerAdapter;
     private int mBottomNaviSelected = 0;
+    private boolean mGraphMenuIsExpense;
 
     public static final String BROADCAST_REPORT_RELOAD
             = "broadcast_main_report_reload";
@@ -69,6 +70,7 @@ public class MainActivity extends AppCompatActivity {
         DefaultDataInstaller.installDefaultUserAndCategories(this);
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
+        mGraphMenuIsExpense = SharedPreferencesManager.getGraphReportIsExpenseType(this);
         setBottomNavigation();
     }
 
@@ -107,6 +109,9 @@ public class MainActivity extends AppCompatActivity {
             case 3: // グラフ
                 periodDivMenu.setVisible(true);
                 isExpenseMenu.setVisible(true);
+                String menuTitle = (mGraphMenuIsExpense)
+                        ? getString(R.string.Expense) : getString(R.string.Income);
+                isExpenseMenu.setTitle(menuTitle);
                 break;
             case 4: // 設定
                 break;
@@ -143,8 +148,7 @@ public class MainActivity extends AppCompatActivity {
                 reportSwitchPeriod(EntryDataManager.PERIOD_TYPE_DAY);
                 break;
             case R.id.action_report_is_expense:
-                boolean menuIsExpense = SharedPreferencesManager.getGraphReportIsExpenseType(this);
-                if (menuIsExpense) {
+                if (mGraphMenuIsExpense) {
                     reportSwitchView(false);
                 } else {
                     reportSwitchView(true);

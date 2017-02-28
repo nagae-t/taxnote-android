@@ -19,9 +19,11 @@ import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.LinkedHashMap;
 import java.util.List;
-
-import static com.helpshift.util.HelpshiftContext.getApplicationContext;
+import java.util.Map;
 
 /**
  * Created by b0ne on 2017/02/28.
@@ -69,6 +71,7 @@ public class GraphContentFragment extends Fragment implements OnChartValueSelect
 
         mEntryManager = new EntryDataManager(mContext);
 
+        new EntryDataTask(mIsExpense).execute(mStartEndDate);
     }
 
     private long[] getStartAndEndDate(Calendar c) {
@@ -113,13 +116,75 @@ public class GraphContentFragment extends Fragment implements OnChartValueSelect
 
         @Override
         protected List<Entry> doInBackground(long[]... longs) {
-            Context context = getApplicationContext();
+            Context context = getActivity().getApplicationContext();
             long[] startEndDate = longs[0];
             List<Entry> entryData = new ArrayList<>();
-            List<Entry> entries;
-            entries = mEntryManager.findAll(context, startEndDate, false);
+            List<Entry> entries = mEntryManager.findAll(startEndDate, isExpense, false);
+
+            Entry entrySum = new Entry();
+            entrySum.titleName = (isExpense) ?
+                    context.getString(R.string.Expense) :
+                    context.getString(R.string.Income);
+            for (Entry entry : entries) {
+                entrySum.price += entry.price;
+            }
+
+            Map<Long, Entry> entryMap = new LinkedHashMap<>();
+
+            for (Entry entry : entries) {
+                Long id = entry.reason.id;
+                if (entryMap.containsKey(id)) {
+                    Entry _entry2 = entryMap.get(id);
+                    _entry2.price += entry.price;
+                } else {
+                    Entry _entry1 = new Entry();
+                    _entry1.titleName = entry.reason.name;
+                    _entry1.price += entry.price;
+                    _entry1.isExpense = isExpense;
+                    entryMap.put(id, _entry1);
+                }
+            }
+            List<Map.Entry<Long, Entry>> entrySortList = sortLinkedHashMap(entryMap);
+
+            entryData.add(entrySum);
+            for (Map.Entry<Long, Entry> entry : entrySortList) {
+                entryData.add(entry.getValue());
+            }
 
             return entryData;
+        }
+
+        private List<Map.Entry<Long, Entry>> sortLinkedHashMap(Map<Long, Entry> sourceMap) {
+            List<Map.Entry<Long, Entry>> dataList =
+                    new ArrayList<>(sourceMap.entrySet());
+            Collections.sort(dataList, new Comparator<Map.Entry<Long, Entry>>() {
+
+                @Override
+                public int compare(Map.Entry<Long, Entry> entry1,
+                                   Map.Entry<Long, Entry> entry2) {
+                    long entry1sum = entry1.getValue().price;
+                    long entry2sum = entry2.getValue().price;
+                    if (entry1sum < entry2sum) {
+                        return 1;
+                    } else if (entry1sum == entry2sum) {
+                        return 0;
+                    } else {
+                        return -1;
+                    }
+                }
+            });
+            return dataList;
+        }
+
+        @Override
+        protected void onPostExecute(List<Entry> result) {
+            if (result == null || result.size() == 0) return;
+
+            for (Entry entry : result) {
+                Log.v("TEST", entry.titleName + " : " + entry.price);
+            }
+//            mRecyclerAdapter = new GraphHistoryRecyclerAdapter(mContext, result);
+//            binding.recyclerContent.setAdapter(mRecyclerAdapter);
         }
     }
 }
