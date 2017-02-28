@@ -3,8 +3,6 @@ package com.example.taxnoteandroid.dataManager;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import com.example.taxnoteandroid.ReportFragment;
-
 import static com.example.taxnoteandroid.TaxnoteConsts.EXPORT_CHARACTER_CODE_UTF8;
 import static com.example.taxnoteandroid.TaxnoteConsts.EXPORT_FORMAT_TYPE_CSV;
 import static com.example.taxnoteandroid.TaxnoteConsts.EXPORT_RANGE_TYPE_ALL;
@@ -139,7 +137,7 @@ public class SharedPreferencesManager {
 
     public static int getProfitLossReportPeriodType(Context context) {
         return getSharedPreferences(context).getInt(
-                PROFIT_LOSS_REPORT_PERIOD_KEY, ReportFragment.PERIOD_TYPE_YEAR);
+                PROFIT_LOSS_REPORT_PERIOD_KEY, EntryDataManager.PERIOD_TYPE_YEAR);
     }
 
     //--------------------------------------------------------------//
@@ -152,7 +150,7 @@ public class SharedPreferencesManager {
 
     public static int getGraphReportPeriodType(Context context) {
         return getSharedPreferences(context).getInt(
-                GRAPH_REPORT_PERIOD_KEY, ReportFragment.PERIOD_TYPE_YEAR);
+                GRAPH_REPORT_PERIOD_KEY, EntryDataManager.PERIOD_TYPE_YEAR);
     }
 
 

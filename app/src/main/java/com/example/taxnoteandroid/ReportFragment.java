@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.taxnoteandroid.dataManager.EntryDataManager;
+import com.example.taxnoteandroid.dataManager.EntryDataManager.ReportGrouping;
 import com.example.taxnoteandroid.dataManager.SharedPreferencesManager;
 import com.example.taxnoteandroid.databinding.FragmentReportBinding;
 import com.example.taxnoteandroid.model.Entry;
@@ -25,13 +26,8 @@ public class ReportFragment extends Fragment {
 
     private Context mContext;
     private FragmentReportBinding binding;
-    private ReportContentFragmentPagerAdapter2 mPagerAdapter;
+    private ReportContentFragmentPagerAdapter mPagerAdapter;
     private int mCurrentPagerPosition = -1;
-
-    // レポート期間タイプ別の定義
-    public static final int PERIOD_TYPE_YEAR = 1;
-    public static final int PERIOD_TYPE_MONTH = 2;
-    public static final int PERIOD_TYPE_DAY = 3;
 
     public ReportFragment() {
     }
@@ -119,20 +115,12 @@ public class ReportFragment extends Fragment {
     public void switchReportPeriod(int periodType) {
 
         // ボタン押したあとReportGroupingの実装を切り替える
-        ReportGrouping reportGrouping = new ReportYearGrouping();
-        switch (periodType) {
-            case PERIOD_TYPE_MONTH:
-                reportGrouping = new ReportMonthGrouping();
-                break;
-            case PERIOD_TYPE_DAY:
-                reportGrouping = new ReportDayGrouping();
-                break;
-        }
+        ReportGrouping reportGrouping = new ReportGrouping(periodType);
         // 期間タイプをデフォルト値として保存
         SharedPreferencesManager.saveProfitLossReportPeriodType(mContext, periodType);
 
         Map<Calendar, List<Entry>> map = createReportDate(reportGrouping);
-        mPagerAdapter = new ReportContentFragmentPagerAdapter2(getChildFragmentManager(), reportGrouping, map);
+        mPagerAdapter = new ReportContentFragmentPagerAdapter(getChildFragmentManager(), reportGrouping, map);
         binding.pager.setAdapter(mPagerAdapter);
         if (mCurrentPagerPosition < 0) {
             binding.pager.setCurrentItem(mPagerAdapter.getCount() - 1);
@@ -141,75 +129,14 @@ public class ReportFragment extends Fragment {
         }
     }
 
-    public interface ReportGrouping {
-        Calendar getGroupingCalendar(Entry entry);
-
-        String createTitle(Calendar calendar);
-    }
-
-    public class ReportYearGrouping implements ReportGrouping {
-
-        @Override
-        public Calendar getGroupingCalendar(Entry entry) {
-            Calendar calendar = Calendar.getInstance();
-            calendar.setTimeInMillis(entry.date);
-            calendar.set(calendar.get(Calendar.YEAR), 0, 1, 0, 0, 0);
-            calendar.set(Calendar.MILLISECOND, 0);
-            return calendar;
-        }
-
-        @Override
-        public String createTitle(Calendar c) {
-            return Integer.toString(c.get(Calendar.YEAR));
-        }
-    }
-
-    public class ReportMonthGrouping implements ReportGrouping {
-
-        @Override
-        public Calendar getGroupingCalendar(Entry entry) {
-            Calendar calendar = Calendar.getInstance();
-            calendar.clear();
-            calendar.setTimeInMillis(entry.date);
-            calendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), 1, 0, 0, 0);
-            calendar.set(Calendar.MILLISECOND, 0);
-            return calendar;
-        }
-
-        @Override
-        public String createTitle(Calendar c) {
-            return Integer.toString(c.get(Calendar.YEAR))
-                    + "/" + Integer.toString(c.get(Calendar.MONTH) + 1);
-        }
-    }
-
-    public class ReportDayGrouping implements ReportGrouping {
-
-        @Override
-        public Calendar getGroupingCalendar(Entry entry) {
-            Calendar calendar = Calendar.getInstance();
-            calendar.setTimeInMillis(entry.date);
-            calendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DATE), 0, 0, 0);
-            calendar.set(Calendar.MILLISECOND, 0);
-            return calendar;
-        }
-
-        @Override
-        public String createTitle(Calendar c) {
-            return Integer.toString(c.get(Calendar.YEAR))
-                    + "/" + Integer.toString(c.get(Calendar.MONTH) + 1)
-                    + "/" + Integer.toString(c.get(Calendar.DATE));
-        }
-    }
-
-    public class ReportContentFragmentPagerAdapter2 extends FragmentStatePagerAdapter {
+    public class ReportContentFragmentPagerAdapter extends FragmentStatePagerAdapter {
 
         private final ReportGrouping reportGrouping;
         private final Map<Calendar, List<Entry>> map;
         private final int count;
         private final Calendar[] calendars;
 
-        public ReportContentFragmentPagerAdapter2(FragmentManager fm, ReportGrouping reportGrouping, Map<Calendar, List<Entry>> map) {
+        public ReportContentFragmentPagerAdapter(FragmentManager fm, ReportGrouping reportGrouping, Map<Calendar, List<Entry>> map) {
             super(fm);
             this.reportGrouping = reportGrouping;
             this.map = map;
@@ -230,7 +157,7 @@ public class ReportFragment extends Fragment {
 
         @Override
         public CharSequence getPageTitle(int position) {
-            return reportGrouping.createTitle(calendars[position]);
+            return reportGrouping.getTabTitle(calendars[position]);
         }
 
         @Override

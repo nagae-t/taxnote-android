@@ -20,6 +20,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.example.taxnoteandroid.dataManager.DefaultDataInstaller;
+import com.example.taxnoteandroid.dataManager.EntryDataManager;
 import com.example.taxnoteandroid.dataManager.SharedPreferencesManager;
 import com.example.taxnoteandroid.databinding.ActivityMainBinding;
 import com.example.taxnoteandroid.entryTab.EntryTabFragment;
@@ -129,13 +130,13 @@ public class MainActivity extends AppCompatActivity {
 
             // 損益表のメニューオプションが選択されたとき
             case R.id.divide_by_year:
-                reportSwitchPeriod(ReportFragment.PERIOD_TYPE_YEAR);
+                reportSwitchPeriod(EntryDataManager.PERIOD_TYPE_YEAR);
                 break;
             case R.id.divide_by_month:
-                reportSwitchPeriod(ReportFragment.PERIOD_TYPE_MONTH);
+                reportSwitchPeriod(EntryDataManager.PERIOD_TYPE_MONTH);
                 break;
             case R.id.divide_by_day:
-                reportSwitchPeriod(ReportFragment.PERIOD_TYPE_DAY);
+                reportSwitchPeriod(EntryDataManager.PERIOD_TYPE_DAY);
                 break;
         }
         return super.onOptionsItemSelected(item);

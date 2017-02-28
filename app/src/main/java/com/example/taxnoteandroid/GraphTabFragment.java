@@ -30,6 +30,7 @@ import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.utils.ColorTemplate;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
 /**
  * Created by b0ne on 2017/02/27.
@@ -131,6 +132,15 @@ public class GraphTabFragment extends Fragment implements OnChartValueSelectedLi
         super.onResume();
     }
 
+    public void reloadData() {
+        int periodType = SharedPreferencesManager.getGraphReportPeriodType(mContext);
+        switchReportPeriod(periodType, true);
+    }
+
+    public void switchReportPeriod(int periodType, boolean isExpense) {
+
+    }
+
     private void setData(int count, float range) {
 
         float mult = range;
@@ -218,18 +228,23 @@ public class GraphTabFragment extends Fragment implements OnChartValueSelectedLi
 
     private class GraphContentFragmentPagerAdapter extends FragmentStatePagerAdapter {
 
+        private final int count = 0;
+//        private final Calendar[] calendars;
+
         public GraphContentFragmentPagerAdapter(FragmentManager fm) {
             super(fm);
+
         }
 
         @Override
         public Fragment getItem(int position) {
-            return null;
+            Calendar targetCalender = null;
+            return GraphContentFragment.newInstance(targetCalender, false);
         }
 
         @Override
         public int getCount() {
-            return 0;
+            return count;
         }
 
         @Override

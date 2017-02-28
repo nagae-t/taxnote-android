@@ -122,10 +122,10 @@ public class HistoryListDataActivity extends AppCompatActivity {
 
     private String getCalendarStringFromPeriodType(Calendar c) {
         switch (mPeriodType) {
-            case ReportFragment.PERIOD_TYPE_MONTH:
+            case EntryDataManager.PERIOD_TYPE_MONTH:
                 return Integer.toString(c.get(Calendar.YEAR))
                         + "/" + Integer.toString(c.get(Calendar.MONTH) + 1);
-            case ReportFragment.PERIOD_TYPE_DAY:
+            case EntryDataManager.PERIOD_TYPE_DAY:
                 return Integer.toString(c.get(Calendar.MONTH) + 1)
                         + "/" + Integer.toString(c.get(Calendar.DATE));
         }
@@ -138,10 +138,10 @@ public class HistoryListDataActivity extends AppCompatActivity {
         endDate.set(c.get(Calendar.YEAR)+1, 0, 1);
 
         switch (mPeriodType) {
-            case ReportFragment.PERIOD_TYPE_MONTH:
+            case EntryDataManager.PERIOD_TYPE_MONTH:
                 endDate.set(c.get(Calendar.YEAR), c.get(Calendar.MONTH)+1, 1);
                 break;
-            case ReportFragment.PERIOD_TYPE_DAY:
+            case EntryDataManager.PERIOD_TYPE_DAY:
                 endDate.set(c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DATE), 0, 0, 0);
                 endDate.add(Calendar.DATE, 1);
                 break;

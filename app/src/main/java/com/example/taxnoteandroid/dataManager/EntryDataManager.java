@@ -13,11 +13,19 @@ import com.example.taxnoteandroid.model.Reason;
 import com.github.gfx.android.orma.OrderSpec;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class EntryDataManager {
+
+    // レポート期間タイプ別の定義
+    public static final int PERIOD_TYPE_YEAR = 1;
+    public static final int PERIOD_TYPE_MONTH = 2;
+    public static final int PERIOD_TYPE_DAY = 3;
+//    public static final int TYPE_INCOME = 10;
+//    public static final int TYPE_EXPENSE = 11;
 
     private OrmaDatabase ormaDatabase;
     private Context mContext;
@@ -246,4 +254,51 @@ public class EntryDataManager {
         return ormaDatabase.deleteFromEntry().idEq(id).execute();
     }
 
+
+    public static class ReportGrouping {
+        private int _periodType = PERIOD_TYPE_YEAR;
+
+        public ReportGrouping(int periodType) {
+            this._periodType = periodType;
+        }
+
+        public Calendar getGroupingCalendar(Entry entry) {
+            Calendar calendar = Calendar.getInstance();
+            calendar.clear();
+            calendar.setTimeInMillis(entry.date);
+            switch (_periodType) {
+                case PERIOD_TYPE_YEAR:
+                    calendar.set(calendar.get(Calendar.YEAR), 0, 1, 0, 0, 0);
+                    break;
+                case PERIOD_TYPE_MONTH:
+                    calendar.set(calendar.get(Calendar.YEAR),
+                            calendar.get(Calendar.MONTH), 1, 0, 0, 0);
+                    break;
+                case PERIOD_TYPE_DAY:
+                    calendar.set(calendar.get(Calendar.YEAR),
+                            calendar.get(Calendar.MONTH),
+                            calendar.get(Calendar.DATE), 0, 0, 0);
+                    break;
+            }
+            calendar.set(Calendar.MILLISECOND, 0);
+
+            return calendar;
+        }
+
+        public String getTabTitle(Calendar c) {
+            int cYear = c.get(Calendar.YEAR);
+            int cMonth = c.get(Calendar.MONTH);
+            int cDate = c.get(Calendar.DATE);
+            switch (_periodType) {
+                case PERIOD_TYPE_MONTH:
+                    return Integer.toString(cYear)
+                            + "/" + Integer.toString(cMonth + 1);
+                case PERIOD_TYPE_DAY:
+                    return Integer.toString(cYear)
+                            + "/" + Integer.toString(cMonth + 1)
+                            + "/" + Integer.toString(cDate);
+            }
+            return Integer.toString(cYear);
+        }
+    }
 }
