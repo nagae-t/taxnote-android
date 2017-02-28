@@ -129,7 +129,7 @@ public class GraphTabFragment extends Fragment  {
 
         int periodType = SharedPreferencesManager.getGraphReportPeriodType(mContext);
         mIsExpense = SharedPreferencesManager.getGraphReportIsExpenseType(mContext);
-        switchReportPeriod(periodType, mIsExpense);
+        switchDataView(periodType, mIsExpense);
 
         binding.pager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -169,10 +169,20 @@ public class GraphTabFragment extends Fragment  {
 
     public void reloadData() {
         int periodType = SharedPreferencesManager.getGraphReportPeriodType(mContext);
-        switchReportPeriod(periodType, true);
+        switchDataView(periodType, true);
     }
 
-    public void switchReportPeriod(int periodType, boolean isExpense) {
+    public void switchDataView(boolean isExpense) {
+        int periodType = SharedPreferencesManager.getGraphReportPeriodType(mContext);
+        switchDataView(periodType, isExpense);
+    }
+
+    public void switchDataView(int periodType) {
+        boolean isExpense = SharedPreferencesManager.getGraphReportIsExpenseType(mContext);
+        switchDataView(periodType, isExpense);
+    }
+
+    public void switchDataView(int periodType, boolean isExpense) {
         ReportGrouping reportGrouping = new ReportGrouping(periodType);
         SharedPreferencesManager.saveGraphReportPeriodType(mContext, periodType);
         SharedPreferencesManager.saveGraphReportIsExpenseType(mContext, isExpense);

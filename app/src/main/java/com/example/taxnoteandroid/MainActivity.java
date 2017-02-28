@@ -84,11 +84,13 @@ public class MainActivity extends AppCompatActivity {
         MenuItem exportMenu = menu.findItem(R.id.data_export);
         MenuItem searchMenu = menu.findItem(R.id.action_search);
         MenuItem periodDivMenu = menu.findItem(R.id.action_period_div);
+        MenuItem isExpenseMenu = menu.findItem(R.id.action_report_is_expense);
 
         helpMenu.setVisible(false);
         exportMenu.setVisible(false);
         searchMenu.setVisible(false);
         periodDivMenu.setVisible(false);
+        isExpenseMenu.setVisible(false);
 
         switch (binding.pager.getCurrentItem()) {
 
@@ -104,6 +106,7 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case 3: // グラフ
                 periodDivMenu.setVisible(true);
+                isExpenseMenu.setVisible(true);
                 break;
             case 4: // 設定
                 break;
@@ -113,6 +116,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+
         switch (item.getItemId()) {
 
             case R.id.help_in_entry_tab:
@@ -137,6 +141,14 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case R.id.divide_by_day:
                 reportSwitchPeriod(EntryDataManager.PERIOD_TYPE_DAY);
+                break;
+            case R.id.action_report_is_expense:
+                boolean menuIsExpense = SharedPreferencesManager.getGraphReportIsExpenseType(this);
+                if (menuIsExpense) {
+                    reportSwitchView(false);
+                } else {
+                    reportSwitchView(true);
+                }
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -229,11 +241,30 @@ public class MainActivity extends AppCompatActivity {
 
         CustomViewPager pager = binding.pager;
         if (mBottomNaviSelected == R.id.tab3) {
-            ReportFragment reportFragment =
-                    (ReportFragment) mTabPagerAdapter.instantiateItem(pager, pager.getCurrentItem());
+            ReportFragment reportFragment = (ReportFragment) mTabPagerAdapter
+                    .instantiateItem(pager, pager.getCurrentItem());
             if (reportFragment == null) return;
 
             reportFragment.switchReportPeriod(type);
+        } else if (mBottomNaviSelected == R.id.tab4) {
+            GraphTabFragment graphFragment = (GraphTabFragment) mTabPagerAdapter
+                    .instantiateItem(pager, pager.getCurrentItem());
+            if (graphFragment == null) return;
+
+            graphFragment.switchDataView(type);
+        }
+    }
+
+    private void reportSwitchView(boolean isExpense) {
+        if (mTabPagerAdapter == null) return;
+
+        CustomViewPager pager = binding.pager;
+        if (mBottomNaviSelected == R.id.tab4) {
+            GraphTabFragment graphFragment = (GraphTabFragment) mTabPagerAdapter
+                    .instantiateItem(pager, pager.getCurrentItem());
+            if (graphFragment == null) return;
+
+            graphFragment.switchDataView(isExpense);
         }
     }
 

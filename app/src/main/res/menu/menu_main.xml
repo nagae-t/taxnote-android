@@ -34,8 +34,8 @@
         android:visible="false"
         app:showAsAction="always">
         <menu>
-            <item android:id="@+id/divide_by_year"
-                android:title="@string/divide_by_year"
+            <item android:id="@+id/action_report_is_expense"
+                android:title="@string/Income"
                 android:visible="false"/>
             <item android:id="@+id/divide_by_year"
                 android:title="@string/divide_by_year" />
