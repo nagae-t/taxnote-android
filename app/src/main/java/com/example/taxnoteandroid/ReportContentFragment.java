@@ -2,17 +2,19 @@ package com.example.taxnoteandroid;
 
 
 import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.taxnoteandroid.Library.ValueConverter;
+import com.example.taxnoteandroid.dataManager.EntryDataManager;
+import com.example.taxnoteandroid.dataManager.SharedPreferencesManager;
 import com.example.taxnoteandroid.databinding.FragmentReportContentBinding;
 import com.example.taxnoteandroid.databinding.RowHistorySectionHeaderBinding;
 import com.example.taxnoteandroid.databinding.RowSimpleCellBinding;
@@ -32,10 +34,16 @@ import java.util.Map;
 public class ReportContentFragment extends Fragment {
 
     private static final String EXTRA_MODE_ = "EXTRA_";
-    private static final String TARGET_CALENDAR = "TARGET_CALENDAR";
+    private static final String KEY_TARGET_CALENDAR = "KEY_TARGET_CALENDAR";
+    private static final String KEY_IS_EXPENSE= "IS_EXPENSE";
+
     private FragmentReportContentBinding binding;
     private Context mContext;
     private Calendar mTargetCalendar;
+
+    private CommonEntryRecyclerAdapter mRecyclerAdapter;
+    private EntryDataManager mEntryManager;
+    private int mPeriodType;
 
     public ReportContentFragment() {
     }
@@ -44,7 +52,16 @@ public class ReportContentFragment extends Fragment {
         ReportContentFragment fragment = new ReportContentFragment();
         Bundle args = new Bundle();
         args.putParcelable(EXTRA_MODE_, Parcels.wrap(entries));
-        args.putSerializable(TARGET_CALENDAR, targetCalendar);
+        args.putSerializable(KEY_TARGET_CALENDAR, targetCalendar);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    public static ReportContentFragment newInstance(Calendar targetCalendar, boolean isExpense) {
+        ReportContentFragment fragment = new ReportContentFragment();
+        Bundle args = new Bundle();
+        args.putSerializable(KEY_TARGET_CALENDAR, targetCalendar);
+        args.putBoolean(KEY_IS_EXPENSE, isExpense);
         fragment.setArguments(args);
         return fragment;
     }
@@ -56,7 +73,7 @@ public class ReportContentFragment extends Fragment {
 
         List<Entry> entries = Parcels.unwrap(getArguments().getParcelable(EXTRA_MODE_));
 //        Log.d("entries", entries.toString());
-        mTargetCalendar = (Calendar) getArguments().getSerializable(TARGET_CALENDAR);
+        mTargetCalendar = (Calendar) getArguments().getSerializable(KEY_TARGET_CALENDAR);
 
         List<ReportContentAdapter.Item> items = new ArrayList<>();
 
@@ -166,6 +183,17 @@ public class ReportContentFragment extends Fragment {
 
 
         return binding.getRoot();
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        mContext = getActivity().getApplicationContext();
+
+        mPeriodType = SharedPreferencesManager.getProfitLossReportPeriodType(mContext);
+        Calendar targetCalendar  = (Calendar) getArguments().getSerializable(KEY_TARGET_CALENDAR);
+        boolean isExpense = getArguments().getBoolean(KEY_IS_EXPENSE, false);
+
     }
 
     private List<Map.Entry<Long, ReportContentAdapter.Item>> sortLinkedHashMap(Map<Long, ReportContentAdapter.Item> sourceMap) {
@@ -305,9 +333,9 @@ public class ReportContentFragment extends Fragment {
                     String reasonName = null;
                     if (viewType == Item.VIEW_ITEM_CATEGORY) {
                         reasonName = item.reasonName;
-                        cellBinding.name.setText(reasonName);
+                        cellBinding.labelName.setText(reasonName);
                     } else {
-                        cellBinding.name.setText(mContext.getString(R.string.total));
+                        cellBinding.labelName.setText(mContext.getString(R.string.total));
                     }
                     cellBinding.getRoot().setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -335,5 +363,19 @@ public class ReportContentFragment extends Fragment {
             mOnItemClickListener = listener;
         }
 
+    }
+
+    private class ReportDataTask extends AsyncTask<long[], Integer, List<Entry>> {
+        private boolean isExpense;
+
+        @Override
+        protected List<Entry> doInBackground(long[]... longs) {
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(List<Entry> result) {
+
+        }
     }
 }

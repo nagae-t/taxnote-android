@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.Color;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -18,7 +17,6 @@ import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.formatter.IValueFormatter;
-import com.github.mikephil.charting.formatter.PercentFormatter;
 import com.github.mikephil.charting.utils.ViewPortHandler;
 
 import java.text.DecimalFormat;
@@ -171,7 +169,7 @@ public class GraphHistoryRecyclerAdapter extends RecyclerView.Adapter<BindingHol
                         : ContextCompat.getColor(mContext, R.color.primary);
                 cellBinding.price.setTextColor(priceColor);
                 cellBinding.price.setText(priceString);
-                cellBinding.name.setText(entry.titleName);
+                cellBinding.labelName.setText(entry.titleName);
                 break;
         }
     }

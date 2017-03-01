@@ -12,6 +12,7 @@ import com.example.taxnoteandroid.Library.ValueConverter;
 import com.example.taxnoteandroid.dataManager.SharedPreferencesManager;
 import com.example.taxnoteandroid.databinding.RowHistoryCellBinding;
 import com.example.taxnoteandroid.databinding.RowHistorySectionHeaderBinding;
+import com.example.taxnoteandroid.databinding.RowSimpleCellBinding;
 import com.example.taxnoteandroid.model.Entry;
 
 import java.util.ArrayList;
@@ -30,6 +31,8 @@ public class CommonEntryRecyclerAdapter extends RecyclerView.Adapter<BindingHold
 
     private static final int VIEW_ITEM_HEADER = 1;
     private static final int VIEW_ITEM_CELL = 2;
+    private static final int VIEW_ITEM_REPORT_CELL = 3;
+    private static final int VIEW_ITEM_REPORT_TOTAL = 4;
 
     public OnItemClickListener mOnItemClickListener;
     public OnLongItemClickListener mOnItemLongClickListener;
@@ -105,6 +108,9 @@ public class CommonEntryRecyclerAdapter extends RecyclerView.Adapter<BindingHold
     public void onBindViewHolder(BindingHolder holder, final int position) {
         int viewType = holder.getItemViewType();
         final Entry entry = mDataList.get(position);
+        String priceString;
+        int priceColor = (entry.isExpense) ? ContextCompat.getColor(mContext, R.color.expense)
+                : ContextCompat.getColor(mContext, R.color.primary);
 
         switch (viewType) {
             case VIEW_ITEM_HEADER:
@@ -113,15 +119,13 @@ public class CommonEntryRecyclerAdapter extends RecyclerView.Adapter<BindingHold
                 headerBindding.price.setText(entry.sumString);
                 break;
             case VIEW_ITEM_CELL:
+
                 RowHistoryCellBinding cellBinding = (RowHistoryCellBinding) holder.binding;
-                cellBinding.getRoot().setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (mOnItemClickListener != null) {
-                            mOnItemClickListener.onItemClick(v, position, entry);
-                        }
-                    }
-                });
+
+                // price
+                priceString = ValueConverter.formatPriceWithSymbol(mContext ,entry.price, entry.isExpense);
+                cellBinding.price.setText(priceString);
+                cellBinding.price.setTextColor(priceColor);
 
                 // Name
                 String nameText;
@@ -145,16 +149,40 @@ public class CommonEntryRecyclerAdapter extends RecyclerView.Adapter<BindingHold
                     memoTv.setText(entry.memo);
                 }
 
-                // Create price string
-                String priceString = ValueConverter.formatPriceWithSymbol(mContext ,entry.price, entry.isExpense);
-                cellBinding.price.setText(priceString);
+                cellBinding.getRoot().setOnClickListener(
+                        getCellOnClickListener(position, entry));
+                break;
+            case VIEW_ITEM_REPORT_CELL:
+            case VIEW_ITEM_REPORT_TOTAL:
 
-                // Set price color
-                int priceColor = (entry.isExpense) ? ContextCompat.getColor(mContext, R.color.expense)
-                        : ContextCompat.getColor(mContext, R.color.primary);
-                cellBinding.price.setTextColor(priceColor);
+                RowSimpleCellBinding rowSimpleBinding = (RowSimpleCellBinding) holder.binding;
+
+                // sum price
+                priceString = ValueConverter.formatPrice(mContext, entry.price);
+                rowSimpleBinding.price.setText(priceString);
+                rowSimpleBinding.price.setTextColor(priceColor);
+
+                String nameString = entry.reasonName;
+                if (viewType == VIEW_ITEM_REPORT_TOTAL) {
+                    nameString = mContext.getString(R.string.total);
+                }
+                rowSimpleBinding.labelName.setText(nameString);
+
+                rowSimpleBinding.getRoot().setOnClickListener(
+                        getCellOnClickListener(position, entry));
                 break;
         }
+    }
+
+    private View.OnClickListener getCellOnClickListener(final int position, final Entry entry) {
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mOnItemClickListener != null) {
+                    mOnItemClickListener.onItemClick(v, position, entry);
+                }
+            }
+        };
     }
 
     @Override

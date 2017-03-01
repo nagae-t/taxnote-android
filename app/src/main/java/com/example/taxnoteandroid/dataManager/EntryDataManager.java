@@ -255,6 +255,9 @@ public class EntryDataManager {
     }
 
 
+    /**
+     * Data Grouping for report.
+     */
     public static class ReportGrouping {
         private int _periodType = PERIOD_TYPE_YEAR;
 

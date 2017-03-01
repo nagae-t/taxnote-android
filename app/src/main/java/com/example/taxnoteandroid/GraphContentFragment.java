@@ -35,7 +35,6 @@ public class GraphContentFragment extends Fragment {
     private GraphHistoryRecyclerAdapter mRecyclerAdapter;
     private EntryDataManager mEntryManager;
     private int mPeriodType;
-    private boolean mIsExpense;
 
     private static final String KEY_TARGET_CALENDAR = "TARGET_CALENDAR";
     private static final String KEY_IS_EXPENSE= "IS_EXPENSE";
@@ -63,12 +62,12 @@ public class GraphContentFragment extends Fragment {
         mContext = getActivity().getApplicationContext();
 
         mPeriodType = SharedPreferencesManager.getProfitLossReportPeriodType(mContext);
-        Calendar targetCalendar  = (Calendar) getArguments().getSerializable(KEY_TARGET_CALENDAR);
-        mIsExpense = getArguments().getBoolean(KEY_IS_EXPENSE, false);
         mEntryManager = new EntryDataManager(mContext);
+        Calendar targetCalendar  = (Calendar) getArguments().getSerializable(KEY_TARGET_CALENDAR);
+        boolean isExpense = getArguments().getBoolean(KEY_IS_EXPENSE, false);
 
         long[] startEndDate = getStartAndEndDate(targetCalendar);
-        new EntryDataTask(mIsExpense).execute(startEndDate);
+        new EntryDataTask(isExpense).execute(startEndDate);
     }
 
     private long[] getStartAndEndDate(Calendar c) {
