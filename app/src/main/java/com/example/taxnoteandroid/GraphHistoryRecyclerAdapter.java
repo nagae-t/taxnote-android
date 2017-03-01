@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -16,8 +17,12 @@ import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
+import com.github.mikephil.charting.formatter.IValueFormatter;
 import com.github.mikephil.charting.formatter.PercentFormatter;
+import com.github.mikephil.charting.utils.ViewPortHandler;
 
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -176,24 +181,31 @@ public class GraphHistoryRecyclerAdapter extends RecyclerView.Adapter<BindingHol
         if (mDataList.size() < 3) return;
 
         Long sumPrice = mDataList.get(1).price;
+        NumberFormat format = NumberFormat.getInstance();
+        format.setMaximumFractionDigits(1);
         for (int i=2; i<mDataList.size(); i++) {
             Entry _entry = mDataList.get(i);
-
-            // set value cut off
             float entryPrice = (float) _entry.price;
+            String labelName = _entry.titleName;
+            // set value cut off
             float pricePercent = (entryPrice / sumPrice) * 100;
             if (pricePercent < 2.0f) {
-                continue;
+                labelName = null;
             }
 
-            PieEntry pEntry = new PieEntry(entryPrice, _entry.titleName);
+            PieEntry pEntry = new PieEntry(entryPrice, labelName, _entry);
+            if (pricePercent < 2.0f) {
+                pEntry.setData(null);
+
+            }
             pieEntries.add(pEntry);
         }
 
         PieDataSet dataSet = new PieDataSet(pieEntries, null);
 
+        // パーセント数値の表示（label内で済ました）
         dataSet.setDrawValues(true);
-        dataSet.setValueFormatter(new PercentFormatter());
+        dataSet.setValueFormatter(new MyPieValueFormatter());
 
         // add a lot of colors
         dataSet.setColors(new int[]{R.color.pie_chart_color6,
@@ -210,9 +222,24 @@ public class GraphHistoryRecyclerAdapter extends RecyclerView.Adapter<BindingHol
 
         // undo all highlights
         mChart.highlightValues(null);
+        mChart.setUsePercentValues(true);
 
         mChart.invalidate();
 
+    }
+
+    private class MyPieValueFormatter implements IValueFormatter {
+
+        protected DecimalFormat mFormat;
+
+        public MyPieValueFormatter() {
+            mFormat = new DecimalFormat("###,###,##0.0");
+        }
+        @Override
+        public String getFormattedValue(float value, com.github.mikephil.charting.data.Entry entry, int dataSetIndex, ViewPortHandler viewPortHandler) {
+            if(value < 2) return "";
+            else return mFormat.format(value) + " %";
+        }
     }
 
     @Override
