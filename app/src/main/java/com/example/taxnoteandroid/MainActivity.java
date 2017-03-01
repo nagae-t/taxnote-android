@@ -42,6 +42,8 @@ public class MainActivity extends AppCompatActivity {
 
     public static final String BROADCAST_REPORT_RELOAD
             = "broadcast_main_report_reload";
+    public static final String BROADCAST_SWITCH_GRAPH_EXPENSE
+            = "broadcast_main_swith_graph_expense";
 
     /**
      * Broadcast for get new home timeline
@@ -50,6 +52,14 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onReceive(Context context, Intent intent) {
             reportReload();
+        }
+    };
+    private final BroadcastReceiver mSwitchGraphExpenseReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            boolean oldVal = SharedPreferencesManager.getGraphReportIsExpenseType(getApplicationContext());
+            mGraphMenuIsExpense = !oldVal;
+            reportSwitchView(mGraphMenuIsExpense);
         }
     };
 
@@ -66,6 +76,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         registerReceiver(mReportReloadReceiver, new IntentFilter(BROADCAST_REPORT_RELOAD));
+        registerReceiver(mSwitchGraphExpenseReceiver, new IntentFilter(BROADCAST_SWITCH_GRAPH_EXPENSE));
 
         DefaultDataInstaller.installDefaultUserAndCategories(this);
 
@@ -269,6 +280,8 @@ public class MainActivity extends AppCompatActivity {
             if (graphFragment == null) return;
 
             graphFragment.switchDataView(isExpense);
+            mGraphMenuIsExpense = SharedPreferencesManager.getGraphReportIsExpenseType(this);
+            invalidateOptionsMenu();
         }
     }
 
@@ -389,6 +402,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         unregisterReceiver(mReportReloadReceiver);
+        unregisterReceiver(mSwitchGraphExpenseReceiver);
         super.onDestroy();
     }
 }

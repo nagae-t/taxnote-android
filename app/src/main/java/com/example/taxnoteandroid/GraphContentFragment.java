@@ -1,6 +1,7 @@
 package com.example.taxnoteandroid;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -14,6 +15,7 @@ import com.example.taxnoteandroid.dataManager.EntryDataManager;
 import com.example.taxnoteandroid.dataManager.SharedPreferencesManager;
 import com.example.taxnoteandroid.databinding.FragmentGraphContentBinding;
 import com.example.taxnoteandroid.model.Entry;
+import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 
@@ -183,6 +185,12 @@ public class GraphContentFragment extends Fragment implements OnChartValueSelect
             if (result == null || result.size() == 0) return;
 
             mRecyclerAdapter = new GraphHistoryRecyclerAdapter(mContext, result);
+            mRecyclerAdapter.setOnGraphClickListener(new GraphHistoryRecyclerAdapter.OnGraphClickListener() {
+                @Override
+                public void onClick(View view, PieChart chart) {
+                    view.getContext().sendBroadcast(new Intent(MainActivity.BROADCAST_SWITCH_GRAPH_EXPENSE));
+                }
+            });
             binding.recyclerContent.setAdapter(mRecyclerAdapter);
         }
     }

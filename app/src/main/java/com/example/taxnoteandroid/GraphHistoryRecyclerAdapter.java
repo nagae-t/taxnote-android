@@ -124,7 +124,6 @@ public class GraphHistoryRecyclerAdapter extends RecyclerView.Adapter<BindingHol
                 mChart.getDescription().setEnabled(false);
                 mChart.setExtraOffsets(2, 2, 2, 2);
 
-//                mChart.setDragDecelerationFrictionCoef(0.95f);
                 mChart.setDragDecelerationEnabled(false);
                 mChart.setOnChartGestureListener(null);
 
@@ -132,7 +131,6 @@ public class GraphHistoryRecyclerAdapter extends RecyclerView.Adapter<BindingHol
                 mChart.setHoleColor(Color.WHITE);
 
                 mChart.setTransparentCircleColor(Color.WHITE);
-//                mChart.setTransparentCircleAlpha(110);
 
                 mChart.setHoleRadius(40f);
                 mChart.setTransparentCircleRadius(40f);
@@ -147,8 +145,7 @@ public class GraphHistoryRecyclerAdapter extends RecyclerView.Adapter<BindingHol
 
                 setGraphData();
 
-                mChart.animateY(600, Easing.EasingOption.EaseInOutQuad);
-                // mChart.spin(2000, 0, 360);
+                mChart.animateY(550, Easing.EasingOption.EaseInOutQuad);
 
                 mChart.getLegend().setEnabled(false);
                 // entry label styling
@@ -189,13 +186,10 @@ public class GraphHistoryRecyclerAdapter extends RecyclerView.Adapter<BindingHol
 
         PieDataSet dataSet = new PieDataSet(pieEntries, null);
 
-//        dataSet.setDrawIcons(false);
         dataSet.setDrawValues(true);
         dataSet.setValueFormatter(new PercentFormatter());
         dataSet.setValueLinePart1OffsetPercentage(0);
 
-//        dataSet.setSliceSpace(3f);
-//        dataSet.setSelectionShift(5f);
 
         // add a lot of colors
         dataSet.setColors(new int[]{R.color.pie_chart_color1,
@@ -205,7 +199,6 @@ public class GraphHistoryRecyclerAdapter extends RecyclerView.Adapter<BindingHol
                 R.color.pie_chart_color5,
                 R.color.pie_chart_color6,
                 R.color.pie_chart_color7}, mContext);
-//        dataSet.setSelectionShift(0f);
 
         PieData data = new PieData(dataSet);
         data.setValueTextSize(11f);
