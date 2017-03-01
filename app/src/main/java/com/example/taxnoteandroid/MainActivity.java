@@ -210,6 +210,7 @@ public class MainActivity extends AppCompatActivity {
                     case R.id.tab4:
                         binding.pager.setCurrentItem(3, false);
                         setTitle(getString(R.string.Graph));
+                        reportReload();
                         break;
                     case R.id.tab5:
                         binding.pager.setCurrentItem(4, false);
@@ -289,11 +290,19 @@ public class MainActivity extends AppCompatActivity {
         if (mTabPagerAdapter == null) return;
 
         CustomViewPager pager = binding.pager;
-        ReportFragment reportFragment =
-                (ReportFragment) mTabPagerAdapter.instantiateItem(pager, 2);
-        if (reportFragment == null) return;
+        if (mBottomNaviSelected == R.id.tab3) {
+            ReportFragment reportFragment =
+                    (ReportFragment) mTabPagerAdapter.instantiateItem(pager, 2);
+            if (reportFragment == null) return;
 
-        reportFragment.reloadData();
+            reportFragment.reloadData();
+        } else if (mBottomNaviSelected == R.id.tab4) {
+            GraphTabFragment graphFragment = (GraphTabFragment) mTabPagerAdapter
+                    .instantiateItem(pager, pager.getCurrentItem());
+            if (graphFragment == null) return;
+
+            graphFragment.reloadData();
+        }
     }
 
     class TabPagerAdapter extends FragmentPagerAdapter {

@@ -145,7 +145,8 @@ public class GraphHistoryRecyclerAdapter extends RecyclerView.Adapter<BindingHol
 
                 setGraphData();
 
-                mChart.animateY(550, Easing.EasingOption.EaseInOutQuad);
+                //@@ グラフ書き出しのアニメーション速度の指定
+                mChart.animateY(500, Easing.EasingOption.EaseInOutQuad);
 
                 mChart.getLegend().setEnabled(false);
                 // entry label styling
@@ -192,13 +193,12 @@ public class GraphHistoryRecyclerAdapter extends RecyclerView.Adapter<BindingHol
 
 
         // add a lot of colors
-        dataSet.setColors(new int[]{R.color.pie_chart_color1,
-                R.color.pie_chart_color2,
-                R.color.pie_chart_color3,
-                R.color.pie_chart_color4,
+        dataSet.setColors(new int[]{R.color.pie_chart_color6,
                 R.color.pie_chart_color5,
-                R.color.pie_chart_color6,
-                R.color.pie_chart_color7}, mContext);
+                R.color.pie_chart_color4,
+                R.color.pie_chart_color3,
+                R.color.pie_chart_color2,
+                R.color.pie_chart_color1}, mContext);
 
         PieData data = new PieData(dataSet);
         data.setValueTextSize(11f);
