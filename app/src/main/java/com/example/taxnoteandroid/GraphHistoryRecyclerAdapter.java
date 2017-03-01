@@ -4,8 +4,11 @@ import android.content.Context;
 import android.graphics.Color;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
+import android.view.Display;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 
 import com.example.taxnoteandroid.Library.ValueConverter;
 import com.example.taxnoteandroid.databinding.PieGraphRowBinding;
@@ -13,7 +16,6 @@ import com.example.taxnoteandroid.databinding.RowSimpleCellBinding;
 import com.example.taxnoteandroid.model.Entry;
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.PieChart;
-import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
@@ -40,6 +42,7 @@ public class GraphHistoryRecyclerAdapter extends RecyclerView.Adapter<BindingHol
 
     public OnItemClickListener mOnItemClickListener;
     public OnLongItemClickListener mOnItemLongClickListener;
+    public OnGraphClickListener mOnGraphClickListener;
 
     public interface OnItemClickListener {
         void onItemClick(View view, int position, Entry item);
@@ -47,6 +50,10 @@ public class GraphHistoryRecyclerAdapter extends RecyclerView.Adapter<BindingHol
 
     public interface OnLongItemClickListener {
         boolean onItemLongClick(View view, int position, Entry item);
+    }
+
+    public interface OnGraphClickListener {
+        void onClick(View view, PieChart chart);
     }
 
     public GraphHistoryRecyclerAdapter(Context context) {
@@ -112,52 +119,50 @@ public class GraphHistoryRecyclerAdapter extends RecyclerView.Adapter<BindingHol
                 PieGraphRowBinding graphBinding = (PieGraphRowBinding) holder.binding;
                 mChart = graphBinding.chart1;
 
+
                 mChart.setUsePercentValues(true);
                 mChart.getDescription().setEnabled(false);
-                mChart.setExtraOffsets(5, 10, 5, 5);
+                mChart.setExtraOffsets(2, 2, 2, 2);
 
-                mChart.setDragDecelerationFrictionCoef(0.95f);
-
+//                mChart.setDragDecelerationFrictionCoef(0.95f);
+                mChart.setDragDecelerationEnabled(false);
+                mChart.setOnChartGestureListener(null);
 
                 mChart.setDrawHoleEnabled(true);
                 mChart.setHoleColor(Color.WHITE);
 
                 mChart.setTransparentCircleColor(Color.WHITE);
-                mChart.setTransparentCircleAlpha(110);
+//                mChart.setTransparentCircleAlpha(110);
 
-                mChart.setHoleRadius(58f);
-                mChart.setTransparentCircleRadius(61f);
+                mChart.setHoleRadius(40f);
+                mChart.setTransparentCircleRadius(40f);
 
                 mChart.setDrawCenterText(true);
 
-                mChart.setRotationAngle(0);
+                mChart.setRotationAngle(270);
                 // enable rotation of the chart by touch
                 mChart.setRotationEnabled(true);
                 mChart.setHighlightPerTapEnabled(true);
-
-                // mChart.setUnit(" €");
-                // mChart.setDrawUnitsInChart(true);
-
-                // add a selection listener
-//                mChart.setOnChartValueSelectedListener(this);
+                mChart.setTouchEnabled(false);
 
                 setGraphData();
 
-                mChart.animateY(1400, Easing.EasingOption.EaseInOutQuad);
+                mChart.animateY(600, Easing.EasingOption.EaseInOutQuad);
                 // mChart.spin(2000, 0, 360);
 
-                Legend l = mChart.getLegend();
-                l.setVerticalAlignment(Legend.LegendVerticalAlignment.TOP);
-                l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.RIGHT);
-                l.setOrientation(Legend.LegendOrientation.VERTICAL);
-                l.setDrawInside(false);
-                l.setXEntrySpace(7f);
-                l.setYEntrySpace(0f);
-                l.setYOffset(0f);
-
+                mChart.getLegend().setEnabled(false);
                 // entry label styling
                 mChart.setEntryLabelColor(Color.WHITE);
                 mChart.setEntryLabelTextSize(12f);
+
+                graphBinding.getRoot().setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        if (mOnGraphClickListener != null) {
+                            mOnGraphClickListener.onClick(view, mChart);
+                        }
+                    }
+                });
 
                 break;
             case VIEW_ITEM_CELL:
@@ -185,37 +190,24 @@ public class GraphHistoryRecyclerAdapter extends RecyclerView.Adapter<BindingHol
         PieDataSet dataSet = new PieDataSet(pieEntries, null);
 
 //        dataSet.setDrawIcons(false);
-        dataSet.setDrawValues(false);
+        dataSet.setDrawValues(true);
+        dataSet.setValueFormatter(new PercentFormatter());
+        dataSet.setValueLinePart1OffsetPercentage(0);
 
-        dataSet.setSliceSpace(3f);
-        dataSet.setSelectionShift(5f);
+//        dataSet.setSliceSpace(3f);
+//        dataSet.setSelectionShift(5f);
 
         // add a lot of colors
-
-        ArrayList<Integer> colors = new ArrayList<>();
-
-        for (int c : ColorTemplate.VORDIPLOM_COLORS)
-            colors.add(c);
-
-        for (int c : ColorTemplate.JOYFUL_COLORS)
-            colors.add(c);
-
-        for (int c : ColorTemplate.COLORFUL_COLORS)
-            colors.add(c);
-
-        for (int c : ColorTemplate.LIBERTY_COLORS)
-            colors.add(c);
-
-        for (int c : ColorTemplate.PASTEL_COLORS)
-            colors.add(c);
-
-        colors.add(ColorTemplate.getHoloBlue());
-
-        dataSet.setColors(colors);
+        dataSet.setColors(new int[]{R.color.pie_chart_color1,
+                R.color.pie_chart_color2,
+                R.color.pie_chart_color3,
+                R.color.pie_chart_color4,
+                R.color.pie_chart_color5,
+                R.color.pie_chart_color6,
+                R.color.pie_chart_color7}, mContext);
 //        dataSet.setSelectionShift(0f);
 
         PieData data = new PieData(dataSet);
-        data.setValueFormatter(new PercentFormatter());
         data.setValueTextSize(11f);
         data.setValueTextColor(Color.WHITE);
         mChart.setData(data);
@@ -224,6 +216,7 @@ public class GraphHistoryRecyclerAdapter extends RecyclerView.Adapter<BindingHol
         mChart.highlightValues(null);
 
         mChart.invalidate();
+
     }
 
     @Override
@@ -238,6 +231,10 @@ public class GraphHistoryRecyclerAdapter extends RecyclerView.Adapter<BindingHol
 
     public void setOnItemLongClickListener(final OnLongItemClickListener listener) {
         mOnItemLongClickListener = listener;
+    }
+
+    public void setOnGraphClickListener(OnGraphClickListener listener) {
+        mOnGraphClickListener = listener;
     }
 
     @Override
