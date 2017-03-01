@@ -4,11 +4,8 @@ import android.content.Context;
 import android.graphics.Color;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
-import android.view.Display;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RelativeLayout;
 
 import com.example.taxnoteandroid.Library.ValueConverter;
 import com.example.taxnoteandroid.databinding.PieGraphRowBinding;
@@ -20,7 +17,6 @@ import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.formatter.PercentFormatter;
-import com.github.mikephil.charting.utils.ColorTemplate;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -179,9 +175,18 @@ public class GraphHistoryRecyclerAdapter extends RecyclerView.Adapter<BindingHol
         ArrayList<PieEntry> pieEntries = new ArrayList<>();
         if (mDataList.size() < 3) return;
 
+        Long sumPrice = mDataList.get(1).price;
         for (int i=2; i<mDataList.size(); i++) {
             Entry _entry = mDataList.get(i);
-            PieEntry pEntry = new PieEntry((float)_entry.price, _entry.titleName);
+
+            // set value cut off
+            float entryPrice = (float) _entry.price;
+            float pricePercent = (entryPrice / sumPrice) * 100;
+            if (pricePercent < 2.0f) {
+                continue;
+            }
+
+            PieEntry pEntry = new PieEntry(entryPrice, _entry.titleName);
             pieEntries.add(pEntry);
         }
 
@@ -189,8 +194,6 @@ public class GraphHistoryRecyclerAdapter extends RecyclerView.Adapter<BindingHol
 
         dataSet.setDrawValues(true);
         dataSet.setValueFormatter(new PercentFormatter());
-        dataSet.setValueLinePart1OffsetPercentage(0);
-
 
         // add a lot of colors
         dataSet.setColors(new int[]{R.color.pie_chart_color6,

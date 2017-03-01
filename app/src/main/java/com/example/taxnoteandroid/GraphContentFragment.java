@@ -6,7 +6,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,8 +15,6 @@ import com.example.taxnoteandroid.dataManager.SharedPreferencesManager;
 import com.example.taxnoteandroid.databinding.FragmentGraphContentBinding;
 import com.example.taxnoteandroid.model.Entry;
 import com.github.mikephil.charting.charts.PieChart;
-import com.github.mikephil.charting.highlight.Highlight;
-import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -31,14 +28,13 @@ import java.util.Map;
  * Created by b0ne on 2017/02/28.
  */
 
-public class GraphContentFragment extends Fragment implements OnChartValueSelectedListener  {
+public class GraphContentFragment extends Fragment {
 
     private Context mContext;
     private FragmentGraphContentBinding binding;
     private GraphHistoryRecyclerAdapter mRecyclerAdapter;
     private EntryDataManager mEntryManager;
     private int mPeriodType;
-    private long[] mStartEndDate;
     private boolean mIsExpense;
 
     private static final String KEY_TARGET_CALENDAR = "TARGET_CALENDAR";
@@ -66,22 +62,23 @@ public class GraphContentFragment extends Fragment implements OnChartValueSelect
         super.onActivityCreated(savedInstanceState);
         mContext = getActivity().getApplicationContext();
 
+        mPeriodType = SharedPreferencesManager.getProfitLossReportPeriodType(mContext);
         Calendar targetCalendar  = (Calendar) getArguments().getSerializable(KEY_TARGET_CALENDAR);
         mIsExpense = getArguments().getBoolean(KEY_IS_EXPENSE, false);
-        mStartEndDate = getStartAndEndDate(targetCalendar);
-        mPeriodType = SharedPreferencesManager.getGraphReportPeriodType(mContext);
-
         mEntryManager = new EntryDataManager(mContext);
 
-        new EntryDataTask(mIsExpense).execute(mStartEndDate);
+        long[] startEndDate = getStartAndEndDate(targetCalendar);
+        new EntryDataTask(mIsExpense).execute(startEndDate);
     }
 
     private long[] getStartAndEndDate(Calendar c) {
         Calendar startDate = (Calendar)c.clone();
         Calendar endDate = (Calendar)c.clone();
-        endDate.set(c.get(Calendar.YEAR)+1, 0, 1);
 
         switch (mPeriodType) {
+            case EntryDataManager.PERIOD_TYPE_YEAR:
+                endDate.set(c.get(Calendar.YEAR)+1, 0, 1);
+                break;
             case EntryDataManager.PERIOD_TYPE_MONTH:
                 endDate.set(c.get(Calendar.YEAR), c.get(Calendar.MONTH)+1, 1);
                 break;
@@ -93,20 +90,6 @@ public class GraphContentFragment extends Fragment implements OnChartValueSelect
 
         long[] result = {startDate.getTimeInMillis(), endDate.getTimeInMillis()};
         return result;
-    }
-
-    @Override
-    public void onValueSelected(com.github.mikephil.charting.data.Entry e, Highlight h) {
-        if (e == null)
-            return;
-        Log.v("TEST",
-                "Value: " + e.getY() + ", index: " + h.getX()
-                        + ", DataSet index: " + h.getDataSetIndex());
-    }
-
-    @Override
-    public void onNothingSelected() {
-
     }
 
     private class EntryDataTask extends AsyncTask<long[], Integer, List<Entry>> {

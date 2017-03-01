@@ -135,9 +135,11 @@ public class HistoryListDataActivity extends AppCompatActivity {
     private long[] getStartAndEndDate(Calendar c) {
         Calendar startDate = (Calendar)c.clone();
         Calendar endDate = (Calendar)c.clone();
-        endDate.set(c.get(Calendar.YEAR)+1, 0, 1);
 
         switch (mPeriodType) {
+            case EntryDataManager.PERIOD_TYPE_YEAR:
+                endDate.set(c.get(Calendar.YEAR)+1, 0, 1);
+                break;
             case EntryDataManager.PERIOD_TYPE_MONTH:
                 endDate.set(c.get(Calendar.YEAR), c.get(Calendar.MONTH)+1, 1);
                 break;

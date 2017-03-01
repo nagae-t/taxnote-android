@@ -30,7 +30,6 @@ public class SharedPreferencesManager {
     private static final String TRACK_ENTRY_KEY                 = "TRACK_ENTRY_KEY";
     private static final String DATA_EXPORT_SUGGEST_KEY         = "DATA_EXPORT_SUGGEST_KEY";
     private static final String PROFIT_LOSS_REPORT_PERIOD_KEY   = "PROFIT_LOSS_REPORT_PERIOD_KEY";
-    private static final String GRAPH_REPORT_PERIOD_KEY         = "GRAPH_REPORT_PERIOD_KEY";
     private static final String GRAPH_REPORT_IS_EXPENSE_KEY         = "GRAPH_REPORT_IS_EXPENSE_KEY";
 
 
@@ -144,15 +143,6 @@ public class SharedPreferencesManager {
     //--------------------------------------------------------------//
     //    -- Graph Report --
     //--------------------------------------------------------------//
-
-    public static void saveGraphReportPeriodType(Context context, int type) {
-        getSharedPreferences(context).edit().putInt(GRAPH_REPORT_PERIOD_KEY, type).apply();
-    }
-
-    public static int getGraphReportPeriodType(Context context) {
-        return getSharedPreferences(context).getInt(
-                GRAPH_REPORT_PERIOD_KEY, EntryDataManager.PERIOD_TYPE_YEAR);
-    }
 
     public static void saveGraphReportIsExpenseType(Context context, boolean val) {
         getSharedPreferences(context).edit().putBoolean(GRAPH_REPORT_IS_EXPENSE_KEY, val).apply();

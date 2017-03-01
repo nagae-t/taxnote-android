@@ -53,7 +53,7 @@ public class GraphTabFragment extends Fragment  {
         mContext = getActivity().getApplicationContext();
 
 
-        int periodType = SharedPreferencesManager.getGraphReportPeriodType(mContext);
+        int periodType = SharedPreferencesManager.getProfitLossReportPeriodType(mContext);
         mIsExpense = SharedPreferencesManager.getGraphReportIsExpenseType(mContext);
         switchDataView(periodType, mIsExpense);
 
@@ -94,13 +94,13 @@ public class GraphTabFragment extends Fragment  {
     }
 
     public void reloadData() {
-        int periodType = SharedPreferencesManager.getGraphReportPeriodType(mContext);
+        int periodType = SharedPreferencesManager.getProfitLossReportPeriodType(mContext);
         boolean isExpense = SharedPreferencesManager.getGraphReportIsExpenseType(mContext);
         switchDataView(periodType, isExpense);
     }
 
     public void switchDataView(boolean isExpense) {
-        int periodType = SharedPreferencesManager.getGraphReportPeriodType(mContext);
+        int periodType = SharedPreferencesManager.getProfitLossReportPeriodType(mContext);
         switchDataView(periodType, isExpense);
     }
 
@@ -111,7 +111,7 @@ public class GraphTabFragment extends Fragment  {
 
     public void switchDataView(int periodType, boolean isExpense) {
         ReportGrouping reportGrouping = new ReportGrouping(periodType);
-        SharedPreferencesManager.saveGraphReportPeriodType(mContext, periodType);
+        SharedPreferencesManager.saveProfitLossReportPeriodType(mContext, periodType);
         SharedPreferencesManager.saveGraphReportIsExpenseType(mContext, isExpense);
 
         List<Calendar> calendars = createData(reportGrouping);
