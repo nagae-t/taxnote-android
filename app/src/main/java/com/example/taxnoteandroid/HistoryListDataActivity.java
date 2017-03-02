@@ -89,13 +89,6 @@ public class HistoryListDataActivity extends AppCompatActivity {
         mPeriodType = SharedPreferencesManager.getProfitLossReportPeriodType(this);
 
         mEntryManager = new EntryDataManager(this);
-        mEntryAdapter = new CommonEntryRecyclerAdapter(this);
-        mEntryAdapter.setOnItemClickListener(new CommonEntryRecyclerAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(View view, int position, Entry entry) {
-                EntryEditActivity.start(getApplicationContext(), entry);
-            }
-        });
 
         Intent receiptIntent = getIntent();
         Calendar targetCalendar  = (Calendar) receiptIntent.getSerializableExtra(KEY_TARGET_CALENDAR);
@@ -118,6 +111,11 @@ public class HistoryListDataActivity extends AppCompatActivity {
         actionBar.setDisplayHomeAsUpEnabled(true);
 
         mStartEndDate = EntryLimitManager.getStartAndEndDate(mPeriodType, targetCalendar);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         loadEntryData(mStartEndDate, mIsBalance, mIsExpense);
     }
 
@@ -287,7 +285,13 @@ public class HistoryListDataActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(List<Entry> result) {
-            mEntryAdapter.addAll(result);
+            mEntryAdapter = new CommonEntryRecyclerAdapter(getApplicationContext(), result);
+            mEntryAdapter.setOnItemClickListener(new CommonEntryRecyclerAdapter.OnItemClickListener() {
+                @Override
+                public void onItemClick(View view, int position, Entry entry) {
+                    EntryEditActivity.start(getApplicationContext(), entry);
+                }
+            });
             binding.entries.setAdapter(mEntryAdapter);
         }
     }
