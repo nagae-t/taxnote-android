@@ -15,6 +15,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.example.taxnoteandroid.Library.DialogManager;
+import com.example.taxnoteandroid.Library.EntryLimitManager;
 import com.example.taxnoteandroid.Library.ValueConverter;
 import com.example.taxnoteandroid.dataManager.EntryDataManager;
 import com.example.taxnoteandroid.dataManager.SharedPreferencesManager;
@@ -116,7 +117,7 @@ public class HistoryListDataActivity extends AppCompatActivity {
         actionBar.setSubtitle(pageSubTitle);
         actionBar.setDisplayHomeAsUpEnabled(true);
 
-        mStartEndDate = getStartAndEndDate(targetCalendar);
+        mStartEndDate = EntryLimitManager.getStartAndEndDate(mPeriodType, targetCalendar);
         loadEntryData(mStartEndDate, mIsBalance, mIsExpense);
     }
 
@@ -130,27 +131,6 @@ public class HistoryListDataActivity extends AppCompatActivity {
                         + "/" + Integer.toString(c.get(Calendar.DATE));
         }
         return Integer.toString(c.get(Calendar.YEAR));
-    }
-
-    private long[] getStartAndEndDate(Calendar c) {
-        Calendar startDate = (Calendar)c.clone();
-        Calendar endDate = (Calendar)c.clone();
-
-        switch (mPeriodType) {
-            case EntryDataManager.PERIOD_TYPE_YEAR:
-                endDate.set(c.get(Calendar.YEAR)+1, 0, 1);
-                break;
-            case EntryDataManager.PERIOD_TYPE_MONTH:
-                endDate.set(c.get(Calendar.YEAR), c.get(Calendar.MONTH)+1, 1);
-                break;
-            case EntryDataManager.PERIOD_TYPE_DAY:
-                endDate.set(c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DATE), 0, 0, 0);
-                endDate.add(Calendar.DATE, 1);
-                break;
-        }
-
-        long[] result = {startDate.getTimeInMillis(), endDate.getTimeInMillis()};
-        return result;
     }
 
     private void loadEntryData(long[] startAndEndDate, boolean isBalance, boolean isExpense) {
