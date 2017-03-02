@@ -7,61 +7,42 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.taxnoteandroid.Library.EntryLimitManager;
 import com.example.taxnoteandroid.Library.ValueConverter;
 import com.example.taxnoteandroid.dataManager.EntryDataManager;
 import com.example.taxnoteandroid.dataManager.SharedPreferencesManager;
 import com.example.taxnoteandroid.databinding.FragmentReportContentBinding;
-import com.example.taxnoteandroid.databinding.RowHistorySectionHeaderBinding;
-import com.example.taxnoteandroid.databinding.RowSimpleCellBinding;
 import com.example.taxnoteandroid.model.Entry;
-import com.example.taxnoteandroid.model.Reason;
-
-import org.parceler.Parcels;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 public class ReportContentFragment extends Fragment {
 
-    private static final String EXTRA_MODE_ = "EXTRA_";
     private static final String KEY_TARGET_CALENDAR = "KEY_TARGET_CALENDAR";
-    private static final String KEY_IS_EXPENSE= "IS_EXPENSE";
 
     private FragmentReportContentBinding binding;
     private Context mContext;
-    private Calendar mTargetCalendar;
 
     private CommonEntryRecyclerAdapter mRecyclerAdapter;
     private EntryDataManager mEntryManager;
+    private Calendar mTargetCalendar;
     private int mPeriodType;
 
     public ReportContentFragment() {
     }
 
-    public static ReportContentFragment newInstance(List<Entry> entries, Calendar targetCalendar) {
-        ReportContentFragment fragment = new ReportContentFragment();
-        Bundle args = new Bundle();
-        args.putParcelable(EXTRA_MODE_, Parcels.wrap(entries));
-        args.putSerializable(KEY_TARGET_CALENDAR, targetCalendar);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    public static ReportContentFragment newInstance(Calendar targetCalendar, boolean isExpense) {
+    public static ReportContentFragment newInstance(Calendar targetCalendar) {
         ReportContentFragment fragment = new ReportContentFragment();
         Bundle args = new Bundle();
         args.putSerializable(KEY_TARGET_CALENDAR, targetCalendar);
-        args.putBoolean(KEY_IS_EXPENSE, isExpense);
         fragment.setArguments(args);
         return fragment;
     }
@@ -69,119 +50,8 @@ public class ReportContentFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentReportContentBinding.inflate(inflater, container, false);
-        mContext = getContext();
-
-        List<Entry> entries = Parcels.unwrap(getArguments().getParcelable(EXTRA_MODE_));
-//        Log.d("entries", entries.toString());
-        mTargetCalendar = (Calendar) getArguments().getSerializable(KEY_TARGET_CALENDAR);
-
-        List<ReportContentAdapter.Item> items = new ArrayList<>();
-
-        ReportContentAdapter.Item incomeSection = ReportContentAdapter.Item.newInstanceSectionIncome();
-        ReportContentAdapter.Item ExpenseSection = ReportContentAdapter.Item.newInstanceSectionExpense();
-
-        ReportContentAdapter.Item incomeSum = ReportContentAdapter.Item.newInstanceSumIncome();
-        ReportContentAdapter.Item ExpenseSum = ReportContentAdapter.Item.newInstanceSumExpense();
-        ExpenseSum.isExpense = true;
-
-        long count = 0;
-        for (Entry entry : entries) {
-            if (entry.isExpense) {
-                // -
-                ExpenseSum.sum += entry.price;
-                count -= entry.price;
-            } else {
-                // +
-                incomeSum.sum += entry.price;
-                count += entry.price;
-            }
-        }
-
-        List<Entry> incomeList = new ArrayList<>();
-        List<Entry> expenseList = new ArrayList<>();
-
-        for (Entry entry : entries) {
-            if (entry.reason.isExpense) {
-                expenseList.add(entry);
-            } else {
-                incomeList.add(entry);
-            }
-        }
-
-        Map<Long, ReportContentAdapter.Item> incomeMap = new LinkedHashMap<>();
-        Map<Long, ReportContentAdapter.Item> expenseMap = new LinkedHashMap<>();
-
-        for (Entry entry : incomeList) {
-            Long id = entry.reason.id;
-            if (incomeMap.containsKey(id)) {
-                ReportContentAdapter.Item i = incomeMap.get(id);
-                i.sum += entry.price;
-            } else {
-                ReportContentAdapter.Item item = ReportContentAdapter.Item.newInstanceCategory(entry.reason);
-                item.sum += entry.price;
-                incomeMap.put(id, item);
-            }
-        }
-
-        for (Entry entry : expenseList) {
-            Long id = entry.reason.id;
-            if (expenseMap.containsKey(id)) {
-                ReportContentAdapter.Item i = expenseMap.get(id);
-                i.isExpense = true;
-                i.sum += entry.price;
-            } else {
-                ReportContentAdapter.Item item = ReportContentAdapter.Item.newInstanceCategory(entry.reason);
-                item.sum += entry.price;
-                item.isExpense = true;
-                expenseMap.put(id, item);
-            }
-        }
-        // 収入・支出の順番ソート
-        List<Map.Entry<Long, ReportContentAdapter.Item>> incomeSortList = sortLinkedHashMap(incomeMap);
-        List<Map.Entry<Long, ReportContentAdapter.Item>> expenseSortList = sortLinkedHashMap(expenseMap);
-
-        // 残高の表示
-        String priceString = ValueConverter.formatPrice(mContext, count);
-        int priceColor = (count < 0) ? ContextCompat.getColor(mContext, R.color.expense)
-                : ContextCompat.getColor(mContext, R.color.primary);
-        priceString = (count > 0) ? "+"+priceString : priceString;
-        binding.price.setText(priceString);
-        binding.price.setTextColor(priceColor);
-        binding.topBalance.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                HistoryListDataActivity.startForBalance(mContext, mTargetCalendar);
-            }
-        });
-
-        items.add(incomeSection);
-        items.add(incomeSum);
-        for (Map.Entry<Long, ReportContentAdapter.Item> entry : incomeSortList) {
-            items.add(entry.getValue());
-        }
-
-        items.add(ExpenseSection);
-        items.add(ExpenseSum);
-        for (Map.Entry<Long, ReportContentAdapter.Item> entry : expenseSortList) {
-            items.add(entry.getValue());
-        }
-
-        binding.reportList.setLayoutManager(new LinearLayoutManager(mContext));
-        binding.reportList.addItemDecoration(new DividerDecoration(mContext));
-        final ReportContentAdapter adapter = new ReportContentAdapter(mContext, items);
-        adapter.setOnItemClickListener(new ReportContentAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(View view, int position, ReportContentAdapter.Item item) {
-                String reasonName = null;
-                int viewType = adapter.getItemViewType(position);
-                if (viewType == ReportContentAdapter.Item.VIEW_ITEM_CATEGORY)
-                    reasonName = item.reasonName;
-                HistoryListDataActivity.start(mContext, mTargetCalendar, reasonName, item.isExpense);
-            }
-        });
-        binding.reportList.setAdapter(adapter);
-
-
+        binding.reportList.setLayoutManager(new LinearLayoutManager(getContext()));
+        binding.reportList.addItemDecoration(new DividerDecoration(getContext()));
         return binding.getRoot();
     }
 
@@ -190,199 +60,158 @@ public class ReportContentFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         mContext = getActivity().getApplicationContext();
 
+        mEntryManager = new EntryDataManager(mContext);
         mPeriodType = SharedPreferencesManager.getProfitLossReportPeriodType(mContext);
-        Calendar targetCalendar  = (Calendar) getArguments().getSerializable(KEY_TARGET_CALENDAR);
-        boolean isExpense = getArguments().getBoolean(KEY_IS_EXPENSE, false);
+        mTargetCalendar  = (Calendar) getArguments().getSerializable(KEY_TARGET_CALENDAR);
 
-    }
-
-    private List<Map.Entry<Long, ReportContentAdapter.Item>> sortLinkedHashMap(Map<Long, ReportContentAdapter.Item> sourceMap) {
-        List<Map.Entry<Long, ReportContentAdapter.Item>> dataList =
-                new ArrayList<>(sourceMap.entrySet());
-        Collections.sort(dataList, new Comparator<Map.Entry<Long, ReportContentAdapter.Item>>() {
-
+        binding.topBalance.setOnClickListener(new View.OnClickListener() {
             @Override
-            public int compare(Map.Entry<Long, ReportContentAdapter.Item> entry1,
-                               Map.Entry<Long, ReportContentAdapter.Item> entry2) {
-                long entry1sum = entry1.getValue().sum;
-                long entry2sum = entry2.getValue().sum;
-                if (entry1sum < entry2sum) {
-                    return 1;
-                } else if (entry1sum == entry2sum) {
-                    return 0;
-                } else {
-                    return -1;
-                }
+            public void onClick(View view) {
+                HistoryListDataActivity.startForBalance(mContext, mTargetCalendar);
             }
         });
-        return dataList;
+
     }
 
-    static class ReportContentAdapter extends RecyclerView.Adapter<BindingHolder> {
+    @Override
+    public void onResume() {
+        super.onResume();
 
-        public static class Item {
-            private static final int VIEW_ITEM_SECTION_INCOME = 1;
-            private static final int VIEW_ITEM_SECTION_EXPENSE = 2;
-            private static final int VIEW_ITEM_SUM_INCOME = 3;
-            private static final int VIEW_ITEM_SUM_EXPENSE = 4;
-            private static final int VIEW_ITEM_CATEGORY = 5;
+        long[] startEndDate = EntryLimitManager.getStartAndEndDate(mPeriodType, mTargetCalendar);
+        new ReportDataTask().execute(startEndDate);
+    }
 
-            private final int viewItemId;
-            private long sum;
-            private String reasonName;
-            private boolean isExpense;
-
-            private Item(int viewItemId) {
-                this.viewItemId = viewItemId;
-            }
-
-            public static Item newInstanceSectionIncome() {
-                return new Item(VIEW_ITEM_SECTION_INCOME);
-            }
-
-            public static Item newInstanceSectionExpense() {
-                return new Item(VIEW_ITEM_SECTION_EXPENSE);
-            }
-
-            public static Item newInstanceSumIncome() {
-                return new Item(VIEW_ITEM_SUM_INCOME);
-            }
-
-            public static Item newInstanceSumExpense() {
-                return new Item(VIEW_ITEM_SUM_EXPENSE);
-            }
-
-            public static Item newInstanceCategory(Reason reason) {
-                Item i = new Item(VIEW_ITEM_CATEGORY);
-                i.reasonName = reason.name;
-                return i;
-            }
-
-        }
-
-        private List<Item> items;
-        private Context mContext;
-        private RecyclerView mRecyclerView;
-
-        public OnItemClickListener mOnItemClickListener;
-
-        public interface OnItemClickListener {
-            void onItemClick(View view, int position, Item item);
-        }
-
-        public ReportContentAdapter(Context context, List<Item> items) {
-            this.items = items;
-            this.mContext = context;
-        }
-
-        @Override
-        public void onAttachedToRecyclerView(RecyclerView recyclerView) {
-            super.onAttachedToRecyclerView(recyclerView);
-            mRecyclerView = recyclerView;
-        }
-
-        @Override
-        public void onDetachedFromRecyclerView(RecyclerView recyclerView) {
-            super.onDetachedFromRecyclerView(recyclerView);
-            mRecyclerView = null;
-        }
-
-        @Override
-        public BindingHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            switch (viewType) {
-                case Item.VIEW_ITEM_SECTION_INCOME:
-                case Item.VIEW_ITEM_SECTION_EXPENSE:
-                    return new BindingHolder(parent.getContext(), parent, R.layout.row_history_section_header);
-                case Item.VIEW_ITEM_SUM_INCOME:
-                case Item.VIEW_ITEM_SUM_EXPENSE:
-                case Item.VIEW_ITEM_CATEGORY:
-                    BindingHolder bindingHolder = new BindingHolder(
-                            parent.getContext(), parent, R.layout.row_simple_cell);
-                    return bindingHolder;
-            }
-            return null;
-        }
-
-        @Override
-        public void onBindViewHolder(BindingHolder holder, final int position) {
-            final Item item = items.get(position);
-            int viewType = holder.getItemViewType();
-            switch (viewType) {
-                case Item.VIEW_ITEM_SECTION_INCOME: {
-                    RowHistorySectionHeaderBinding headerIncomeBinding = (RowHistorySectionHeaderBinding) holder.binding;
-                    headerIncomeBinding.name.setText(R.string.Income);
-                    break;
-                }
-                case Item.VIEW_ITEM_SECTION_EXPENSE: {
-                    RowHistorySectionHeaderBinding headerExpenseBinding = (RowHistorySectionHeaderBinding) holder.binding;
-                    headerExpenseBinding.name.setText(R.string.Expense);
-                    break;
-                }
-                case Item.VIEW_ITEM_SUM_INCOME:
-                case Item.VIEW_ITEM_SUM_EXPENSE:
-                case Item.VIEW_ITEM_CATEGORY:
-
-                    RowSimpleCellBinding cellBinding = (RowSimpleCellBinding) holder.binding;
-                    String priceString = ValueConverter.formatPrice(mContext,item.sum);
-                    cellBinding.price.setText(priceString);
-
-                    int priceColor = (item.isExpense) ? ContextCompat.getColor(mContext, R.color.expense)
-                            : ContextCompat.getColor(mContext, R.color.primary);
-                    cellBinding.price.setTextColor(priceColor);
-
-                    String reasonName = null;
-                    if (viewType == Item.VIEW_ITEM_CATEGORY) {
-                        reasonName = item.reasonName;
-                        cellBinding.labelName.setText(reasonName);
-                    } else {
-                        cellBinding.labelName.setText(mContext.getString(R.string.total));
-                    }
-                    cellBinding.getRoot().setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            if (mOnItemClickListener != null) {
-                                mOnItemClickListener.onItemClick(v, position, item);
-                            }
-                        }
-                    });
-                    break;
-            }
-        }
-
-        @Override
-        public int getItemViewType(int position) {
-            return items.get(position).viewItemId;
-        }
-
-        @Override
-        public int getItemCount() {
-            return items.size();
-        }
-
-        public void setOnItemClickListener(final OnItemClickListener listener) {
-            mOnItemClickListener = listener;
-        }
-
+    private void setTopBalanceValue(long price) {
+        // 残高の表示
+        String priceString = ValueConverter.formatPrice(mContext, price);
+        int priceColor = (price < 0) ? ContextCompat.getColor(mContext, R.color.expense)
+                : ContextCompat.getColor(mContext, R.color.primary);
+        priceString = (price > 0) ? "+"+priceString : priceString;
+        binding.price.setText(priceString);
+        binding.price.setTextColor(priceColor);
     }
 
     private class ReportDataTask extends AsyncTask<long[], Integer, List<Entry>> {
-        private boolean isExpense;
 
         @Override
         protected List<Entry> doInBackground(long[]... longs) {
             long[] startEndDate = longs[0];
-            List<Entry> entryData = new ArrayList<>();
-            List<Entry> entries = mEntryManager.findAll(startEndDate, isExpense, false);
+            List<Entry> resultEntries = new ArrayList<>();
+            List<Entry> entries = mEntryManager.findAll(mContext, startEndDate, false);
 
-            Entry incomSection = new Entry();
-            incomSection.viewType = CommonEntryRecyclerAdapter.VIEW_ITEM_HEADER;
+            Entry incomeSection = new Entry();
+            incomeSection.viewType = CommonEntryRecyclerAdapter.VIEW_ITEM_HEADER;
+            incomeSection.titleName = mContext.getString(R.string.Income);
+            Entry expenseSection = new Entry();
+            expenseSection.viewType = CommonEntryRecyclerAdapter.VIEW_ITEM_HEADER;
+            expenseSection.titleName = mContext.getString(R.string.Expense);
 
-            return null;
+            Entry incomeSum = new Entry();
+            incomeSum.viewType = CommonEntryRecyclerAdapter.VIEW_ITEM_REPORT_TOTAL;
+            Entry expenseSum = new Entry();
+            expenseSum.viewType = CommonEntryRecyclerAdapter.VIEW_ITEM_REPORT_TOTAL;
+            expenseSum.isExpense = true;
+
+            // 支出と収入のそれぞれの合計を計算する
+            long balancePrice = 0;
+            for (Entry entry : entries) {
+                if (entry.isExpense) {
+                    // -
+                    expenseSum.price += entry.price;
+                    balancePrice -= entry.price;
+                } else {
+                    // +
+                    incomeSum.price += entry.price;
+                    balancePrice += entry.price;
+                }
+            }
+            Entry topBalance = new Entry();
+            topBalance.price = balancePrice;
+            // このデータはAdapterで表示しないのでのちに削除
+            resultEntries.add(topBalance);
+
+            // 支出と収入データを分ける
+            List<Entry> incomeList = new ArrayList<>();
+            List<Entry> expenseList = new ArrayList<>();
+            for (Entry entry : entries) {
+                if (entry.reason.isExpense) {
+                    expenseList.add(entry);
+                } else {
+                    incomeList.add(entry);
+                }
+            }
+
+            Map<Long, Entry> incomeMap = new LinkedHashMap<>();
+            Map<Long, Entry> expenseMap = new LinkedHashMap<>();
+
+            for (Entry entry : incomeList) {
+                Long id = entry.reason.id;
+                if (incomeMap.containsKey(id)) {
+                    Entry _entry2 = incomeMap.get(id);
+                    _entry2.price += entry.price;
+                } else {
+                    Entry _entry1 = new Entry();
+                    _entry1.viewType = CommonEntryRecyclerAdapter.VIEW_ITEM_REPORT_CELL;
+                    _entry1.reasonName = entry.reason.name;
+                    _entry1.price += entry.price;
+                    incomeMap.put(id, _entry1);
+                }
+            }
+
+            for (Entry entry : expenseList) {
+                Long id = entry.reason.id;
+                if (expenseMap.containsKey(id)) {
+                    Entry _entry2 = expenseMap.get(id);
+                    _entry2.price += entry.price;
+                } else {
+                    Entry _entry1 = new Entry();
+                    _entry1.viewType = CommonEntryRecyclerAdapter.VIEW_ITEM_REPORT_CELL;
+                    _entry1.reasonName = entry.reason.name;
+                    _entry1.price += entry.price;
+                    _entry1.isExpense = true;
+                    expenseMap.put(id, _entry1);
+                }
+            }
+
+            // 順番ソート
+            List<Map.Entry<Long, Entry>> incomeSortList = EntryLimitManager.sortLinkedHashMap(incomeMap);
+            List<Map.Entry<Long, Entry>> expenseSortList = EntryLimitManager.sortLinkedHashMap(expenseMap);
+
+            // 表示データはここから
+            resultEntries.add(incomeSection);
+            resultEntries.add(incomeSum);
+            for (Map.Entry<Long, Entry> entry : incomeSortList) {
+                resultEntries.add(entry.getValue());
+            }
+
+            resultEntries.add(expenseSection);
+            resultEntries.add(expenseSum);
+            for (Map.Entry<Long, Entry> entry : expenseSortList) {
+                resultEntries.add(entry.getValue());
+            }
+
+            return resultEntries;
         }
 
         @Override
         protected void onPostExecute(List<Entry> result) {
+            if (result == null || result.size() == 0) return;
 
+            Entry topBalance = result.get(0);
+            setTopBalanceValue(topBalance.price);
+            result.remove(0);
+
+            mRecyclerAdapter = new CommonEntryRecyclerAdapter(mContext, result);
+            mRecyclerAdapter.setOnItemClickListener(new CommonEntryRecyclerAdapter.OnItemClickListener() {
+                @Override
+                public void onItemClick(View view, int position, Entry entry) {
+                    String reasonName = null;
+                    if (entry.viewType == CommonEntryRecyclerAdapter.VIEW_ITEM_REPORT_CELL)
+                        reasonName = entry.reasonName;
+                    HistoryListDataActivity.start(mContext, mTargetCalendar, reasonName, entry.isExpense);
+                }
+            });
+            binding.reportList.setAdapter(mRecyclerAdapter);
         }
     }
 }

@@ -132,14 +132,12 @@ public class ReportFragment extends Fragment {
     public class ReportContentFragmentPagerAdapter extends FragmentStatePagerAdapter {
 
         private final ReportGrouping reportGrouping;
-        private final Map<Calendar, List<Entry>> map;
         private final int count;
         private final Calendar[] calendars;
 
         public ReportContentFragmentPagerAdapter(FragmentManager fm, ReportGrouping reportGrouping, Map<Calendar, List<Entry>> map) {
             super(fm);
             this.reportGrouping = reportGrouping;
-            this.map = map;
             this.count = map.size();
             calendars = map.keySet().toArray(new Calendar[map.keySet().size()]);
         }
@@ -147,7 +145,7 @@ public class ReportFragment extends Fragment {
         @Override
         public Fragment getItem(int position) {
             Calendar targetCalender = calendars[position];
-            return ReportContentFragment.newInstance(map.get(targetCalender), targetCalender);
+            return ReportContentFragment.newInstance(targetCalender);
         }
 
         @Override

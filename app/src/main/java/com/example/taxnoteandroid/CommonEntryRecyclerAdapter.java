@@ -100,6 +100,9 @@ public class CommonEntryRecyclerAdapter extends RecyclerView.Adapter<BindingHold
                 return new BindingHolder(parent.getContext(), parent, R.layout.row_history_section_header);
             case VIEW_ITEM_CELL:
                 return new BindingHolder(parent.getContext(), parent, R.layout.row_history_cell);
+            case VIEW_ITEM_REPORT_TOTAL:
+            case VIEW_ITEM_REPORT_CELL:
+                return new BindingHolder(parent.getContext(), parent, R.layout.row_simple_cell);
         }
         return null;
     }
