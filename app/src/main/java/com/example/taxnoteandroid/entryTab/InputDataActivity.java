@@ -14,10 +14,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.taxnoteandroid.CalculatorActivity;
 import com.example.taxnoteandroid.Library.DialogManager;
 import com.example.taxnoteandroid.Library.EntryLimitManager;
 import com.example.taxnoteandroid.Library.ValueConverter;
@@ -429,13 +427,13 @@ public class InputDataActivity extends AppCompatActivity {
     //@@ 電卓あとで追加
     private void setCalculatorView() {
 
-        ImageView calculatorButton = (ImageView) findViewById(R.id.calculator_button);
-        calculatorButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivityForResult(CalculatorActivity.createIntent(InputDataActivity.this, currentPrice), 1);
-            }
-        });
+//        ImageView calculatorButton = (ImageView) findViewById(R.id.calculator_button);
+//        calculatorButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                startActivityForResult(CalculatorActivity.createIntent(InputDataActivity.this, currentPrice), 1);
+//            }
+//        });
     }
 
     @Override

@@ -196,7 +196,7 @@
     // 新しいstringsは全部この下に書いていってもらえれば、あとから編集するので。
     <string name="delete_this_screen_data_confirm_message">この画面に表示されているデータをすべて削除しますか？</string>
     <string name="profit_loss_table">損益表</string>
-    <string name="Graph">Graph</string>
+    <string name="Graph">グラフ</string>
 
 
 
