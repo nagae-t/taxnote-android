@@ -210,6 +210,9 @@ public class SearchEntryActivity extends AppCompatActivity {
             } else {
                 result = mEntryManager.searchBy(word, mReasonName, startEndDate, mIsExpense);
             }
+            for (Entry entry : result) {
+                entry.viewType = CommonEntryRecyclerAdapter.VIEW_ITEM_CELL;
+            }
 
             return result;
         }

@@ -370,6 +370,13 @@ public class ReportContentFragment extends Fragment {
 
         @Override
         protected List<Entry> doInBackground(long[]... longs) {
+            long[] startEndDate = longs[0];
+            List<Entry> entryData = new ArrayList<>();
+            List<Entry> entries = mEntryManager.findAll(startEndDate, isExpense, false);
+
+            Entry incomSection = new Entry();
+            incomSection.viewType = CommonEntryRecyclerAdapter.VIEW_ITEM_HEADER;
+
             return null;
         }
 

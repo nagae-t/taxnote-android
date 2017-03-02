@@ -29,10 +29,10 @@ public class CommonEntryRecyclerAdapter extends RecyclerView.Adapter<BindingHold
     private RecyclerView mRecyclerView;
     private List<Entry> mDataList;
 
-    private static final int VIEW_ITEM_HEADER = 1;
-    private static final int VIEW_ITEM_CELL = 2;
-    private static final int VIEW_ITEM_REPORT_CELL = 3;
-    private static final int VIEW_ITEM_REPORT_TOTAL = 4;
+    public static final int VIEW_ITEM_HEADER = 1;
+    public static final int VIEW_ITEM_CELL = 2;
+    public static final int VIEW_ITEM_REPORT_CELL = 3;
+    public static final int VIEW_ITEM_REPORT_TOTAL = 4;
 
     public OnItemClickListener mOnItemClickListener;
     public OnLongItemClickListener mOnItemLongClickListener;
@@ -114,9 +114,9 @@ public class CommonEntryRecyclerAdapter extends RecyclerView.Adapter<BindingHold
 
         switch (viewType) {
             case VIEW_ITEM_HEADER:
-                RowHistorySectionHeaderBinding headerBindding = (RowHistorySectionHeaderBinding) holder.binding;
-                headerBindding.name.setText(entry.dateString);
-                headerBindding.price.setText(entry.sumString);
+                RowHistorySectionHeaderBinding headerBinding = (RowHistorySectionHeaderBinding) holder.binding;
+                headerBinding.name.setText(entry.dateString);
+                headerBinding.price.setText(entry.sumString);
                 break;
             case VIEW_ITEM_CELL:
 
@@ -188,10 +188,11 @@ public class CommonEntryRecyclerAdapter extends RecyclerView.Adapter<BindingHold
     @Override
     public int getItemViewType(int position) {
         Entry item = mDataList.get(position);
-        if (item.dateString != null) {
-            return VIEW_ITEM_HEADER;
-        }
-        return VIEW_ITEM_CELL;
+        return item.viewType;
+//        if (item.dateString != null) {
+//            return VIEW_ITEM_HEADER;
+//        }
+//        return VIEW_ITEM_CELL;
     }
 
     @Override

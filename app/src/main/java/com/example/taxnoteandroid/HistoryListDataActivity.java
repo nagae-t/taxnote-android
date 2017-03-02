@@ -260,6 +260,7 @@ public class HistoryListDataActivity extends AppCompatActivity {
 
                 Entry headerItem = new Entry();
                 headerItem.dateString = e.getKey();
+                headerItem.viewType = CommonEntryRecyclerAdapter.VIEW_ITEM_HEADER;
                 entryData.add(headerItem);
 
                 long totalPrice = 0;
@@ -273,6 +274,7 @@ public class HistoryListDataActivity extends AppCompatActivity {
                         totalPrice += _entry.price;
                     }
 
+                    _entry.viewType = CommonEntryRecyclerAdapter.VIEW_ITEM_CELL;
                     entryData.add(_entry);
                 }
 
