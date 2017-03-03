@@ -179,6 +179,11 @@ public class GraphHistoryRecyclerAdapter extends RecyclerView.Adapter<BindingHol
         ArrayList<PieEntry> pieEntries = new ArrayList<>();
         if (mDataList.size() < 3) return;
 
+        int[] colorList = new int[mDataList.size()-2];
+        int color1 = R.color.pie_chart_color1;
+        int color2 = R.color.pie_chart_color2;
+        int color3 = R.color.pie_chart_color3;
+
         Long sumPrice = mDataList.get(1).price;
         NumberFormat format = NumberFormat.getInstance();
         format.setMaximumFractionDigits(1);
@@ -195,9 +200,19 @@ public class GraphHistoryRecyclerAdapter extends RecyclerView.Adapter<BindingHol
             PieEntry pEntry = new PieEntry(entryPrice, labelName, _entry);
             if (pricePercent < 2.0f) {
                 pEntry.setData(null);
-
             }
             pieEntries.add(pEntry);
+
+            int colorIndex = i-2;
+            if (colorIndex == 0) {
+                colorList[0] = color1;
+            } else if (colorIndex%2 != 0) {
+                colorList[colorIndex] = color2;
+            } else if (colorIndex%2 == 0) {
+                colorList[colorIndex] = color3;
+            }
+            // 0:1,
+
         }
 
         PieDataSet dataSet = new PieDataSet(pieEntries, null);
@@ -207,12 +222,7 @@ public class GraphHistoryRecyclerAdapter extends RecyclerView.Adapter<BindingHol
         dataSet.setValueFormatter(new MyPieValueFormatter());
 
         // add a lot of colors
-        dataSet.setColors(new int[]{R.color.pie_chart_color6,
-                R.color.pie_chart_color5,
-                R.color.pie_chart_color4,
-                R.color.pie_chart_color3,
-                R.color.pie_chart_color2,
-                R.color.pie_chart_color1}, mContext);
+        dataSet.setColors(colorList, mContext);
 
         PieData data = new PieData(dataSet);
         data.setValueTextSize(11f);

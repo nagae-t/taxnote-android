@@ -18,11 +18,7 @@
     <color name="selector_pressed_false">#ffffff</color>
 
     <!-- PieChart Color -->
-    <color name="pie_chart_color1">#008175</color>
-    <color name="pie_chart_color2">#029c8e</color>
-    <color name="pie_chart_color3">#00a999</color>
-    <color name="pie_chart_color4">#00bcaa</color>
-    <color name="pie_chart_color5">#00e4cf</color>
-    <color name="pie_chart_color6">#76cfc7</color>
-    <color name="pie_chart_color7">#8ec4bf</color>
+    <color name="pie_chart_color1">#00cc9b</color>
+    <color name="pie_chart_color2">#00b387</color>
+    <color name="pie_chart_color3">#009974</color>
 </resources>
