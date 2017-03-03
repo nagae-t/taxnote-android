@@ -211,8 +211,6 @@ public class GraphHistoryRecyclerAdapter extends RecyclerView.Adapter<BindingHol
             } else if (colorIndex%2 == 0) {
                 colorList[colorIndex] = color3;
             }
-            // 0:1,
-
         }
 
         PieDataSet dataSet = new PieDataSet(pieEntries, null);

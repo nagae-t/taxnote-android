@@ -285,6 +285,14 @@ public class HistoryListDataActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(List<Entry> result) {
+            if (result.size() == 0) {
+                binding.entries.setVisibility(View.GONE);
+                binding.empty.setVisibility(View.VISIBLE);
+            } else {
+                binding.entries.setVisibility(View.VISIBLE);
+                binding.empty.setVisibility(View.GONE);
+            }
+
             mEntryAdapter = new CommonEntryRecyclerAdapter(getApplicationContext(), result);
             mEntryAdapter.setOnItemClickListener(new CommonEntryRecyclerAdapter.OnItemClickListener() {
                 @Override
