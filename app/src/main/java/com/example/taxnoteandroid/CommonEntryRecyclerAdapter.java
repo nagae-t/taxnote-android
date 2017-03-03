@@ -120,6 +120,8 @@ public class CommonEntryRecyclerAdapter extends RecyclerView.Adapter<BindingHold
                 RowHistorySectionHeaderBinding headerBinding = (RowHistorySectionHeaderBinding) holder.binding;
                 headerBinding.name.setText(entry.dateString);
                 headerBinding.price.setText(entry.sumString);
+                if (entry.titleName != null)
+                    headerBinding.name.setText(entry.titleName);
                 break;
             case VIEW_ITEM_CELL:
 
