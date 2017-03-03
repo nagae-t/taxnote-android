@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding binding;
     private TabPagerAdapter mTabPagerAdapter;
     private int mBottomNaviSelected = 0;
-    private boolean mGraphMenuIsExpense;
+    private boolean mGraphMenuIsExpense = true;
 
     public static final String BROADCAST_REPORT_RELOAD
             = "broadcast_main_report_reload";

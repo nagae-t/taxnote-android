@@ -149,7 +149,7 @@ public class SharedPreferencesManager {
     }
 
     public static boolean getGraphReportIsExpenseType(Context context) {
-        return getSharedPreferences(context).getBoolean(GRAPH_REPORT_IS_EXPENSE_KEY, false);
+        return getSharedPreferences(context).getBoolean(GRAPH_REPORT_IS_EXPENSE_KEY, true);
     }
 
 

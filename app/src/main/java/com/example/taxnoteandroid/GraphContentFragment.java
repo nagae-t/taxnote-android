@@ -63,7 +63,7 @@ public class GraphContentFragment extends Fragment {
         mPeriodType = SharedPreferencesManager.getProfitLossReportPeriodType(mContext);
         mEntryManager = new EntryDataManager(mContext);
         Calendar targetCalendar  = (Calendar) getArguments().getSerializable(KEY_TARGET_CALENDAR);
-        boolean isExpense = getArguments().getBoolean(KEY_IS_EXPENSE, false);
+        boolean isExpense = getArguments().getBoolean(KEY_IS_EXPENSE, true);
 
         long[] startEndDate = EntryLimitManager.getStartAndEndDate(mPeriodType, targetCalendar);
         new EntryDataTask(isExpense).execute(startEndDate);
