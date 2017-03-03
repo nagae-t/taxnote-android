@@ -118,7 +118,8 @@ public class GraphHistoryRecyclerAdapter extends RecyclerView.Adapter<BindingHol
                 PieGraphRowBinding graphBinding = (PieGraphRowBinding) holder.binding;
                 mChart = graphBinding.chart1;
 
-
+                mChart.setNoDataText(mContext.getString(R.string.history_data_empty));
+                mChart.setNoDataTextColor(ContextCompat.getColor(mContext, R.color.accent));
                 mChart.setUsePercentValues(true);
                 mChart.getDescription().setEnabled(false);
                 mChart.setExtraOffsets(2, 2, 2, 2);
