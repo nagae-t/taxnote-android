@@ -42,8 +42,8 @@ import com.example.taxnoteandroid.model.Project;
 import com.example.taxnoteandroid.model.Reason;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -378,20 +378,11 @@ public class EntryTabReasonSelectFragment extends Fragment {
                 return false;
             }
 
-            ArrayList<Reason> list = new ArrayList<Reason>();
-
-            for (int i = 0; i < size; i++) {
-                if (i == position_to) list.add(reasonList.get(position_from));
-                if (i != position_from) list.add(reasonList.get(i));
-            }
-
-            reasonList = list;
-
+            Collections.swap(reasonList, position_from, position_to);
+            adapter.notifyItemMoved(position_from, position_to);
             for (int i = 0; i < size; i++) {
                 reasonDataManager.updateOrder(reasonList.get(i).id, i); // Update database
             }
-
-            adapter.notifyItemMoved(position_from, position_to);
 
             return true;
         }
