@@ -29,11 +29,11 @@ public class TNSimpleDialogFragment extends DialogFragment
 
     // interface
     public interface TNSimpleDialogListener {
-        public void onPositiveBtnClick(DialogInterface dialogInterface, int i, String tag);
-        public void onNeutralBtnClick(DialogInterface dialogInterface, int i, String tag);
-        public void onNegativeBtnClick(DialogInterface dialogInterface, int i, String tag);
-        public void onDialogCancel(DialogInterface dialogInterface, String tag);
-        public void onDialogDismiss(DialogInterface dialogInterface, String tag);
+        void onPositiveBtnClick(DialogInterface dialogInterface, int i, String tag);
+        void onNeutralBtnClick(DialogInterface dialogInterface, int i, String tag);
+        void onNegativeBtnClick(DialogInterface dialogInterface, int i, String tag);
+        void onDialogCancel(DialogInterface dialogInterface, String tag);
+        void onDialogDismiss(DialogInterface dialogInterface, String tag);
     }
 
     public static TNSimpleDialogFragment newInstance() {
@@ -77,7 +77,7 @@ public class TNSimpleDialogFragment extends DialogFragment
                 public boolean onKey(DialogInterface dialogInterface, int keyCode, KeyEvent keyEvent) {
                     switch (keyCode) {
                         case KeyEvent.KEYCODE_BACK:
-                            getActivity().finish();
+                            // getActivity().finish();
                             return true;
                     }
                     return false;

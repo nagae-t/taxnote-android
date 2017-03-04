@@ -89,6 +89,13 @@ public class MainActivity extends AppCompatActivity {
         final TNSimpleDialogFragment dialogFragment = TNSimpleDialogFragment.newInstance();
         dialogFragment.setTitle("ここはTitle");
         dialogFragment.setMessage("せつめいです。せつめいです。せつめいです。せつめいです。せつめいです。せつめいです。");
+
+        // layout 指定する場合
+//        dialogFragment.setContentViewId(R.layout.fragment_dialog_sample);
+
+        // 閉じるボタン以外はダイアログ消せない
+        dialogFragment.setCloseToFinish(true);
+
         dialogFragment.setPositiveBtnText("閉じる");
         dialogFragment.setDialogListener(new TNSimpleDialogFragment.TNSimpleDialogListener() {
             @Override
