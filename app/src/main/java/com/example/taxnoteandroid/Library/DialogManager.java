@@ -10,6 +10,7 @@ import android.widget.Toast;
 
 import com.example.taxnoteandroid.DataExportActivity;
 import com.example.taxnoteandroid.R;
+import com.example.taxnoteandroid.TNSimpleDialogFragment;
 import com.example.taxnoteandroid.dataManager.EntryDataManager;
 import com.example.taxnoteandroid.dataManager.SharedPreferencesManager;
 import com.example.taxnoteandroid.model.Entry;
@@ -262,4 +263,56 @@ public class DialogManager {
                 })
                 .show();
     }
+
+
+    //--------------------------------------------------------------//
+    //    -- Custom AlertDialog --
+    //--------------------------------------------------------------//
+
+    public static void showCustomAlertDialog(final Context context) {
+
+        // test custom dialog
+        final TNSimpleDialogFragment dialogFragment = TNSimpleDialogFragment.newInstance();
+        dialogFragment.setTitle("ここはTitle");
+        dialogFragment.setMessage("せつめいです。せつめいです。せつめいです。せつめいです。せつめいです。せつめいです。");
+
+        // layout 指定する場合
+//        dialogFragment.setContentViewId(R.layout.fragment_dialog_sample);
+
+        // 閉じるボタン以外はダイアログ消せない
+        dialogFragment.setCloseToFinish(true);
+
+        dialogFragment.setPositiveBtnText("閉じる");
+        dialogFragment.setDialogListener(new TNSimpleDialogFragment.TNSimpleDialogListener() {
+            @Override
+            public void onPositiveBtnClick(DialogInterface dialogInterface, int i, String tag) {
+                dialogInterface.dismiss();
+            }
+
+            @Override
+            public void onNeutralBtnClick(DialogInterface dialogInterface, int i, String tag) {
+
+            }
+
+            @Override
+            public void onNegativeBtnClick(DialogInterface dialogInterface, int i, String tag) {
+
+            }
+
+            @Override
+            public void onDialogCancel(DialogInterface dialogInterface, String tag) {
+
+            }
+
+            @Override
+            public void onDialogDismiss(DialogInterface dialogInterface, String tag) {
+
+            }
+        });
+
+        //QQ ここ、DialogManager内で使いたければどうしたらいいだろうか？
+        // context.getSupportFragmentManager もエラーがでる。
+//        dialogFragment.show(getSupportFragmentManager(), "dialog_tag");
+    }
+
 }

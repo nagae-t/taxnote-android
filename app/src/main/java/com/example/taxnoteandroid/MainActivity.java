@@ -2,7 +2,6 @@ package com.example.taxnoteandroid;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.databinding.DataBindingUtil;
@@ -84,46 +83,6 @@ public class MainActivity extends AppCompatActivity {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
         mGraphMenuIsExpense = SharedPreferencesManager.getGraphReportIsExpenseType(this);
         setBottomNavigation();
-
-        // test custom dialog
-        final TNSimpleDialogFragment dialogFragment = TNSimpleDialogFragment.newInstance();
-        dialogFragment.setTitle("ここはTitle");
-        dialogFragment.setMessage("せつめいです。せつめいです。せつめいです。せつめいです。せつめいです。せつめいです。");
-
-        // layout 指定する場合
-//        dialogFragment.setContentViewId(R.layout.fragment_dialog_sample);
-
-        // 閉じるボタン以外はダイアログ消せない
-        dialogFragment.setCloseToFinish(true);
-
-        dialogFragment.setPositiveBtnText("閉じる");
-        dialogFragment.setDialogListener(new TNSimpleDialogFragment.TNSimpleDialogListener() {
-            @Override
-            public void onPositiveBtnClick(DialogInterface dialogInterface, int i, String tag) {
-                dialogInterface.dismiss();
-            }
-
-            @Override
-            public void onNeutralBtnClick(DialogInterface dialogInterface, int i, String tag) {
-
-            }
-
-            @Override
-            public void onNegativeBtnClick(DialogInterface dialogInterface, int i, String tag) {
-
-            }
-
-            @Override
-            public void onDialogCancel(DialogInterface dialogInterface, String tag) {
-
-            }
-
-            @Override
-            public void onDialogDismiss(DialogInterface dialogInterface, String tag) {
-
-            }
-        });
-        dialogFragment.show(getSupportFragmentManager(), "dialog_tag");
     }
 
     @Override
@@ -403,7 +362,7 @@ public class MainActivity extends AppCompatActivity {
 
         MixpanelAPI mixpanel = MixpanelAPI.getInstance(this, MIXPANEL_TOKEN);
 
-        //QQ 自分のデバイスだけTrackingを無視したい
+        //@@ 自分のデバイスだけTrackingを無視したい
 //        // JSONOBjectでエラーがでますねん
 //        JSONObject props = new JSONObject();
 //        props.put("$ignore", "true");
