@@ -77,8 +77,6 @@ public class InputDataActivity extends AppCompatActivity {
         setSummary();
         setSaveButton();
         setPriceInputPart();
-
-        //@@ 電卓あとで追加
         setCalculatorView();
 
         DialogManager.showTapRegisterMessage(InputDataActivity.this);

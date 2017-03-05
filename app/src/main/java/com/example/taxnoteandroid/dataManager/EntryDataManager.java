@@ -132,7 +132,6 @@ public class EntryDataManager {
         List<Entry> entries = new ArrayList<>();
         String orderSpec = OrderSpec.DESC;
 
-        // @@ こんなんでいけそう
         // https://github.com/gfx/Android-Orma/search?utf8=%E2%9C%93&q=like
         ormaDatabase.selectFromEntry()
                 .projectEq(project)
