@@ -32,7 +32,7 @@ import com.example.taxnoteandroid.model.Account;
 import com.example.taxnoteandroid.model.Entry;
 import com.example.taxnoteandroid.model.Project;
 
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -353,21 +353,11 @@ public class AccountSelectActivity extends AppCompatActivity {
                 return false;
             }
 
-            ArrayList<Account> list = new ArrayList<Account>();
-
-            for (int i = 0; i < size; i++) {
-                if (i == position_to) list.add(accountList.get(position_from));
-                if (i != position_from) list.add(accountList.get(i));
-            }
-
-            accountList = list;
-
-            //TODO ここ聞いてないのを修正
+            Collections.swap(accountList, position_from, position_to);
+            adapter.notifyItemMoved(position_from, position_to);
             for (int i = 0; i < size; i++) {
                 accountDataManager.updateOrder(accountList.get(i).id, i); // Update database
             }
-
-            adapter.notifyItemMoved(position_from, position_to);
 
             return true;
         }

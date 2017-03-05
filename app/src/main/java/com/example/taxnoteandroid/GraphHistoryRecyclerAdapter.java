@@ -138,6 +138,7 @@ public class GraphHistoryRecyclerAdapter extends RecyclerView.Adapter<BindingHol
                 mChart.setDrawCenterText(true);
 
                 mChart.setRotationAngle(270);
+
                 // enable rotation of the chart by touch
                 mChart.setRotationEnabled(true);
                 mChart.setHighlightPerTapEnabled(true);
@@ -145,7 +146,7 @@ public class GraphHistoryRecyclerAdapter extends RecyclerView.Adapter<BindingHol
 
                 setGraphData();
 
-                //@@ グラフ書き出しのアニメーション速度の指定
+                // Animation speed
                 mChart.animateY(500, Easing.EasingOption.EaseInOutQuad);
 
                 mChart.getLegend().setEnabled(false);
