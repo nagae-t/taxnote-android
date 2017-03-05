@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
 import android.view.Gravity;
 import android.widget.Toast;
@@ -269,20 +270,32 @@ public class DialogManager {
     //    -- Custom AlertDialog --
     //--------------------------------------------------------------//
 
-    public static void showCustomAlertDialog(final Context context) {
+    public static void showCustomAlertDialog(Context context, FragmentManager fragmentManager,
+                                             String title, String message) {
+        showCustomAlertDialog(context, fragmentManager, title, message, 0);
+    }
+
+    public static void showCustomAlertDialog(Context context, FragmentManager fragmentManager,
+                                             String title, int layoutId) {
+        showCustomAlertDialog(context, fragmentManager, title, null, layoutId);
+    }
+
+    public static void showCustomAlertDialog(Context context, FragmentManager fragmentManager,
+                                             String title, String message, int layoutId) {
 
         // test custom dialog
         final TNSimpleDialogFragment dialogFragment = TNSimpleDialogFragment.newInstance();
-        dialogFragment.setTitle("ここはTitle");
-        dialogFragment.setMessage("せつめいです。せつめいです。せつめいです。せつめいです。せつめいです。せつめいです。");
+        dialogFragment.setTitle(title);
+        if (message != null) dialogFragment.setMessage(message);
 
         // layout 指定する場合
-//        dialogFragment.setContentViewId(R.layout.fragment_dialog_sample);
+        if (layoutId != 0)
+            dialogFragment.setContentViewId(layoutId);
 
         // 閉じるボタン以外はダイアログ消せない
         dialogFragment.setCloseToFinish(true);
 
-        dialogFragment.setPositiveBtnText("閉じる");
+        dialogFragment.setPositiveBtnText(context.getString(android.R.string.ok));
         dialogFragment.setDialogListener(new TNSimpleDialogFragment.TNSimpleDialogListener() {
             @Override
             public void onPositiveBtnClick(DialogInterface dialogInterface, int i, String tag) {
@@ -310,9 +323,7 @@ public class DialogManager {
             }
         });
 
-        //QQ ここ、DialogManager内で使いたければどうしたらいいだろうか？
-        // context.getSupportFragmentManager もエラーがでる。
-//        dialogFragment.show(getSupportFragmentManager(), "dialog_tag");
+        dialogFragment.show(fragmentManager, null);
     }
 
 }

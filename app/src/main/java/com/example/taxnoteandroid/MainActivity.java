@@ -83,6 +83,12 @@ public class MainActivity extends AppCompatActivity {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
         mGraphMenuIsExpense = SharedPreferencesManager.getGraphReportIsExpenseType(this);
         setBottomNavigation();
+
+//        String title = "Dialog Title";
+//        String message = "Dialog Message";
+//        DialogManager.showCustomAlertDialog(this, getSupportFragmentManager(), title, message);
+        // layout 指定したい場合
+//        DialogManager.showCustomAlertDialog(this, getSupportFragmentManager(), title, R.layout.fragment_dialog_sample);
     }
 
     @Override
