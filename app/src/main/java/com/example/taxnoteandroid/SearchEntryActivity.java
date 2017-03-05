@@ -221,9 +221,11 @@ public class SearchEntryActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(List<Entry> result) {
             if (result == null || result.size() == 0) {
+
                 mEntryAdapter.clearAllToNotifyData();
+
                 DialogManager.showToast(getApplicationContext(),
-                        getString(R.string.no_match));
+                        getString(R.string.no_match_by_search_message));
                 return;
             }
 

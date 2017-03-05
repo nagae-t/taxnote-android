@@ -184,20 +184,15 @@
     //--------------------------------------------------------------//
 
     <string name="rounded_decimal_numbers">四捨五入しました。</string>
-
-
     <string name="profit_loss_sort">期間変更</string>
     <string name="divide_by_year">年別</string>
     <string name="divide_by_month">月別</string>
     <string name="divide_by_day">日別</string>
     <string name="total">合計</string>
-
-
-    // 新しいstringsは全部この下に書いていってもらえれば、あとから編集するので。
     <string name="delete_this_screen_data_confirm_message">この画面に表示されているデータをすべて削除しますか？</string>
     <string name="profit_loss_table">損益表</string>
     <string name="Graph">グラフ</string>
-    <string name="no_match">マッチする項目がありません</string>
+    <string name="no_match_by_search_message">検索ワードにマッチする項目がありません</string>
 
 
 
