@@ -94,6 +94,9 @@ public class SettingsTabFragment extends Fragment {
         LayoutInflater inflater = (LayoutInflater)getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View projectMultiRow = inflater.inflate(R.layout.project_multi_row, null);
 
+        // edit dialog fragment
+        final ProjectEditorDialogFragment editDialog = ProjectEditorDialogFragment.newInstance(ProjectEditorDialogFragment.TYPE_ADD_NEW);
+
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         String[] items = {"帳簿を追加", "帳簿を削除・名前変更"};
         builder.setItems(items, new DialogInterface.OnClickListener() {
@@ -101,6 +104,7 @@ public class SettingsTabFragment extends Fragment {
             public void onClick(DialogInterface dialogInterface, int i) {
                 switch (i) {
                     case 0: // 追加
+                        editDialog.show(mFragmentManager, null);
                         break;
                     case 1: // 削除、名前変更
                         break;

@@ -87,8 +87,8 @@ public class TNSimpleDialogFragment extends DialogFragment
             dialog.setCanceledOnTouchOutside(false);
             dialog.setCancelable(false);
         }
-
         return dialog;
+
     }
 
     @Override

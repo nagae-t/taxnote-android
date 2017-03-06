@@ -194,7 +194,11 @@
     <string name="Graph">グラフ</string>
     <string name="no_match_by_search_message">検索ワードにマッチする項目がありません</string>
 
-
+    <string name="master_project_name">本帳簿</string>
+    <string name="project_settings">帳簿を追加、編集</string>
+    <string name="new_project_name">新しい帳簿の名前</string>
+    <string name="add_new_project">帳簿を追加</string>
+    <string name="edit_project_name">名前を変更</string>
 
 
 </resources>
