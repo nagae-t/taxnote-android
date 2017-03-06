@@ -1,9 +1,13 @@
 package com.example.taxnoteandroid;
 
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.ShareCompat;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +21,9 @@ import com.helpshift.support.Support;
 
 public class SettingsTabFragment extends Fragment {
 
+    private Context mContext;
     private FragmentSettingsTabBinding binding;
+    private FragmentManager mFragmentManager;
 
     public SettingsTabFragment() {
         // Required empty public constructor
@@ -37,9 +43,15 @@ public class SettingsTabFragment extends Fragment {
         binding = FragmentSettingsTabBinding.inflate(inflater, container, false);
         binding.version.setText(BuildConfig.VERSION_NAME);
 
-        setViews();
-
         return binding.getRoot();
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        mContext = getActivity().getApplicationContext();
+        mFragmentManager = getFragmentManager();
+        setViews();
     }
 
 
@@ -49,6 +61,7 @@ public class SettingsTabFragment extends Fragment {
 
     private void setViews() {
         setUpgradeView();
+        setMultipleProject();
         setDecimalSwitch();
         setHelpViews();
         setShareButton();
@@ -67,6 +80,38 @@ public class SettingsTabFragment extends Fragment {
 
                 Intent intent = new Intent(getContext(), UpgradeActivity.class);
                 startActivity(intent);
+            }
+        });
+    }
+
+
+    //--------------------------------------------------------------//
+    //    -- Multiple Project --
+    //--------------------------------------------------------------//
+
+    private void setMultipleProject() {
+
+        LayoutInflater inflater = (LayoutInflater)getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View projectMultiRow = inflater.inflate(R.layout.project_multi_row, null);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        String[] items = {"帳簿を追加", "帳簿を削除・名前変更"};
+        builder.setItems(items, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                switch (i) {
+                    case 0: // 追加
+                        break;
+                    case 1: // 削除、名前変更
+                        break;
+                }
+            }
+        });
+        final AlertDialog menuDialog = builder.create();
+        binding.settingsProjectButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                menuDialog.show();
             }
         });
     }

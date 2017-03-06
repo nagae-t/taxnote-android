@@ -21,7 +21,8 @@
             android:paddingEnd="16dp"
             android:paddingStart="16dp"
             android:paddingTop="14dp"
-            android:paddingBottom="14dp" />
+            android:paddingBottom="14dp"
+            android:textColor="@color/secondary_text"/>
         <ImageButton
             android:id="@+id/delete_btn"
             android:layout_width="wrap_content"
