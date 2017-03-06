@@ -16,7 +16,7 @@
     <!-- //@@ グラフアイコンを差し替える必要あり -->
     <item
         android:id="@+id/tab4"
-        android:icon="@android:drawable/ic_menu_gallery"
+        android:icon="@drawable/ic_pie_chart"
         android:title="@string/Graph" />
 
     <item
