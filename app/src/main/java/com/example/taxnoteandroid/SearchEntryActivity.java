@@ -15,7 +15,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
-import com.example.taxnoteandroid.Library.DialogManager;
 import com.example.taxnoteandroid.dataManager.EntryDataManager;
 import com.example.taxnoteandroid.databinding.ActivityEntryCommonBinding;
 import com.example.taxnoteandroid.model.Entry;
@@ -224,8 +223,9 @@ public class SearchEntryActivity extends AppCompatActivity {
 
                 mEntryAdapter.clearAllToNotifyData();
 
-                DialogManager.showToast(getApplicationContext(),
-                        getString(R.string.no_match_by_search_message));
+                //QQ これ、検索の虫眼鏡ボタンをタップした時だけ出したい。
+//                DialogManager.showToast(getApplicationContext(),
+//                        getString(R.string.no_match_by_search_message));
                 return;
             }
 
