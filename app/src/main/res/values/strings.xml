@@ -195,6 +195,8 @@
     <string name="no_match_by_search_message">検索ワードにマッチする項目がありません</string>
 
 
+    <string name="master_project_name">本帳簿</string>
+    <string name="project_settings">帳簿を追加、編集</string>
 
 
 </resources>
