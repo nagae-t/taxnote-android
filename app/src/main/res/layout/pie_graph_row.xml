@@ -4,9 +4,9 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="320dp"
+        android:layout_height="@dimen/pie_chart_height"
         android:background="@android:color/white"
-        android:padding="4dp">
+        android:padding="2dp">
 
         <com.github.mikephil.charting.charts.PieChart
             android:id="@+id/chart1"

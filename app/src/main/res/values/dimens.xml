@@ -7,4 +7,6 @@
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="font_size_standard">16sp</dimen>
     <dimen name="cell_height_standard">55dp</dimen>
+
+    <dimen name="pie_chart_height">376dp</dimen>
 </resources>
