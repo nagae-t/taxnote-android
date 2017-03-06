@@ -12,6 +12,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
+import android.widget.EditText;
+import android.widget.RadioButton;
 
 import com.example.taxnoteandroid.dataManager.ProjectDataManager;
 import com.example.taxnoteandroid.databinding.FragmentSettingsTabBinding;
@@ -91,24 +93,21 @@ public class SettingsTabFragment extends Fragment {
 
     private void setMultipleProject() {
 
-        LayoutInflater inflater = (LayoutInflater)getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View projectMultiRow = inflater.inflate(R.layout.project_multi_row, null);
-
-        // edit dialog fragment
-        final ProjectEditorDialogFragment editDialog = ProjectEditorDialogFragment.newInstance(ProjectEditorDialogFragment.TYPE_ADD_NEW);
-
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         String[] items = {"帳簿を追加", "帳簿を削除・名前変更"};
         builder.setItems(items, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
+                ProjectEditorDialogFragment editDialog = ProjectEditorDialogFragment
+                        .newInstance(ProjectEditorDialogFragment.TYPE_ADD_NEW);
                 switch (i) {
-                    case 0: // 追加
-                        editDialog.show(mFragmentManager, null);
-                        break;
                     case 1: // 削除、名前変更
+                        editDialog = ProjectEditorDialogFragment
+                                .newInstance(ProjectEditorDialogFragment.TYPE_EDIT_NAME);
                         break;
                 }
+                editDialog.setOnSubmitListener(onProjectEditorSubmitListener);
+                editDialog.show(mFragmentManager, null);
             }
         });
         final AlertDialog menuDialog = builder.create();
@@ -119,6 +118,24 @@ public class SettingsTabFragment extends Fragment {
             }
         });
     }
+
+    private ProjectEditorDialogFragment.OnEditorSubmitListener onProjectEditorSubmitListener
+            = new ProjectEditorDialogFragment.OnEditorSubmitListener() {
+        @Override
+        public void onSubmit(DialogInterface dialogInterface, EditText nameEdit, String tag) {
+            if (nameEdit == null) return;
+
+            String newName = nameEdit.getText().toString();
+            LayoutInflater inflater = (LayoutInflater)getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            View viewRow = inflater.inflate(R.layout.project_multi_row, binding.projectRadioGroup, false);
+            RadioButton projectBtn = (RadioButton)viewRow.findViewById(R.id.project_radio_btn);
+            projectBtn.setText(newName);
+
+//            ((ViewGroup)binding.projectRadioGroup.getParent())
+//                    .removeView(binding.projectRadioGroup);
+//            binding.projectRadioGroup.addView(viewRow);
+        }
+    };
 
 
     //--------------------------------------------------------------//

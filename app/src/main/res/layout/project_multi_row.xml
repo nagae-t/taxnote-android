@@ -15,7 +15,6 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:background="@drawable/selector_background_colors"
-            android:checked="false"
             android:gravity="center_vertical"
             android:minHeight="44dp"
             android:paddingEnd="16dp"

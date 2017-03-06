@@ -22,35 +22,40 @@
             android:text="@string/benefits_of_upgrade" />
 
         <!-- 複数帳簿 -->
-        <RadioGroup
-            android:layout_marginTop="20dp"
-            android:id="@+id/project_radio_group"
-            android:background="@drawable/selector_background_colors"
+        <LinearLayout
+            android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
+            android:background="@android:color/white"
             android:paddingStart="6dp"
-            android:paddingEnd="2dp">
-            <RadioButton
-                android:id="@+id/main_project_radio"
-                style="@style/font_style_standard"
+            android:paddingEnd="2dp"
+            android:layout_marginTop="20dp">
+            <RadioGroup
+                android:id="@+id/project_radio_group"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/selector_background_colors"
-                android:checked="true"
-                android:gravity="center_vertical"
-                android:minHeight="44dp"
-                android:paddingEnd="16dp"
-                android:paddingStart="16dp"
-                android:paddingTop="14dp"
-                android:paddingBottom="14dp"
-                android:textColor="@color/secondary_text"
-                android:text="本帳簿" />
-            <android.support.v4.widget.Space
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/header_background"/>
-        </RadioGroup>
+                android:orientation="vertical">
+                <RadioButton
+                    android:id="@+id/main_project_radio"
+                    style="@style/font_style_standard"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/selector_background_colors"
+                    android:checked="true"
+                    android:gravity="center_vertical"
+                    android:minHeight="44dp"
+                    android:paddingEnd="16dp"
+                    android:paddingStart="16dp"
+                    android:paddingTop="14dp"
+                    android:paddingBottom="14dp"
+                    android:textColor="@color/secondary_text"
+                    android:text="本帳簿" />
+                <android.support.v4.widget.Space
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/header_background"/>
+            </RadioGroup>
+        </LinearLayout>
         <android.support.v4.widget.Space
             android:layout_width="match_parent"
             android:layout_height="1px" />

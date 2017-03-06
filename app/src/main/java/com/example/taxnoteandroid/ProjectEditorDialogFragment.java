@@ -28,14 +28,14 @@ public class ProjectEditorDialogFragment extends DialogFragment
     private AlertDialog mDialog;
     private EditText mEditName;
 
-    private ProjectEditorDialogListener mListener;
+    private OnEditorSubmitListener mListener;
 
     public static final int TYPE_ADD_NEW = 1;
     public static final int TYPE_EDIT_NAME = 2;
     private static final String KEY_TYPE = "dialog_type";
 
-    public interface ProjectEditorDialogListener {
-        void onSubmitBtnClick(DialogInterface dialogInterface, EditText nameEdit, String tag);
+    public interface OnEditorSubmitListener {
+        void onSubmit(DialogInterface dialogInterface, EditText nameEdit, String tag);
     }
 
     public static ProjectEditorDialogFragment newInstance(int type) {
@@ -59,17 +59,8 @@ public class ProjectEditorDialogFragment extends DialogFragment
 
         builder.setTitle(titleName).setMessage(null);
 
-        builder.setNegativeButton(mContext.getText(android.R.string.cancel), new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-            }
-        });
-        builder.setPositiveButton(mContext.getText(android.R.string.ok), new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-
-            }
-        });
+        builder.setNegativeButton(mContext.getText(android.R.string.cancel), this);
+        builder.setPositiveButton(mContext.getText(android.R.string.ok), this);
 
         // バックキーでダイアログ閉じないように
         builder.setOnKeyListener(new DialogInterface.OnKeyListener() {
@@ -127,11 +118,11 @@ public class ProjectEditorDialogFragment extends DialogFragment
     public void onClick(DialogInterface dialogInterface, int i) {
         if (mListener == null) return;
         if (i == DialogInterface.BUTTON_POSITIVE) {
-            mListener.onSubmitBtnClick(dialogInterface, mEditName, getTag());
+            mListener.onSubmit(dialogInterface, mEditName, getTag());
         }
     }
 
-    public void setOnSubmitListener(ProjectEditorDialogListener listener) {
+    public void setOnSubmitListener(OnEditorSubmitListener listener) {
         this.mListener = listener;
     }
 
