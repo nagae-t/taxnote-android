@@ -13,7 +13,6 @@
         android:icon="@drawable/ic_report_black"
         android:title="@string/profit_loss_table" />
 
-    <!-- //@@ グラフアイコンを差し替える必要あり -->
     <item
         android:id="@+id/tab4"
         android:icon="@drawable/ic_pie_chart"
