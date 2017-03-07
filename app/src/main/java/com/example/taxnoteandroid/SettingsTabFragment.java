@@ -17,6 +17,7 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 
+import com.example.taxnoteandroid.dataManager.DefaultDataInstaller;
 import com.example.taxnoteandroid.dataManager.ProjectDataManager;
 import com.example.taxnoteandroid.databinding.FragmentSettingsTabBinding;
 import com.example.taxnoteandroid.model.Project;
@@ -140,31 +141,29 @@ public class SettingsTabFragment extends Fragment {
             String projectName = projects.get(i).name;
             addSubProjectView(projectName);
         }
+        // set current project radio checked
+        checkCurrentProjectToRadio();
     }
 
+    // 新規プロジェクト作成またはプロジェクト名を修正するコールバック
     private ProjectEditorDialogFragment.OnEditorSubmitListener onProjectEditorSubmitListener
             = new ProjectEditorDialogFragment.OnEditorSubmitListener() {
         @Override
-        public void onSubmit(DialogInterface dialogInterface, EditText nameEdit, String tag) {
+        public void onSubmit(DialogInterface dialogInterface,
+                             int dialogType, EditText nameEdit, String tag) {
             if (nameEdit == null) return;
 
             String newName = nameEdit.getText().toString();
 
-            addSubProjectView(newName);
-
-//            final View viewRow = mInflater.inflate(R.layout.project_multi_row, binding.subProjectRadioLayout, false);
-//            RadioButton projectBtn = (RadioButton)viewRow.findViewById(R.id.project_radio_btn);
-//            projectBtn.setOnClickListener(projectRadioOnClick);
-//            projectBtn.setText(newName);
-//            int newTag = projectBtn.getId() + mSubProjectRadioTags.size() + 1;
-//            projectBtn.setTag(newTag);
-//            mSubProjectRadioTags.add(newTag);
-//
-//            // delete btn
-//            ImageButton deleteBtn = (ImageButton)viewRow.findViewById(R.id.delete_btn);
-//            deleteBtn.setOnClickListener(getSubProjectRemoveOnClick(newName, viewRow));
-//
-//            binding.subProjectRadioLayout.addView(viewRow);
+            switch (dialogType) {
+                case ProjectEditorDialogFragment.TYPE_ADD_NEW:
+                    int projectSize = mProjectDataManager.allSize();
+                    DefaultDataInstaller.addNewProjectByName(mContext, newName, projectSize);
+                    addSubProjectView(newName);
+                    break;
+                case ProjectEditorDialogFragment.TYPE_EDIT_NAME:
+                    break;
+            }
         }
     };
 
@@ -223,6 +222,27 @@ public class SettingsTabFragment extends Fragment {
                 RadioButton radioBtn = (RadioButton)subView.findViewWithTag(viewTag);
                 if (radioBtn != null) {
                     radioBtn.setChecked(false);
+                }
+            }
+        }
+    }
+
+    private void checkCurrentProjectToRadio() {
+        Project currentProject = mProjectDataManager.findCurrentProjectWithContext(mContext);
+        if (currentProject.isMaster) return;
+
+        LinearLayout subProjectView = binding.subProjectRadioLayout;
+
+        binding.mainProjectRadio.setChecked(false);
+        unCheckAllSubProjectRadio();
+
+        for (int i=0; i<subProjectView.getChildCount(); i++) {
+            View subView = subProjectView.getChildAt(i);
+
+            for (int viewTag : mSubProjectRadioTags) {
+                RadioButton radioBtn = (RadioButton)subView.findViewWithTag(viewTag);
+                if (radioBtn != null && radioBtn.getText().equals(currentProject.name) ) {
+                    radioBtn.setChecked(true);
                 }
             }
         }

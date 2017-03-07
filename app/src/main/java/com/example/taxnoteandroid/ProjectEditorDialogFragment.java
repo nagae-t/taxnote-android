@@ -35,7 +35,7 @@ public class ProjectEditorDialogFragment extends DialogFragment
     private static final String KEY_TYPE = "dialog_type";
 
     public interface OnEditorSubmitListener {
-        void onSubmit(DialogInterface dialogInterface, EditText nameEdit, String tag);
+        void onSubmit(DialogInterface dialogInterface, int dialogType, EditText nameEdit, String tag);
     }
 
     public static ProjectEditorDialogFragment newInstance(int type) {
@@ -118,7 +118,8 @@ public class ProjectEditorDialogFragment extends DialogFragment
     public void onClick(DialogInterface dialogInterface, int i) {
         if (mListener == null) return;
         if (i == DialogInterface.BUTTON_POSITIVE) {
-            mListener.onSubmit(dialogInterface, mEditName, getTag());
+            int dialogType = getArguments().getInt(KEY_TYPE);
+            mListener.onSubmit(dialogInterface, dialogType, mEditName, getTag());
         }
     }
 

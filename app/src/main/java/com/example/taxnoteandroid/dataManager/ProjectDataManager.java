@@ -3,15 +3,12 @@ package com.example.taxnoteandroid.dataManager;
 import android.content.Context;
 
 import com.example.taxnoteandroid.TaxnoteApp;
-import com.example.taxnoteandroid.model.Entry_Schema;
 import com.example.taxnoteandroid.model.OrmaDatabase;
 import com.example.taxnoteandroid.model.Project;
 import com.example.taxnoteandroid.model.Project_Schema;
 
 import java.util.List;
 
-import static android.icu.lang.UCharacter.GraphemeClusterBreak.L;
-import static java.util.stream.Collectors.toList;
 
 public class ProjectDataManager {
 
