@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 
@@ -106,16 +107,16 @@ public class SettingsTabFragment extends Fragment {
         builder.setItems(items, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                ProjectEditorDialogFragment editDialog = ProjectEditorDialogFragment
-                        .newInstance(ProjectEditorDialogFragment.TYPE_ADD_NEW);
-                switch (i) {
-                    case 1: // 削除、名前変更
-                        editDialog = ProjectEditorDialogFragment
-                                .newInstance(ProjectEditorDialogFragment.TYPE_EDIT_NAME);
-                        break;
+                int countSubProject = binding.subProjectRadioLayout.getChildCount();
+                if (i == 0 && countSubProject < 2) {
+                    ProjectEditorDialogFragment editDialog = ProjectEditorDialogFragment
+                            .newInstance(ProjectEditorDialogFragment.TYPE_ADD_NEW);
+                    editDialog.setOnSubmitListener(onProjectEditorSubmitListener);
+                    editDialog.show(mFragmentManager, null);
+                } else if (i == 1) {
+                    // TODO: set radio layout to show remove btn
+                    switchSubProjectEdit();
                 }
-                editDialog.setOnSubmitListener(onProjectEditorSubmitListener);
-                editDialog.show(mFragmentManager, null);
             }
         });
         final AlertDialog menuDialog = builder.create();
@@ -134,7 +135,7 @@ public class SettingsTabFragment extends Fragment {
         public void onSubmit(DialogInterface dialogInterface, EditText nameEdit, String tag) {
             if (nameEdit == null) return;
 
-            View viewRow = mInflater.inflate(R.layout.project_multi_row, binding.subProjectRadioLayout, false);
+            final View viewRow = mInflater.inflate(R.layout.project_multi_row, binding.subProjectRadioLayout, false);
             RadioButton projectBtn = (RadioButton)viewRow.findViewById(R.id.project_radio_btn);
             projectBtn.setOnClickListener(projectRadioOnClick);
             String newName = nameEdit.getText().toString();
@@ -143,9 +144,14 @@ public class SettingsTabFragment extends Fragment {
             projectBtn.setTag(newTag);
             mSubProjectRadioTags.add(newTag);
 
+            // delete btn
+            ImageButton deleteBtn = (ImageButton)viewRow.findViewById(R.id.delete_btn);
+            deleteBtn.setOnClickListener(getSubProjectRemoveOnClick(viewRow));
+
             binding.subProjectRadioLayout.addView(viewRow);
         }
     };
+
     private View.OnClickListener projectRadioOnClick = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
@@ -184,6 +190,25 @@ public class SettingsTabFragment extends Fragment {
                     radioBtn.setChecked(false);
                 }
             }
+        }
+    }
+
+    private View.OnClickListener getSubProjectRemoveOnClick(final View parentRowView) {
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                binding.subProjectRadioLayout.removeView(parentRowView);
+            }
+        };
+    }
+
+    private void switchSubProjectEdit() {
+        LinearLayout subProjectView = binding.subProjectRadioLayout;
+        for (int i=0; i<subProjectView.getChildCount(); i++) {
+            View subView = subProjectView.getChildAt(i);
+
+            ImageButton deleteBtn = (ImageButton)subView.findViewById(R.id.delete_btn);
+            deleteBtn.setVisibility(View.VISIBLE);
         }
     }
 
