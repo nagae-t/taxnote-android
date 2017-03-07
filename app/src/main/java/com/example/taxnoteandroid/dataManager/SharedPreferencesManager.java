@@ -30,7 +30,8 @@ public class SharedPreferencesManager {
     private static final String TRACK_ENTRY_KEY                 = "TRACK_ENTRY_KEY";
     private static final String DATA_EXPORT_SUGGEST_KEY         = "DATA_EXPORT_SUGGEST_KEY";
     private static final String PROFIT_LOSS_REPORT_PERIOD_KEY   = "PROFIT_LOSS_REPORT_PERIOD_KEY";
-    private static final String GRAPH_REPORT_IS_EXPENSE_KEY         = "GRAPH_REPORT_IS_EXPENSE_KEY";
+    private static final String GRAPH_REPORT_IS_EXPENSE_KEY     = "GRAPH_REPORT_IS_EXPENSE_KEY";
+    private static final String BUSINESS_MODEL_MESSAGE_KEY      = "BUSINESS_MODEL_MESSAGE_KEY";
 
 
     //--------------------------------------------------------------//
@@ -232,6 +233,14 @@ public class SharedPreferencesManager {
 
     public static boolean isDataExportSuggestDone(Context context) {
         return getSharedPreferences(context).getBoolean(DATA_EXPORT_SUGGEST_KEY, false);
+    }
+
+    public static void saveBusinessModelMessageDone(Context context) {
+        getSharedPreferences(context).edit().putBoolean(BUSINESS_MODEL_MESSAGE_KEY, true).apply();
+    }
+
+    public static boolean isBusinessModelMessageDone(Context context) {
+        return getSharedPreferences(context).getBoolean(BUSINESS_MODEL_MESSAGE_KEY, false);
     }
 
 

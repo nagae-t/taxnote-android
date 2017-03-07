@@ -83,12 +83,6 @@ public class MainActivity extends AppCompatActivity {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
         mGraphMenuIsExpense = SharedPreferencesManager.getGraphReportIsExpenseType(this);
         setBottomNavigation();
-
-//        String title = "Dialog Title";
-//        String message = "Dialog Message";
-//        DialogManager.showCustomAlertDialog(this, getSupportFragmentManager(), title, message);
-        // layout 指定したい場合
-//        DialogManager.showCustomAlertDialog(this, getSupportFragmentManager(), title, R.layout.fragment_dialog_sample);
     }
 
     @Override
@@ -388,7 +382,7 @@ public class MainActivity extends AppCompatActivity {
         RateThisApp.showRateDialogIfNeeded(this);
 
         // Custom message
-        RateThisApp.Config config = new RateThisApp.Config(30,50);
+        RateThisApp.Config config = new RateThisApp.Config(3, 10);
         config.setTitle(R.string.rate_app_title);
         config.setMessage(R.string.rate_app_message);
         config.setYesButtonText(R.string.rate_app_yes_button);

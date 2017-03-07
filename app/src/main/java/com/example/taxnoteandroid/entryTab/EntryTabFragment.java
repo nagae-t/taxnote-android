@@ -7,14 +7,15 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.taxnoteandroid.Library.DialogManager;
 import com.example.taxnoteandroid.R;
+import com.example.taxnoteandroid.TNSimpleDialogFragment;
 import com.example.taxnoteandroid.dataManager.SharedPreferencesManager;
+import com.github.javiersantos.appupdater.AppUpdater;
 import com.helpshift.support.Support;
 
 
@@ -43,7 +44,7 @@ public class EntryTabFragment extends Fragment {
         // Reset selected date
         SharedPreferencesManager.saveCurrentSelectedDate(getActivity(),System.currentTimeMillis());
 
-        DialogManager.showFirstLaunchMessage(getActivity());
+        DialogManager.showFirstLaunchMessage(getActivity(), getFragmentManager());
 
         return v;
     }
@@ -51,7 +52,11 @@ public class EntryTabFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        DialogManager.showHistoryTabHelpMessage(getActivity());
+
+        checkLatestUpdate();
+        DialogManager.showBusinessModelMessage(getActivity(), getFragmentManager());
+        DialogManager.showAskAnythingMessage(getActivity(), getFragmentManager());
+        DialogManager.showHistoryTabHelpMessage(getActivity(), getFragmentManager());
     }
 
     @Override
@@ -60,8 +65,6 @@ public class EntryTabFragment extends Fragment {
 
         if (this.isVisible()) {
             if (isVisibleToUser) {
-
-                DialogManager.showAskAnythingMessage(getActivity());
                 checkHelpshiftReplyMessage();
             }
         }
@@ -111,18 +114,37 @@ public class EntryTabFragment extends Fragment {
         // Check if the Hhelpshit reply message exists
         if (Support.getNotificationCount() != 0) {
 
-            new AlertDialog.Builder(getActivity())
-                    .setTitle(getString(R.string.Helpshift_ReplyTitle))
-                    .setMessage(getString(R.string.Helpshift_ReplyMessage))
-                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
+            // Custom Alert
+            final TNSimpleDialogFragment dialogFragment = TNSimpleDialogFragment.newInstance();
+            dialogFragment.setTitle(getString(R.string.Helpshift_ReplyTitle));
+            dialogFragment.setMessage(getString(R.string.Helpshift_ReplyMessage));
 
-                            dialogInterface.dismiss();
-                            Support.showConversation(getActivity());
-                        }
-                    })
-                    .show();
+            dialogFragment.setCloseToFinish(true);
+            dialogFragment.setPositiveBtnText("OK");
+
+            dialogFragment.setDialogListener(new TNSimpleDialogFragment.TNSimpleDialogListener() {
+                @Override
+                public void onPositiveBtnClick(DialogInterface dialogInterface, int i, String tag) {
+                    dialogInterface.dismiss();
+                    Support.showConversation(getActivity());
+                }
+                @Override
+                public void onNeutralBtnClick(DialogInterface dialogInterface, int i, String tag) {}
+                @Override
+                public void onNegativeBtnClick(DialogInterface dialogInterface, int i, String tag) {}
+                @Override
+                public void onDialogCancel(DialogInterface dialogInterface, String tag) {}
+                @Override
+                public void onDialogDismiss(DialogInterface dialogInterface, String tag) {}
+            });
+
+            dialogFragment.show(getFragmentManager(), null);
         }
+    }
+
+    private void checkLatestUpdate() {
+
+        AppUpdater appUpdater = new AppUpdater(getActivity());
+        appUpdater.start();
     }
 }

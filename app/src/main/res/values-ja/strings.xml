@@ -86,7 +86,7 @@
     <string name="frequently_asked_questions">ヘルプ・よくある質問</string>
     <string name="ask_questions_or_request">要望・質問を送る</string>
     <string name="version">バージョン</string>
-    <string name="upgrade_to_plus_unlock_the_limit">無料版ではそれぞれの月に15件までしか入力できません。もしよければ無制限に記録できるTaxnoteプラスをご検討ください。</string>
+    <string name="upgrade_to_plus_unlock_the_limit">無料版では入力数が月15件までとなります。もしよければ無制限に記録できるTaxnoteプラスをご検討ください。機種変更時など、以前に購入している方は有料版がアップグレードの特典画面で自動的に復元されます。</string>
     <string name="go_to_upgrade_screen">アップグレード画面へ</string>
     <string name="upgrade">アップグレード</string>
     <string name="share_taxnote">Taxnoteをシェアする</string>
@@ -131,14 +131,14 @@
     //--------------------------------------------------------------//
 
     <string name="AlertView_firstIntroTitle">Taxnoteとは</string>
-    <string name="AlertView_firstIntroMessage">確定申告に使える帳簿を入力するアプリです。</string>
+    <string name="AlertView_firstIntroMessage">確定申告の帳簿を素早く入力するアプリです。</string>
     <string name="AlertView_secondIntroTitle">青色申告(複式簿記)の方</string>
     <string name="AlertView_secondIntroMessage">入力したデータはExcelや会計ソフトに取り込めます。</string>
     <string name="AlertView_thirdIntroTitle">白色・青色申告(簡易簿記)の方</string>
     <string name="AlertView_thirdIntroMessage">Taxnoteのみで完結。簡単なのでオススメ。</string>
     <string name="AlertView_letsbegin">まずは、接待交際費などをタップ</string>
     <string name="AlertView_entryDone">入力完了！</string>
-    <string name="AlertView_tapHistory">仕訳帳タブから編集できます。</string>
+    <string name="AlertView_tapHistory">画面下の仕訳帳タブから編集できます。</string>
     <string name="AlertView_inputPrice">金額を入力して「仕訳帳に記録」をタップ</string>
     <string name="AlertView_selectSummary">備考をタップ</string>
     <string name="Helpshift_ReplyTitle">返信があります</string>
@@ -148,7 +148,7 @@
     <string name="help_rename_category_message">この科目は仕訳帳にすでに使われているので、該当する仕訳帳内の科目名も自動的に変更されます。</string>
     <string name="tap_here">（ここをタップ）</string>
     <string name="ask_anything_title">質問や要望はお気軽に</string>
-    <string name="ask_anything_message">こんにちは、Taxnoteを開発している梅本です。アプリの操作で分からない部分や要望がありましたら、ヘルプからお気軽にお問い合わせください。開発からサポートまでやっているので直接お答えできます。</string>
+    <string name="ask_anything_message">こんにちは、Taxnoteを開発している梅本です。確定申告やアプリ操作で分からない部分や要望がありましたら、ヘルプからお気軽にお問い合わせください。開発からサポートまでやっているので直接お答えできます。</string>
     <string name="see_help">ヘルプを見る</string>
     <string name="data_export_suggest_title">データの出力</string>
     <string name="data_export_suggest_message">右上のボタンから、入力したデータをエクセル、弥生会計、freee、MFクラウドなどに出力できます。</string>
@@ -173,7 +173,7 @@
     // English対応したら消す
     <string name="hs__new_conversation_hint">要望・質問はお気軽に。24時間以内に作者の梅本が直接返信させてもらいます。(右上のボタンから写真の添付が可能です)</string>
     <string name="hs__new_conversation_header">要望・質問を送る</string>
-    <string name="hs__conversation_started_message">返信はアプリ内のポップメッセージでおしらせします。</string>
+    <string name="hs__conversation_started_message">返信はアプリ内のアラートでおしらせします。</string>
     <string name="hs__conversation_detail_error">検索</string>
     <string name="hs__review_title">アップデートに関して</string>
     <string name="hs__review_message">こんにちは、Taxnoteを開発している梅本です。今回のアップデートの感想、または今後の要望などあれば遠慮なくお願いします。</string>
@@ -193,6 +193,8 @@
     <string name="profit_loss_table">損益表</string>
     <string name="Graph">グラフ</string>
     <string name="no_match_by_search_message">検索ワードにマッチする項目がありません</string>
+    <string name="business_model_title">無料版の制限について</string>
+    <string name="business_model_message">Taxnoteは無料でお試しできますが、月15件の入力制限があります。まずは、仕訳帳の編集、データ出力、損益表、グラフなどをいろいろと使ってみてください。もし気に入ってもらえれば、有料版を検討してもらえると嬉しいです。</string>
 
     <string name="master_project_name">本帳簿</string>
     <string name="project_settings">帳簿を追加、編集</string>
