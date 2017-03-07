@@ -29,6 +29,7 @@ import java.util.List;
 public class SettingsTabFragment extends Fragment {
 
     private Context mContext;
+    private ProjectDataManager mProjectDataManager;
     private FragmentSettingsTabBinding binding;
     private FragmentManager mFragmentManager;
     private LayoutInflater mInflater;
@@ -61,6 +62,9 @@ public class SettingsTabFragment extends Fragment {
         mContext = getActivity().getApplicationContext();
         mFragmentManager = getFragmentManager();
         mInflater = (LayoutInflater)getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+        mProjectDataManager = new ProjectDataManager(mContext);
+
         setViews();
     }
 
@@ -107,8 +111,9 @@ public class SettingsTabFragment extends Fragment {
         builder.setItems(items, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                int countSubProject = binding.subProjectRadioLayout.getChildCount();
-                if (i == 0 && countSubProject < 2) {
+
+                int projectSize = mProjectDataManager.allSize();
+                if (i == 0 && projectSize < 3) {
                     ProjectEditorDialogFragment editDialog = ProjectEditorDialogFragment
                             .newInstance(ProjectEditorDialogFragment.TYPE_ADD_NEW);
                     editDialog.setOnSubmitListener(onProjectEditorSubmitListener);
@@ -127,6 +132,14 @@ public class SettingsTabFragment extends Fragment {
             }
         });
         binding.mainProjectRadio.setOnClickListener(projectRadioOnClick);
+
+        if (mProjectDataManager.allSize() == 1) return;
+        // sub project があれば表示
+        List<Project> projects = mProjectDataManager.findAll(false);
+        for (int i=0; i<projects.size(); i++) {
+            String projectName = projects.get(i).name;
+            addSubProjectView(projectName);
+        }
     }
 
     private ProjectEditorDialogFragment.OnEditorSubmitListener onProjectEditorSubmitListener
@@ -135,22 +148,44 @@ public class SettingsTabFragment extends Fragment {
         public void onSubmit(DialogInterface dialogInterface, EditText nameEdit, String tag) {
             if (nameEdit == null) return;
 
-            final View viewRow = mInflater.inflate(R.layout.project_multi_row, binding.subProjectRadioLayout, false);
-            RadioButton projectBtn = (RadioButton)viewRow.findViewById(R.id.project_radio_btn);
-            projectBtn.setOnClickListener(projectRadioOnClick);
             String newName = nameEdit.getText().toString();
-            projectBtn.setText(newName);
-            int newTag = projectBtn.getId() + mSubProjectRadioTags.size() + 1;
-            projectBtn.setTag(newTag);
-            mSubProjectRadioTags.add(newTag);
 
-            // delete btn
-            ImageButton deleteBtn = (ImageButton)viewRow.findViewById(R.id.delete_btn);
-            deleteBtn.setOnClickListener(getSubProjectRemoveOnClick(viewRow));
+            addSubProjectView(newName);
 
-            binding.subProjectRadioLayout.addView(viewRow);
+//            final View viewRow = mInflater.inflate(R.layout.project_multi_row, binding.subProjectRadioLayout, false);
+//            RadioButton projectBtn = (RadioButton)viewRow.findViewById(R.id.project_radio_btn);
+//            projectBtn.setOnClickListener(projectRadioOnClick);
+//            projectBtn.setText(newName);
+//            int newTag = projectBtn.getId() + mSubProjectRadioTags.size() + 1;
+//            projectBtn.setTag(newTag);
+//            mSubProjectRadioTags.add(newTag);
+//
+//            // delete btn
+//            ImageButton deleteBtn = (ImageButton)viewRow.findViewById(R.id.delete_btn);
+//            deleteBtn.setOnClickListener(getSubProjectRemoveOnClick(newName, viewRow));
+//
+//            binding.subProjectRadioLayout.addView(viewRow);
         }
     };
+
+    private void addSubProjectView(String projectName) {
+        final View viewRow = mInflater.inflate(R.layout.project_multi_row, binding.subProjectRadioLayout, false);
+
+        // radio btn
+        RadioButton projectBtn = (RadioButton)viewRow.findViewById(R.id.project_radio_btn);
+        projectBtn.setOnClickListener(projectRadioOnClick);
+        projectBtn.setText(projectName);
+        int newTag = projectBtn.getId() + mSubProjectRadioTags.size() + 1;
+        projectBtn.setTag(newTag);
+
+        mSubProjectRadioTags.add(newTag);
+
+        // delete btn
+        ImageButton deleteBtn = (ImageButton)viewRow.findViewById(R.id.delete_btn);
+        deleteBtn.setOnClickListener(getSubProjectRemoveOnClick(projectName, viewRow));
+
+        binding.subProjectRadioLayout.addView(viewRow);
+    }
 
     private View.OnClickListener projectRadioOnClick = new View.OnClickListener() {
         @Override
@@ -193,11 +228,29 @@ public class SettingsTabFragment extends Fragment {
         }
     }
 
-    private View.OnClickListener getSubProjectRemoveOnClick(final View parentRowView) {
+    private View.OnClickListener getSubProjectRemoveOnClick(final String projectName, final View parentRowView) {
         return new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                binding.subProjectRadioLayout.removeView(parentRowView);
+
+                // Delete confirm dialog
+                new AlertDialog.Builder(getActivity())
+                        .setTitle(projectName)
+                        .setMessage(getString(R.string.delete_project_confirm_message))
+                        .setPositiveButton(getString(R.string.Delete), new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+
+                                // TODO : remove the Project from DB
+
+                                binding.subProjectRadioLayout.removeView(parentRowView);
+
+                                dialogInterface.dismiss();
+                            }
+                        })
+                        .setNegativeButton(getString(R.string.cancel), null)
+                        .show();
+
             }
         };
     }

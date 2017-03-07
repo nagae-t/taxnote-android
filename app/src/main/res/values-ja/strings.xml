@@ -201,6 +201,7 @@
     <string name="new_project_name">新しい帳簿の名前</string>
     <string name="add_new_project">帳簿を追加</string>
     <string name="edit_project_name">名前を変更</string>
+    <string name="delete_project_confirm_message">この帳簿を削除してもよいですか？</string>
 
 
 </resources>

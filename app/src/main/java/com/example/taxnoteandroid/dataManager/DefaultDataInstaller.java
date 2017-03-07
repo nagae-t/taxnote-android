@@ -53,6 +53,38 @@ public class DefaultDataInstaller {
         SharedPreferencesManager.saveDefaultDatabaseSet(context);
     }
 
+    /**
+     * 新しいProject（帳簿）を追加する
+     * @param context
+     * @param name
+     * @return
+     */
+    public static long addNewProjectByName(Context context, String name, int order) {
+        ProjectDataManager projectDataManager = new ProjectDataManager(context);
+
+        // Set New Project
+        Project project = new Project();
+        project.isMaster = false;
+        project.name = name;
+        project.order = order;
+        project.uuid = UUID.randomUUID().toString();
+        project.accountUuidForExpense = "";
+        project.accountUuidForIncome = "";
+        project.decimal = context.getResources().getBoolean(R.bool.is_decimal);
+
+        long newId = projectDataManager.save(project);
+        project.id = newId;
+
+        // Set categories
+        setDefaultReasonData(context, project);
+        setDefaultAccountData(context, project);
+
+        // Save shared preferences
+        SharedPreferencesManager.saveUuidForCurrentProject(context, project.uuid);
+
+        return newId;
+    }
+
     private static void setDefaultReasonData(Context context, Project project) {
 
         Type type = new TypeToken<List<Reason>>() {
