@@ -16,6 +16,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
+import android.widget.TextView;
 
 import com.example.taxnoteandroid.dataManager.DefaultDataInstaller;
 import com.example.taxnoteandroid.dataManager.ProjectDataManager;
@@ -35,6 +36,7 @@ public class SettingsTabFragment extends Fragment {
     private FragmentManager mFragmentManager;
     private LayoutInflater mInflater;
     private List<Integer> mSubProjectRadioTags;
+    private boolean isProjectEditMode = false;
 
     public SettingsTabFragment() {
         // Required empty public constructor
@@ -106,21 +108,19 @@ public class SettingsTabFragment extends Fragment {
 
     private void setMultipleProject() {
         mSubProjectRadioTags = new ArrayList<>();
+        int projectSize = mProjectDataManager.allSize();
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        String[] items = {"帳簿を追加", "帳簿を削除・名前変更"};
+        String addTitle = mContext.getString(R.string.add_new_project);
+        String deleteOrEditNameTitle = mContext.getString(R.string.delete_project_or_edit_name);
+        String[] items = {addTitle, deleteOrEditNameTitle};
         builder.setItems(items, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
 
-                int projectSize = mProjectDataManager.allSize();
-                if (i == 0 && projectSize < 3) {
-                    ProjectEditorDialogFragment editDialog = ProjectEditorDialogFragment
-                            .newInstance(ProjectEditorDialogFragment.TYPE_ADD_NEW);
-                    editDialog.setOnSubmitListener(onProjectEditorSubmitListener);
-                    editDialog.show(mFragmentManager, null);
+                if (i == 0 && mProjectDataManager.allSize() < 3) {
+                    showProjectEditorDialog(ProjectEditorDialogFragment.TYPE_ADD_NEW);
                 } else if (i == 1) {
-                    // TODO: set radio layout to show remove btn
                     switchSubProjectEdit();
                 }
             }
@@ -129,7 +129,11 @@ public class SettingsTabFragment extends Fragment {
         binding.settingsProjectButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                menuDialog.show();
+                if (isProjectEditMode) {
+                    switchSubProjectEdit();
+                } else {
+                    menuDialog.show();
+                }
             }
         });
         binding.mainProjectRadio.setOnClickListener(projectRadioOnClick);
@@ -143,6 +147,13 @@ public class SettingsTabFragment extends Fragment {
         }
         // set current project radio checked
         checkCurrentProjectToRadio();
+    }
+
+    private void showProjectEditorDialog(int dialogType) {
+        ProjectEditorDialogFragment editDialog = ProjectEditorDialogFragment
+                .newInstance(dialogType);
+        editDialog.setOnSubmitListener(onProjectEditorSubmitListener);
+        editDialog.show(mFragmentManager, null);
     }
 
     // 新規プロジェクト作成またはプロジェクト名を修正するコールバック
@@ -190,9 +201,16 @@ public class SettingsTabFragment extends Fragment {
         @Override
         public void onClick(View view) {
             int viewId = view.getId();
-            unCheckAllSubProjectRadio();
-
             RadioButton mainRadio = binding.mainProjectRadio;
+            if (isProjectEditMode) { // edit mode
+                if (viewId == mainRadio.getId() &&  !mainRadio.isChecked()) {
+                    mainRadio.setChecked(false);
+                }
+                showProjectEditorDialog(ProjectEditorDialogFragment.TYPE_EDIT_NAME);
+                return;
+            }
+
+            unCheckAllSubProjectRadio();
             if (viewId == mainRadio.getId()) {
                 if (mainRadio.isChecked()) return;
                 mainRadio.setChecked(true);
@@ -276,13 +294,25 @@ public class SettingsTabFragment extends Fragment {
     }
 
     private void switchSubProjectEdit() {
+        // isProjectEditMode
+
         LinearLayout subProjectView = binding.subProjectRadioLayout;
+        TextView settingsProjectBtn = binding.settingsProjectButton;
         for (int i=0; i<subProjectView.getChildCount(); i++) {
             View subView = subProjectView.getChildAt(i);
 
             ImageButton deleteBtn = (ImageButton)subView.findViewById(R.id.delete_btn);
-            deleteBtn.setVisibility(View.VISIBLE);
+
+            if (isProjectEditMode) {
+                deleteBtn.setVisibility(View.GONE);
+                settingsProjectBtn.setText(mContext.getString(R.string.project_settings));
+            } else {
+                deleteBtn.setVisibility(View.VISIBLE);
+                settingsProjectBtn.setText(mContext.getString(R.string.project_settings_finish));
+            }
         }
+
+        isProjectEditMode = !isProjectEditMode;
     }
 
 

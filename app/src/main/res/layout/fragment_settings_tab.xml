@@ -45,7 +45,7 @@
                 android:paddingTop="14dp"
                 android:paddingBottom="14dp"
                 android:textColor="@color/secondary_text"
-                android:text="本帳簿" />
+                android:text="@string/master_project_name" />
             <android.support.v4.widget.Space
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
@@ -70,7 +70,7 @@
             android:paddingEnd="16dp"
             android:paddingStart="16dp"
             android:clickable="true"
-            android:text="帳簿を追加・編集" />
+            android:text="@string/project_settings" />
 
         <Switch
             style="@style/font_style_standard"

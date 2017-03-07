@@ -78,6 +78,9 @@ public class ProjectEditorDialogFragment extends DialogFragment
                 R.layout.dialog_project_editor, null, false);
         builder.setView(binding.getRoot());
         binding.nameEdit.addTextChangedListener(mTextEditorWatcher);
+        if (dialogType == TYPE_EDIT_NAME) {
+            binding.nameEdit.setHint(null);
+        }
         mEditName = binding.nameEdit;
 
 
