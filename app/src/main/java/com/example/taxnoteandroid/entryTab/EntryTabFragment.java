@@ -15,6 +15,7 @@ import com.example.taxnoteandroid.Library.DialogManager;
 import com.example.taxnoteandroid.R;
 import com.example.taxnoteandroid.TNSimpleDialogFragment;
 import com.example.taxnoteandroid.dataManager.SharedPreferencesManager;
+import com.github.javiersantos.appupdater.AppUpdater;
 import com.helpshift.support.Support;
 
 
@@ -51,6 +52,8 @@ public class EntryTabFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+
+        checkLatestUpdate();
         DialogManager.showBusinessModelMessage(getActivity(), getFragmentManager());
         DialogManager.showAskAnythingMessage(getActivity(), getFragmentManager());
         DialogManager.showHistoryTabHelpMessage(getActivity(), getFragmentManager());
@@ -137,5 +140,11 @@ public class EntryTabFragment extends Fragment {
 
             dialogFragment.show(getFragmentManager(), null);
         }
+    }
+
+    private void checkLatestUpdate() {
+
+        AppUpdater appUpdater = new AppUpdater(getActivity());
+        appUpdater.start();
     }
 }

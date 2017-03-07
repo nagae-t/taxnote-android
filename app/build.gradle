@@ -1,6 +1,7 @@
 buildscript {
     repositories {
         maven { url 'https://maven.fabric.io/public' }
+        maven { url 'https://jitpack.io' }
     }
 
     dependencies {
@@ -56,6 +57,9 @@ dependencies {
     apt 'com.google.dagger:dagger-compiler:2.9'
     apt 'com.android.databinding:compiler:2.3.0'
 
+
+    // AppUpdater
+    compile 'com.github.javiersantos:AppUpdater:2.5.1'
 
     // Mixpanel
     compile "com.mixpanel.android:mixpanel-android:4.9.3"
