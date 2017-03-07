@@ -85,6 +85,16 @@ public class DefaultDataInstaller {
         return newId;
     }
 
+    /**
+     * 帳簿(Project)を切り替える
+     * @param context
+     * @param targetProject
+     */
+    public static void switchProject(Context context, Project targetProject) {
+        // Save shared preferences
+        SharedPreferencesManager.saveUuidForCurrentProject(context, targetProject.uuid);
+    }
+
     private static void setDefaultReasonData(Context context, Project project) {
 
         Type type = new TypeToken<List<Reason>>() {

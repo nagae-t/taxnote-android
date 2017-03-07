@@ -36,7 +36,8 @@ public class SettingsTabFragment extends Fragment {
     private FragmentManager mFragmentManager;
     private LayoutInflater mInflater;
     private List<Integer> mSubProjectRadioTags;
-    private boolean isProjectEditMode = false;
+    private boolean isProjectEditing = false;
+    private List<Project> mAllProjects;
 
     public SettingsTabFragment() {
         // Required empty public constructor
@@ -108,6 +109,12 @@ public class SettingsTabFragment extends Fragment {
 
     private void setMultipleProject() {
         mSubProjectRadioTags = new ArrayList<>();
+        mAllProjects = mProjectDataManager.findAll();
+        // debug
+//        for (Project proj : mAllProjects) {
+//            Log.v("TEST", "project name: "+proj.name + ", uuid:"+proj.uuid);
+//        }
+
         int projectSize = mProjectDataManager.allSize();
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -118,8 +125,13 @@ public class SettingsTabFragment extends Fragment {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
 
-                if (i == 0 && mProjectDataManager.allSize() < 3) {
+                int projectAllSize = mProjectDataManager.allSize();
+                // 無料版はmaster含めてProject3つまで
+                if (i == 0 && projectAllSize < 3) {
                     showProjectEditorDialog(ProjectEditorDialogFragment.TYPE_ADD_NEW);
+                } else if (i == 0 && projectAllSize >= 3) {
+                    //@@ 帳簿数上限に達していて「追加」ボタンをしたら何をだすかここに追加
+
                 } else if (i == 1) {
                     switchSubProjectEdit();
                 }
@@ -129,7 +141,7 @@ public class SettingsTabFragment extends Fragment {
         binding.settingsProjectButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (isProjectEditMode) {
+                if (isProjectEditing) {
                     switchSubProjectEdit();
                 } else {
                     menuDialog.show();
@@ -156,7 +168,7 @@ public class SettingsTabFragment extends Fragment {
         editDialog.show(mFragmentManager, null);
     }
 
-    // 新規プロジェクト作成またはプロジェクト名を修正するコールバック
+    // 新規プロジェクト(帳簿)作成またはプロジェクト名を修正するコールバック
     private ProjectEditorDialogFragment.OnEditorSubmitListener onProjectEditorSubmitListener
             = new ProjectEditorDialogFragment.OnEditorSubmitListener() {
         @Override
@@ -167,10 +179,12 @@ public class SettingsTabFragment extends Fragment {
             String newName = nameEdit.getText().toString();
 
             switch (dialogType) {
-                case ProjectEditorDialogFragment.TYPE_ADD_NEW:
+                case ProjectEditorDialogFragment.TYPE_ADD_NEW: // 新規帳簿を追加する
                     int projectSize = mProjectDataManager.allSize();
                     DefaultDataInstaller.addNewProjectByName(mContext, newName, projectSize);
                     addSubProjectView(newName);
+                    checkCurrentProjectToRadio();
+                    mAllProjects = mProjectDataManager.findAll();
                     break;
                 case ProjectEditorDialogFragment.TYPE_EDIT_NAME:
                     break;
@@ -197,39 +211,61 @@ public class SettingsTabFragment extends Fragment {
         binding.subProjectRadioLayout.addView(viewRow);
     }
 
+    // 帳簿Radioをタップするときの処理
     private View.OnClickListener projectRadioOnClick = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
             int viewId = view.getId();
             RadioButton mainRadio = binding.mainProjectRadio;
-            if (isProjectEditMode) { // edit mode
-                if (viewId == mainRadio.getId() &&  !mainRadio.isChecked()) {
-                    mainRadio.setChecked(false);
-                }
+            if (isProjectEditing) { // edit mode
+                checkCurrentProjectToRadio();
                 showProjectEditorDialog(ProjectEditorDialogFragment.TYPE_EDIT_NAME);
                 return;
             }
 
             unCheckAllSubProjectRadio();
             if (viewId == mainRadio.getId()) {
-                if (mainRadio.isChecked()) return;
-                mainRadio.setChecked(true);
+                switchProjectThread(true, null);
                 return;
             }
             mainRadio.setChecked(false);
 
             LinearLayout subProjectView = binding.subProjectRadioLayout;
+            String selectedRadioName = null;
             for (int i=0; i<subProjectView.getChildCount(); i++) {
                 View subView = subProjectView.getChildAt(i);
                 for (int viewTag : mSubProjectRadioTags) {
                     RadioButton radioBtn = (RadioButton) subView.findViewWithTag(viewTag);
                     if (radioBtn != null && radioBtn.getTag() == view.getTag()) {
+                        selectedRadioName = radioBtn.getText().toString();
                         radioBtn.setChecked(true);
+                        break;
+                    }
+                }
+                if (selectedRadioName != null) break;
+            }
+
+            switchProjectThread(false, selectedRadioName);
+        }
+    };
+
+    private void switchProjectThread(final boolean isMaster, final String projectName) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+
+                for (Project project : mAllProjects) {
+                    if (isMaster && project.isMaster) {
+                        DefaultDataInstaller.switchProject(mContext, project);
+                        break;
+                    } else if (!isMaster && projectName != null && project.name.equals(projectName)) {
+                        DefaultDataInstaller.switchProject(mContext, project);
+                        break;
                     }
                 }
             }
-        }
-    };
+        }).start();
+    }
 
     private void unCheckAllSubProjectRadio() {
         LinearLayout subProjectView = binding.subProjectRadioLayout;
@@ -294,7 +330,7 @@ public class SettingsTabFragment extends Fragment {
     }
 
     private void switchSubProjectEdit() {
-        // isProjectEditMode
+        // isProjectEditing
 
         LinearLayout subProjectView = binding.subProjectRadioLayout;
         TextView settingsProjectBtn = binding.settingsProjectButton;
@@ -303,7 +339,7 @@ public class SettingsTabFragment extends Fragment {
 
             ImageButton deleteBtn = (ImageButton)subView.findViewById(R.id.delete_btn);
 
-            if (isProjectEditMode) {
+            if (isProjectEditing) {
                 deleteBtn.setVisibility(View.GONE);
                 settingsProjectBtn.setText(mContext.getString(R.string.project_settings));
             } else {
@@ -312,7 +348,7 @@ public class SettingsTabFragment extends Fragment {
             }
         }
 
-        isProjectEditMode = !isProjectEditMode;
+        isProjectEditing = !isProjectEditing;
     }
 
 
