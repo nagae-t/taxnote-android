@@ -7,7 +7,6 @@ import android.support.v4.app.ShareCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
-import com.example.taxnoteandroid.R;
 import com.example.taxnoteandroid.TaxnoteApp;
 import com.example.taxnoteandroid.dataManager.AccountDataManager;
 import com.example.taxnoteandroid.dataManager.EntryDataManager;
@@ -35,7 +34,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
-import java.util.UUID;
 
 /**
  * Created by Eiichi on 2017/01/18.
@@ -131,17 +129,17 @@ public class FileUtil  {
 
                 Thread.sleep(500);
 
-                Project project = new Project();
-                project.isMaster = true;
-                project.name = "master";
-                project.order = 0;
-                project.uuid = UUID.randomUUID().toString();
-                project.accountUuidForExpense = "";
-                project.accountUuidForIncome = "";
-                project.decimal = context.getResources().getBoolean(R.bool.is_decimal);
-
-                newProjectId = new ProjectDataManager(context).save(project);
-                SharedPreferencesManager.saveUuidForCurrentProject(context, project.uuid);
+//                Project project = new Project();
+//                project.isMaster = true;
+//                project.name = "master";
+//                project.order = 0;
+//                project.uuid = UUID.randomUUID().toString();
+//                project.accountUuidForExpense = "";
+//                project.accountUuidForIncome = "";
+//                project.decimal = context.getResources().getBoolean(R.bool.is_decimal);
+//
+//                newProjectId = new ProjectDataManager(context).save(project);
+//                SharedPreferencesManager.saveUuidForCurrentProject(context, project.uuid);
 
             } catch (Exception e) {
                 Log.e("ERROR", "dataImport: truncate error: " + e.getMessage());
@@ -151,25 +149,33 @@ public class FileUtil  {
             // project
             JsonArray jsonList = jsonObj.get("project").getAsJsonArray();
             ProjectDataManager projectDataManager = new ProjectDataManager(context);
-            JsonElement projectJson = jsonList.get(0);
-            Project newProject = gson.fromJson(projectJson, Project.class);
-            // project を上書き
-            _db.updateProject().idEq(newProjectId)
-                    .order(newProject.order)
-                    .isMaster(newProject.isMaster)
-                    .decimal(newProject.decimal)
-                    .deleted(newProject.deleted)
-                    .needSave(newProject.needSave)
-                    .needSync(newProject.needSync)
-                    .name(newProject.name)
-                    .accountUuidForExpense(newProject.accountUuidForExpense)
-                    .accountUuidForIncome(newProject.accountUuidForIncome)
-                    .execute();
+            for (JsonElement projectJson : jsonList) {
+                Project newProject = gson.fromJson(projectJson, Project.class);
+                projectDataManager.save(newProject);
+                if (newProject.isMaster) {
+                    SharedPreferencesManager.saveUuidForCurrentProject(context, newProject.uuid);
+                }
+//                if (newProject.isMaster) {
+//                    // project を上書き
+//                    _db.updateProject().idEq(newProjectId)
+//                            .order(newProject.order)
+//                            .isMaster(newProject.isMaster)
+//                            .decimal(newProject.decimal)
+//                            .deleted(newProject.deleted)
+//                            .needSave(newProject.needSave)
+//                            .needSync(newProject.needSync)
+//                            .name(newProject.name)
+//                            .accountUuidForExpense(newProject.accountUuidForExpense)
+//                            .accountUuidForIncome(newProject.accountUuidForIncome)
+//                            .execute();
+//                } else {
+//
+//                }
+            }
 
             try {
-                Thread.sleep(500);
+                Thread.sleep(400);
             } catch (InterruptedException e) {
-                e.printStackTrace();
             }
 
             // 上書きされたprojectを他のデータと一緒に挿入
