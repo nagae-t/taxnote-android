@@ -9,6 +9,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.ShareCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.IntentCompat;
 import android.support.v4.widget.CompoundButtonCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.AppCompatRadioButton;
@@ -31,6 +32,8 @@ import com.example.taxnoteandroid.model.Project;
 import com.helpshift.support.Support;
 
 import java.util.List;
+
+import static com.helpshift.util.HelpshiftContext.getApplicationContext;
 
 
 public class SettingsTabFragment extends Fragment {
@@ -282,6 +285,12 @@ public class SettingsTabFragment extends Fragment {
                     radioBtn.setChecked(true);
 
                     SharedPreferencesManager.saveAppThemeStyle(mContext, i+1);
+                    // restart
+                    mContext.sendBroadcast(new Intent(MainActivity.BROADCAST_RESTART_APP));
+                    getActivity().finish();
+                    Intent mainIntent = new Intent(getApplicationContext(), MainActivity.class);
+                    Intent intentCompat = IntentCompat.makeRestartActivityTask(mainIntent.getComponent());
+                    startActivity(intentCompat);
                     break;
                 }
             }

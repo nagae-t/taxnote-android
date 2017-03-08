@@ -13,7 +13,6 @@ import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -33,7 +32,7 @@ import java.lang.reflect.Field;
 import static com.example.taxnoteandroid.R.string.report;
 import static com.example.taxnoteandroid.TaxnoteConsts.MIXPANEL_TOKEN;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends DefaultCommonActivity {
 
     private ActivityMainBinding binding;
     private TabPagerAdapter mTabPagerAdapter;
@@ -86,15 +85,6 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        int themeStyle = SharedPreferencesManager.getAppThemeStyle(this);
-        switch (themeStyle) {
-            case 1:
-                setTheme(R.style.AppThemeSecond);
-                break;
-            case 2:
-                setTheme(R.style.AppThemeThird);
-                break;
-        }
         super.onCreate(savedInstanceState);
 
         registerReceiver(mReportReloadReceiver, new IntentFilter(BROADCAST_REPORT_RELOAD));
