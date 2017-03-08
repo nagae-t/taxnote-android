@@ -46,6 +46,7 @@ public class SettingsTabFragment extends Fragment {
     private boolean isProjectEditing = false;
     private List<Project> mAllProjects;
     private Project mEditingProject;
+    private Project mCurrentProject;
 
     public SettingsTabFragment() {
         // Required empty public constructor
@@ -200,6 +201,7 @@ public class SettingsTabFragment extends Fragment {
                     Project newProject = DefaultDataInstaller.addNewProjectByName(mContext, newName, projectSize);
                     addSubProjectView(newProject);
                     mAllProjects = mProjectDataManager.findAll();
+                    checkCurrentProjectToRadio();
 
                     // show message
                     DialogManager.showToast(mContext, mContext.getString(R.string.created_new_project_message));
@@ -275,8 +277,9 @@ public class SettingsTabFragment extends Fragment {
                 return;
             }
 
-            unCheckAllSubProjectRadio();
-            if (viewId == mainRadio.getId()) {
+            if (viewId == mainRadio.getId()) { // master project radio
+                if (mCurrentProject.isMaster) return;
+
                 SharedPreferencesManager.saveAppThemeStyle(mContext, 0);
                 switchUseProject(true, null);
                 return;
@@ -288,16 +291,19 @@ public class SettingsTabFragment extends Fragment {
             for (int i=0; i<subProjectView.getChildCount(); i++) {
                 View subView = subProjectView.getChildAt(i);
                 AppCompatRadioButton radioBtn = (AppCompatRadioButton) subView.findViewById(R.id.project_radio_btn);
-                if (radioBtn != null && radioBtn.getTag() == view.getTag()) {
-                    tagUuid = radioBtn.getTag().toString();
-                    radioBtn.setChecked(true);
+                String radioTagUuid = radioBtn.getTag().toString();
+                if (!mCurrentProject.uuid.equals(radioTagUuid)) {
+                    if (radioBtn != null && radioTagUuid.equals(view.getTag())) {
+                        tagUuid = radioBtn.getTag().toString();
+                        radioBtn.setChecked(true);
 
-                    SharedPreferencesManager.saveAppThemeStyle(mContext, i+1);
-                    break;
+                        SharedPreferencesManager.saveAppThemeStyle(mContext, i + 1);
+                        break;
+                    }
                 }
             }
-
-            switchUseProject(false, tagUuid);
+            if (tagUuid != null)
+                switchUseProject(false, tagUuid);
         }
     };
 
@@ -350,8 +356,8 @@ public class SettingsTabFragment extends Fragment {
     }
 
     private void checkCurrentProjectToRadio() {
-        Project currentProject = mProjectDataManager.findCurrentProjectWithContext(mContext);
-        if (currentProject.isMaster) return;
+        mCurrentProject = mProjectDataManager.findCurrentProjectWithContext(mContext);
+        if (mCurrentProject.isMaster) return;
 
         LinearLayout subProjectView = binding.subProjectRadioLayout;
 
@@ -361,7 +367,7 @@ public class SettingsTabFragment extends Fragment {
         for (int i=0; i<subProjectView.getChildCount(); i++) {
             View subView = subProjectView.getChildAt(i);
             AppCompatRadioButton radioBtn = (AppCompatRadioButton)subView.findViewById(R.id.project_radio_btn);
-            if (radioBtn != null && radioBtn.getText().equals(currentProject.name)) {
+            if (radioBtn != null && radioBtn.getTag().toString().equals(mCurrentProject.uuid)) {
                 radioBtn.setChecked(true);
             }
 
@@ -386,8 +392,8 @@ public class SettingsTabFragment extends Fragment {
                 if (mEditingProject.isMaster) return;
 
                 // can not remove current project
-                Project currentProject = mProjectDataManager.findCurrentProjectWithContext(mContext);
-                if (selectedUuid.equals(currentProject.uuid)) {
+//                mCurrentProject = mProjectDataManager.findCurrentProjectWithContext(mContext);
+                if (selectedUuid.equals(mCurrentProject.uuid)) {
                     DialogManager.showOKOnlyAlert(getActivity(), null,
                             mContext.getString(R.string.delete_current_project_message));
                     return;
