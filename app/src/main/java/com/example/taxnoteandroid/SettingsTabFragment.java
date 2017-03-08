@@ -9,9 +9,9 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.ShareCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.content.IntentCompat;
 import android.support.v4.widget.CompoundButtonCompat;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatRadioButton;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,8 +32,6 @@ import com.example.taxnoteandroid.model.Project;
 import com.helpshift.support.Support;
 
 import java.util.List;
-
-import static com.helpshift.util.HelpshiftContext.getApplicationContext;
 
 
 public class SettingsTabFragment extends Fragment {
@@ -285,12 +283,6 @@ public class SettingsTabFragment extends Fragment {
                     radioBtn.setChecked(true);
 
                     SharedPreferencesManager.saveAppThemeStyle(mContext, i+1);
-                    // restart
-                    mContext.sendBroadcast(new Intent(MainActivity.BROADCAST_RESTART_APP));
-                    getActivity().finish();
-                    Intent mainIntent = new Intent(getApplicationContext(), MainActivity.class);
-                    Intent intentCompat = IntentCompat.makeRestartActivityTask(mainIntent.getComponent());
-                    startActivity(intentCompat);
                     break;
                 }
             }
@@ -331,6 +323,8 @@ public class SettingsTabFragment extends Fragment {
 
     private void switchUseProject(boolean isMaster, String uuid) {
         DefaultDataInstaller.switchProject(mContext, getProjectEditing(isMaster, uuid));
+        // restart
+        DefaultDataInstaller.restartApp((AppCompatActivity) getActivity());
     }
 
     private void unCheckAllSubProjectRadio() {

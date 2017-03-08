@@ -1,7 +1,11 @@
 package com.example.taxnoteandroid.dataManager;
 
 import android.content.Context;
+import android.content.Intent;
+import android.support.v4.content.IntentCompat;
+import android.support.v7.app.AppCompatActivity;
 
+import com.example.taxnoteandroid.MainActivity;
 import com.example.taxnoteandroid.R;
 import com.example.taxnoteandroid.model.Account;
 import com.example.taxnoteandroid.model.Project;
@@ -16,6 +20,8 @@ import java.io.InputStreamReader;
 import java.lang.reflect.Type;
 import java.util.List;
 import java.util.UUID;
+
+import static com.helpshift.util.HelpshiftContext.getApplicationContext;
 
 public class DefaultDataInstaller {
 
@@ -185,5 +191,14 @@ public class DefaultDataInstaller {
 
             summaryDataManager.save(summary);
         }
+    }
+
+    public static void restartApp(AppCompatActivity activity) {
+        Context context = activity.getApplicationContext();
+        context.sendBroadcast(new Intent(MainActivity.BROADCAST_RESTART_APP));
+        Intent mainIntent = new Intent(getApplicationContext(), MainActivity.class);
+        Intent intentCompat = IntentCompat.makeRestartActivityTask(mainIntent.getComponent());
+        activity.startActivity(intentCompat);
+        activity.finish();
     }
 }
