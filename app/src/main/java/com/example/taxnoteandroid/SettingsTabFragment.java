@@ -18,6 +18,7 @@ import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
+import com.example.taxnoteandroid.Library.DialogManager;
 import com.example.taxnoteandroid.dataManager.DefaultDataInstaller;
 import com.example.taxnoteandroid.dataManager.ProjectDataManager;
 import com.example.taxnoteandroid.databinding.FragmentSettingsTabBinding;
@@ -354,9 +355,23 @@ public class SettingsTabFragment extends Fragment {
     }
 
     private View.OnClickListener getSubProjectRemoveOnClick(final String projectName, final View parentRowView) {
+        final RadioButton radioBtn = (RadioButton)parentRowView.findViewById(R.id.project_radio_btn);
+        final String selectedUuid = radioBtn.getTag().toString();
+        mEditingProject = mProjectDataManager.findByUuid(selectedUuid);
+
         return new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                // master を削除できないように
+                if (mEditingProject.isMaster) return;
+
+                // can not remove current project
+                Project currentProject = mProjectDataManager.findCurrentProjectWithContext(mContext);
+                if (selectedUuid.equals(currentProject.uuid)) {
+                    DialogManager.showOKOnlyAlert(getActivity(), null,
+                            mContext.getString(R.string.delete_current_project_message));
+                    return;
+                }
 
                 // Delete confirm dialog
                 new AlertDialog.Builder(getActivity())
@@ -365,11 +380,12 @@ public class SettingsTabFragment extends Fragment {
                         .setPositiveButton(getString(R.string.Delete), new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
-
-                                // TODO : remove the Project from DB
+                                // remove the Project from DB
+                                mProjectDataManager.delete(mEditingProject.id);
 
                                 binding.subProjectRadioLayout.removeView(parentRowView);
 
+                                mEditingProject = null;
                                 dialogInterface.dismiss();
                             }
                         })
