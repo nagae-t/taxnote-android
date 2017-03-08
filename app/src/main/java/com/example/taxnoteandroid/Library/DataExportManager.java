@@ -649,7 +649,7 @@ public class DataExportManager implements TaxnoteConsts {
 
         // Entry DB data
         EntryDataManager entryDataManager = new EntryDataManager(context);
-        List<Entry> entryList = entryDataManager.findAll(context, null, false);
+        List<Entry> entryList = entryDataManager.findAll();
         maps.put("entry", entryList);
 
         // Summary DB data

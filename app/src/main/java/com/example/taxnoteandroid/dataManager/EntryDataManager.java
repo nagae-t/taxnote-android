@@ -57,6 +57,10 @@ public class EntryDataManager {
         return ormaDatabase.selectFromEntry().where(Entry_Schema.INSTANCE.uuid.getQualifiedName() + " = ?", uuid).valueOrNull();
     }
 
+    public List<Entry> findAll() {
+        return ormaDatabase.selectFromEntry().toList();
+    }
+
     public List<Entry> findAll(Context context, long[] startAndEndDate, Boolean asc) {
 
         ProjectDataManager projectDataManager   = new ProjectDataManager(context);
