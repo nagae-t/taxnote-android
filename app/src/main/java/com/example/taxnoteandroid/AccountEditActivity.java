@@ -22,7 +22,7 @@ import com.example.taxnoteandroid.model.Reason;
 
 import java.util.List;
 
-public class AccountEditActivity extends AppCompatActivity {
+public class AccountEditActivity extends DefaultCommonActivity {
 
     private static final String EXTRA_IS_EXPENSE    = "EXTRA_IS_EXPENSE";
     private static final String EXTRA_IS_ACCOUNT    = "EXTRA_IS_ACCOUNT";

@@ -7,7 +7,6 @@ import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -25,7 +24,7 @@ import org.parceler.Parcels;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
-public class EntryEditActivity extends AppCompatActivity {
+public class EntryEditActivity extends DefaultCommonActivity {
 
     private ActivityEntryEditBinding binding;
     private Entry entry;

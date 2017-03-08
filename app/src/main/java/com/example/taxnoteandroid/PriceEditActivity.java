@@ -12,7 +12,7 @@ import com.example.taxnoteandroid.Library.DialogManager;
 import com.example.taxnoteandroid.Library.ValueConverter;
 import com.example.taxnoteandroid.dataManager.EntryDataManager;
 
-public class PriceEditActivity extends AppCompatActivity {
+public class PriceEditActivity extends DefaultCommonActivity {
 
     private static final String EXTRA_ENTRY_ID = "EXTRA_ENTRY_ID";
     private static final String EXTRA_CURRENT_PRICE = "EXTRA_CURRENT_PRICE";
