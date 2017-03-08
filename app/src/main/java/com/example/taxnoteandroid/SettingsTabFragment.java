@@ -24,6 +24,7 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 
 import com.example.taxnoteandroid.Library.DialogManager;
+import com.example.taxnoteandroid.Library.FileUtil;
 import com.example.taxnoteandroid.dataManager.DefaultDataInstaller;
 import com.example.taxnoteandroid.dataManager.ProjectDataManager;
 import com.example.taxnoteandroid.dataManager.SharedPreferencesManager;
@@ -87,8 +88,10 @@ public class SettingsTabFragment extends Fragment {
         setUpgradeView();
         setMultipleProject();
         setDecimalSwitch();
+        setDataBackup();
         setHelpViews();
         setShareButton();
+
     }
 
 
@@ -444,6 +447,29 @@ public class SettingsTabFragment extends Fragment {
             @Override
             public void onCheckedChanged(CompoundButton buttonView,boolean isChecked) {
                 projectDataManager.updateDecimal(project, isChecked);
+            }
+        });
+    }
+
+
+    //--------------------------------------------------------------//
+    //    -- Data Backup --
+    //--------------------------------------------------------------//
+
+    private void setDataBackup() {
+        // set click data backup
+        binding.dataBackup.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                // 別のスレッドで実行
+                new Thread(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        FileUtil.dataExport((AppCompatActivity) getActivity());
+                    }
+                }).start();
             }
         });
     }
