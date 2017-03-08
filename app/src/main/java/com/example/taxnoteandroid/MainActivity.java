@@ -42,8 +42,10 @@ public class MainActivity extends AppCompatActivity {
 
     public static final String BROADCAST_REPORT_RELOAD
             = "broadcast_main_report_reload";
+    public static final String BROADCAST_RESTART_APP
+            = "broadcast_main_restart_app";
     public static final String BROADCAST_SWITCH_GRAPH_EXPENSE
-            = "broadcast_main_swith_graph_expense";
+            = "broadcast_main_switch_graph_expense";
 
     /**
      * Broadcast for get new home timeline
@@ -63,6 +65,17 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
+    /**
+     * Broadcast to restart app
+     */
+    private final BroadcastReceiver mRestartAppReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            finish();
+            System.exit(0);
+        }
+    };
+
     @Override
     protected void onStart() {
         super.onStart();
@@ -73,9 +86,19 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        int themeStyle = SharedPreferencesManager.getAppThemeStyle(this);
+        switch (themeStyle) {
+            case 1:
+                setTheme(R.style.AppThemeSecond);
+                break;
+            case 2:
+                setTheme(R.style.AppThemeThird);
+                break;
+        }
         super.onCreate(savedInstanceState);
 
         registerReceiver(mReportReloadReceiver, new IntentFilter(BROADCAST_REPORT_RELOAD));
+        registerReceiver(mRestartAppReceiver, new IntentFilter(BROADCAST_RESTART_APP));
         registerReceiver(mSwitchGraphExpenseReceiver, new IntentFilter(BROADCAST_SWITCH_GRAPH_EXPENSE));
 
         DefaultDataInstaller.installDefaultUserAndCategories(this);
@@ -83,6 +106,7 @@ public class MainActivity extends AppCompatActivity {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
         mGraphMenuIsExpense = SharedPreferencesManager.getGraphReportIsExpenseType(this);
         setBottomNavigation();
+
     }
 
     @Override
@@ -411,6 +435,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         unregisterReceiver(mReportReloadReceiver);
+        unregisterReceiver(mRestartAppReceiver);
         unregisterReceiver(mSwitchGraphExpenseReceiver);
         super.onDestroy();
     }

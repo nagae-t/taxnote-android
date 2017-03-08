@@ -25,6 +25,7 @@ import android.widget.TextView;
 import com.example.taxnoteandroid.Library.DialogManager;
 import com.example.taxnoteandroid.dataManager.DefaultDataInstaller;
 import com.example.taxnoteandroid.dataManager.ProjectDataManager;
+import com.example.taxnoteandroid.dataManager.SharedPreferencesManager;
 import com.example.taxnoteandroid.databinding.FragmentSettingsTabBinding;
 import com.example.taxnoteandroid.model.Project;
 import com.helpshift.support.Support;
@@ -265,7 +266,8 @@ public class SettingsTabFragment extends Fragment {
 
             unCheckAllSubProjectRadio();
             if (viewId == mainRadio.getId()) {
-                switchProjectThread(true, null);
+                SharedPreferencesManager.saveAppThemeStyle(mContext, 0);
+                switchUseProject(true, null);
                 return;
             }
             mainRadio.setChecked(false);
@@ -278,11 +280,13 @@ public class SettingsTabFragment extends Fragment {
                 if (radioBtn != null && radioBtn.getTag() == view.getTag()) {
                     tagUuid = radioBtn.getTag().toString();
                     radioBtn.setChecked(true);
+
+                    SharedPreferencesManager.saveAppThemeStyle(mContext, i+1);
                     break;
                 }
             }
 
-            switchProjectThread(false, tagUuid);
+            switchUseProject(false, tagUuid);
         }
     };
 
@@ -316,7 +320,7 @@ public class SettingsTabFragment extends Fragment {
         return null;
     }
 
-    private void switchProjectThread(boolean isMaster, String uuid) {
+    private void switchUseProject(boolean isMaster, String uuid) {
         DefaultDataInstaller.switchProject(mContext, getProjectEditing(isMaster, uuid));
     }
 
