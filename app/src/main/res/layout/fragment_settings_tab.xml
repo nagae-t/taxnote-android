@@ -31,7 +31,7 @@
             android:layout_marginTop="20dp"
             android:paddingStart="6dp"
             android:paddingEnd="2dp">
-            <RadioButton
+            <android.support.v7.widget.AppCompatRadioButton
                 android:id="@+id/main_project_radio"
                 style="@style/font_style_standard"
                 android:layout_width="match_parent"

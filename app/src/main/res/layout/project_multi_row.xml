@@ -8,7 +8,7 @@
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-        <RadioButton
+        <android.support.v7.widget.AppCompatRadioButton
             android:id="@+id/project_radio_btn"
             style="@style/font_style_standard"
             android:layout_width="0dp"
