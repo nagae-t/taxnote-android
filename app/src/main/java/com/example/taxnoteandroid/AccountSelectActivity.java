@@ -36,7 +36,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
-public class AccountSelectActivity extends AppCompatActivity {
+public class AccountSelectActivity extends DefaultCommonActivity {
 
     private static final String EXTRA_ISEXPENSE = "EXTRA_ISEXPENSE";
 

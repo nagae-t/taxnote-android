@@ -26,7 +26,7 @@ import java.util.List;
  * Created by b0ne on 2017/02/23.
  */
 
-public class SearchEntryActivity extends AppCompatActivity {
+public class SearchEntryActivity extends DefaultCommonActivity {
 
     private ActivityEntryCommonBinding binding;
     private EntryDataManager mEntryManager;

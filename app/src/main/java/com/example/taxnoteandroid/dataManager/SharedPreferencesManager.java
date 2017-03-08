@@ -33,6 +33,8 @@ public class SharedPreferencesManager {
     private static final String GRAPH_REPORT_IS_EXPENSE_KEY     = "GRAPH_REPORT_IS_EXPENSE_KEY";
     private static final String BUSINESS_MODEL_MESSAGE_KEY      = "BUSINESS_MODEL_MESSAGE_KEY";
 
+    private static final String APP_THEME_STYLE_KEY      = "APP_THEME_STYLE_KEY";
+
 
     //--------------------------------------------------------------//
     //    -- Init --
@@ -66,6 +68,14 @@ public class SharedPreferencesManager {
 
     public static String getUuidForCurrentProject(Context context) {
         return getSharedPreferences(context).getString(UUID_FOR_CURRENT_KEY, "");
+    }
+
+    public static void saveAppThemeStyle(Context context, int type) {
+        getSharedPreferences(context).edit().putInt(APP_THEME_STYLE_KEY, type).apply();
+    }
+
+    public static int getAppThemeStyle(Context context) {
+        return getSharedPreferences(context).getInt(APP_THEME_STYLE_KEY, 0);
     }
 
 

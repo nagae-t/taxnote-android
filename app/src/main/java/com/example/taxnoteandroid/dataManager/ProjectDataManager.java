@@ -5,15 +5,25 @@ import android.content.Context;
 import com.example.taxnoteandroid.TaxnoteApp;
 import com.example.taxnoteandroid.model.OrmaDatabase;
 import com.example.taxnoteandroid.model.Project;
+import com.example.taxnoteandroid.model.Project_Schema;
+
+import java.util.List;
+
 
 public class ProjectDataManager {
 
     private OrmaDatabase ormaDatabase;
+    private Context mContext;
 
     public ProjectDataManager(Context context) {
-      ormaDatabase = TaxnoteApp.getOrmaDatabase();
+        this.mContext = context;
+        this.ormaDatabase = TaxnoteApp.getOrmaDatabase();
+        ormaDatabase.selectFromProject().count();
     }
 
+    public int allSize() {
+        return ormaDatabase.selectFromProject().count();
+    }
 
     //--------------------------------------------------------------//
     //    -- Create --
@@ -50,6 +60,22 @@ public class ProjectDataManager {
         return project.decimal;
     }
 
+    public List<Project> findAll() {
+        List<Project> projectList = ormaDatabase.selectFromProject().toList();
+
+        return projectList;
+    }
+
+    public List<Project> findAll(boolean isMaster) {
+        int master = (isMaster) ? 1 : 0;
+        List<Project> projectList = ormaDatabase.selectFromProject()
+                .where(Project_Schema.INSTANCE.isMaster.getQualifiedName() + " = " + master)
+                .toList();
+
+
+        return projectList;
+    }
+
 
     //--------------------------------------------------------------//
     //    -- Update --
@@ -65,6 +91,13 @@ public class ProjectDataManager {
 
     public int updateDecimal(Project project, boolean decimalStatus) {
         return ormaDatabase.updateProject().idEq(project.id).decimal(decimalStatus).execute();
+    }
+
+    public void updateName(Project project) {
+        ormaDatabase.updateProject()
+                .idEq(project.id)
+                .name(project.name)
+                .execute();
     }
 
 

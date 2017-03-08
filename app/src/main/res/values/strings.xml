@@ -198,9 +198,13 @@
 
     <string name="master_project_name">本帳簿</string>
     <string name="project_settings">帳簿を追加、編集</string>
+    <string name="project_settings_finish">編集を終了</string>
+    <string name="delete_project_or_edit_name">帳簿を削除・名前変更</string>
     <string name="new_project_name">新しい帳簿の名前</string>
     <string name="add_new_project">帳簿を追加</string>
     <string name="edit_project_name">名前を変更</string>
+    <string name="delete_project_confirm_message">この帳簿を削除してもよいですか？</string>
+    <string name="delete_current_project_message">使用中の帳簿は削除できません。他の帳簿に切り替えてから削除してください。</string>
 
 
 </resources>

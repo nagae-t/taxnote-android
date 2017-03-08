@@ -29,7 +29,7 @@ import static com.example.taxnoteandroid.TaxnoteConsts.EXPORT_RANGE_TYPE_LAST_MO
 import static com.example.taxnoteandroid.TaxnoteConsts.EXPORT_RANGE_TYPE_THIS_MONTH;
 
 
-public class DataExportActivity extends AppCompatActivity {
+public class DataExportActivity extends DefaultCommonActivity {
 
     private ActivityDataExportBinding binding;
 

@@ -1,8 +1,10 @@
 package com.example.taxnoteandroid;
 
 import android.app.Application;
+import android.content.Context;
 
 import com.crashlytics.android.Crashlytics;
+import com.example.taxnoteandroid.dataManager.SharedPreferencesManager;
 import com.example.taxnoteandroid.model.OrmaDatabase;
 import com.github.gfx.android.orma.AccessThreadConstraint;
 import com.helpshift.All;
@@ -46,6 +48,20 @@ public class TaxnoteApp extends Application {
 //    public Billing getBilling() {
 //        return mBilling;
 //    }
+
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
+        int themeStyle = SharedPreferencesManager.getAppThemeStyle(this);
+        switch (themeStyle) {
+            case 1:
+                base.setTheme(R.style.AppThemeSecond);
+                break;
+            case 2:
+                base.setTheme(R.style.AppThemeThird);
+                break;
+        }
+    }
 
     @Override
     public void onCreate() {
