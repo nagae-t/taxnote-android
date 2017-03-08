@@ -16,6 +16,7 @@ import android.support.v7.widget.AppCompatRadioButton;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -118,14 +119,6 @@ public class SettingsTabFragment extends Fragment {
 
     private void setMultipleProject() {
         mAllProjects = mProjectDataManager.findAll();
-        // debug
-//        for (Project proj : mAllProjects) {
-//            Log.v("TEST", "project name: "+proj.name
-//                    +", order: "+proj.order
-//                    + ", uuid:"+proj.uuid);
-//        }
-
-        int projectSize = mProjectDataManager.allSize();
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         String addTitle = mContext.getString(R.string.add_new_project);
@@ -141,7 +134,7 @@ public class SettingsTabFragment extends Fragment {
                     showProjectEditorDialog(ProjectEditorDialogFragment.TYPE_ADD_NEW);
                 } else if (i == 0 && projectAllSize >= 3) {
                     //@@ 帳簿数上限に達していて「追加」ボタンをしたら何をだすかここに追加
-
+                    DialogManager.showToast(mContext, mContext.getString(R.string.max_add_project_message));
                 } else if (i == 1) {
                     switchSubProjectEdit();
                 }
@@ -196,14 +189,28 @@ public class SettingsTabFragment extends Fragment {
 
             String newName = nameEdit.getText().toString();
 
+            // hide keyboard
+            InputMethodManager imm = (InputMethodManager)mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(nameEdit.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+
             switch (dialogType) {
                 case ProjectEditorDialogFragment.TYPE_ADD_NEW: // 新規帳簿を追加する
+
                     int projectSize = mProjectDataManager.allSize();
-                    DefaultDataInstaller.addNewProjectByName(mContext, newName, projectSize);
-                    Project newCurrentProject = mProjectDataManager.findCurrentProjectWithContext(mContext);
-                    addSubProjectView(newCurrentProject);
-                    checkCurrentProjectToRadio();
+                    Project newProject = DefaultDataInstaller.addNewProjectByName(mContext, newName, projectSize);
+                    addSubProjectView(newProject);
                     mAllProjects = mProjectDataManager.findAll();
+
+                    // show message
+                    DialogManager.showToast(mContext, mContext.getString(R.string.created_new_project_message));
+
+                    //@@ 新しく追加した帳簿をcurrentにしてアプリを再起動すると
+                    // 「帳簿を作成したよー」のメッセージが表示されなくなる
+
+//                    checkCurrentProjectToRadio()
+                    // restart
+//                    DefaultDataInstaller.restartApp((AppCompatActivity) getActivity());
+
                     break;
                 case ProjectEditorDialogFragment.TYPE_EDIT_NAME:
                     editProjectName(newName);
@@ -397,8 +404,8 @@ public class SettingsTabFragment extends Fragment {
                                 mProjectDataManager.delete(mEditingProject.id);
 
                                 binding.subProjectRadioLayout.removeView(parentRowView);
+                                mAllProjects = mProjectDataManager.findAll();
 
-                                mEditingProject = null;
                                 dialogInterface.dismiss();
                             }
                         })
@@ -410,7 +417,6 @@ public class SettingsTabFragment extends Fragment {
     }
 
     private void switchSubProjectEdit() {
-        // isProjectEditing
 
         LinearLayout subProjectView = binding.subProjectRadioLayout;
         TextView settingsProjectBtn = binding.settingsProjectButton;
@@ -421,11 +427,13 @@ public class SettingsTabFragment extends Fragment {
 
             if (isProjectEditing) {
                 deleteBtn.setVisibility(View.GONE);
-                settingsProjectBtn.setText(mContext.getString(R.string.project_settings));
             } else {
                 deleteBtn.setVisibility(View.VISIBLE);
-                settingsProjectBtn.setText(mContext.getString(R.string.project_settings_finish));
             }
+        }
+        settingsProjectBtn.setText(mContext.getString(R.string.project_settings));
+        if (!isProjectEditing) {
+            settingsProjectBtn.setText(mContext.getString(R.string.project_settings_finish));
         }
 
         isProjectEditing = !isProjectEditing;

@@ -65,7 +65,7 @@ public class DefaultDataInstaller {
      * @param name
      * @return
      */
-    public static long addNewProjectByName(Context context, String name, int order) {
+    public static Project addNewProjectByName(Context context, String name, int order) {
         ProjectDataManager projectDataManager = new ProjectDataManager(context);
 
         // Set New Project
@@ -86,9 +86,9 @@ public class DefaultDataInstaller {
         setDefaultAccountData(context, project);
 
         // Save shared preferences
-        SharedPreferencesManager.saveUuidForCurrentProject(context, project.uuid);
+//        SharedPreferencesManager.saveUuidForCurrentProject(context, project.uuid);
 
-        return newId;
+        return project;
     }
 
     /**
