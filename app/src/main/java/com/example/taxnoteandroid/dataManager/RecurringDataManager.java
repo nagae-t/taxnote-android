@@ -6,6 +6,8 @@ import com.example.taxnoteandroid.TaxnoteApp;
 import com.example.taxnoteandroid.model.OrmaDatabase;
 import com.example.taxnoteandroid.model.Recurring;
 
+import java.util.List;
+
 public class RecurringDataManager {
 
     private OrmaDatabase ormaDatabase;
@@ -31,6 +33,12 @@ public class RecurringDataManager {
     //--------------------------------------------------------------//
     //    -- Read --
     //--------------------------------------------------------------//
+
+    public List<Recurring> findAll() {
+        List<Recurring> dataList = ormaDatabase.selectFromRecurring().toList();
+
+        return dataList;
+    }
 
     public Recurring findByUuid(String uuid) {
         return ormaDatabase.selectFromRecurring().uuidEq(uuid).valueOrNull();

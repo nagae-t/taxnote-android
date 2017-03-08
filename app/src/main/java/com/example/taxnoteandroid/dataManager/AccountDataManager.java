@@ -36,6 +36,12 @@ public class AccountDataManager {
     //    -- Read --
     //--------------------------------------------------------------//
 
+    public List<Account> findAll() {
+        List<Account> dataList = ormaDatabase.selectFromAccount().toList();
+
+        return dataList;
+    }
+
     public Account findByUuid(String uuid) {
         return ormaDatabase.selectFromAccount().uuidEq(uuid).valueOrNull();
     }

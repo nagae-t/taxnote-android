@@ -1,36 +1,232 @@
 package com.example.taxnoteandroid.Library;
 
+import android.content.Context;
+import android.net.Uri;
 import android.os.Environment;
+import android.support.v4.app.ShareCompat;
+import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+
+import com.example.taxnoteandroid.R;
+import com.example.taxnoteandroid.TaxnoteApp;
+import com.example.taxnoteandroid.dataManager.AccountDataManager;
+import com.example.taxnoteandroid.dataManager.EntryDataManager;
+import com.example.taxnoteandroid.dataManager.ProjectDataManager;
+import com.example.taxnoteandroid.dataManager.ReasonDataManager;
+import com.example.taxnoteandroid.dataManager.RecurringDataManager;
+import com.example.taxnoteandroid.dataManager.SharedPreferencesManager;
+import com.example.taxnoteandroid.dataManager.SummaryDataManager;
+import com.example.taxnoteandroid.model.Account;
+import com.example.taxnoteandroid.model.Entry;
+import com.example.taxnoteandroid.model.OrmaDatabase;
+import com.example.taxnoteandroid.model.Project;
+import com.example.taxnoteandroid.model.Reason;
+import com.example.taxnoteandroid.model.Recurring;
+import com.example.taxnoteandroid.model.Summary;
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.PrintWriter;
+import java.util.UUID;
 
 /**
  * Created by Eiichi on 2017/01/18.
  */
 
 public class FileUtil  {
+    public static void saveCSV(String path, String name) {
+        PrintWriter writer = null;
 
-  public static void saveCSV(String path, String name)
-  {
-    PrintWriter writer = null;
+        try {
+            File folder = new File(Environment.getExternalStorageDirectory(), path);
+            File file = new File(folder, name);
+            writer = new PrintWriter(new BufferedWriter(new FileWriter(file, false)));
+        }  catch(IOException e) {
+            e.printStackTrace();
+        } finally {
+          if(writer!=null) writer.close();
+        }
+    }
 
-    try
-    {
-      File folder = new File(Environment.getExternalStorageDirectory(), path);
-      File file = new File(folder, name);
-      writer = new PrintWriter(new BufferedWriter(new FileWriter(file, false)));
+    /**
+     * DBデータからJsonに変換し、テキストファイル(*.json)を書き出して共有する
+     *
+     * @param activity
+     */
+    public static void dataExport(AppCompatActivity activity) {
+        Context context = activity.getApplicationContext();
+        // Db to Json
+        DataExportManager dataExportManager = new DataExportManager(context);
+        String dataJsonString = dataExportManager.generateDbToJson();
+
+        // jsonファイル出力
+        long nowTime = System.currentTimeMillis() * 1000;
+        String bkFilename = "taxnote-android-" + String.valueOf(nowTime) + ".json";
+        File file = new File(Environment.
+                getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), bkFilename);
+        FileWriter filewriter;
+
+        Uri streamUri = null;
+        try {
+            filewriter = new FileWriter(file);
+            BufferedWriter bw = new BufferedWriter(filewriter);
+            PrintWriter pw = new PrintWriter(bw);
+            pw.write(dataJsonString);
+            pw.close();
+
+            streamUri = Uri.fromFile(file);
+        } catch (IOException e) {
+            Log.e("ERROR", "data export : " + e.getMessage());
+            e.printStackTrace();
+        }
+
+        if (streamUri == null) return;
+
+        // share intent
+        ShareCompat.IntentBuilder.from(activity)
+                .setType("application/json")
+                .setChooserTitle("Backup file")
+                .setStream(streamUri)
+                .startChooser();
+
     }
-    catch(IOException e)
-    {
-      e.printStackTrace();
+
+    /**
+     * 共有されたファイルから内容を読み込んでJsonに変換する
+     *
+     * @param context
+     * @param uri
+     */
+    public static void dataImport(Context context, Uri uri) {
+        // ファイルの読み込み
+        InputStream input;
+        Gson gson = new Gson();
+        try {
+
+            input = context.getContentResolver().openInputStream(uri);
+            int size = input.available();
+            byte[] buffer = new byte[size];
+            input.read(buffer);
+            input.close();
+
+            // Json読み込み
+            String jsonString = new String(buffer);
+
+            JsonParser parser = new JsonParser();
+            JsonObject jsonObj = parser.parse(jsonString).getAsJsonObject();
+
+            // DBテーブルの初期化
+            OrmaDatabase _db = TaxnoteApp.getOrmaDatabase();
+            long newProjectId = 0;
+            try {
+                _db.deleteAll();
+
+                Thread.sleep(500);
+
+                Project project = new Project();
+                project.isMaster = true;
+                project.name = "master";
+                project.order = 0;
+                project.uuid = UUID.randomUUID().toString();
+                project.accountUuidForExpense = "";
+                project.accountUuidForIncome = "";
+                project.decimal = context.getResources().getBoolean(R.bool.is_decimal);
+
+                newProjectId = new ProjectDataManager(context).save(project);
+                SharedPreferencesManager.saveUuidForCurrentProject(context, project.uuid);
+
+            } catch (Exception e) {
+                Log.e("ERROR", "dataImport: truncate error: " + e.getMessage());
+//                e.printStackTrace();
+            }
+
+            // project
+            JsonArray jsonList = jsonObj.get("project").getAsJsonArray();
+            ProjectDataManager projectDataManager = new ProjectDataManager(context);
+            JsonElement projectJson = jsonList.get(0);
+            Project newProject = gson.fromJson(projectJson, Project.class);
+            // project を上書き
+            _db.updateProject().idEq(newProjectId)
+                    .order(newProject.order)
+                    .isMaster(newProject.isMaster)
+                    .decimal(newProject.decimal)
+                    .deleted(newProject.deleted)
+                    .needSave(newProject.needSave)
+                    .needSync(newProject.needSync)
+                    .name(newProject.name)
+                    .accountUuidForExpense(newProject.accountUuidForExpense)
+                    .accountUuidForIncome(newProject.accountUuidForIncome)
+                    .execute();
+
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+            // 上書きされたprojectを他のデータと一緒に挿入
+            Project currentProject = projectDataManager.findCurrentProjectWithContext(context);
+
+            // account
+            jsonList = jsonObj.get("account").getAsJsonArray();
+            AccountDataManager accountDataManager = new AccountDataManager(context);
+            for (JsonElement jsItem : jsonList) {
+                Account newAcc = gson.fromJson(jsItem, Account.class);
+                newAcc.project = currentProject;
+                accountDataManager.save(newAcc);
+            }
+
+            // reason
+            jsonList = jsonObj.get("reason").getAsJsonArray();
+            ReasonDataManager reasonDataManager = new ReasonDataManager(context);
+            for (JsonElement jsItem : jsonList) {
+                Reason newData = gson.fromJson(jsItem, Reason.class);
+                newData.project = currentProject;
+                reasonDataManager.save(newData);
+            }
+
+            // entry
+            jsonList = jsonObj.get("entry").getAsJsonArray();
+            EntryDataManager entryDataManager = new EntryDataManager(context);
+            for (JsonElement jsItem : jsonList) {
+                Entry newData = gson.fromJson(jsItem, Entry.class);
+                newData.project = currentProject;
+                newData.account = accountDataManager.findByUuid(newData.account.uuid);
+                newData.reason = reasonDataManager.findByUuid(newData.reason.uuid);
+                entryDataManager.save(newData);
+            }
+
+            // summary
+            jsonList = jsonObj.get("summary").getAsJsonArray();
+            SummaryDataManager summDataManager = new SummaryDataManager(context);
+            for (JsonElement jsItem : jsonList) {
+                Summary newData = gson.fromJson(jsItem, Summary.class);
+                newData.project = currentProject;
+                newData.reason = reasonDataManager.findByUuid(newData.reason.uuid);
+                summDataManager.save(newData);
+            }
+
+            // recurring
+            jsonList = jsonObj.get("recurring").getAsJsonArray();
+            RecurringDataManager recDataManager = new RecurringDataManager(context);
+            for (JsonElement jsItem : jsonList) {
+                Recurring newData = gson.fromJson(jsItem, Recurring.class);
+                newData.project = currentProject;
+                recDataManager.save(newData);
+            }
+
+            SharedPreferencesManager.saveDefaultDatabaseSet(context);
+        } catch (Exception e) {
+            Log.e("ERROR", "import error: " + e.getMessage());
+        }
     }
-    finally
-    {
-      if(writer!=null) writer.close();
-    }
-  }
+
 }

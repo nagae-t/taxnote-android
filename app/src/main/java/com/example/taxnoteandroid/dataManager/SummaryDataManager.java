@@ -37,6 +37,12 @@ public class SummaryDataManager {
     //    -- Read --
     //--------------------------------------------------------------//
 
+    public List<Summary> findAll() {
+        List<Summary> dataList = ormaDatabase.selectFromSummary().toList();
+
+        return dataList;
+    }
+
     public Summary findByUuid(String uuid) {
         return ormaDatabase.selectFromSummary().uuidEq(uuid).valueOrNull();
     }
