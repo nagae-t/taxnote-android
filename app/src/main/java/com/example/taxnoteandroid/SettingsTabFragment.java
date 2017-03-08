@@ -443,6 +443,8 @@ public class SettingsTabFragment extends Fragment {
         }
 
         isProjectEditing = !isProjectEditing;
+
+        DialogManager.showToast(mContext, mContext.getString(R.string.tap_project_to_edit_name));
     }
 
 

@@ -85,9 +85,6 @@ public class DefaultDataInstaller {
         setDefaultReasonData(context, project);
         setDefaultAccountData(context, project);
 
-        // Save shared preferences
-//        SharedPreferencesManager.saveUuidForCurrentProject(context, project.uuid);
-
         return project;
     }
 
