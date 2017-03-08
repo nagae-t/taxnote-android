@@ -93,6 +93,13 @@ public class ProjectDataManager {
         return ormaDatabase.updateProject().idEq(project.id).decimal(decimalStatus).execute();
     }
 
+    public void updateName(Project project) {
+        ormaDatabase.updateProject()
+                .idEq(project.id)
+                .name(project.name)
+                .execute();
+    }
+
 
     //--------------------------------------------------------------//
     //    -- Delete --
