@@ -3,6 +3,7 @@ package com.example.taxnoteandroid.dataManager;
 import android.content.Context;
 
 import com.example.taxnoteandroid.TaxnoteApp;
+import com.example.taxnoteandroid.model.Account;
 import com.example.taxnoteandroid.model.OrmaDatabase;
 import com.example.taxnoteandroid.model.Project;
 import com.example.taxnoteandroid.model.Reason;
@@ -46,6 +47,12 @@ public class ReasonDataManager {
     //--------------------------------------------------------------//
     //    -- Read --
     //--------------------------------------------------------------//
+
+    public List<Reason> findAll() {
+        List<Reason> dataList = ormaDatabase.selectFromReason().toList();
+
+        return dataList;
+    }
 
     public Reason findByUuid(String uuid) {
         return ormaDatabase.selectFromReason().uuidEq(uuid).valueOrNull();

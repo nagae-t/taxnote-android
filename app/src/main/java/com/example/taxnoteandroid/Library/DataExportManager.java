@@ -10,9 +10,20 @@ import android.os.Environment;
 
 import com.example.taxnoteandroid.R;
 import com.example.taxnoteandroid.TaxnoteConsts;
+import com.example.taxnoteandroid.dataManager.AccountDataManager;
 import com.example.taxnoteandroid.dataManager.EntryDataManager;
+import com.example.taxnoteandroid.dataManager.ProjectDataManager;
+import com.example.taxnoteandroid.dataManager.ReasonDataManager;
+import com.example.taxnoteandroid.dataManager.RecurringDataManager;
 import com.example.taxnoteandroid.dataManager.SharedPreferencesManager;
+import com.example.taxnoteandroid.dataManager.SummaryDataManager;
+import com.example.taxnoteandroid.model.Account;
 import com.example.taxnoteandroid.model.Entry;
+import com.example.taxnoteandroid.model.Project;
+import com.example.taxnoteandroid.model.Reason;
+import com.example.taxnoteandroid.model.Recurring;
+import com.example.taxnoteandroid.model.Summary;
+import com.google.gson.Gson;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -21,7 +32,9 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.TimeZone;
 
 /**
@@ -42,6 +55,12 @@ public class DataExportManager implements TaxnoteConsts {
     private String separator = ",";
     private Entry current_entry = null;
     private long total_price = 0;
+
+    public DataExportManager() {}
+
+    public DataExportManager(Context context) {
+        this.context = context;
+    }
 
     public DataExportManager(String mode, String character_code) {
 
@@ -604,5 +623,45 @@ public class DataExportManager implements TaxnoteConsts {
         public String getValue() {
             return Long.toString(current_entry.id);
         }
+    }
+
+    //@@ For data backup
+
+    // Project, Account, Reason, Entry, Summary, Recurring
+    public String generateDbToJson() {
+        Gson gson = new Gson();
+        Map<String, Object> maps = new LinkedHashMap<>();
+
+        // Project DB data
+        ProjectDataManager projectDataManager = new ProjectDataManager(context);
+        List<Project> projectList = projectDataManager.findAll();
+        maps.put("project", projectList);
+
+        // Account DB data
+        AccountDataManager accountDataManager = new AccountDataManager(context);
+        List<Account> accountList = accountDataManager.findAll();
+        maps.put("account", accountList);
+
+        // Reason DB data
+        ReasonDataManager reasonDataManager = new ReasonDataManager(context);
+        List<Reason> reasonList = reasonDataManager.findAll();
+        maps.put("reason", reasonList);
+
+        // Entry DB data
+        EntryDataManager entryDataManager = new EntryDataManager(context);
+        List<Entry> entryList = entryDataManager.findAll(context, null, false);
+        maps.put("entry", entryList);
+
+        // Summary DB data
+        SummaryDataManager summaryDataManager = new SummaryDataManager(context);
+        List<Summary> summaryList = summaryDataManager.findAll();
+        maps.put("summary", summaryList);
+
+        // Recurring DB data
+        RecurringDataManager recDataManager = new RecurringDataManager(context);
+        List<Recurring> recList = recDataManager.findAll();
+        maps.put("recurring", recList);
+
+        return gson.toJson(maps);
     }
 }
