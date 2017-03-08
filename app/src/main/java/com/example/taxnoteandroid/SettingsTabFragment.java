@@ -3,10 +3,13 @@ package com.example.taxnoteandroid;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.ShareCompat;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.CompoundButtonCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.AppCompatRadioButton;
 import android.view.LayoutInflater;
@@ -151,8 +154,8 @@ public class SettingsTabFragment extends Fragment {
             }
         });
         binding.mainProjectRadio.setOnClickListener(projectRadioOnClick);
-//        CompoundButtonCompat.setButtonTintList(binding.mainProjectRadio,
-//                ColorStateList.valueOf(ContextCompat.getColor(mContext, R.color.primary)));
+        CompoundButtonCompat.setButtonTintList(binding.mainProjectRadio,
+                ColorStateList.valueOf(ContextCompat.getColor(mContext, R.color.primary)));
         for (Project project : mAllProjects) {
             if (project.isMaster && !project.name.equals("master")) {
                 binding.mainProjectRadio.setText(project.name);
@@ -212,6 +215,10 @@ public class SettingsTabFragment extends Fragment {
         projectBtn.setOnClickListener(projectRadioOnClick);
         projectBtn.setText(project.name);
         projectBtn.setTag(project.uuid);
+
+        int radioBtnColorRes = (project.order == 1) ? R.color.second_primary : R.color.third_primary;
+            CompoundButtonCompat.setButtonTintList(projectBtn,
+                    ColorStateList.valueOf(ContextCompat.getColor(mContext, radioBtnColorRes)));
 
         // delete btn
         ImageButton deleteBtn = (ImageButton)viewRow.findViewById(R.id.delete_btn);
@@ -327,8 +334,6 @@ public class SettingsTabFragment extends Fragment {
 
     private void checkCurrentProjectToRadio() {
         Project currentProject = mProjectDataManager.findCurrentProjectWithContext(mContext);
-//        CompoundButtonCompat.setButtonTintList(binding.mainProjectRadio,
-//                ColorStateList.valueOf(ContextCompat.getColor(mContext, R.color.primary)));
         if (currentProject.isMaster) return;
 
         LinearLayout subProjectView = binding.subProjectRadioLayout;
@@ -339,9 +344,6 @@ public class SettingsTabFragment extends Fragment {
         for (int i=0; i<subProjectView.getChildCount(); i++) {
             View subView = subProjectView.getChildAt(i);
             AppCompatRadioButton radioBtn = (AppCompatRadioButton)subView.findViewById(R.id.project_radio_btn);
-//            int radioBtnColorRes = (i==0) ? R.color.second_primary : R.color.third_primary;
-//            CompoundButtonCompat.setButtonTintList(radioBtn,
-//                    ColorStateList.valueOf(ContextCompat.getColor(mContext, radioBtnColorRes)));
             if (radioBtn != null && radioBtn.getText().equals(currentProject.name)) {
                 radioBtn.setChecked(true);
             }
