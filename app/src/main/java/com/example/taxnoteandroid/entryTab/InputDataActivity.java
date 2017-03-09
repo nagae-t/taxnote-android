@@ -13,6 +13,7 @@ import android.text.format.DateUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager.LayoutParams;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -246,6 +247,13 @@ public class InputDataActivity extends AppCompatActivity {
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         client.connect();
         AppIndex.AppIndexApi.start(client, getIndexApiAction());
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        getWindow().setSoftInputMode(LayoutParams.SOFT_INPUT_STATE_HIDDEN);
     }
 
     @Override
