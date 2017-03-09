@@ -443,6 +443,27 @@ public class DialogManager {
 //        dialogFragment.show(fragmentManager, null);
     }
 
+    //--------------------------------------------------------------//
+    //    -- Show  Import Data Confirm AlertDialog --
+    //--------------------------------------------------------------//
+
+    public static void showImportDataConfirm(final Context context, FragmentManager fragmentManager,
+                                             TNSimpleDialogFragment.TNSimpleDialogListener listener) {
+        String title = context.getString(R.string.data_import);
+        String message = context.getString(R.string.import_data_overwrite_confirm_message);
+
+        final TNSimpleDialogFragment dialogFragment = TNSimpleDialogFragment.newInstance();
+        dialogFragment.setTitle(title);
+        dialogFragment.setMessage(message);
+        dialogFragment.setCloseToFinish(true);
+
+        dialogFragment.setPositiveBtnText(context.getString(android.R.string.ok));
+        dialogFragment.setNegativeBtnText(context.getString(android.R.string.cancel));
+        dialogFragment.setDialogListener(listener);
+
+        dialogFragment.show(fragmentManager, null);
+    }
+
 
     //--------------------------------------------------------------//
     //    -- Custom AlertDialog --

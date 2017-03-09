@@ -1,5 +1,6 @@
 package com.example.taxnoteandroid;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.net.Uri;
@@ -10,6 +11,7 @@ import android.support.v4.content.IntentCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
+import com.example.taxnoteandroid.Library.DialogManager;
 import com.example.taxnoteandroid.Library.FileUtil;
 import com.example.taxnoteandroid.dataManager.SharedPreferencesManager;
 import com.example.taxnoteandroid.databinding.ActivityImportFilterBinding;
@@ -53,7 +55,38 @@ public class ImportFilterActivity extends AppCompatActivity {
             }
         });
 
-        new DataImportTask().execute(intentUri);
+        DialogManager.showImportDataConfirm(this, getSupportFragmentManager(),
+                getConfirmDialogListener(intentUri));
+
+    }
+
+    private TNSimpleDialogFragment.TNSimpleDialogListener getConfirmDialogListener(final Uri importFileUri) {
+        return new TNSimpleDialogFragment.TNSimpleDialogListener() {
+            @Override
+            public void onPositiveBtnClick(DialogInterface dialogInterface, int i, String tag) {
+                dialogInterface.dismiss();
+
+                new DataImportTask().execute(importFileUri);
+            }
+
+            @Override
+            public void onNeutralBtnClick(DialogInterface dialogInterface, int i, String tag) {
+
+            }
+
+            @Override
+            public void onNegativeBtnClick(DialogInterface dialogInterface, int i, String tag) {
+                finish();
+            }
+
+            @Override
+            public void onDialogCancel(DialogInterface dialogInterface, String tag) {
+            }
+
+            @Override
+            public void onDialogDismiss(DialogInterface dialogInterface, String tag) {
+            }
+        };
     }
 
 
