@@ -216,4 +216,6 @@
     <string name="finished_data_import">データのインポートが完了しました。</string>
     <string name="restart_app">アプリを再起動する</string>
 
+    <string name="profit_loss_settings">残高繰越・締め日</string>
+
 </resources>
