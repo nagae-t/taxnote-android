@@ -5,13 +5,78 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:scrollbarStyle="insideOverlay"
+    android:background="@color/header_background"
     android:fadingEdge="none">
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/header_background">
+        android:layout_height="wrap_content">
 
+        <Switch
+            style="@style/font_style_standard"
+            android:background="@drawable/selector_background_colors"
+            android:id="@+id/balance_carry_forward"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:gravity="center_vertical"
+            android:minHeight="@dimen/cell_height_standard"
+            android:paddingEnd="16dp"
+            android:paddingStart="16dp"
+            android:textColor="@color/secondary_text"
+            android:text="@string/balance_carry_forward" />
+        <TextView
+            style="@style/font_style_footer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="8dp"
+            android:paddingEnd="16dp"
+            android:paddingStart="16dp"
+            android:text="@string/balance_carry_forward_desc"/>
+
+        <Switch
+            style="@style/font_style_standard"
+            android:background="@drawable/selector_background_colors"
+            android:id="@+id/monthly_closing_date"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:gravity="center_vertical"
+            android:minHeight="@dimen/cell_height_standard"
+            android:paddingEnd="16dp"
+            android:paddingStart="16dp"
+            android:textColor="@color/secondary_text"
+            android:text="@string/monthly_closing_date" />
+        <TextView
+            style="@style/font_style_footer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="8dp"
+            android:paddingEnd="16dp"
+            android:paddingStart="16dp"
+            android:text="@string/monthly_closing_date_desc"/>
+
+        <Switch
+            style="@style/font_style_standard"
+            android:background="@drawable/selector_background_colors"
+            android:id="@+id/start_month_of_year"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:gravity="center_vertical"
+            android:minHeight="@dimen/cell_height_standard"
+            android:paddingEnd="16dp"
+            android:paddingStart="16dp"
+            android:textColor="@color/secondary_text"
+            android:text="@string/start_month_of_year" />
+        <TextView
+            style="@style/font_style_footer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="8dp"
+            android:paddingEnd="16dp"
+            android:paddingStart="16dp"
+            android:text="@string/start_month_of_year_desc"/>
 
     </LinearLayout>
 </ScrollView>
