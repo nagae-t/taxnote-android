@@ -11,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
 import com.example.taxnoteandroid.Library.FileUtil;
+import com.example.taxnoteandroid.dataManager.SharedPreferencesManager;
 import com.example.taxnoteandroid.databinding.ActivityImportFilterBinding;
 
 /**
@@ -66,6 +67,9 @@ public class ImportFilterActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(Boolean result) {
+            // set theme style to default
+            SharedPreferencesManager.saveAppThemeStyle(getApplicationContext(), 0);
+
             binding.loadingLayout.setVisibility(View.GONE);
             binding.backupFinishedLayout.setVisibility(View.VISIBLE);
         }
