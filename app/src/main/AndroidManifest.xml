@@ -69,6 +69,10 @@
             android:name=".HistoryListDataActivity"
             android:screenOrientation="portrait" />
         <activity
+            android:name=".ProfitLossSettingsActivity"
+            android:label="@string/profit_loss_settings"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".ImportFilterActivity"
             android:label="@string/taxnote_data_import"
             android:screenOrientation="portrait" >

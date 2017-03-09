@@ -183,6 +183,7 @@ public class MainActivity extends DefaultCommonActivity {
                 }
                 break;
             case R.id.action_profit_loss_settings:
+                ProfitLossSettingsActivity.start(this);
                 break;
         }
         return super.onOptionsItemSelected(item);
