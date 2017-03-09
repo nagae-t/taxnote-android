@@ -25,8 +25,11 @@
             android:paddingStart="16dp"
             android:text="@string/benefits_of_upgrade" />
 
+        <!--//@@一時的に消してる-->
         <!-- 複数帳簿 -->
         <LinearLayout
+            android:visibility="gone"
+
             android:id="@+id/project_radio_layout"
             android:orientation="vertical"
             android:layout_width="match_parent"
@@ -61,9 +64,13 @@
                 android:layout_height="wrap_content" />
         </LinearLayout>
         <android.support.v4.widget.Space
+            android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="1px" />
         <TextView
+
+            android:visibility="gone"
+
             style="@style/font_style_standard"
             android:id="@+id/settings_project_button"
             android:background="@drawable/selector_background_colors"
@@ -92,7 +99,11 @@
         <android.support.v4.widget.Space
             android:layout_width="match_parent"
             android:layout_height="1dp" />
+
+
+        <!--//@@一時的に消してる-->
         <TextView
+            android:visibility="gone"
             style="@style/font_style_standard"
             android:id="@+id/data_backup"
             android:background="@drawable/selector_background_colors"
