@@ -11,6 +11,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.WindowManager.LayoutParams;
 import android.widget.Button;
 import android.widget.EditText;
 
@@ -51,7 +52,7 @@ public class ProjectEditorDialogFragment extends DialogFragment
         mContext = getActivity().getApplicationContext();
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
-        int dialogType = getArguments().getInt(KEY_TYPE);
+        final int dialogType = getArguments().getInt(KEY_TYPE);
         String titleName = mContext.getString(R.string.add_new_project);
         if (dialogType == TYPE_EDIT_NAME) {
             titleName = mContext.getString(R.string.edit_project_name);
@@ -68,6 +69,7 @@ public class ProjectEditorDialogFragment extends DialogFragment
             public boolean onKey(DialogInterface dialogInterface, int keyCode, KeyEvent keyEvent) {
                 switch (keyCode) {
                     case KeyEvent.KEYCODE_BACK:
+                        if (binding.nameEdit.getText().length() == 0) return false;
                         return true;
                 }
                 return false;
@@ -88,6 +90,7 @@ public class ProjectEditorDialogFragment extends DialogFragment
         dialog.setCanceledOnTouchOutside(false);
 
         mDialog = dialog;
+        dialog.getWindow().setSoftInputMode(LayoutParams.SOFT_INPUT_STATE_VISIBLE);
         return dialog;
     }
 

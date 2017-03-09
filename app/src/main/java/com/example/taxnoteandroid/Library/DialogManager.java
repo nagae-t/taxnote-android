@@ -403,6 +403,48 @@ public class DialogManager {
 
 
     //--------------------------------------------------------------//
+    //    -- Show release note --
+    //--------------------------------------------------------------//
+
+    public static void showReleaseNoteAfterUpdate(final Context context, FragmentManager fragmentManager) {
+
+        //@@@ ここやってる途中
+//
+//        // Custom Alert
+//        final TNSimpleDialogFragment dialogFragment = TNSimpleDialogFragment.newInstance();
+//        dialogFragment.setTitle(context.getString(R.string.business_model_title));
+//        dialogFragment.setMessage(context.getString(R.string.business_model_message));
+//
+//        dialogFragment.setContentViewId(R.layout.changelog_layout);
+//
+//        dialogFragment.setCloseToFinish(true);
+//        dialogFragment.setPositiveBtnText(context.getString(R.string.rate_app_yes_button));
+//        dialogFragment.setNegativeBtnText(context.getString(R.string.cancel));
+//
+//        dialogFragment.setDialogListener(new TNSimpleDialogFragment.TNSimpleDialogListener() {
+//            @Override
+//            public void onPositiveBtnClick(DialogInterface dialogInterface, int i, String tag) {
+//
+//                //@@@ ここでレビュージャンプ
+//                dialogInterface.dismiss();
+//            }
+//            @Override
+//            public void onNeutralBtnClick(DialogInterface dialogInterface, int i, String tag) {}
+//            @Override
+//            public void onNegativeBtnClick(DialogInterface dialogInterface, int i, String tag) {
+//                dialogInterface.dismiss();
+//            }
+//            @Override
+//            public void onDialogCancel(DialogInterface dialogInterface, String tag) {}
+//            @Override
+//            public void onDialogDismiss(DialogInterface dialogInterface, String tag) {}
+//        });
+//
+//        dialogFragment.show(fragmentManager, null);
+    }
+
+
+    //--------------------------------------------------------------//
     //    -- Custom AlertDialog --
     //--------------------------------------------------------------//
 

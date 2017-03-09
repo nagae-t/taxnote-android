@@ -19,6 +19,9 @@ import com.example.taxnoteandroid.dataManager.SharedPreferencesManager;
 import com.example.taxnoteandroid.databinding.ActivityUpgradeBinding;
 import com.helpshift.support.Support;
 import com.kobakei.ratethisapp.RateThisApp;
+import com.mixpanel.android.mpmetrics.MixpanelAPI;
+
+import static com.example.taxnoteandroid.TaxnoteConsts.MIXPANEL_TOKEN;
 
 
 public class UpgradeActivity extends DefaultCommonActivity {
@@ -206,6 +209,9 @@ public class UpgradeActivity extends DefaultCommonActivity {
                         }
                     })
                     .show();
+
+            MixpanelAPI mixpanel = MixpanelAPI.getInstance(this, MIXPANEL_TOKEN);
+            mixpanel.track("Taxnote Plus Upgraded");
         }
     }
 }
