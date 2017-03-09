@@ -17,7 +17,6 @@
 #}
 
 
-# @@ ここの設定ワケワカメ
 #-dontwarn android.support.v4.**
 -keep class android.support.v4.** { *; }
 -keep interface android.support.v4.** { *; }

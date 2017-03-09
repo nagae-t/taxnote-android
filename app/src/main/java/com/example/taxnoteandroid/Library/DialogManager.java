@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
 import android.view.Gravity;
@@ -409,38 +410,41 @@ public class DialogManager {
     public static void showReleaseNoteAfterUpdate(final Context context, FragmentManager fragmentManager) {
 
         //@@@ ここやってる途中
-//
-//        // Custom Alert
-//        final TNSimpleDialogFragment dialogFragment = TNSimpleDialogFragment.newInstance();
-//        dialogFragment.setTitle(context.getString(R.string.business_model_title));
+
+        // Custom Alert
+        final TNSimpleDialogFragment dialogFragment = TNSimpleDialogFragment.newInstance();
+        dialogFragment.setTitle("最新版の情報");
 //        dialogFragment.setMessage(context.getString(R.string.business_model_message));
-//
-//        dialogFragment.setContentViewId(R.layout.changelog_layout);
-//
-//        dialogFragment.setCloseToFinish(true);
-//        dialogFragment.setPositiveBtnText(context.getString(R.string.rate_app_yes_button));
-//        dialogFragment.setNegativeBtnText(context.getString(R.string.cancel));
-//
-//        dialogFragment.setDialogListener(new TNSimpleDialogFragment.TNSimpleDialogListener() {
-//            @Override
-//            public void onPositiveBtnClick(DialogInterface dialogInterface, int i, String tag) {
-//
-//                //@@@ ここでレビュージャンプ
-//                dialogInterface.dismiss();
-//            }
-//            @Override
-//            public void onNeutralBtnClick(DialogInterface dialogInterface, int i, String tag) {}
-//            @Override
-//            public void onNegativeBtnClick(DialogInterface dialogInterface, int i, String tag) {
-//                dialogInterface.dismiss();
-//            }
-//            @Override
-//            public void onDialogCancel(DialogInterface dialogInterface, String tag) {}
-//            @Override
-//            public void onDialogDismiss(DialogInterface dialogInterface, String tag) {}
-//        });
-//
-//        dialogFragment.show(fragmentManager, null);
+
+        dialogFragment.setContentViewId(R.layout.changelog_layout);
+
+        dialogFragment.setCloseToFinish(true);
+        dialogFragment.setPositiveBtnText(context.getString(R.string.rate_app_yes_button));
+        dialogFragment.setNegativeBtnText(context.getString(R.string.cancel));
+
+        dialogFragment.setDialogListener(new TNSimpleDialogFragment.TNSimpleDialogListener() {
+            @Override
+            public void onPositiveBtnClick(DialogInterface dialogInterface, int i, String tag) {
+
+                dialogInterface.dismiss();
+
+                // Show the store page
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=com.nonapp.taxnote"));
+                context.startActivity(intent);
+            }
+            @Override
+            public void onNeutralBtnClick(DialogInterface dialogInterface, int i, String tag) {}
+            @Override
+            public void onNegativeBtnClick(DialogInterface dialogInterface, int i, String tag) {
+                dialogInterface.dismiss();
+            }
+            @Override
+            public void onDialogCancel(DialogInterface dialogInterface, String tag) {}
+            @Override
+            public void onDialogDismiss(DialogInterface dialogInterface, String tag) {}
+        });
+
+        dialogFragment.show(fragmentManager, null);
     }
 
 
