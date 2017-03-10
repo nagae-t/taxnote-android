@@ -28,6 +28,7 @@ public class ReportFragment extends Fragment {
     private FragmentReportBinding binding;
     private ReportContentFragmentPagerAdapter mPagerAdapter;
     private int mCurrentPagerPosition = -1;
+    private int mClosingDateIndex = 0;
 
     public ReportFragment() {
     }
@@ -52,6 +53,7 @@ public class ReportFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         mContext = getActivity().getApplicationContext();
 
+        mClosingDateIndex = SharedPreferencesManager.getMonthlyClosingDateIndex(mContext);
         int periodType = SharedPreferencesManager.getProfitLossReportPeriodType(mContext);
 
         // ボタン押したあとReportGroupingの実装を切り替える

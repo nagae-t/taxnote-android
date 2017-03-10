@@ -86,7 +86,7 @@ public class ReportContentFragment extends Fragment {
                 + mContext.getString(R.string.balance_carry_forward_view);
         binding.balanceTv.setText(blanceText);
 
-        long[] startEndDate = EntryLimitManager.getStartAndEndDate(mPeriodType, mTargetCalendar);
+        long[] startEndDate = EntryLimitManager.getStartAndEndDate(mContext, mPeriodType, mTargetCalendar);
         new ReportDataTask().execute(startEndDate);
     }
 

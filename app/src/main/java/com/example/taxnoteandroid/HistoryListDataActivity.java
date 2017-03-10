@@ -109,7 +109,7 @@ public class HistoryListDataActivity extends DefaultCommonActivity {
         actionBar.setSubtitle(pageSubTitle);
         actionBar.setDisplayHomeAsUpEnabled(true);
 
-        mStartEndDate = EntryLimitManager.getStartAndEndDate(mPeriodType, targetCalendar);
+        mStartEndDate = EntryLimitManager.getStartAndEndDate(this, mPeriodType, targetCalendar);
     }
 
     @Override

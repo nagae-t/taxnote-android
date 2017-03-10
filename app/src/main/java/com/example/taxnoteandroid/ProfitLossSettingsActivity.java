@@ -61,6 +61,7 @@ public class ProfitLossSettingsActivity extends DefaultCommonActivity {
                         SharedPreferencesManager.saveMonthlyClosingDateIndex(
                                 getApplicationContext(), i);
                         binding.monthlyClosingDateValue.setText(dateList[i]);
+                        sendBroadcast(new Intent(MainActivity.BROADCAST_REPORT_RELOAD));
                     }
                 });
             }
@@ -81,6 +82,7 @@ public class ProfitLossSettingsActivity extends DefaultCommonActivity {
                         SharedPreferencesManager.saveStartMonthOfYearIndex(
                                 getApplicationContext(), i);
                         binding.startMonthOfYearValue.setText(monthItems[i]);
+                        sendBroadcast(new Intent(MainActivity.BROADCAST_REPORT_RELOAD));
                     }
                 });
             }
