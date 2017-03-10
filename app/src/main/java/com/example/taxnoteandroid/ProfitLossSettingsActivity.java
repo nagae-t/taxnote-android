@@ -44,6 +44,11 @@ public class ProfitLossSettingsActivity extends DefaultCommonActivity {
             }
         });
 
+        // Monthly closing date
+
+
+        // Start month of year row
+
 
 
     }
