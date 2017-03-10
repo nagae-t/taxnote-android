@@ -6,7 +6,9 @@ import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.view.MenuItem;
+import android.widget.CompoundButton;
 
+import com.example.taxnoteandroid.dataManager.SharedPreferencesManager;
 import com.example.taxnoteandroid.databinding.ActivityProfitLossSettingsBinding;
 
 /**
@@ -30,6 +32,17 @@ public class ProfitLossSettingsActivity extends DefaultCommonActivity {
 
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
+
+
+        // Balance carry forward
+        boolean prefBalanceVal = SharedPreferencesManager.getBalanceCarryForward(this);
+        binding.balanceCarryForward.setChecked(prefBalanceVal);
+        binding.balanceCarryForward.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+                SharedPreferencesManager.saveBalanceCarryForward(getApplicationContext(), isChecked);
+            }
+        });
 
 
 
