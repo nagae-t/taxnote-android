@@ -10,6 +10,7 @@ import android.support.v7.app.AlertDialog;
 import android.view.Gravity;
 import android.widget.Toast;
 
+import com.example.taxnoteandroid.BuildConfig;
 import com.example.taxnoteandroid.DataExportActivity;
 import com.example.taxnoteandroid.R;
 import com.example.taxnoteandroid.TNSimpleDialogFragment;
@@ -408,36 +409,36 @@ public class DialogManager {
     //--------------------------------------------------------------//
 
     public static void showReleaseNoteAfterUpdate(final Context context, FragmentManager fragmentManager) {
+        
+        // Check if showReleaseNoteAfterUpdate got called before
+        if (SharedPreferencesManager.isLatestReleaseNoteDialogDone(context)) {
+            return;
+        }
 
-        //@@@ ここやってる途中
+        SharedPreferencesManager.saveLatestReleaseNoteDialogDone(context);
 
         // Custom Alert
         final TNSimpleDialogFragment dialogFragment = TNSimpleDialogFragment.newInstance();
-        dialogFragment.setTitle("最新版の情報");
-//        dialogFragment.setMessage(context.getString(R.string.business_model_message));
 
-        dialogFragment.setContentViewId(R.layout.changelog_layout);
+        String title = context.getString(R.string.release_note_title) + BuildConfig.VERSION_NAME;
+        dialogFragment.setTitle(title);
+        dialogFragment.setMessage(context.getString(R.string.release_note_message);
 
         dialogFragment.setCloseToFinish(true);
-        dialogFragment.setPositiveBtnText(context.getString(R.string.rate_app_yes_button));
-        dialogFragment.setNegativeBtnText(context.getString(R.string.cancel));
+        dialogFragment.setPositiveBtnText("OK");
 
         dialogFragment.setDialogListener(new TNSimpleDialogFragment.TNSimpleDialogListener() {
             @Override
             public void onPositiveBtnClick(DialogInterface dialogInterface, int i, String tag) {
 
                 dialogInterface.dismiss();
-
-                // Show the store page
-                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=com.nonapp.taxnote"));
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(context.getString(R.string.release_note_url)));
                 context.startActivity(intent);
             }
             @Override
             public void onNeutralBtnClick(DialogInterface dialogInterface, int i, String tag) {}
             @Override
-            public void onNegativeBtnClick(DialogInterface dialogInterface, int i, String tag) {
-                dialogInterface.dismiss();
-            }
+            public void onNegativeBtnClick(DialogInterface dialogInterface, int i, String tag) {}
             @Override
             public void onDialogCancel(DialogInterface dialogInterface, String tag) {}
             @Override

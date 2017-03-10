@@ -3,6 +3,8 @@ package com.example.taxnoteandroid.dataManager;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.example.taxnoteandroid.BuildConfig;
+
 import static com.example.taxnoteandroid.TaxnoteConsts.EXPORT_CHARACTER_CODE_UTF8;
 import static com.example.taxnoteandroid.TaxnoteConsts.EXPORT_FORMAT_TYPE_CSV;
 import static com.example.taxnoteandroid.TaxnoteConsts.EXPORT_RANGE_TYPE_ALL;
@@ -32,8 +34,8 @@ public class SharedPreferencesManager {
     private static final String PROFIT_LOSS_REPORT_PERIOD_KEY   = "PROFIT_LOSS_REPORT_PERIOD_KEY";
     private static final String GRAPH_REPORT_IS_EXPENSE_KEY     = "GRAPH_REPORT_IS_EXPENSE_KEY";
     private static final String BUSINESS_MODEL_MESSAGE_KEY      = "BUSINESS_MODEL_MESSAGE_KEY";
-
-    private static final String APP_THEME_STYLE_KEY      = "APP_THEME_STYLE_KEY";
+    private static final String APP_THEME_STYLE_KEY             = "APP_THEME_STYLE_KEY";
+    private static final String RELEASE_NOTE_KEY                = "RELEASE_NOTE_KEY";
 
 
     //--------------------------------------------------------------//
@@ -137,8 +139,7 @@ public class SharedPreferencesManager {
     }
 
 
-
-    //--------------------------------------------------------------//
+    //------------------------------------------------------------//
     //    -- Profit And Loss Report --
     //--------------------------------------------------------------//
 
@@ -150,6 +151,7 @@ public class SharedPreferencesManager {
         return getSharedPreferences(context).getInt(
                 PROFIT_LOSS_REPORT_PERIOD_KEY, EntryDataManager.PERIOD_TYPE_YEAR);
     }
+
 
     //--------------------------------------------------------------//
     //    -- Graph Report --
@@ -272,5 +274,22 @@ public class SharedPreferencesManager {
 
     public static long getTrackEntryCount(Context context) {
         return getSharedPreferences(context).getLong(TRACK_ENTRY_KEY, 0);
+    }
+
+
+    //--------------------------------------------------------------//
+    //    -- Release Note --
+    //--------------------------------------------------------------//
+
+    public static void saveLatestReleaseNoteDialogDone(Context context) {
+
+        String key = RELEASE_NOTE_KEY + BuildConfig.VERSION_NAME;
+        getSharedPreferences(context).edit().putBoolean(key, true).apply();
+    }
+
+    public static boolean isLatestReleaseNoteDialogDone(Context context) {
+
+        String key = RELEASE_NOTE_KEY + BuildConfig.VERSION_NAME;
+        return getSharedPreferences(context).getBoolean(key, false);
     }
 }

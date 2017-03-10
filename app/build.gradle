@@ -104,8 +104,4 @@ dependencies {
 
     // AppUpdater
     compile 'com.github.javiersantos:AppUpdater:2.5.1'
-
-    // changeloglib
-    compile 'com.github.gabrielemariotti.changeloglib:changelog:2.1.0'
-
 }
