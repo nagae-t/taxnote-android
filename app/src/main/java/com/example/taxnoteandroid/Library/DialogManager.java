@@ -18,6 +18,7 @@ import com.example.taxnoteandroid.UpgradeActivity;
 import com.example.taxnoteandroid.dataManager.EntryDataManager;
 import com.example.taxnoteandroid.dataManager.SharedPreferencesManager;
 import com.example.taxnoteandroid.model.Entry;
+import com.github.javiersantos.appupdater.AppUpdater;
 import com.helpshift.support.Support;
 
 import java.util.List;
@@ -35,7 +36,7 @@ public class DialogManager {
     public static void showInputDataToast(Context context, String dateString, Entry entry) {
 
         String message;
-        String priceString = ValueConverter.formatPrice(context ,entry.price);
+        String priceString = ValueConverter.formatPrice(context, entry.price);
 
         if (entry.isExpense) {
             message = dateString + " " + entry.reason.name + " / " + entry.account.name + " " + priceString;
@@ -91,14 +92,22 @@ public class DialogManager {
                 dialogInterface.dismiss();
                 showFirstLaunchMessage2(context, fragmentManager);
             }
+
             @Override
-            public void onNeutralBtnClick(DialogInterface dialogInterface, int i, String tag) {}
+            public void onNeutralBtnClick(DialogInterface dialogInterface, int i, String tag) {
+            }
+
             @Override
-            public void onNegativeBtnClick(DialogInterface dialogInterface, int i, String tag) {}
+            public void onNegativeBtnClick(DialogInterface dialogInterface, int i, String tag) {
+            }
+
             @Override
-            public void onDialogCancel(DialogInterface dialogInterface, String tag) {}
+            public void onDialogCancel(DialogInterface dialogInterface, String tag) {
+            }
+
             @Override
-            public void onDialogDismiss(DialogInterface dialogInterface, String tag) {}
+            public void onDialogDismiss(DialogInterface dialogInterface, String tag) {
+            }
         });
 
         dialogFragment.show(fragmentManager, null);
@@ -119,14 +128,22 @@ public class DialogManager {
                 dialogInterface.dismiss();
                 showFirstLaunchMessage3(context, fragmentManager);
             }
+
             @Override
-            public void onNeutralBtnClick(DialogInterface dialogInterface, int i, String tag) {}
+            public void onNeutralBtnClick(DialogInterface dialogInterface, int i, String tag) {
+            }
+
             @Override
-            public void onNegativeBtnClick(DialogInterface dialogInterface, int i, String tag) {}
+            public void onNegativeBtnClick(DialogInterface dialogInterface, int i, String tag) {
+            }
+
             @Override
-            public void onDialogCancel(DialogInterface dialogInterface, String tag) {}
+            public void onDialogCancel(DialogInterface dialogInterface, String tag) {
+            }
+
             @Override
-            public void onDialogDismiss(DialogInterface dialogInterface, String tag) {}
+            public void onDialogDismiss(DialogInterface dialogInterface, String tag) {
+            }
         });
 
         dialogFragment.show(fragmentManager, null);
@@ -147,14 +164,22 @@ public class DialogManager {
                 dialogInterface.dismiss();
                 showFirstLaunchMessage4(context, fragmentManager);
             }
+
             @Override
-            public void onNeutralBtnClick(DialogInterface dialogInterface, int i, String tag) {}
+            public void onNeutralBtnClick(DialogInterface dialogInterface, int i, String tag) {
+            }
+
             @Override
-            public void onNegativeBtnClick(DialogInterface dialogInterface, int i, String tag) {}
+            public void onNegativeBtnClick(DialogInterface dialogInterface, int i, String tag) {
+            }
+
             @Override
-            public void onDialogCancel(DialogInterface dialogInterface, String tag) {}
+            public void onDialogCancel(DialogInterface dialogInterface, String tag) {
+            }
+
             @Override
-            public void onDialogDismiss(DialogInterface dialogInterface, String tag) {}
+            public void onDialogDismiss(DialogInterface dialogInterface, String tag) {
+            }
         });
 
         dialogFragment.show(fragmentManager, null);
@@ -230,14 +255,22 @@ public class DialogManager {
                 dialogInterface.dismiss();
                 SharedPreferencesManager.saveHistoryTabHelpDone(context);
             }
+
             @Override
-            public void onNeutralBtnClick(DialogInterface dialogInterface, int i, String tag) {}
+            public void onNeutralBtnClick(DialogInterface dialogInterface, int i, String tag) {
+            }
+
             @Override
-            public void onNegativeBtnClick(DialogInterface dialogInterface, int i, String tag) {}
+            public void onNegativeBtnClick(DialogInterface dialogInterface, int i, String tag) {
+            }
+
             @Override
-            public void onDialogCancel(DialogInterface dialogInterface, String tag) {}
+            public void onDialogCancel(DialogInterface dialogInterface, String tag) {
+            }
+
             @Override
-            public void onDialogDismiss(DialogInterface dialogInterface, String tag) {}
+            public void onDialogDismiss(DialogInterface dialogInterface, String tag) {
+            }
         });
 
         dialogFragment.show(fragmentManager, null);
@@ -275,16 +308,23 @@ public class DialogManager {
                 Support.showFAQSection((Activity) context, "22");
                 dialogInterface.dismiss();
             }
+
             @Override
-            public void onNeutralBtnClick(DialogInterface dialogInterface, int i, String tag) {}
+            public void onNeutralBtnClick(DialogInterface dialogInterface, int i, String tag) {
+            }
+
             @Override
             public void onNegativeBtnClick(DialogInterface dialogInterface, int i, String tag) {
                 dialogInterface.dismiss();
             }
+
             @Override
-            public void onDialogCancel(DialogInterface dialogInterface, String tag) {}
+            public void onDialogCancel(DialogInterface dialogInterface, String tag) {
+            }
+
             @Override
-            public void onDialogDismiss(DialogInterface dialogInterface, String tag) {}
+            public void onDialogDismiss(DialogInterface dialogInterface, String tag) {
+            }
         });
 
         dialogFragment.show(fragmentManager, null);
@@ -322,16 +362,23 @@ public class DialogManager {
                 context.startActivity(intent);
                 dialogInterface.dismiss();
             }
+
             @Override
-            public void onNeutralBtnClick(DialogInterface dialogInterface, int i, String tag) {}
+            public void onNeutralBtnClick(DialogInterface dialogInterface, int i, String tag) {
+            }
+
             @Override
             public void onNegativeBtnClick(DialogInterface dialogInterface, int i, String tag) {
                 dialogInterface.dismiss();
             }
+
             @Override
-            public void onDialogCancel(DialogInterface dialogInterface, String tag) {}
+            public void onDialogCancel(DialogInterface dialogInterface, String tag) {
+            }
+
             @Override
-            public void onDialogDismiss(DialogInterface dialogInterface, String tag) {}
+            public void onDialogDismiss(DialogInterface dialogInterface, String tag) {
+            }
         });
 
         dialogFragment.show(fragmentManager, null);
@@ -388,16 +435,23 @@ public class DialogManager {
 
                 dialogInterface.dismiss();
             }
+
             @Override
-            public void onNeutralBtnClick(DialogInterface dialogInterface, int i, String tag) {}
+            public void onNeutralBtnClick(DialogInterface dialogInterface, int i, String tag) {
+            }
+
             @Override
             public void onNegativeBtnClick(DialogInterface dialogInterface, int i, String tag) {
                 dialogInterface.dismiss();
             }
+
             @Override
-            public void onDialogCancel(DialogInterface dialogInterface, String tag) {}
+            public void onDialogCancel(DialogInterface dialogInterface, String tag) {
+            }
+
             @Override
-            public void onDialogDismiss(DialogInterface dialogInterface, String tag) {}
+            public void onDialogDismiss(DialogInterface dialogInterface, String tag) {
+            }
         });
 
         dialogFragment.show(fragmentManager, null);
@@ -405,11 +459,11 @@ public class DialogManager {
 
 
     //--------------------------------------------------------------//
-    //    -- Show release note --
+    //    -- Release Note --
     //--------------------------------------------------------------//
 
     public static void showReleaseNoteAfterUpdate(final Context context, FragmentManager fragmentManager) {
-        
+
         // Check if showReleaseNoteAfterUpdate got called before
         if (SharedPreferencesManager.isLatestReleaseNoteDialogDone(context)) {
             return;
@@ -422,7 +476,7 @@ public class DialogManager {
 
         String title = context.getString(R.string.release_note_title) + BuildConfig.VERSION_NAME;
         dialogFragment.setTitle(title);
-        dialogFragment.setMessage(context.getString(R.string.release_note_message);
+        dialogFragment.setMessage(context.getString(R.string.release_note_message));
 
         dialogFragment.setCloseToFinish(true);
         dialogFragment.setPositiveBtnText("OK");
@@ -435,14 +489,22 @@ public class DialogManager {
                 Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(context.getString(R.string.release_note_url)));
                 context.startActivity(intent);
             }
+
             @Override
-            public void onNeutralBtnClick(DialogInterface dialogInterface, int i, String tag) {}
+            public void onNeutralBtnClick(DialogInterface dialogInterface, int i, String tag) {
+            }
+
             @Override
-            public void onNegativeBtnClick(DialogInterface dialogInterface, int i, String tag) {}
+            public void onNegativeBtnClick(DialogInterface dialogInterface, int i, String tag) {
+            }
+
             @Override
-            public void onDialogCancel(DialogInterface dialogInterface, String tag) {}
+            public void onDialogCancel(DialogInterface dialogInterface, String tag) {
+            }
+
             @Override
-            public void onDialogDismiss(DialogInterface dialogInterface, String tag) {}
+            public void onDialogDismiss(DialogInterface dialogInterface, String tag) {
+            }
         });
 
         dialogFragment.show(fragmentManager, null);
@@ -483,17 +545,35 @@ public class DialogManager {
             public void onPositiveBtnClick(DialogInterface dialogInterface, int i, String tag) {
                 dialogInterface.dismiss();
             }
+
             @Override
-            public void onNeutralBtnClick(DialogInterface dialogInterface, int i, String tag) {}
+            public void onNeutralBtnClick(DialogInterface dialogInterface, int i, String tag) {
+            }
+
             @Override
-            public void onNegativeBtnClick(DialogInterface dialogInterface, int i, String tag) {}
+            public void onNegativeBtnClick(DialogInterface dialogInterface, int i, String tag) {
+            }
+
             @Override
-            public void onDialogCancel(DialogInterface dialogInterface, String tag) {}
+            public void onDialogCancel(DialogInterface dialogInterface, String tag) {
+            }
+
             @Override
-            public void onDialogDismiss(DialogInterface dialogInterface, String tag) {}
+            public void onDialogDismiss(DialogInterface dialogInterface, String tag) {
+            }
         });
 
         dialogFragment.show(fragmentManager, null);
     }
 
+    public static void checkLatestUpdate(final Context context) {
+
+        AppUpdater appUpdater = new AppUpdater(context)
+                .setTitleOnUpdateAvailable(context.getResources().getString(R.string.update_check_title))
+                .setContentOnUpdateAvailable(context.getResources().getString(R.string.update_check_message))
+                .setButtonUpdate(context.getResources().getString(R.string.update_check_update))
+                .setButtonDismiss(context.getResources().getString(R.string.update_check_later))
+                .setButtonDoNotShowAgain(context.getResources().getString(R.string.update_check_do_not_show_again));
+        appUpdater.start();
+    }
 }

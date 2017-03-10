@@ -218,7 +218,15 @@
 
     <string name="release_note_title">最新版の情報 : </string>
     <string name="release_note_message">Taxnoteが最新版にアップデートされました。新しい機能、変更点、バグ修正などのお知らせをご確認ください。</string>
+
+    <!--//@@ここをアップデートごとに変更-->
     <string name="release_note_url">http://taxnote.hatenablog.com/entry/2016/12/01/071009</string>
+
+    <string name="update_check_title">新しいアップデートがあります</string>
+    <string name="update_check_message">Taxnoteの最新版が更新されています。新しいバージョンにアップデートしてください。</string>
+    <string name="update_check_update">アップデートする</string>
+    <string name="update_check_later">あとで</string>
+    <string name="update_check_do_not_show_again">アップデートしない</string>
 
 
 
