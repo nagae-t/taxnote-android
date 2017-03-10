@@ -219,6 +219,29 @@ public class EntryDataManager {
         return ormaDatabase.selectFromEntry().and().accountEq(account).valueOrNull();
     }
 
+    public long findSumBalance(long endDate) {
+        ProjectDataManager projectDataManager   = new ProjectDataManager(mContext);
+        Project project                         = projectDataManager.findCurrentProjectWithContext(mContext);
+
+        String schemeDelete = Entry_Schema.INSTANCE.deleted.getQualifiedName();
+        String schemeIsExpense = Entry_Schema.INSTANCE.isExpense.getQualifiedName();
+        String schemeDate = Entry_Schema.INSTANCE.date.getQualifiedName();
+
+        Entry_Selector selector = ormaDatabase.selectFromEntry()
+                .where(schemeDelete + " = 0")
+                .projectEq(project)
+                .where(schemeDate + " < " + endDate);
+
+        Long sumIncome = selector.clone().where(schemeIsExpense + " = 0").sumByPrice();
+        Long sumExpense = selector.clone().where(schemeIsExpense + " = 1").sumByPrice();
+
+        long total = 0;
+        if (sumIncome != null) total += sumIncome;
+        if (sumExpense != null) total -= sumExpense;
+
+        return total;
+    }
+
 
     //--------------------------------------------------------------//
     //    -- Update --
