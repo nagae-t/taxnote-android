@@ -410,7 +410,7 @@ public class InputDataActivity extends AppCompatActivity {
         new AlertDialog.Builder(this)
                 .setTitle(getResources().getString(R.string.upgrade))
                 .setMessage(getResources().getString(R.string.upgrade_to_plus_unlock_the_limit))
-                .setPositiveButton(getResources().getString(R.string.go_to_upgrade_screen), new DialogInterface.OnClickListener() {
+                .setPositiveButton(getResources().getString(R.string.benefits_of_upgrade), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
 
