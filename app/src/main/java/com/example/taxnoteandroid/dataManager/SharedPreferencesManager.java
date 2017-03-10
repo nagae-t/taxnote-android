@@ -34,8 +34,8 @@ public class SharedPreferencesManager {
     private static final String BUSINESS_MODEL_MESSAGE_KEY      = "BUSINESS_MODEL_MESSAGE_KEY";
 
     private static final String BALANCE_CARRY_FORWARD_KEY      = "BALANCE_CARRY_FORWARD_KEY";
-    private static final String MONTHLY_CLOSING_DATE_KEY      = "MONTHLY_CLOSING_DATE_KEY";
-    private static final String START_MONTH_OF_YEAR_KEY      = "START_MONTH_OF_YEAR_KEY";
+    private static final String MONTHLY_CLOSING_DATE_INDEX_KEY      = "MONTHLY_CLOSING_DATE_INDEX_KEY";
+    private static final String START_MONTH_OF_YEAR_INDEX_KEY      = "START_MONTH_OF_YEAR_INDEX_KEY";
 
     private static final String APP_THEME_STYLE_KEY      = "APP_THEME_STYLE_KEY";
 
@@ -163,16 +163,18 @@ public class SharedPreferencesManager {
         return getSharedPreferences(context).getBoolean(BALANCE_CARRY_FORWARD_KEY, false);
     }
 
-    // MONTHLY_CLOSING_DATE_KEY
-    public static void saveMonthlyClosingDate(Context context) {
+    public static void saveMonthlyClosingDateIndex(Context context, int index) {
+        getSharedPreferences(context).edit().putInt(MONTHLY_CLOSING_DATE_INDEX_KEY, index).apply();
     }
-    public static void getMonthlyClosingDate(Context context) {
+    public static int  getMonthlyClosingDateIndex(Context context) {
+        return getSharedPreferences(context).getInt(MONTHLY_CLOSING_DATE_INDEX_KEY, 28);
     }
 
-    // START_MONTH_OF_YEAR_KEY
-    public static void saveStartMonthOfYear(Context context) {
+    public static void saveStartMonthOfYearIndex(Context context, int index) {
+        getSharedPreferences(context).edit().putInt(START_MONTH_OF_YEAR_INDEX_KEY, index).apply();
     }
-    public static void getStartMonthOfYear(Context context) {
+    public static int getStartMonthOfYearIndex(Context context) {
+        return getSharedPreferences(context).getInt(START_MONTH_OF_YEAR_INDEX_KEY, 0);
     }
 
     //--------------------------------------------------------------//

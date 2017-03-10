@@ -1,11 +1,14 @@
 package com.example.taxnoteandroid;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.CompoundButton;
 
 import com.example.taxnoteandroid.dataManager.SharedPreferencesManager;
@@ -45,12 +48,52 @@ public class ProfitLossSettingsActivity extends DefaultCommonActivity {
         });
 
         // Monthly closing date
+        final String[] dateList = getResources().getStringArray(R.array.close_date_list);
+        int dateIndex = SharedPreferencesManager.getMonthlyClosingDateIndex(this);
+        binding.monthlyClosingDateValue.setText(dateList[dateIndex]);
+        binding.monthlyClosingDateRow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String title = getString(R.string.monthly_closing_date);
+                showListMenuDialog(title, dateList, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        SharedPreferencesManager.saveMonthlyClosingDateIndex(
+                                getApplicationContext(), i);
+                        binding.monthlyClosingDateValue.setText(dateList[i]);
+                    }
+                });
+            }
+        });
 
 
         // Start month of year row
+        final String[] monthItems = getResources().getStringArray(R.array.month_list);
+        int monthIndex = SharedPreferencesManager.getStartMonthOfYearIndex(this);
+        binding.startMonthOfYearValue.setText(monthItems[monthIndex]);
+        binding.startMonthOfYearRow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String title = getString(R.string.start_month_of_year);
+                showListMenuDialog(title, monthItems, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        SharedPreferencesManager.saveStartMonthOfYearIndex(
+                                getApplicationContext(), i);
+                        binding.startMonthOfYearValue.setText(monthItems[i]);
+                    }
+                });
+            }
+        });
+    }
 
+    private void showListMenuDialog(String title, String[] items, DialogInterface.OnClickListener clickListerner) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
-
+        builder.setItems(items, clickListerner);
+        AlertDialog menuDialog = builder.create();
+        menuDialog.setTitle(title);
+        menuDialog.show();
     }
 
     @Override
