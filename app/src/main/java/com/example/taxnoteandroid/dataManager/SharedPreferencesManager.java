@@ -3,8 +3,6 @@ package com.example.taxnoteandroid.dataManager;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import com.example.taxnoteandroid.BuildConfig;
-
 import static com.example.taxnoteandroid.TaxnoteConsts.EXPORT_CHARACTER_CODE_UTF8;
 import static com.example.taxnoteandroid.TaxnoteConsts.EXPORT_FORMAT_TYPE_CSV;
 import static com.example.taxnoteandroid.TaxnoteConsts.EXPORT_RANGE_TYPE_ALL;
@@ -281,15 +279,12 @@ public class SharedPreferencesManager {
     //    -- Release Note --
     //--------------------------------------------------------------//
 
-    public static void saveLatestReleaseNoteDialogDone(Context context) {
-
-        String key = RELEASE_NOTE_KEY + BuildConfig.VERSION_NAME;
-        getSharedPreferences(context).edit().putBoolean(key, true).apply();
+    public static void saveLastVersionName(Context context, String versionName) {
+        getSharedPreferences(context).edit().putString(RELEASE_NOTE_KEY, versionName).apply();
     }
 
-    public static boolean isLatestReleaseNoteDialogDone(Context context) {
-
-        String key = RELEASE_NOTE_KEY + BuildConfig.VERSION_NAME;
-        return getSharedPreferences(context).getBoolean(key, false);
+    public static String getLastVersionName(Context context) {
+        return getSharedPreferences(context).getString(RELEASE_NOTE_KEY, "");
     }
+
 }

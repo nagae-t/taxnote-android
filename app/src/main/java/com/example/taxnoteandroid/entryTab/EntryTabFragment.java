@@ -43,7 +43,7 @@ public class EntryTabFragment extends Fragment {
         // Reset selected date
         SharedPreferencesManager.saveCurrentSelectedDate(getActivity(),System.currentTimeMillis());
 
-        // Show release note on update
+        DialogManager.showFirstLaunchMessage(getActivity(),getFragmentManager());
         DialogManager.showReleaseNoteAfterUpdate(getActivity(), getFragmentManager());
 
         return v;

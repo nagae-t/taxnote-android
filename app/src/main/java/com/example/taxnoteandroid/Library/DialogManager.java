@@ -10,7 +10,6 @@ import android.support.v7.app.AlertDialog;
 import android.view.Gravity;
 import android.widget.Toast;
 
-import com.example.taxnoteandroid.BuildConfig;
 import com.example.taxnoteandroid.DataExportActivity;
 import com.example.taxnoteandroid.R;
 import com.example.taxnoteandroid.TNSimpleDialogFragment;
@@ -422,7 +421,7 @@ public class DialogManager {
         dialogFragment.setMessage(context.getString(R.string.business_model_message));
 
         dialogFragment.setCloseToFinish(true);
-        dialogFragment.setPositiveBtnText(context.getString(R.string.go_to_upgrade_screen));
+        dialogFragment.setPositiveBtnText(context.getString(R.string.benefits_of_upgrade));
         dialogFragment.setNegativeBtnText(context.getString(R.string.cancel));
 
         dialogFragment.setDialogListener(new TNSimpleDialogFragment.TNSimpleDialogListener() {
@@ -464,22 +463,33 @@ public class DialogManager {
 
     public static void showReleaseNoteAfterUpdate(final Context context, FragmentManager fragmentManager) {
 
-        // Check if showReleaseNoteAfterUpdate got called before
-        if (SharedPreferencesManager.isLatestReleaseNoteDialogDone(context)) {
+        String lastVersionName      = SharedPreferencesManager.getLastVersionName(context);
+        String currentVersionName   = com.example.taxnoteandroid.BuildConfig.VERSION_NAME;
+
+        // Skip for the first run
+        if (lastVersionName.isEmpty()) {
+            SharedPreferencesManager.saveLastVersionName(context, currentVersionName);
             return;
         }
 
-        SharedPreferencesManager.saveLatestReleaseNoteDialogDone(context);
+        // Skip when no update is available
+        if (lastVersionName.equals(currentVersionName)) {
+            return;
+        }
+
+        // Save it when a new update is available
+        SharedPreferencesManager.saveLastVersionName(context, currentVersionName);
 
         // Custom Alert
         final TNSimpleDialogFragment dialogFragment = TNSimpleDialogFragment.newInstance();
 
-        String title = context.getString(R.string.release_note_title) + BuildConfig.VERSION_NAME;
+        String title = context.getString(R.string.release_note_title) + currentVersionName;
         dialogFragment.setTitle(title);
         dialogFragment.setMessage(context.getString(R.string.release_note_message));
 
         dialogFragment.setCloseToFinish(true);
         dialogFragment.setPositiveBtnText("OK");
+        dialogFragment.setNegativeBtnText(context.getString(R.string.cancel));
 
         dialogFragment.setDialogListener(new TNSimpleDialogFragment.TNSimpleDialogListener() {
             @Override
@@ -491,23 +501,29 @@ public class DialogManager {
             }
 
             @Override
-            public void onNeutralBtnClick(DialogInterface dialogInterface, int i, String tag) {
-            }
-
+            public void onNeutralBtnClick(DialogInterface dialogInterface, int i, String tag) {}
             @Override
             public void onNegativeBtnClick(DialogInterface dialogInterface, int i, String tag) {
+                dialogInterface.dismiss();
             }
-
             @Override
-            public void onDialogCancel(DialogInterface dialogInterface, String tag) {
-            }
-
+            public void onDialogCancel(DialogInterface dialogInterface, String tag) {}
             @Override
-            public void onDialogDismiss(DialogInterface dialogInterface, String tag) {
-            }
+            public void onDialogDismiss(DialogInterface dialogInterface, String tag) {}
         });
 
         dialogFragment.show(fragmentManager, null);
+    }
+
+    public static void checkLatestUpdate(final Context context) {
+
+        AppUpdater appUpdater = new AppUpdater(context)
+                .setTitleOnUpdateAvailable(context.getResources().getString(R.string.update_check_title))
+                .setContentOnUpdateAvailable(context.getResources().getString(R.string.update_check_message))
+                .setButtonUpdate(context.getResources().getString(R.string.update_check_update))
+                .setButtonDismiss(context.getResources().getString(R.string.update_check_later))
+                .setButtonDoNotShowAgain(context.getResources().getString(R.string.update_check_do_not_show_again));
+        appUpdater.start();
     }
 
 
@@ -564,16 +580,5 @@ public class DialogManager {
         });
 
         dialogFragment.show(fragmentManager, null);
-    }
-
-    public static void checkLatestUpdate(final Context context) {
-
-        AppUpdater appUpdater = new AppUpdater(context)
-                .setTitleOnUpdateAvailable(context.getResources().getString(R.string.update_check_title))
-                .setContentOnUpdateAvailable(context.getResources().getString(R.string.update_check_message))
-                .setButtonUpdate(context.getResources().getString(R.string.update_check_update))
-                .setButtonDismiss(context.getResources().getString(R.string.update_check_later))
-                .setButtonDoNotShowAgain(context.getResources().getString(R.string.update_check_do_not_show_again));
-        appUpdater.start();
     }
 }
