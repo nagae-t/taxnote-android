@@ -25,11 +25,8 @@
             android:paddingStart="16dp"
             android:text="@string/benefits_of_upgrade" />
 
-        <!--//@@一時的に消してる-->
         <!-- 複数帳簿 -->
         <LinearLayout
-            android:visibility="gone"
-
             android:id="@+id/project_radio_layout"
             android:orientation="vertical"
             android:layout_width="match_parent"
@@ -68,9 +65,6 @@
             android:layout_width="match_parent"
             android:layout_height="1px" />
         <TextView
-
-            android:visibility="gone"
-
             style="@style/font_style_standard"
             android:id="@+id/settings_project_button"
             android:background="@drawable/selector_background_colors"
