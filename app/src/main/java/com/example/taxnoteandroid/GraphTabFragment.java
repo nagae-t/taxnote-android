@@ -16,7 +16,6 @@ import com.example.taxnoteandroid.dataManager.SharedPreferencesManager;
 import com.example.taxnoteandroid.databinding.FragmentGraphTabBinding;
 import com.example.taxnoteandroid.model.Entry;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
@@ -29,7 +28,9 @@ public class GraphTabFragment extends Fragment  {
     private Context mContext;
     private FragmentGraphTabBinding binding;
     private GraphContentFragmentPagerAdapter mPagerAdapter;
+    private EntryDataManager mEntryDataManager;
     private int mCurrentPagerPosition = -1;
+    private int mClosingDateIndex = 0;
     private boolean mIsExpense;
 
     public static GraphTabFragment newInstance() {
@@ -52,7 +53,8 @@ public class GraphTabFragment extends Fragment  {
         super.onActivityCreated(savedInstanceState);
         mContext = getActivity().getApplicationContext();
 
-
+        mEntryDataManager = new EntryDataManager(mContext);
+        mClosingDateIndex = SharedPreferencesManager.getMonthlyClosingDateIndex(mContext);
         int periodType = SharedPreferencesManager.getProfitLossReportPeriodType(mContext);
         mIsExpense = SharedPreferencesManager.getGraphReportIsExpenseType(mContext);
         switchDataView(periodType, mIsExpense);
@@ -78,21 +80,6 @@ public class GraphTabFragment extends Fragment  {
         super.onResume();
     }
 
-    private List<Calendar> createData(ReportGrouping reportGrouping) {
-        EntryDataManager entryDataManager = new EntryDataManager(mContext);
-        List<Entry> entries = entryDataManager.findAll(mContext, null, true);
-        List<Calendar> result = new ArrayList<>();
-        for (Entry entry : entries) {
-            Calendar calendar = reportGrouping.getGroupingCalendar(entry);
-
-            if (!result.contains(calendar)) {
-                result.add(calendar);
-            }
-        }
-
-        return result;
-    }
-
     public void reloadData() {
         int periodType = SharedPreferencesManager.getProfitLossReportPeriodType(mContext);
         boolean isExpense = SharedPreferencesManager.getGraphReportIsExpenseType(mContext);
@@ -114,7 +101,8 @@ public class GraphTabFragment extends Fragment  {
         SharedPreferencesManager.saveProfitLossReportPeriodType(mContext, periodType);
         SharedPreferencesManager.saveGraphReportIsExpenseType(mContext, isExpense);
 
-        List<Calendar> calendars = createData(reportGrouping);
+        List<Entry> entries = mEntryDataManager.findAll(mContext, null, true);
+        List<Calendar> calendars = reportGrouping.getReportCalendars(mClosingDateIndex, entries);
         mPagerAdapter = new GraphContentFragmentPagerAdapter(
                 getChildFragmentManager(), reportGrouping, calendars, isExpense);
         binding.pager.setAdapter(mPagerAdapter);

@@ -16,17 +16,15 @@ import com.example.taxnoteandroid.dataManager.SharedPreferencesManager;
 import com.example.taxnoteandroid.databinding.FragmentReportBinding;
 import com.example.taxnoteandroid.model.Entry;
 
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 public class ReportFragment extends Fragment {
 
     private Context mContext;
     private FragmentReportBinding binding;
     private ReportContentFragmentPagerAdapter mPagerAdapter;
+    private EntryDataManager mEntryDataManager;
     private int mCurrentPagerPosition = -1;
     private int mClosingDateIndex = 0;
 
@@ -53,6 +51,7 @@ public class ReportFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         mContext = getActivity().getApplicationContext();
 
+        mEntryDataManager = new EntryDataManager(mContext);
         mClosingDateIndex = SharedPreferencesManager.getMonthlyClosingDateIndex(mContext);
         int periodType = SharedPreferencesManager.getProfitLossReportPeriodType(mContext);
 
@@ -75,29 +74,6 @@ public class ReportFragment extends Fragment {
         });
     }
 
-    private Map<Calendar, List<Entry>> createReportDate(ReportGrouping reportGrouping) {
-        EntryDataManager entryDataManager = new EntryDataManager(mContext);
-        List<Entry> entries = entryDataManager.findAll(mContext, null, true);
-        Map<Calendar, List<Entry>> map = new LinkedHashMap<>();
-        for (Entry entry : entries) {
-            Calendar calendar = reportGrouping.getGroupingCalendar(entry);
-
-//            for (Calendar c : map.keySet()) {
-//                Log.d("cccc", "calendar : " + calendar.toString());
-//                Log.d("cccc", "c : " + c.toString());
-//                Log.d("cccc", "" + calendar.equals(c));
-//            }
-
-            if (map.containsKey(calendar)) {
-                map.get(calendar).add(entry);
-            } else {
-                List<Entry> list = new ArrayList<>();
-                list.add(entry);
-                map.put(calendar, list);
-            }
-        }
-        return map;
-    }
 
     @Override
     public void onResume() {
@@ -121,8 +97,9 @@ public class ReportFragment extends Fragment {
         // 期間タイプをデフォルト値として保存
         SharedPreferencesManager.saveProfitLossReportPeriodType(mContext, periodType);
 
-        Map<Calendar, List<Entry>> map = createReportDate(reportGrouping);
-        mPagerAdapter = new ReportContentFragmentPagerAdapter(getChildFragmentManager(), reportGrouping, map);
+        List<Entry> entries = mEntryDataManager.findAll(mContext, null, true);
+        List<Calendar> calendars = reportGrouping.getReportCalendars(mClosingDateIndex, entries);
+        mPagerAdapter = new ReportContentFragmentPagerAdapter(getChildFragmentManager(), reportGrouping, calendars);
         binding.pager.setAdapter(mPagerAdapter);
         if (mCurrentPagerPosition < 0) {
             binding.pager.setCurrentItem(mPagerAdapter.getCount() - 1);
@@ -134,30 +111,31 @@ public class ReportFragment extends Fragment {
     public class ReportContentFragmentPagerAdapter extends FragmentStatePagerAdapter {
 
         private final ReportGrouping reportGrouping;
-        private final int count;
-        private final Calendar[] calendars;
+        private final List<Calendar> calendars;
 
-        public ReportContentFragmentPagerAdapter(FragmentManager fm, ReportGrouping reportGrouping, Map<Calendar, List<Entry>> map) {
+        public ReportContentFragmentPagerAdapter(FragmentManager fm,
+                                                 ReportGrouping reportGrouping,
+                                                 List<Calendar> calendars) {
             super(fm);
             this.reportGrouping = reportGrouping;
-            this.count = map.size();
-            calendars = map.keySet().toArray(new Calendar[map.keySet().size()]);
+            this.calendars = calendars;
         }
 
         @Override
         public Fragment getItem(int position) {
-            Calendar targetCalender = calendars[position];
+            Calendar targetCalender = calendars.get(position);
             return ReportContentFragment.newInstance(targetCalender);
         }
 
         @Override
         public int getCount() {
-            return count;
+            if (calendars == null) return 0;
+            return calendars.size();
         }
 
         @Override
         public CharSequence getPageTitle(int position) {
-            return reportGrouping.getTabTitle(calendars[position]);
+            return reportGrouping.getTabTitle(calendars.get(position));
         }
 
         @Override
