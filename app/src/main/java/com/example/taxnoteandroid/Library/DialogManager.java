@@ -17,6 +17,7 @@ import com.example.taxnoteandroid.UpgradeActivity;
 import com.example.taxnoteandroid.dataManager.EntryDataManager;
 import com.example.taxnoteandroid.dataManager.SharedPreferencesManager;
 import com.example.taxnoteandroid.model.Entry;
+import com.github.javiersantos.appupdater.AppUpdater;
 import com.helpshift.support.Support;
 
 import java.util.List;
@@ -34,7 +35,7 @@ public class DialogManager {
     public static void showInputDataToast(Context context, String dateString, Entry entry) {
 
         String message;
-        String priceString = ValueConverter.formatPrice(context ,entry.price);
+        String priceString = ValueConverter.formatPrice(context, entry.price);
 
         if (entry.isExpense) {
             message = dateString + " " + entry.reason.name + " / " + entry.account.name + " " + priceString;
@@ -90,14 +91,22 @@ public class DialogManager {
                 dialogInterface.dismiss();
                 showFirstLaunchMessage2(context, fragmentManager);
             }
+
             @Override
-            public void onNeutralBtnClick(DialogInterface dialogInterface, int i, String tag) {}
+            public void onNeutralBtnClick(DialogInterface dialogInterface, int i, String tag) {
+            }
+
             @Override
-            public void onNegativeBtnClick(DialogInterface dialogInterface, int i, String tag) {}
+            public void onNegativeBtnClick(DialogInterface dialogInterface, int i, String tag) {
+            }
+
             @Override
-            public void onDialogCancel(DialogInterface dialogInterface, String tag) {}
+            public void onDialogCancel(DialogInterface dialogInterface, String tag) {
+            }
+
             @Override
-            public void onDialogDismiss(DialogInterface dialogInterface, String tag) {}
+            public void onDialogDismiss(DialogInterface dialogInterface, String tag) {
+            }
         });
 
         dialogFragment.show(fragmentManager, null);
@@ -118,14 +127,22 @@ public class DialogManager {
                 dialogInterface.dismiss();
                 showFirstLaunchMessage3(context, fragmentManager);
             }
+
             @Override
-            public void onNeutralBtnClick(DialogInterface dialogInterface, int i, String tag) {}
+            public void onNeutralBtnClick(DialogInterface dialogInterface, int i, String tag) {
+            }
+
             @Override
-            public void onNegativeBtnClick(DialogInterface dialogInterface, int i, String tag) {}
+            public void onNegativeBtnClick(DialogInterface dialogInterface, int i, String tag) {
+            }
+
             @Override
-            public void onDialogCancel(DialogInterface dialogInterface, String tag) {}
+            public void onDialogCancel(DialogInterface dialogInterface, String tag) {
+            }
+
             @Override
-            public void onDialogDismiss(DialogInterface dialogInterface, String tag) {}
+            public void onDialogDismiss(DialogInterface dialogInterface, String tag) {
+            }
         });
 
         dialogFragment.show(fragmentManager, null);
@@ -146,14 +163,22 @@ public class DialogManager {
                 dialogInterface.dismiss();
                 showFirstLaunchMessage4(context, fragmentManager);
             }
+
             @Override
-            public void onNeutralBtnClick(DialogInterface dialogInterface, int i, String tag) {}
+            public void onNeutralBtnClick(DialogInterface dialogInterface, int i, String tag) {
+            }
+
             @Override
-            public void onNegativeBtnClick(DialogInterface dialogInterface, int i, String tag) {}
+            public void onNegativeBtnClick(DialogInterface dialogInterface, int i, String tag) {
+            }
+
             @Override
-            public void onDialogCancel(DialogInterface dialogInterface, String tag) {}
+            public void onDialogCancel(DialogInterface dialogInterface, String tag) {
+            }
+
             @Override
-            public void onDialogDismiss(DialogInterface dialogInterface, String tag) {}
+            public void onDialogDismiss(DialogInterface dialogInterface, String tag) {
+            }
         });
 
         dialogFragment.show(fragmentManager, null);
@@ -229,14 +254,22 @@ public class DialogManager {
                 dialogInterface.dismiss();
                 SharedPreferencesManager.saveHistoryTabHelpDone(context);
             }
+
             @Override
-            public void onNeutralBtnClick(DialogInterface dialogInterface, int i, String tag) {}
+            public void onNeutralBtnClick(DialogInterface dialogInterface, int i, String tag) {
+            }
+
             @Override
-            public void onNegativeBtnClick(DialogInterface dialogInterface, int i, String tag) {}
+            public void onNegativeBtnClick(DialogInterface dialogInterface, int i, String tag) {
+            }
+
             @Override
-            public void onDialogCancel(DialogInterface dialogInterface, String tag) {}
+            public void onDialogCancel(DialogInterface dialogInterface, String tag) {
+            }
+
             @Override
-            public void onDialogDismiss(DialogInterface dialogInterface, String tag) {}
+            public void onDialogDismiss(DialogInterface dialogInterface, String tag) {
+            }
         });
 
         dialogFragment.show(fragmentManager, null);
@@ -274,16 +307,23 @@ public class DialogManager {
                 Support.showFAQSection((Activity) context, "22");
                 dialogInterface.dismiss();
             }
+
             @Override
-            public void onNeutralBtnClick(DialogInterface dialogInterface, int i, String tag) {}
+            public void onNeutralBtnClick(DialogInterface dialogInterface, int i, String tag) {
+            }
+
             @Override
             public void onNegativeBtnClick(DialogInterface dialogInterface, int i, String tag) {
                 dialogInterface.dismiss();
             }
+
             @Override
-            public void onDialogCancel(DialogInterface dialogInterface, String tag) {}
+            public void onDialogCancel(DialogInterface dialogInterface, String tag) {
+            }
+
             @Override
-            public void onDialogDismiss(DialogInterface dialogInterface, String tag) {}
+            public void onDialogDismiss(DialogInterface dialogInterface, String tag) {
+            }
         });
 
         dialogFragment.show(fragmentManager, null);
@@ -321,16 +361,23 @@ public class DialogManager {
                 context.startActivity(intent);
                 dialogInterface.dismiss();
             }
+
             @Override
-            public void onNeutralBtnClick(DialogInterface dialogInterface, int i, String tag) {}
+            public void onNeutralBtnClick(DialogInterface dialogInterface, int i, String tag) {
+            }
+
             @Override
             public void onNegativeBtnClick(DialogInterface dialogInterface, int i, String tag) {
                 dialogInterface.dismiss();
             }
+
             @Override
-            public void onDialogCancel(DialogInterface dialogInterface, String tag) {}
+            public void onDialogCancel(DialogInterface dialogInterface, String tag) {
+            }
+
             @Override
-            public void onDialogDismiss(DialogInterface dialogInterface, String tag) {}
+            public void onDialogDismiss(DialogInterface dialogInterface, String tag) {
+            }
         });
 
         dialogFragment.show(fragmentManager, null);
@@ -374,7 +421,7 @@ public class DialogManager {
         dialogFragment.setMessage(context.getString(R.string.business_model_message));
 
         dialogFragment.setCloseToFinish(true);
-        dialogFragment.setPositiveBtnText(context.getString(R.string.go_to_upgrade_screen));
+        dialogFragment.setPositiveBtnText(context.getString(R.string.benefits_of_upgrade));
         dialogFragment.setNegativeBtnText(context.getString(R.string.cancel));
 
         dialogFragment.setDialogListener(new TNSimpleDialogFragment.TNSimpleDialogListener() {
@@ -387,6 +434,72 @@ public class DialogManager {
 
                 dialogInterface.dismiss();
             }
+
+            @Override
+            public void onNeutralBtnClick(DialogInterface dialogInterface, int i, String tag) {
+            }
+
+            @Override
+            public void onNegativeBtnClick(DialogInterface dialogInterface, int i, String tag) {
+                dialogInterface.dismiss();
+            }
+
+            @Override
+            public void onDialogCancel(DialogInterface dialogInterface, String tag) {
+            }
+
+            @Override
+            public void onDialogDismiss(DialogInterface dialogInterface, String tag) {
+            }
+        });
+
+        dialogFragment.show(fragmentManager, null);
+    }
+
+
+    //--------------------------------------------------------------//
+    //    -- Release Note --
+    //--------------------------------------------------------------//
+
+    public static void showReleaseNoteAfterUpdate(final Context context, FragmentManager fragmentManager) {
+
+        String lastVersionName      = SharedPreferencesManager.getLastVersionName(context);
+        String currentVersionName   = com.example.taxnoteandroid.BuildConfig.VERSION_NAME;
+
+        // Skip for the first run
+        if (lastVersionName.isEmpty()) {
+            SharedPreferencesManager.saveLastVersionName(context, currentVersionName);
+            return;
+        }
+
+        // Skip when no update is available
+        if (lastVersionName.equals(currentVersionName)) {
+            return;
+        }
+
+        // Save it when a new update is available
+        SharedPreferencesManager.saveLastVersionName(context, currentVersionName);
+
+        // Custom Alert
+        final TNSimpleDialogFragment dialogFragment = TNSimpleDialogFragment.newInstance();
+
+        String title = context.getString(R.string.release_note_title) + currentVersionName;
+        dialogFragment.setTitle(title);
+        dialogFragment.setMessage(context.getString(R.string.release_note_message));
+
+        dialogFragment.setCloseToFinish(true);
+        dialogFragment.setPositiveBtnText("OK");
+        dialogFragment.setNegativeBtnText(context.getString(R.string.cancel));
+
+        dialogFragment.setDialogListener(new TNSimpleDialogFragment.TNSimpleDialogListener() {
+            @Override
+            public void onPositiveBtnClick(DialogInterface dialogInterface, int i, String tag) {
+
+                dialogInterface.dismiss();
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(context.getString(R.string.release_note_url)));
+                context.startActivity(intent);
+            }
+
             @Override
             public void onNeutralBtnClick(DialogInterface dialogInterface, int i, String tag) {}
             @Override
@@ -402,49 +515,15 @@ public class DialogManager {
         dialogFragment.show(fragmentManager, null);
     }
 
+    public static void checkLatestUpdate(final Context context) {
 
-    //--------------------------------------------------------------//
-    //    -- Show release note --
-    //--------------------------------------------------------------//
-
-    public static void showReleaseNoteAfterUpdate(final Context context, FragmentManager fragmentManager) {
-
-        //@@@ ここやってる途中
-
-        // Custom Alert
-        final TNSimpleDialogFragment dialogFragment = TNSimpleDialogFragment.newInstance();
-        dialogFragment.setTitle("最新版の情報");
-//        dialogFragment.setMessage(context.getString(R.string.business_model_message));
-
-        dialogFragment.setContentViewId(R.layout.changelog_layout);
-
-        dialogFragment.setCloseToFinish(true);
-        dialogFragment.setPositiveBtnText(context.getString(R.string.rate_app_yes_button));
-        dialogFragment.setNegativeBtnText(context.getString(R.string.cancel));
-
-        dialogFragment.setDialogListener(new TNSimpleDialogFragment.TNSimpleDialogListener() {
-            @Override
-            public void onPositiveBtnClick(DialogInterface dialogInterface, int i, String tag) {
-
-                dialogInterface.dismiss();
-
-                // Show the store page
-                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=com.nonapp.taxnote"));
-                context.startActivity(intent);
-            }
-            @Override
-            public void onNeutralBtnClick(DialogInterface dialogInterface, int i, String tag) {}
-            @Override
-            public void onNegativeBtnClick(DialogInterface dialogInterface, int i, String tag) {
-                dialogInterface.dismiss();
-            }
-            @Override
-            public void onDialogCancel(DialogInterface dialogInterface, String tag) {}
-            @Override
-            public void onDialogDismiss(DialogInterface dialogInterface, String tag) {}
-        });
-
-        dialogFragment.show(fragmentManager, null);
+        AppUpdater appUpdater = new AppUpdater(context)
+                .setTitleOnUpdateAvailable(context.getResources().getString(R.string.update_check_title))
+                .setContentOnUpdateAvailable(context.getResources().getString(R.string.update_check_message))
+                .setButtonUpdate(context.getResources().getString(R.string.update_check_update))
+                .setButtonDismiss(context.getResources().getString(R.string.update_check_later))
+                .setButtonDoNotShowAgain(context.getResources().getString(R.string.update_check_do_not_show_again));
+        appUpdater.start();
     }
 
 
@@ -482,17 +561,24 @@ public class DialogManager {
             public void onPositiveBtnClick(DialogInterface dialogInterface, int i, String tag) {
                 dialogInterface.dismiss();
             }
+
             @Override
-            public void onNeutralBtnClick(DialogInterface dialogInterface, int i, String tag) {}
+            public void onNeutralBtnClick(DialogInterface dialogInterface, int i, String tag) {
+            }
+
             @Override
-            public void onNegativeBtnClick(DialogInterface dialogInterface, int i, String tag) {}
+            public void onNegativeBtnClick(DialogInterface dialogInterface, int i, String tag) {
+            }
+
             @Override
-            public void onDialogCancel(DialogInterface dialogInterface, String tag) {}
+            public void onDialogCancel(DialogInterface dialogInterface, String tag) {
+            }
+
             @Override
-            public void onDialogDismiss(DialogInterface dialogInterface, String tag) {}
+            public void onDialogDismiss(DialogInterface dialogInterface, String tag) {
+            }
         });
 
         dialogFragment.show(fragmentManager, null);
     }
-
 }

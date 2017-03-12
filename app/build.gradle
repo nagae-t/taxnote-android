@@ -26,8 +26,8 @@ android {
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
 
-        versionCode 57
-        versionName "1.0.6"
+        versionCode 58
+        versionName "1.0.7"
     }
     dataBinding {
         enabled true
@@ -103,9 +103,5 @@ dependencies {
     }
 
     // AppUpdater
-    compile 'com.github.javiersantos:AppUpdater:2.5.1'
-
-    // changeloglib
-    compile 'com.github.gabrielemariotti.changeloglib:changelog:2.1.0'
-
+    compile 'com.github.javiersantos:AppUpdater:2.5.2'
 }

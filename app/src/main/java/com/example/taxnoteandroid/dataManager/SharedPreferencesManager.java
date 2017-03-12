@@ -33,11 +33,12 @@ public class SharedPreferencesManager {
     private static final String GRAPH_REPORT_IS_EXPENSE_KEY     = "GRAPH_REPORT_IS_EXPENSE_KEY";
     private static final String BUSINESS_MODEL_MESSAGE_KEY      = "BUSINESS_MODEL_MESSAGE_KEY";
 
-    private static final String BALANCE_CARRY_FORWARD_KEY      = "BALANCE_CARRY_FORWARD_KEY";
-    private static final String MONTHLY_CLOSING_DATE_INDEX_KEY      = "MONTHLY_CLOSING_DATE_INDEX_KEY";
-    private static final String START_MONTH_OF_YEAR_INDEX_KEY      = "START_MONTH_OF_YEAR_INDEX_KEY";
+    private static final String BALANCE_CARRY_FORWARD_KEY       = "BALANCE_CARRY_FORWARD_KEY";
+    private static final String MONTHLY_CLOSING_DATE_INDEX_KEY  = "MONTHLY_CLOSING_DATE_INDEX_KEY";
+    private static final String START_MONTH_OF_YEAR_INDEX_KEY   = "START_MONTH_OF_YEAR_INDEX_KEY";
 
-    private static final String APP_THEME_STYLE_KEY      = "APP_THEME_STYLE_KEY";
+    private static final String APP_THEME_STYLE_KEY             = "APP_THEME_STYLE_KEY";
+    private static final String RELEASE_NOTE_KEY                = "RELEASE_NOTE_KEY";
 
 
     //--------------------------------------------------------------//
@@ -141,8 +142,7 @@ public class SharedPreferencesManager {
     }
 
 
-
-    //--------------------------------------------------------------//
+    //------------------------------------------------------------//
     //    -- Profit And Loss Report --
     //--------------------------------------------------------------//
 
@@ -299,4 +299,18 @@ public class SharedPreferencesManager {
     public static long getTrackEntryCount(Context context) {
         return getSharedPreferences(context).getLong(TRACK_ENTRY_KEY, 0);
     }
+
+
+    //--------------------------------------------------------------//
+    //    -- Release Note --
+    //--------------------------------------------------------------//
+
+    public static void saveLastVersionName(Context context, String versionName) {
+        getSharedPreferences(context).edit().putString(RELEASE_NOTE_KEY, versionName).apply();
+    }
+
+    public static String getLastVersionName(Context context) {
+        return getSharedPreferences(context).getString(RELEASE_NOTE_KEY, "");
+    }
+
 }

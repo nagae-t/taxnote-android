@@ -15,7 +15,6 @@ import com.example.taxnoteandroid.Library.DialogManager;
 import com.example.taxnoteandroid.R;
 import com.example.taxnoteandroid.TNSimpleDialogFragment;
 import com.example.taxnoteandroid.dataManager.SharedPreferencesManager;
-import com.github.javiersantos.appupdater.AppUpdater;
 import com.helpshift.support.Support;
 
 
@@ -44,8 +43,8 @@ public class EntryTabFragment extends Fragment {
         // Reset selected date
         SharedPreferencesManager.saveCurrentSelectedDate(getActivity(),System.currentTimeMillis());
 
-        // Show release note on update
-//        DialogManager.showReleaseNoteAfterUpdate(getActivity(), getFragmentManager());
+        DialogManager.showFirstLaunchMessage(getActivity(),getFragmentManager());
+        DialogManager.showReleaseNoteAfterUpdate(getActivity(), getFragmentManager());
 
         return v;
     }
@@ -54,7 +53,6 @@ public class EntryTabFragment extends Fragment {
     public void onResume() {
         super.onResume();
 
-        checkLatestUpdate();
         DialogManager.showBusinessModelMessage(getActivity(), getFragmentManager());
         DialogManager.showAskAnythingMessage(getActivity(), getFragmentManager());
         DialogManager.showHistoryTabHelpMessage(getActivity(), getFragmentManager());
@@ -143,9 +141,4 @@ public class EntryTabFragment extends Fragment {
         }
     }
 
-    private void checkLatestUpdate() {
-
-        AppUpdater appUpdater = new AppUpdater(getActivity());
-        appUpdater.start();
-    }
 }

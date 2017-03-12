@@ -87,7 +87,6 @@
     <string name="ask_questions_or_request">要望・質問を送る</string>
     <string name="version">バージョン</string>
     <string name="upgrade_to_plus_unlock_the_limit">無料版では入力数が月15件までとなります。もしよければ無制限に記録できるTaxnoteプラスをご検討ください。機種変更時など、以前に購入している方は有料版がアップグレードの特典画面で自動的に復元されます。</string>
-    <string name="go_to_upgrade_screen">アップグレード画面へ</string>
     <string name="upgrade">アップグレード</string>
     <string name="share_taxnote">Taxnoteをシェアする</string>
     <string name="share_taxnote_title">この会計アプリ便利。</string>
@@ -209,16 +208,27 @@
     <string name="created_new_project_message">新しい帳簿を作成しました。</string>
     <string name="tap_project_to_edit_name">帳簿名をタップすると名前を変更できます。</string>
 
-
     <string name="data_backup">データのバックアップ</string>
     <string name="taxnote_data_import">Taxnote へインポート</string>
     <string name="loading">読み込み中・・・</string>
     <string name="finished_data_import">データのインポートが完了しました。</string>
     <string name="restart_app">アプリを再起動する</string>
 
+    <string name="release_note_title">最新版の情報 : </string>
+    <string name="release_note_message">Taxnoteが最新版にアップデートされました。新しい機能、変更点、バグ修正などのお知らせをご確認ください。</string>
+
+    <!--//@@ここをアップデートごとに変更-->
+    <string name="release_note_url">http://taxnote.hatenablog.com/entry/2017/03/11/183000</string>
+
+    <string name="update_check_title">新しいアップデートがあります</string>
+    <string name="update_check_message">Taxnoteの最新版が更新されています。新しいバージョンにアップデートしてください。</string>
+    <string name="update_check_update">アップデートする</string>
+    <string name="update_check_later">あとで</string>
+    <string name="update_check_do_not_show_again">アップデートしない</string>
+
     <string name="Balance">残高</string>
     <string name="profit_loss_settings">損益表の設定</string>
-    <string name="profit_loss_settings_text1">>残高繰越・締め日</string>
+    <string name="profit_loss_settings_text1">残高繰越・締め日</string>
     <string name="balance_carry_forward">残高を繰り返す</string>
     <string name="balance_carry_forward_desc">損益表の残高が、以前の残高を繰り越した数値になります。</string>
     <string name="monthly_closing_date">毎月の締め日</string>
