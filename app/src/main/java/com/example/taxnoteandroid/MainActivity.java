@@ -112,6 +112,7 @@ public class MainActivity extends DefaultCommonActivity {
         MenuItem searchMenu = menu.findItem(R.id.action_search);
         MenuItem periodDivMenu = menu.findItem(R.id.action_period_div);
         MenuItem profitLossSettingsMenu = menu.findItem(R.id.action_profit_loss_settings);
+        MenuItem profitLossExportMenu = menu.findItem(R.id.action_data_export);
         MenuItem isExpenseMenu = menu.findItem(R.id.action_report_is_expense);
 
         helpMenu.setVisible(false);
@@ -119,6 +120,7 @@ public class MainActivity extends DefaultCommonActivity {
         searchMenu.setVisible(false);
         periodDivMenu.setVisible(false);
         profitLossSettingsMenu.setVisible(false);
+        profitLossExportMenu.setVisible(false);
         isExpenseMenu.setVisible(false);
 
         switch (binding.pager.getCurrentItem()) {
@@ -133,6 +135,7 @@ public class MainActivity extends DefaultCommonActivity {
             case 2: // 損益表
                 periodDivMenu.setVisible(true);
                 profitLossSettingsMenu.setVisible(true);
+                profitLossExportMenu.setVisible(true);
                 break;
             case 3: // グラフ
                 periodDivMenu.setVisible(true);
