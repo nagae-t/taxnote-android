@@ -363,6 +363,7 @@ public class EntryDataManager {
             // for year title
             String yearTitle = Integer.toString(cYear);
             if (startMonthIndex > 0) {
+                endMonth -= 1;
                 yearTitle = startYear + "/" + startMonth
                         + " ~ " + endYear + "/" + endMonth;
             }
@@ -384,9 +385,11 @@ public class EntryDataManager {
                 }
             }
 
+            int calSize = calendars.size();
+            if (calSize == 0) return calendars;
+
             Calendar firstCal = calendars.get(0);
             Calendar newFirstCal = (Calendar)firstCal.clone();
-            int calSize = calendars.size();
             Calendar lastCal = (calSize == 1) ? firstCal : calendars.get(calSize-1);
             Calendar newLastCal = (Calendar)lastCal.clone();
 

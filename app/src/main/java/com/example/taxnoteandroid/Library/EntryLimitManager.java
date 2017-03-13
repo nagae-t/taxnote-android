@@ -105,14 +105,9 @@ public class EntryLimitManager {
 
         switch (periodType) {
             case EntryDataManager.PERIOD_TYPE_YEAR:
-                int yearEndYear = c.get(Calendar.YEAR)+1;
-                int yearEndMonth = startMonthIndex - 1;
-                if (yearEndMonth < 0) {
-                    yearEndMonth = 11;
-                    yearEndYear -= 1;
-                }
-                startCalendar.set(c.get(Calendar.YEAR), startMonthIndex, startDate);
-                endCalendar.set(yearEndYear, yearEndMonth, endDate);
+                int yearEndYear = c.get(Calendar.YEAR);
+                startCalendar.set(yearEndYear, startMonthIndex, startDate);
+                endCalendar.set(yearEndYear+1, startMonthIndex, endDate);
                 break;
             case EntryDataManager.PERIOD_TYPE_MONTH:
                 startCalendar.set(startYear, startMonth, startDate);
