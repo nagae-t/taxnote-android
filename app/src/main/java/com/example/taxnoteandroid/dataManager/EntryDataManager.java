@@ -384,12 +384,15 @@ public class EntryDataManager {
                 }
             }
 
+            Calendar firstCal = calendars.get(0);
+            Calendar newFirstCal = (Calendar)firstCal.clone();
+            int calSize = calendars.size();
+            Calendar lastCal = (calSize == 1) ? firstCal : calendars.get(calSize-1);
+            Calendar newLastCal = (Calendar)lastCal.clone();
+
             //@@ 月の締め日が月末以外に設定されていたら
             // 頭と最後に1ヶ月ずつ増やす
-            if (closingDateIndex != 28) {
-                int calSize = calendars.size();
-                Calendar firstCal = calendars.get(0);
-                Calendar newFirstCal = (Calendar)firstCal.clone();
+            if (_periodType == PERIOD_TYPE_MONTH && closingDateIndex != 28) {
                 int newFirstYear = firstCal.get(Calendar.YEAR);
                 int newFirstMonth = firstCal.get(Calendar.MONTH)-1;
                 if (newFirstMonth < 0) {
@@ -402,8 +405,6 @@ public class EntryDataManager {
                         newFirstMonth,
                         firstCal.get(Calendar.DATE));
 
-                Calendar lastCal = (calSize == 1) ? firstCal : calendars.get(calSize-1);
-                Calendar newLastCal = (Calendar)lastCal.clone();
                 int newLastYear = lastCal.get(Calendar.YEAR);
                 int newLastMonth = lastCal.get(Calendar.MONTH)+1;
                 if (newLastMonth == 12) {
@@ -415,6 +416,18 @@ public class EntryDataManager {
                 newLastCal.set(newLastYear,
                         newLastMonth,
                         firstCal.get(Calendar.DATE));
+
+                calendars.add(0, newFirstCal);
+                calendars.add(newLastCal);
+            }
+
+            //@@ 年別のときは前後１年ずつ増やす
+            if (_periodType == PERIOD_TYPE_YEAR) {
+                int newFirstYear = firstCal.get(Calendar.YEAR);
+                newFirstCal.set(newFirstYear-1, firstCal.get(Calendar.MONTH), firstCal.get(Calendar.DATE));
+
+                int newLastYear = lastCal.get(Calendar.YEAR);
+                newLastCal.set(newLastYear+1, lastCal.get(Calendar.MONTH), lastCal.get(Calendar.DATE));
 
                 calendars.add(0, newFirstCal);
                 calendars.add(newLastCal);
