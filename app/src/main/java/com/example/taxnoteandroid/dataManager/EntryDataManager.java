@@ -20,6 +20,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static android.icu.lang.UCharacter.GraphemeClusterBreak.L;
+import static com.example.taxnoteandroid.dataManager.SharedPreferencesManager.getStartMonthOfYearIndex;
 
 public class EntryDataManager {
 
@@ -314,29 +315,37 @@ public class EntryDataManager {
         }
 
         public String getTabTitle(Context context, int closingDateIndex, Calendar c) {
+            int startMonthIndex = SharedPreferencesManager.getStartMonthOfYearIndex(context);
             int cYear = c.get(Calendar.YEAR);
             int cMonth = c.get(Calendar.MONTH);
             int cDate = c.get(Calendar.DATE);
+
+            long[] startEndDate = EntryLimitManager
+                    .getStartAndEndDate(context, _periodType, c);
+            Calendar startCal = Calendar.getInstance();
+            startCal.clear();
+            startCal.setTimeInMillis(startEndDate[0]);
+            Calendar endCal = Calendar.getInstance();
+            endCal.clear();
+            endCal.setTimeInMillis(startEndDate[1]);
+
+            int startYear = startCal.get(Calendar.YEAR);
+            int startMonth = startCal.get(Calendar.MONTH)+1;
+            int startDate = startCal.get(Calendar.DATE);
+            int endYear = endCal.get(Calendar.YEAR);
+            int endMonth = endCal.get(Calendar.MONTH)+1;
+            int endDate = endCal.get(Calendar.DATE) - 1;
+            if (endDate == 0) {
+                endMonth -= 1;
+                endCal.set(endYear, endMonth, 1);
+                endDate = endCal.getActualMaximum(Calendar.DAY_OF_MONTH);
+            }
+
             switch (_periodType) {
                 case PERIOD_TYPE_MONTH:
                     String monthTitle = Integer.toString(cYear)
                             + "/" + Integer.toString(cMonth + 1);
                     if (closingDateIndex != 28) {
-                        long[] startEndDate = EntryLimitManager
-                                .getStartAndEndDate(context, _periodType, c);
-                        Calendar startCal = Calendar.getInstance();
-                        startCal.clear();
-                        startCal.setTimeInMillis(startEndDate[0]);
-                        Calendar endCal = Calendar.getInstance();
-                        endCal.clear();
-                        endCal.setTimeInMillis(startEndDate[1]);
-
-                        int startYear = startCal.get(Calendar.YEAR);
-                        int startMonth = startCal.get(Calendar.MONTH)+1;
-                        int startDate = startCal.get(Calendar.DATE);
-                        int endYear = endCal.get(Calendar.YEAR);
-                        int endMonth = endCal.get(Calendar.MONTH)+1;
-                        int endDate = endCal.get(Calendar.DATE);
                         String endTitle = " ~ " + endMonth + "/" + endDate;
                         if (startYear != endYear)
                             endTitle = " ~ " + endYear + "/" + endMonth + "/" + endDate;
@@ -347,11 +356,23 @@ public class EntryDataManager {
 
                     return monthTitle;
                 case PERIOD_TYPE_DAY:
-                    return Integer.toString(cYear)
-                            + "/" + Integer.toString(cMonth + 1)
-                            + "/" + Integer.toString(cDate);
+                    String dayTitle = cYear + "/" + (cMonth + 1) + "/" +cDate;
+                    return dayTitle;
             }
-            return Integer.toString(cYear);
+
+            // for year title
+            String yearTitle = Integer.toString(cYear);
+            if (startMonthIndex > 0) {
+                yearTitle = startYear + "/" + startMonth
+                        + " ~ " + endYear + "/" + endMonth;
+            }
+
+            if (closingDateIndex != 28) {
+                yearTitle = startYear + "/" + startMonth + "/" + startDate
+                        + " ~ " + endYear + "/" + endMonth + "/" + endDate;
+            }
+
+            return yearTitle;
         }
 
         public List<Calendar> getReportCalendars(int closingDateIndex, List<Entry> entries) {
