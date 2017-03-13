@@ -346,6 +346,8 @@ public class EntryDataManager {
                 if (newFirstMonth < 0) {
                     newFirstMonth = 11;
                     newFirstYear -= 1;
+                } else if (_periodType == PERIOD_TYPE_YEAR) {
+                    newFirstYear -= 1;
                 }
                 newFirstCal.set(newFirstYear,
                         newFirstMonth,
@@ -358,11 +360,12 @@ public class EntryDataManager {
                 if (newLastMonth == 12) {
                     newLastMonth = 0;
                     newLastYear += 1;
+                } else if (_periodType == PERIOD_TYPE_YEAR) {
+                    newLastYear += 1;
                 }
                 newLastCal.set(newLastYear,
                         newLastMonth,
                         firstCal.get(Calendar.DATE));
-
 
                 calendars.add(0, newFirstCal);
                 calendars.add(newLastCal);
