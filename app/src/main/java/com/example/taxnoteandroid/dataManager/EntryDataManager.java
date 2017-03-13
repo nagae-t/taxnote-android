@@ -20,6 +20,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static android.icu.lang.UCharacter.GraphemeClusterBreak.L;
+import static com.example.taxnoteandroid.dataManager.SharedPreferencesManager.getStartMonthOfYearIndex;
 
 public class EntryDataManager {
 
@@ -314,29 +315,37 @@ public class EntryDataManager {
         }
 
         public String getTabTitle(Context context, int closingDateIndex, Calendar c) {
+            int startMonthIndex = SharedPreferencesManager.getStartMonthOfYearIndex(context);
             int cYear = c.get(Calendar.YEAR);
             int cMonth = c.get(Calendar.MONTH);
             int cDate = c.get(Calendar.DATE);
+
+            long[] startEndDate = EntryLimitManager
+                    .getStartAndEndDate(context, _periodType, c);
+            Calendar startCal = Calendar.getInstance();
+            startCal.clear();
+            startCal.setTimeInMillis(startEndDate[0]);
+            Calendar endCal = Calendar.getInstance();
+            endCal.clear();
+            endCal.setTimeInMillis(startEndDate[1]);
+
+            int startYear = startCal.get(Calendar.YEAR);
+            int startMonth = startCal.get(Calendar.MONTH)+1;
+            int startDate = startCal.get(Calendar.DATE);
+            int endYear = endCal.get(Calendar.YEAR);
+            int endMonth = endCal.get(Calendar.MONTH)+1;
+            int endDate = endCal.get(Calendar.DATE) - 1;
+            if (closingDateIndex != 28 && endDate == 0) {
+                endMonth -= 1;
+                endCal.set(endYear, endMonth, 1);
+                endDate = endCal.getActualMaximum(Calendar.DAY_OF_MONTH);
+            }
+
             switch (_periodType) {
                 case PERIOD_TYPE_MONTH:
                     String monthTitle = Integer.toString(cYear)
                             + "/" + Integer.toString(cMonth + 1);
                     if (closingDateIndex != 28) {
-                        long[] startEndDate = EntryLimitManager
-                                .getStartAndEndDate(context, _periodType, c);
-                        Calendar startCal = Calendar.getInstance();
-                        startCal.clear();
-                        startCal.setTimeInMillis(startEndDate[0]);
-                        Calendar endCal = Calendar.getInstance();
-                        endCal.clear();
-                        endCal.setTimeInMillis(startEndDate[1]);
-
-                        int startYear = startCal.get(Calendar.YEAR);
-                        int startMonth = startCal.get(Calendar.MONTH)+1;
-                        int startDate = startCal.get(Calendar.DATE);
-                        int endYear = endCal.get(Calendar.YEAR);
-                        int endMonth = endCal.get(Calendar.MONTH)+1;
-                        int endDate = endCal.get(Calendar.DATE);
                         String endTitle = " ~ " + endMonth + "/" + endDate;
                         if (startYear != endYear)
                             endTitle = " ~ " + endYear + "/" + endMonth + "/" + endDate;
@@ -347,11 +356,24 @@ public class EntryDataManager {
 
                     return monthTitle;
                 case PERIOD_TYPE_DAY:
-                    return Integer.toString(cYear)
-                            + "/" + Integer.toString(cMonth + 1)
-                            + "/" + Integer.toString(cDate);
+                    String dayTitle = cYear + "/" + (cMonth + 1) + "/" +cDate;
+                    return dayTitle;
             }
-            return Integer.toString(cYear);
+
+            // for year title
+            String yearTitle = Integer.toString(cYear);
+            if (startMonthIndex > 0) {
+                endMonth -= 1;
+                yearTitle = startYear + "/" + startMonth
+                        + " ~ " + endYear + "/" + endMonth;
+            }
+
+            if (closingDateIndex != 28) {
+                yearTitle = startYear + "/" + startMonth + "/" + startDate
+                        + " ~ " + endYear + "/" + endMonth + "/" + endDate;
+            }
+
+            return yearTitle;
         }
 
         public List<Calendar> getReportCalendars(int closingDateIndex, List<Entry> entries) {
@@ -363,12 +385,17 @@ public class EntryDataManager {
                 }
             }
 
+            int calSize = calendars.size();
+            if (calSize == 0) return calendars;
+
+            Calendar firstCal = calendars.get(0);
+            Calendar newFirstCal = (Calendar)firstCal.clone();
+            Calendar lastCal = (calSize == 1) ? firstCal : calendars.get(calSize-1);
+            Calendar newLastCal = (Calendar)lastCal.clone();
+
             //@@ 月の締め日が月末以外に設定されていたら
             // 頭と最後に1ヶ月ずつ増やす
-            if (closingDateIndex != 28) {
-                int calSize = calendars.size();
-                Calendar firstCal = calendars.get(0);
-                Calendar newFirstCal = (Calendar)firstCal.clone();
+            if (_periodType == PERIOD_TYPE_MONTH && closingDateIndex != 28) {
                 int newFirstYear = firstCal.get(Calendar.YEAR);
                 int newFirstMonth = firstCal.get(Calendar.MONTH)-1;
                 if (newFirstMonth < 0) {
@@ -381,8 +408,6 @@ public class EntryDataManager {
                         newFirstMonth,
                         firstCal.get(Calendar.DATE));
 
-                Calendar lastCal = (calSize == 1) ? firstCal : calendars.get(calSize-1);
-                Calendar newLastCal = (Calendar)lastCal.clone();
                 int newLastYear = lastCal.get(Calendar.YEAR);
                 int newLastMonth = lastCal.get(Calendar.MONTH)+1;
                 if (newLastMonth == 12) {
@@ -394,6 +419,18 @@ public class EntryDataManager {
                 newLastCal.set(newLastYear,
                         newLastMonth,
                         firstCal.get(Calendar.DATE));
+
+                calendars.add(0, newFirstCal);
+                calendars.add(newLastCal);
+            }
+
+            //@@ 年別のときは前後１年ずつ増やす
+            if (_periodType == PERIOD_TYPE_YEAR) {
+                int newFirstYear = firstCal.get(Calendar.YEAR);
+                newFirstCal.set(newFirstYear-1, firstCal.get(Calendar.MONTH), firstCal.get(Calendar.DATE));
+
+                int newLastYear = lastCal.get(Calendar.YEAR);
+                newLastCal.set(newLastYear+1, lastCal.get(Calendar.MONTH), lastCal.get(Calendar.DATE));
 
                 calendars.add(0, newFirstCal);
                 calendars.add(newLastCal);

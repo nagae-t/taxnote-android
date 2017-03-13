@@ -74,8 +74,8 @@ public class EntryLimitManager {
         int startDate = 1;
         int endDate = 1;
         if (closingDateIndex < 28) {
-            startDate = closingDateIndex+1;
-            endDate = closingDateIndex+1;
+            startDate = closingDateIndex;
+            endDate = closingDateIndex+2;
         }
         int startMonth = c.get(Calendar.MONTH);
         int startYear = c.get(Calendar.YEAR);
@@ -97,11 +97,17 @@ public class EntryLimitManager {
             startYear -= 1;
         }
 
+        if (startDate == 0) {
+            Calendar _c = Calendar.getInstance();
+            _c.set(startYear, startMonth, 1);
+            startDate = _c.getActualMaximum(Calendar.DAY_OF_MONTH);
+        }
 
         switch (periodType) {
             case EntryDataManager.PERIOD_TYPE_YEAR:
-                startCalendar.set(startYear, startMonthIndex, startDate);
-                endCalendar.set(endYear+1, startMonthIndex, endDate);
+                int yearEndYear = c.get(Calendar.YEAR);
+                startCalendar.set(yearEndYear, startMonthIndex, startDate);
+                endCalendar.set(yearEndYear+1, startMonthIndex, endDate);
                 break;
             case EntryDataManager.PERIOD_TYPE_MONTH:
                 startCalendar.set(startYear, startMonth, startDate);
@@ -118,7 +124,7 @@ public class EntryLimitManager {
 
         // for debug
 //        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
-//                context.getResources().getString(R.string.date_string_format_to_year_month_day_weekday));
+//                context.getResources().getString(R.string.date_string_format_to_year_month_day));
 //        String startCalStr = simpleDateFormat.format(startCalendar.getTime());
 //        String endCalStr = simpleDateFormat.format(endCalendar.getTime());
 //        Log.v("TEST", "startCal : " + startCalStr + ", endCal : " + endCalStr);
