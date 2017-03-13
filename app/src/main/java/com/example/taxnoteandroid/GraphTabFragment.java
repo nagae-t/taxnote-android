@@ -144,7 +144,7 @@ public class GraphTabFragment extends Fragment  {
 
         @Override
         public CharSequence getPageTitle(int position) {
-            return reportGrouping.getTabTitle(calendars.get(position));
+            return reportGrouping.getTabTitle(mContext, mClosingDateIndex, calendars.get(position));
         }
 
         @Override

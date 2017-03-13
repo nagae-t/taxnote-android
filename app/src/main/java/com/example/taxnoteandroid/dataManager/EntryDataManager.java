@@ -2,6 +2,7 @@ package com.example.taxnoteandroid.dataManager;
 
 import android.content.Context;
 
+import com.example.taxnoteandroid.Library.EntryLimitManager;
 import com.example.taxnoteandroid.TaxnoteApp;
 import com.example.taxnoteandroid.model.Account;
 import com.example.taxnoteandroid.model.Entry;
@@ -17,6 +18,8 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import static android.icu.lang.UCharacter.GraphemeClusterBreak.L;
 
 public class EntryDataManager {
 
@@ -310,14 +313,39 @@ public class EntryDataManager {
             return calendar;
         }
 
-        public String getTabTitle(Calendar c) {
+        public String getTabTitle(Context context, int closingDateIndex, Calendar c) {
             int cYear = c.get(Calendar.YEAR);
             int cMonth = c.get(Calendar.MONTH);
             int cDate = c.get(Calendar.DATE);
             switch (_periodType) {
                 case PERIOD_TYPE_MONTH:
-                    return Integer.toString(cYear)
+                    String monthTitle = Integer.toString(cYear)
                             + "/" + Integer.toString(cMonth + 1);
+                    if (closingDateIndex != 28) {
+                        long[] startEndDate = EntryLimitManager
+                                .getStartAndEndDate(context, _periodType, c);
+                        Calendar startCal = Calendar.getInstance();
+                        startCal.clear();
+                        startCal.setTimeInMillis(startEndDate[0]);
+                        Calendar endCal = Calendar.getInstance();
+                        endCal.clear();
+                        endCal.setTimeInMillis(startEndDate[1]);
+
+                        int startYear = startCal.get(Calendar.YEAR);
+                        int startMonth = startCal.get(Calendar.MONTH)+1;
+                        int startDate = startCal.get(Calendar.DATE);
+                        int endYear = endCal.get(Calendar.YEAR);
+                        int endMonth = endCal.get(Calendar.MONTH)+1;
+                        int endDate = endCal.get(Calendar.DATE);
+                        String endTitle = " ~ " + endMonth + "/" + endDate;
+                        if (startYear != endYear)
+                            endTitle = " ~ " + endYear + "/" + endMonth + "/" + endDate;
+
+                        monthTitle = startYear + "/" + startMonth + "/" + startDate
+                                + endTitle;
+                    }
+
+                    return monthTitle;
                 case PERIOD_TYPE_DAY:
                     return Integer.toString(cYear)
                             + "/" + Integer.toString(cMonth + 1)
