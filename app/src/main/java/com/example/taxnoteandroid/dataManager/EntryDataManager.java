@@ -335,7 +335,7 @@ public class EntryDataManager {
             int endYear = endCal.get(Calendar.YEAR);
             int endMonth = endCal.get(Calendar.MONTH)+1;
             int endDate = endCal.get(Calendar.DATE) - 1;
-            if (endDate == 0) {
+            if (closingDateIndex != 28 && endDate == 0) {
                 endMonth -= 1;
                 endCal.set(endYear, endMonth, 1);
                 endDate = endCal.getActualMaximum(Calendar.DAY_OF_MONTH);
