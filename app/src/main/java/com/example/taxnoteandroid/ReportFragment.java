@@ -91,6 +91,7 @@ public class ReportFragment extends Fragment {
      * @param periodType
      */
     public void switchReportPeriod(int periodType) {
+        mClosingDateIndex = SharedPreferencesManager.getMonthlyClosingDateIndex(mContext);
 
         // ボタン押したあとReportGroupingの実装を切り替える
         ReportGrouping reportGrouping = new ReportGrouping(periodType);

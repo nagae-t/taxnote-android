@@ -97,6 +97,7 @@ public class GraphTabFragment extends Fragment  {
     }
 
     public void switchDataView(int periodType, boolean isExpense) {
+        mClosingDateIndex = SharedPreferencesManager.getMonthlyClosingDateIndex(mContext);
         ReportGrouping reportGrouping = new ReportGrouping(periodType);
         SharedPreferencesManager.saveProfitLossReportPeriodType(mContext, periodType);
         SharedPreferencesManager.saveGraphReportIsExpenseType(mContext, isExpense);
