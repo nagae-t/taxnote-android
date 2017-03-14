@@ -153,15 +153,18 @@ public class ProfitLossExportActivity extends DefaultCommonActivity {
 
             Entry incomeSection = new Entry();
             incomeSection.viewType = CommonEntryRecyclerAdapter.VIEW_ITEM_HEADER;
-            incomeSection.titleName = context.getString(R.string.Income);
+            incomeSection.reasonName = context.getString(R.string.Income);
             Entry expenseSection = new Entry();
             expenseSection.viewType = CommonEntryRecyclerAdapter.VIEW_ITEM_HEADER;
-            expenseSection.titleName = context.getString(R.string.Expense);
+            expenseSection.reasonName = context.getString(R.string.Expense);
 
+            String totalString = context.getString(R.string.total);
             Entry incomeSum = new Entry();
             incomeSum.viewType = CommonEntryRecyclerAdapter.VIEW_ITEM_REPORT_TOTAL;
+            incomeSum.reasonName = totalString;
             Entry expenseSum = new Entry();
             expenseSum.viewType = CommonEntryRecyclerAdapter.VIEW_ITEM_REPORT_TOTAL;
+            incomeSum.reasonName = totalString;
             expenseSum.isExpense = true;
 
             // 支出と収入のそれぞれの合計を計算する
@@ -178,8 +181,10 @@ public class ProfitLossExportActivity extends DefaultCommonActivity {
                 }
             }
             Entry topBalance = new Entry();
+            topBalance.reasonName = context.getString(R.string.Balance);
             if (isShowBalanceCarryForward) {
                 topBalance.price = entryManager.findSumBalance(startEndDate[1]);
+                topBalance.reasonName += context.getString(R.string.balance_carry_forward_view);
             } else {
                 topBalance.price = balancePrice;
             }
@@ -259,6 +264,7 @@ public class ProfitLossExportActivity extends DefaultCommonActivity {
 
             Log.v("TEST", "report task onPostExecute size: " + result.size());
             DataExportManager exportManager = new DataExportManager(
+                    getApplicationContext(),
                     mDefaultCharCode, mStartEndDate, result);
             exportManager.export(ProfitLossExportActivity.this);
         }
