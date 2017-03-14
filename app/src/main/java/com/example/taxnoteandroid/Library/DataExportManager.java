@@ -202,7 +202,7 @@ public class DataExportManager implements TaxnoteConsts {
         } else if (mode.compareTo(EXPORT_PROFIT_LOSS_FORMAT_TYPE_CSV) == 0) { // 損益表の出力
             intColumns(2); // CSV column size.
             String title = context.getString(R.string.profit_loss_export);
-            title += " " + getCustomDateRangeStrings().replace("_", "");
+            title += " " + getReportStartEndDateString();
             setColumnTitles(title, "");
             setColumn(0, new ReasonNameColumn());
             setColumn(1, new TotalPriceColumn());
@@ -396,6 +396,18 @@ public class DataExportManager implements TaxnoteConsts {
         return "_" + startDateString + "~" + endDateString;
     }
 
+    private String getReportStartEndDateString() {
+        long startDate  = startEndDate[0];
+        long endDate    = startEndDate[1];
+
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(context.getResources().getString(R.string.date_string_format_to_year_month_day));
+
+        String startDateString  = simpleDateFormat.format(startDate);
+        String endDateString    = simpleDateFormat.format(endDate);
+
+        return startDateString + "~" + endDateString;
+    }
+
     private void setCurrentEntry(Entry entry) {
         current_entry = entry;
         total_price = (entry.isExpense ? -entry.price : entry.price);
@@ -440,7 +452,13 @@ public class DataExportManager implements TaxnoteConsts {
         intent.setType("vnd.android.cursor.item/email"); // 2017/01/25 E.Nozaki intent.setType("text/plain");
         intent.putExtra(android.content.Intent.EXTRA_EMAIL, new String[]{""});
 
-        intent.putExtra(android.content.Intent.EXTRA_SUBJECT, context.getString(R.string.data_export_mail_title));
+        String subjectString = context.getString(R.string.data_export_mail_title);
+        if (mode.equals(EXPORT_PROFIT_LOSS_FORMAT_TYPE_CSV)) {
+            subjectString = "Taxnote " + context.getString(R.string.profit_loss_export)
+                + " (" +getReportStartEndDateString()+ ")";
+        }
+
+        intent.putExtra(android.content.Intent.EXTRA_SUBJECT, subjectString);
         intent.putExtra(android.content.Intent.EXTRA_TEXT, getBodyMessage());
 
         // TODO FileProviderを使えばいけるかも。
