@@ -20,7 +20,9 @@ import com.example.taxnoteandroid.dataManager.SharedPreferencesManager;
 import com.example.taxnoteandroid.databinding.ActivityProfitLossExportBinding;
 import com.example.taxnoteandroid.model.Entry;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -85,6 +87,18 @@ public class ProfitLossExportActivity extends DefaultCommonActivity {
                 new ReportDataTask().execute(mStartEndDate);
             }
         });
+
+
+        // for debug
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
+                getString(R.string.date_string_format_to_year_month_day));
+        Calendar startCal = Calendar.getInstance();
+        startCal.setTimeInMillis(mStartEndDate[0]);
+        Calendar endCal = Calendar.getInstance();
+        endCal.setTimeInMillis(mStartEndDate[1]);
+        String startCalStr = simpleDateFormat.format(startCal.getTime());
+        String endCalStr = simpleDateFormat.format(endCal.getTime());
+        Log.v("TEST", "startCal : " + startCalStr + ", endCal : " + endCalStr);
     }
 
     private void showCharCodeMenuDialog() {

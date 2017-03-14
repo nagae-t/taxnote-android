@@ -189,7 +189,10 @@ public class MainActivity extends DefaultCommonActivity {
                 ProfitLossSettingsActivity.start(this);
                 break;
             case R.id.action_profit_loss_export:
-                ProfitLossExportActivity.start(this);
+                long[] startEndDate = getReportStartEndDate();
+                if (startEndDate[0] <= 0) break;
+
+                ProfitLossExportActivity.start(this, startEndDate);
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -329,6 +332,17 @@ public class MainActivity extends DefaultCommonActivity {
 
             graphFragment.reloadData();
         }
+    }
+
+    private long[] getReportStartEndDate() {
+        if (mBottomNaviSelected == R.id.tab3) {
+            ReportFragment reportFragment =
+                    (ReportFragment) mTabPagerAdapter.instantiateItem(binding.pager, 2);
+            if (reportFragment == null) return new long[2];
+
+            return reportFragment.getStartEndDate();
+        }
+        return new long[2];
     }
 
     class TabPagerAdapter extends FragmentPagerAdapter {

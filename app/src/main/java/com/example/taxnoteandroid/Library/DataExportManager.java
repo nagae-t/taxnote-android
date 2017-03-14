@@ -530,7 +530,8 @@ public class DataExportManager implements TaxnoteConsts {
 
     private void setCharacterCode(String code) {
 
-        if (mode.compareTo(EXPORT_FORMAT_TYPE_CSV) == 0) { // CSV
+        if (mode.compareTo(EXPORT_FORMAT_TYPE_CSV) == 0
+                || mode.compareTo(EXPORT_PROFIT_LOSS_FORMAT_TYPE_CSV) == 0) { // CSV
 
             if (code.compareTo(EXPORT_CHARACTER_CODE_UTF8) == 0) {
                 this.character_code = CHARACTER_CODE_UTF_8;

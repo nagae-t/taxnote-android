@@ -85,6 +85,12 @@ public class ReportFragment extends Fragment {
         switchReportPeriod(periodType);
     }
 
+    public long[] getStartEndDate() {
+        ReportContentFragment fragment = (ReportContentFragment) mPagerAdapter
+                .instantiateItem(binding.pager, binding.pager.getCurrentItem());
+        return fragment.getStartEndDate();
+    }
+
     /**
      * 期間別のタイプで表示を切り替える
      *

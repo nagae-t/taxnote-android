@@ -73,8 +73,11 @@ public class ReportContentFragment extends Fragment {
                 HistoryListDataActivity.startForBalance(mContext, mTargetCalendar);
             }
         });
+    }
 
-
+    public long[] getStartEndDate() {
+        long[] startEndDate = EntryLimitManager.getStartAndEndDate(mContext, mPeriodType, mTargetCalendar);
+        return startEndDate;
     }
 
     @Override
