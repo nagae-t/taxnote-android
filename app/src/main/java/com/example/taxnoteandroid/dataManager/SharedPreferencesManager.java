@@ -36,6 +36,7 @@ public class SharedPreferencesManager {
     private static final String BALANCE_CARRY_FORWARD_KEY       = "BALANCE_CARRY_FORWARD_KEY";
     private static final String MONTHLY_CLOSING_DATE_INDEX_KEY  = "MONTHLY_CLOSING_DATE_INDEX_KEY";
     private static final String START_MONTH_OF_YEAR_INDEX_KEY   = "START_MONTH_OF_YEAR_INDEX_KEY";
+    private static final String PROFIT_KEY   = "START_MONTH_OF_YEAR_INDEX_KEY";
 
     private static final String APP_THEME_STYLE_KEY             = "APP_THEME_STYLE_KEY";
     private static final String RELEASE_NOTE_KEY                = "RELEASE_NOTE_KEY";

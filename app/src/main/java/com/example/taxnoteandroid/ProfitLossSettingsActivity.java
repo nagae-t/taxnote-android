@@ -89,10 +89,10 @@ public class ProfitLossSettingsActivity extends DefaultCommonActivity {
         });
     }
 
-    private void showListMenuDialog(String title, String[] items, DialogInterface.OnClickListener clickListerner) {
+    private void showListMenuDialog(String title, String[] items, DialogInterface.OnClickListener clickListener) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
-        builder.setItems(items, clickListerner);
+        builder.setItems(items, clickListener);
         AlertDialog menuDialog = builder.create();
         menuDialog.setTitle(title);
         menuDialog.show();
