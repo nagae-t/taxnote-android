@@ -71,6 +71,9 @@
             android:name=".ProfitLossSettingsActivity"
             android:label="@string/profit_loss_settings"
             android:screenOrientation="portrait" />
+        <activity android:name=".ProfitLossExportActivity"
+            android:label="@string/profit_loss_export"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ImportFilterActivity"
             android:label="@string/taxnote_data_import"

@@ -112,7 +112,7 @@ public class MainActivity extends DefaultCommonActivity {
         MenuItem searchMenu = menu.findItem(R.id.action_search);
         MenuItem periodDivMenu = menu.findItem(R.id.action_period_div);
         MenuItem profitLossSettingsMenu = menu.findItem(R.id.action_profit_loss_settings);
-        MenuItem profitLossExportMenu = menu.findItem(R.id.action_data_export);
+        MenuItem profitLossExportMenu = menu.findItem(R.id.action_profit_loss_export);
         MenuItem isExpenseMenu = menu.findItem(R.id.action_report_is_expense);
 
         helpMenu.setVisible(false);
@@ -187,6 +187,9 @@ public class MainActivity extends DefaultCommonActivity {
                 break;
             case R.id.action_profit_loss_settings:
                 ProfitLossSettingsActivity.start(this);
+                break;
+            case R.id.action_profit_loss_export:
+                ProfitLossExportActivity.start(this);
                 break;
         }
         return super.onOptionsItemSelected(item);
