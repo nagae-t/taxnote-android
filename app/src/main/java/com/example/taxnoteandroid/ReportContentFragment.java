@@ -36,6 +36,7 @@ public class ReportContentFragment extends Fragment {
     private EntryDataManager mEntryManager;
     private Calendar mTargetCalendar;
     private int mPeriodType;
+    private List<Entry> mReportDataResult;
 
     public ReportContentFragment() {
     }
@@ -64,6 +65,7 @@ public class ReportContentFragment extends Fragment {
         mEntryManager = new EntryDataManager(mContext);
         mPeriodType = SharedPreferencesManager.getProfitLossReportPeriodType(mContext);
         mTargetCalendar  = (Calendar) getArguments().getSerializable(KEY_TARGET_CALENDAR);
+        mReportDataResult = new ArrayList<>();
 
         binding.topBalance.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -211,6 +213,7 @@ public class ReportContentFragment extends Fragment {
         protected void onPostExecute(List<Entry> result) {
             if (result == null || result.size() == 0) return;
 
+            mReportDataResult = result;
             Entry topBalance = result.get(0);
             setTopBalanceValue(topBalance.price);
             result.remove(0);
