@@ -7,8 +7,8 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Environment;
-import android.util.Log;
 
+import com.example.taxnoteandroid.CommonEntryRecyclerAdapter;
 import com.example.taxnoteandroid.R;
 import com.example.taxnoteandroid.TaxnoteConsts;
 import com.example.taxnoteandroid.dataManager.AccountDataManager;
@@ -202,7 +202,7 @@ public class DataExportManager implements TaxnoteConsts {
         } else if (mode.compareTo(EXPORT_PROFIT_LOSS_FORMAT_TYPE_CSV) == 0) { // 損益表の出力
             intColumns(2); // CSV column size.
             String title = context.getString(R.string.profit_loss_export);
-            title += " " + getCustomDateRangeStrings();
+            title += " " + getCustomDateRangeStrings().replace("_", "");
             setColumnTitles(title, "");
             setColumn(0, new ReasonNameColumn());
             setColumn(1, new TotalPriceColumn());
@@ -273,11 +273,6 @@ public class DataExportManager implements TaxnoteConsts {
             // 損益表の出力の場合
             if (mode.equals(EXPORT_PROFIT_LOSS_FORMAT_TYPE_CSV)) {
                 entries = reportData;
-//                for (Entry entry : reportData) {
-//                    resetArray(line);
-//                    for ()
-//                }
-//                return file;
             }
 
             for (Entry entry : entries) {
@@ -375,8 +370,6 @@ public class DataExportManager implements TaxnoteConsts {
         } else {
             file_name += ".csv";
         }
-
-        Log.v("TEST", "getOutputFile name : " + file_name);
 
         return new File(Environment.getExternalStorageDirectory(), "Taxnote/" + System.currentTimeMillis() + "/" + file_name);
 
@@ -601,7 +594,10 @@ public class DataExportManager implements TaxnoteConsts {
     private class ReasonNameColumn extends Column {
         @Override
         public String getValue() {
-            if (current_entry.reason == null) return current_entry.reasonName;
+            if (current_entry.reason == null) {
+                if (current_entry.reasonName == null) return "";
+                return current_entry.reasonName;
+            }
 
             return (current_entry.reason.name);
         }
@@ -645,7 +641,16 @@ public class DataExportManager implements TaxnoteConsts {
     private class TotalPriceColumn extends Column {
         @Override
         public String getValue() {
-            return Long.toString(total_price);
+            if (mode.equals(EXPORT_PROFIT_LOSS_FORMAT_TYPE_CSV) &&
+                    (current_entry.reasonName == null ||
+                    current_entry.viewType == CommonEntryRecyclerAdapter.VIEW_ITEM_HEADER)) {
+                return "";
+            }
+            String valueString = Long.toString(total_price);
+            if (context != null)
+                valueString = "\""+ValueConverter.formatPrice(context, total_price)+"\"";
+
+            return valueString;
         }
     }
 

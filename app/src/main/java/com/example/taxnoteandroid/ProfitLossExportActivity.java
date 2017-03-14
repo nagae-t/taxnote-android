@@ -8,7 +8,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -20,7 +19,6 @@ import com.example.taxnoteandroid.dataManager.SharedPreferencesManager;
 import com.example.taxnoteandroid.databinding.ActivityProfitLossExportBinding;
 import com.example.taxnoteandroid.model.Entry;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.LinkedHashMap;
@@ -90,15 +88,15 @@ public class ProfitLossExportActivity extends DefaultCommonActivity {
 
 
         // for debug
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
-                getString(R.string.date_string_format_to_year_month_day));
-        Calendar startCal = Calendar.getInstance();
-        startCal.setTimeInMillis(mStartEndDate[0]);
-        Calendar endCal = Calendar.getInstance();
-        endCal.setTimeInMillis(mStartEndDate[1]);
-        String startCalStr = simpleDateFormat.format(startCal.getTime());
-        String endCalStr = simpleDateFormat.format(endCal.getTime());
-        Log.v("TEST", "startCal : " + startCalStr + ", endCal : " + endCalStr);
+//        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
+//                getString(R.string.date_string_format_to_year_month_day));
+//        Calendar startCal = Calendar.getInstance();
+//        startCal.setTimeInMillis(mStartEndDate[0]);
+//        Calendar endCal = Calendar.getInstance();
+//        endCal.setTimeInMillis(mStartEndDate[1]);
+//        String startCalStr = simpleDateFormat.format(startCal.getTime());
+//        String endCalStr = simpleDateFormat.format(endCal.getTime());
+//        Log.v("TEST", "startCal : " + startCalStr + ", endCal : " + endCalStr);
     }
 
     private void showCharCodeMenuDialog() {
@@ -164,8 +162,8 @@ public class ProfitLossExportActivity extends DefaultCommonActivity {
             incomeSum.reasonName = totalString;
             Entry expenseSum = new Entry();
             expenseSum.viewType = CommonEntryRecyclerAdapter.VIEW_ITEM_REPORT_TOTAL;
-            incomeSum.reasonName = totalString;
-            expenseSum.isExpense = true;
+            expenseSum.reasonName = totalString;
+//            expenseSum.isExpense = true;
 
             // 支出と収入のそれぞれの合計を計算する
             long balancePrice = 0;
@@ -180,6 +178,8 @@ public class ProfitLossExportActivity extends DefaultCommonActivity {
                     balancePrice += entry.price;
                 }
             }
+
+            resultEntries.add(new Entry());
             Entry topBalance = new Entry();
             topBalance.reasonName = context.getString(R.string.Balance);
             if (isShowBalanceCarryForward) {
@@ -238,12 +238,15 @@ public class ProfitLossExportActivity extends DefaultCommonActivity {
             List<Map.Entry<Long, Entry>> incomeSortList = EntryLimitManager.sortLinkedHashMap(incomeMap);
             List<Map.Entry<Long, Entry>> expenseSortList = EntryLimitManager.sortLinkedHashMap(expenseMap);
 
+            resultEntries.add(new Entry());
             // 表示データはここから
             resultEntries.add(incomeSection);
             resultEntries.add(incomeSum);
             for (Map.Entry<Long, Entry> entry : incomeSortList) {
                 resultEntries.add(entry.getValue());
             }
+
+            resultEntries.add(new Entry());
 
             resultEntries.add(expenseSection);
             resultEntries.add(expenseSum);
@@ -261,12 +264,16 @@ public class ProfitLossExportActivity extends DefaultCommonActivity {
             mReportDataResult = result;
 
             //@@ To export CSV file...
-
-            Log.v("TEST", "report task onPostExecute size: " + result.size());
+            Calendar endCal = Calendar.getInstance();
+            endCal.setTimeInMillis(mStartEndDate[1]);
+            endCal.add(Calendar.DATE, -1);
+            mStartEndDate[1] = endCal.getTimeInMillis();
             DataExportManager exportManager = new DataExportManager(
                     getApplicationContext(),
                     mDefaultCharCode, mStartEndDate, result);
             exportManager.export(ProfitLossExportActivity.this);
+
+            mStartEndDate = getIntent().getLongArrayExtra(KEY_TARGET_START_END_DATE);
         }
     }
 }
