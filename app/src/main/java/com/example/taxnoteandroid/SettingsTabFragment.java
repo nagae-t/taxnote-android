@@ -90,6 +90,7 @@ public class SettingsTabFragment extends Fragment {
         setUpgradeView();
         setMultipleProject();
         setDecimalSwitch();
+        setAlertInputForget();
         setDataBackup();
         setHelpViews();
         setShareButton();
@@ -463,6 +464,21 @@ public class SettingsTabFragment extends Fragment {
             @Override
             public void onCheckedChanged(CompoundButton buttonView,boolean isChecked) {
                 projectDataManager.updateDecimal(project, isChecked);
+            }
+        });
+    }
+
+
+    //--------------------------------------------------------------//
+    //    -- Alert Input Forget --
+    //--------------------------------------------------------------//
+
+    private void setAlertInputForget() {
+
+        binding.alertInputForget.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AlertInputForgetSettingsActivity.start(mContext);
             }
         });
     }

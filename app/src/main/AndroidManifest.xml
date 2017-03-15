@@ -67,6 +67,9 @@
         <activity
             android:name=".HistoryListDataActivity"
             android:screenOrientation="portrait" />
+        <activity android:name=".AlertInputForgetSettingsActivity"
+            android:label="@string/alert_input_forget"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ImportFilterActivity"
             android:label="@string/taxnote_data_import"
