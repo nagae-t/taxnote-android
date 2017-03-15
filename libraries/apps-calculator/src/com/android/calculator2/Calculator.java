@@ -37,6 +37,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnKeyListener;
@@ -46,6 +47,7 @@ import android.view.ViewGroupOverlay;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.calculator2.CalculatorEditText.OnTextSizeChangeListener;
 import com.android.calculator2.CalculatorExpressionEvaluator.EvaluateCallback;
@@ -122,8 +124,11 @@ public class Calculator extends AppCompatActivity
     private View mEqualButton;
 
     private Animator mCurrentAnimator;
+    private String mRoundedDecimalMsg;
 
     public static final String KEY_CURRENT_PRICE = "current_price";
+    // rounded_decimal_numbers
+    public static final String KEY_ROUNDED_DECIMAL_MSG = "rounded_decimal_message";
 
     public static void start(Context context) {
         Intent intent = new Intent(context, Calculator.class);
@@ -131,10 +136,11 @@ public class Calculator extends AppCompatActivity
         context.startActivity(intent);
     }
 
-    public static void startForResult(Activity activity, long currentPrice, int requestCode) {
+    public static void startForResult(Activity activity, long currentPrice,
+                                      String roundedDecimalMsg, int requestCode) {
         Intent intent = new Intent(activity.getApplicationContext(), Calculator.class);
-//        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.putExtra(KEY_CURRENT_PRICE, currentPrice);
+        intent.putExtra(KEY_ROUNDED_DECIMAL_MSG, roundedDecimalMsg);
 
         activity.startActivityForResult(intent, requestCode);
     }
@@ -164,6 +170,18 @@ public class Calculator extends AppCompatActivity
                 savedInstanceState.getInt(KEY_CURRENT_STATE, CalculatorState.INPUT.ordinal())]);
         mFormulaEditText.setText(mTokenizer.getLocalizedExpression(
                 savedInstanceState.getString(KEY_CURRENT_EXPRESSION, "")));
+
+        // set current price
+        Intent intent = getIntent();
+        if (intent != null) {
+            long currPrice = intent.getLongExtra(KEY_CURRENT_PRICE, 0);
+            if (currPrice > 0 && savedInstanceState == Bundle.EMPTY) {
+                mFormulaEditText.setText(mTokenizer.getLocalizedExpression(
+                        String.valueOf(currPrice)));
+            }
+            mRoundedDecimalMsg = intent.getStringExtra(KEY_ROUNDED_DECIMAL_MSG);
+        }
+
         mEvaluator.evaluate(mFormulaEditText.getText(), this);
 
         mFormulaEditText.setEditableFactory(mFormulaEditableFactory);
@@ -481,7 +499,17 @@ public class Calculator extends AppCompatActivity
         animatorSet.start();
 
         // return result
-        long currentPrice = Long.valueOf(result);
+        if (result.contains(".") && mRoundedDecimalMsg != null) {
+            Toast toast = Toast.makeText(this, mRoundedDecimalMsg, Toast.LENGTH_SHORT);
+            toast.setGravity(Gravity.CENTER, 0, 0);
+            toast.show();
+        }
+
+        // Convert double to long
+        double priceDoubleNumber = Double.parseDouble(result);
+        priceDoubleNumber = Math.round(priceDoubleNumber);
+        long currentPrice = (long) priceDoubleNumber;
+
         Intent intent = new Intent();
         intent.putExtra(KEY_CURRENT_PRICE, currentPrice);
         setResult(RESULT_OK, intent);

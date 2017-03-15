@@ -10,7 +10,6 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -442,7 +441,9 @@ public class InputDataActivity extends AppCompatActivity {
             public void onClick(View view) {
 //                startActivityForResult(CalculatorActivity.createIntent(InputDataActivity.this, currentPrice), 1);
 
-                Calculator.startForResult(InputDataActivity.this, currentPrice, 1);
+                String roundedDecimalMsg =  getString(R.string.rounded_decimal_numbers);
+                Calculator.startForResult(InputDataActivity.this,
+                        currentPrice, roundedDecimalMsg,  1);
             }
         });
     }
