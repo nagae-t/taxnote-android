@@ -35,6 +35,9 @@ public class SharedPreferencesManager {
     private static final String APP_THEME_STYLE_KEY             = "APP_THEME_STYLE_KEY";
     private static final String RELEASE_NOTE_KEY                = "RELEASE_NOTE_KEY";
 
+    private static final String DAILY_ALERT_INPUT_FORGET_ENABLE_KEY = "DAILY_ALERT_INPUT_FORGET_ENABLE_KEY";
+    private static final String DAILY_ALERT_INPUT_FORGET_TIME_KEY = "DAILY_ALERT_INPUT_FORGET_TIME_KEY";
+
 
     //--------------------------------------------------------------//
     //    -- Init --
@@ -90,6 +93,21 @@ public class SharedPreferencesManager {
     public static long getCurrentSelectedDate(Context context) {
         return getSharedPreferences(context).getLong(DATE_CURRENT_SELECTED, System.currentTimeMillis());
     }
+
+
+    //--------------------------------------------------------------//
+    //    -- Daily Alert Input Forget --
+    //--------------------------------------------------------------//
+
+    public static void saveDailyAlertInputForgetEnable(Context context, boolean val) {
+        getSharedPreferences(context).edit().putBoolean(DAILY_ALERT_INPUT_FORGET_ENABLE_KEY, val).apply();
+    }
+
+    public static boolean getDailyAlertInputForgetEnable(Context context) {
+        return getSharedPreferences(context).getBoolean(DAILY_ALERT_INPUT_FORGET_ENABLE_KEY, true);
+    }
+
+    // DAILY_ALERT_INPUT_FORGET_TIME_KEY
 
 
     //--------------------------------------------------------------//

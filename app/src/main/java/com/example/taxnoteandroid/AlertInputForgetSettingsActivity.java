@@ -9,6 +9,8 @@ import android.view.MenuItem;
 
 import com.example.taxnoteandroid.databinding.ActivityAlertInputForgetBinding;
 
+import java.text.SimpleDateFormat;
+
 /**
  * Created by b0ne on 2017/03/15.
  */
@@ -31,6 +33,14 @@ public class AlertInputForgetSettingsActivity extends DefaultCommonActivity {
 
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
+
+        SimpleDateFormat format = new SimpleDateFormat("HH:mm");
+        // デフォルトでは現在の5分後
+        long defaultTime = System.currentTimeMillis() + (300*1000);
+        String timeString = format.format(defaultTime);
+
+        binding.alertTimeValue.setText(timeString);
+
     }
 
 
