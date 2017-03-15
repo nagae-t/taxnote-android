@@ -24,6 +24,9 @@ import android.animation.ArgbEvaluator;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.animation.ValueAnimator.AnimatorUpdateListener;
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Build;
 import android.os.Bundle;
@@ -119,6 +122,22 @@ public class Calculator extends AppCompatActivity
     private View mEqualButton;
 
     private Animator mCurrentAnimator;
+
+    public static final String KEY_CURRENT_PRICE = "current_price";
+
+    public static void start(Context context) {
+        Intent intent = new Intent(context, Calculator.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(intent);
+    }
+
+    public static void startForResult(Activity activity, long currentPrice, int requestCode) {
+        Intent intent = new Intent(activity.getApplicationContext(), Calculator.class);
+//        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.putExtra(KEY_CURRENT_PRICE, currentPrice);
+
+        activity.startActivityForResult(intent, requestCode);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -460,5 +479,12 @@ public class Calculator extends AppCompatActivity
 
         mCurrentAnimator = animatorSet;
         animatorSet.start();
+
+        // return result
+        long currentPrice = Long.valueOf(result);
+        Intent intent = new Intent();
+        intent.putExtra(KEY_CURRENT_PRICE, currentPrice);
+        setResult(RESULT_OK, intent);
+        finish();
     }
 }

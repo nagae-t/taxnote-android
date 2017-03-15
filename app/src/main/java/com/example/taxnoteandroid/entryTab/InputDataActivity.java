@@ -10,6 +10,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -441,8 +442,7 @@ public class InputDataActivity extends AppCompatActivity {
             public void onClick(View view) {
 //                startActivityForResult(CalculatorActivity.createIntent(InputDataActivity.this, currentPrice), 1);
 
-                Intent intent = new Intent(getApplicationContext(), Calculator.class);
-                startActivity(intent);
+                Calculator.startForResult(InputDataActivity.this, currentPrice, 1);
             }
         });
     }
@@ -454,7 +454,9 @@ public class InputDataActivity extends AppCompatActivity {
         if (requestCode == 1 && resultCode == RESULT_OK) {
 
             // Update price string
-            currentPrice = data.getLongExtra("EXTRA_CURRENT_PRICE", 0);
+//            currentPrice = data.getLongExtra("EXTRA_CURRENT_PRICE", 0);
+
+            currentPrice = data.getLongExtra(Calculator.KEY_CURRENT_PRICE, 0);
             String priceString = ValueConverter.formatPrice(InputDataActivity.this ,currentPrice);
             priceTextView.setText(priceString);
         }
