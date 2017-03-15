@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.taxnoteandroid.Library.EntryLimitManager;
 import com.example.taxnoteandroid.dataManager.EntryDataManager;
 import com.example.taxnoteandroid.dataManager.EntryDataManager.ReportGrouping;
 import com.example.taxnoteandroid.dataManager.SharedPreferencesManager;
@@ -109,7 +110,16 @@ public class ReportFragment extends Fragment {
         mPagerAdapter = new ReportContentFragmentPagerAdapter(getChildFragmentManager(), reportGrouping, calendars);
         binding.pager.setAdapter(mPagerAdapter);
         if (mCurrentPagerPosition < 0) {
-            binding.pager.setCurrentItem(mPagerAdapter.getCount() - 1);
+            int lastIndex = mPagerAdapter.getCount() - 1;
+            // 最後のページにデータがあるかどうか
+            long[] startEndDate = EntryLimitManager.getStartAndEndDate(mContext,
+                    periodType, calendars.get(lastIndex));
+            int countData = mEntryDataManager.count(startEndDate);
+            if (countData == 0) {
+                binding.pager.setCurrentItem(lastIndex - 1);
+            } else {
+                binding.pager.setCurrentItem(lastIndex);
+            }
         } else {
             binding.pager.setCurrentItem(mCurrentPagerPosition);
         }

@@ -19,9 +19,6 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static android.icu.lang.UCharacter.GraphemeClusterBreak.L;
-import static com.example.taxnoteandroid.dataManager.SharedPreferencesManager.getStartMonthOfYearIndex;
-
 public class EntryDataManager {
 
     // レポート期間タイプ別の定義
@@ -94,6 +91,20 @@ public class EntryDataManager {
         }
 
         return entries;
+    }
+
+    public int count(long[] startEndDate) {
+        ProjectDataManager projectDataManager   = new ProjectDataManager(mContext);
+        Project project                         = projectDataManager.findCurrentProjectWithContext(mContext);
+        long startDate  = startEndDate[0];
+        long endDate    = startEndDate[1];
+        int countData = ormaDatabase.selectFromEntry().
+                where(Entry_Schema.INSTANCE.deleted.getQualifiedName() + " = 0")
+                .projectEq(project)
+                .where(Entry_Schema.INSTANCE.date.getQualifiedName() + " > " + startDate)
+                .where(Entry_Schema.INSTANCE.date.getQualifiedName() + " < " + endDate)
+                .count();
+        return countData;
     }
 
     //@@ 収入・支出別
