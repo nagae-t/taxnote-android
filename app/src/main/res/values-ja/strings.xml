@@ -228,5 +228,9 @@
     <string name="update_check_do_not_show_again">アップデートしない</string>
 
     <string name="alert_input_forget">入れ忘れ防止通知</string>
+    <string name="alert_time_enable_notify">指定時間に通知する</string>
+    <string name="alert_time">指定時間</string>
+    <string name="alert_time_notify_desc">指定時間に通知するボタンをオンにしておくと、指定した時間にローカル通知でお知らせします。</string>
+    <string name="alert_notification_desc">通知が効かない時は端末の設定 => アプリ => Taxnoteアプリ情報で通知を許可してください。</string>
 
 </resources>

@@ -111,7 +111,7 @@
             android:paddingEnd="16dp"
             android:paddingStart="16dp"
             android:clickable="true"
-            android:text="Alert input forget" />
+            android:text="@string/alert_input_forget" />
 
         <android.support.v4.widget.Space
             android:layout_width="match_parent"

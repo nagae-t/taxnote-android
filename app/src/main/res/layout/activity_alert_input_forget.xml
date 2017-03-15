@@ -19,8 +19,10 @@
         android:paddingEnd="16dp"
         android:paddingStart="16dp"
         android:textColor="@color/secondary_text"
-        android:text="aaaaaa" />
-
+        android:text="@string/alert_time_enable_notify" />
+    <android.support.v4.widget.Space
+        android:layout_width="match_parent"
+        android:layout_height="1dp" />
     <LinearLayout
         android:id="@+id/alert_time_row"
         android:orientation="horizontal"
@@ -28,7 +30,6 @@
         android:layout_height="wrap_content"
         android:background="@drawable/selector_background_colors"
         android:clickable="true"
-        android:layout_marginTop="20dp"
         android:gravity="center_vertical"
         android:minHeight="@dimen/cell_height_standard"
         android:paddingEnd="16dp"
@@ -40,7 +41,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:textColor="@color/secondary_text"
-            android:text="BBBBB" />
+            android:text="@string/alert_time" />
 
         <TextView
             android:id="@+id/alert_time_value"
@@ -56,7 +57,15 @@
         android:paddingTop="8dp"
         android:paddingEnd="16dp"
         android:paddingStart="16dp"
-        android:text="XXXXX"/>
+        android:text="@string/alert_time_notify_desc"/>
+    <TextView
+        style="@style/font_style_footer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="8dp"
+        android:paddingEnd="16dp"
+        android:paddingStart="16dp"
+        android:text="@string/alert_notification_desc"/>
 
 </LinearLayout>
 </layout>
