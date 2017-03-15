@@ -18,7 +18,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.taxnoteandroid.CalculatorActivity;
+import com.android.calculator2.Calculator;
 import com.example.taxnoteandroid.Library.DialogManager;
 import com.example.taxnoteandroid.Library.EntryLimitManager;
 import com.example.taxnoteandroid.Library.ValueConverter;
@@ -439,7 +439,10 @@ public class InputDataActivity extends AppCompatActivity {
         calculatorButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivityForResult(CalculatorActivity.createIntent(InputDataActivity.this, currentPrice), 1);
+//                startActivityForResult(CalculatorActivity.createIntent(InputDataActivity.this, currentPrice), 1);
+
+                Intent intent = new Intent(getApplicationContext(), Calculator.class);
+                startActivity(intent);
             }
         });
     }

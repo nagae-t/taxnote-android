@@ -1,0 +1,577 @@
+[
+    {
+        "outputFile": "/Users/b0ne/AndroidStudioProjects/TaxnoteAndroid/libraries/apps-calculator/build/intermediates/incremental/mergeDebugResources/merged.dir/values-ko/values-ko.xml",
+        "map": [
+            {
+                "to": {
+                    "startLine": 2,
+                    "startColumn": 4,
+                    "startOffset": 55,
+                    "endColumn": 70,
+                    "endOffset": 121
+                },
+                "from": {
+                    "file": "/Users/b0ne/AndroidStudioProjects/TaxnoteAndroid/libraries/apps-calculator/res/values-ko/strings.xml",
+                    "position": {
+                        "startLine": 19,
+                        "startColumn": 4,
+                        "startOffset": 778,
+                        "endColumn": 70,
+                        "endOffset": 844
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 3,
+                    "startColumn": 4,
+                    "startOffset": 126,
+                    "endColumn": 65,
+                    "endOffset": 187
+                },
+                "from": {
+                    "file": "/Users/b0ne/AndroidStudioProjects/TaxnoteAndroid/libraries/apps-calculator/res/values-ko/strings.xml",
+                    "position": {
+                        "startLine": 27,
+                        "startColumn": 4,
+                        "startOffset": 1345,
+                        "endColumn": 65,
+                        "endOffset": 1406
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 4,
+                    "startColumn": 4,
+                    "startOffset": 192,
+                    "endColumn": 65,
+                    "endOffset": 253
+                },
+                "from": {
+                    "file": "/Users/b0ne/AndroidStudioProjects/TaxnoteAndroid/libraries/apps-calculator/res/values-ko/strings.xml",
+                    "position": {
+                        "startLine": 28,
+                        "startColumn": 4,
+                        "startOffset": 1411,
+                        "endColumn": 65,
+                        "endOffset": 1472
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 5,
+                    "startColumn": 4,
+                    "startOffset": 258,
+                    "endColumn": 70,
+                    "endOffset": 324
+                },
+                "from": {
+                    "file": "/Users/b0ne/AndroidStudioProjects/TaxnoteAndroid/libraries/apps-calculator/res/values-ko/strings.xml",
+                    "position": {
+                        "startLine": 46,
+                        "startColumn": 4,
+                        "startOffset": 2781,
+                        "endColumn": 70,
+                        "endOffset": 2847
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 6,
+                    "startColumn": 4,
+                    "startOffset": 329,
+                    "endColumn": 77,
+                    "endOffset": 402
+                },
+                "from": {
+                    "file": "/Users/b0ne/AndroidStudioProjects/TaxnoteAndroid/libraries/apps-calculator/res/values-ko/strings.xml",
+                    "position": {
+                        "startLine": 29,
+                        "startColumn": 4,
+                        "startOffset": 1477,
+                        "endColumn": 77,
+                        "endOffset": 1550
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 7,
+                    "startColumn": 4,
+                    "startOffset": 407,
+                    "endColumn": 79,
+                    "endOffset": 482
+                },
+                "from": {
+                    "file": "/Users/b0ne/AndroidStudioProjects/TaxnoteAndroid/libraries/apps-calculator/res/values-ko/strings.xml",
+                    "position": {
+                        "startLine": 30,
+                        "startColumn": 4,
+                        "startOffset": 1555,
+                        "endColumn": 79,
+                        "endOffset": 1630
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 8,
+                    "startColumn": 4,
+                    "startOffset": 487,
+                    "endColumn": 76,
+                    "endOffset": 559
+                },
+                "from": {
+                    "file": "/Users/b0ne/AndroidStudioProjects/TaxnoteAndroid/libraries/apps-calculator/res/values-ko/strings.xml",
+                    "position": {
+                        "startLine": 31,
+                        "startColumn": 4,
+                        "startOffset": 1635,
+                        "endColumn": 76,
+                        "endOffset": 1707
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 9,
+                    "startColumn": 4,
+                    "startOffset": 564,
+                    "endColumn": 69,
+                    "endOffset": 629
+                },
+                "from": {
+                    "file": "/Users/b0ne/AndroidStudioProjects/TaxnoteAndroid/libraries/apps-calculator/res/values-ko/strings.xml",
+                    "position": {
+                        "startLine": 47,
+                        "startColumn": 4,
+                        "startOffset": 2852,
+                        "endColumn": 69,
+                        "endOffset": 2917
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 10,
+                    "startColumn": 4,
+                    "startOffset": 634,
+                    "endColumn": 68,
+                    "endOffset": 698
+                },
+                "from": {
+                    "file": "/Users/b0ne/AndroidStudioProjects/TaxnoteAndroid/libraries/apps-calculator/res/values-ko/strings.xml",
+                    "position": {
+                        "startLine": 48,
+                        "startColumn": 4,
+                        "startOffset": 2922,
+                        "endColumn": 68,
+                        "endOffset": 2986
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 11,
+                    "startColumn": 4,
+                    "startOffset": 703,
+                    "endColumn": 82,
+                    "endOffset": 781
+                },
+                "from": {
+                    "file": "/Users/b0ne/AndroidStudioProjects/TaxnoteAndroid/libraries/apps-calculator/res/values-ko/strings.xml",
+                    "position": {
+                        "startLine": 34,
+                        "startColumn": 4,
+                        "startOffset": 1865,
+                        "endColumn": 82,
+                        "endOffset": 1943
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 12,
+                    "startColumn": 4,
+                    "startOffset": 786,
+                    "endColumn": 74,
+                    "endOffset": 856
+                },
+                "from": {
+                    "file": "/Users/b0ne/AndroidStudioProjects/TaxnoteAndroid/libraries/apps-calculator/res/values-ko/strings.xml",
+                    "position": {
+                        "startLine": 35,
+                        "startColumn": 4,
+                        "startOffset": 1948,
+                        "endColumn": 74,
+                        "endOffset": 2018
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 13,
+                    "startColumn": 4,
+                    "startOffset": 861,
+                    "endColumn": 73,
+                    "endOffset": 930
+                },
+                "from": {
+                    "file": "/Users/b0ne/AndroidStudioProjects/TaxnoteAndroid/libraries/apps-calculator/res/values-ko/strings.xml",
+                    "position": {
+                        "startLine": 36,
+                        "startColumn": 4,
+                        "startOffset": 2023,
+                        "endColumn": 73,
+                        "endOffset": 2092
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 14,
+                    "startColumn": 4,
+                    "startOffset": 935,
+                    "endColumn": 79,
+                    "endOffset": 1010
+                },
+                "from": {
+                    "file": "/Users/b0ne/AndroidStudioProjects/TaxnoteAndroid/libraries/apps-calculator/res/values-ko/strings.xml",
+                    "position": {
+                        "startLine": 37,
+                        "startColumn": 4,
+                        "startOffset": 2097,
+                        "endColumn": 79,
+                        "endOffset": 2172
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 15,
+                    "startColumn": 4,
+                    "startOffset": 1015,
+                    "endColumn": 83,
+                    "endOffset": 1094
+                },
+                "from": {
+                    "file": "/Users/b0ne/AndroidStudioProjects/TaxnoteAndroid/libraries/apps-calculator/res/values-ko/strings.xml",
+                    "position": {
+                        "startLine": 38,
+                        "startColumn": 4,
+                        "startOffset": 2177,
+                        "endColumn": 83,
+                        "endOffset": 2256
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 16,
+                    "startColumn": 4,
+                    "startOffset": 1099,
+                    "endColumn": 75,
+                    "endOffset": 1170
+                },
+                "from": {
+                    "file": "/Users/b0ne/AndroidStudioProjects/TaxnoteAndroid/libraries/apps-calculator/res/values-ko/strings.xml",
+                    "position": {
+                        "startLine": 32,
+                        "startColumn": 4,
+                        "startOffset": 1712,
+                        "endColumn": 75,
+                        "endOffset": 1783
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 17,
+                    "startColumn": 4,
+                    "startOffset": 1175,
+                    "endColumn": 73,
+                    "endOffset": 1244
+                },
+                "from": {
+                    "file": "/Users/b0ne/AndroidStudioProjects/TaxnoteAndroid/libraries/apps-calculator/res/values-ko/strings.xml",
+                    "position": {
+                        "startLine": 39,
+                        "startColumn": 4,
+                        "startOffset": 2261,
+                        "endColumn": 73,
+                        "endOffset": 2330
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 18,
+                    "startColumn": 4,
+                    "startOffset": 1249,
+                    "endColumn": 73,
+                    "endOffset": 1318
+                },
+                "from": {
+                    "file": "/Users/b0ne/AndroidStudioProjects/TaxnoteAndroid/libraries/apps-calculator/res/values-ko/strings.xml",
+                    "position": {
+                        "startLine": 40,
+                        "startColumn": 4,
+                        "startOffset": 2335,
+                        "endColumn": 73,
+                        "endOffset": 2404
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 19,
+                    "startColumn": 4,
+                    "startOffset": 1323,
+                    "endColumn": 75,
+                    "endOffset": 1394
+                },
+                "from": {
+                    "file": "/Users/b0ne/AndroidStudioProjects/TaxnoteAndroid/libraries/apps-calculator/res/values-ko/strings.xml",
+                    "position": {
+                        "startLine": 41,
+                        "startColumn": 4,
+                        "startOffset": 2409,
+                        "endColumn": 75,
+                        "endOffset": 2480
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 20,
+                    "startColumn": 4,
+                    "startOffset": 1399,
+                    "endColumn": 72,
+                    "endOffset": 1467
+                },
+                "from": {
+                    "file": "/Users/b0ne/AndroidStudioProjects/TaxnoteAndroid/libraries/apps-calculator/res/values-ko/strings.xml",
+                    "position": {
+                        "startLine": 42,
+                        "startColumn": 4,
+                        "startOffset": 2485,
+                        "endColumn": 72,
+                        "endOffset": 2553
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 21,
+                    "startColumn": 4,
+                    "startOffset": 1472,
+                    "endColumn": 74,
+                    "endOffset": 1542
+                },
+                "from": {
+                    "file": "/Users/b0ne/AndroidStudioProjects/TaxnoteAndroid/libraries/apps-calculator/res/values-ko/strings.xml",
+                    "position": {
+                        "startLine": 43,
+                        "startColumn": 4,
+                        "startOffset": 2558,
+                        "endColumn": 74,
+                        "endOffset": 2628
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 22,
+                    "startColumn": 4,
+                    "startOffset": 1547,
+                    "endColumn": 74,
+                    "endOffset": 1617
+                },
+                "from": {
+                    "file": "/Users/b0ne/AndroidStudioProjects/TaxnoteAndroid/libraries/apps-calculator/res/values-ko/strings.xml",
+                    "position": {
+                        "startLine": 44,
+                        "startColumn": 4,
+                        "startOffset": 2633,
+                        "endColumn": 74,
+                        "endOffset": 2703
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 23,
+                    "startColumn": 4,
+                    "startOffset": 1622,
+                    "endColumn": 72,
+                    "endOffset": 1690
+                },
+                "from": {
+                    "file": "/Users/b0ne/AndroidStudioProjects/TaxnoteAndroid/libraries/apps-calculator/res/values-ko/strings.xml",
+                    "position": {
+                        "startLine": 45,
+                        "startColumn": 4,
+                        "startOffset": 2708,
+                        "endColumn": 72,
+                        "endOffset": 2776
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 24,
+                    "startColumn": 4,
+                    "startOffset": 1695,
+                    "endColumn": 76,
+                    "endOffset": 1767
+                },
+                "from": {
+                    "file": "/Users/b0ne/AndroidStudioProjects/TaxnoteAndroid/libraries/apps-calculator/res/values-ko/strings.xml",
+                    "position": {
+                        "startLine": 33,
+                        "startColumn": 4,
+                        "startOffset": 1788,
+                        "endColumn": 76,
+                        "endOffset": 1860
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 25,
+                    "startColumn": 4,
+                    "startOffset": 1772,
+                    "endColumn": 73,
+                    "endOffset": 1841
+                },
+                "from": {
+                    "file": "/Users/b0ne/AndroidStudioProjects/TaxnoteAndroid/libraries/apps-calculator/res/values-ko/strings.xml",
+                    "position": {
+                        "startLine": 20,
+                        "startColumn": 4,
+                        "startOffset": 849,
+                        "endColumn": 73,
+                        "endOffset": 918
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 26,
+                    "startColumn": 4,
+                    "startOffset": 1846,
+                    "endColumn": 73,
+                    "endOffset": 1915
+                },
+                "from": {
+                    "file": "/Users/b0ne/AndroidStudioProjects/TaxnoteAndroid/libraries/apps-calculator/res/values-ko/strings.xml",
+                    "position": {
+                        "startLine": 21,
+                        "startColumn": 4,
+                        "startOffset": 923,
+                        "endColumn": 73,
+                        "endOffset": 992
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 27,
+                    "startColumn": 4,
+                    "startOffset": 1920,
+                    "endColumn": 69,
+                    "endOffset": 1985
+                },
+                "from": {
+                    "file": "/Users/b0ne/AndroidStudioProjects/TaxnoteAndroid/libraries/apps-calculator/res/values-ko/strings.xml",
+                    "position": {
+                        "startLine": 22,
+                        "startColumn": 4,
+                        "startOffset": 997,
+                        "endColumn": 69,
+                        "endOffset": 1062
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 28,
+                    "startColumn": 4,
+                    "startOffset": 1990,
+                    "endColumn": 67,
+                    "endOffset": 2053
+                },
+                "from": {
+                    "file": "/Users/b0ne/AndroidStudioProjects/TaxnoteAndroid/libraries/apps-calculator/res/values-ko/strings.xml",
+                    "position": {
+                        "startLine": 23,
+                        "startColumn": 4,
+                        "startOffset": 1067,
+                        "endColumn": 67,
+                        "endOffset": 1130
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 29,
+                    "startColumn": 4,
+                    "startOffset": 2058,
+                    "endColumn": 69,
+                    "endOffset": 2123
+                },
+                "from": {
+                    "file": "/Users/b0ne/AndroidStudioProjects/TaxnoteAndroid/libraries/apps-calculator/res/values-ko/strings.xml",
+                    "position": {
+                        "startLine": 24,
+                        "startColumn": 4,
+                        "startOffset": 1135,
+                        "endColumn": 69,
+                        "endOffset": 1200
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 30,
+                    "startColumn": 4,
+                    "startOffset": 2128,
+                    "endColumn": 69,
+                    "endOffset": 2193
+                },
+                "from": {
+                    "file": "/Users/b0ne/AndroidStudioProjects/TaxnoteAndroid/libraries/apps-calculator/res/values-ko/strings.xml",
+                    "position": {
+                        "startLine": 25,
+                        "startColumn": 4,
+                        "startOffset": 1205,
+                        "endColumn": 69,
+                        "endOffset": 1270
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 31,
+                    "startColumn": 4,
+                    "startOffset": 2198,
+                    "endColumn": 69,
+                    "endOffset": 2263
+                },
+                "from": {
+                    "file": "/Users/b0ne/AndroidStudioProjects/TaxnoteAndroid/libraries/apps-calculator/res/values-ko/strings.xml",
+                    "position": {
+                        "startLine": 26,
+                        "startColumn": 4,
+                        "startOffset": 1275,
+                        "endColumn": 69,
+                        "endOffset": 1340
+                    }
+                }
+            }
+        ]
+    }
+]

@@ -1,0 +1,217 @@
+[
+    {
+        "outputFile": "/Users/b0ne/AndroidStudioProjects/TaxnoteAndroid/libraries/apps-calculator/build/intermediates/incremental/mergeReleaseResources/merged.dir/values-sw800dp-land-v13/values-sw800dp-land-v13.xml",
+        "map": [
+            {
+                "to": {
+                    "startLine": 2,
+                    "startColumn": 4,
+                    "startOffset": 55,
+                    "endLine": 10,
+                    "endColumn": 12,
+                    "endOffset": 463
+                },
+                "from": {
+                    "file": "/Users/b0ne/AndroidStudioProjects/TaxnoteAndroid/libraries/apps-calculator/res/values-sw800dp-land/styles.xml",
+                    "position": {
+                        "startLine": 20,
+                        "startColumn": 4,
+                        "startOffset": 787,
+                        "endLine": 28,
+                        "endColumn": 12,
+                        "endOffset": 1195
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 11,
+                    "startColumn": 4,
+                    "startOffset": 468,
+                    "endLine": 17,
+                    "endColumn": 12,
+                    "endOffset": 790
+                },
+                "from": {
+                    "file": "/Users/b0ne/AndroidStudioProjects/TaxnoteAndroid/libraries/apps-calculator/res/values-sw800dp-land/styles.xml",
+                    "position": {
+                        "startLine": 30,
+                        "startColumn": 4,
+                        "startOffset": 1201,
+                        "endLine": 36,
+                        "endColumn": 12,
+                        "endOffset": 1523
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 18,
+                    "startColumn": 4,
+                    "startOffset": 795,
+                    "endLine": 23,
+                    "endColumn": 12,
+                    "endOffset": 1123
+                },
+                "from": {
+                    "file": "/Users/b0ne/AndroidStudioProjects/TaxnoteAndroid/libraries/apps-calculator/res/values-sw800dp-land/styles.xml",
+                    "position": {
+                        "startLine": 38,
+                        "startColumn": 4,
+                        "startOffset": 1529,
+                        "endLine": 43,
+                        "endColumn": 12,
+                        "endOffset": 1857
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 24,
+                    "startColumn": 4,
+                    "startOffset": 1128,
+                    "endLine": 27,
+                    "endColumn": 12,
+                    "endOffset": 1283
+                },
+                "from": {
+                    "file": "/Users/b0ne/AndroidStudioProjects/TaxnoteAndroid/libraries/apps-calculator/res/values-sw800dp-land/styles.xml",
+                    "position": {
+                        "startLine": 45,
+                        "startColumn": 4,
+                        "startOffset": 1863,
+                        "endLine": 48,
+                        "endColumn": 12,
+                        "endOffset": 2018
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 28,
+                    "startColumn": 4,
+                    "startOffset": 1288,
+                    "endLine": 30,
+                    "endColumn": 12,
+                    "endOffset": 1397
+                },
+                "from": {
+                    "file": "/Users/b0ne/AndroidStudioProjects/TaxnoteAndroid/libraries/apps-calculator/res/values-sw800dp-land/styles.xml",
+                    "position": {
+                        "startLine": 50,
+                        "startColumn": 4,
+                        "startOffset": 2024,
+                        "endLine": 52,
+                        "endColumn": 12,
+                        "endOffset": 2133
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 31,
+                    "startColumn": 4,
+                    "startOffset": 1402,
+                    "endLine": 34,
+                    "endColumn": 12,
+                    "endOffset": 1558
+                },
+                "from": {
+                    "file": "/Users/b0ne/AndroidStudioProjects/TaxnoteAndroid/libraries/apps-calculator/res/values-sw800dp-land/styles.xml",
+                    "position": {
+                        "startLine": 54,
+                        "startColumn": 4,
+                        "startOffset": 2139,
+                        "endLine": 57,
+                        "endColumn": 12,
+                        "endOffset": 2295
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 35,
+                    "startColumn": 4,
+                    "startOffset": 1563,
+                    "endLine": 38,
+                    "endColumn": 12,
+                    "endOffset": 1722
+                },
+                "from": {
+                    "file": "/Users/b0ne/AndroidStudioProjects/TaxnoteAndroid/libraries/apps-calculator/res/values-sw800dp-land/styles.xml",
+                    "position": {
+                        "startLine": 59,
+                        "startColumn": 4,
+                        "startOffset": 2301,
+                        "endLine": 62,
+                        "endColumn": 12,
+                        "endOffset": 2460
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 39,
+                    "startColumn": 4,
+                    "startOffset": 1727,
+                    "endLine": 48,
+                    "endColumn": 12,
+                    "endOffset": 2200
+                },
+                "from": {
+                    "file": "/Users/b0ne/AndroidStudioProjects/TaxnoteAndroid/libraries/apps-calculator/res/values-sw800dp-land/styles.xml",
+                    "position": {
+                        "startLine": 64,
+                        "startColumn": 4,
+                        "startOffset": 2466,
+                        "endLine": 73,
+                        "endColumn": 12,
+                        "endOffset": 2939
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 49,
+                    "startColumn": 4,
+                    "startOffset": 2205,
+                    "endLine": 56,
+                    "endColumn": 12,
+                    "endOffset": 2580
+                },
+                "from": {
+                    "file": "/Users/b0ne/AndroidStudioProjects/TaxnoteAndroid/libraries/apps-calculator/res/values-sw800dp-land/styles.xml",
+                    "position": {
+                        "startLine": 75,
+                        "startColumn": 4,
+                        "startOffset": 2945,
+                        "endLine": 82,
+                        "endColumn": 12,
+                        "endOffset": 3320
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 57,
+                    "startColumn": 4,
+                    "startOffset": 2585,
+                    "endLine": 64,
+                    "endColumn": 12,
+                    "endOffset": 2961
+                },
+                "from": {
+                    "file": "/Users/b0ne/AndroidStudioProjects/TaxnoteAndroid/libraries/apps-calculator/res/values-sw800dp-land/styles.xml",
+                    "position": {
+                        "startLine": 84,
+                        "startColumn": 4,
+                        "startOffset": 3326,
+                        "endLine": 91,
+                        "endColumn": 12,
+                        "endOffset": 3702
+                    }
+                }
+            }
+        ]
+    }
+]

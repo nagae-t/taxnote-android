@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string msgid="8095131950334945205" name="app_name">"계산기"</string>
+    <string msgid="3126239559646368205" name="clr">"clr"</string>
+    <string msgid="6700172918709138470" name="del">"del"</string>
+    <string msgid="8357371663749541924" name="desc_clr">"지우기"</string>
+    <string msgid="7752508267661034194" name="desc_const_e">"오일러의 수"</string>
+    <string msgid="5843835548313660468" name="desc_const_pi">"원주율(파이)"</string>
+    <string msgid="6211527612960070934" name="desc_dec_point">"소수점"</string>
+    <string msgid="1866733601083210032" name="desc_del">"삭제"</string>
+    <string msgid="8068773095462472408" name="desc_eq">"등호"</string>
+    <string msgid="3197307754450718348" name="desc_fun_cos">"코사인(cosine)"</string>
+    <string msgid="4943842219071979148" name="desc_fun_ln">"자연로그"</string>
+    <string msgid="6163178034661345125" name="desc_fun_log">"로그"</string>
+    <string msgid="4010564022860883142" name="desc_fun_sin">"사인(sine)"</string>
+    <string msgid="8547330421304946587" name="desc_fun_tan">"탄젠트(tangent)"</string>
+    <string msgid="3319203240269597504" name="desc_lparen">"왼쪽 괄호"</string>
+    <string msgid="1174812755738083078" name="desc_op_add">"더하기"</string>
+    <string msgid="8320455802423478031" name="desc_op_div">"나누기"</string>
+    <string msgid="5004950609277631750" name="desc_op_fact">"팩토리얼"</string>
+    <string msgid="978652245185868311" name="desc_op_mul">"곱하기"</string>
+    <string msgid="2620877401884059447" name="desc_op_pow">"거듭제곱"</string>
+    <string msgid="4405610392216554239" name="desc_op_sqrt">"제곱근"</string>
+    <string msgid="2563060630032563021" name="desc_op_sub">"빼기"</string>
+    <string msgid="7629704943022422763" name="desc_rparen">"오른쪽 괄호"</string>
+    <string msgid="4071578355972369426" name="error_nan">"숫자 아님"</string>
+    <string msgid="6940043994468390738" name="error_syntax">"오류"</string>
+    <string msgid="7312559527731358211" name="fun_cos">"cos"</string>
+    <string msgid="6282013842946532944" name="fun_ln">"ln"</string>
+    <string msgid="6856905045055937519" name="fun_log">"log"</string>
+    <string msgid="7136698561875496766" name="fun_sin">"sin"</string>
+    <string msgid="9116158377794370341" name="fun_tan">"tan"</string>
+</resources>

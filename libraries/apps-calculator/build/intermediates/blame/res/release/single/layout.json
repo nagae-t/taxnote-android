@@ -1,0 +1,34 @@
+[
+    {
+        "merged": "/Users/b0ne/AndroidStudioProjects/TaxnoteAndroid/libraries/apps-calculator/build/intermediates/res/merged/release/layout/pad_operator_one_col.xml",
+        "source": "/Users/b0ne/AndroidStudioProjects/TaxnoteAndroid/libraries/apps-calculator/res/layout/pad_operator_one_col.xml"
+    },
+    {
+        "merged": "/Users/b0ne/AndroidStudioProjects/TaxnoteAndroid/libraries/apps-calculator/build/intermediates/res/merged/release/layout/pad_advanced.xml",
+        "source": "/Users/b0ne/AndroidStudioProjects/TaxnoteAndroid/libraries/apps-calculator/res/layout/pad_advanced.xml"
+    },
+    {
+        "merged": "/Users/b0ne/AndroidStudioProjects/TaxnoteAndroid/libraries/apps-calculator/build/intermediates/res/merged/release/layout/pad_numeric.xml",
+        "source": "/Users/b0ne/AndroidStudioProjects/TaxnoteAndroid/libraries/apps-calculator/res/layout/pad_numeric.xml"
+    },
+    {
+        "merged": "/Users/b0ne/AndroidStudioProjects/TaxnoteAndroid/libraries/apps-calculator/build/intermediates/res/merged/release/layout/activity_calculator_tablet_port.xml",
+        "source": "/Users/b0ne/AndroidStudioProjects/TaxnoteAndroid/libraries/apps-calculator/res/layout/activity_calculator_tablet_port.xml"
+    },
+    {
+        "merged": "/Users/b0ne/AndroidStudioProjects/TaxnoteAndroid/libraries/apps-calculator/build/intermediates/res/merged/release/layout/display.xml",
+        "source": "/Users/b0ne/AndroidStudioProjects/TaxnoteAndroid/libraries/apps-calculator/res/layout/display.xml"
+    },
+    {
+        "merged": "/Users/b0ne/AndroidStudioProjects/TaxnoteAndroid/libraries/apps-calculator/build/intermediates/res/merged/release/layout/activity_calculator_port.xml",
+        "source": "/Users/b0ne/AndroidStudioProjects/TaxnoteAndroid/libraries/apps-calculator/res/layout/activity_calculator_port.xml"
+    },
+    {
+        "merged": "/Users/b0ne/AndroidStudioProjects/TaxnoteAndroid/libraries/apps-calculator/build/intermediates/res/merged/release/layout/activity_calculator_land.xml",
+        "source": "/Users/b0ne/AndroidStudioProjects/TaxnoteAndroid/libraries/apps-calculator/res/layout/activity_calculator_land.xml"
+    },
+    {
+        "merged": "/Users/b0ne/AndroidStudioProjects/TaxnoteAndroid/libraries/apps-calculator/build/intermediates/res/merged/release/layout/pad_operator_two_col.xml",
+        "source": "/Users/b0ne/AndroidStudioProjects/TaxnoteAndroid/libraries/apps-calculator/res/layout/pad_operator_two_col.xml"
+    }
+]

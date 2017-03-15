@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string msgid="8095131950334945205" name="app_name">"ক্যালকুলেটর"</string>
+    <string msgid="3126239559646368205" name="clr">"clr"</string>
+    <string msgid="6700172918709138470" name="del">"del"</string>
+    <string msgid="8357371663749541924" name="desc_clr">"সাফ করুন"</string>
+    <string msgid="7752508267661034194" name="desc_const_e">"ইউলার সংখ্যা"</string>
+    <string msgid="5843835548313660468" name="desc_const_pi">"পাই"</string>
+    <string msgid="6211527612960070934" name="desc_dec_point">"পয়েন্ট"</string>
+    <string msgid="1866733601083210032" name="desc_del">"মুছুন"</string>
+    <string msgid="8068773095462472408" name="desc_eq">"সমান চিহ্ন"</string>
+    <string msgid="3197307754450718348" name="desc_fun_cos">"কোসাইন"</string>
+    <string msgid="4943842219071979148" name="desc_fun_ln">"স্বাভাবিক লগারিদম"</string>
+    <string msgid="6163178034661345125" name="desc_fun_log">"লগারিদম"</string>
+    <string msgid="4010564022860883142" name="desc_fun_sin">"সাইন"</string>
+    <string msgid="8547330421304946587" name="desc_fun_tan">"ট্যানজেন্ট"</string>
+    <string msgid="3319203240269597504" name="desc_lparen">"বাম লঘুবন্ধনী"</string>
+    <string msgid="1174812755738083078" name="desc_op_add">"যোগ চিহ্ন"</string>
+    <string msgid="8320455802423478031" name="desc_op_div">"ভাগ চিহ্ন"</string>
+    <string msgid="5004950609277631750" name="desc_op_fact">"গৌণিক"</string>
+    <string msgid="978652245185868311" name="desc_op_mul">"গুণ"</string>
+    <string msgid="2620877401884059447" name="desc_op_pow">"পাওয়ার"</string>
+    <string msgid="4405610392216554239" name="desc_op_sqrt">"বর্গমূল"</string>
+    <string msgid="2563060630032563021" name="desc_op_sub">"বিয়োগ চিহ্ন"</string>
+    <string msgid="7629704943022422763" name="desc_rparen">"ডান লঘুবন্ধনী"</string>
+    <string msgid="4071578355972369426" name="error_nan">"একটি সংখ্যা নয়"</string>
+    <string msgid="6940043994468390738" name="error_syntax">"ত্রুটি"</string>
+    <string msgid="7312559527731358211" name="fun_cos">"cos"</string>
+    <string msgid="6282013842946532944" name="fun_ln">"ইন"</string>
+    <string msgid="6856905045055937519" name="fun_log">"log"</string>
+    <string msgid="7136698561875496766" name="fun_sin">"sin"</string>
+    <string msgid="9116158377794370341" name="fun_tan">"tan"</string>
+</resources>

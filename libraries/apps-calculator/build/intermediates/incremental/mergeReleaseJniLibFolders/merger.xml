@@ -1,0 +1,2 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merger version="3"><dataSet config="main"><source path="/Users/b0ne/AndroidStudioProjects/TaxnoteAndroid/libraries/apps-calculator/src/main/jniLibs"/></dataSet><dataSet config="release"><source path="/Users/b0ne/AndroidStudioProjects/TaxnoteAndroid/libraries/apps-calculator/src/release/jniLibs"/></dataSet></merger>

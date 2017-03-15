@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string msgid="8095131950334945205" name="app_name">"Calculadora"</string>
+    <string msgid="3126239559646368205" name="clr">"c"</string>
+    <string msgid="6700172918709138470" name="del">"CE"</string>
+    <string msgid="8357371663749541924" name="desc_clr">"esborra"</string>
+    <string msgid="7752508267661034194" name="desc_const_e">"nombre d\'Euler"</string>
+    <string msgid="5843835548313660468" name="desc_const_pi">"pi"</string>
+    <string msgid="6211527612960070934" name="desc_dec_point">"punt"</string>
+    <string msgid="1866733601083210032" name="desc_del">"suprimeix"</string>
+    <string msgid="8068773095462472408" name="desc_eq">"és igual a"</string>
+    <string msgid="3197307754450718348" name="desc_fun_cos">"cosinus"</string>
+    <string msgid="4943842219071979148" name="desc_fun_ln">"logaritme natural"</string>
+    <string msgid="6163178034661345125" name="desc_fun_log">"logaritme"</string>
+    <string msgid="4010564022860883142" name="desc_fun_sin">"sinus"</string>
+    <string msgid="8547330421304946587" name="desc_fun_tan">"tangent"</string>
+    <string msgid="3319203240269597504" name="desc_lparen">"parèntesi d\'obertura"</string>
+    <string msgid="1174812755738083078" name="desc_op_add">"més"</string>
+    <string msgid="8320455802423478031" name="desc_op_div">"divideix"</string>
+    <string msgid="5004950609277631750" name="desc_op_fact">"factorial"</string>
+    <string msgid="978652245185868311" name="desc_op_mul">"vegades"</string>
+    <string msgid="2620877401884059447" name="desc_op_pow">"potència"</string>
+    <string msgid="4405610392216554239" name="desc_op_sqrt">"arrel quadrada"</string>
+    <string msgid="2563060630032563021" name="desc_op_sub">"menys"</string>
+    <string msgid="7629704943022422763" name="desc_rparen">"parèntesi de tancament"</string>
+    <string msgid="4071578355972369426" name="error_nan">"No és una xifra"</string>
+    <string msgid="6940043994468390738" name="error_syntax">"Error"</string>
+    <string msgid="7312559527731358211" name="fun_cos">"cos"</string>
+    <string msgid="6282013842946532944" name="fun_ln">"ln"</string>
+    <string msgid="6856905045055937519" name="fun_log">"log"</string>
+    <string msgid="7136698561875496766" name="fun_sin">"sin"</string>
+    <string msgid="9116158377794370341" name="fun_tan">"tan"</string>
+</resources>

@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <bool name="use_localized_digits">false</bool>
+    <color name="calculator_accent_color">#00BCD4</color>
+    <color name="calculator_error_color">#F40056</color>
+    <color name="display_background_color">#FFF</color>
+    <color name="display_formula_text_color">#8A000000</color>
+    <color name="display_result_text_color">#6C000000</color>
+    <color name="pad_advanced_background_color">#1DE9B6</color>
+    <color name="pad_button_advanced_ripple_color">#1A000000</color>
+    <color name="pad_button_advanced_text_color">#91000000</color>
+    <color name="pad_button_ripple_color">#33FFFFFF</color>
+    <color name="pad_button_text_color">#FFF</color>
+    <color name="pad_numeric_background_color">#434343</color>
+    <color name="pad_operator_background_color">#636363</color>
+    <declare-styleable name="CalculatorEditText"><attr format="dimension" name="minTextSize"/><attr format="dimension" name="maxTextSize"/><attr format="dimension" name="stepTextSize"/></declare-styleable>
+    <string name="app_name">Calculator</string>
+    <string name="clr">clr</string>
+    <string name="const_e">e</string>
+    <string name="const_pi">π</string>
+    <string name="del">del</string>
+    <string name="desc_clr">clear</string>
+    <string name="desc_const_e">Euler\'s number</string>
+    <string name="desc_const_pi">pi</string>
+    <string name="desc_dec_point">point</string>
+    <string name="desc_del">delete</string>
+    <string name="desc_eq">equals</string>
+    <string name="desc_fun_cos">cosine</string>
+    <string name="desc_fun_ln">natural logarithm</string>
+    <string name="desc_fun_log">logarithm</string>
+    <string name="desc_fun_sin">sine</string>
+    <string name="desc_fun_tan">tangent</string>
+    <string name="desc_lparen">left parenthesis</string>
+    <string name="desc_op_add">plus</string>
+    <string name="desc_op_div">divide</string>
+    <string name="desc_op_fact">factorial</string>
+    <string name="desc_op_mul">times</string>
+    <string name="desc_op_pow">power</string>
+    <string name="desc_op_sqrt">square root</string>
+    <string name="desc_op_sub">minus</string>
+    <string name="desc_rparen">right parenthesis</string>
+    <string name="eq">=</string>
+    <string name="error_nan">Not a number</string>
+    <string name="error_syntax">Error</string>
+    <string name="fun_cos">cos</string>
+    <string name="fun_ln">ln</string>
+    <string name="fun_log">log</string>
+    <string name="fun_sin">sin</string>
+    <string name="fun_tan">tan</string>
+    <string name="inf">∞</string>
+    <string name="lparen">(</string>
+    <string name="op_add">+</string>
+    <string name="op_div">÷</string>
+    <string name="op_fact">!</string>
+    <string name="op_mul">×</string>
+    <string name="op_pow">^</string>
+    <string name="op_sqrt">√</string>
+    <string name="op_sub">−</string>
+    <string name="rparen">)</string>
+    <style name="CalculatorTheme" parent="@android:style/Theme.Material.Light.NoActionBar">
+        <item name="android:colorPrimary">@color/calculator_accent_color</item>
+        <item name="android:navigationBarColor">@android:color/black</item>
+        <item name="android:statusBarColor">@color/calculator_accent_color</item>
+        <item name="android:windowContentOverlay">@null</item>
+    </style>
+    <style name="DisplayEditTextStyle" parent="@android:style/Widget.Material.Light.EditText">
+        <item name="android:background">@android:color/transparent</item>
+        <item name="android:cursorVisible">false</item>
+        <item name="android:fontFamily">sans-serif-light</item>
+        <item name="android:includeFontPadding">false</item>
+        <item name="android:gravity">bottom|end</item>
+    </style>
+    <style name="PadButtonStyle" parent="@android:style/Widget.Material.Light.Button.Borderless">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">@drawable/pad_button_background</item>
+        <item name="android:fontFamily">sans-serif-light</item>
+        <item name="android:gravity">center</item>
+        <item name="android:includeFontPadding">false</item>
+        <item name="android:minWidth">0dip</item>
+        <item name="android:minHeight">0dip</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textColor">@color/pad_button_text_color</item>
+    </style>
+    <style name="PadLayoutStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+    </style>
+</resources>
