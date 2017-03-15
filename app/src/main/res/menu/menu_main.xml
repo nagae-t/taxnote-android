@@ -50,12 +50,12 @@
         android:icon="@drawable/ic_settings_white_24dp"
         android:title="@string/profit_loss_settings"
         android:visible="false"
-        app:showAsAction="always" />
+        app:showAsAction="never" />
     <item
         android:id="@+id/action_profit_loss_export"
         android:icon="@drawable/ic_data_export_white_24dp"
         android:title="@string/data_export"
         android:visible="false"
-        app:showAsAction="always" />
+        app:showAsAction="never" />
 
 </menu>
