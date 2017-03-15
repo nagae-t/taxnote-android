@@ -24,12 +24,13 @@ import android.animation.ArgbEvaluator;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.animation.ValueAnimator.AnimatorUpdateListener;
-import android.app.Activity;
 import android.graphics.Rect;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -45,9 +46,8 @@ import android.widget.TextView;
 
 import com.android.calculator2.CalculatorEditText.OnTextSizeChangeListener;
 import com.android.calculator2.CalculatorExpressionEvaluator.EvaluateCallback;
-import com.android.calculator2.R;
 
-public class Calculator extends Activity
+public class Calculator extends AppCompatActivity
         implements OnTextSizeChangeListener, EvaluateCallback, OnLongClickListener {
 
     private static final String NAME = Calculator.class.getName();
@@ -182,17 +182,21 @@ public class Calculator extends Activity
             }
 
             if (state == CalculatorState.ERROR) {
-                final int errorColor = getResources().getColor(R.color.calculator_error_color);
+                final int errorColor = ContextCompat.getColor(this, R.color.calculator_error_color);
                 mFormulaEditText.setTextColor(errorColor);
                 mResultEditText.setTextColor(errorColor);
-                getWindow().setStatusBarColor(errorColor);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    getWindow().setStatusBarColor(errorColor);
+                }
             } else {
                 mFormulaEditText.setTextColor(
-                        getResources().getColor(R.color.display_formula_text_color));
+                        ContextCompat.getColor(this, R.color.display_formula_text_color));
                 mResultEditText.setTextColor(
-                        getResources().getColor(R.color.display_result_text_color));
-                getWindow().setStatusBarColor(
-                        getResources().getColor(R.color.calculator_accent_color));
+                        ContextCompat.getColor(this, R.color.display_result_text_color));
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    getWindow().setStatusBarColor(
+                            ContextCompat.getColor(this, R.color.calculator_accent_color));
+                }
             }
         }
     }
@@ -335,19 +339,22 @@ public class Calculator extends Activity
         final double y_2 = Math.pow(revealView.getTop() - revealCenterY, 2);
         final float revealRadius = (float) Math.max(Math.sqrt(x1_2 + y_2), Math.sqrt(x2_2 + y_2));
 
-        final Animator revealAnimator =
-                ViewAnimationUtils.createCircularReveal(revealView,
-                        revealCenterX, revealCenterY, 0.0f, revealRadius);
-        revealAnimator.setDuration(
-                getResources().getInteger(android.R.integer.config_longAnimTime));
-
         final Animator alphaAnimator = ObjectAnimator.ofFloat(revealView, View.ALPHA, 0.0f);
         alphaAnimator.setDuration(
                 getResources().getInteger(android.R.integer.config_mediumAnimTime));
         alphaAnimator.addListener(listener);
 
         final AnimatorSet animatorSet = new AnimatorSet();
-        animatorSet.play(revealAnimator).before(alphaAnimator);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            final Animator revealAnimator =
+                    ViewAnimationUtils.createCircularReveal(revealView,
+                            revealCenterX, revealCenterY, 0.0f, revealRadius);
+            revealAnimator.setDuration(
+                    getResources().getInteger(android.R.integer.config_longAnimTime));
+            animatorSet.play(revealAnimator).before(alphaAnimator);
+        }
+
         animatorSet.setInterpolator(new AccelerateDecelerateInterpolator());
         animatorSet.addListener(new AnimatorListenerAdapter() {
             @Override

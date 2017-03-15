@@ -47,4 +47,5 @@ android {
 dependencies {
     compile files("arity-2.1.2.jar")
     compile "com.android.support:support-v4:${supportPackageVersion}"
+    compile "com.android.support:appcompat-v7:${supportPackageVersion}"
 }

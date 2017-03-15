@@ -18,11 +18,10 @@ package com.android.calculator2;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.widget.Button;
 import android.view.View;
-import java.text.DecimalFormat;
+import android.widget.Button;
+
 import java.text.DecimalFormatSymbols;
-import java.text.NumberFormat;
 import java.util.Locale;
 
 public class CalculatorNumericPadLayout extends CalculatorPadLayout {
@@ -45,10 +44,11 @@ public class CalculatorNumericPadLayout extends CalculatorPadLayout {
 
         Locale locale = getResources().getConfiguration().locale;
         if (!getResources().getBoolean(R.bool.use_localized_digits)) {
-            locale = new Locale.Builder()
-                .setLocale(locale)
-                .setUnicodeLocaleKeyword("nu", "latn")
-                .build();
+//            locale = new Locale.Builder()
+//                .setLocale(locale)
+//                .setUnicodeLocaleKeyword("nu", "latn")
+//                .build();
+            locale = new Locale("nu", "latn");
         }
 
         final DecimalFormatSymbols symbols = DecimalFormatSymbols.getInstance(locale);
