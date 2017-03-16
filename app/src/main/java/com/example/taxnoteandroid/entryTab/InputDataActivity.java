@@ -457,7 +457,12 @@ public class InputDataActivity extends AppCompatActivity {
             // Update price string
 //            currentPrice = data.getLongExtra("EXTRA_CURRENT_PRICE", 0);
 
+            long maxPrice = 999999999;
             currentPrice = data.getLongExtra(Calculator.KEY_CURRENT_PRICE, 0);
+            if (currentPrice > maxPrice) {
+                currentPrice = maxPrice;
+                DialogManager.showToast(this, getString(R.string.max_cal_digit_value));
+            }
             String priceString = ValueConverter.formatPrice(InputDataActivity.this ,currentPrice);
             priceTextView.setText(priceString);
         }

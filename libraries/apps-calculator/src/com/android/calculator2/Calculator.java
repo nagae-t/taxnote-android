@@ -499,14 +499,15 @@ public class Calculator extends AppCompatActivity
         animatorSet.start();
 
         // return result
-        if (result.contains(".") && mRoundedDecimalMsg != null) {
+        long maxPrice = 999999999;
+        double priceDoubleNumber = Double.parseDouble(result);
+        if (result.contains(".") && mRoundedDecimalMsg != null && priceDoubleNumber < maxPrice) {
             Toast toast = Toast.makeText(this, mRoundedDecimalMsg, Toast.LENGTH_SHORT);
             toast.setGravity(Gravity.CENTER, 0, 0);
             toast.show();
         }
 
         // Convert double to long
-        double priceDoubleNumber = Double.parseDouble(result);
         priceDoubleNumber = Math.round(priceDoubleNumber);
         long currentPrice = (long) priceDoubleNumber;
 
