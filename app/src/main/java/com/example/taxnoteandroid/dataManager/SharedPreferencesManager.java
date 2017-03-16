@@ -108,6 +108,13 @@ public class SharedPreferencesManager {
     }
 
     // DAILY_ALERT_INPUT_FORGET_TIME_KEY
+    public static void saveDailyAlertInputForgetTime(Context context, String timeStr) {
+        getSharedPreferences(context).edit().putString(DAILY_ALERT_INPUT_FORGET_TIME_KEY, timeStr).apply();
+    }
+
+    public static String getDailyAlertInputForgetTime(Context context) {
+        return getSharedPreferences(context).getString(DAILY_ALERT_INPUT_FORGET_TIME_KEY, null);
+    }
 
 
     //--------------------------------------------------------------//

@@ -1,15 +1,21 @@
 package com.example.taxnoteandroid;
 
+import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
+import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TimePicker;
 
+import com.example.taxnoteandroid.dataManager.SharedPreferencesManager;
 import com.example.taxnoteandroid.databinding.ActivityAlertInputForgetBinding;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
 /**
  * Created by b0ne on 2017/03/15.
@@ -18,6 +24,7 @@ import java.text.SimpleDateFormat;
 public class AlertInputForgetSettingsActivity extends DefaultCommonActivity {
 
     private ActivityAlertInputForgetBinding binding;
+    private SimpleDateFormat formatHourMin;
 
     public static void start(Context context) {
         Intent intent = new Intent(context, AlertInputForgetSettingsActivity.class);
@@ -34,13 +41,48 @@ public class AlertInputForgetSettingsActivity extends DefaultCommonActivity {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
 
-        SimpleDateFormat format = new SimpleDateFormat("HH:mm");
-        // デフォルトでは現在の5分後
-        long defaultTime = System.currentTimeMillis() + (300*1000);
-        String timeString = format.format(defaultTime);
+        formatHourMin = new SimpleDateFormat("HH:mm");
 
-        binding.alertTimeValue.setText(timeString);
+        String savedAlertTime = SharedPreferencesManager.getDailyAlertInputForgetTime(this);
+        if (savedAlertTime == null) {
+            // デフォルトでは現在の5分後
+            long defaultTime = System.currentTimeMillis() + (300 * 1000);
+            String timeString = formatHourMin.format(defaultTime);
 
+            binding.alertTimeValue.setText(timeString);
+        } else {
+            String[] timeStrings = savedAlertTime.split(":");
+            Log.v("TEST", "saved time = " + timeStrings[0]
+                + "h, "+timeStrings[1]+"m");
+        }
+
+        binding.alertTimeRow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showTimePickerDialog();
+            }
+        });
+    }
+
+    private void showTimePickerDialog() {
+        final Calendar calendar = Calendar.getInstance();
+        int hour = calendar.get(Calendar.HOUR_OF_DAY);
+        int minute = calendar.get(Calendar.MINUTE);
+        TimePickerDialog dialog = new TimePickerDialog(
+                this,
+                new TimePickerDialog.OnTimeSetListener(){
+                    @Override
+                    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                        calendar.set(calendar.get(Calendar.YEAR),
+                                calendar.get(Calendar.MONTH),
+                                calendar.get(Calendar.DATE),
+                                hourOfDay, minute);
+                        String timeString = formatHourMin.format(calendar.getTime());
+                        Log.v("TEST", "onTimeSet newTimeString:  "+timeString);
+                        binding.alertTimeValue.setText(timeString);
+                    }
+                }, hour, minute, true);
+        dialog.show();
     }
 
 
