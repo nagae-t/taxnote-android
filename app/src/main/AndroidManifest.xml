@@ -87,6 +87,17 @@
         </activity>
         <service android:name=".Library.DailyAlertInputForgetService" />
 
+        <receiver android:name=".Library.OnBootReceiver"
+            android:enabled="true"
+            android:directBootAware="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.ACTION_LOCKED_BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+
         <!--
  ATTENTION: This was auto-generated to add Google Play services to your project for
      App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information.

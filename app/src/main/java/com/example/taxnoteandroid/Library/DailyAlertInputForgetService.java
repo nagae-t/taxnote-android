@@ -51,7 +51,10 @@ public class DailyAlertInputForgetService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Log.v("TEST", "AlertService onStartCommand");
+        Log.v("TEST", "AlertService onStartCommand show notification");
+        TNAppNotification appNotification = TNAppNotification.newInstanceForAlertInputForget(mContext);
+        appNotification.show();
+
         return START_NOT_STICKY;
     }
 
