@@ -11,11 +11,14 @@ import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.TimePicker;
 
+import com.example.taxnoteandroid.Library.DailyAlertInputForgetService;
+import com.example.taxnoteandroid.Library.DailyScheduler;
 import com.example.taxnoteandroid.dataManager.SharedPreferencesManager;
 import com.example.taxnoteandroid.databinding.ActivityAlertInputForgetBinding;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Locale;
 
 /**
  * Created by b0ne on 2017/03/15.
@@ -25,6 +28,10 @@ public class AlertInputForgetSettingsActivity extends DefaultCommonActivity {
 
     private ActivityAlertInputForgetBinding binding;
     private SimpleDateFormat formatHourMin;
+    private DailyScheduler dailyScheduler;
+    private String dailyAlertTimeString;
+
+    private static final int DAILY_ALERT_SERVICE_ID = 1;
 
     public static void start(Context context) {
         Intent intent = new Intent(context, AlertInputForgetSettingsActivity.class);
@@ -41,10 +48,11 @@ public class AlertInputForgetSettingsActivity extends DefaultCommonActivity {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
 
-        formatHourMin = new SimpleDateFormat("HH:mm");
+        dailyScheduler = new DailyScheduler(this);
+        formatHourMin = new SimpleDateFormat("HH:mm", Locale.getDefault());
 
-        String savedAlertTime = SharedPreferencesManager.getDailyAlertInputForgetTime(this);
-        if (savedAlertTime == null) {
+        dailyAlertTimeString = SharedPreferencesManager.getDailyAlertInputForgetTime(this);
+        if (dailyAlertTimeString == null) {
             // デフォルトでは現在の5分後
             long defaultTime = System.currentTimeMillis() + (300 * 1000);
             String timeString = formatHourMin.format(defaultTime);
@@ -54,7 +62,7 @@ public class AlertInputForgetSettingsActivity extends DefaultCommonActivity {
 //            String[] timeStrings = savedAlertTime.split(":");
 //            Log.v("TEST", "saved time = " + timeStrings[0]
 //                + "h, "+timeStrings[1]+"m");
-            binding.alertTimeValue.setText(savedAlertTime);
+            binding.alertTimeValue.setText(dailyAlertTimeString);
         }
 
         // 通知する、しないの設定
@@ -64,6 +72,7 @@ public class AlertInputForgetSettingsActivity extends DefaultCommonActivity {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
                 SharedPreferencesManager.saveDailyAlertInputForgetEnable(getApplicationContext(), isChecked);
+                checkNotifyEnable(isChecked);
             }
         });
 
@@ -95,6 +104,20 @@ public class AlertInputForgetSettingsActivity extends DefaultCommonActivity {
                     }
                 }, hour, minute, true);
         dialog.show();
+    }
+
+    private void checkNotifyEnable(boolean isEnable) {
+        dailyAlertTimeString = SharedPreferencesManager.getDailyAlertInputForgetTime(this);
+        if (dailyAlertTimeString == null) return;
+
+        String[] timeStrings = dailyAlertTimeString.split(":");
+        int hourOfDay = Integer.valueOf(timeStrings[0]);
+        int minute = Integer.valueOf(timeStrings[1]);
+        if (isEnable) {
+            dailyScheduler.setByTime(DailyAlertInputForgetService.class, hourOfDay, minute, DAILY_ALERT_SERVICE_ID);
+        } else {
+            dailyScheduler.cancel(DailyAlertInputForgetService.class, 0, DAILY_ALERT_SERVICE_ID);
+        }
     }
 
 
