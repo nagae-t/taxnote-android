@@ -123,26 +123,13 @@ public class FileUtil  {
 
             // DBテーブルの初期化
             OrmaDatabase _db = TaxnoteApp.getOrmaDatabase();
-            long newProjectId = 0;
             try {
                 _db.deleteAll();
 
                 Thread.sleep(500);
 
-//                Project project = new Project();
-//                project.isMaster = true;
-//                project.name = "master";
-//                project.order = 0;
-//                project.uuid = UUID.randomUUID().toString();
-//                project.accountUuidForExpense = "";
-//                project.accountUuidForIncome = "";
-//                project.decimal = context.getResources().getBoolean(R.bool.is_decimal);
-//
-//                newProjectId = new ProjectDataManager(context).save(project);
-//                SharedPreferencesManager.saveUuidForCurrentProject(context, project.uuid);
-
             } catch (Exception e) {
-                Log.e("ERROR", "dataImport: truncate error: " + e.getMessage());
+                Log.e("ERROR", "dataImport: reset DB error: " + e.getMessage());
 //                e.printStackTrace();
             }
 
@@ -151,82 +138,70 @@ public class FileUtil  {
             ProjectDataManager projectDataManager = new ProjectDataManager(context);
             for (JsonElement projectJson : jsonList) {
                 Project newProject = gson.fromJson(projectJson, Project.class);
-                projectDataManager.save(newProject);
+                long newProjectId = projectDataManager.save(newProject);
+                newProject.id = newProjectId;
+
                 if (newProject.isMaster) {
                     SharedPreferencesManager.saveUuidForCurrentProject(context, newProject.uuid);
                 }
-//                if (newProject.isMaster) {
-//                    // project を上書き
-//                    _db.updateProject().idEq(newProjectId)
-//                            .order(newProject.order)
-//                            .isMaster(newProject.isMaster)
-//                            .decimal(newProject.decimal)
-//                            .deleted(newProject.deleted)
-//                            .needSave(newProject.needSave)
-//                            .needSync(newProject.needSync)
-//                            .name(newProject.name)
-//                            .accountUuidForExpense(newProject.accountUuidForExpense)
-//                            .accountUuidForIncome(newProject.accountUuidForIncome)
-//                            .execute();
-//                } else {
-//
-//                }
-            }
 
-            try {
-                Thread.sleep(400);
-            } catch (InterruptedException e) {
-            }
+                // account
+                jsonList = jsonObj.get("account").getAsJsonArray();
+                AccountDataManager accountDataManager = new AccountDataManager(context);
+                for (JsonElement jsItem : jsonList) {
+                    Account newData = gson.fromJson(jsItem, Account.class);
+                    if (newData.project.uuid.equals(newProject.uuid)) {
+                        newData.project = newProject;
+                        accountDataManager.save(newData);
+                    }
+                }
 
-            // 上書きされたprojectを他のデータと一緒に挿入
-            Project currentProject = projectDataManager.findCurrentProjectWithContext(context);
+                // reason
+                jsonList = jsonObj.get("reason").getAsJsonArray();
+                ReasonDataManager reasonDataManager = new ReasonDataManager(context);
+                for (JsonElement jsItem : jsonList) {
+                    Reason newData = gson.fromJson(jsItem, Reason.class);
+                    if (newData.project.uuid.equals(newProject.uuid)) {
+                        newData.project = newProject;
+                        reasonDataManager.save(newData);
+                    }
+                }
 
-            // account
-            jsonList = jsonObj.get("account").getAsJsonArray();
-            AccountDataManager accountDataManager = new AccountDataManager(context);
-            for (JsonElement jsItem : jsonList) {
-                Account newAcc = gson.fromJson(jsItem, Account.class);
-                newAcc.project = currentProject;
-                accountDataManager.save(newAcc);
-            }
+                // entry
+                jsonList = jsonObj.get("entry").getAsJsonArray();
+                EntryDataManager entryDataManager = new EntryDataManager(context);
+                for (JsonElement jsItem : jsonList) {
+                    Entry newData = gson.fromJson(jsItem, Entry.class);
+                    if (newData.project.uuid.equals(newProject.uuid)) {
+                        newData.project = newProject;
+                        newData.account = accountDataManager.findByUuid(newData.account.uuid);
+                        newData.reason = reasonDataManager.findByUuid(newData.reason.uuid);
+                        entryDataManager.save(newData);
+                    }
+                }
 
-            // reason
-            jsonList = jsonObj.get("reason").getAsJsonArray();
-            ReasonDataManager reasonDataManager = new ReasonDataManager(context);
-            for (JsonElement jsItem : jsonList) {
-                Reason newData = gson.fromJson(jsItem, Reason.class);
-                newData.project = currentProject;
-                reasonDataManager.save(newData);
-            }
+                // summary
+                jsonList = jsonObj.get("summary").getAsJsonArray();
+                SummaryDataManager summDataManager = new SummaryDataManager(context);
+                for (JsonElement jsItem : jsonList) {
+                    Summary newData = gson.fromJson(jsItem, Summary.class);
+                    if (newData.project.uuid.equals(newProject.uuid)) {
+                        newData.project = newProject;
+                        newData.reason = reasonDataManager.findByUuid(newData.reason.uuid);
+                        summDataManager.save(newData);
+                    }
+                }
 
-            // entry
-            jsonList = jsonObj.get("entry").getAsJsonArray();
-            EntryDataManager entryDataManager = new EntryDataManager(context);
-            for (JsonElement jsItem : jsonList) {
-                Entry newData = gson.fromJson(jsItem, Entry.class);
-                newData.project = currentProject;
-                newData.account = accountDataManager.findByUuid(newData.account.uuid);
-                newData.reason = reasonDataManager.findByUuid(newData.reason.uuid);
-                entryDataManager.save(newData);
-            }
-
-            // summary
-            jsonList = jsonObj.get("summary").getAsJsonArray();
-            SummaryDataManager summDataManager = new SummaryDataManager(context);
-            for (JsonElement jsItem : jsonList) {
-                Summary newData = gson.fromJson(jsItem, Summary.class);
-                newData.project = currentProject;
-                newData.reason = reasonDataManager.findByUuid(newData.reason.uuid);
-                summDataManager.save(newData);
-            }
-
-            // recurring
-            jsonList = jsonObj.get("recurring").getAsJsonArray();
-            RecurringDataManager recDataManager = new RecurringDataManager(context);
-            for (JsonElement jsItem : jsonList) {
-                Recurring newData = gson.fromJson(jsItem, Recurring.class);
-                newData.project = currentProject;
-                recDataManager.save(newData);
+                // recurring
+                jsonList = jsonObj.get("recurring").getAsJsonArray();
+                RecurringDataManager recDataManager = new RecurringDataManager(context);
+                for (JsonElement jsItem : jsonList) {
+                    Recurring newData = gson.fromJson(jsItem, Recurring.class);
+                    if (newData.project.uuid.equals(newProject.uuid)) {
+                        newData.project = newProject;
+                        recDataManager.save(newData);
+                    }
+                }
             }
 
             SharedPreferencesManager.saveDefaultDatabaseSet(context);
