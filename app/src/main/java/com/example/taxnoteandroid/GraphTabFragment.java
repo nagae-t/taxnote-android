@@ -108,6 +108,8 @@ public class GraphTabFragment extends Fragment  {
         mPagerAdapter = new GraphContentFragmentPagerAdapter(
                 getChildFragmentManager(), reportGrouping, calendars, isExpense);
         binding.pager.setAdapter(mPagerAdapter);
+        if (calendars.size() == 0) return;
+
         if (mCurrentPagerPosition < 0) {
             int lastIndex = mPagerAdapter.getCount() - 1;
             // 最後のページにデータがあるかどうか
