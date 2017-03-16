@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.CompoundButton;
@@ -30,6 +31,7 @@ public class AlertInputForgetSettingsActivity extends DefaultCommonActivity {
     private SimpleDateFormat formatHourMin;
     private DailyScheduler dailyScheduler;
     private String dailyAlertTimeString;
+    private Boolean notifyEnable;
 
     private static final int DAILY_ALERT_SERVICE_ID = 1;
 
@@ -66,12 +68,13 @@ public class AlertInputForgetSettingsActivity extends DefaultCommonActivity {
         }
 
         // 通知する、しないの設定
-        Boolean notifyEnable = SharedPreferencesManager.getDailyAlertInputForgetEnable(this);
+        notifyEnable = SharedPreferencesManager.getDailyAlertInputForgetEnable(this);
         binding.notifySwitch.setChecked(notifyEnable);
         binding.notifySwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
                 SharedPreferencesManager.saveDailyAlertInputForgetEnable(getApplicationContext(), isChecked);
+                notifyEnable = isChecked;
                 checkNotifyEnable(isChecked);
             }
         });
@@ -101,22 +104,26 @@ public class AlertInputForgetSettingsActivity extends DefaultCommonActivity {
                         String timeString = formatHourMin.format(calendar.getTime());
                         binding.alertTimeValue.setText(timeString);
                         SharedPreferencesManager.saveDailyAlertInputForgetTime(getApplicationContext(), timeString);
+                        checkNotifyEnable(notifyEnable);
                     }
                 }, hour, minute, true);
         dialog.show();
     }
 
     private void checkNotifyEnable(boolean isEnable) {
+        // まずスケジュールをクリアする
+        dailyScheduler.cancel(DailyAlertInputForgetService.class, 0, DAILY_ALERT_SERVICE_ID);
+
         dailyAlertTimeString = SharedPreferencesManager.getDailyAlertInputForgetTime(this);
         if (dailyAlertTimeString == null) return;
 
         String[] timeStrings = dailyAlertTimeString.split(":");
         int hourOfDay = Integer.valueOf(timeStrings[0]);
         int minute = Integer.valueOf(timeStrings[1]);
+
         if (isEnable) {
+            Log.v("TEST", "checkNotifyEnable enable : " + dailyAlertTimeString);
             dailyScheduler.setByTime(DailyAlertInputForgetService.class, hourOfDay, minute, DAILY_ALERT_SERVICE_ID);
-        } else {
-            dailyScheduler.cancel(DailyAlertInputForgetService.class, 0, DAILY_ALERT_SERVICE_ID);
         }
     }
 

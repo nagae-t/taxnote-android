@@ -37,7 +37,7 @@ public class DailyScheduler {
         AlarmManager alarm = (AlarmManager) context
                 .getSystemService(context.ALARM_SERVICE);
         alarm.setRepeating(AlarmManager.RTC,
-                durationTime,AlarmManager.INTERVAL_DAY, action);
+                durationTime, AlarmManager.INTERVAL_DAY, action);
     }
 
     /*
