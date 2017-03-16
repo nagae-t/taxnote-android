@@ -12,6 +12,8 @@ import android.util.Log;
 
 import com.example.taxnoteandroid.dataManager.SharedPreferencesManager;
 
+import static com.example.taxnoteandroid.AlertInputForgetSettingsActivity.DAILY_ALERT_SERVICE_ID;
+
 /**
  * Created by b0ne on 2017/03/16.
  */
@@ -40,7 +42,6 @@ public class DailyAlertInputForgetService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        Log.v("TEST", "AlertService onCreate");
 
         mContext = getApplicationContext();
         boolean isDailyAlertEnable = SharedPreferencesManager.getDailyAlertInputForgetEnable(mContext);
@@ -51,16 +52,18 @@ public class DailyAlertInputForgetService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Log.v("TEST", "AlertService onStartCommand show notification");
         TNAppNotification appNotification = TNAppNotification.newInstanceForAlertInputForget(mContext);
         appNotification.show();
+
+        // 次回の通知
+        DailyScheduler dailyScheduler = new DailyScheduler(mContext);
+        dailyScheduler.setBySavedDailyAlertInputForget(DAILY_ALERT_SERVICE_ID);
 
         return START_NOT_STICKY;
     }
 
     @Override
     public void onDestroy() {
-        Log.v("TEST", "AlertService onDestroy");
         super.onDestroy();
     }
 }

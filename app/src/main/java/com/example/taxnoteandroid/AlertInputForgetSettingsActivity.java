@@ -33,7 +33,7 @@ public class AlertInputForgetSettingsActivity extends DefaultCommonActivity {
     private String dailyAlertTimeString;
     private Boolean notifyEnable;
 
-    private static final int DAILY_ALERT_SERVICE_ID = 1;
+    public static final int DAILY_ALERT_SERVICE_ID = 1;
 
     public static void start(Context context) {
         Intent intent = new Intent(context, AlertInputForgetSettingsActivity.class);
@@ -61,9 +61,6 @@ public class AlertInputForgetSettingsActivity extends DefaultCommonActivity {
 
             binding.alertTimeValue.setText(timeString);
         } else {
-//            String[] timeStrings = savedAlertTime.split(":");
-//            Log.v("TEST", "saved time = " + timeStrings[0]
-//                + "h, "+timeStrings[1]+"m");
             binding.alertTimeValue.setText(dailyAlertTimeString);
         }
 
@@ -112,18 +109,10 @@ public class AlertInputForgetSettingsActivity extends DefaultCommonActivity {
 
     private void checkNotifyEnable(boolean isEnable) {
         // まずスケジュールをクリアする
-        dailyScheduler.cancel(DailyAlertInputForgetService.class, 0, DAILY_ALERT_SERVICE_ID);
-
-        dailyAlertTimeString = SharedPreferencesManager.getDailyAlertInputForgetTime(this);
-        if (dailyAlertTimeString == null) return;
-
-        String[] timeStrings = dailyAlertTimeString.split(":");
-        int hourOfDay = Integer.valueOf(timeStrings[0]);
-        int minute = Integer.valueOf(timeStrings[1]);
+        dailyScheduler.cancel(DailyAlertInputForgetService.class, DAILY_ALERT_SERVICE_ID);
 
         if (isEnable) {
-            Log.v("TEST", "checkNotifyEnable enable : " + dailyAlertTimeString);
-            dailyScheduler.setByTime(DailyAlertInputForgetService.class, hourOfDay, minute, DAILY_ALERT_SERVICE_ID);
+            dailyScheduler.setBySavedDailyAlertInputForget(DAILY_ALERT_SERVICE_ID);
         }
     }
 

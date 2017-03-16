@@ -45,8 +45,9 @@ public class TNAppNotification {
     }
 
     public static TNAppNotification newInstanceForAlertInputForget(Context context) {
+        String title = context.getString(R.string.app_name);
         String message = context.getString(R.string.alert_input_forget_notify_message);
-        TNAppNotification appNotification = new TNAppNotification(context, null, message);
+        TNAppNotification appNotification = new TNAppNotification(context, title, message);
         return appNotification;
     }
 
@@ -74,9 +75,9 @@ public class TNAppNotification {
         ntBuilder.setDefaults(defsVal);
 
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            ntBuilder.setVisibility(Notification.VISIBILITY_PRIVATE);
+            ntBuilder.setVisibility(Notification.VISIBILITY_PUBLIC);
             ntBuilder.setColor(ContextCompat.getColor(mContext, R.color.primary));
-            ntBuilder.setPriority(Notification.PRIORITY_DEFAULT);
+            ntBuilder.setPriority(Notification.PRIORITY_HIGH);
         }
 
         ntBuilder.setSmallIcon(R.drawable.ic_notifications_white_24dp);
@@ -85,8 +86,8 @@ public class TNAppNotification {
 
         NotificationCompat.BigTextStyle bigTextStyle =
                 new NotificationCompat.BigTextStyle(ntBuilder);
-        bigTextStyle.bigText(mMessage)
-                .setBigContentTitle(mTitle);
+        bigTextStyle.setBigContentTitle(mTitle)
+                .bigText(mMessage);
 
         Notification notification = bigTextStyle.build();
         notification.flags = Notification.FLAG_SHOW_LIGHTS;

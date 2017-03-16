@@ -4,6 +4,9 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
+
+import com.example.taxnoteandroid.dataManager.SharedPreferencesManager;
 
 import java.util.Calendar;
 import java.util.TimeZone;
@@ -23,10 +26,14 @@ public class DailyScheduler {
         this.context = context;
     }
 
-    /*
+    /**
      * durationTime(ミリ秒)後 launchServiceを実行する
      * serviceIdはどのサービスかを区別する為のID(同じなら上書き)
-     * 一回起動するとそのタイミングで毎日1回動き続ける
+     *
+     * @param launchService
+     * @param durationTime
+     * @param serviceId
+     * @param <T>
      */
     public <T> void set(Class<T> launchService, long durationTime, int serviceId) {
 
@@ -36,13 +43,24 @@ public class DailyScheduler {
                 PendingIntent.FLAG_CANCEL_CURRENT);
         AlarmManager alarm = (AlarmManager) context
                 .getSystemService(context.ALARM_SERVICE);
-        alarm.setRepeating(AlarmManager.RTC,
-                durationTime, AlarmManager.INTERVAL_DAY, action);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            alarm.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP,
+                    durationTime, action);
+        } else {
+            alarm.setExact(AlarmManager.RTC_WAKEUP, durationTime, action);
+        }
     }
 
-    /*
+    /**
      * 起動したい時刻(hour:minute)を指定するバージョン
      * 指定した時刻で毎日起動する
+     *
+     * @param launchService
+     * @param hour
+     * @param minute
+     * @param serviceId
+     * @param <T>
      */
     public <T> void setByTime(Class<T> launchService, int hour, int minute, int serviceId) {
         TimeZone tz = TimeZone.getDefault();
@@ -74,10 +92,14 @@ public class DailyScheduler {
 
     }
 
-    /*
+    /**
      * キャンセル用
+     *
+     * @param launchService
+     * @param serviceId
+     * @param <T>
      */
-    public <T> void cancel(Class<T> launchService, long wakeTime, int serviceId) {
+    public <T> void cancel(Class<T> launchService, int serviceId) {
         Intent intent = new Intent(context, launchService);
         PendingIntent action = PendingIntent.getService(context, serviceId, intent,
                 PendingIntent.FLAG_UPDATE_CURRENT);
@@ -85,4 +107,16 @@ public class DailyScheduler {
                 .getSystemService(Context.ALARM_SERVICE);
         alarm.cancel(action);
     }
+
+    public void setBySavedDailyAlertInputForget(int serviceId) {
+        String savedTimeString = SharedPreferencesManager.getDailyAlertInputForgetTime(context);
+        if (savedTimeString == null) return;
+
+        String[] timeStrings = savedTimeString.split(":");
+        int hourOfDay = Integer.valueOf(timeStrings[0]);
+        int minute = Integer.valueOf(timeStrings[1]);
+
+        setByTime(DailyAlertInputForgetService.class, hourOfDay, minute, serviceId);
+    }
+
 }
