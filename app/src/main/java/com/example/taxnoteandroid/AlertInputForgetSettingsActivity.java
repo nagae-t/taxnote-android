@@ -6,9 +6,9 @@ import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.CompoundButton;
 import android.widget.TimePicker;
 
 import com.example.taxnoteandroid.dataManager.SharedPreferencesManager;
@@ -51,11 +51,23 @@ public class AlertInputForgetSettingsActivity extends DefaultCommonActivity {
 
             binding.alertTimeValue.setText(timeString);
         } else {
-            String[] timeStrings = savedAlertTime.split(":");
-            Log.v("TEST", "saved time = " + timeStrings[0]
-                + "h, "+timeStrings[1]+"m");
+//            String[] timeStrings = savedAlertTime.split(":");
+//            Log.v("TEST", "saved time = " + timeStrings[0]
+//                + "h, "+timeStrings[1]+"m");
+            binding.alertTimeValue.setText(savedAlertTime);
         }
 
+        // 通知する、しないの設定
+        Boolean notifyEnable = SharedPreferencesManager.getDailyAlertInputForgetEnable(this);
+        binding.notifySwitch.setChecked(notifyEnable);
+        binding.notifySwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+                SharedPreferencesManager.saveDailyAlertInputForgetEnable(getApplicationContext(), isChecked);
+            }
+        });
+
+        // 時間の設定
         binding.alertTimeRow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -78,8 +90,8 @@ public class AlertInputForgetSettingsActivity extends DefaultCommonActivity {
                                 calendar.get(Calendar.DATE),
                                 hourOfDay, minute);
                         String timeString = formatHourMin.format(calendar.getTime());
-                        Log.v("TEST", "onTimeSet newTimeString:  "+timeString);
                         binding.alertTimeValue.setText(timeString);
+                        SharedPreferencesManager.saveDailyAlertInputForgetTime(getApplicationContext(), timeString);
                     }
                 }, hour, minute, true);
         dialog.show();

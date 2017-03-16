@@ -104,7 +104,7 @@ public class SharedPreferencesManager {
     }
 
     public static boolean getDailyAlertInputForgetEnable(Context context) {
-        return getSharedPreferences(context).getBoolean(DAILY_ALERT_INPUT_FORGET_ENABLE_KEY, true);
+        return getSharedPreferences(context).getBoolean(DAILY_ALERT_INPUT_FORGET_ENABLE_KEY, false);
     }
 
     // DAILY_ALERT_INPUT_FORGET_TIME_KEY
