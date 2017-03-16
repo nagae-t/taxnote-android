@@ -110,7 +110,11 @@ public class DailyScheduler {
 
     public void setBySavedDailyAlertInputForget(int serviceId) {
         String savedTimeString = SharedPreferencesManager.getDailyAlertInputForgetTime(context);
-        if (savedTimeString == null) return;
+        Boolean notifyEnable = SharedPreferencesManager.getDailyAlertInputForgetEnable(context);
+        if (savedTimeString == null || !notifyEnable) {
+            cancel(DailyAlertInputForgetService.class, serviceId);
+            return;
+        }
 
         String[] timeStrings = savedTimeString.split(":");
         int hourOfDay = Integer.valueOf(timeStrings[0]);
