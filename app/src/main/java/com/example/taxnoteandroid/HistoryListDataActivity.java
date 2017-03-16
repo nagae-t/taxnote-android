@@ -8,7 +8,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -33,7 +32,7 @@ import java.util.Map;
  * Created by b0ne on 2017/02/25.
  */
 
-public class HistoryListDataActivity extends AppCompatActivity {
+public class HistoryListDataActivity extends DefaultCommonActivity {
 
     private ActivityEntryCommonBinding binding;
     private CommonEntryRecyclerAdapter mEntryAdapter;

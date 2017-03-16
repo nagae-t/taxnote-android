@@ -31,8 +31,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="end"
-                    style="@style/font_style_standard"
-                    android:text="-9000000000" />
+                    style="@style/font_style_standard" />
             </LinearLayout>
         </RelativeLayout>
 

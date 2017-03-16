@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.taxnoteandroid.Library.ValueConverter;
+import com.example.taxnoteandroid.dataManager.SharedPreferencesManager;
 import com.example.taxnoteandroid.databinding.PieGraphRowBinding;
 import com.example.taxnoteandroid.databinding.RowSimpleCellBinding;
 import com.example.taxnoteandroid.model.Entry;
@@ -138,6 +139,7 @@ public class GraphHistoryRecyclerAdapter extends RecyclerView.Adapter<BindingHol
                 mChart.setDrawCenterText(true);
 
                 mChart.setRotationAngle(270);
+
                 // enable rotation of the chart by touch
                 mChart.setRotationEnabled(true);
                 mChart.setHighlightPerTapEnabled(true);
@@ -145,7 +147,7 @@ public class GraphHistoryRecyclerAdapter extends RecyclerView.Adapter<BindingHol
 
                 setGraphData();
 
-                //@@ グラフ書き出しのアニメーション速度の指定
+                // Animation speed
                 mChart.animateY(500, Easing.EasingOption.EaseInOutQuad);
 
                 mChart.getLegend().setEnabled(false);
@@ -183,6 +185,18 @@ public class GraphHistoryRecyclerAdapter extends RecyclerView.Adapter<BindingHol
         int color1 = R.color.pie_chart_color1;
         int color2 = R.color.pie_chart_color2;
         int color3 = R.color.pie_chart_color3;
+
+        // 帳簿のテーマカラーにグラフ色をあわせる
+        int themeStyle = SharedPreferencesManager.getAppThemeStyle(mContext);
+        if (themeStyle == 1) {
+            color1 = R.color.second_pie_chart_color1;
+            color2 = R.color.second_pie_chart_color2;
+            color3 = R.color.second_pie_chart_color3;
+        } else if (themeStyle == 2) {
+            color1 = R.color.third_pie_chart_color1;
+            color2 = R.color.third_pie_chart_color2;
+            color3 = R.color.third_pie_chart_color3;
+        }
 
         Long sumPrice = mDataList.get(1).price;
         NumberFormat format = NumberFormat.getInstance();

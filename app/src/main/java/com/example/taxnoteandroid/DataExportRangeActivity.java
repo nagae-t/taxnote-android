@@ -2,7 +2,6 @@ package com.example.taxnoteandroid;
 
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.RadioGroup;
 
@@ -18,7 +17,7 @@ import static com.example.taxnoteandroid.TaxnoteConsts.EXPORT_RANGE_TYPE_CUSTOM;
 import static com.example.taxnoteandroid.TaxnoteConsts.EXPORT_RANGE_TYPE_LAST_MONTH;
 import static com.example.taxnoteandroid.TaxnoteConsts.EXPORT_RANGE_TYPE_THIS_MONTH;
 
-public class DataExportRangeActivity extends AppCompatActivity {
+public class DataExportRangeActivity extends DefaultCommonActivity {
 
     private ActivityDataExportRangeBinding binding;
 

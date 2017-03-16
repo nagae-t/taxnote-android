@@ -10,6 +10,20 @@
         <item name="android:textColorSecondary">@color/secondary_text</item>
     </style>
 
+    <!-- Second app them -->
+    <style name="AppThemeSecond" parent="AppTheme">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/second_primary</item>
+        <item name="colorPrimaryDark">@color/second_primary_dark</item>
+    </style>
+
+    <!-- Third app them -->
+    <style name="AppThemeThird" parent="AppTheme">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/third_primary</item>
+        <item name="colorPrimaryDark">@color/third_primary_dark</item>
+    </style>
+
     <style name="input_button">
         <item name="android:textColor">#FFFFFF</item>
         <item name="android:background">@drawable/selector_background_button</item>

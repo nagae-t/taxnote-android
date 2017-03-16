@@ -72,7 +72,7 @@ public class HistoryTabFragment extends Fragment {
         if (this.isVisible()) {
             if (isVisibleToUser) {
                 loadHistoryData();
-                DialogManager.showDataExportSuggestMessage(getActivity());
+                DialogManager.showDataExportSuggestMessage(getActivity(), getFragmentManager());
             }
         }
     }

@@ -13,6 +13,7 @@ import android.text.format.DateUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager.LayoutParams;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -77,8 +78,6 @@ public class InputDataActivity extends AppCompatActivity {
         setSummary();
         setSaveButton();
         setPriceInputPart();
-
-        //@@ 電卓あとで追加
         setCalculatorView();
 
         DialogManager.showTapRegisterMessage(InputDataActivity.this);
@@ -251,6 +250,13 @@ public class InputDataActivity extends AppCompatActivity {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+
+        getWindow().setSoftInputMode(LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+    }
+
+    @Override
     public void onStop() {
         super.onStop();
 
@@ -404,7 +410,7 @@ public class InputDataActivity extends AppCompatActivity {
         new AlertDialog.Builder(this)
                 .setTitle(getResources().getString(R.string.upgrade))
                 .setMessage(getResources().getString(R.string.upgrade_to_plus_unlock_the_limit))
-                .setPositiveButton(getResources().getString(R.string.go_to_upgrade_screen), new DialogInterface.OnClickListener() {
+                .setPositiveButton(getResources().getString(R.string.benefits_of_upgrade), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
 

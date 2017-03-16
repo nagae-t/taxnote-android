@@ -1,7 +1,11 @@
 package com.example.taxnoteandroid.dataManager;
 
 import android.content.Context;
+import android.content.Intent;
+import android.support.v4.content.IntentCompat;
+import android.support.v7.app.AppCompatActivity;
 
+import com.example.taxnoteandroid.MainActivity;
 import com.example.taxnoteandroid.R;
 import com.example.taxnoteandroid.model.Account;
 import com.example.taxnoteandroid.model.Project;
@@ -16,6 +20,8 @@ import java.io.InputStreamReader;
 import java.lang.reflect.Type;
 import java.util.List;
 import java.util.UUID;
+
+import static com.helpshift.util.HelpshiftContext.getApplicationContext;
 
 public class DefaultDataInstaller {
 
@@ -51,6 +57,45 @@ public class DefaultDataInstaller {
         // Save shared preferences
         SharedPreferencesManager.saveUuidForCurrentProject(context, project.uuid);
         SharedPreferencesManager.saveDefaultDatabaseSet(context);
+    }
+
+    /**
+     * 新しいProject（帳簿）を追加する
+     * @param context
+     * @param name
+     * @return
+     */
+    public static Project addNewProjectByName(Context context, String name, int order) {
+        ProjectDataManager projectDataManager = new ProjectDataManager(context);
+
+        // Set New Project
+        Project project = new Project();
+        project.isMaster = false;
+        project.name = name;
+        project.order = order;
+        project.uuid = UUID.randomUUID().toString();
+        project.accountUuidForExpense = "";
+        project.accountUuidForIncome = "";
+        project.decimal = context.getResources().getBoolean(R.bool.is_decimal);
+
+        long newId = projectDataManager.save(project);
+        project.id = newId;
+
+        // Set categories
+        setDefaultReasonData(context, project);
+        setDefaultAccountData(context, project);
+
+        return project;
+    }
+
+    /**
+     * 帳簿(Project)を切り替える
+     * @param context
+     * @param targetProject
+     */
+    public static void switchProject(Context context, Project targetProject) {
+        // Save shared preferences
+        SharedPreferencesManager.saveUuidForCurrentProject(context, targetProject.uuid);
     }
 
     private static void setDefaultReasonData(Context context, Project project) {
@@ -143,5 +188,14 @@ public class DefaultDataInstaller {
 
             summaryDataManager.save(summary);
         }
+    }
+
+    public static void restartApp(AppCompatActivity activity) {
+        Context context = activity.getApplicationContext();
+        context.sendBroadcast(new Intent(MainActivity.BROADCAST_RESTART_APP));
+        Intent mainIntent = new Intent(getApplicationContext(), MainActivity.class);
+        Intent intentCompat = IntentCompat.makeRestartActivityTask(mainIntent.getComponent());
+        activity.startActivity(intentCompat);
+        activity.finish();
     }
 }

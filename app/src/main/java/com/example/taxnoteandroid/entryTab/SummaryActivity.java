@@ -35,7 +35,7 @@ import com.example.taxnoteandroid.model.Summary;
 
 import org.parceler.Parcels;
 
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -349,21 +349,11 @@ public class SummaryActivity extends AppCompatActivity {
                 return false;
             }
 
-            ArrayList<Summary> list = new ArrayList<Summary>();
-
-            for (int i = 0; i < size; i++) {
-                if (i == position_to) list.add(summaryList.get(position_from));
-                if (i != position_from) list.add(summaryList.get(i));
-            }
-
-            summaryList = list;
-
-            //TODO ここ聞いてないのを修正
+            Collections.swap(summaryList, position_from, position_to);
+            adapter.notifyItemMoved(position_from, position_to);
             for (int i = 0; i < size; i++) {
                 summaryDataManager.updateOrder(summaryList.get(i).id, i); // Update database
             }
-
-            adapter.notifyItemMoved(position_from, position_to);
 
             return true;
         }

@@ -30,7 +30,10 @@ public class SharedPreferencesManager {
     private static final String TRACK_ENTRY_KEY                 = "TRACK_ENTRY_KEY";
     private static final String DATA_EXPORT_SUGGEST_KEY         = "DATA_EXPORT_SUGGEST_KEY";
     private static final String PROFIT_LOSS_REPORT_PERIOD_KEY   = "PROFIT_LOSS_REPORT_PERIOD_KEY";
-    private static final String GRAPH_REPORT_IS_EXPENSE_KEY         = "GRAPH_REPORT_IS_EXPENSE_KEY";
+    private static final String GRAPH_REPORT_IS_EXPENSE_KEY     = "GRAPH_REPORT_IS_EXPENSE_KEY";
+    private static final String BUSINESS_MODEL_MESSAGE_KEY      = "BUSINESS_MODEL_MESSAGE_KEY";
+    private static final String APP_THEME_STYLE_KEY             = "APP_THEME_STYLE_KEY";
+    private static final String RELEASE_NOTE_KEY                = "RELEASE_NOTE_KEY";
 
 
     //--------------------------------------------------------------//
@@ -65,6 +68,14 @@ public class SharedPreferencesManager {
 
     public static String getUuidForCurrentProject(Context context) {
         return getSharedPreferences(context).getString(UUID_FOR_CURRENT_KEY, "");
+    }
+
+    public static void saveAppThemeStyle(Context context, int type) {
+        getSharedPreferences(context).edit().putInt(APP_THEME_STYLE_KEY, type).apply();
+    }
+
+    public static int getAppThemeStyle(Context context) {
+        return getSharedPreferences(context).getInt(APP_THEME_STYLE_KEY, 0);
     }
 
 
@@ -126,8 +137,7 @@ public class SharedPreferencesManager {
     }
 
 
-
-    //--------------------------------------------------------------//
+    //------------------------------------------------------------//
     //    -- Profit And Loss Report --
     //--------------------------------------------------------------//
 
@@ -139,6 +149,7 @@ public class SharedPreferencesManager {
         return getSharedPreferences(context).getInt(
                 PROFIT_LOSS_REPORT_PERIOD_KEY, EntryDataManager.PERIOD_TYPE_YEAR);
     }
+
 
     //--------------------------------------------------------------//
     //    -- Graph Report --
@@ -234,6 +245,14 @@ public class SharedPreferencesManager {
         return getSharedPreferences(context).getBoolean(DATA_EXPORT_SUGGEST_KEY, false);
     }
 
+    public static void saveBusinessModelMessageDone(Context context) {
+        getSharedPreferences(context).edit().putBoolean(BUSINESS_MODEL_MESSAGE_KEY, true).apply();
+    }
+
+    public static boolean isBusinessModelMessageDone(Context context) {
+        return getSharedPreferences(context).getBoolean(BUSINESS_MODEL_MESSAGE_KEY, false);
+    }
+
 
     //--------------------------------------------------------------//
     //    -- Analytics --
@@ -254,4 +273,18 @@ public class SharedPreferencesManager {
     public static long getTrackEntryCount(Context context) {
         return getSharedPreferences(context).getLong(TRACK_ENTRY_KEY, 0);
     }
+
+
+    //--------------------------------------------------------------//
+    //    -- Release Note --
+    //--------------------------------------------------------------//
+
+    public static void saveLastVersionName(Context context, String versionName) {
+        getSharedPreferences(context).edit().putString(RELEASE_NOTE_KEY, versionName).apply();
+    }
+
+    public static String getLastVersionName(Context context) {
+        return getSharedPreferences(context).getString(RELEASE_NOTE_KEY, "");
+    }
+
 }

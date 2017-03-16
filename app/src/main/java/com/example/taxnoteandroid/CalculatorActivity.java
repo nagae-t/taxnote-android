@@ -10,7 +10,7 @@ import android.widget.TextView;
 import com.example.taxnoteandroid.Library.DialogManager;
 import com.example.taxnoteandroid.Library.ValueConverter;
 
-public class CalculatorActivity extends AppCompatActivity {
+public class CalculatorActivity extends DefaultCommonActivity {
 
     private static final String EXTRA_CURRENT_PRICE = "EXTRA_CURRENT_PRICE";
     private static final String DECIMAL_SYMBOL      = ".";

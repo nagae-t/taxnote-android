@@ -1,6 +1,10 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
-
+<ScrollView
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:scrollbarStyle="insideOverlay"
+    android:fadingEdge="none">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -21,6 +25,64 @@
             android:paddingStart="16dp"
             android:text="@string/benefits_of_upgrade" />
 
+        <!--//@@一時的に消してる-->
+        <!-- 複数帳簿 -->
+        <LinearLayout
+            android:visibility="gone"
+
+            android:id="@+id/project_radio_layout"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/white"
+            android:layout_marginTop="20dp"
+            android:paddingStart="6dp"
+            android:paddingEnd="2dp">
+            <android.support.v7.widget.AppCompatRadioButton
+                android:id="@+id/main_project_radio"
+                style="@style/font_style_standard"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/selector_background_colors"
+                android:checked="true"
+                android:gravity="center_vertical"
+                android:minHeight="44dp"
+                android:paddingEnd="16dp"
+                android:paddingStart="16dp"
+                android:paddingTop="14dp"
+                android:paddingBottom="14dp"
+                android:textColor="@color/secondary_text"
+                android:text="@string/master_project_name" />
+            <android.support.v4.widget.Space
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/header_background"/>
+            <LinearLayout
+                android:id="@+id/sub_project_radio_layout"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+        <android.support.v4.widget.Space
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="1px" />
+        <TextView
+
+            android:visibility="gone"
+
+            style="@style/font_style_standard"
+            android:id="@+id/settings_project_button"
+            android:background="@drawable/selector_background_colors"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:minHeight="@dimen/cell_height_standard"
+            android:paddingEnd="16dp"
+            android:paddingStart="16dp"
+            android:clickable="true"
+            android:text="@string/project_settings" />
+
         <Switch
             style="@style/font_style_standard"
             android:background="@drawable/selector_background_colors"
@@ -34,6 +96,26 @@
             android:paddingStart="16dp"
             android:textColor="@color/secondary_text"
             android:text="@string/decimal_button" />
+        <android.support.v4.widget.Space
+            android:layout_width="match_parent"
+            android:layout_height="1dp" />
+
+
+        <!--//@@一時的に消してる-->
+        <TextView
+            android:visibility="gone"
+            style="@style/font_style_standard"
+            android:id="@+id/data_backup"
+            android:background="@drawable/selector_background_colors"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:minHeight="@dimen/cell_height_standard"
+            android:paddingEnd="16dp"
+            android:paddingStart="16dp"
+            android:textColor="@color/secondary_text"
+            android:clickable="true"
+            android:text="@string/data_backup"/>
 
         <TextView
             style="@style/font_style_standard"
@@ -108,4 +190,5 @@
                 android:layout_height="wrap_content" />
         </LinearLayout>
     </LinearLayout>
+</ScrollView>
 </layout>

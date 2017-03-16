@@ -17,8 +17,23 @@
     <color name="selector_pressed_true">#e9e9e9</color>
     <color name="selector_pressed_false">#ffffff</color>
 
+    <!-- Sub Project primary -->
+    <color name="second_primary">#55a0f0</color>
+    <color name="second_primary_dark">#3c7abc</color>
+    <color name="third_primary">#7b8be4</color>
+    <color name="third_primary_dark">#5562ac</color>
+
+
     <!-- PieChart Color -->
     <color name="pie_chart_color1">#00cc9b</color>
     <color name="pie_chart_color2">#00b387</color>
     <color name="pie_chart_color3">#009974</color>
+
+    <color name="second_pie_chart_color1">#55a0f0</color>
+    <color name="second_pie_chart_color2">#3e93ee</color>
+    <color name="second_pie_chart_color3">#2686ec</color>
+
+    <color name="third_pie_chart_color1">#7b8be4</color>
+    <color name="third_pie_chart_color2">#6678e0</color>
+    <color name="third_pie_chart_color3">#5166db</color>
 </resources>
