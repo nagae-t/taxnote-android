@@ -7,7 +7,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.ShareCompat;
 import android.support.v4.content.IntentCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
 import com.example.taxnoteandroid.Library.FileUtil;
@@ -17,7 +16,7 @@ import com.example.taxnoteandroid.databinding.ActivityImportFilterBinding;
  * Created by b0ne on 2017/03/08.
  */
 
-public class ImportFilterActivity extends AppCompatActivity {
+public class ImportFilterActivity extends DefaultCommonActivity {
 
     private ActivityImportFilterBinding binding;
 

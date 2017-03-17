@@ -8,7 +8,6 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
@@ -20,6 +19,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 
+import com.example.taxnoteandroid.DefaultCommonActivity;
 import com.example.taxnoteandroid.DividerDecoration;
 import com.example.taxnoteandroid.Library.DialogManager;
 import com.example.taxnoteandroid.Library.KeyboardUtil;
@@ -39,7 +39,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
-public class SummaryActivity extends AppCompatActivity {
+public class SummaryActivity extends DefaultCommonActivity {
 
     private static final int TYPE_ACCOUNT = 0;
     private static final int TYPE_FOOTER = 1;
