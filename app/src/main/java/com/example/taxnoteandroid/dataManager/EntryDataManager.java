@@ -111,7 +111,7 @@ public class EntryDataManager {
         return countData;
     }
 
-    //@@ 収入・支出別
+    // 収入・支出別
     public List<Entry> findAll(long[] startAndEndDate, boolean isExpense, Boolean asc) {
         ProjectDataManager projectDataManager   = new ProjectDataManager(mContext);
         Project project                         = projectDataManager.findCurrentProjectWithContext(mContext);
