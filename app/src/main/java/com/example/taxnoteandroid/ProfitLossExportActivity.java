@@ -270,9 +270,9 @@ public class ProfitLossExportActivity extends DefaultCommonActivity {
             endCal.add(Calendar.DATE, -1);
             mStartEndDate[1] = endCal.getTimeInMillis();
             DataExportManager exportManager = new DataExportManager(
-                    getApplicationContext(),
+                    ProfitLossExportActivity.this,
                     mDefaultCharCode, mStartEndDate, result);
-            exportManager.export(ProfitLossExportActivity.this);
+            exportManager.export();
 
             mStartEndDate = getIntent().getLongArrayExtra(KEY_TARGET_START_END_DATE);
         }

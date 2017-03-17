@@ -63,26 +63,24 @@ public class DataExportManager implements TaxnoteConsts {
     private long[] startEndDate;
     private List<Entry> reportData;
 
-    public DataExportManager() {}
-
     public DataExportManager(Activity activity) {
         this.mActivity = activity;
         this.context = activity.getApplicationContext();
     }
 
-    public DataExportManager(Context context) {
-        this.context = context;
-    }
 
-    public DataExportManager(String mode, String character_code) {
+    public DataExportManager(Activity activity, String mode, String character_code) {
+        this.mActivity = activity;
+        this.context = activity.getApplicationContext();
 
         this.setMode(mode);
         this.setCharacterCode(character_code);
     }
 
     // 損益表の出力用
-    public DataExportManager(Context context, String charCode, long[] startEndDate, List<Entry> data) {
-        this.context = context;
+    public DataExportManager(Activity activity, String charCode, long[] startEndDate, List<Entry> data) {
+        this.mActivity = activity;
+        this.context = activity.getApplicationContext();
         this.startEndDate = startEndDate;
         this.reportData = data;
         this.setMode(EXPORT_PROFIT_LOSS_FORMAT_TYPE_CSV);
@@ -100,11 +98,11 @@ public class DataExportManager implements TaxnoteConsts {
         calendar.set(Calendar.MINUTE, 0);
         calendar.set(Calendar.SECOND, 0);
 
-        long time_start = calendar.getTimeInMillis();
+        long timeStart = calendar.getTimeInMillis();
         calendar.add(Calendar.MONTH, 1);
-        long time_end = calendar.getTimeInMillis();
+        long timeEnd = calendar.getTimeInMillis();
 
-        return new long[]{time_start, time_end};
+        return new long[]{timeStart, timeEnd};
     }
 
     private static long[] getLastMonthStartAndEndDate() {
@@ -118,11 +116,11 @@ public class DataExportManager implements TaxnoteConsts {
         calendar.set(Calendar.MINUTE, 0);
         calendar.set(Calendar.SECOND, 0);
 
-        long time_end = calendar.getTimeInMillis();
+        long timeEnd = calendar.getTimeInMillis();
         calendar.add(Calendar.MONTH, -1);
-        long time_start = calendar.getTimeInMillis();
+        long timeStart = calendar.getTimeInMillis();
 
-        return new long[]{time_start, time_end};
+        return new long[]{timeStart, timeEnd};
     }
 
     private static long[] getCustomStartAndEndDate(Context context) {
@@ -214,9 +212,7 @@ public class DataExportManager implements TaxnoteConsts {
         }
     }
 
-    public void export(final Context context) {
-
-        this.context = context;
+    public void export() {
 
         // Progress dialog
         final ProgressDialog dialog = new ProgressDialog(context);
@@ -552,8 +548,8 @@ public class DataExportManager implements TaxnoteConsts {
         this.columnTitles = null;
     }
 
-    private void setColumnTitles(String... column_titles) {
-        this.columnTitles = column_titles;
+    private void setColumnTitles(String... columnTitles) {
+        this.columnTitles = columnTitles;
     }
 
     private void setSeparator(String separator) {
