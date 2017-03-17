@@ -225,7 +225,7 @@ public class DataExportManager implements TaxnoteConsts {
 
             @Override
             protected File doInBackground(Object... objects) {
-                return generateCsvFile(context);
+                return generateCsvFile();
             }
 
             @Override
@@ -234,7 +234,7 @@ public class DataExportManager implements TaxnoteConsts {
                 dialog.cancel();
 
                 if (file != null) {
-                    sendFileByEmail(context, file);
+                    sendFileByEmail(file);
                 } else {
                     DialogManager.showOKOnlyAlert(context, context.getString(R.string.Error), context.getString(R.string.data_export_cant_make_csv));
                 }
@@ -244,19 +244,19 @@ public class DataExportManager implements TaxnoteConsts {
         task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
-    private File generateCsvFile(Context context) {
+    private File generateCsvFile() {
 
         OutputStream streamOut = null;
         PrintWriter writer = null;
 
         try {
-            File file = getOutputFile(context);
+            File file = getOutputFile();
             if (file.getParentFile().exists() == false)
                 file.getParentFile().mkdirs(); // If parent folder doesn't exist, create it.
             streamOut = new FileOutputStream(file);
             writer = new PrintWriter(new OutputStreamWriter(streamOut, characterCode));
 
-            List<Entry> entries = getSelectedRangeEntries(context); // Get a list of Entry.
+            List<Entry> entries = getSelectedRangeEntries(); // Get a list of Entry.
 
             // Output column titles.
 
@@ -313,7 +313,7 @@ public class DataExportManager implements TaxnoteConsts {
         return null;
     }
 
-    private File getOutputFile(Context context) {
+    private File getOutputFile() {
 
         String fileName = "taxnote";
 
@@ -446,7 +446,7 @@ public class DataExportManager implements TaxnoteConsts {
         return builder.toString();
     }
 
-    private void sendFileByEmail(Context context, File file) {
+    private void sendFileByEmail(File file) {
 
         Intent intent = new Intent(android.content.Intent.ACTION_SEND);
         intent.setAction(Intent.ACTION_SEND);
@@ -497,7 +497,7 @@ public class DataExportManager implements TaxnoteConsts {
         return message;
     }
 
-    private List<Entry> getSelectedRangeEntries(Context context) {
+    private List<Entry> getSelectedRangeEntries() {
 
         List<Entry> entries;
         long[] startEnd;
