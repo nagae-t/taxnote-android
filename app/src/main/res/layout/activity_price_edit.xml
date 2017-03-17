@@ -16,23 +16,36 @@
         android:gravity="center"
         android:hint="0"
         android:textColor="#000000"
-        android:textSize="62sp"
-        tools:text="300,000,000" />
+        android:textSize="62sp"/>
 
     <View
         android:layout_weight="0"
         style="@style/horizontal_line" />
 
-    <TextView
-        android:id="@+id/save"
+    <LinearLayout
+        android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="60"
-        android:gravity="center"
-        android:minHeight="75dp"
-        android:textColor="@drawable/text_button_colors"
-        android:text="@string/Update"
-        android:textSize="35sp" />
+        android:layout_height="wrap_content">
+        <ImageView
+            android:id="@+id/calculator_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:padding="16dp"
+            android:src="@drawable/ic_calculator_24dp"
+            android:tint="@color/primary" />
+        <TextView
+            android:id="@+id/save"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:minHeight="75dp"
+            android:textColor="@drawable/text_button_colors"
+            android:paddingStart="-56dp"
+            android:text="@string/Update"
+            android:textSize="35sp" />
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
