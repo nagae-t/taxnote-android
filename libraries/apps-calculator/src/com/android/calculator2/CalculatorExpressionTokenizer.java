@@ -18,9 +18,7 @@ package com.android.calculator2;
 
 import android.content.Context;
 
-import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
-import java.text.NumberFormat;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -35,10 +33,7 @@ public class CalculatorExpressionTokenizer {
 
         Locale locale = context.getResources().getConfiguration().locale;
         if (!context.getResources().getBoolean(R.bool.use_localized_digits)) {
-            locale = new Locale.Builder()
-                .setLocale(locale)
-                .setUnicodeLocaleKeyword("nu", "latn")
-                .build();
+            locale = new Locale("nu", "latn");
         }
 
         final DecimalFormatSymbols symbols = new DecimalFormatSymbols(locale);

@@ -15,7 +15,6 @@
   limitations under the License.
   -->
 
-<ripple xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:color="@color/pad_button_advanced_ripple_color"
-    tools:targetApi="lollipop" />
+<resources>
+    <item name="activity_calculator" type="layout">@layout/activity_calculator_tablet_port</item>
+</resources>
