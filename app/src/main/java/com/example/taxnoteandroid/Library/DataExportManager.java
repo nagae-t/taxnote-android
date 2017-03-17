@@ -3,11 +3,10 @@ package com.example.taxnoteandroid.Library;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Environment;
+import android.support.v4.app.ShareCompat;
 
 import com.example.taxnoteandroid.CommonEntryRecyclerAdapter;
 import com.example.taxnoteandroid.R;
@@ -215,7 +214,7 @@ public class DataExportManager implements TaxnoteConsts {
     public void export() {
 
         // Progress dialog
-        final ProgressDialog dialog = new ProgressDialog(context);
+        final ProgressDialog dialog = new ProgressDialog(mActivity);
         dialog.setMessage(context.getString(R.string.data_export));
         dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         dialog.setCancelable(false);
@@ -234,9 +233,9 @@ public class DataExportManager implements TaxnoteConsts {
                 dialog.cancel();
 
                 if (file != null) {
-                    sendFileByEmail(file);
+                    shareFileContent(file);
                 } else {
-                    DialogManager.showOKOnlyAlert(context, context.getString(R.string.Error), context.getString(R.string.data_export_cant_make_csv));
+                    DialogManager.showOKOnlyAlert(mActivity, context.getString(R.string.Error), context.getString(R.string.data_export_cant_make_csv));
                 }
             }
         };
@@ -446,13 +445,7 @@ public class DataExportManager implements TaxnoteConsts {
         return builder.toString();
     }
 
-    private void sendFileByEmail(File file) {
-
-        Intent intent = new Intent(android.content.Intent.ACTION_SEND);
-        intent.setAction(Intent.ACTION_SEND);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        intent.setType("vnd.android.cursor.item/email"); // 2017/01/25 E.Nozaki intent.setType("text/plain");
-        intent.putExtra(android.content.Intent.EXTRA_EMAIL, new String[]{""});
+    private void shareFileContent(File file) {
 
         String subjectString = context.getString(R.string.data_export_mail_title);
         if (mode.equals(EXPORT_PROFIT_LOSS_FORMAT_TYPE_CSV)) {
@@ -460,23 +453,24 @@ public class DataExportManager implements TaxnoteConsts {
                 + " (" +getReportStartEndDateString()+ ")";
         }
 
-        intent.putExtra(android.content.Intent.EXTRA_SUBJECT, subjectString);
-        intent.putExtra(android.content.Intent.EXTRA_TEXT, getBodyMessage());
+        // ShareCompat
+        Uri streamUri = Uri.fromFile(file);
 
-        // TODO FileProviderを使えばいけるかも。
-        // https://developer.android.com/reference/android/support/v4/content/FileProvider.html
-        // https://developer.android.com/about/versions/nougat/android-7.0-changes.html#perm
-        intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(file));
-
-        List activities = context.getPackageManager().queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY);
-
-        if (activities != null && activities.size() > 0) { // 2017/01/25 Check if there is available mailer.
-            context.startActivity(intent);
+        ShareCompat.IntentBuilder builder = ShareCompat.IntentBuilder.from(mActivity);
+        if (mode.compareTo(EXPORT_FORMAT_TYPE_YAYOI) == 0) {
+            builder.setType("text/plain");
         } else {
-            DialogManager.showOKOnlyAlert(context, context.getString(R.string.Error), context.getString(R.string.data_export_no_valid_mailer));
+            builder.setType("text/csv");
         }
+        builder.setChooserTitle(context.getString(R.string.data_export))
+            .setStream(streamUri);
 
-        context.startActivity(Intent.createChooser(intent, context.getString(R.string.data_export)));
+        // for mail
+        builder.setSubject(subjectString)
+                .setText(getBodyMessage());
+
+        builder.startChooser();
+
     }
 
     private String getBodyMessage() {
