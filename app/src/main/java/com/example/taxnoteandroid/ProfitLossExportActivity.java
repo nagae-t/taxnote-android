@@ -18,6 +18,7 @@ import com.example.taxnoteandroid.dataManager.EntryDataManager;
 import com.example.taxnoteandroid.dataManager.SharedPreferencesManager;
 import com.example.taxnoteandroid.databinding.ActivityProfitLossExportBinding;
 import com.example.taxnoteandroid.model.Entry;
+import com.helpshift.support.Support;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -69,11 +70,11 @@ public class ProfitLossExportActivity extends DefaultCommonActivity {
             }
         });
 
-        //@@ help link
+        // Help link
         binding.help.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //@@ 対象のヘルプページへ
+                Support.showFAQSection(ProfitLossExportActivity.this,"36");
             }
         });
 
