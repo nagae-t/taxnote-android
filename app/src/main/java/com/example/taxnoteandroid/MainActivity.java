@@ -18,6 +18,8 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.example.taxnoteandroid.Library.AsyncOkHttpClient;
+import com.example.taxnoteandroid.Library.taxnote.TNApiUser;
 import com.example.taxnoteandroid.dataManager.DefaultDataInstaller;
 import com.example.taxnoteandroid.dataManager.EntryDataManager;
 import com.example.taxnoteandroid.dataManager.SharedPreferencesManager;
@@ -28,6 +30,8 @@ import com.kobakei.ratethisapp.RateThisApp;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
 
 import java.lang.reflect.Field;
+
+import okhttp3.Response;
 
 import static com.example.taxnoteandroid.R.string.report;
 import static com.example.taxnoteandroid.TaxnoteConsts.MIXPANEL_TOKEN;
@@ -97,6 +101,22 @@ public class MainActivity extends DefaultCommonActivity {
         mGraphMenuIsExpense = SharedPreferencesManager.getGraphReportIsExpenseType(this);
         setBottomNavigation();
 
+        // debug api
+        TNApiUser apiUser = new TNApiUser("", "");
+        apiUser.signIn(new AsyncOkHttpClient.Callback() {
+            @Override
+            public void onFailure(Response response, Throwable throwable) {
+                Log.v("TEST", "sign in onFailure ");
+                if (throwable != null) {
+                    Log.v("TEST", throwable.getMessage());
+                }
+            }
+
+            @Override
+            public void onSuccess(Response response, String content) {
+                Log.v("TEST", "sign in onSuccess content : " + content);
+            }
+        });
     }
 
     @Override
