@@ -15,8 +15,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager.LayoutParams;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.android.calculator2.Calculator;
+import com.example.taxnoteandroid.CalculatorActivity;
 import com.example.taxnoteandroid.Library.DialogManager;
 import com.example.taxnoteandroid.Library.EntryLimitManager;
 import com.example.taxnoteandroid.Library.ValueConverter;
@@ -430,16 +433,15 @@ public class InputDataActivity extends AppCompatActivity {
     //    -- Calculator --
     //--------------------------------------------------------------//
 
-    //@@ 電卓あとで追加
     private void setCalculatorView() {
 
-//        ImageView calculatorButton = (ImageView) findViewById(R.id.calculator_button);
-//        calculatorButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                startActivityForResult(CalculatorActivity.createIntent(InputDataActivity.this, currentPrice), 1);
-//            }
-//        });
+        ImageView calculatorButton = (ImageView) findViewById(R.id.calculator_button);
+        calculatorButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                CalculatorActivity.startForResult(InputDataActivity.this, currentPrice, 1);
+            }
+        });
     }
 
     @Override
@@ -448,8 +450,7 @@ public class InputDataActivity extends AppCompatActivity {
 
         if (requestCode == 1 && resultCode == RESULT_OK) {
 
-            // Update price string
-            currentPrice = data.getLongExtra("EXTRA_CURRENT_PRICE", 0);
+            currentPrice = data.getLongExtra(Calculator.KEY_CURRENT_PRICE, 0);
             String priceString = ValueConverter.formatPrice(InputDataActivity.this ,currentPrice);
             priceTextView.setText(priceString);
         }

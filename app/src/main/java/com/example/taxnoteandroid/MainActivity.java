@@ -111,12 +111,16 @@ public class MainActivity extends DefaultCommonActivity {
         MenuItem exportMenu = menu.findItem(R.id.data_export);
         MenuItem searchMenu = menu.findItem(R.id.action_search);
         MenuItem periodDivMenu = menu.findItem(R.id.action_period_div);
+        MenuItem profitLossSettingsMenu = menu.findItem(R.id.action_profit_loss_settings);
+        MenuItem profitLossExportMenu = menu.findItem(R.id.action_profit_loss_export);
         MenuItem isExpenseMenu = menu.findItem(R.id.action_report_is_expense);
 
         helpMenu.setVisible(false);
         exportMenu.setVisible(false);
         searchMenu.setVisible(false);
         periodDivMenu.setVisible(false);
+        profitLossSettingsMenu.setVisible(false);
+        profitLossExportMenu.setVisible(false);
         isExpenseMenu.setVisible(false);
 
         switch (binding.pager.getCurrentItem()) {
@@ -130,6 +134,8 @@ public class MainActivity extends DefaultCommonActivity {
                 break;
             case 2: // 損益表
                 periodDivMenu.setVisible(true);
+                profitLossSettingsMenu.setVisible(true);
+                profitLossExportMenu.setVisible(true);
                 break;
             case 3: // グラフ
                 periodDivMenu.setVisible(true);
@@ -178,6 +184,15 @@ public class MainActivity extends DefaultCommonActivity {
                 } else {
                     reportSwitchView(true);
                 }
+                break;
+            case R.id.action_profit_loss_settings:
+                ProfitLossSettingsActivity.start(this);
+                break;
+            case R.id.action_profit_loss_export:
+                long[] startEndDate = getReportStartEndDate();
+                if (startEndDate[0] <= 0) break;
+
+                ProfitLossExportActivity.start(this, startEndDate);
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -317,6 +332,17 @@ public class MainActivity extends DefaultCommonActivity {
 
             graphFragment.reloadData();
         }
+    }
+
+    private long[] getReportStartEndDate() {
+        if (mBottomNaviSelected == R.id.tab3) {
+            ReportFragment reportFragment =
+                    (ReportFragment) mTabPagerAdapter.instantiateItem(binding.pager, 2);
+            if (reportFragment == null) return new long[2];
+
+            return reportFragment.getStartEndDate();
+        }
+        return new long[2];
     }
 
     class TabPagerAdapter extends FragmentPagerAdapter {

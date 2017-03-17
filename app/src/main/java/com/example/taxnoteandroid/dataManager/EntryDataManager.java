@@ -2,6 +2,7 @@ package com.example.taxnoteandroid.dataManager;
 
 import android.content.Context;
 
+import com.example.taxnoteandroid.Library.EntryLimitManager;
 import com.example.taxnoteandroid.TaxnoteApp;
 import com.example.taxnoteandroid.model.Account;
 import com.example.taxnoteandroid.model.Entry;
@@ -57,6 +58,10 @@ public class EntryDataManager {
         return ormaDatabase.selectFromEntry().where(Entry_Schema.INSTANCE.uuid.getQualifiedName() + " = ?", uuid).valueOrNull();
     }
 
+    public List<Entry> findAll() {
+        return ormaDatabase.selectFromEntry().toList();
+    }
+
     public List<Entry> findAll(Context context, long[] startAndEndDate, Boolean asc) {
 
         ProjectDataManager projectDataManager   = new ProjectDataManager(context);
@@ -92,7 +97,21 @@ public class EntryDataManager {
         return entries;
     }
 
-    //@@ 収入・支出別
+    public int count(long[] startEndDate) {
+        ProjectDataManager projectDataManager   = new ProjectDataManager(mContext);
+        Project project                         = projectDataManager.findCurrentProjectWithContext(mContext);
+        long startDate  = startEndDate[0];
+        long endDate    = startEndDate[1];
+        int countData = ormaDatabase.selectFromEntry().
+                where(Entry_Schema.INSTANCE.deleted.getQualifiedName() + " = 0")
+                .projectEq(project)
+                .where(Entry_Schema.INSTANCE.date.getQualifiedName() + " > " + startDate)
+                .where(Entry_Schema.INSTANCE.date.getQualifiedName() + " < " + endDate)
+                .count();
+        return countData;
+    }
+
+    // 収入・支出別
     public List<Entry> findAll(long[] startAndEndDate, boolean isExpense, Boolean asc) {
         ProjectDataManager projectDataManager   = new ProjectDataManager(mContext);
         Project project                         = projectDataManager.findCurrentProjectWithContext(mContext);
@@ -219,6 +238,29 @@ public class EntryDataManager {
         return ormaDatabase.selectFromEntry().and().accountEq(account).valueOrNull();
     }
 
+    public long findSumBalance(long endDate) {
+        ProjectDataManager projectDataManager   = new ProjectDataManager(mContext);
+        Project project                         = projectDataManager.findCurrentProjectWithContext(mContext);
+
+        String schemeDelete = Entry_Schema.INSTANCE.deleted.getQualifiedName();
+        String schemeIsExpense = Entry_Schema.INSTANCE.isExpense.getQualifiedName();
+        String schemeDate = Entry_Schema.INSTANCE.date.getQualifiedName();
+
+        Entry_Selector selector = ormaDatabase.selectFromEntry()
+                .where(schemeDelete + " = 0")
+                .projectEq(project)
+                .where(schemeDate + " < " + endDate);
+
+        Long sumIncome = selector.clone().where(schemeIsExpense + " = 0").sumByPrice();
+        Long sumExpense = selector.clone().where(schemeIsExpense + " = 1").sumByPrice();
+
+        long total = 0;
+        if (sumIncome != null) total += sumIncome;
+        if (sumExpense != null) total -= sumExpense;
+
+        return total;
+    }
+
 
     //--------------------------------------------------------------//
     //    -- Update --
@@ -287,20 +329,129 @@ public class EntryDataManager {
             return calendar;
         }
 
-        public String getTabTitle(Calendar c) {
+        public String getTabTitle(Context context, int closingDateIndex, Calendar c) {
+            int startMonthIndex = SharedPreferencesManager.getStartMonthOfYearIndex(context);
             int cYear = c.get(Calendar.YEAR);
             int cMonth = c.get(Calendar.MONTH);
             int cDate = c.get(Calendar.DATE);
+
+            long[] startEndDate = EntryLimitManager
+                    .getStartAndEndDate(context, _periodType, c);
+            Calendar startCal = Calendar.getInstance();
+            startCal.clear();
+            startCal.setTimeInMillis(startEndDate[0]);
+            Calendar endCal = Calendar.getInstance();
+            endCal.clear();
+            endCal.setTimeInMillis(startEndDate[1]);
+
+            int startYear = startCal.get(Calendar.YEAR);
+            int startMonth = startCal.get(Calendar.MONTH)+1;
+            int startDate = startCal.get(Calendar.DATE);
+            int endYear = endCal.get(Calendar.YEAR);
+            int endMonth = endCal.get(Calendar.MONTH)+1;
+            int endDate = endCal.get(Calendar.DATE) - 1;
+            if (closingDateIndex != 28 && endDate == 0) {
+                endMonth -= 1;
+                endCal.set(endYear, endMonth, 1);
+                endDate = endCal.getActualMaximum(Calendar.DAY_OF_MONTH);
+            }
+
             switch (_periodType) {
                 case PERIOD_TYPE_MONTH:
-                    return Integer.toString(cYear)
+                    String monthTitle = Integer.toString(cYear)
                             + "/" + Integer.toString(cMonth + 1);
+                    if (closingDateIndex != 28) {
+                        String endTitle = " ~ " + endMonth + "/" + endDate;
+                        if (startYear != endYear)
+                            endTitle = " ~ " + endYear + "/" + endMonth + "/" + endDate;
+
+                        monthTitle = startYear + "/" + startMonth + "/" + startDate
+                                + endTitle;
+                    }
+
+                    return monthTitle;
                 case PERIOD_TYPE_DAY:
-                    return Integer.toString(cYear)
-                            + "/" + Integer.toString(cMonth + 1)
-                            + "/" + Integer.toString(cDate);
+                    String dayTitle = cYear + "/" + (cMonth + 1) + "/" +cDate;
+                    return dayTitle;
             }
-            return Integer.toString(cYear);
+
+            // for year title
+            String yearTitle = Integer.toString(cYear);
+            if (startMonthIndex > 0) {
+                endMonth -= 1;
+                yearTitle = startYear + "/" + startMonth
+                        + " ~ " + endYear + "/" + endMonth;
+            }
+
+            if (closingDateIndex != 28) {
+                yearTitle = startYear + "/" + startMonth + "/" + startDate
+                        + " ~ " + endYear + "/" + endMonth + "/" + endDate;
+            }
+
+            return yearTitle;
+        }
+
+        public List<Calendar> getReportCalendars(int closingDateIndex, List<Entry> entries) {
+            List<Calendar> calendars = new ArrayList<>();
+            for (Entry entry : entries) {
+                Calendar calendar = getGroupingCalendar(entry);
+                if (!calendars.contains(calendar)) {
+                    calendars.add(calendar);
+                }
+            }
+
+            int calSize = calendars.size();
+            if (calSize == 0) return calendars;
+
+            Calendar firstCal = calendars.get(0);
+            Calendar newFirstCal = (Calendar)firstCal.clone();
+            Calendar lastCal = (calSize == 1) ? firstCal : calendars.get(calSize-1);
+            Calendar newLastCal = (Calendar)lastCal.clone();
+
+            //@@ 月の締め日が月末以外に設定されていたら
+            // 頭と最後に1ヶ月ずつ増やす
+            if (_periodType == PERIOD_TYPE_MONTH && closingDateIndex != 28) {
+                int newFirstYear = firstCal.get(Calendar.YEAR);
+                int newFirstMonth = firstCal.get(Calendar.MONTH)-1;
+                if (newFirstMonth < 0) {
+                    newFirstMonth = 11;
+                    newFirstYear -= 1;
+                } else if (_periodType == PERIOD_TYPE_YEAR) {
+                    newFirstYear -= 1;
+                }
+                newFirstCal.set(newFirstYear,
+                        newFirstMonth,
+                        firstCal.get(Calendar.DATE));
+
+                int newLastYear = lastCal.get(Calendar.YEAR);
+                int newLastMonth = lastCal.get(Calendar.MONTH)+1;
+                if (newLastMonth == 12) {
+                    newLastMonth = 0;
+                    newLastYear += 1;
+                } else if (_periodType == PERIOD_TYPE_YEAR) {
+                    newLastYear += 1;
+                }
+                newLastCal.set(newLastYear,
+                        newLastMonth,
+                        firstCal.get(Calendar.DATE));
+
+                calendars.add(0, newFirstCal);
+                calendars.add(newLastCal);
+            }
+
+            //@@ 年別のときは前後１年ずつ増やす
+            if (_periodType == PERIOD_TYPE_YEAR) {
+                int newFirstYear = firstCal.get(Calendar.YEAR);
+                newFirstCal.set(newFirstYear-1, firstCal.get(Calendar.MONTH), firstCal.get(Calendar.DATE));
+
+                int newLastYear = lastCal.get(Calendar.YEAR);
+                newLastCal.set(newLastYear+1, lastCal.get(Calendar.MONTH), lastCal.get(Calendar.DATE));
+
+                calendars.add(0, newFirstCal);
+                calendars.add(newLastCal);
+            }
+
+            return calendars;
         }
     }
 }

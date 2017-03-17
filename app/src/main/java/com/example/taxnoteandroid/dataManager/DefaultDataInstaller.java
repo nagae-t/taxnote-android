@@ -19,8 +19,11 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Type;
 import java.util.List;
+import java.util.Locale;
 import java.util.UUID;
 
+import static com.example.taxnoteandroid.TaxnoteConsts.EXPORT_CHARACTER_CODE_SHIFTJIS;
+import static com.example.taxnoteandroid.TaxnoteConsts.EXPORT_CHARACTER_CODE_UTF8;
 import static com.helpshift.util.HelpshiftContext.getApplicationContext;
 
 public class DefaultDataInstaller {
@@ -57,6 +60,15 @@ public class DefaultDataInstaller {
         // Save shared preferences
         SharedPreferencesManager.saveUuidForCurrentProject(context, project.uuid);
         SharedPreferencesManager.saveDefaultDatabaseSet(context);
+
+        // 文字コードデフォルト値
+        String localeLanguage = Locale.getDefault().getLanguage();
+        if (localeLanguage.equals("ja")) {
+            SharedPreferencesManager.saveCurrentCharacterCode(context, EXPORT_CHARACTER_CODE_SHIFTJIS);
+        } else {
+            SharedPreferencesManager.saveCurrentCharacterCode(context, EXPORT_CHARACTER_CODE_UTF8);
+        }
+
     }
 
     /**

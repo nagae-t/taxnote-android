@@ -18,7 +18,6 @@ public class ValueConverter {
         boolean decimalStatus = projectDataManager.getDecimalStatusWithContect(context);
         String priceString;
 
-        //@@@
         if (decimalStatus) {
 
             DecimalFormat formatForPriceStyle   = new DecimalFormat("#,##0.00");

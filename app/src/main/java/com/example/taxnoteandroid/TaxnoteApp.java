@@ -2,6 +2,7 @@ package com.example.taxnoteandroid;
 
 import android.app.Application;
 import android.content.Context;
+import android.support.multidex.MultiDex;
 
 import com.crashlytics.android.Crashlytics;
 import com.example.taxnoteandroid.dataManager.SharedPreferencesManager;
@@ -61,6 +62,7 @@ public class TaxnoteApp extends Application {
                 base.setTheme(R.style.AppThemeThird);
                 break;
         }
+        MultiDex.install(this);
     }
 
     @Override

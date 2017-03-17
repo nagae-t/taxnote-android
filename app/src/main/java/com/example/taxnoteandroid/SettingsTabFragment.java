@@ -134,7 +134,7 @@ public class SettingsTabFragment extends Fragment {
                 if (i == 0 && projectAllSize < 3) {
                     showProjectEditorDialog(ProjectEditorDialogFragment.TYPE_ADD_NEW);
                 } else if (i == 0 && projectAllSize >= 3) {
-                    //@@ 帳簿数上限に達していて「追加」ボタンをしたら何をだすかここに追加
+                    // 帳簿数上限に達していて「追加」ボタンをしたら何をだすかここに追加
                     DialogManager.showToast(mContext, mContext.getString(R.string.max_add_project_message));
                 } else if (i == 1) {
                     switchSubProjectEdit();
