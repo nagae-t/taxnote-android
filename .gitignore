@@ -3,5 +3,10 @@
 /local.properties
 .idea
 .DS_Store
-/build
-/captures
+build
+.classpath
+.project
+.settings
+bin
+gen
+captures

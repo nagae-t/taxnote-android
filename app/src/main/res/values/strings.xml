@@ -290,4 +290,7 @@
     <string name="send_export">データを送信</string>
     <string name="character_code_desc">文字化けする時は文字コードを変更してください。</string>
 
+    <string name="max_cal_digit_value">999,999,999が最大値です。</string>
+
+
 </resources>

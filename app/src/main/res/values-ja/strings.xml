@@ -209,10 +209,12 @@
     <string name="tap_project_to_edit_name">帳簿名をタップすると名前を変更できます。</string>
 
     <string name="data_backup">データのバックアップ</string>
+    <string name="data_import">データのインポート</string>
     <string name="taxnote_data_import">Taxnote へインポート</string>
     <string name="loading">読み込み中・・・</string>
     <string name="finished_data_import">データのインポートが完了しました。</string>
     <string name="restart_app">アプリを再起動する</string>
+    <string name="import_data_overwrite_confirm_message">バックアップデータをインポートすると全ての既存データに上書きされてます。本当にインポートしてよろしいですか？</string>
 
     <string name="release_note_title">最新版の情報 : </string>
     <string name="release_note_message">Taxnoteが最新版にアップデートされました。新しい機能、変更点、バグ修正などのお知らせをご確認ください。</string>
@@ -287,5 +289,8 @@
     <string name="profit_loss_export">損益表の出力</string>
     <string name="send_export">データを送信</string>
     <string name="character_code_desc">文字化けする時は文字コードを変更してください。</string>
+
+    <string name="max_cal_digit_value">999,999,999が最大値です。</string>
+
 
 </resources>
