@@ -19,6 +19,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.calculator2.Calculator;
+import com.example.taxnoteandroid.CalculatorActivity;
 import com.example.taxnoteandroid.Library.DialogManager;
 import com.example.taxnoteandroid.Library.EntryLimitManager;
 import com.example.taxnoteandroid.Library.ValueConverter;
@@ -441,9 +442,11 @@ public class InputDataActivity extends AppCompatActivity {
             public void onClick(View view) {
 //                startActivityForResult(CalculatorActivity.createIntent(InputDataActivity.this, currentPrice), 1);
 
-                String roundedDecimalMsg =  getString(R.string.rounded_decimal_numbers);
-                Calculator.startForResult(InputDataActivity.this,
-                        currentPrice, roundedDecimalMsg,  1);
+//                String roundedDecimalMsg =  getString(R.string.rounded_decimal_numbers);
+//                Calculator.startForResult(InputDataActivity.this,
+//                        currentPrice, roundedDecimalMsg,  1);
+
+                CalculatorActivity.startForResult(InputDataActivity.this, currentPrice, 1);
             }
         });
     }
@@ -454,15 +457,11 @@ public class InputDataActivity extends AppCompatActivity {
 
         if (requestCode == 1 && resultCode == RESULT_OK) {
 
-            // Update price string
-//            currentPrice = data.getLongExtra("EXTRA_CURRENT_PRICE", 0);
-
-            long maxPrice = 999999999;
             currentPrice = data.getLongExtra(Calculator.KEY_CURRENT_PRICE, 0);
-            if (currentPrice > maxPrice) {
-                currentPrice = maxPrice;
-                DialogManager.showToast(this, getString(R.string.max_cal_digit_value));
-            }
+//            if (currentPrice > maxPrice) {
+//                currentPrice = maxPrice;
+//                DialogManager.showToast(this, getString(R.string.max_cal_digit_value));
+//            }
             String priceString = ValueConverter.formatPrice(InputDataActivity.this ,currentPrice);
             priceTextView.setText(priceString);
         }

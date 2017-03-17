@@ -1,337 +1,517 @@
 package com.example.taxnoteandroid;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.AnimatorSet;
+import android.animation.ArgbEvaluator;
+import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Rect;
+import android.os.Build;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.view.ViewPager;
+import android.support.v7.app.ActionBar;
+import android.text.Editable;
+import android.text.TextUtils;
+import android.text.TextWatcher;
+import android.view.KeyEvent;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewAnimationUtils;
+import android.view.ViewGroupOverlay;
+import android.view.animation.AccelerateDecelerateInterpolator;
+import android.widget.Button;
 import android.widget.TextView;
 
+import com.android.calculator2.CalculatorEditText;
+import com.android.calculator2.CalculatorExpressionBuilder;
+import com.android.calculator2.CalculatorExpressionEvaluator;
+import com.android.calculator2.CalculatorExpressionTokenizer;
 import com.example.taxnoteandroid.Library.DialogManager;
-import com.example.taxnoteandroid.Library.ValueConverter;
 
-public class CalculatorActivity extends DefaultCommonActivity {
 
-    private static final String EXTRA_CURRENT_PRICE = "EXTRA_CURRENT_PRICE";
-    private static final String DECIMAL_SYMBOL      = ".";
-    private static final String PLUS_SYMBOL         = "PLUS_SYMBOL";
-    private static final String MINUS_SYMBOL        = "MINUS_SYMBOL";
-    private static final String MULTIPLE_SYMBOL     = "MULTIPLE_SYMBOL";
-    private static final String SPLIT_SYMBOL        = "SPLIT_SYMBOL";
-    private static final String EQUAL_SYMBOL        = "EQUAL_SYMBOL";
+public class CalculatorActivity extends DefaultCommonActivity
+        implements CalculatorEditText.OnTextSizeChangeListener,
+        CalculatorExpressionEvaluator.EvaluateCallback,
+        View.OnLongClickListener {
 
-    public long currentPrice = 0;
-    private String priceString;
-    private String previousPriceString;
-    private String selectedSymbol;
-    private TextView priceTextView;
+    private static final String NAME = CalculatorActivity.class.getName();
 
+    // instance state keys
+    private static final String KEY_CURRENT_STATE = NAME + "_currentState";
+    private static final String KEY_CURRENT_EXPRESSION = NAME + "_currentExpression";
+
+    /**
+     * Constant for an invalid resource id.
+     */
+    public static final int INVALID_RES_ID = -1;
+
+    private enum CalculatorState {
+        INPUT, EVALUATE, RESULT, ERROR
+    }
+
+    private final TextWatcher mFormulaTextWatcher = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence charSequence, int start, int count, int after) {
+        }
+
+        @Override
+        public void onTextChanged(CharSequence charSequence, int start, int count, int after) {
+        }
+
+        @Override
+        public void afterTextChanged(Editable editable) {
+            setState(CalculatorState.INPUT);
+            mEvaluator.evaluate(editable, CalculatorActivity.this);
+        }
+    };
+
+    private final View.OnKeyListener mFormulaOnKeyListener = new View.OnKeyListener() {
+        @Override
+        public boolean onKey(View view, int keyCode, KeyEvent keyEvent) {
+            switch (keyCode) {
+                case KeyEvent.KEYCODE_NUMPAD_ENTER:
+                case KeyEvent.KEYCODE_ENTER:
+                    if (keyEvent.getAction() == KeyEvent.ACTION_UP) {
+                        onEquals();
+                    }
+                    // ignore all other actions
+                    return true;
+            }
+            return false;
+        }
+    };
+
+    private final Editable.Factory mFormulaEditableFactory = new Editable.Factory() {
+        @Override
+        public Editable newEditable(CharSequence source) {
+            final boolean isEdited = mCurrentState == CalculatorState.INPUT
+                    || mCurrentState == CalculatorState.ERROR;
+            return new CalculatorExpressionBuilder(source, mTokenizer, isEdited);
+        }
+    };
+
+    private CalculatorState mCurrentState;
+    private CalculatorExpressionTokenizer mTokenizer;
+    private CalculatorExpressionEvaluator mEvaluator;
+
+    private View mDisplayView;
+    private CalculatorEditText mFormulaEditText;
+    private CalculatorEditText mResultEditText;
+    private ViewPager mPadViewPager;
+    private View mDeleteButton;
+    private View mClearButton;
+    private View mEqualButton;
+
+    private Animator mCurrentAnimator;
+
+    public static final String KEY_CURRENT_PRICE = "current_price";
+
+    public static void start(Context context) {
+        Intent intent = new Intent(context, CalculatorActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(intent);
+    }
+
+    public static void startForResult(Activity activity, long currentPrice, int requestCode) {
+        Intent intent = new Intent(activity.getApplicationContext(), CalculatorActivity.class);
+        intent.putExtra(KEY_CURRENT_PRICE, currentPrice);
+
+        activity.startActivityForResult(intent, requestCode);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_calculator);
 
-        setIntentData();
-        setPriceInputPart();
-    }
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
 
+        mDisplayView = findViewById(R.id.display);
+        mFormulaEditText = (CalculatorEditText) findViewById(R.id.formula);
+        mResultEditText = (CalculatorEditText) findViewById(R.id.result);
+        mPadViewPager = (ViewPager) findViewById(R.id.pad_pager);
+        mDeleteButton = findViewById(R.id.del);
+        mClearButton = findViewById(R.id.clr);
 
-    //--------------------------------------------------------------//
-    //    -- Intent --
-    //--------------------------------------------------------------//
+        mEqualButton = findViewById(R.id.pad_numeric).findViewById(R.id.eq);
+        if (mEqualButton == null || mEqualButton.getVisibility() != View.VISIBLE) {
+            mEqualButton = findViewById(R.id.pad_operator).findViewById(R.id.eq);
+        }
 
-    public static Intent createIntent(Context context, long currentPrice) {
+        mTokenizer = new CalculatorExpressionTokenizer(this);
+        mEvaluator = new CalculatorExpressionEvaluator(mTokenizer);
 
-        Intent i = new Intent(context, CalculatorActivity.class);
-        i.putExtra(EXTRA_CURRENT_PRICE, currentPrice);
-        return i;
-    }
+        savedInstanceState = savedInstanceState == null ? Bundle.EMPTY : savedInstanceState;
+        setState(CalculatorState.values()[
+                savedInstanceState.getInt(KEY_CURRENT_STATE, CalculatorState.INPUT.ordinal())]);
+        mFormulaEditText.setText(mTokenizer.getLocalizedExpression(
+                savedInstanceState.getString(KEY_CURRENT_EXPRESSION, "")));
 
-    private void setIntentData() {
-
+        // set current price
         Intent intent = getIntent();
-        currentPrice = intent.getLongExtra(EXTRA_CURRENT_PRICE, 0);
-        priceString = Long.toString(currentPrice);
-    }
-
-
-    //--------------------------------------------------------------//
-    //    -- Display Part --
-    //--------------------------------------------------------------//
-
-    private void setPriceInputPart() {
-
-        priceTextView = (TextView) findViewById(R.id.title);
-
-        String priceString = ValueConverter.formatPrice(CalculatorActivity.this ,currentPrice);
-        priceTextView.setText(priceString);
-
-        CalculatorActivity.OnPriceClickListener onPriceClickListener = new CalculatorActivity.OnPriceClickListener();
-        findViewById(R.id.button_0).setOnClickListener(onPriceClickListener);
-        findViewById(R.id.button_1).setOnClickListener(onPriceClickListener);
-        findViewById(R.id.button_2).setOnClickListener(onPriceClickListener);
-        findViewById(R.id.button_3).setOnClickListener(onPriceClickListener);
-        findViewById(R.id.button_4).setOnClickListener(onPriceClickListener);
-        findViewById(R.id.button_5).setOnClickListener(onPriceClickListener);
-        findViewById(R.id.button_6).setOnClickListener(onPriceClickListener);
-        findViewById(R.id.button_7).setOnClickListener(onPriceClickListener);
-        findViewById(R.id.button_8).setOnClickListener(onPriceClickListener);
-        findViewById(R.id.button_9).setOnClickListener(onPriceClickListener);
-        findViewById(R.id.button_decimal).setOnClickListener(onPriceClickListener);
-        findViewById(R.id.button_c).setOnClickListener(onPriceClickListener);
-        findViewById(R.id.button_split).setOnClickListener(onPriceClickListener);
-        findViewById(R.id.button_multiple).setOnClickListener(onPriceClickListener);
-        findViewById(R.id.button_minus).setOnClickListener(onPriceClickListener);
-        findViewById(R.id.button_plus).setOnClickListener(onPriceClickListener);
-        findViewById(R.id.button_equal).setOnClickListener(onPriceClickListener);
-    }
-
-
-    //--------------------------------------------------------------//
-    //    -- Handle Data --
-    //--------------------------------------------------------------//
-
-    private class OnPriceClickListener implements View.OnClickListener {
-
-        @Override
-        public void onClick(View view) {
-            String selectedString = "";
-            switch (view.getId()) {
-                case R.id.button_0:
-                    selectedString = "0";
-                    break;
-                case R.id.button_1:
-                    selectedString = "1";
-                    break;
-                case R.id.button_2:
-                    selectedString = "2";
-                    break;
-                case R.id.button_3:
-                    selectedString = "3";
-                    break;
-                case R.id.button_4:
-                    selectedString = "4";
-                    break;
-                case R.id.button_5:
-                    selectedString = "5";
-                    break;
-                case R.id.button_6:
-                    selectedString = "6";
-                    break;
-                case R.id.button_7:
-                    selectedString = "7";
-                    break;
-                case R.id.button_8:
-                    selectedString = "8";
-                    break;
-                case R.id.button_9:
-                    selectedString = "9";
-                    break;
-                case R.id.button_decimal:
-                    selectedString = DECIMAL_SYMBOL;
-                    break;
-                case R.id.button_split:
-                    selectedString = SPLIT_SYMBOL;
-                    break;
-                case R.id.button_multiple:
-                    selectedString = MULTIPLE_SYMBOL;
-                    break;
-                case R.id.button_minus:
-                    selectedString = MINUS_SYMBOL;
-                    break;
-                case R.id.button_plus:
-                    selectedString = PLUS_SYMBOL;
-                    break;
-                case R.id.button_equal:
-                    selectedString = EQUAL_SYMBOL;
-                    break;
-                case R.id.button_c:
-
-                    // Reset
-                    priceTextView.setText(null);
-                    currentPrice = 0;
-                    priceString = null;
-                    previousPriceString = null;
-                    selectedSymbol = null;
-                    return;
+        if (intent != null) {
+            long currPrice = intent.getLongExtra(KEY_CURRENT_PRICE, 0);
+            if (currPrice > 0 && savedInstanceState == Bundle.EMPTY) {
+                mFormulaEditText.setText(mTokenizer.getLocalizedExpression(
+                        String.valueOf(currPrice)));
             }
-
-            handleSelectedString(selectedString);
-        }
-    }
-
-
-    //--------------------------------------------------------------//
-    //    -- Calculate --
-    //--------------------------------------------------------------//
-
-    private void handleSelectedString(String selectedString) {
-
-        if (selectedStringIsCalculationSymbol(selectedString)) {
-
-            // Save price number and symbol after price number is set and symbol is selected
-            if (previousPriceString == null) {
-
-                // Save symbol and price number
-                previousPriceString = priceString;
-                selectedSymbol      = selectedString;
-                priceString         = null;
-
-                return;
-            }
-
-            // Change selected symbol if current price number is not set
-            if (priceString == null) {
-                selectedSymbol = selectedString;
-                return;
-            }
-
-            // Calculate
-            priceString = calculatePriceStringAndPreviousPriceString(priceString, previousPriceString, selectedSymbol);
-
-            // Set text
-//            currentPrice    = Long.parseLong(priceString);
-//            String text     = ValueConverter.formatPrice(CalculatorActivity.this , currentPrice);
-//            priceTextView.setText(text);
-
-            //@@@
-            priceTextView.setText(priceString);
-
-
-            // Save symbol and price number
-            previousPriceString = priceString;
-            selectedSymbol      = selectedString;
-            priceString         = null;
-
-            return;
         }
 
-        // Dismiss the activity
-        if (selectedString.equals(EQUAL_SYMBOL)) {
+        mEvaluator.evaluate(mFormulaEditText.getText(), this);
 
-            // Calculate if priceNumber and previousNumber and selectedSymbol are set
-            if (priceString != null && previousPriceString != null && selectedSymbol != null) {
-                priceString = calculatePriceStringAndPreviousPriceString(priceString, previousPriceString, selectedSymbol);
+        mFormulaEditText.setEditableFactory(mFormulaEditableFactory);
+        mFormulaEditText.addTextChangedListener(mFormulaTextWatcher);
+        mFormulaEditText.setOnKeyListener(mFormulaOnKeyListener);
+        mFormulaEditText.setOnTextSizeChangeListener(this);
+        mDeleteButton.setOnLongClickListener(this);
+
+    }
+
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        // If there's an animation in progress, end it immediately to ensure the state is
+        // up-to-date before it is serialized.
+        if (mCurrentAnimator != null) {
+            mCurrentAnimator.end();
+        }
+
+        super.onSaveInstanceState(outState);
+
+        outState.putInt(KEY_CURRENT_STATE, mCurrentState.ordinal());
+        outState.putString(KEY_CURRENT_EXPRESSION,
+                mTokenizer.getNormalizedExpression(mFormulaEditText.getText().toString()));
+    }
+
+    private void setState(CalculatorState state) {
+        if (mCurrentState != state) {
+            mCurrentState = state;
+
+            if (state == CalculatorState.RESULT || state == CalculatorState.ERROR) {
+                mDeleteButton.setVisibility(View.GONE);
+                mClearButton.setVisibility(View.VISIBLE);
+            } else {
+                mDeleteButton.setVisibility(View.VISIBLE);
+                mClearButton.setVisibility(View.GONE);
             }
 
-            // Get priceNumber from previousNumber if priceNumber is nil after tapping symbol
-            if (priceString == null) {
-                priceString = previousPriceString;
-
-                if (priceString == null) {
-                    priceString = "0";
+            if (state == CalculatorState.ERROR) {
+                final int errorColor = ContextCompat.getColor(this, R.color.calculator_error_color);
+                mFormulaEditText.setTextColor(errorColor);
+                mResultEditText.setTextColor(errorColor);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    getWindow().setStatusBarColor(errorColor);
+                }
+            } else {
+                mFormulaEditText.setTextColor(
+                        ContextCompat.getColor(this, R.color.display_formula_text_color));
+                mResultEditText.setTextColor(
+                        ContextCompat.getColor(this, R.color.display_result_text_color));
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    getWindow().setStatusBarColor(
+                            ContextCompat.getColor(this, R.color.calculator_accent_color));
                 }
             }
+        }
+    }
 
-            if (priceString.contains(".")) {
-                DialogManager.showToast(this, getResources().getString(R.string.rounded_decimal_numbers));
-            }
+    @Override
+    public void onBackPressed() {
+        if (mPadViewPager == null || mPadViewPager.getCurrentItem() == 0) {
+            // If the user is currently looking at the first pad (or the pad is not paged),
+            // allow the system to handle the Back button.
+            super.onBackPressed();
+        } else {
+            // Otherwise, select the previous pad.
+            mPadViewPager.setCurrentItem(mPadViewPager.getCurrentItem() - 1);
+        }
+    }
 
-            // Convert double to long
-            double priceDoubleNumber = Double.parseDouble(priceString);
-            priceDoubleNumber = Math.round(priceDoubleNumber);
-            currentPrice = (long) priceDoubleNumber;
+    @Override
+    public void onUserInteraction() {
+        super.onUserInteraction();
 
-            Intent intent = new Intent();
-            intent.putExtra(EXTRA_CURRENT_PRICE, currentPrice);
-            setResult(RESULT_OK, intent);
-            finish();
+        // If there's an animation in progress, end it immediately to ensure the state is
+        // up-to-date before the pending user interaction is handled.
+        if (mCurrentAnimator != null) {
+            mCurrentAnimator.end();
+        }
+    }
+
+    public void onButtonClick(View view) {
+        int i = view.getId();
+        if (i == R.id.eq) {
+            onEquals();
+
+        } else if (i == R.id.del) {
+            onDelete();
+
+        } else if (i == R.id.clr) {
+            onClear();
+
+        } else if (i == R.id.fun_cos || i == R.id.fun_ln || i == R.id.fun_log || i == R.id.fun_sin || i == R.id.fun_tan) {// Add left parenthesis after functions.
+            mFormulaEditText.append(((Button) view).getText() + "(");
+
+        } else {
+            mFormulaEditText.append(((Button) view).getText());
+
+        }
+    }
+
+    @Override
+    public boolean onLongClick(View view) {
+        if (view.getId() == R.id.del) {
+            onClear();
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public void onEvaluate(String expr, String result, int errorResourceId) {
+        if (mCurrentState == CalculatorState.INPUT) {
+            mResultEditText.setText(result);
+        } else if (errorResourceId != INVALID_RES_ID) {
+            onError(errorResourceId);
+        } else if (!TextUtils.isEmpty(result)) {
+            onResult(result);
+        } else if (mCurrentState == CalculatorState.EVALUATE) {
+            // The current expression cannot be evaluated -> return to the input state.
+            setState(CalculatorState.INPUT);
+        }
+
+        mFormulaEditText.requestFocus();
+    }
+
+    @Override
+    public void onTextSizeChanged(final TextView textView, float oldSize) {
+        if (mCurrentState != CalculatorState.INPUT) {
+            // Only animate text changes that occur from user input.
             return;
         }
 
-        // Remove "," from price text
-        String text = priceTextView.getText().toString().replace(",", "");
+        // Calculate the values needed to perform the scale and translation animations,
+        // maintaining the same apparent baseline for the displayed text.
+        final float textScale = oldSize / textView.getTextSize();
+        final float translationX = (1.0f - textScale) *
+                (textView.getWidth() / 2.0f - textView.getPaddingEnd());
+        final float translationY = (1.0f - textScale) *
+                (textView.getHeight() / 2.0f - textView.getPaddingBottom());
 
-        if (text.length() > 9) {
+        final AnimatorSet animatorSet = new AnimatorSet();
+        animatorSet.playTogether(
+                ObjectAnimator.ofFloat(textView, View.SCALE_X, textScale, 1.0f),
+                ObjectAnimator.ofFloat(textView, View.SCALE_Y, textScale, 1.0f),
+                ObjectAnimator.ofFloat(textView, View.TRANSLATION_X, translationX, 0.0f),
+                ObjectAnimator.ofFloat(textView, View.TRANSLATION_Y, translationY, 0.0f));
+        animatorSet.setDuration(getResources().getInteger(android.R.integer.config_mediumAnimTime));
+        animatorSet.setInterpolator(new AccelerateDecelerateInterpolator());
+        animatorSet.start();
+    }
+
+    private void onEquals() {
+        if (mCurrentState == CalculatorState.INPUT) {
+            setState(CalculatorState.EVALUATE);
+            mEvaluator.evaluate(mFormulaEditText.getText(), this);
+        }
+    }
+
+    private void onDelete() {
+        // Delete works like backspace; remove the last character from the expression.
+        final Editable formulaText = mFormulaEditText.getEditableText();
+        final int formulaLength = formulaText.length();
+        if (formulaLength > 0) {
+            formulaText.delete(formulaLength - 1, formulaLength);
+        }
+    }
+
+    private void reveal(View sourceView, int colorRes, Animator.AnimatorListener listener) {
+        final ViewGroupOverlay groupOverlay =
+                (ViewGroupOverlay) getWindow().getDecorView().getOverlay();
+
+        final Rect displayRect = new Rect();
+        mDisplayView.getGlobalVisibleRect(displayRect);
+
+        // Make reveal cover the display and status bar.
+        final View revealView = new View(this);
+        revealView.setBottom(displayRect.bottom);
+        revealView.setLeft(displayRect.left);
+        revealView.setRight(displayRect.right);
+        revealView.setBackgroundColor(getResources().getColor(colorRes));
+        groupOverlay.add(revealView);
+
+        final int[] clearLocation = new int[2];
+        sourceView.getLocationInWindow(clearLocation);
+        clearLocation[0] += sourceView.getWidth() / 2;
+        clearLocation[1] += sourceView.getHeight() / 2;
+
+        final int revealCenterX = clearLocation[0] - revealView.getLeft();
+        final int revealCenterY = clearLocation[1] - revealView.getTop();
+
+        final double x1_2 = Math.pow(revealView.getLeft() - revealCenterX, 2);
+        final double x2_2 = Math.pow(revealView.getRight() - revealCenterX, 2);
+        final double y_2 = Math.pow(revealView.getTop() - revealCenterY, 2);
+        final float revealRadius = (float) Math.max(Math.sqrt(x1_2 + y_2), Math.sqrt(x2_2 + y_2));
+
+        final Animator alphaAnimator = ObjectAnimator.ofFloat(revealView, View.ALPHA, 0.0f);
+        alphaAnimator.setDuration(
+                getResources().getInteger(android.R.integer.config_mediumAnimTime));
+        alphaAnimator.addListener(listener);
+
+        final AnimatorSet animatorSet = new AnimatorSet();
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            final Animator revealAnimator =
+                    ViewAnimationUtils.createCircularReveal(revealView,
+                            revealCenterX, revealCenterY, 0.0f, revealRadius);
+            revealAnimator.setDuration(
+                    getResources().getInteger(android.R.integer.config_longAnimTime));
+            animatorSet.play(revealAnimator).before(alphaAnimator);
+        }
+
+        animatorSet.setInterpolator(new AccelerateDecelerateInterpolator());
+        animatorSet.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animator) {
+                groupOverlay.remove(revealView);
+                mCurrentAnimator = null;
+            }
+        });
+
+        mCurrentAnimator = animatorSet;
+        animatorSet.start();
+    }
+
+    private void onClear() {
+        if (TextUtils.isEmpty(mFormulaEditText.getText())) {
             return;
         }
 
-        //@@@
-        // Create price string
-        if (priceString == null || priceString.equals("0")) {
-
-            if (selectedString.equals(DECIMAL_SYMBOL)) {
-                priceString = "0.";
-            } else {
-                priceString = selectedString;
+        final View sourceView = mClearButton.getVisibility() == View.VISIBLE
+                ? mClearButton : mDeleteButton;
+        reveal(sourceView, R.color.calculator_accent_color, new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+                mFormulaEditText.getEditableText().clear();
             }
-        } else {
-
-            if (selectedString.equals(DECIMAL_SYMBOL)) {
-
-                if (!priceString.contains(".")) {
-                    priceString = priceString + ".";
-                }
-
-            } else {
-                priceString = priceString + selectedString;
-            }
-        }
-
-        priceTextView.setText(priceString);
+        });
     }
 
-    private String calculatePriceStringAndPreviousPriceString(String priceString, String previousPriceString, String selectedSymbol) {
-
-        double newPriceDoubleNumber = 0;
-        double priceDoubleNumber = Double.parseDouble(priceString);
-        double previousPriceDoubleNumber = Double.parseDouble(previousPriceString);
-        String calculatedPriceString = "";
-
-        if (selectedSymbol.equals(PLUS_SYMBOL)) {
-            newPriceDoubleNumber    = previousPriceDoubleNumber + priceDoubleNumber;
-//            calculatedPriceString   = Long.toString((long) newPriceDoubleNumber);
-
-        } else if (selectedSymbol.equals(MINUS_SYMBOL)) {
-            newPriceDoubleNumber    = previousPriceDoubleNumber - priceDoubleNumber;
-//            calculatedPriceString   = Long.toString((long) newPriceDoubleNumber);
-
-        } else if (selectedSymbol.equals(MULTIPLE_SYMBOL)) {
-            newPriceDoubleNumber        = previousPriceDoubleNumber * priceDoubleNumber;
-//            calculatedPriceString       = Long.toString((long) newPriceDoubleNumber);
-
-        } else if (selectedSymbol.equals(SPLIT_SYMBOL)) {
-            newPriceDoubleNumber    = previousPriceDoubleNumber / priceDoubleNumber;
-//            calculatedPriceString   = Double.toString(newPriceDoubleNumber);
+    private void onError(final int errorResourceId) {
+        if (mCurrentState != CalculatorState.EVALUATE) {
+            // Only animate error on evaluate.
+            mResultEditText.setText(errorResourceId);
+            return;
         }
 
-        calculatedPriceString   = Double.toString(newPriceDoubleNumber);
+        reveal(mEqualButton, R.color.calculator_error_color, new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+                setState(CalculatorState.ERROR);
+                mResultEditText.setText(errorResourceId);
+            }
+        });
+    }
 
+    private void onResult(final String result) {
+        // Calculate the values needed to perform the scale and translation animations,
+        // accounting for how the scale will affect the final position of the text.
+        final float resultScale =
+                mFormulaEditText.getVariableTextSize(result) / mResultEditText.getTextSize();
+        final float resultTranslationX = (1.0f - resultScale) *
+                (mResultEditText.getWidth() / 2.0f - mResultEditText.getPaddingEnd());
+        final float resultTranslationY = (1.0f - resultScale) *
+                (mResultEditText.getHeight() / 2.0f - mResultEditText.getPaddingBottom()) +
+                (mFormulaEditText.getBottom() - mResultEditText.getBottom()) +
+                (mResultEditText.getPaddingBottom() - mFormulaEditText.getPaddingBottom());
+        final float formulaTranslationY = -mFormulaEditText.getBottom();
 
-        //@@
+        // Use a value animator to fade to the final text color over the course of the animation.
+        final int resultTextColor = mResultEditText.getCurrentTextColor();
+        final int formulaTextColor = mFormulaEditText.getCurrentTextColor();
+        final ValueAnimator textColorAnimator =
+                ValueAnimator.ofObject(new ArgbEvaluator(), resultTextColor, formulaTextColor);
+        textColorAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                mResultEditText.setTextColor((int) valueAnimator.getAnimatedValue());
+            }
+        });
 
-
-//        long priceLongNumber            = (long) newPriceDoubleNumber;
-//        String calculatedPriceString    = Long.toString(priceLongNumber);
-
-        // Limit max length
-            if (calculatedPriceString.length() > 9) {
-
-                // @@ 翻訳する
-                DialogManager.showOKOnlyAlert(this, "Limit", "Limit Reached");
-                return Double.toString(previousPriceDoubleNumber);
+        final AnimatorSet animatorSet = new AnimatorSet();
+        animatorSet.playTogether(
+                textColorAnimator,
+                ObjectAnimator.ofFloat(mResultEditText, View.SCALE_X, resultScale),
+                ObjectAnimator.ofFloat(mResultEditText, View.SCALE_Y, resultScale),
+                ObjectAnimator.ofFloat(mResultEditText, View.TRANSLATION_X, resultTranslationX),
+                ObjectAnimator.ofFloat(mResultEditText, View.TRANSLATION_Y, resultTranslationY),
+                ObjectAnimator.ofFloat(mFormulaEditText, View.TRANSLATION_Y, formulaTranslationY));
+        animatorSet.setDuration(getResources().getInteger(android.R.integer.config_longAnimTime));
+        animatorSet.setInterpolator(new AccelerateDecelerateInterpolator());
+        animatorSet.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+                mResultEditText.setText(result);
             }
 
-        return calculatedPriceString;
-    }
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                // Reset all of the values modified during the animation.
+                mResultEditText.setTextColor(resultTextColor);
+                mResultEditText.setScaleX(1.0f);
+                mResultEditText.setScaleY(1.0f);
+                mResultEditText.setTranslationX(0.0f);
+                mResultEditText.setTranslationY(0.0f);
+                mFormulaEditText.setTranslationY(0.0f);
 
-    private boolean selectedStringIsCalculationSymbol(String priceString) {
+                // Finally update the formula to use the current result.
+                mFormulaEditText.setText(result);
+                setState(CalculatorState.RESULT);
 
-        if (priceString.equals(PLUS_SYMBOL)) {
-            return true;
+                mCurrentAnimator = null;
+            }
+        });
 
-        } else if (priceString.equals(MINUS_SYMBOL)) {
-            return true;
+        mCurrentAnimator = animatorSet;
+        animatorSet.start();
 
-        } else if (priceString.equals(MULTIPLE_SYMBOL)) {
-            return true;
-
-        } else if (priceString.equals(SPLIT_SYMBOL)) {
-            return true;
-        } else {
-            return false;
+        // return result
+        long maxPrice = 999999999;
+        double priceDoubleNumber = Double.parseDouble(result);
+        if (result.contains(".") && priceDoubleNumber < maxPrice) {
+            DialogManager.showToast(this, getString(R.string.rounded_decimal_numbers));
         }
+
+        // Convert double to long
+        priceDoubleNumber = Math.round(priceDoubleNumber);
+        long currentPrice = (long) priceDoubleNumber;
+
+        if (currentPrice > maxPrice) {
+            currentPrice = maxPrice;
+            DialogManager.showToast(this, getString(R.string.max_cal_digit_value));
+        }
+
+        Intent intent = new Intent();
+        intent.putExtra(KEY_CURRENT_PRICE, currentPrice);
+        setResult(RESULT_OK, intent);
+        finish();
     }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+
 }
