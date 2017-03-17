@@ -213,10 +213,6 @@ public class CalculatorActivity extends DefaultCommonActivity
                         ContextCompat.getColor(this, R.color.display_formula_text_color));
                 mResultEditText.setTextColor(
                         ContextCompat.getColor(this, R.color.display_result_text_color));
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    getWindow().setStatusBarColor(
-                            ContextCompat.getColor(this, R.color.calculator_accent_color));
-                }
             }
         }
     }
@@ -481,22 +477,35 @@ public class CalculatorActivity extends DefaultCommonActivity
         mCurrentAnimator = animatorSet;
         animatorSet.start();
 
-        // return result
-        long maxPrice = 999999999;
-        double priceDoubleNumber = Double.parseDouble(result);
-        if (result.contains(".") && priceDoubleNumber < maxPrice) {
-            DialogManager.showToast(this, getString(R.string.rounded_decimal_numbers));
+        long currentPrice;
+        boolean isError = false;
+        // 0で割ったりするとresultが「∞」になる
+        try {
+            currentPrice = Long.valueOf(result);
+        } catch (Exception e) {
+            isError = true;
+            currentPrice = 0;
         }
 
-        // Convert double to long
-        priceDoubleNumber = Math.round(priceDoubleNumber);
-        long currentPrice = (long) priceDoubleNumber;
+        long maxPrice = 999999999;
+        if (isError) {
+            double priceDoubleNumber = Double.parseDouble(result);
+            if (result.contains(".") && priceDoubleNumber < maxPrice) {
+                DialogManager.showToast(this, getString(R.string.rounded_decimal_numbers));
+            }
+
+            // Convert double to long
+            priceDoubleNumber = Math.round(priceDoubleNumber);
+            currentPrice = (long) priceDoubleNumber;
+        }
+
 
         if (currentPrice > maxPrice) {
             currentPrice = maxPrice;
             DialogManager.showToast(this, getString(R.string.max_cal_digit_value));
         }
 
+        // return result
         Intent intent = new Intent();
         intent.putExtra(KEY_CURRENT_PRICE, currentPrice);
         setResult(RESULT_OK, intent);
