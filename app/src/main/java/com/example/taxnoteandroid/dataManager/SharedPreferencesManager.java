@@ -32,6 +32,12 @@ public class SharedPreferencesManager {
     private static final String PROFIT_LOSS_REPORT_PERIOD_KEY   = "PROFIT_LOSS_REPORT_PERIOD_KEY";
     private static final String GRAPH_REPORT_IS_EXPENSE_KEY     = "GRAPH_REPORT_IS_EXPENSE_KEY";
     private static final String BUSINESS_MODEL_MESSAGE_KEY      = "BUSINESS_MODEL_MESSAGE_KEY";
+
+    private static final String BALANCE_CARRY_FORWARD_KEY       = "BALANCE_CARRY_FORWARD_KEY";
+    private static final String MONTHLY_CLOSING_DATE_INDEX_KEY  = "MONTHLY_CLOSING_DATE_INDEX_KEY";
+    private static final String START_MONTH_OF_YEAR_INDEX_KEY   = "START_MONTH_OF_YEAR_INDEX_KEY";
+    private static final String PROFIT_KEY   = "START_MONTH_OF_YEAR_INDEX_KEY";
+
     private static final String APP_THEME_STYLE_KEY             = "APP_THEME_STYLE_KEY";
     private static final String RELEASE_NOTE_KEY                = "RELEASE_NOTE_KEY";
 
@@ -150,6 +156,27 @@ public class SharedPreferencesManager {
                 PROFIT_LOSS_REPORT_PERIOD_KEY, EntryDataManager.PERIOD_TYPE_YEAR);
     }
 
+    public static void saveBalanceCarryForward(Context context, boolean val) {
+        getSharedPreferences(context).edit().putBoolean(BALANCE_CARRY_FORWARD_KEY, val).apply();
+    }
+
+    public static boolean getBalanceCarryForward(Context context) {
+        return getSharedPreferences(context).getBoolean(BALANCE_CARRY_FORWARD_KEY, false);
+    }
+
+    public static void saveMonthlyClosingDateIndex(Context context, int index) {
+        getSharedPreferences(context).edit().putInt(MONTHLY_CLOSING_DATE_INDEX_KEY, index).apply();
+    }
+    public static int  getMonthlyClosingDateIndex(Context context) {
+        return getSharedPreferences(context).getInt(MONTHLY_CLOSING_DATE_INDEX_KEY, 28);
+    }
+
+    public static void saveStartMonthOfYearIndex(Context context, int index) {
+        getSharedPreferences(context).edit().putInt(START_MONTH_OF_YEAR_INDEX_KEY, index).apply();
+    }
+    public static int getStartMonthOfYearIndex(Context context) {
+        return getSharedPreferences(context).getInt(START_MONTH_OF_YEAR_INDEX_KEY, 0);
+    }
 
     //--------------------------------------------------------------//
     //    -- Graph Report --

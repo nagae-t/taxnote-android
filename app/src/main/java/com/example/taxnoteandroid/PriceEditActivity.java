@@ -3,10 +3,14 @@ package com.example.taxnoteandroid;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.text.TextUtils;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.android.calculator2.Calculator;
 import com.example.taxnoteandroid.Library.DialogManager;
 import com.example.taxnoteandroid.Library.ValueConverter;
 import com.example.taxnoteandroid.dataManager.EntryDataManager;
@@ -26,10 +30,14 @@ public class PriceEditActivity extends DefaultCommonActivity {
 
         setContentView(R.layout.activity_price_edit);
 
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+
         setIntentData();
         setTitle();
         setSaveButton();
         setPriceInputPart();
+        setCalculatorView();
     }
 
 
@@ -181,6 +189,44 @@ public class PriceEditActivity extends DefaultCommonActivity {
             currentPrice = Long.parseLong(currentPriceString + price);
             String priceString = ValueConverter.formatPrice(PriceEditActivity.this ,currentPrice);
 
+            priceTextView.setText(priceString);
+        }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    //--------------------------------------------------------------//
+    //    -- Calculator --
+    //--------------------------------------------------------------//
+
+    private void setCalculatorView() {
+
+        ImageView calculatorButton = (ImageView) findViewById(R.id.calculator_button);
+        calculatorButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                CalculatorActivity.startForResult(PriceEditActivity.this, currentPrice, 1);
+            }
+        });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == 1 && resultCode == RESULT_OK) {
+
+            currentPrice = data.getLongExtra(Calculator.KEY_CURRENT_PRICE, 0);
+            String priceString = ValueConverter.formatPrice(PriceEditActivity.this ,currentPrice);
             priceTextView.setText(priceString);
         }
     }

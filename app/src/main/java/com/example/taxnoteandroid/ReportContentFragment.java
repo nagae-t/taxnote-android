@@ -30,11 +30,13 @@ public class ReportContentFragment extends Fragment {
 
     private FragmentReportContentBinding binding;
     private Context mContext;
+    private Boolean isShowBalanceCarryForward = false;
 
     private CommonEntryRecyclerAdapter mRecyclerAdapter;
     private EntryDataManager mEntryManager;
     private Calendar mTargetCalendar;
     private int mPeriodType;
+    private List<Entry> mReportDataResult;
 
     public ReportContentFragment() {
     }
@@ -63,6 +65,7 @@ public class ReportContentFragment extends Fragment {
         mEntryManager = new EntryDataManager(mContext);
         mPeriodType = SharedPreferencesManager.getProfitLossReportPeriodType(mContext);
         mTargetCalendar  = (Calendar) getArguments().getSerializable(KEY_TARGET_CALENDAR);
+        mReportDataResult = new ArrayList<>();
 
         binding.topBalance.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -70,16 +73,28 @@ public class ReportContentFragment extends Fragment {
                 HistoryListDataActivity.startForBalance(mContext, mTargetCalendar);
             }
         });
+    }
 
+    public long[] getStartEndDate() {
+        long[] startEndDate = EntryLimitManager.getStartAndEndDate(mContext, mPeriodType, mTargetCalendar);
+        return startEndDate;
     }
 
     @Override
     public void onResume() {
         super.onResume();
 
-        long[] startEndDate = EntryLimitManager.getStartAndEndDate(mPeriodType, mTargetCalendar);
+        isShowBalanceCarryForward = SharedPreferencesManager.getBalanceCarryForward(mContext);
+        String blanceText = mContext.getString(R.string.Balance);
+        if (isShowBalanceCarryForward)
+            blanceText = mContext.getString(R.string.Balance)
+                + mContext.getString(R.string.balance_carry_forward_view);
+        binding.balanceTv.setText(blanceText);
+
+        long[] startEndDate = EntryLimitManager.getStartAndEndDate(mContext, mPeriodType, mTargetCalendar);
         new ReportDataTask().execute(startEndDate);
     }
+
 
     private void setTopBalanceValue(long price) {
         // 残高の表示
@@ -126,7 +141,11 @@ public class ReportContentFragment extends Fragment {
                 }
             }
             Entry topBalance = new Entry();
-            topBalance.price = balancePrice;
+            if (isShowBalanceCarryForward) {
+                topBalance.price = mEntryManager.findSumBalance(startEndDate[1]);
+            } else {
+                topBalance.price = balancePrice;
+            }
             // このデータはAdapterで表示しないのでのちに削除
             resultEntries.add(topBalance);
 
@@ -197,6 +216,7 @@ public class ReportContentFragment extends Fragment {
         protected void onPostExecute(List<Entry> result) {
             if (result == null || result.size() == 0) return;
 
+            mReportDataResult = result;
             Entry topBalance = result.get(0);
             setTopBalanceValue(topBalance.price);
             result.remove(0);

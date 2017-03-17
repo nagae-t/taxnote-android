@@ -3,6 +3,7 @@ package com.example.taxnoteandroid.Library;
 import android.content.Context;
 
 import com.example.taxnoteandroid.dataManager.EntryDataManager;
+import com.example.taxnoteandroid.dataManager.SharedPreferencesManager;
 import com.example.taxnoteandroid.model.Entry;
 
 import java.util.ArrayList;
@@ -63,24 +64,70 @@ public class EntryLimitManager {
         return start_end;
     }
 
-    public static long[] getStartAndEndDate(int periodType, Calendar c) {
-        Calendar startDate = (Calendar)c.clone();
-        Calendar endDate = (Calendar)c.clone();
+    public static long[] getStartAndEndDate(Context context, int periodType, Calendar c) {
+        Calendar startCalendar = (Calendar)c.clone();
+        Calendar endCalendar = (Calendar)c.clone();
+
+        int closingDateIndex = SharedPreferencesManager.getMonthlyClosingDateIndex(context);
+        int startMonthIndex = SharedPreferencesManager.getStartMonthOfYearIndex(context);
+
+        int startDate = 1;
+        int endDate = 1;
+        if (closingDateIndex < 28) {
+            startDate = closingDateIndex;
+            endDate = closingDateIndex+2;
+        }
+        int startMonth = c.get(Calendar.MONTH);
+        int startYear = c.get(Calendar.YEAR);
+        int endMonth = c.get(Calendar.MONTH);
+        int endYear = c.get(Calendar.YEAR);
+
+        // 締め日が15日以降なら次月分に
+        if (startDate >= 15) {
+            startMonth -= 1;
+        }
+        // 締め日が14日までなら前月分、または締め日が月末
+        if (startDate < 15 || closingDateIndex == 29) {
+            endMonth += 1;
+        }
+
+        // 開始月がマイナスなら去年12月にする
+        if (startMonth < 0) {
+            startMonth = 11;
+            startYear -= 1;
+        }
+
+        if (startDate == 0) {
+            Calendar _c = Calendar.getInstance();
+            _c.set(startYear, startMonth, 1);
+            startDate = _c.getActualMaximum(Calendar.DAY_OF_MONTH);
+        }
 
         switch (periodType) {
             case EntryDataManager.PERIOD_TYPE_YEAR:
-                endDate.set(c.get(Calendar.YEAR)+1, 0, 1);
+                int yearEndYear = c.get(Calendar.YEAR);
+                startCalendar.set(yearEndYear, startMonthIndex, startDate);
+                endCalendar.set(yearEndYear+1, startMonthIndex, endDate);
                 break;
             case EntryDataManager.PERIOD_TYPE_MONTH:
-                endDate.set(c.get(Calendar.YEAR), c.get(Calendar.MONTH)+1, 1);
+                startCalendar.set(startYear, startMonth, startDate);
+                endCalendar.set(endYear, endMonth, endDate);
                 break;
             case EntryDataManager.PERIOD_TYPE_DAY:
-                endDate.set(c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DATE), 0, 0, 0);
-                endDate.add(Calendar.DATE, 1);
+                startCalendar.set(c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DATE), 0, 0, 0);
+                endCalendar.set(c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DATE), 0, 0, 0);
+                endCalendar.add(Calendar.DATE, 1);
                 break;
         }
 
-        long[] result = {startDate.getTimeInMillis(), endDate.getTimeInMillis()};
+        long[] result = {startCalendar.getTimeInMillis(), endCalendar.getTimeInMillis()};
+
+        // for debug
+//        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
+//                context.getResources().getString(R.string.date_string_format_to_year_month_day));
+//        String startCalStr = simpleDateFormat.format(startCalendar.getTime());
+//        String endCalStr = simpleDateFormat.format(endCalendar.getTime());
+//        Log.v("TEST", "startCal : " + startCalStr + ", endCal : " + endCalStr);
         return result;
     }
 
