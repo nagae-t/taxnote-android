@@ -43,6 +43,12 @@ public class AsyncOkHttpClient {
         execute(request, callback);
     }
 
+    /**
+     *
+     * @param url
+     * @param requestBody
+     * @param callback
+     */
     public static void get(String url, RequestBody requestBody, Callback callback) {
         Request request = new Request.Builder()
                 .url(url)
@@ -65,6 +71,22 @@ public class AsyncOkHttpClient {
                 .addHeader("User-Agent", uaInfo)
                 .url(url)
                 .post(requestBody)
+                .build();
+        execute(request, callback);
+    }
+
+    /**
+     *
+     * @param method
+     * @param url
+     * @param requestBody
+     * @param callback
+     */
+    public static void execute(String method, String url,
+                               RequestBody requestBody, Callback callback) {
+        Request request = new Request.Builder()
+                .url(url)
+                .method(method, requestBody)
                 .build();
         execute(request, callback);
     }

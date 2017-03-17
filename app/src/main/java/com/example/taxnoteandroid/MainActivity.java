@@ -102,7 +102,7 @@ public class MainActivity extends DefaultCommonActivity {
         setBottomNavigation();
 
         // debug api
-        TNApiUser apiUser = new TNApiUser("", "");
+        TNApiUser apiUser = new TNApiUser("m@m.com", "mmmmmmmm");
         apiUser.signIn(new AsyncOkHttpClient.Callback() {
             @Override
             public void onFailure(Response response, Throwable throwable) {

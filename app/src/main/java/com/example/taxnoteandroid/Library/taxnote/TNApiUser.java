@@ -13,6 +13,7 @@ public class TNApiUser extends TNApi {
 
     private String email;
     private String password;
+    private String passwordConfirm;
 
     public TNApiUser(String email, String password) {
         this.email = email;
@@ -37,6 +38,27 @@ public class TNApiUser extends TNApi {
         this.password = password;
     }
 
+    public String getPasswordConfirm() {
+        return passwordConfirm;
+    }
+
+    public void setPasswordConfirm(String passwordConfirm) {
+        this.passwordConfirm = passwordConfirm;
+    }
+
+    public void register(AsyncOkHttpClient.Callback callback) {
+        setRequestPath(URL_PATH_REGISTER);
+        RequestBody requestBody = new FormBody.Builder()
+                .add("email", email)
+                .add("password", password)
+                .add("password_confirmation", passwordConfirm)
+                .build();
+        setRequestBody(requestBody);
+        setCallback(callback);
+        requestApi();
+
+    }
+
     public void signIn(AsyncOkHttpClient.Callback callback) {
         setRequestPath(URL_PATH_SIGN_IN);
         RequestBody requestBody = new FormBody.Builder()
@@ -47,4 +69,18 @@ public class TNApiUser extends TNApi {
         setCallback(callback);
         requestApi();
     }
+
+    public void signOut(AsyncOkHttpClient.Callback callback) {
+        setHttpMethod(HTTP_METHOD_DELETE);
+        setRequestPath(URL_PATH_SIGN_OUT);
+
+        setRequestBody(null);
+        setCallback(callback);
+        requestApi();
+    }
+
+    public void updatePassword() {
+    }
+
+
 }
