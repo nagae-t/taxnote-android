@@ -339,7 +339,7 @@ public class CalculatorActivity extends DefaultCommonActivity
         revealView.setBottom(displayRect.bottom);
         revealView.setLeft(displayRect.left);
         revealView.setRight(displayRect.right);
-        revealView.setBackgroundColor(getResources().getColor(colorRes));
+        revealView.setBackgroundColor(ContextCompat.getColor(this, colorRes));
         groupOverlay.add(revealView);
 
         final int[] clearLocation = new int[2];
@@ -391,7 +391,11 @@ public class CalculatorActivity extends DefaultCommonActivity
 
         final View sourceView = mClearButton.getVisibility() == View.VISIBLE
                 ? mClearButton : mDeleteButton;
-        reveal(sourceView, R.color.calculator_accent_color, new AnimatorListenerAdapter() {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+            mFormulaEditText.getEditableText().clear();
+            return;
+        }
+        reveal(sourceView, R.color.accent, new AnimatorListenerAdapter() {
             @Override
             public void onAnimationStart(Animator animation) {
                 mFormulaEditText.getEditableText().clear();
