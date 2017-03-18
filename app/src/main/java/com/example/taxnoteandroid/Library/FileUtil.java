@@ -62,7 +62,7 @@ public class FileUtil  {
     public static void dataExport(AppCompatActivity activity) {
         Context context = activity.getApplicationContext();
         // Db to Json
-        DataExportManager dataExportManager = new DataExportManager(context);
+        DataExportManager dataExportManager = new DataExportManager(activity);
         String dataJsonString = dataExportManager.generateDbToJson();
 
         // jsonファイル出力

@@ -220,7 +220,7 @@
     <string name="release_note_message">Taxnoteが最新版にアップデートされました。新しい機能、変更点、バグ修正などのお知らせをご確認ください。</string>
 
     <!--//@@ここをアップデートごとに変更-->
-    <string name="release_note_url">http://taxnote.hatenablog.com/entry/2017/03/11/183000</string>
+    <string name="release_note_url">http://taxnote.hatenablog.com/entry/2017/03/18/111707</string>
 
     <string name="update_check_title">新しいアップデートがあります</string>
     <string name="update_check_message">Taxnoteの最新版が更新されています。新しいバージョンにアップデートしてください。</string>
@@ -291,6 +291,11 @@
     <string name="character_code_desc">文字化けする時は文字コードを変更してください。</string>
 
     <string name="max_cal_digit_value">999,999,999が最大値です。</string>
-
+    <string name="alert_input_forget">入れ忘れ防止通知</string>
+    <string name="alert_time_enable_notify">指定時間に通知する</string>
+    <string name="alert_time">指定時間</string>
+    <string name="alert_time_notify_desc">指定時間に通知するボタンをオンにしておくと、指定した時間にローカル通知でお知らせします。</string>
+    <string name="alert_notification_desc">通知が効かない時は端末の設定 => アプリ => Taxnoteアプリ情報で通知を許可してください。</string>
+    <string name="alert_input_forget_notify_message">本日の入力はお済みですか？</string>
 
 </resources>

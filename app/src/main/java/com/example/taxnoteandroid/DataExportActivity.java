@@ -6,7 +6,6 @@ import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.RadioGroup;
@@ -90,8 +89,8 @@ public class DataExportActivity extends DefaultCommonActivity {
                 // 2017/01/20 E.Nozaki
                 String format = SharedPreferencesManager.getCurrentExportFormat(DataExportActivity.this);
                 String characterCode = SharedPreferencesManager.getCurrentCharacterCode(DataExportActivity.this);
-                DataExportManager manager = new DataExportManager(format, characterCode);
-                manager.export(DataExportActivity.this); // Generate CSV file and send it by email.
+                DataExportManager manager = new DataExportManager(DataExportActivity.this, format, characterCode);
+                manager.export(); // Generate CSV file and send it by email.
             }
         });
     }

@@ -280,9 +280,16 @@ public class CalculatorActivity extends DefaultCommonActivity
         } else if (mCurrentState == CalculatorState.EVALUATE) {
             // The current expression cannot be evaluated -> return to the input state.
             setState(CalculatorState.INPUT);
+
+            // = キーで数値を返す
+            if (expr != null && expr.length() > 0 && result == null) {
+                long currentPrice = Long.valueOf(expr);
+                returnResultToFinish(currentPrice);
+            }
         }
 
         mFormulaEditText.requestFocus();
+
     }
 
     @Override
@@ -510,6 +517,10 @@ public class CalculatorActivity extends DefaultCommonActivity
         }
 
         // return result
+        returnResultToFinish(currentPrice);
+    }
+
+    private void returnResultToFinish(long currentPrice) {
         Intent intent = new Intent();
         intent.putExtra(KEY_CURRENT_PRICE, currentPrice);
         setResult(RESULT_OK, intent);

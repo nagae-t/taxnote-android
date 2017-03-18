@@ -1,12 +1,12 @@
 package com.example.taxnoteandroid.Library;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Environment;
+import android.support.v4.app.ShareCompat;
 
 import com.example.taxnoteandroid.CommonEntryRecyclerAdapter;
 import com.example.taxnoteandroid.R;
@@ -36,6 +36,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
 
@@ -48,33 +49,37 @@ public class DataExportManager implements TaxnoteConsts {
     private static String CHARACTER_CODE_UTF_8 = "UTF-8";
     private static String CHARACTER_CODE_SHIFT_JIS = "Shift_JIS";
 
+    private Activity mActivity;
     private Context context = null;
     private String mode = null;
-    private int column_size = -1; // CSV column size.
-    private String[] column_titles = null;
+    private int columnSize = -1; // CSV column size.
+    private String[] columnTitles = null;
     private Column[] columns = null;
-    private String character_code = null;
+    private String characterCode = null;
     private String separator = ",";
-    private Entry current_entry = null;
-    private long total_price = 0;
+    private Entry currentEntry = null;
+    private long totalPrice = 0;
     private long[] startEndDate;
     private List<Entry> reportData;
 
-    public DataExportManager() {}
-
-    public DataExportManager(Context context) {
-        this.context = context;
+    public DataExportManager(Activity activity) {
+        this.mActivity = activity;
+        this.context = activity.getApplicationContext();
     }
 
-    public DataExportManager(String mode, String character_code) {
+
+    public DataExportManager(Activity activity, String mode, String character_code) {
+        this.mActivity = activity;
+        this.context = activity.getApplicationContext();
 
         this.setMode(mode);
         this.setCharacterCode(character_code);
     }
 
     // 損益表の出力用
-    public DataExportManager(Context context, String charCode, long[] startEndDate, List<Entry> data) {
-        this.context = context;
+    public DataExportManager(Activity activity, String charCode, long[] startEndDate, List<Entry> data) {
+        this.mActivity = activity;
+        this.context = activity.getApplicationContext();
         this.startEndDate = startEndDate;
         this.reportData = data;
         this.setMode(EXPORT_PROFIT_LOSS_FORMAT_TYPE_CSV);
@@ -92,13 +97,11 @@ public class DataExportManager implements TaxnoteConsts {
         calendar.set(Calendar.MINUTE, 0);
         calendar.set(Calendar.SECOND, 0);
 
-        long time_start = calendar.getTimeInMillis();
+        long timeStart = calendar.getTimeInMillis();
         calendar.add(Calendar.MONTH, 1);
-        long time_end = calendar.getTimeInMillis();
+        long timeEnd = calendar.getTimeInMillis();
 
-        long[] start_end = {time_start, time_end};
-
-        return start_end;
+        return new long[]{timeStart, timeEnd};
     }
 
     private static long[] getLastMonthStartAndEndDate() {
@@ -112,13 +115,11 @@ public class DataExportManager implements TaxnoteConsts {
         calendar.set(Calendar.MINUTE, 0);
         calendar.set(Calendar.SECOND, 0);
 
-        long time_end = calendar.getTimeInMillis();
+        long timeEnd = calendar.getTimeInMillis();
         calendar.add(Calendar.MONTH, -1);
-        long time_start = calendar.getTimeInMillis();
+        long timeStart = calendar.getTimeInMillis();
 
-        long[] start_end = {time_start, time_end};
-
-        return start_end;
+        return new long[]{timeStart, timeEnd};
     }
 
     private static long[] getCustomStartAndEndDate(Context context) {
@@ -133,9 +134,7 @@ public class DataExportManager implements TaxnoteConsts {
         calendar.add(Calendar.HOUR, 24);
         endDate = calendar.getTimeInMillis();
 
-        long[] start_end = {beginDate, endDate};
-
-        return start_end;
+        return new long[]{beginDate, endDate};
     }
 
     private void setMode(String mode) {
@@ -212,12 +211,10 @@ public class DataExportManager implements TaxnoteConsts {
         }
     }
 
-    public void export(final Context context) {
-
-        this.context = context;
+    public void export() {
 
         // Progress dialog
-        final ProgressDialog dialog = new ProgressDialog(context);
+        final ProgressDialog dialog = new ProgressDialog(mActivity);
         dialog.setMessage(context.getString(R.string.data_export));
         dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         dialog.setCancelable(false);
@@ -227,7 +224,7 @@ public class DataExportManager implements TaxnoteConsts {
 
             @Override
             protected File doInBackground(Object... objects) {
-                return generateCsvFile(context);
+                return generateCsvFile();
             }
 
             @Override
@@ -236,9 +233,9 @@ public class DataExportManager implements TaxnoteConsts {
                 dialog.cancel();
 
                 if (file != null) {
-                    sendFileByEmail(context, file);
+                    shareFileContent(file);
                 } else {
-                    DialogManager.showOKOnlyAlert(context, context.getString(R.string.Error), context.getString(R.string.data_export_cant_make_csv));
+                    DialogManager.showOKOnlyAlert(mActivity, context.getString(R.string.Error), context.getString(R.string.data_export_cant_make_csv));
                 }
             }
         };
@@ -246,29 +243,29 @@ public class DataExportManager implements TaxnoteConsts {
         task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
-    private File generateCsvFile(Context context) {
+    private File generateCsvFile() {
 
-        OutputStream stream_out = null;
+        OutputStream streamOut = null;
         PrintWriter writer = null;
 
         try {
-            File file = getOutputFile(context);
+            File file = getOutputFile();
             if (file.getParentFile().exists() == false)
                 file.getParentFile().mkdirs(); // If parent folder doesn't exist, create it.
-            stream_out = new FileOutputStream(file);
-            writer = new PrintWriter(new OutputStreamWriter(stream_out, character_code));
+            streamOut = new FileOutputStream(file);
+            writer = new PrintWriter(new OutputStreamWriter(streamOut, characterCode));
 
-            List<Entry> entries = getSelectedRangeEntries(context); // Get a list of Entry.
+            List<Entry> entries = getSelectedRangeEntries(); // Get a list of Entry.
 
             // Output column titles.
 
-            if (column_titles != null) {
-                writer.append(getCSVString(column_titles, separator) + "\n");
+            if (columnTitles != null) {
+                writer.append(getCSVString(columnTitles, separator) + "\n");
             }
 
             // Out put data rows.
 
-            String[] line = new String[column_size];
+            String[] line = new String[columnSize];
 
             // 損益表の出力の場合
             if (mode.equals(EXPORT_PROFIT_LOSS_FORMAT_TYPE_CSV)) {
@@ -304,8 +301,8 @@ public class DataExportManager implements TaxnoteConsts {
             }
 
             try {
-                if (stream_out != null) {
-                    stream_out.close();
+                if (streamOut != null) {
+                    streamOut.close();
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -315,20 +312,20 @@ public class DataExportManager implements TaxnoteConsts {
         return null;
     }
 
-    private File getOutputFile(Context context) {
+    private File getOutputFile() {
 
-        String file_name = "taxnote";
+        String fileName = "taxnote";
 
         // Mode
         if (mode.compareTo(EXPORT_FORMAT_TYPE_CSV) == 0 ||
                 mode.compareTo(EXPORT_PROFIT_LOSS_FORMAT_TYPE_CSV) == 0) { // CSV
-            file_name += "_BasicCSV";
+            fileName += "_BasicCSV";
         } else if (mode.compareTo(EXPORT_FORMAT_TYPE_YAYOI) == 0) { // 弥生
-            file_name += "_Yayoi";
+            fileName += "_Yayoi";
         } else if (mode.compareTo(EXPORT_FORMAT_TYPE_FREEE) == 0) { // Freee
-            file_name += "_Free";
+            fileName += "_Free";
         } else if (mode.compareTo(EXPORT_FORMAT_TYPE_MFCLOUD) == 0) { // MF Could
-            file_name += "_MFCloud";
+            fileName += "_MFCloud";
         } else {
             throw new RuntimeException("Invalid Mode : " + mode);
         }
@@ -337,43 +334,43 @@ public class DataExportManager implements TaxnoteConsts {
         String exportRangeType = SharedPreferencesManager.getExportRangeType(context);
 
         if (mode.compareTo(EXPORT_PROFIT_LOSS_FORMAT_TYPE_CSV) == 0) {
-            file_name += getCustomDateRangeStrings();
+            fileName += getCustomDateRangeStrings();
         } else if (exportRangeType.equals(EXPORT_RANGE_TYPE_ALL)) {
-            file_name += "_AllDate";
+            fileName += "_AllDate";
         } else if (exportRangeType.equals(EXPORT_RANGE_TYPE_THIS_MONTH)) {
-            file_name += "_ThisMonth";
+            fileName += "_ThisMonth";
         } else if (exportRangeType.equals(EXPORT_RANGE_TYPE_LAST_MONTH)) {
-            file_name += "_LastMonth";
+            fileName += "_LastMonth";
         } else {
-            file_name += getCustomDateRangeStrings();
+            fileName += getCustomDateRangeStrings();
         }
 
         // Character code
         if (mode.compareTo(EXPORT_FORMAT_TYPE_CSV) == 0 ||
                 mode.compareTo(EXPORT_PROFIT_LOSS_FORMAT_TYPE_CSV) == 0) { // CSV
-            if (this.character_code.compareTo(CHARACTER_CODE_UTF_8) == 0) {
-                file_name += "_utf8";
-            } else if (this.character_code.compareTo(CHARACTER_CODE_SHIFT_JIS) == 0) {
-                file_name += "_shift_jis";
+            if (this.characterCode.compareTo(CHARACTER_CODE_UTF_8) == 0) {
+                fileName += "_utf8";
+            } else if (this.characterCode.compareTo(CHARACTER_CODE_SHIFT_JIS) == 0) {
+                fileName += "_shift_jis";
             }
         } else if (mode.compareTo(EXPORT_FORMAT_TYPE_YAYOI) == 0) { // 弥生
-            file_name += "_shift_jis";
+            fileName += "_shift_jis";
         } else if (mode.compareTo(EXPORT_FORMAT_TYPE_FREEE) == 0) { // Freee
-            file_name += "_utf8";
+            fileName += "_utf8";
         } else if (mode.compareTo(EXPORT_FORMAT_TYPE_MFCLOUD) == 0) { // MF Could
-            file_name += "_utf8";
+            fileName += "_utf8";
         }
 
         // File extension
         if (mode.compareTo(EXPORT_FORMAT_TYPE_YAYOI) == 0) { // 弥生
-            file_name += ".txt";
+            fileName += ".txt";
         } else {
-            file_name += ".csv";
+            fileName += ".csv";
         }
 
-        return new File(Environment.getExternalStorageDirectory(), "Taxnote/" + System.currentTimeMillis() + "/" + file_name);
+        return new File(Environment.getExternalStorageDirectory(), "Taxnote/" + System.currentTimeMillis() + "/" + fileName);
 
-//        return new File(context.getCacheDir(), "Taxnote/" + System.currentTimeMillis() + "/" + file_name);
+//        return new File(context.getCacheDir(), "Taxnote/" + System.currentTimeMillis() + "/" + fileName);
     }
 
     private String getCustomDateRangeStrings() {
@@ -388,7 +385,9 @@ public class DataExportManager implements TaxnoteConsts {
         long startDate  = startAndEndDate[0];
         long endDate    = startAndEndDate[1];
 
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(context.getResources().getString(R.string.date_string_format_for_custom_range));
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
+                context.getResources().getString(R.string.date_string_format_for_custom_range),
+                Locale.getDefault());
 
         String startDateString  = simpleDateFormat.format(startDate);
         String endDateString    = simpleDateFormat.format(endDate);
@@ -400,7 +399,9 @@ public class DataExportManager implements TaxnoteConsts {
         long startDate  = startEndDate[0];
         long endDate    = startEndDate[1];
 
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(context.getResources().getString(R.string.date_string_format_to_year_month_day));
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
+                context.getResources().getString(R.string.date_string_format_to_year_month_day),
+                Locale.getDefault());
 
         String startDateString  = simpleDateFormat.format(startDate);
         String endDateString    = simpleDateFormat.format(endDate);
@@ -409,10 +410,10 @@ public class DataExportManager implements TaxnoteConsts {
     }
 
     private void setCurrentEntry(Entry entry) {
-        current_entry = entry;
-        total_price = (entry.isExpense ? -entry.price : entry.price);
+        currentEntry = entry;
+        totalPrice = (entry.isExpense ? -entry.price : entry.price);
         if (mode.equals(EXPORT_PROFIT_LOSS_FORMAT_TYPE_CSV)) {
-            total_price = entry.price;
+            totalPrice = entry.price;
             return;
         }
     }
@@ -444,13 +445,7 @@ public class DataExportManager implements TaxnoteConsts {
         return builder.toString();
     }
 
-    private void sendFileByEmail(Context context, File file) {
-
-        Intent intent = new Intent(android.content.Intent.ACTION_SEND);
-        intent.setAction(Intent.ACTION_SEND);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        intent.setType("vnd.android.cursor.item/email"); // 2017/01/25 E.Nozaki intent.setType("text/plain");
-        intent.putExtra(android.content.Intent.EXTRA_EMAIL, new String[]{""});
+    private void shareFileContent(File file) {
 
         String subjectString = context.getString(R.string.data_export_mail_title);
         if (mode.equals(EXPORT_PROFIT_LOSS_FORMAT_TYPE_CSV)) {
@@ -458,23 +453,24 @@ public class DataExportManager implements TaxnoteConsts {
                 + " (" +getReportStartEndDateString()+ ")";
         }
 
-        intent.putExtra(android.content.Intent.EXTRA_SUBJECT, subjectString);
-        intent.putExtra(android.content.Intent.EXTRA_TEXT, getBodyMessage());
+        // ShareCompat
+        Uri streamUri = Uri.fromFile(file);
 
-        // TODO FileProviderを使えばいけるかも。
-        // https://developer.android.com/reference/android/support/v4/content/FileProvider.html
-        // https://developer.android.com/about/versions/nougat/android-7.0-changes.html#perm
-        intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(file));
-
-        List activities = context.getPackageManager().queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY);
-
-        if (activities != null && activities.size() > 0) { // 2017/01/25 Check if there is available mailer.
-            context.startActivity(intent);
+        ShareCompat.IntentBuilder builder = ShareCompat.IntentBuilder.from(mActivity);
+        if (mode.compareTo(EXPORT_FORMAT_TYPE_YAYOI) == 0) {
+            builder.setType("text/plain");
         } else {
-            DialogManager.showOKOnlyAlert(context, context.getString(R.string.Error), context.getString(R.string.data_export_no_valid_mailer));
+            builder.setType("text/csv");
         }
+        builder.setChooserTitle(context.getString(R.string.data_export))
+            .setStream(streamUri);
 
-        context.startActivity(Intent.createChooser(intent, context.getString(R.string.data_export)));
+        // for mail
+        builder.setSubject(subjectString)
+                .setText(getBodyMessage());
+
+        builder.startChooser();
+
     }
 
     private String getBodyMessage() {
@@ -495,10 +491,10 @@ public class DataExportManager implements TaxnoteConsts {
         return message;
     }
 
-    private List<Entry> getSelectedRangeEntries(Context context) {
+    private List<Entry> getSelectedRangeEntries() {
 
         List<Entry> entries;
-        long[] start_end;
+        long[] startEnd;
         EntryDataManager entryDataManager = new EntryDataManager(context);
 
         String exportRangeType = SharedPreferencesManager.getExportRangeType(context);
@@ -510,18 +506,18 @@ public class DataExportManager implements TaxnoteConsts {
                 break;
 
             case EXPORT_RANGE_TYPE_THIS_MONTH:
-                start_end = getThisMonthStartAndEndDate();
-                entries = entryDataManager.findAll(context, start_end, true);
+                startEnd = getThisMonthStartAndEndDate();
+                entries = entryDataManager.findAll(context, startEnd, true);
                 break;
 
             case EXPORT_RANGE_TYPE_LAST_MONTH:
-                start_end = getLastMonthStartAndEndDate();
-                entries = entryDataManager.findAll(context, start_end, true);
+                startEnd = getLastMonthStartAndEndDate();
+                entries = entryDataManager.findAll(context, startEnd, true);
                 break;
 
             case EXPORT_RANGE_TYPE_CUSTOM:
-                start_end = getCustomStartAndEndDate(context);
-                entries = entryDataManager.findAll(context, start_end, true);
+                startEnd = getCustomStartAndEndDate(context);
+                entries = entryDataManager.findAll(context, startEnd, true);
                 break;
 
             case EXPORT_PROFIT_LOSS_FORMAT_TYPE_CSV: //@@ 多分使わない
@@ -540,14 +536,14 @@ public class DataExportManager implements TaxnoteConsts {
     //    -- Set Column --
     //--------------------------------------------------------------//
 
-    private void intColumns(int column_size) {
-        this.column_size = column_size;
-        this.columns = new Column[column_size];
-        this.column_titles = null;
+    private void intColumns(int columnSize) {
+        this.columnSize = columnSize;
+        this.columns = new Column[columnSize];
+        this.columnTitles = null;
     }
 
-    private void setColumnTitles(String... column_titles) {
-        this.column_titles = column_titles;
+    private void setColumnTitles(String... columnTitles) {
+        this.columnTitles = columnTitles;
     }
 
     private void setSeparator(String separator) {
@@ -564,19 +560,19 @@ public class DataExportManager implements TaxnoteConsts {
                 || mode.compareTo(EXPORT_PROFIT_LOSS_FORMAT_TYPE_CSV) == 0) { // CSV
 
             if (code.compareTo(EXPORT_CHARACTER_CODE_UTF8) == 0) {
-                this.character_code = CHARACTER_CODE_UTF_8;
+                this.characterCode = CHARACTER_CODE_UTF_8;
             } else if (code.compareTo(EXPORT_CHARACTER_CODE_SHIFTJIS) == 0) {
-                this.character_code = CHARACTER_CODE_SHIFT_JIS;
+                this.characterCode = CHARACTER_CODE_SHIFT_JIS;
             }
 
         } else if (mode.compareTo(EXPORT_FORMAT_TYPE_YAYOI) == 0) { // 弥生
-            this.character_code = CHARACTER_CODE_SHIFT_JIS;
+            this.characterCode = CHARACTER_CODE_SHIFT_JIS;
 
         } else if (mode.compareTo(EXPORT_FORMAT_TYPE_FREEE) == 0) { // Freee
-            this.character_code = CHARACTER_CODE_UTF_8;
+            this.characterCode = CHARACTER_CODE_UTF_8;
 
         } else if (mode.compareTo(EXPORT_FORMAT_TYPE_MFCLOUD) == 0) { // MF Could
-            this.character_code = CHARACTER_CODE_UTF_8;
+            this.characterCode = CHARACTER_CODE_UTF_8;
 
         } else {
             throw new RuntimeException("Invalid Mode : " + mode);
@@ -598,61 +594,61 @@ public class DataExportManager implements TaxnoteConsts {
                 simpleDateFormat = new SimpleDateFormat(context.getResources().getString(R.string.date_string_format_for_export));
             }
 
-            return simpleDateFormat.format(current_entry.date);
+            return simpleDateFormat.format(currentEntry.date);
         }
     }
 
     private class LeftAccountNameColumn extends Column {
         @Override
         public String getValue() {
-            return (current_entry.isExpense ? current_entry.reason.name : current_entry.account.name);
+            return (currentEntry.isExpense ? currentEntry.reason.name : currentEntry.account.name);
         }
     }
 
     private class ReasonNameColumn extends Column {
         @Override
         public String getValue() {
-            if (current_entry.reason == null) {
-                if (current_entry.reasonName == null) return "";
-                return current_entry.reasonName;
+            if (currentEntry.reason == null) {
+                if (currentEntry.reasonName == null) return "";
+                return currentEntry.reasonName;
             }
 
-            return (current_entry.reason.name);
+            return (currentEntry.reason.name);
         }
     }
 
     private class AccountNameColumn extends Column {
         @Override
         public String getValue() {
-            return (current_entry.account.name);
+            return (currentEntry.account.name);
         }
     }
 
     private class LeftAccountPriceColumn extends Column {
         @Override
         public String getValue() {
-            return Long.toString(current_entry.price);
+            return Long.toString(currentEntry.price);
         }
     }
 
     private class RightAccountNameColumn extends Column {
         @Override
         public String getValue() {
-            return (current_entry.isExpense ? current_entry.account.name : current_entry.reason.name);
+            return (currentEntry.isExpense ? currentEntry.account.name : currentEntry.reason.name);
         }
     }
 
     private class RightAccountPriceColumn extends Column {
         @Override
         public String getValue() {
-            return Long.toString(current_entry.price);
+            return Long.toString(currentEntry.price);
         }
     }
 
     private class SubAccountNameColumn extends Column {
         @Override
         public String getValue() {
-            return current_entry.memo;
+            return currentEntry.memo;
         }
     }
 
@@ -660,13 +656,13 @@ public class DataExportManager implements TaxnoteConsts {
         @Override
         public String getValue() {
             if (mode.equals(EXPORT_PROFIT_LOSS_FORMAT_TYPE_CSV) &&
-                    (current_entry.reasonName == null ||
-                    current_entry.viewType == CommonEntryRecyclerAdapter.VIEW_ITEM_HEADER)) {
+                    (currentEntry.reasonName == null ||
+                    currentEntry.viewType == CommonEntryRecyclerAdapter.VIEW_ITEM_HEADER)) {
                 return "";
             }
-            String valueString = Long.toString(total_price);
+            String valueString = Long.toString(totalPrice);
             if (context != null)
-                valueString = "\""+ValueConverter.formatPrice(context, total_price)+"\"";
+                valueString = "\""+ValueConverter.formatPrice(context, totalPrice)+"\"";
 
             return valueString;
         }
@@ -675,7 +671,7 @@ public class DataExportManager implements TaxnoteConsts {
     private class ExpenseDivisionColumn extends Column {
         @Override
         public String getValue() {
-            return (current_entry.isExpense ? "支出" : "収入");
+            return (currentEntry.isExpense ? "支出" : "収入");
         }
     }
 
@@ -696,7 +692,7 @@ public class DataExportManager implements TaxnoteConsts {
     private class IndexColumn extends Column {
         @Override
         public String getValue() {
-            return Long.toString(current_entry.id);
+            return Long.toString(currentEntry.id);
         }
     }
 

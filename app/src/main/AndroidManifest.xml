@@ -8,6 +8,9 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.BLUETOOTH" />
 
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+
     <!--<supports-screens-->
         <!--android:largeScreens="false"-->
         <!--android:normalScreens="true"-->
@@ -67,6 +70,9 @@
         <activity
             android:name=".HistoryListDataActivity"
             android:screenOrientation="portrait" />
+        <activity android:name=".AlertInputForgetSettingsActivity"
+            android:label="@string/alert_input_forget"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ProfitLossSettingsActivity"
             android:label="@string/profit_loss_settings"
@@ -86,6 +92,18 @@
                 <data android:mimeType="application/*" />
             </intent-filter>
         </activity>
+        <service android:name=".Library.DailyAlertInputForgetService" />
+
+        <receiver android:name=".Library.OnBootReceiver"
+            android:enabled="true"
+            android:directBootAware="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.ACTION_LOCKED_BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
 
         <!--
  ATTENTION: This was auto-generated to add Google Play services to your project for

@@ -7,7 +7,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.SearchView;
 import android.view.Menu;
@@ -15,6 +14,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
+import com.example.taxnoteandroid.Library.DialogManager;
 import com.example.taxnoteandroid.dataManager.EntryDataManager;
 import com.example.taxnoteandroid.databinding.ActivityEntryCommonBinding;
 import com.example.taxnoteandroid.model.Entry;
@@ -33,6 +33,7 @@ public class SearchEntryActivity extends DefaultCommonActivity {
     private SearchView mSearchView;
     private CommonEntryRecyclerAdapter mEntryAdapter;
     private String mSearchWord;
+    private boolean mIsOnSearchSubmit = false;
     private boolean mIsCommon;
     private boolean mIsExpense;
     private long mStartTime = 0;
@@ -135,6 +136,7 @@ public class SearchEntryActivity extends DefaultCommonActivity {
     private SearchView.OnQueryTextListener onQueryText = new SearchView.OnQueryTextListener() {
         @Override
         public boolean onQueryTextSubmit(String query) {
+            mIsOnSearchSubmit = true;
             closeKeyboard(mSearchView);
             if (query.length() > 0) {
                 mSearchWord = query;
@@ -223,9 +225,12 @@ public class SearchEntryActivity extends DefaultCommonActivity {
 
                 mEntryAdapter.clearAllToNotifyData();
 
-                //QQ これ、検索の虫眼鏡ボタンをタップした時だけ出したい。
-//                DialogManager.showToast(getApplicationContext(),
-//                        getString(R.string.no_match_by_search_message));
+                //QQ キーボードの検索の虫眼鏡ボタンをタップした時だけメッセージをだす
+                if (mIsOnSearchSubmit) {
+                    DialogManager.showToast(getApplicationContext(),
+                        getString(R.string.no_match_by_search_message));
+                    mIsOnSearchSubmit = false;
+                }
                 return;
             }
 
