@@ -18,6 +18,7 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.example.taxnoteandroid.Library.TNAppNotification;
 import com.example.taxnoteandroid.dataManager.DefaultDataInstaller;
 import com.example.taxnoteandroid.dataManager.EntryDataManager;
 import com.example.taxnoteandroid.dataManager.SharedPreferencesManager;
@@ -97,6 +98,7 @@ public class MainActivity extends DefaultCommonActivity {
         mGraphMenuIsExpense = SharedPreferencesManager.getGraphReportIsExpenseType(this);
         setBottomNavigation();
 
+        TNAppNotification.cancel(this, TNAppNotification.DAILY_ALERT_INPUT_FORGET_ID);
     }
 
     @Override
@@ -446,6 +448,12 @@ public class MainActivity extends DefaultCommonActivity {
         }
         return super.onKeyDown(keyCode, event);
 
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        TNAppNotification.cancel(this, TNAppNotification.DAILY_ALERT_INPUT_FORGET_ID);
+        super.onNewIntent(intent);
     }
 
     @Override
