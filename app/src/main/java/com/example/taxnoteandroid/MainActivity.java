@@ -192,7 +192,8 @@ public class MainActivity extends DefaultCommonActivity {
                 break;
             case R.id.action_profit_loss_export:
                 long[] startEndDate = getReportStartEndDate();
-                if (startEndDate[0] <= 0) break;
+
+                if (startEndDate == null || startEndDate[0] <= 0) break;
 
                 ProfitLossExportActivity.start(this, startEndDate);
                 break;

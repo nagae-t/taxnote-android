@@ -87,6 +87,8 @@ public class ReportFragment extends Fragment {
     }
 
     public long[] getStartEndDate() {
+        if (mPagerAdapter.getCount() == 0) return null;
+
         ReportContentFragment fragment = (ReportContentFragment) mPagerAdapter
                 .instantiateItem(binding.pager, binding.pager.getCurrentItem());
         return fragment.getStartEndDate();
