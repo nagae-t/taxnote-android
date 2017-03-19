@@ -1,5 +1,7 @@
 package com.example.taxnoteandroid.Library.taxnote;
 
+import android.content.Context;
+
 import com.example.taxnoteandroid.Library.AsyncOkHttpClient;
 
 import okhttp3.FormBody;
@@ -15,10 +17,11 @@ public class TNApiUser extends TNApi {
     private String password;
     private String passwordConfirm;
 
-    public TNApiUser(String email, String password) {
+    public TNApiUser(Context context, String email, String password) {
+        this.context = context;
+
         this.email = email;
         this.password = password;
-
         setHttpMethod(HTTP_METHOD_POST);
     }
 

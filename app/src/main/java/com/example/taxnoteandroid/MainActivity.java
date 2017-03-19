@@ -19,8 +19,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.example.taxnoteandroid.Library.AsyncOkHttpClient;
-import com.example.taxnoteandroid.Library.taxnote.TNApiUser;
 import com.example.taxnoteandroid.Library.TNAppNotification;
+import com.example.taxnoteandroid.Library.taxnote.TNApiUser;
 import com.example.taxnoteandroid.dataManager.DefaultDataInstaller;
 import com.example.taxnoteandroid.dataManager.EntryDataManager;
 import com.example.taxnoteandroid.dataManager.SharedPreferencesManager;
@@ -32,6 +32,7 @@ import com.mixpanel.android.mpmetrics.MixpanelAPI;
 
 import java.lang.reflect.Field;
 
+import okhttp3.Headers;
 import okhttp3.Response;
 
 import static com.example.taxnoteandroid.R.string.report;
@@ -103,7 +104,7 @@ public class MainActivity extends DefaultCommonActivity {
         setBottomNavigation();
 
         // debug api
-        TNApiUser apiUser = new TNApiUser("m@m.com", "mmmmmmmm");
+        TNApiUser apiUser = new TNApiUser(this, "m@m.com", "mmmmmmmm");
         apiUser.signIn(new AsyncOkHttpClient.Callback() {
             @Override
             public void onFailure(Response response, Throwable throwable) {
@@ -116,6 +117,8 @@ public class MainActivity extends DefaultCommonActivity {
             @Override
             public void onSuccess(Response response, String content) {
                 Log.v("TEST", "sign in onSuccess content : " + content);
+                Headers headers = response.headers();
+                Log.v("TEST", "sign in headers: " + headers.toString());
             }
         });
 

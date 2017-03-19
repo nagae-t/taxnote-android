@@ -7,6 +7,7 @@ import android.os.Looper;
 import java.io.IOException;
 
 import okhttp3.Call;
+import okhttp3.Headers;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
@@ -18,10 +19,21 @@ import okhttp3.Response;
 
 public class AsyncOkHttpClient {
 
-    private static final OkHttpClient SINGLETON = new OkHttpClient.Builder().build();
+    private static final OkHttpClient OKHTTP_CLIENT_SINGLETON = new OkHttpClient.Builder().build();
+
+    private static AsyncOkHttpClient singleton;
 
     private AsyncOkHttpClient() {
     }
+
+    public static AsyncOkHttpClient newInstance() {
+
+        if (singleton == null) {
+            singleton = new AsyncOkHttpClient();
+        }
+        return singleton;
+    }
+
 
     /**
      * @param request
@@ -91,8 +103,18 @@ public class AsyncOkHttpClient {
         execute(request, callback);
     }
 
+    public static void execute(Headers headers, String method, String url,
+                              RequestBody requestBody, Callback callback) {
+        Request request = new Request.Builder()
+                .url(url)
+                .headers(headers)
+                .method(method, requestBody)
+                .build();
+        execute(request, callback);
+    }
+
     private static void execute(final Request request, final Callback callback) {
-        SINGLETON.newCall(request).enqueue(new okhttp3.Callback() {
+        OKHTTP_CLIENT_SINGLETON.newCall(request).enqueue(new okhttp3.Callback() {
             final Handler mainHandler = new Handler(Looper.getMainLooper());
 
             @Override

@@ -1,5 +1,7 @@
 package com.example.taxnoteandroid.Library.taxnote;
 
+import android.content.Context;
+
 import com.example.taxnoteandroid.BuildConfig;
 import com.example.taxnoteandroid.Library.AsyncOkHttpClient;
 
@@ -29,6 +31,7 @@ public class TNApi {
     public static final String HTTP_METHOD_DELETE = "DELETE";
 
 
+    protected Context context;
     private String requestUrl;
     private RequestBody requestBody;
     private AsyncOkHttpClient.Callback callback;
