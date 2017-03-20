@@ -3,11 +3,11 @@
 
     <item
         android:id="@+id/reorder"
-        android:title="並び替え" />
+        android:title="@string/reorder_category" />
     <item
         android:id="@+id/rename"
-        android:title="科目名変更" />
+        android:title="@string/rename_category" />
     <item
         android:id="@+id/delete"
-        android:title="削除" />
+        android:title="@string/delete_category" />
 </menu>

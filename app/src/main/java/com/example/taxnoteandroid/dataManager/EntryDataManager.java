@@ -408,7 +408,7 @@ public class EntryDataManager {
             Calendar lastCal = (calSize == 1) ? firstCal : calendars.get(calSize-1);
             Calendar newLastCal = (Calendar)lastCal.clone();
 
-            //@@ 月の締め日が月末以外に設定されていたら
+            // 月の締め日が月末以外に設定されていたら
             // 頭と最後に1ヶ月ずつ増やす
             if (_periodType == PERIOD_TYPE_MONTH && closingDateIndex != 28) {
                 int newFirstYear = firstCal.get(Calendar.YEAR);
@@ -439,7 +439,7 @@ public class EntryDataManager {
                 calendars.add(newLastCal);
             }
 
-            //@@ 年別のときは前後１年ずつ増やす
+            // 年別のときは前後１年ずつ増やす
             if (_periodType == PERIOD_TYPE_YEAR) {
                 int newFirstYear = firstCal.get(Calendar.YEAR);
                 newFirstCal.set(newFirstYear-1, firstCal.get(Calendar.MONTH), firstCal.get(Calendar.DATE));

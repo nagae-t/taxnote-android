@@ -405,7 +405,6 @@ public class MainActivity extends DefaultCommonActivity {
 
         MixpanelAPI mixpanel = MixpanelAPI.getInstance(this, MIXPANEL_TOKEN);
 
-        //@@ 自分のデバイスだけTrackingを無視したい
 //        // JSONOBjectでエラーがでますねん
 //        JSONObject props = new JSONObject();
 //        props.put("$ignore", "true");
