@@ -7,6 +7,7 @@ import android.support.v4.app.ShareCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
+import com.example.taxnoteandroid.R;
 import com.example.taxnoteandroid.TaxnoteApp;
 import com.example.taxnoteandroid.dataManager.AccountDataManager;
 import com.example.taxnoteandroid.dataManager.EntryDataManager;
@@ -34,6 +35,9 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Locale;
 
 /**
  * Created by Eiichi on 2017/01/18.
@@ -66,8 +70,14 @@ public class FileUtil  {
         String dataJsonString = dataExportManager.generateDbToJson();
 
         // jsonファイル出力
-        long nowTime = System.currentTimeMillis() * 1000;
-        String bkFilename = "taxnote-android-" + String.valueOf(nowTime) + ".json";
+        Calendar cal = Calendar.getInstance();
+        cal.setTimeInMillis(System.currentTimeMillis());
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
+                context.getResources().getString(R.string.date_string_format_for_custom_range)
+                +"_HHmmss",
+                Locale.getDefault());
+        String dateString = simpleDateFormat.format(cal.getTime());
+        String bkFilename = "taxnote_android_" + dateString + ".json";
         File file = new File(Environment.
                 getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), bkFilename);
         FileWriter filewriter;
