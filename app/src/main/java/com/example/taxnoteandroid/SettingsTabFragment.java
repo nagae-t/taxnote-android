@@ -493,17 +493,42 @@ public class SettingsTabFragment extends Fragment {
         binding.dataBackup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                // 別のスレッドで実行
-                new Thread(new Runnable() {
-
-                    @Override
-                    public void run() {
-                        FileUtil.dataExport((AppCompatActivity) getActivity());
-                    }
-                }).start();
+                showDataBackupDialog();
             }
         });
+    }
+
+    private void showDataBackupDialog() {
+
+        new AlertDialog.Builder(getActivity())
+                .setTitle(getResources().getString(R.string.data_backup))
+                .setMessage(getResources().getString(R.string.data_backup_message))
+                .setPositiveButton(getResources().getString(R.string.data_backup_button), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                        // 別のスレッドで実行
+                        new Thread(new Runnable() {
+
+                            @Override
+                            public void run() {
+                                FileUtil.dataExport((AppCompatActivity) getActivity());
+                            }
+                        }).start();
+                    }
+                })
+                .setNeutralButton(getResources().getString(R.string.help), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        Support.showSingleFAQ(getActivity(),"113");
+                    }
+                })
+                .setNegativeButton(getResources().getString(R.string.cancel), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                    }
+                })
+                .show();
     }
 
 

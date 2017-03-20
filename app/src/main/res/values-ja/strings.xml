@@ -208,7 +208,7 @@
     <string name="created_new_project_message">新しい帳簿を作成しました。</string>
     <string name="tap_project_to_edit_name">帳簿名をタップすると名前を変更できます。</string>
 
-    <string name="data_backup">データのバックアップ</string>
+    <string name="data_backup">データのバックアップ・移行</string>
     <string name="data_import">データのインポート</string>
     <string name="taxnote_data_import">Taxnote へインポート</string>
     <string name="loading">読み込み中・・・</string>
@@ -220,7 +220,7 @@
     <string name="release_note_message">Taxnoteが最新版にアップデートされました。新しい機能、変更点、バグ修正などのお知らせをご確認ください。</string>
 
     <!--//@@ここをアップデートごとに変更-->
-    <string name="release_note_url">http://taxnote.hatenablog.com/entry/2017/03/18/111707</string>
+    <string name="release_note_url">http://taxnote.hatenablog.com/entry/2017/03/19/121605</string>
 
     <string name="update_check_title">新しいアップデートがあります</string>
     <string name="update_check_message">Taxnoteの最新版が更新されています。新しいバージョンにアップデートしてください。</string>
@@ -297,5 +297,9 @@
     <string name="alert_time_notify_desc">指定時間に通知するボタンをオンにしておくと、指定した時間にローカル通知でお知らせします。</string>
     <string name="alert_notification_desc">通知が効かない時は端末の設定 => アプリ => Taxnoteアプリ情報で通知を許可してください。</string>
     <string name="alert_input_forget_notify_message">本日の入力はお済みですか？</string>
+
+    <string name="data_backup_button">バックアップ</string>
+    <string name="data_backup_message">Taxnoteに保存したすべてのデータと科目をマイドライブやGmailなどにバックアップし、好きな時に復元ができます。機種変更時や、別の端末にデータを移行したい時も便利です。バックアップと復元の手順は左下のヘルプをご覧ください。（iOS版とは互換性がなく、AndroidとiPhone/iPad端末でデータを移行することはできません。）</string>
+
 
 </resources>
