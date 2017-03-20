@@ -20,19 +20,23 @@ import android.view.MenuItem;
 
 import com.example.taxnoteandroid.Library.AsyncOkHttpClient;
 import com.example.taxnoteandroid.Library.TNAppNotification;
-import com.example.taxnoteandroid.Library.taxnote.TNApiUser;
+import com.example.taxnoteandroid.Library.taxnote.TNApiModel;
 import com.example.taxnoteandroid.dataManager.DefaultDataInstaller;
 import com.example.taxnoteandroid.dataManager.EntryDataManager;
 import com.example.taxnoteandroid.dataManager.SharedPreferencesManager;
 import com.example.taxnoteandroid.databinding.ActivityMainBinding;
 import com.example.taxnoteandroid.entryTab.EntryTabFragment;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.helpshift.support.Support;
 import com.kobakei.ratethisapp.RateThisApp;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
 
 import java.lang.reflect.Field;
+import java.util.Map;
 
-import okhttp3.Headers;
 import okhttp3.Response;
 
 import static com.example.taxnoteandroid.R.string.report;
@@ -103,7 +107,10 @@ public class MainActivity extends DefaultCommonActivity {
         mGraphMenuIsExpense = SharedPreferencesManager.getGraphReportIsExpenseType(this);
         setBottomNavigation();
 
+        TNAppNotification.cancel(this, TNAppNotification.DAILY_ALERT_INPUT_FORGET_ID);
+
         // debug api
+        /*
         TNApiUser apiUser = new TNApiUser(this, "m@m.com", "mmmmmmmm");
         apiUser.signIn(new AsyncOkHttpClient.Callback() {
             @Override
@@ -120,9 +127,32 @@ public class MainActivity extends DefaultCommonActivity {
                 Headers headers = response.headers();
                 Log.v("TEST", "sign in headers: " + headers.toString());
             }
-        });
+        });*/
 
-        TNAppNotification.cancel(this, TNAppNotification.DAILY_ALERT_INPUT_FORGET_ID);
+        TNApiModel apiModel = new TNApiModel(this);
+        apiModel.getProjects(new AsyncOkHttpClient.Callback() {
+            @Override
+            public void onFailure(Response response, Throwable throwable) {
+                Log.v("TEST", "getProjects onFailure ");
+                if (throwable != null) {
+                    Log.v("TEST", throwable.getMessage());
+                }
+            }
+
+            @Override
+            public void onSuccess(Response response, String content) {
+                Log.v("TEST", "getProjects onSuccess content : " + content);
+                JsonParser parser = new JsonParser();
+                JsonArray jsArr = parser.parse(content).getAsJsonArray();
+                jsArr.iterator();
+                for (JsonElement jsElement : jsArr) {
+                    JsonObject obj = jsElement.getAsJsonObject();
+                    for (Map.Entry<String, JsonElement> entry : obj.entrySet()) {
+                        Log.v("TEST", "key: " + entry.getKey() + " | " + entry.getValue());
+                    }
+                }
+            }
+        });
     }
 
     @Override

@@ -14,7 +14,6 @@ public class TNApiModel extends TNApi {
         this.context = context;
     }
 
-
     //--------------------------------------------------------------//
     //    -- Get Method --
     //--------------------------------------------------------------//
@@ -31,19 +30,23 @@ public class TNApiModel extends TNApi {
         requestApi();
     }
 
-    public void getReasons() {
+    public void getReasons(AsyncOkHttpClient.Callback callback) {
+        setHttpMethod(HTTP_METHOD_GET);
+        setRequestPath(URL_PATH_REASON);
+        setCallback(callback);
+        requestApi();
     }
 
-    public void getAccounts() {
+    public void getAccounts(AsyncOkHttpClient.Callback callback) {
     }
 
-    public void getSummaries() {
+    public void getSummaries(AsyncOkHttpClient.Callback callback) {
     }
 
-    public void getRecurrings() {
+    public void getRecurrings(AsyncOkHttpClient.Callback callback) {
     }
 
-    public void getEntries() {
+    public void getEntries(AsyncOkHttpClient.Callback callback) {
     }
 
     //--------------------------------------------------------------//

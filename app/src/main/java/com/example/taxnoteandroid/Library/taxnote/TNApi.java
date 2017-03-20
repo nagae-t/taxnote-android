@@ -68,8 +68,8 @@ public class TNApi {
     private Headers getHeaders() {
         Map<String, String> headerMap = new LinkedHashMap<>();
 
-        headerMap.put("access-token", "af3rOlhWWGkt0lTIWYzZKg");
-        headerMap.put("client", "gTxM1VdxfEW55CTvpRrIUQ");
+        headerMap.put("access-token", "3q23DESWpgcZsWPFuZFoOg");
+        headerMap.put("client", "vkvrV-wKkCPfTFNBr5W5-Q");
         headerMap.put("uid", "m@m.com");
         return Headers.of(headerMap);
     }

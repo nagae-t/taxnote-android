@@ -49,6 +49,11 @@ public class TNApiUser extends TNApi {
         this.passwordConfirm = passwordConfirm;
     }
 
+    @Override
+    public void setCallback(AsyncOkHttpClient.Callback callback) {
+        super.setCallback(callback);
+    }
+
     public void register(AsyncOkHttpClient.Callback callback) {
         setRequestPath(URL_PATH_REGISTER);
         RequestBody requestBody = new FormBody.Builder()
