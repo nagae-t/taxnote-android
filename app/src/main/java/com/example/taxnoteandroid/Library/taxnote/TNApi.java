@@ -5,6 +5,10 @@ import android.content.Context;
 import com.example.taxnoteandroid.BuildConfig;
 import com.example.taxnoteandroid.Library.AsyncOkHttpClient;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
+
+import okhttp3.Headers;
 import okhttp3.RequestBody;
 
 /**
@@ -61,11 +65,20 @@ public class TNApi {
         callback = cb;
     }
 
+    private Headers getHeaders() {
+        Map<String, String> headerMap = new LinkedHashMap<>();
+
+        headerMap.put("access-token", "af3rOlhWWGkt0lTIWYzZKg");
+        headerMap.put("client", "gTxM1VdxfEW55CTvpRrIUQ");
+        headerMap.put("uid", "m@m.com");
+        return Headers.of(headerMap);
+    }
+
     protected void requestApi() {
-        if (httpMethod.equals(HTTP_METHOD_GET)) {
-            AsyncOkHttpClient.get(requestUrl, requestBody, callback);
-        } else {
-            AsyncOkHttpClient.post(requestUrl, requestBody, callback);
-        }
+        String method = httpMethod;
+        if (httpMethod == null) method = HTTP_METHOD_GET;
+
+        AsyncOkHttpClient.execute(getHeaders(),
+                method, requestUrl, requestBody, callback);
     }
 }
