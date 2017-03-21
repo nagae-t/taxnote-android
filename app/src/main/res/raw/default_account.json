@@ -1,26 +1,57 @@
 [
   {
-    "name": "現金",
-    "isExpense": true
+    "name": "Travel",
+    "isExpense": true,
+    "details": ""
   },
   {
-    "name": "普通預金",
-    "isExpense": true
+    "name": "Supplies",
+    "isExpense": true,
+    "details": ""
   },
   {
-    "name": "当座預金",
-    "isExpense": true
+    "name": "Advertising",
+    "isExpense": true,
+    "details": ""
   },
   {
-    "name": "現金",
-    "isExpense": false
+    "name": "Commission",
+    "isExpense": true,
+    "details": ""
   },
   {
-    "name": "普通預金",
-    "isExpense": false
+    "name": "Book",
+    "isExpense": true,
+    "details": ""
   },
   {
-    "name": "当座預金",
-    "isExpense": false
+    "name": "Delivery",
+    "isExpense": true,
+    "details": ""
+  },
+  {
+    "name": "Rent",
+    "isExpense": true,
+    "details": ""
+  },
+  {
+    "name": "Utilities",
+    "isExpense": true,
+    "details": ""
+  },
+  {
+    "name": "Insurance",
+    "isExpense": true,
+    "details": ""
+  },
+  {
+    "name": "Welfare",
+    "isExpense": true,
+    "details": ""
+  },
+  {
+    "name": "Sales",
+    "isExpense": false,
+    "details": ""
   }
 ]

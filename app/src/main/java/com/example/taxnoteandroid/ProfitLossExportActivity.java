@@ -264,7 +264,7 @@ public class ProfitLossExportActivity extends DefaultCommonActivity {
 
             mReportDataResult = result;
 
-            //@@ To export CSV file...
+            // To export CSV file...
             Calendar endCal = Calendar.getInstance();
             endCal.setTimeInMillis(mStartEndDate[1]);
             endCal.add(Calendar.DATE, -1);

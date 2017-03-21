@@ -23,7 +23,6 @@
             android:paddingBottom="14dp"
             android:textColor="@color/secondary_text"/>
 
-        <!-- //@@ 帳簿削除アイコン、変更するならここ -->
         <ImageButton
             android:id="@+id/delete_btn"
             android:layout_width="wrap_content"

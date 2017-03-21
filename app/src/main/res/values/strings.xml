@@ -1,67 +1,70 @@
 <resources>
 
     <string name="app_name">Taxnote</string>
-    <string name="Expense">支出</string>
-    <string name="Income">収入</string>
-    <string name="Entry">入力</string>
-    <string name="History">仕訳帳</string>
-    <string name="report">損益表</string>
-    <string name="Settings">設定</string>
-    <string name="Update">更新する</string>
-    <string name="Details">備考</string>
-    <string name="Price">金額</string>
-    <string name="Delete">削除する</string>
-    <string name="help">ヘルプ</string>
-    <string name="search">検索</string>
-    <string name="edit_entry">仕訳の編集</string>
-    <string name="title_activity_calculator">電卓</string>
-    <string name="SummaryActivity_no_select">備考を選択しない</string>
-    <string name="SummaryActivity_nex">次へ進む</string>
-    <string name="SummaryActivity_select">備考を選択</string>
-    <string name="SummaryActivity_footer">備考を追加</string>
+    <string name="Expense">Expense</string>
+    <string name="Income">Income</string>
+    <string name="Entry">Entry</string>
+    <string name="History">History</string>
+    <string name="report">Overview</string>
+    <string name="Settings">Settings</string>
+    <string name="Update">Update</string>
+    <string name="Details">details</string>
+    <string name="Price">Price</string>
+    <string name="Delete">Delete</string>
+    <string name="help">Help</string>
+    <string name="search">Search</string>
+    <string name="edit_entry">Edit</string>
+    <string name="title_activity_calculator">Calculator</string>
+
+    <string name="SummaryActivity_no_select">Skip</string>
+    <string name="SummaryActivity_nex">Skip</string>
+    <string name="SummaryActivity_select">Summary</string>
+    <string name="SummaryActivity_footer">New Summary</string>
+
     <string name="MainActivity_entry_tab">Entry</string>
     <string name="MainActivity_history_tab">History</string>
     <string name="MainActivity_settings_tab">Settings</string>
-    <string name="done">完了</string>
-    <string name="cancel">キャンセル</string>
-    <string name="delete_confirm_message">削除していいですか？</string>
+
+    <string name="done">Done</string>
+    <string name="cancel">Cancel</string>
+    <string name="delete_confirm_message">Are you sure to delete it?</string>
 
 
     //--------------------------------------------------------------//
     // -- Error Message --
     //--------------------------------------------------------------//
 
-    <string name="Error">エラー</string>
-    <string name="please_enter_price">金額を入力してください。</string>
-    <string name="history_data_empty">入力タブからデータを入力してください。</string>
-    <string name="using_this_account_in_entry_already">指定した科目を使用した記録があります。まず、仕訳帳から該当する記録を削除してください。</string>
+    <string name="Error">Error</string>
+    <string name="please_enter_price">Please enter the price.</string>
+    <string name="history_data_empty">Please enter data from Entry tab.</string>
+    <string name="using_this_account_in_entry_already">You have records using this account, please delete them from the History.</string>
 
 
     //--------------------------------------------------------------//
     // -- Entry Tab --
     //--------------------------------------------------------------//
 
-    <string name="entry_tab_fragment_date">日付</string>
-    <string name="entry_tab_fragment_account">支払い方法</string>
-    <string name="entry_tab_fragment_account2">受け取り方法</string>
-    <string name="entry_tab_fragment_select_reason">科目を選択</string>
-    <string name="tap_here_to_set_details">備考の入力はここをタップ</string>
-    <string name="save_data">仕訳帳に記録</string>
-    <string name="delete_done">削除しました。</string>
-    <string name="delete_done_after_title">を削除しました。</string>
-    <string name="pin_button">連続入力</string>
-    <string name="pin_button_on_message">連続入力オン - 日付と科目を固定して連続入力</string>
-    <string name="pin_button_off_message">連続入力オフ</string>
+    <string name="entry_tab_fragment_date">Date</string>
+    <string name="entry_tab_fragment_account">Account</string>
+    <string name="entry_tab_fragment_account2">Account</string>
+    <string name="entry_tab_fragment_select_reason">Category</string>
+    <string name="tap_here_to_set_details">Summary</string>
+    <string name="save_data">Register</string>
+    <string name="delete_done">Deleted</string>
+    <string name="delete_done_after_title">&#160;has been deleted.</string>
+    <string name="pin_button">Continuous Input</string>
+    <string name="pin_button_on_message">Continuous Input ON - Fix date and categories</string>
+    <string name="pin_button_off_message">Continuous Input OFF</string>
 
 
     //--------------------------------------------------------------//
     // -- Date --
     //--------------------------------------------------------------//
 
-    <string name="date_string_today">今日</string>
-    <string name="date_string_format_to_year_month_day_weekday">yyyy年M月d日 E</string>
-    <string name="date_string_format_to_year_month_day">yyyy年M月d日</string>
-    <string name="date_string_format_to_month_day">M月d日</string>
+    <string name="date_string_today">Today</string>
+    <string name="date_string_format_to_year_month_day_weekday">yyyy/M/d/ E</string>
+    <string name="date_string_format_to_year_month_day">yyyy/M/d</string>
+    <string name="date_string_format_to_month_day">M/d</string>
     <string name="date_string_format_for_export">yyyy/MM/dd</string>
     <string name="date_string_format_for_custom_range">yyyy_MM_dd</string>
 
@@ -70,56 +73,54 @@
     // -- List View --
     //--------------------------------------------------------------//
 
-    <string name="list_view_add_reason">科目を追加</string>
-    <string name="list_view_rename">科目名を変更</string>
+    <string name="list_view_add_reason">New Category</string>
+    <string name="list_view_rename">Rename</string>
 
 
     //--------------------------------------------------------------//
     // -- Settings --
     //--------------------------------------------------------------//
 
-    <string name="benefits_of_upgrade">アップグレードの特典</string>
-    <string name="taxnote_plus">Taxnoteプラス</string>
-    <string name="thanks_for_purchase">ご購入ありがとうございます！機種変更時の復元や有効期限の確認などもこちらのボタンをタップしてください。</string>
-    <string name="upgrade_is_active">有効</string>
-    <string name="taxnote_plus_descriptions">Taxnoteは無料ですべての機能が使えますが、月15件の入力制限があります。まずは無料版でいろいろ使ってみてください。\n\nTaxnoteプラスにアップグレードすると月15件の入力制限が解除されます。一回のお支払いで一年間有効となります。機種変更時の復元、有効期限の確認、自動更新の解約などもこちらのボタンをタップしてください。</string>
-    <string name="frequently_asked_questions">ヘルプ・よくある質問</string>
-    <string name="ask_questions_or_request">要望・質問を送る</string>
-    <string name="version">バージョン</string>
-    <string name="upgrade_to_plus_unlock_the_limit">無料版では入力数が月15件までとなります。もしよければ無制限に記録できるTaxnoteプラスをご検討ください。機種変更時など、以前に購入している方は有料版がアップグレードの特典画面で自動的に復元されます。</string>
-    <string name="upgrade">アップグレード</string>
-    <string name="share_taxnote">Taxnoteをシェアする</string>
-    <string name="share_taxnote_title">この会計アプリ便利。</string>
-    <string name="share_taxnote_message">この会計アプリ便利。https://play.google.com/store/apps/details?id=com.nonume.taxnote</string>
-    <string name="decimal_button">小数点表示（ドル・ユーロなどに）</string>
+    <string name="benefits_of_upgrade">About Upgrade</string>
+    <string name="taxnote_plus">Taxnote Plus</string>
+    <string name="thanks_for_purchase">Thank you for upgrading! Please use this button again when you need to check your status or restore purchases.</string>
+    <string name="upgrade_is_active">Active</string>
+    <string name="taxnote_plus_descriptions">With Taxnote Plus, you can unlock 15 entries limit per month.\n\nPlease use this button again when you need to check your status or restore purchases.</string>    <string name="frequently_asked_questions">Help</string>
+    <string name="ask_questions_or_request">Send Feedback</string>
+    <string name="version">Version</string>
+    <string name="upgrade_to_plus_unlock_the_limit">You can register for free up to 15 entries on the same month.  Please upgrade to Taxnote Plus for unlimited entry.\n\nIf you already upgraded before, you can restore it for free.</string>    <string name="upgrade">Upgrade</string>
+    <string name="share_taxnote">Share Taxnote</string>
+    <string name="share_taxnote_title">I like this accounting app. </string>
+    <string name="share_taxnote_message">I like this accounting app. https://play.google.com/store/apps/details?id=com.nonume.taxnote</string>
+    <string name="decimal_button">Decimal</string>
 
 
     //--------------------------------------------------------------//
     // -- Data Export --
     //--------------------------------------------------------------//
 
-    <string name="data_export">データ出力</string>
-    <string name="data_export_start">データを出力する</string>
-    <string name="data_export_range">出力する期間</string>
-    <string name="data_export_all_range">すべての期間</string>
-    <string name="data_export_this_month">今月</string>
-    <string name="data_export_last_month">先月</string>
-    <string name="data_export_custom_range">指定した期間</string>
-    <string name="data_export_begin_date">開始</string>
-    <string name="data_export_end_date">終了</string>
-    <string name="character_code">文字コード（CSV専用）</string>
-    <string name="character_code_select_please">文字コードを選択（CSVのみ有効）</string>
+    <string name="data_export">Export</string>
+    <string name="data_export_start">Data Export</string>
+    <string name="data_export_range">Period</string>
+    <string name="data_export_all_range">All</string>
+    <string name="data_export_this_month">This Month</string>
+    <string name="data_export_last_month">Last Month</string>
+    <string name="data_export_custom_range">Specified Period</string>
+    <string name="data_export_begin_date">From</string>
+    <string name="data_export_end_date">To</string>
+    <string name="character_code">Character Code</string>
+    <string name="character_code_select_please">Select Character Code</string>
     <string name="character_code_uff8">UTF8</string>
     <string name="character_code_shiftjis">ShiftJIS</string>
-    <string name="csv_format">CSV (Excelなどの表計算ソフト)</string>
-    <string name="yayoi_format">弥生会計・やよいの青色申告</string>
-    <string name="freee_format">freee</string>
-    <string name="mfcloud_format">MFクラウド</string>
+    <string name="csv_format">CSV (for spreadsheets like Excel)</string>
+    <string name="yayoi_format">Yayoi Kaikei (JP Software)</string>
+    <string name="freee_format">freee (JP Software)</string>
+    <string name="mfcloud_format">MFCloud (JP Software)</string>
     <string name="title_activity_data_export_range">DataExportRangeActivity</string>
-    <string name="data_export_cant_make_csv">CSVファイルを出力できません。</string>
-    <string name="data_export_no_valid_mailer">データをメールで送信するために、Android端末でメールが使えるよう設定してください。</string>
-    <string name="data_export_mail_title">Taxnoteデータ出力</string>
-    <string name="data_export_mail_message_csv">このデータはエクセルやGoogleスプレッドシートなどの表計算ソフトに取り込めるcsv形式です。\n\n文字化けする時はこちらを参考にしてください。\nhttps://goo.gl/JRvqvO</string>
+    <string name="data_export_cant_make_csv">Failed to make a csv file.</string>
+    <string name="data_export_no_valid_mailer">Please set up email on Android to send data via email.</string>
+    <string name="data_export_mail_title">Taxnote Data Export</string>
+    <string name="data_export_mail_message_csv">You can open this csv file with spreadsheets like Excel or Google Spreadsheets.</string>
     <string name="data_export_mail_message_yayoi">Windows版の弥生会計・やよいの青色申告、またはWeb版のやよいの青色申告オンラインにインポートできます。このデータをパソコンのデスクトップなどにダウンロードし、お使いのソフトへインポートしてください。\n\n説明動画や詳しい解説はこちら。\nhttps://goo.gl/XoSwFZ</string>
     <string name="data_export_mail_message_mfcloud">MFクラウド会計・確定申告にインポートできます。このデータをパソコンのデスクトップなどにダウンロードし、MFクラウドへインポートしてください。\n\n説明動画や詳しい解説はこちら。\nhttps://goo.gl/xt7aK2</string>
     <string name="data_export_mail_message_freee">クラウド会計ソフトfreeeにインポートできます。このデータをパソコンのデスクトップなどにダウンロードし、freeeへインポートしてください。\n\n説明動画や詳しい解説はこちら。\nhttps://goo.gl/PFDe8U</string>
@@ -129,177 +130,186 @@
     // -- Help Message --
     //--------------------------------------------------------------//
 
-    <string name="AlertView_firstIntroTitle">Taxnoteとは</string>
-    <string name="AlertView_firstIntroMessage">確定申告の帳簿を素早く入力するアプリです。</string>
-    <string name="AlertView_secondIntroTitle">青色申告(複式簿記)の方</string>
-    <string name="AlertView_secondIntroMessage">入力したデータはExcelや会計ソフトに取り込めます。</string>
-    <string name="AlertView_thirdIntroTitle">白色・青色申告(簡易簿記)の方</string>
-    <string name="AlertView_thirdIntroMessage">Taxnoteのみで完結。簡単なのでオススメ。</string>
-    <string name="AlertView_letsbegin">まずは、接待交際費などをタップ</string>
-    <string name="AlertView_entryDone">入力完了！</string>
-    <string name="AlertView_tapHistory">画面下の仕訳帳タブから編集できます。</string>
-    <string name="AlertView_inputPrice">金額を入力して「仕訳帳に記録」をタップ</string>
-    <string name="AlertView_selectSummary">備考をタップ</string>
-    <string name="Helpshift_ReplyTitle">返信があります</string>
-    <string name="Helpshift_ReplyMessage">あなたのメッセージに返信が届きました。</string>
-    <string name="reorder_how_to_title">並び替え方法</string>
-    <string name="reorder_how_to_message">科目をしばらくタップし続けると色が変わるので、そのまま押し続けながら上下に移動させてください。</string>
-    <string name="help_rename_category_message">この科目は仕訳帳にすでに使われているので、該当する仕訳帳内の科目名も自動的に変更されます。</string>
-    <string name="tap_here">（ここをタップ）</string>
-    <string name="ask_anything_title">質問や要望はお気軽に</string>
-    <string name="ask_anything_message">こんにちは、Taxnoteを開発している梅本です。確定申告やアプリ操作で分からない部分や要望がありましたら、ヘルプからお気軽にお問い合わせください。開発からサポートまでやっているので直接お答えできます。</string>
-    <string name="see_help">ヘルプを見る</string>
-    <string name="data_export_suggest_title">データの出力</string>
-    <string name="data_export_suggest_message">右上のボタンから、入力したデータをエクセル、弥生会計、freee、MFクラウドなどに出力できます。</string>
-    <string name="data_export_suggest_button">データの出力画面を表示</string>
+    <string name="AlertView_firstIntroTitle">Fast</string>
+    <string name="AlertView_firstIntroMessage">Taxnote is a super fast accounting app.</string>
+    <string name="AlertView_secondIntroTitle">Simple</string>
+    <string name="AlertView_secondIntroMessage">It specializes in entering data.</string>
+    <string name="AlertView_thirdIntroTitle">Data Export</string>
+    <string name="AlertView_thirdIntroMessage">You can export data into spreadsheets like Excel.</string>
+    <string name="AlertView_letsbegin">First, tap a category</string>
+    <string name="AlertView_entryDone">Done!</string>
+    <string name="AlertView_tapHistory">Tap the History tab to edit it.</string>
+    <string name="AlertView_inputPrice">Enter numbers and tap Register</string>
+    <string name="AlertView_selectSummary">Select a summary</string>
+    <string name="Helpshift_ReplyTitle">New Message</string>
+    <string name="Helpshift_ReplyMessage">You got a new message.</string>
+    <string name="reorder_how_to_title">How to reorder</string>
+    <string name="reorder_how_to_message">Tap and hold a category, then drag it to reorder.</string>
+    <string name="help_rename_category_message">You have entries in the history using this category, so the category name in these entries will be also renamed automatically.</string>
+    <string name="tap_here">(Tap here)</string>
+    <string name="ask_anything_title">Ask Anything</string>
+    <string name="ask_anything_message">Hello, this is Non Umemoto, creator of Taxnote.  If you have any questions or requests, feel free to contact me via the help button.</string>
+    <string name="see_help">Help</string>
+    <string name="data_export_suggest_title">Data Export</string>
+    <string name="data_export_suggest_message">You can export your data into csv file to open it with Excel or other spreadsheets.</string>
+    <string name="data_export_suggest_button">Data Export</string>
 
 
     //--------------------------------------------------------------//
     // -- Rate --
     //--------------------------------------------------------------//
 
-    <string name="rate_app_title">レビューのお願い</string>
-    <string name="rate_app_message">こんにちは、Taxnoteを開発している梅本です。ストアのレビューは全て読んでいるので、よければアプリへの要望を書いてもらえませんか？\n\n例えば、気に入ってて変えて欲しくないところ、今後の要望などを書いてもらえれば。\n\nもちろん一言メッセージや、星をつけるだけでも嬉しいです。\n\n良いレビューが増えるとDL数が増えやすく、開発が継続できるので、気がむいた時にどうぞよろしくお願いします。(ストア画面を下にスクロールするとレビュー画面があります)</string>
-    <string name="rate_app_yes_button">レビューを書く</string>
-    <string name="rate_app_no_button">やらない</string>
-    <string name="rate_app_cancel_button">あとで</string>
+    <string name="rate_app_title">Review Request</string>
+    <string name="rate_app_message">Hi, this is Non Umemoto, creator of Taxnote.  I read all reviews of Taxnote to make it better, so I would really appreciate it if you could review it or just rate it.</string>
+    <string name="rate_app_yes_button">OK</string>
+    <string name="rate_app_no_button">NO</string>
+    <string name="rate_app_cancel_button">Later</string>
 
 
     //--------------------------------------------------------------//
     // -- Helpshift --
     //--------------------------------------------------------------//
 
-    // English対応したら消す
-    <string name="hs__new_conversation_hint">要望・質問はお気軽に。24時間以内に作者の梅本が直接返信させてもらいます。(右上のボタンから写真の添付が可能です)</string>
-    <string name="hs__new_conversation_header">要望・質問を送る</string>
-    <string name="hs__conversation_started_message">返信はアプリ内のアラートでおしらせします。</string>
-    <string name="hs__conversation_detail_error">検索</string>
-    <string name="hs__review_title">アップデートに関して</string>
-    <string name="hs__review_message">こんにちは、Taxnoteを開発している梅本です。今回のアップデートの感想、または今後の要望などあれば遠慮なくお願いします。</string>
+    <string name="hs__new_conversation_hint">Feel free to ask me anything including questions or requests.  I will get back to you within 24 hours normally.</string>
+    <string name="hs__new_conversation_header">Ask Anything</string>
+    <string name="hs__conversation_started_message">Thanks for your message!  I get back to you shortly and you will get a pop message within the app.</string>
+    <string name="hs__conversation_detail_error">Search</string>
+    <string name="hs__review_title">About New Updates</string>
+    <string name="hs__review_message">Hi, this is Non Umemoto, creator of Taxnote.  If you love new updates of Taxnote, I\'d appreciate it if you could review it.</string>
 
 
     //--------------------------------------------------------------//
     // -- All --
     //--------------------------------------------------------------//
 
-    <string name="rounded_decimal_numbers">四捨五入しました。</string>
-    <string name="profit_loss_sort">期間変更</string>
-    <string name="divide_by_year">年別</string>
-    <string name="divide_by_month">月別</string>
-    <string name="divide_by_day">日別</string>
-    <string name="total">合計</string>
-    <string name="delete_this_screen_data_confirm_message">この画面に表示されているデータをすべて削除しますか？</string>
-    <string name="profit_loss_table">損益表</string>
-    <string name="Graph">グラフ</string>
-    <string name="no_match_by_search_message">検索ワードにマッチする項目がありません</string>
-    <string name="business_model_title">無料版の制限について</string>
-    <string name="business_model_message">Taxnoteは無料でお試しできますが、月15件の入力制限があります。まずは、仕訳帳の編集、データ出力、損益表、グラフなどをいろいろと使ってみてください。もし気に入ってもらえれば、有料版を検討してもらえると嬉しいです。</string>
+    <string name="rounded_decimal_numbers">Rounded</string>
+    <string name="profit_loss_sort">Change Date</string>
+    <string name="divide_by_year">Yearly</string>
+    <string name="divide_by_month">Monthly</string>
+    <string name="divide_by_day">Daily</string>
+    <string name="total">Total</string>
+    <string name="delete_this_screen_data_confirm_message">Are you sure to delete all of the data in this view?</string>
+    <string name="profit_loss_table">Overview</string>
+    <string name="Graph">Charts</string>
+    <string name="no_match_by_search_message">No results have been found to match the terms.</string>
+    <string name="business_model_title">About Entry Limit</string>
+    <string name="business_model_message">You can try Taxnote for free, but the free version has a limit of 15 entries each month.  Please try data edit, Overview, Charts, Data Export and others.  If you like Taxnote, please consider upgrading it.</string>
+    <string name="master_project_name">Master</string>
+    <string name="project_settings">Add or Edit Books</string>
+    <string name="project_settings_finish">Done</string>
+    <string name="delete_project_or_edit_name">Delete or Rename</string>
+    <string name="new_project_name">New Name</string>
+    <string name="add_new_project">Add a book</string>
+    <string name="edit_project_name">Edit Name</string>
+    <string name="delete_project_confirm_message">Are you sure you want to delete this book?</string>
+    <string name="delete_current_project_message">You cannot delete the book you are using now, please select other book and try again.</string>
+    <string name="max_add_project_message">The maximum numbers of books has been reached already.</string>
+    <string name="created_new_project_message">New book has been created!</string>
+    <string name="tap_project_to_edit_name">You can rename it if you tap a book.</string>
 
-    <string name="master_project_name">本帳簿</string>
-    <string name="project_settings">帳簿を追加、編集</string>
-    <string name="project_settings_finish">編集を終了</string>
-    <string name="delete_project_or_edit_name">帳簿を削除・名前変更</string>
-    <string name="new_project_name">新しい帳簿の名前</string>
-    <string name="add_new_project">帳簿を追加</string>
-    <string name="edit_project_name">名前を変更</string>
-    <string name="delete_project_confirm_message">この帳簿を削除してもよいですか？</string>
-    <string name="delete_current_project_message">使用中の帳簿は削除できません。他の帳簿に切り替えてから削除してください。</string>
-    <string name="max_add_project_message">追加できる帳簿の上限に達しています。</string>
-    <string name="created_new_project_message">新しい帳簿を作成しました。</string>
-    <string name="tap_project_to_edit_name">帳簿名をタップすると名前を変更できます。</string>
 
-    <string name="data_backup">データのバックアップ・移行</string>
-    <string name="data_import">データのインポート</string>
-    <string name="taxnote_data_import">Taxnote へインポート</string>
-    <string name="loading">読み込み中・・・</string>
-    <string name="finished_data_import">データのインポートが完了しました。</string>
-    <string name="restart_app">アプリを再起動する</string>
-    <string name="import_data_overwrite_confirm_message">バックアップデータをインポートすると全ての既存データに上書きされてます。本当にインポートしてよろしいですか？</string>
+    <string name="data_backup">Data Backup</string>
+    <string name="data_import">Data Import</string>
+    <string name="taxnote_data_import">Import data into Taxnote</string>
+    <string name="loading">Loading...</string>
+    <string name="finished_data_import">Importing has completed.</string>
+    <string name="restart_app">Restart Taxnote</string>
+    <string name="import_data_overwrite_confirm_message">Do you want to restore this backup data?  Please note that the current data of your Android device will be overwritten with the new data.</string>
 
-    <string name="release_note_title">最新版の情報 : </string>
-    <string name="release_note_message">Taxnoteが最新版にアップデートされました。新しい機能、変更点、バグ修正などのお知らせをご確認ください。</string>
+    <string name="release_note_title">Update Info :</string>
+    <string name="release_note_message">Taxnote has been updated.  Please check new features, changes, and bug fixes.</string>
 
     <!--//@@ここをアップデートごとに変更-->
     <string name="release_note_url">http://taxnote.hatenablog.com/entry/2017/03/19/121605</string>
 
-    <string name="update_check_title">新しいアップデートがあります</string>
-    <string name="update_check_message">Taxnoteの最新版が更新されています。新しいバージョンにアップデートしてください。</string>
-    <string name="update_check_update">アップデートする</string>
-    <string name="update_check_later">あとで</string>
-    <string name="update_check_do_not_show_again">アップデートしない</string>
+    <string name="update_check_title">Update available</string>
+    <string name="update_check_message">Please update to the latest version of Taxnote.</string>
+    <string name="update_check_update">Update</string>
+    <string name="update_check_later">Later</string>
+    <string name="update_check_do_not_show_again">Don\'t show again</string>
 
-    <string name="Balance">残高</string>
-    <string name="profit_loss_settings">損益表の設定</string>
-    <string name="profit_loss_settings_text1">残高繰越・締め日</string>
-    <string name="balance_carry_forward">残高を繰り返す</string>
-    <string name="balance_carry_forward_desc">損益表の残高が、以前の残高を繰り越した数値になります。</string>
-    <string name="monthly_closing_date">毎月の締め日</string>
-    <string name="monthly_closing_date_desc">1日から14日までを選択した時は、選択した日までが前月分の損益表に表示されます。15日以降を選択した時は、選択した日より後が次月分の損益表に表示されます。例えば、25日を選択した場合、先月25日〜今月24日までが今月分の損益表に表示されます。</string>
-    <string name="start_month_of_year">年度の開始月</string>
-    <string name="start_month_of_year_desc">レポートで年別表示した時の開始月です。例えば、4月を選択した場合、その年の4月から翌年の3月末まで表示します。月の数字と組み合わせて、2015年4月10日〜2016年4月9日などの年度表示も可能です。</string>
-    <string name="balance_carry_forward_view">（繰り越し）</string>
+    <string name="reorder_category">Reorder</string>
+    <string name="rename_category">Rename</string>
+    <string name="delete_category">Delete</string>
+
+    <string name="Balance">Balance</string>
+    <string name="profit_loss_settings">Overview Settings</string>
+    <string name="balance_carry_forward">Carry Forward Balance</string>
+    <string name="balance_carry_forward_desc">A previous Balance is carried forward.</string>
+    <string name="monthly_closing_date">Finish Date</string>
+    <string name="monthly_closing_date_desc">If you select 1st - 14th, the data which ends at the selected date will be shown on the Overview of the previous month.\n\nIf you select the 15th or later, the data which starts from the selected date will be shown on the Overview of the next month.\n\nFor example, if you select 25th, the data between the 25th of the previous month and the 24th of this month will be shown on the Overview of this month.</string>
+    <string name="start_month_of_year">First Month of Year</string>
+    <string name="start_month_of_year_desc">If you select 4, the data from April of the year to March of the next year will be shown on the Yearly Overview.  You can also combine this with a day number to show Yearly numbers like 10th April 2015 ~ 9th April 2016.</string>
+    <string name="balance_carry_forward_view">(CarryForward)</string>
 
     <string-array name="month_list">
-        <item>1月</item>
-        <item>2月</item>
-        <item>3月</item>
-        <item>4月</item>
-        <item>5月</item>
-        <item>6月</item>
-        <item>7月</item>
-        <item>8月</item>
-        <item>9月</item>
-        <item>10月</item>
-        <item>11月</item>
-        <item>12月</item>
+        <item>January</item>
+        <item>February</item>
+        <item>March</item>
+        <item>April</item>
+        <item>May</item>
+        <item>June</item>
+        <item>July</item>
+        <item>August</item>
+        <item>September</item>
+        <item>October</item>
+        <item>November</item>
+        <item>December</item>
     </string-array>
 
     <string-array name="close_date_list">
-        <item>1日</item>
-        <item>2日</item>
-        <item>3日</item>
-        <item>4日</item>
-        <item>5日</item>
-        <item>6日</item>
-        <item>7日</item>
-        <item>8日</item>
-        <item>9日</item>
-        <item>10日</item>
-        <item>11日</item>
-        <item>12日</item>
-        <item>13日</item>
-        <item>14日</item>
-        <item>15日</item>
-        <item>16日</item>
-        <item>17日</item>
-        <item>18日</item>
-        <item>19日</item>
-        <item>20日</item>
-        <item>21日</item>
-        <item>22日</item>
-        <item>23日</item>
-        <item>24日</item>
-        <item>25日</item>
-        <item>26日</item>
-        <item>27日</item>
-        <item>28日</item>
-        <item>月末</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+        <item>8</item>
+        <item>9</item>
+        <item>10</item>
+        <item>11</item>
+        <item>12</item>
+        <item>13</item>
+        <item>14</item>
+        <item>15</item>
+        <item>16</item>
+        <item>17</item>
+        <item>18</item>
+        <item>19</item>
+        <item>20</item>
+        <item>21</item>
+        <item>22</item>
+        <item>23</item>
+        <item>24</item>
+        <item>25</item>
+        <item>26</item>
+        <item>27</item>
+        <item>28</item>
+        <item>Last Day of Month</item>
     </string-array>
 
-    <string name="profit_loss_export">損益表の出力</string>
-    <string name="send_export">データを送信</string>
-    <string name="character_code_desc">文字化けする時は文字コードを変更してください。</string>
+    <string name="profit_loss_export">Export Overview</string>
+    <string name="send_export">Export Data</string>
+    <string name="character_code_desc">Change the Character Code if you have character issues.</string>
 
-    <string name="max_cal_digit_value">999,999,999が最大値です。</string>
-    <string name="alert_input_forget">入れ忘れ防止通知</string>
-    <string name="alert_time_enable_notify">指定時間に通知する</string>
-    <string name="alert_time">指定時間</string>
-    <string name="alert_time_notify_desc">指定時間に通知するボタンをオンにしておくと、指定した時間にローカル通知でお知らせします。</string>
-    <string name="alert_notification_desc">通知が効かない時は端末の設定 => アプリ => Taxnoteアプリ情報で通知を許可してください。</string>
-    <string name="alert_input_forget_notify_message">本日の入力はお済みですか？</string>
+    <string name="max_cal_digit_value">Max number is 999,999,999.</string>
+    <string name="alert_input_forget">Notification</string>
+    <string name="alert_time_enable_notify">Set Notification</string>
+    <string name="alert_time">Notification Time</string>
+    <string name="alert_time_notify_desc">Get a notification to remember your daily data entry.</string>
+    <string name="alert_notification_desc">If the notification don\'t work, enable Notifications in the Android Settings => Apps => Taxnote => Notifications.</string>
+    <string name="alert_input_forget_notify_message">Did you finish your data entry today?</string>
 
-    <string name="data_backup_button">バックアップ</string>
-    <string name="data_backup_message">Taxnoteに保存したすべてのデータと科目をマイドライブやGmailなどにバックアップし、好きな時に復元ができます。機種変更時や、別の端末にデータを移行したい時も便利です。バックアップと復元の手順は左下のヘルプをご覧ください。（iOS版とは互換性がなく、AndroidとiPhone/iPad端末でデータを移行することはできません。）</string>
+    <string name="data_backup_button">Backup</string>
+    <string name="data_backup_message">Backup your Taxnote data into GoogleDrive, Gmail or other services.  You can restore your data when you want to transfer your data to other Android devices.  Please check Help about how you can backup and restore. (You cannot transfer Taxnote data between Android and iOS versions.)</string>
 
+    <string name="data_export_debit">Debit</string>
+    <string name="data_export_account">Debit_Account</string>
+    <string name="data_export_credit">Credit</string>
+    <string name="data_export_credit_account">Credit_Account</string>
+    <string name="data_export_details">Details</string>
+
+    <string name="no_data_to_export_message">No data exists.  Please enter data from Entry tab.</string>
 
 </resources>
