@@ -12,7 +12,9 @@
     <string name="Price">Price</string>
     <string name="Delete">Delete</string>
     <string name="help">Help</string>
+    <string name="search">Search</string>
     <string name="edit_entry">Edit</string>
+    <string name="title_activity_calculator">Calculator</string>
 
     <string name="SummaryActivity_no_select">Skip</string>
     <string name="SummaryActivity_nex">Skip</string>
@@ -207,15 +209,18 @@
 
 
     <string name="data_backup">Data Backup</string>
+    <string name="data_import">Data Import</string>
     <string name="taxnote_data_import">Import data into Taxnote</string>
     <string name="loading">Loading...</string>
     <string name="finished_data_import">Importing has completed.</string>
     <string name="restart_app">Restart Taxnote</string>
+    <string name="import_data_overwrite_confirm_message">Do you want to restore this backup data?  Please note that the current data of your Android device will be overwritten with the new data.</string>
+
     <string name="release_note_title">Update Info :</string>
     <string name="release_note_message">Taxnote has been updated.  Please check new features, changes, and bug fixes.</string>
 
     <!--//@@ここをアップデートごとに変更-->
-    <string name="release_note_url">http://taxnote.hatenablog.com/entry/2016/12/01/071009</string>
+    <string name="release_note_url">http://taxnote.hatenablog.com/entry/2017/03/19/121605</string>
 
     <string name="update_check_title">Update available</string>
     <string name="update_check_message">Please update to the latest version of Taxnote.</string>
