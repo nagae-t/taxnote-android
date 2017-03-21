@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
-
+<ScrollView
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:scrollbarStyle="insideOverlay"
+    android:fadingEdge="none">
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
@@ -12,18 +16,21 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:layout_marginBottom="12dp"
-            android:paddingStart="16dp"
-            android:paddingEnd="16dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:paddingStart="18dp"
+            android:paddingEnd="18dp"
+            android:textSize="14sp"
             android:text="@string/taxnote_cloud_login_desc"/>
 
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingStart="16dp"
-            android:paddingEnd="16dp"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
             android:background="@android:color/white">
 
             <android.support.design.widget.TextInputLayout
@@ -58,6 +65,7 @@
                 android:id="@+id/btn_send_login"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
                 android:text="@string/login"/>
 
             <Button
@@ -65,9 +73,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
-                android:layout_marginBottom="18dp"
+                android:layout_marginBottom="8dp"
                 android:text="@string/forgot_password"/>
         </LinearLayout>
 
     </LinearLayout>
+</ScrollView>
 </layout>

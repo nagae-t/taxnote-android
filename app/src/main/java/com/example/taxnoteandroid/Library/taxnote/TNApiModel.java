@@ -11,7 +11,7 @@ import com.example.taxnoteandroid.Library.AsyncOkHttpClient;
 public class TNApiModel extends TNApi {
 
     public TNApiModel(Context context) {
-        this.context = context;
+        super(context);
     }
 
     //--------------------------------------------------------------//

@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.example.taxnoteandroid.BuildConfig;
 import com.example.taxnoteandroid.Library.AsyncOkHttpClient;
+import com.example.taxnoteandroid.dataManager.SharedPreferencesManager;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -29,6 +30,10 @@ public class TNApi {
     protected static final String URL_PATH_SIGN_OUT = "/auth/sign_out";
     protected static final String URL_PATH_PASSWORD_RESET = "/auth/password";
 
+    private static final String KEY_USER_UID = "TAXNOTE_USER_UID";
+    private static final String KEY_USER_ACCESS_TOKEN = "TAXNOTE_USER_ACCESS_TOKEN";
+    private static final String KEY_USER_CLIENT = "TAXNOTE_USER_CLIENT";
+
     public static final String HTTP_METHOD_GET = "GET";
     public static final String HTTP_METHOD_POST = "POST";
     public static final String HTTP_METHOD_PUT = "PUT";
@@ -41,8 +46,38 @@ public class TNApi {
     private AsyncOkHttpClient.Callback callback;
     private String httpMethod;
 
+    private String loginUid;
+    private String loginAccessToken;
+    private String loginClient;
 
-    public TNApi() {
+
+    public TNApi(Context context) {
+        this.context = context;
+
+        String userUid = getLoginUid();
+        if (userUid != null) {
+            this.loginUid = userUid;
+            this.loginAccessToken = getLoginAccessToken();
+            this.loginClient = getLoginClient();
+        }
+    }
+
+    protected void saveLoginValue(String uid, String accessToken, String client) {
+        SharedPreferencesManager.saveUserApiLoginValue(context, KEY_USER_UID, uid);
+        SharedPreferencesManager.saveUserApiLoginValue(context, KEY_USER_ACCESS_TOKEN, accessToken);
+        SharedPreferencesManager.saveUserApiLoginValue(context, KEY_USER_CLIENT, client);
+    }
+
+    protected String getLoginUid() {
+        return SharedPreferencesManager.getUserApiLoginValue(context, KEY_USER_UID);
+    }
+
+    protected String getLoginAccessToken() {
+        return SharedPreferencesManager.getUserApiLoginValue(context, KEY_USER_ACCESS_TOKEN);
+    }
+
+    protected String getLoginClient() {
+        return SharedPreferencesManager.getUserApiLoginValue(context, KEY_USER_CLIENT);
     }
 
     protected void setRequestPath(String path) {
@@ -66,11 +101,12 @@ public class TNApi {
     }
 
     private Headers getHeaders() {
-        Map<String, String> headerMap = new LinkedHashMap<>();
+        if (loginUid == null) return null;
 
-        headerMap.put("access-token", "3q23DESWpgcZsWPFuZFoOg");
-        headerMap.put("client", "vkvrV-wKkCPfTFNBr5W5-Q");
-        headerMap.put("uid", "m@m.com");
+        Map<String, String> headerMap = new LinkedHashMap<>();
+        headerMap.put("access-token", loginAccessToken);
+        headerMap.put("client", loginClient);
+        headerMap.put("uid", loginUid);
         return Headers.of(headerMap);
     }
 
@@ -78,7 +114,9 @@ public class TNApi {
         String method = httpMethod;
         if (httpMethod == null) method = HTTP_METHOD_GET;
 
-        AsyncOkHttpClient.execute(getHeaders(),
+        Headers headers = getHeaders();
+
+        AsyncOkHttpClient.execute(headers,
                 method, requestUrl, requestBody, callback);
     }
 }

@@ -105,9 +105,11 @@ public class AsyncOkHttpClient {
 
     public static void execute(Headers headers, String method, String url,
                               RequestBody requestBody, Callback callback) {
-        Request request = new Request.Builder()
+        Request.Builder builder = new Request.Builder();
+        if (headers != null) builder.headers(headers);
+
+        Request request = builder
                 .url(url)
-                .headers(headers)
                 .method(method, requestBody)
                 .build();
         execute(request, callback);

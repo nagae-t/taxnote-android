@@ -142,7 +142,7 @@ public class MainActivity extends DefaultCommonActivity {
 
             @Override
             public void onSuccess(Response response, String content) {
-                Log.v("TEST", "getProjects onSuccess content : " + content);
+                Log.v("TEST", "getProjects onSuccess content : ");
                 JsonParser parser = new JsonParser();
                 JsonArray jsArr = parser.parse(content).getAsJsonArray();
                 jsArr.iterator();

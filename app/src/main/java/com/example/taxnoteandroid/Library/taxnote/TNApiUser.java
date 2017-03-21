@@ -5,6 +5,7 @@ import android.content.Context;
 import com.example.taxnoteandroid.Library.AsyncOkHttpClient;
 
 import okhttp3.FormBody;
+import okhttp3.Headers;
 import okhttp3.RequestBody;
 
 /**
@@ -13,12 +14,14 @@ import okhttp3.RequestBody;
 
 public class TNApiUser extends TNApi {
 
+
     private String email;
     private String password;
     private String passwordConfirm;
 
     public TNApiUser(Context context, String email, String password) {
-        this.context = context;
+        super(context);
+//        this.context = context;
 
         this.email = email;
         this.password = password;
@@ -52,6 +55,13 @@ public class TNApiUser extends TNApi {
     @Override
     public void setCallback(AsyncOkHttpClient.Callback callback) {
         super.setCallback(callback);
+    }
+
+    public void saveLoginWithHttpHeaders(Headers headers) {
+        String accessToken = headers.get("Access-Token");
+        String client = headers.get("Client");
+        String uid = headers.get("Uid");
+        super.saveLoginValue(uid, accessToken, client);
     }
 
     public void register(AsyncOkHttpClient.Callback callback) {

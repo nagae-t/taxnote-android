@@ -339,4 +339,17 @@ public class SharedPreferencesManager {
         return getSharedPreferences(context).getString(RELEASE_NOTE_KEY, "");
     }
 
+
+    //--------------------------------------------------------------//
+    //    -- User login value --
+    //--------------------------------------------------------------//
+
+    public static void saveUserApiLoginValue(Context context, String key, String value) {
+        getSharedPreferences(context).edit().putString(key, value).apply();
+    }
+
+    public static String getUserApiLoginValue(Context context, String key) {
+        return getSharedPreferences(context).getString(key, null);
+    }
+
 }
