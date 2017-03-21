@@ -6,7 +6,6 @@ import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -157,6 +156,14 @@ public class UpgradeActivity extends DefaultCommonActivity {
         });
 
         updateUpgradeStatus();
+
+
+        binding.btnLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                LoginCloudActivity.start(getApplicationContext());
+            }
+        });
     }
 
     private void updateUpgradeStatus() {

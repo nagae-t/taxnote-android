@@ -78,6 +78,21 @@
             <!--android:layout_height="1dp" />-->
 
         <TextView
+            style="@style/font_style_standard"
+            android:background="@drawable/selector_background_colors"
+            android:id="@+id/btn_login"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:gravity="center_vertical"
+            android:minHeight="@dimen/cell_height_standard"
+            android:paddingEnd="16dp"
+            android:paddingStart="16dp"
+            android:clickable="true"
+            android:text="Login" />
+
+
+        <TextView
             android:layout_marginTop="20dp"
             android:background="@drawable/selector_background_colors"
             style="@style/font_style_standard"
