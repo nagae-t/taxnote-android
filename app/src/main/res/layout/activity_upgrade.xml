@@ -89,7 +89,7 @@
             android:paddingEnd="16dp"
             android:paddingStart="16dp"
             android:clickable="true"
-            android:text="Login" />
+            android:text="@string/login" />
 
 
         <TextView

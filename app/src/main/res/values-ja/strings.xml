@@ -312,4 +312,11 @@
 
     <string name="no_data_to_export_message">出力するデータがありません。入力タブからデータを入力してください。</string>
 
+    <string name="login">ログイン</string>
+    <string name="taxnote_cloud_first_free">Taxnoteクラウド（初回無料）</string>
+    <string name="taxnote_cloud_login_desc">Taxnoteクラウド専用アカウントでログインできます。（アカウントはTaxnoteクラウドをPlayストアで購読した後に作成できます。）</string>
+    <string name="email_address">メールアドレス</string>
+    <string name="password">パスワード</string>
+    <string name="forgot_password">パスワードを忘れた</string>
+
 </resources>

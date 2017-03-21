@@ -7,30 +7,67 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/header_background"
-        android:paddingStart="16dp"
-        android:paddingEnd="16dp"
         tools:context="com.example.taxnoteandroid.LoginCloudActivity">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
-            android:text="Taxnoteクラウド専用アカウントでログインできます。"/>
+            android:layout_marginBottom="12dp"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:text="@string/taxnote_cloud_login_desc"/>
 
-        <android.support.design.widget.TextInputLayout
-            android:id="@+id/email_input_layout"
+        <LinearLayout
+            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:background="@android:color/white">
 
-            <EditText
-                android:id="@+id/email_input"
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/email_input_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <EditText
+                    android:id="@+id/email_input"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/email_address"
+                    android:inputType="textEmailAddress" />
+
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/passwd_input_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <EditText
+                    android:id="@+id/passwd_input"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/password"
+                    android:inputType="textPassword" />
+
+            </android.support.design.widget.TextInputLayout>
+
+            <Button
+                android:id="@+id/btn_send_login"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="email hint"
-                android:inputType="text" />
+                android:text="@string/login"/>
 
-        </android.support.design.widget.TextInputLayout>
-
+            <Button
+                android:id="@+id/btn_forgot_passwd"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="18dp"
+                android:text="@string/forgot_password"/>
+        </LinearLayout>
 
     </LinearLayout>
 </layout>
