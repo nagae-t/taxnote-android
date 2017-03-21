@@ -143,9 +143,15 @@ public class DataExportManager implements TaxnoteConsts {
 
         if (mode.compareTo(EXPORT_FORMAT_TYPE_CSV) == 0) { // CSV
 
-            //@@@ 英語にする時翻訳必要
+            String date = this.context.getResources().getString(R.string.entry_tab_fragment_date);
+            String leftAccountNameColumn = this.context.getResources().getString(R.string.data_export_debit);
+            String LeftAccountPriceColumn = this.context.getResources().getString(R.string.data_export_account);
+            String RightAccountNameColumn = this.context.getResources().getString(R.string.data_export_credit);
+            String RightAccountPriceColumn = this.context.getResources().getString(R.string.data_export_credit_account);
+            String SubAccountNameColumn = this.context.getResources().getString(R.string.data_export_details);
+
             intColumns(6); // CSV column size.
-            setColumnTitles("日付", "借方勘定", "借方金額", "貸方勘定", "貸方金額", "備考");
+            setColumnTitles(date, leftAccountNameColumn, LeftAccountPriceColumn, RightAccountNameColumn, RightAccountPriceColumn, SubAccountNameColumn);
             setColumn(0, new DateColumn());
             setColumn(1, new LeftAccountNameColumn());
             setColumn(2, new LeftAccountPriceColumn());
@@ -696,7 +702,7 @@ public class DataExportManager implements TaxnoteConsts {
         }
     }
 
-    //@@ For data backup
+    // For data backup
 
     // Project, Account, Reason, Entry, Summary, Recurring
     public String generateDbToJson() {

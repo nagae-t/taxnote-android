@@ -299,4 +299,10 @@
     <string name="data_backup_button">Backup</string>
     <string name="data_backup_message">Backup your Taxnote data into GoogleDrive, Gmail or other services.  You can restore your data when you want to transfer your data to other Android devices.  Please check Help about how you can backup and restore. (You cannot transfer Taxnote data between Android and iOS versions.)</string>
 
+    <string name="data_export_debit">Debit</string>
+    <string name="data_export_account">Debit_Account</string>
+    <string name="data_export_credit">Credit</string>
+    <string name="data_export_credit_account">Credit_Account</string>
+    <string name="data_export_details">Details</string>
+
 </resources>

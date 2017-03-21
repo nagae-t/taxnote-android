@@ -304,5 +304,10 @@
     <string name="data_backup_button">バックアップ</string>
     <string name="data_backup_message">Taxnoteに保存したすべてのデータと科目をマイドライブやGmailなどにバックアップし、好きな時に復元ができます。機種変更時や、別の端末にデータを移行したい時も便利です。バックアップと復元の手順は左下のヘルプをご覧ください。（iOS版とは互換性がなく、AndroidとiPhone/iPad端末でデータを移行することはできません。）</string>
 
+    <string name="data_export_debit">借方金額</string>
+    <string name="data_export_account">借方勘定</string>
+    <string name="data_export_credit">貸方金額</string>
+    <string name="data_export_credit_account">貸方勘定</string>
+    <string name="data_export_details">備考</string>
 
 </resources>
