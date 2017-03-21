@@ -305,4 +305,6 @@
     <string name="data_export_credit_account">Credit_Account</string>
     <string name="data_export_details">Details</string>
 
+    <string name="no_data_to_export_message">No data exists.  Please enter data from Entry tab.</string>
+
 </resources>

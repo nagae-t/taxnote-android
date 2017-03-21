@@ -18,6 +18,7 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.example.taxnoteandroid.Library.DialogManager;
 import com.example.taxnoteandroid.Library.TNAppNotification;
 import com.example.taxnoteandroid.dataManager.DefaultDataInstaller;
 import com.example.taxnoteandroid.dataManager.EntryDataManager;
@@ -193,7 +194,10 @@ public class MainActivity extends DefaultCommonActivity {
             case R.id.action_profit_loss_export:
                 long[] startEndDate = getReportStartEndDate();
 
-                if (startEndDate == null || startEndDate[0] <= 0) break;
+                if (startEndDate == null || startEndDate[0] <= 0) {
+                    DialogManager.showToast(this, getString(R.string.no_data_to_export_message));
+                    break;
+                }
 
                 ProfitLossExportActivity.start(this, startEndDate);
                 break;
