@@ -1,6 +1,7 @@
 package com.example.taxnoteandroid.Library.taxnote;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.example.taxnoteandroid.BuildConfig;
 import com.example.taxnoteandroid.Library.AsyncOkHttpClient;
@@ -63,6 +64,7 @@ public class TNApi {
     }
 
     protected void saveLoginValue(String uid, String accessToken, String client) {
+        Log.v("TEST", "uid: "+uid+", token: "+accessToken+", client: " + client);
         SharedPreferencesManager.saveUserApiLoginValue(context, KEY_USER_UID, uid);
         SharedPreferencesManager.saveUserApiLoginValue(context, KEY_USER_ACCESS_TOKEN, accessToken);
         SharedPreferencesManager.saveUserApiLoginValue(context, KEY_USER_CLIENT, client);

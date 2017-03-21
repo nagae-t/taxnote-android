@@ -111,25 +111,6 @@ public class MainActivity extends DefaultCommonActivity {
         TNAppNotification.cancel(this, TNAppNotification.DAILY_ALERT_INPUT_FORGET_ID);
 
         // debug api
-        /*
-        TNApiUser apiUser = new TNApiUser(this, "m@m.com", "mmmmmmmm");
-        apiUser.signIn(new AsyncOkHttpClient.Callback() {
-            @Override
-            public void onFailure(Response response, Throwable throwable) {
-                Log.v("TEST", "sign in onFailure ");
-                if (throwable != null) {
-                    Log.v("TEST", throwable.getMessage());
-                }
-            }
-
-            @Override
-            public void onSuccess(Response response, String content) {
-                Log.v("TEST", "sign in onSuccess content : " + content);
-                Headers headers = response.headers();
-                Log.v("TEST", "sign in headers: " + headers.toString());
-            }
-        });*/
-
         TNApiModel apiModel = new TNApiModel(this);
         apiModel.getProjects(new AsyncOkHttpClient.Callback() {
             @Override
