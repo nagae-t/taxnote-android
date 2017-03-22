@@ -1,7 +1,6 @@
 package com.example.taxnoteandroid.Library.taxnote;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.example.taxnoteandroid.BuildConfig;
 import com.example.taxnoteandroid.Library.AsyncOkHttpClient;
@@ -18,6 +17,8 @@ import okhttp3.RequestBody;
  */
 
 public class TNApi {
+
+    private static final String KEY_IS_SYNCING_DATA = "is_syncing_data";
 
     protected static final String URL_PATH_RECURRING = "/v1/recurrings";
     protected static final String URL_PATH_SUBSCRIPTION = "/v1/subscriptions";
@@ -64,7 +65,6 @@ public class TNApi {
     }
 
     protected void saveLoginValue(String uid, String accessToken, String client) {
-        Log.v("TEST", "uid: "+uid+", token: "+accessToken+", client: " + client);
         SharedPreferencesManager.saveUserApiLoginValue(context, KEY_USER_UID, uid);
         SharedPreferencesManager.saveUserApiLoginValue(context, KEY_USER_ACCESS_TOKEN, accessToken);
         SharedPreferencesManager.saveUserApiLoginValue(context, KEY_USER_CLIENT, client);
@@ -117,5 +117,13 @@ public class TNApi {
         Headers headers = getHeaders();
         AsyncOkHttpClient.execute(headers,
                 method, requestUrl, requestBody, callback);
+    }
+
+    public void setIsSyncing(boolean value) {
+        SharedPreferencesManager.saveBoolean(context, KEY_IS_SYNCING_DATA, value);
+    }
+
+    public boolean isSyncing() {
+        return SharedPreferencesManager.getBoolean(context, KEY_IS_SYNCING_DATA);
     }
 }

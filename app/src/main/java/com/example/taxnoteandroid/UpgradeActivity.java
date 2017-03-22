@@ -17,6 +17,7 @@ import com.example.taxnoteandroid.Library.billing.IabHelper;
 import com.example.taxnoteandroid.Library.billing.IabResult;
 import com.example.taxnoteandroid.Library.billing.Inventory;
 import com.example.taxnoteandroid.Library.billing.Purchase;
+import com.example.taxnoteandroid.Library.taxnote.TNApiModel;
 import com.example.taxnoteandroid.Library.taxnote.TNApiUser;
 import com.example.taxnoteandroid.dataManager.SharedPreferencesManager;
 import com.example.taxnoteandroid.databinding.ActivityUpgradeBinding;
@@ -37,7 +38,8 @@ public class UpgradeActivity extends DefaultCommonActivity {
     private static final int REQUEST_CODE_PURCHASE_PREMIUM = 0;
     private static final int REQUEST_CODE_CLOUD_LOGIN = 2;
     private IabHelper mBillingHelper;
-    private TNApiUser apiUser;
+    private TNApiUser mApiUser;
+    private TNApiModel mApiModel;
 
 
     @Override
@@ -45,7 +47,8 @@ public class UpgradeActivity extends DefaultCommonActivity {
         super.onCreate(savedInstanceState);
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_upgrade);
-        apiUser = new TNApiUser(this);
+        mApiUser = new TNApiUser(this);
+        mApiModel = new TNApiModel(this);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
 
@@ -145,10 +148,16 @@ public class UpgradeActivity extends DefaultCommonActivity {
         }
 
         if (resultCode == RESULT_OK && requestCode == REQUEST_CODE_CLOUD_LOGIN) {
-            apiUser = new TNApiUser(this);
+            mApiUser = new TNApiUser(this);
             binding.btnLogin.setVisibility(View.GONE);
             binding.cloudMemberLayout.setVisibility(View.VISIBLE);
-            binding.email.setText(apiUser.getEmail());
+            binding.email.setText(mApiUser.getEmail());
+
+            //@@ getAllDataAfterLogInWithCompletion ログイン成功後の処理
+            mApiModel.resetAllUpdatedKeys();
+            //@@ DB全データの削除？
+
+
         }
     }
 
@@ -250,7 +259,7 @@ public class UpgradeActivity extends DefaultCommonActivity {
             }
         });
 
-        String userEmail = apiUser.getEmail();
+        String userEmail = mApiUser.getEmail();
         if (userEmail != null) {
             binding.btnLogin.setVisibility(View.GONE);
             binding.cloudMemberLayout.setVisibility(View.VISIBLE);
@@ -295,7 +304,7 @@ public class UpgradeActivity extends DefaultCommonActivity {
         //@@ modelデータの同期
 
         //@@ ログアウト処理
-        apiUser.signOut(new AsyncOkHttpClient.Callback() {
+        mApiUser.signOut(new AsyncOkHttpClient.Callback() {
             @Override
             public void onFailure(Response response, Throwable throwable) {
                 dialog.dismiss();
@@ -309,8 +318,12 @@ public class UpgradeActivity extends DefaultCommonActivity {
             public void onSuccess(Response response, String content) {
                 dialog.dismiss();
                 Log.v("TEST", "sign out onSuccess content : " + content);
+
+                binding.btnLogin.setVisibility(View.VISIBLE);
+                binding.cloudMemberLayout.setVisibility(View.GONE);
+
                 //@@ 保存しているtokenを削除
-                apiUser.deleteLoginData();
+                mApiUser.deleteLoginData();
 
                 //@@ Sbscription情報を削除
 

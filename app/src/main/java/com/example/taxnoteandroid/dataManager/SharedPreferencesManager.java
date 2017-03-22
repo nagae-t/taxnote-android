@@ -53,6 +53,14 @@ public class SharedPreferencesManager {
         return context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
     }
 
+    public static void saveBoolean(Context context, String key, boolean value) {
+        getSharedPreferences(context).edit().putBoolean(key, value).apply();
+    }
+
+    public static boolean getBoolean(Context context, String key) {
+        return getSharedPreferences(context).getBoolean(key, false);
+    }
+
 
     //--------------------------------------------------------------//
     //    -- Default Data Install --
@@ -350,6 +358,19 @@ public class SharedPreferencesManager {
 
     public static String getUserApiLoginValue(Context context, String key) {
         return getSharedPreferences(context).getString(key, null);
+    }
+
+
+    //--------------------------------------------------------------//
+    //    -- Model sync updated value --
+    //--------------------------------------------------------------//
+
+    public static void saveSyncUpdatedAt(Context context, String key, long value) {
+        getSharedPreferences(context).edit().putLong(key, value).apply();
+    }
+
+    public static long getSyncUpdatedAt(Context context, String key) {
+        return getSharedPreferences(context).getLong(key, 0);
     }
 
 }

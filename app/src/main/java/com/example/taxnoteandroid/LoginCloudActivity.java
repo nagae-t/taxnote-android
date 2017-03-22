@@ -14,6 +14,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.example.taxnoteandroid.Library.AsyncOkHttpClient;
+import com.example.taxnoteandroid.Library.DialogManager;
 import com.example.taxnoteandroid.Library.taxnote.TNApiUser;
 import com.example.taxnoteandroid.databinding.ActivityLoginCloudBinding;
 
@@ -112,17 +113,22 @@ public class LoginCloudActivity extends DefaultCommonActivity {
             @Override
             public void onFailure(Response response, Throwable throwable) {
                 dialog.dismiss();
-                Log.v("TEST", "sign in onFailure ");
-                if (throwable != null) {
-                    Log.v("TEST", throwable.getMessage());
+
+                int httpStatusCode = response.code();
+                if (httpStatusCode == 401) {
+                    DialogManager.showOKOnlyAlert(LoginCloudActivity.this,
+                            getResources().getString(R.string.login_error),
+                            getResources().getString(R.string.login_error_desc));
+                } else {
+                    String errorMsg = response.message();
+                    if (throwable != null) {
+                        errorMsg = throwable.getLocalizedMessage();
+                    }
+                    DialogManager.showOKOnlyAlert(LoginCloudActivity.this,
+                            getResources().getString(R.string.login_error),
+                            errorMsg);
                 }
 
-                // Show dialog message
-                new AlertDialog.Builder(LoginCloudActivity.this)
-                        .setTitle(getResources().getString(R.string.login_error))
-                        .setMessage(getResources().getString(R.string.login_error_desc))
-                        .setPositiveButton(android.R.string.ok, null)
-                        .show();
             }
 
             @Override
