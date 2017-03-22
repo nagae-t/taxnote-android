@@ -19,6 +19,10 @@ public class TNApiUser extends TNApi {
     private String password;
     private String passwordConfirm;
 
+    public TNApiUser(Context context) {
+        super(context);
+    }
+
     public TNApiUser(Context context, String email, String password) {
         super(context);
 //        this.context = context;
@@ -95,6 +99,9 @@ public class TNApiUser extends TNApi {
         setRequestBody(null);
         setCallback(callback);
         requestApi();
+    }
+
+    public void sendForgotPassword() {
     }
 
     public void updatePassword() {
