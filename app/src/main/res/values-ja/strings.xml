@@ -321,5 +321,13 @@
     <string name="empty_email_input_error">メールアドレスを入力してください。</string>
     <string name="empty_password_input_error">パスワードを入力してください。</string>
     <string name="cloud">クラウド</string>
+    <string name="login_error">ログインできません</string>
+    <string name="login_error_desc">メールアドレスとパスワードを確認してください。</string>
+    <string name="login_confirm_title">ログインすると、現在のデータは上書きされます</string>
+    <string name="login_confirm_desc">ログインすると、このデバイスにあるデータは削除され、サーバに保存されているデータを取得して上書きします。ログインしてもいいですか？</string>
+    <string name="logout">ログアウト</string>
+    <string name="change_password">パスワードの変更</string>
+    <string name="delete_account">アカウントの削除</string>
+
 
 </resources>

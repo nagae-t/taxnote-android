@@ -25,7 +25,6 @@ public class TNApiUser extends TNApi {
 
     public TNApiUser(Context context, String email, String password) {
         super(context);
-//        this.context = context;
 
         this.email = email;
         this.password = password;
@@ -70,6 +69,11 @@ public class TNApiUser extends TNApi {
         String client = headers.get("Client");
         String uid = headers.get("Uid");
         super.saveLoginValue(uid, accessToken, client);
+    }
+
+    @Override
+    public void deleteLoginData() {
+        super.deleteLoginData();
     }
 
     public void register(AsyncOkHttpClient.Callback callback) {

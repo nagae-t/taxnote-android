@@ -1,14 +1,17 @@
 package com.example.taxnoteandroid;
 
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.example.taxnoteandroid.Library.AsyncOkHttpClient;
 import com.example.taxnoteandroid.Library.UpgradeManger;
 import com.example.taxnoteandroid.Library.billing.IabHelper;
 import com.example.taxnoteandroid.Library.billing.IabResult;
@@ -20,6 +23,8 @@ import com.example.taxnoteandroid.databinding.ActivityUpgradeBinding;
 import com.helpshift.support.Support;
 import com.kobakei.ratethisapp.RateThisApp;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
+
+import okhttp3.Response;
 
 import static com.example.taxnoteandroid.TaxnoteConsts.MIXPANEL_TOKEN;
 
@@ -154,6 +159,7 @@ public class UpgradeActivity extends DefaultCommonActivity {
 
     private void setViews() {
         setUpgradeToTaxnotePlusView();
+        setTaxnoteCloud();
         setHelpView();
     }
 
@@ -167,14 +173,6 @@ public class UpgradeActivity extends DefaultCommonActivity {
         });
 
         updateUpgradeStatus();
-
-
-        binding.btnLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                LoginCloudActivity.startForResult(UpgradeActivity.this, REQUEST_CODE_CLOUD_LOGIN);
-            }
-        });
     }
 
     private void updateUpgradeStatus() {
@@ -231,5 +229,93 @@ public class UpgradeActivity extends DefaultCommonActivity {
             MixpanelAPI mixpanel = MixpanelAPI.getInstance(this, MIXPANEL_TOKEN);
             mixpanel.track("Taxnote Plus Upgraded");
         }
+    }
+
+    //--------------------------------------------------------------//
+    //    -- Taxnote cloud login etc... --
+    //--------------------------------------------------------------//
+
+    private void setTaxnoteCloud() {
+        binding.btnLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                LoginCloudActivity.startForResult(UpgradeActivity.this, REQUEST_CODE_CLOUD_LOGIN);
+            }
+        });
+
+        binding.cloudMemberLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showMemberDialogItems();
+            }
+        });
+
+        String userEmail = apiUser.getEmail();
+        if (userEmail != null) {
+            binding.btnLogin.setVisibility(View.GONE);
+            binding.cloudMemberLayout.setVisibility(View.VISIBLE);
+            binding.email.setText(userEmail);
+        }
+    }
+
+    private void showMemberDialogItems() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        String[] items = {getString(R.string.logout),
+                getString(R.string.change_password),
+                getString(R.string.delete_account)};
+        builder.setItems(items, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                switch (i) {
+                    case 0: // ログアウト
+                        sendSignOut();
+                        break;
+                    case 1: //@@ パスワードの変更
+                        break;
+                    case 2: //@@ アカウントの削除
+                        break;
+                }
+            }
+        });
+        AlertDialog menuDialog = builder.create();
+        menuDialog.show();
+    }
+
+    /**
+     * 同期を完了させてからログアウトする
+     */
+    private void sendSignOut() {
+        // Progress dialog
+        final ProgressDialog dialog = new ProgressDialog(this);
+        dialog.setMessage(getString(R.string.loading));
+        dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        dialog.setCancelable(false);
+        dialog.show();
+
+        //@@ modelデータの同期
+
+        //@@ ログアウト処理
+        apiUser.signOut(new AsyncOkHttpClient.Callback() {
+            @Override
+            public void onFailure(Response response, Throwable throwable) {
+                dialog.dismiss();
+                Log.v("TEST", "sign out onFailure ");
+                if (throwable != null) {
+                    Log.v("TEST", throwable.getMessage());
+                }
+            }
+
+            @Override
+            public void onSuccess(Response response, String content) {
+                dialog.dismiss();
+                Log.v("TEST", "sign out onSuccess content : " + content);
+                //@@ 保存しているtokenを削除
+                apiUser.deleteLoginData();
+
+                //@@ Sbscription情報を削除
+
+                //@@ iOS: ApiGetHandler.resetAllUpdatedAtKeys model更新キーをリセットする
+            }
+        });
     }
 }

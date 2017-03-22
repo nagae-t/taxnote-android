@@ -70,6 +70,12 @@ public class TNApi {
         SharedPreferencesManager.saveUserApiLoginValue(context, KEY_USER_CLIENT, client);
     }
 
+    protected void deleteLoginData() {
+        SharedPreferencesManager.saveUserApiLoginValue(context, KEY_USER_UID, null);
+        SharedPreferencesManager.saveUserApiLoginValue(context, KEY_USER_ACCESS_TOKEN, null);
+        SharedPreferencesManager.saveUserApiLoginValue(context, KEY_USER_CLIENT, null);
+    }
+
     protected String getLoginUid() {
         return loginUid;
     }
@@ -109,7 +115,6 @@ public class TNApi {
         if (httpMethod == null) method = HTTP_METHOD_GET;
 
         Headers headers = getHeaders();
-
         AsyncOkHttpClient.execute(headers,
                 method, requestUrl, requestBody, callback);
     }

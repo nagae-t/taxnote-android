@@ -3,10 +3,12 @@ package com.example.taxnoteandroid;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -56,7 +58,8 @@ public class LoginCloudActivity extends DefaultCommonActivity {
             int viewId = view.getId();
             switch (viewId) {
                 case R.id.btn_send_login:
-                    sendLogin();
+//                    sendLogin();
+                    showLoginConfirm();
                     break;
                 case R.id.btn_forgot_passwd:
                     sendForgotPasswd();
@@ -65,9 +68,9 @@ public class LoginCloudActivity extends DefaultCommonActivity {
         }
     };
 
-    private void sendLogin() {
-        String email = binding.emailInput.getText().toString();
-        String passwd = binding.passwdInput.getText().toString();
+    private void showLoginConfirm() {
+        final String email = binding.emailInput.getText().toString();
+        final String passwd = binding.passwdInput.getText().toString();
 
         if (email.length() == 0) {
             binding.emailInputLayout.setError(getString(R.string.empty_email_input_error));
@@ -80,6 +83,22 @@ public class LoginCloudActivity extends DefaultCommonActivity {
         }
         binding.passwdInputLayout.setErrorEnabled(false);
 
+        // Show dialog message
+        new AlertDialog.Builder(this)
+                .setTitle(getResources().getString(R.string.login_confirm_title))
+                .setMessage(getResources().getString(R.string.login_confirm_desc))
+                .setNegativeButton(android.R.string.cancel, null)
+                .setPositiveButton(R.string.login, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        sendLogin(email, passwd);
+                    }
+                })
+                .show();
+
+    }
+
+    private void sendLogin(String email, String passwd) {
 
         // Progress dialog
         final ProgressDialog dialog = new ProgressDialog(this);
@@ -97,6 +116,13 @@ public class LoginCloudActivity extends DefaultCommonActivity {
                 if (throwable != null) {
                     Log.v("TEST", throwable.getMessage());
                 }
+
+                // Show dialog message
+                new AlertDialog.Builder(LoginCloudActivity.this)
+                        .setTitle(getResources().getString(R.string.login_error))
+                        .setMessage(getResources().getString(R.string.login_error_desc))
+                        .setPositiveButton(android.R.string.ok, null)
+                        .show();
             }
 
             @Override
