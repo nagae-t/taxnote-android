@@ -1,57 +1,18 @@
 [
   {
-    "name": "Travel",
-    "isExpense": true,
-    "details": ""
+    "name": "Cash",
+    "isExpense": true
   },
   {
-    "name": "Supplies",
-    "isExpense": true,
-    "details": ""
+    "name": "Bank",
+    "isExpense": true
   },
   {
-    "name": "Advertising",
-    "isExpense": true,
-    "details": ""
+    "name": "Cash",
+    "isExpense": false
   },
   {
-    "name": "Commission",
-    "isExpense": true,
-    "details": ""
-  },
-  {
-    "name": "Book",
-    "isExpense": true,
-    "details": ""
-  },
-  {
-    "name": "Delivery",
-    "isExpense": true,
-    "details": ""
-  },
-  {
-    "name": "Rent",
-    "isExpense": true,
-    "details": ""
-  },
-  {
-    "name": "Utilities",
-    "isExpense": true,
-    "details": ""
-  },
-  {
-    "name": "Insurance",
-    "isExpense": true,
-    "details": ""
-  },
-  {
-    "name": "Welfare",
-    "isExpense": true,
-    "details": ""
-  },
-  {
-    "name": "Sales",
-    "isExpense": false,
-    "details": ""
+    "name": "Bank",
+    "isExpense": false
   }
 ]
