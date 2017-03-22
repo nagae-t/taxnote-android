@@ -489,6 +489,7 @@ public class DialogManager {
 
         dialogFragment.setCloseToFinish(true);
         dialogFragment.setPositiveBtnText("OK");
+        dialogFragment.setNegativeBtnText(context.getString(R.string.cancel));
 
         dialogFragment.setDialogListener(new TNSimpleDialogFragment.TNSimpleDialogListener() {
             @Override
@@ -503,6 +504,7 @@ public class DialogManager {
             public void onNeutralBtnClick(DialogInterface dialogInterface, int i, String tag) {}
             @Override
             public void onNegativeBtnClick(DialogInterface dialogInterface, int i, String tag) {
+                dialogInterface.dismiss();
             }
             @Override
             public void onDialogCancel(DialogInterface dialogInterface, String tag) {}

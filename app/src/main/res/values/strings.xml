@@ -52,7 +52,7 @@
     <string name="save_data">Register</string>
     <string name="delete_done">Deleted</string>
     <string name="delete_done_after_title">&#160;has been deleted.</string>
-    <string name="pin_button">Continuous Input</string>
+    <string name="pin_button">Continuous</string>
     <string name="pin_button_on_message">Continuous Input ON - Fix date and categories</string>
     <string name="pin_button_off_message">Continuous Input OFF</string>
 
@@ -220,7 +220,7 @@
     <string name="release_note_message">Taxnote has been updated.  Please check new features, changes, and bug fixes.</string>
 
     <!--//@@ここをアップデートごとに変更-->
-    <string name="release_note_url">http://taxnote.hatenablog.com/entry/2017/03/19/121605</string>
+    <string name="release_note_url">http://taxnote.hatenablog.com/entry/2017/03/21/110450</string>
 
     <string name="update_check_title">Update available</string>
     <string name="update_check_message">Please update to the latest version of Taxnote.</string>
