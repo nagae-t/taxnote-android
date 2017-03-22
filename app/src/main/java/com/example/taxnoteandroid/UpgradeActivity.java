@@ -29,6 +29,7 @@ public class UpgradeActivity extends DefaultCommonActivity {
     private static final String LICENSE_KEY_OF_GOOGLE_PLAY = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAm+14FzQyLcAO7X2zwFDWXwHDuzN8RA60R71JouG5TO6la3xh0A7uWIQ4Y2k1kvqa/fHRAOble7TxIDsy11GsLjD/2sI+e4p4pE5vDKeY3ARBadcQI7iDc/VVnkzCSrZeoGTYinm+99diGn71cGIlF+7ISnh98Kss1zguKLlY+tCkaDDCe+moghLYTvqVuJg27ShVfxxPpWr4gwMusdSMcbJLR6S4ajeWbEtacGAdEJnzQfuAH6RMnt/ggZa4CFRVbNnJA6Eft/CCQL7GFBwBYnkMfG+Jdr+66BcTHbtPP8cE5WdmjGzDje+iy5HGYyIfqiDTdBs178zgWKUS8TM9QwIDAQAB";
     private static final String TAXNOTE_PLUS_ID = "taxnote.plus.sub";
     private static final int REQUEST_CODE_PURCHASE_PREMIUM = 0;
+    private static final int REQUEST_CODE_CLOUD_LOGIN = 2;
     private IabHelper mBillingHelper;
 
 
@@ -134,6 +135,11 @@ public class UpgradeActivity extends DefaultCommonActivity {
         if (!mBillingHelper.handleActivityResult(requestCode, resultCode, data)) {
             super.onActivityResult(requestCode, resultCode, data);
         }
+
+        if (resultCode == RESULT_OK && requestCode == REQUEST_CODE_CLOUD_LOGIN) {
+            binding.btnLogin.setVisibility(View.GONE);
+            binding.cloudMemberLayout.setVisibility(View.VISIBLE);
+        }
     }
 
 
@@ -161,7 +167,7 @@ public class UpgradeActivity extends DefaultCommonActivity {
         binding.btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                LoginCloudActivity.start(getApplicationContext());
+                LoginCloudActivity.startForResult(UpgradeActivity.this, REQUEST_CODE_CLOUD_LOGIN);
             }
         });
     }

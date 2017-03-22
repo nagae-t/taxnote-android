@@ -320,5 +320,6 @@
     <string name="forgot_password">パスワードを忘れた</string>
     <string name="empty_email_input_error">メールアドレスを入力してください。</string>
     <string name="empty_password_input_error">パスワードを入力してください。</string>
+    <string name="cloud">クラウド</string>
 
 </resources>

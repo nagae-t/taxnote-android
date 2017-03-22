@@ -1,5 +1,6 @@
 package com.example.taxnoteandroid;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
@@ -22,6 +23,11 @@ public class LoginCloudActivity extends DefaultCommonActivity {
         Intent intent = new Intent(context, LoginCloudActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(intent);
+    }
+
+    public static void startForResult(Activity activity, int requestCode) {
+        Intent intent = new Intent(activity.getApplicationContext(), LoginCloudActivity.class);
+        activity.startActivityForResult(intent, requestCode);
     }
 
     @Override
@@ -66,6 +72,9 @@ public class LoginCloudActivity extends DefaultCommonActivity {
             return;
         }
         binding.passwdInputLayout.setErrorEnabled(false);
+
+        setResult(RESULT_OK);
+        finish();
 
         /*
         // Progress dialog
