@@ -55,11 +55,11 @@ public class TNApi {
     public TNApi(Context context) {
         this.context = context;
 
-        String userUid = getLoginUid();
+        String userUid = SharedPreferencesManager.getUserApiLoginValue(context, KEY_USER_UID);
         if (userUid != null) {
             this.loginUid = userUid;
-            this.loginAccessToken = getLoginAccessToken();
-            this.loginClient = getLoginClient();
+            this.loginAccessToken = SharedPreferencesManager.getUserApiLoginValue(context, KEY_USER_ACCESS_TOKEN);
+            this.loginClient = SharedPreferencesManager.getUserApiLoginValue(context, KEY_USER_CLIENT);
         }
     }
 
@@ -71,15 +71,7 @@ public class TNApi {
     }
 
     protected String getLoginUid() {
-        return SharedPreferencesManager.getUserApiLoginValue(context, KEY_USER_UID);
-    }
-
-    protected String getLoginAccessToken() {
-        return SharedPreferencesManager.getUserApiLoginValue(context, KEY_USER_ACCESS_TOKEN);
-    }
-
-    protected String getLoginClient() {
-        return SharedPreferencesManager.getUserApiLoginValue(context, KEY_USER_CLIENT);
+        return loginUid;
     }
 
     protected void setRequestPath(String path) {

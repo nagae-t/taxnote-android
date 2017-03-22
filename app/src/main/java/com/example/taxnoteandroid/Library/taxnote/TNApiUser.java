@@ -33,6 +33,10 @@ public class TNApiUser extends TNApi {
     }
 
     public String getEmail() {
+        String loginUid = getLoginUid();
+        if (email == null && loginUid != null)
+            return loginUid;
+
         return email;
     }
 

@@ -1,15 +1,22 @@
 package com.example.taxnoteandroid;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.example.taxnoteandroid.Library.AsyncOkHttpClient;
+import com.example.taxnoteandroid.Library.taxnote.TNApiUser;
 import com.example.taxnoteandroid.databinding.ActivityLoginCloudBinding;
+
+import okhttp3.Headers;
+import okhttp3.Response;
 
 /**
  * Created by b0ne on 2017/03/21.
@@ -73,10 +80,7 @@ public class LoginCloudActivity extends DefaultCommonActivity {
         }
         binding.passwdInputLayout.setErrorEnabled(false);
 
-        setResult(RESULT_OK);
-        finish();
 
-        /*
         // Progress dialog
         final ProgressDialog dialog = new ProgressDialog(this);
         dialog.setMessage(getString(R.string.loading));
@@ -101,8 +105,11 @@ public class LoginCloudActivity extends DefaultCommonActivity {
                 Log.v("TEST", "sign in onSuccess content : " + content);
                 Headers headers = response.headers();
                 apiUser.saveLoginWithHttpHeaders(headers);
+
+                setResult(RESULT_OK);
+                finish();
             }
-        });*/
+        });
     }
 
     private void sendForgotPasswd() {
