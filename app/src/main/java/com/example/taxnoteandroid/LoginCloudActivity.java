@@ -158,6 +158,7 @@ public class LoginCloudActivity extends DefaultCommonActivity {
                     public void onSuccess(Response response, String content) {
                         dialog.dismiss();
                         Log.v("TEST", "getAllDataAfterLogin onSuccess ");
+                        Log.v("TEST", "getAllDataAfterLogin headers: " + response.headers().toString());
                         setResult(RESULT_OK);
                         finish();
                     }

@@ -72,7 +72,17 @@ public class TNApiModel extends TNApi {
     //    -- Get Method --
     //--------------------------------------------------------------//
 
-    public void getProjects(final AsyncOkHttpClient.Callback callback) {
+    public void testGetProjects(AsyncOkHttpClient.Callback callback) {
+        setHttpMethod(HTTP_METHOD_GET);
+        setRequestPath(URL_PATH_PROJECT);
+
+        setFormBody(getUpdatedAtParams(KEY_SYNC_UPDATED_PROJECT));
+        setCallback(callback);
+
+        requestApi();
+    }
+
+    private void getProjects(final AsyncOkHttpClient.Callback callback) {
         setHttpMethod(HTTP_METHOD_GET);
         setRequestPath(URL_PATH_PROJECT);
 
@@ -95,7 +105,7 @@ public class TNApiModel extends TNApi {
         requestApi();
     }
 
-    public void getReasons(final AsyncOkHttpClient.Callback callback) {
+    private void getReasons(final AsyncOkHttpClient.Callback callback) {
         setHttpMethod(HTTP_METHOD_GET);
         setRequestPath(URL_PATH_REASON);
 
@@ -117,7 +127,7 @@ public class TNApiModel extends TNApi {
         requestApi();
     }
 
-    public void getAccounts(final AsyncOkHttpClient.Callback callback) {
+    private void getAccounts(final AsyncOkHttpClient.Callback callback) {
         setHttpMethod(HTTP_METHOD_GET);
         setRequestPath(URL_PATH_ACCOUNT);
 
@@ -139,7 +149,7 @@ public class TNApiModel extends TNApi {
         requestApi();
     }
 
-    public void getSummaries(final AsyncOkHttpClient.Callback callback) {
+    private void getSummaries(final AsyncOkHttpClient.Callback callback) {
         setHttpMethod(HTTP_METHOD_GET);
         setRequestPath(URL_PATH_SUMMARY);
 
@@ -161,7 +171,7 @@ public class TNApiModel extends TNApi {
         requestApi();
     }
 
-    public void getRecurrings(final AsyncOkHttpClient.Callback callback) {
+    private void getRecurrings(final AsyncOkHttpClient.Callback callback) {
         setHttpMethod(HTTP_METHOD_GET);
         setRequestPath(URL_PATH_RECURRING);
 
@@ -183,7 +193,7 @@ public class TNApiModel extends TNApi {
         requestApi();
     }
 
-    public void getEntries(final AsyncOkHttpClient.Callback callback) {
+    private void getEntries(final AsyncOkHttpClient.Callback callback) {
         setHttpMethod(HTTP_METHOD_GET);
         setRequestPath(URL_PATH_ENTRY);
 

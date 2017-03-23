@@ -304,16 +304,19 @@ public class UpgradeActivity extends DefaultCommonActivity {
             @Override
             public void onFailure(Response response, Throwable throwable) {
                 dialog.dismiss();
-                Log.v("TEST", "sign out onFailure code: " + response.code()
-                    + ", message: " + response.message());
+                Log.v("TEST", "sign out onFailure ");
                 if (throwable != null) {
                     Log.v("TEST", throwable.getMessage());
                 }
-                Request req = response.request();
-                Log.v("TEST", "error: request url: " + req.url());
-                Log.v("TEST", "error: request method: " + req.method());
-                Log.v("TEST", "error: request body: " + req.body());
-                Log.v("TEST", "error: request headers: " + req.headers().toString());
+                if (response != null) {
+                    Request req = response.request();
+                    Log.v("TEST", "error: response code: " + response.code());
+                    Log.v("TEST", "error: response message: " + response.message());
+                    Log.v("TEST", "error: request url: " + req.url());
+                    Log.v("TEST", "error: request method: " + req.method());
+                    Log.v("TEST", "error: request body: " + req.body());
+                    Log.v("TEST", "error: request headers: " + req.headers().toString());
+                }
             }
 
             @Override

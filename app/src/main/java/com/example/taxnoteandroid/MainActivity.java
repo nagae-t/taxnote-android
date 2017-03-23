@@ -18,6 +18,7 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.example.taxnoteandroid.Library.AsyncOkHttpClient;
 import com.example.taxnoteandroid.Library.DialogManager;
 import com.example.taxnoteandroid.Library.TNAppNotification;
 import com.example.taxnoteandroid.Library.taxnote.TNApiModel;
@@ -26,13 +27,18 @@ import com.example.taxnoteandroid.dataManager.EntryDataManager;
 import com.example.taxnoteandroid.dataManager.SharedPreferencesManager;
 import com.example.taxnoteandroid.databinding.ActivityMainBinding;
 import com.example.taxnoteandroid.entryTab.EntryTabFragment;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.helpshift.support.Support;
 import com.kobakei.ratethisapp.RateThisApp;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
 
 import java.lang.reflect.Field;
+import java.util.Map;
 
-import okhttp3.HttpUrl;
+import okhttp3.Response;
 
 import static com.example.taxnoteandroid.R.string.report;
 import static com.example.taxnoteandroid.TaxnoteConsts.MIXPANEL_TOKEN;
@@ -106,17 +112,9 @@ public class MainActivity extends DefaultCommonActivity {
 
         // debug api
         TNApiModel apiModel = new TNApiModel(this);
-        HttpUrl.Builder urlBuilder = new HttpUrl.Builder()
-                .scheme("https")
-                .host("www.dummy.com")
-                .addPathSegment("api")
-                .addQueryParameter("name1", "aaaa")
-                .addQueryParameter("name2", "bbbb");
-        String urlQuery = urlBuilder.build().query();
-        Log.v("TEST", "urlQuery : " + urlQuery);
 
-        /*
-        apiModel.getProjects(new AsyncOkHttpClient.Callback() {
+        /**/
+        apiModel.testGetProjects(new AsyncOkHttpClient.Callback() {
             @Override
             public void onFailure(Response response, Throwable throwable) {
                 Log.v("TEST", "getProjects onFailure code : " + response.code()
@@ -139,7 +137,7 @@ public class MainActivity extends DefaultCommonActivity {
                     }
                 }
             }
-        });*/
+        }); /**/
 
         /*
         apiModel.getAllData(new AsyncOkHttpClient.Callback() {

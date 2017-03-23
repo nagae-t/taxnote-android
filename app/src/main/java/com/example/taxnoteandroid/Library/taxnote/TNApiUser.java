@@ -6,7 +6,6 @@ import com.example.taxnoteandroid.Library.AsyncOkHttpClient;
 
 import okhttp3.FormBody;
 import okhttp3.Headers;
-import okhttp3.RequestBody;
 
 /**
  * Created by b0ne on 2017/03/17.
@@ -78,7 +77,7 @@ public class TNApiUser extends TNApi {
 
     public void register(AsyncOkHttpClient.Callback callback) {
         setRequestPath(URL_PATH_REGISTER);
-        RequestBody requestBody = new FormBody.Builder()
+        FormBody requestBody = new FormBody.Builder()
                 .add("email", email)
                 .add("password", password)
                 .add("password_confirmation", passwordConfirm)
@@ -91,7 +90,7 @@ public class TNApiUser extends TNApi {
 
     public void signIn(AsyncOkHttpClient.Callback callback) {
         setRequestPath(URL_PATH_SIGN_IN);
-        RequestBody requestBody = new FormBody.Builder()
+        FormBody requestBody = new FormBody.Builder()
                 .add("email", email)
                 .add("password", password)
                 .build();
