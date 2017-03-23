@@ -1,9 +1,18 @@
 package com.example.taxnoteandroid.Library.taxnote;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.example.taxnoteandroid.Library.AsyncOkHttpClient;
+import com.example.taxnoteandroid.dataManager.ProjectDataManager;
 import com.example.taxnoteandroid.dataManager.SharedPreferencesManager;
+import com.example.taxnoteandroid.model.Project;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+
+import java.util.Map;
 
 import okhttp3.FormBody;
 import okhttp3.RequestBody;
@@ -116,6 +125,18 @@ public class TNApiModel extends TNApi {
                 .build();
     }
 
+    private void showLogOnSuccess(String content) {
+        JsonParser parser = new JsonParser();
+        JsonArray jsArr = parser.parse(content).getAsJsonArray();
+        jsArr.iterator();
+        for (JsonElement jsElement : jsArr) {
+            JsonObject obj = jsElement.getAsJsonObject();
+            for (Map.Entry<String, JsonElement> entry : obj.entrySet()) {
+                Log.v("TEST", "key: " + entry.getKey() + " | " + entry.getValue());
+            }
+            Log.v("TEST", "........................");
+        }
+    }
     public void getAllData(final AsyncOkHttpClient.Callback callback) {
         if (isSyncing()) return;
 
@@ -131,6 +152,9 @@ public class TNApiModel extends TNApi {
             @Override
             public void onSuccess(Response response, String content) {
 
+                Log.v("TEST", "onSuccess----Projects :");
+                showLogOnSuccess(content);
+
                 getReasons(new AsyncOkHttpClient.Callback() {
                     @Override
                     public void onFailure(Response response, Throwable throwable) {
@@ -140,6 +164,8 @@ public class TNApiModel extends TNApi {
 
                     @Override
                     public void onSuccess(Response response, String content) {
+                        Log.v("TEST", "onSuccess----Reasons :");
+                        showLogOnSuccess(content);
 
                         getAccounts(new AsyncOkHttpClient.Callback() {
                             @Override
@@ -150,6 +176,8 @@ public class TNApiModel extends TNApi {
 
                             @Override
                             public void onSuccess(Response response, String content) {
+                                Log.v("TEST", "onSuccess----Accounts :");
+                                showLogOnSuccess(content);
 
                                 getSummaries(new AsyncOkHttpClient.Callback() {
                                     @Override
@@ -160,6 +188,8 @@ public class TNApiModel extends TNApi {
 
                                     @Override
                                     public void onSuccess(Response response, String content) {
+                                        Log.v("TEST", "onSuccess----Summaries :");
+                                        showLogOnSuccess(content);
 
                                         getRecurrings(new AsyncOkHttpClient.Callback() {
                                             @Override
@@ -170,6 +200,8 @@ public class TNApiModel extends TNApi {
 
                                             @Override
                                             public void onSuccess(Response response, String content) {
+                                                Log.v("TEST", "onSuccess----Recurrings :");
+                                                showLogOnSuccess(content);
 
                                                 getEntries(new AsyncOkHttpClient.Callback() {
                                                     @Override
@@ -180,6 +212,9 @@ public class TNApiModel extends TNApi {
 
                                                     @Override
                                                     public void onSuccess(Response response, String content) {
+                                                        Log.v("TEST", "onSuccess----Entries :");
+                                                        showLogOnSuccess(content);
+
                                                         setIsSyncing(false);
                                                         callback.onSuccess(response, content);
                                                     }
@@ -229,6 +264,67 @@ public class TNApiModel extends TNApi {
     //--------------------------------------------------------------//
     //    -- Update Method --
     //--------------------------------------------------------------//
+
+    private void updateProjects(JsonArray array) {
+        ProjectDataManager projectDm = new ProjectDataManager(context);
+        for (JsonElement jsElement : array) {
+            JsonObject obj = jsElement.getAsJsonObject();
+
+            boolean deleted = obj.get("deleted").getAsBoolean();
+            String uuid = obj.get("uuid").getAsString();
+            Project project = projectDm.findByUuid(uuid);
+
+            // Delete it if deleted is YES
+            if (deleted) {
+                if (project != null) {
+                    projectDm.delete(project.id);
+                }
+
+            } else { // Update
+                if (project == null) {
+                    project = new Project();
+                    project.needSave = false;
+                }
+
+                project.uuid = uuid;
+                project.name = obj.get("name").getAsString();
+                project.order = obj.get("order").getAsLong();
+                project.isMaster = obj.get("master").getAsBoolean();
+                project.decimal = obj.get("decimal").getAsBoolean();
+                project.accountUuidForExpense = obj.get("account_for_expense").getAsString();
+                project.accountUuidForIncome = obj.get("account_for_income").getAsString();
+
+            }
+
+            // save sync updated
+            long nowTime = System.currentTimeMillis() + 1000; // 1秒足すようだ
+            saveSyncUpdated(KEY_SYNC_UPDATED_PROJECT, nowTime);
+
+//            for (Map.Entry<String, JsonElement> entry : obj.entrySet()) {
+//                Log.v("TEST", "key: " + entry.getKey() + " | " + entry.getValue());
+//            }
+        }
+    }
+
+    private void updateReasons(JsonArray array) {
+
+    }
+
+    private void updateAccounts(JsonArray array) {
+
+    }
+
+    private void updateSummaries(JsonArray array) {
+
+    }
+
+    private void updateRecurrings(JsonArray array) {
+
+    }
+
+    private void updateEntries(JsonArray array) {
+
+    }
 
 
     //--------------------------------------------------------------//

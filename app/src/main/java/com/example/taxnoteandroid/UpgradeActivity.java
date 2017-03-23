@@ -156,6 +156,8 @@ public class UpgradeActivity extends DefaultCommonActivity {
             //@@ getAllDataAfterLogInWithCompletion ログイン成功後の処理
             mApiModel.resetAllUpdatedKeys();
             //@@ DB全データの削除？
+//            OrmaDatabase _db = TaxnoteApp.getOrmaDatabase();
+//            _db.deleteAll();
 
 
         }
