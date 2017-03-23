@@ -14,8 +14,10 @@ import java.util.List;
 public class SummaryDataManager {
 
     private OrmaDatabase ormaDatabase;
+    private Context mContext;
 
     public SummaryDataManager(Context context) {
+        this.mContext = context;
         ormaDatabase = TaxnoteApp.getOrmaDatabase();
     }
 
@@ -47,10 +49,10 @@ public class SummaryDataManager {
         return ormaDatabase.selectFromSummary().uuidEq(uuid).valueOrNull();
     }
 
-    public List<Summary> findAllWithReason(Reason reason, Context context) {
+    public List<Summary> findAllWithReason(Reason reason) {
 
         // Get the current project
-        ProjectDataManager projectDataManager = new ProjectDataManager(context);
+        ProjectDataManager projectDataManager = new ProjectDataManager(mContext);
         Project project = projectDataManager.findCurrentProjectWithContext();
 
         List summaries = ormaDatabase.selectFromSummary()

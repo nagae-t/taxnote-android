@@ -15,9 +15,11 @@ import java.util.List;
 public class ReasonDataManager {
 
     private OrmaDatabase ormaDatabase;
+    private Context mContext;
 
     public ReasonDataManager(Context context) {
-      ormaDatabase = TaxnoteApp.getOrmaDatabase();
+        this.mContext = context;
+        ormaDatabase = TaxnoteApp.getOrmaDatabase();
     }
 
 
@@ -58,10 +60,10 @@ public class ReasonDataManager {
         return ormaDatabase.selectFromReason().uuidEq(uuid).valueOrNull();
     }
 
-    public List<Reason> findAllWithIsExpense(Boolean isExpense, Context context) {
+    public List<Reason> findAllWithIsExpense(Boolean isExpense) {
 
         // Get the current project
-        ProjectDataManager projectDataManager   = new ProjectDataManager(context);
+        ProjectDataManager projectDataManager   = new ProjectDataManager(mContext);
         Project project                         = projectDataManager.findCurrentProjectWithContext();
 
         List reasons = ormaDatabase.selectFromReason().where(Reason_Schema.INSTANCE.deleted.getQualifiedName() + " = 0  AND "

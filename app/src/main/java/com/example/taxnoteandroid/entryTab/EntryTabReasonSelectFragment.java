@@ -59,7 +59,7 @@ public class EntryTabReasonSelectFragment extends Fragment {
     private Account account;
     private MyRecyclerViewAdapter adapter;
     private FragmentEntryTabReasonSelectBinding binding;
-    private ReasonDataManager reasonDataManager = new ReasonDataManager(getContext());
+    private ReasonDataManager reasonDataManager;
     private List<Reason> reasonList;
 
     public EntryTabReasonSelectFragment() {
@@ -96,11 +96,17 @@ public class EntryTabReasonSelectFragment extends Fragment {
 
         View view = binding.getRoot();
 
-        setDateView();
-        setAccountView(view);
-        setReasonList(view);
-
         return view;
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        reasonDataManager = new ReasonDataManager(getActivity().getApplicationContext());
+        setDateView();
+        setAccountView(getView());
+        setReasonList(getView());
     }
 
     @Override
@@ -488,7 +494,7 @@ public class EntryTabReasonSelectFragment extends Fragment {
 
         public void onReasonDataManagerChanged() {
             Log.d(this.getClass().getSimpleName() + ":438", "onReasonDataManagerChanged() が呼ばれた。");
-            reasonList = reasonDataManager.findAllWithIsExpense(isExpense, getContext());
+            reasonList = reasonDataManager.findAllWithIsExpense(isExpense);
             this.notifyDataSetChanged();
         }
     }
@@ -575,7 +581,7 @@ public class EntryTabReasonSelectFragment extends Fragment {
                                 ProjectDataManager projectDataManager = new ProjectDataManager(context);
                                 Project project = projectDataManager.findCurrentProjectWithContext();
 
-                                List<Reason> reasonList = reasonDataManager.findAllWithIsExpense(isExpense, context);
+                                List<Reason> reasonList = reasonDataManager.findAllWithIsExpense(isExpense);
 
                                 Reason reason = new Reason();
                                 reason.name = newName;

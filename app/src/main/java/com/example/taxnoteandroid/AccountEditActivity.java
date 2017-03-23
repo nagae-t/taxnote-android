@@ -152,7 +152,7 @@ public class AccountEditActivity extends DefaultCommonActivity {
 
         // Get account list
         ReasonDataManager reasonDataManager   = new ReasonDataManager(this);
-        final List<Reason> reasons            = reasonDataManager.findAllWithIsExpense(isExpense, this);
+        final List<Reason> reasons            = reasonDataManager.findAllWithIsExpense(isExpense);
 
         ReasonSelectAdapter reasonSelectAdapter = new ReasonSelectAdapter(this, reasons);
         listView.setAdapter(reasonSelectAdapter);

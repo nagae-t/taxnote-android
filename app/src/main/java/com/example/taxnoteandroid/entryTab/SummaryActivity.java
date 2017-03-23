@@ -301,7 +301,7 @@ public class SummaryActivity extends AppCompatActivity {
 
         public void onSummaryDataManagerChanged() {
             Log.d(this.getClass().getSimpleName() + ":435", "onAccountDataManagerChanged() が呼ばれた。");
-            summaryList = summaryDataManager.findAllWithReason(reason, SummaryActivity.this);
+            summaryList = summaryDataManager.findAllWithReason(reason);
             this.notifyDataSetChanged();
         }
     }
@@ -476,7 +476,7 @@ public class SummaryActivity extends AppCompatActivity {
                             Project project = projectDataManager.findCurrentProjectWithContext();
 
                             SummaryDataManager summaryDataManager = new SummaryDataManager(SummaryActivity.this);
-                            List<Summary> summaryList = summaryDataManager.findAllWithReason(reason, context);
+                            List<Summary> summaryList = summaryDataManager.findAllWithReason(reason);
 
                             Summary summary = new Summary();
                             summary.reason = reason;
