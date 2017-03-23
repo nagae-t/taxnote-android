@@ -6,6 +6,7 @@ import com.example.taxnoteandroid.TaxnoteApp;
 import com.example.taxnoteandroid.model.OrmaDatabase;
 import com.example.taxnoteandroid.model.Project;
 import com.example.taxnoteandroid.model.Project_Schema;
+import com.example.taxnoteandroid.model.Project_Updater;
 
 import java.util.List;
 
@@ -97,6 +98,21 @@ public class ProjectDataManager {
         ormaDatabase.updateProject()
                 .idEq(project.id)
                 .name(project.name)
+                .execute();
+    }
+
+    public void update(Project project) {
+        Project_Updater updater = ormaDatabase.updateProject();
+        updater.idEq(project.id)
+                .order(project.order)
+                .decimal(project.decimal)
+                .deleted(project.deleted)
+                .needSave(project.needSave)
+                .needSync(project.needSync)
+                .uuid(project.uuid)
+                .name(project.name)
+                .accountUuidForExpense(project.accountUuidForExpense)
+                .accountUuidForIncome(project.accountUuidForIncome)
                 .execute();
     }
 

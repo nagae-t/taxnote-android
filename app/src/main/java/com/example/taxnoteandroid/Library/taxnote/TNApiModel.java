@@ -5,8 +5,10 @@ import android.util.Log;
 
 import com.example.taxnoteandroid.Library.AsyncOkHttpClient;
 import com.example.taxnoteandroid.dataManager.ProjectDataManager;
+import com.example.taxnoteandroid.dataManager.ReasonDataManager;
 import com.example.taxnoteandroid.dataManager.SharedPreferencesManager;
 import com.example.taxnoteandroid.model.Project;
+import com.example.taxnoteandroid.model.Reason;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -270,6 +272,7 @@ public class TNApiModel extends TNApi {
         for (JsonElement jsElement : array) {
             JsonObject obj = jsElement.getAsJsonObject();
 
+            boolean isNewProject = false;
             boolean deleted = obj.get("deleted").getAsBoolean();
             String uuid = obj.get("uuid").getAsString();
             Project project = projectDm.findByUuid(uuid);
@@ -282,6 +285,7 @@ public class TNApiModel extends TNApi {
 
             } else { // Update
                 if (project == null) {
+                    isNewProject = true;
                     project = new Project();
                     project.needSave = false;
                 }
@@ -294,36 +298,93 @@ public class TNApiModel extends TNApi {
                 project.accountUuidForExpense = obj.get("account_for_expense").getAsString();
                 project.accountUuidForIncome = obj.get("account_for_income").getAsString();
 
+                if (project.isMaster) {
+                    // Set master as current project
+                    SharedPreferencesManager.saveUuidForCurrentProject(context, uuid);
+
+                    // Save in keychain when premium expires date updated
+                    //@@ 購読（課金）の有効期限の保存処理?
+                    String expiresDateString = obj.get("subscription_expires").getAsString();
+                    String subscriptionType = obj.get("subscription_type").getAsString();
+                }
+
+            }
+            if (isNewProject) {
+                projectDm.save(project);
+            } else {
+                projectDm.update(project);
             }
 
             // save sync updated
             long nowTime = System.currentTimeMillis() + 1000; // 1秒足すようだ
             saveSyncUpdated(KEY_SYNC_UPDATED_PROJECT, nowTime);
-
-//            for (Map.Entry<String, JsonElement> entry : obj.entrySet()) {
-//                Log.v("TEST", "key: " + entry.getKey() + " | " + entry.getValue());
-//            }
         }
     }
 
     private void updateReasons(JsonArray array) {
+        ReasonDataManager reasonDm = new ReasonDataManager(context);
+        ProjectDataManager projectDm = new ProjectDataManager(context);
+        for (JsonElement jsElement : array) {
+            JsonObject obj = jsElement.getAsJsonObject();
 
+            boolean isNewReason = false;
+            boolean deleted = obj.get("deleted").getAsBoolean();
+            String uuid = obj.get("uuid").getAsString();
+            Reason reason = reasonDm.findByUuid(uuid);
+
+            // Delete it if deleted is YES
+            if (deleted) {
+                if (reason != null) reasonDm.delete(reason.id);
+            } else { // Update
+                if (reason == null) {
+                    isNewReason = true;
+                    reason = new Reason();
+                    reason.needSave = false;
+                }
+
+                reason.uuid = uuid;
+                reason.name = obj.get("name").getAsString();
+                reason.order = obj.get("order").getAsLong();
+                reason.isExpense = obj.get("is_expense").getAsBoolean();
+                reason.details = obj.get("details").getAsString();
+                reason.project = projectDm.findByUuid(obj.get("project_uuid").getAsString());
+            }
+            if (isNewReason) {
+                reasonDm.save(reason);
+            } else {
+                reasonDm.update(reason);
+            }
+
+            // save sync updated
+            long nowTime = System.currentTimeMillis() + 1000; // 1秒足すようだ
+            saveSyncUpdated(KEY_SYNC_UPDATED_REASON, nowTime);
+        }
     }
 
     private void updateAccounts(JsonArray array) {
-
+        for (JsonElement jsElement : array) {
+            JsonObject obj = jsElement.getAsJsonObject();
+        }
     }
 
     private void updateSummaries(JsonArray array) {
-
+        for (JsonElement jsElement : array) {
+            JsonObject obj = jsElement.getAsJsonObject();
+        }
     }
 
     private void updateRecurrings(JsonArray array) {
 
+        for (JsonElement jsElement : array) {
+            JsonObject obj = jsElement.getAsJsonObject();
+        }
     }
 
     private void updateEntries(JsonArray array) {
 
+        for (JsonElement jsElement : array) {
+            JsonObject obj = jsElement.getAsJsonObject();
+        }
     }
 
 

@@ -3,11 +3,11 @@ package com.example.taxnoteandroid.dataManager;
 import android.content.Context;
 
 import com.example.taxnoteandroid.TaxnoteApp;
-import com.example.taxnoteandroid.model.Account;
 import com.example.taxnoteandroid.model.OrmaDatabase;
 import com.example.taxnoteandroid.model.Project;
 import com.example.taxnoteandroid.model.Reason;
 import com.example.taxnoteandroid.model.Reason_Schema;
+import com.example.taxnoteandroid.model.Reason_Updater;
 import com.github.gfx.android.orma.Inserter;
 
 import java.util.List;
@@ -87,6 +87,21 @@ public class ReasonDataManager {
 
     public int updateOrder(long id, int order) {
         return ormaDatabase.updateReason().idEq(id).order(order).execute();
+    }
+
+    public void update(Reason reason) {
+        Reason_Updater updater = ormaDatabase.updateReason();
+        updater.idEq(reason.id)
+                .order(reason.order)
+                .deleted(reason.deleted)
+                .isExpense(reason.isExpense)
+                .needSync(reason.needSync)
+                .needSave(reason.needSave)
+                .name(reason.name)
+                .details(reason.details)
+                .uuid(reason.uuid)
+                .project(reason.project)
+                .execute();
     }
 
     
