@@ -25,6 +25,7 @@ import com.helpshift.support.Support;
 import com.kobakei.ratethisapp.RateThisApp;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
 
+import okhttp3.Request;
 import okhttp3.Response;
 
 import static com.example.taxnoteandroid.TaxnoteConsts.MIXPANEL_TOKEN;
@@ -152,13 +153,6 @@ public class UpgradeActivity extends DefaultCommonActivity {
             binding.btnLogin.setVisibility(View.GONE);
             binding.cloudMemberLayout.setVisibility(View.VISIBLE);
             binding.email.setText(mApiUser.getEmail());
-
-            //@@ getAllDataAfterLogInWithCompletion ログイン成功後の処理
-            mApiModel.resetAllUpdatedKeys();
-            //@@ DB全データの削除？
-//            OrmaDatabase _db = TaxnoteApp.getOrmaDatabase();
-//            _db.deleteAll();
-
 
         }
     }
@@ -310,10 +304,16 @@ public class UpgradeActivity extends DefaultCommonActivity {
             @Override
             public void onFailure(Response response, Throwable throwable) {
                 dialog.dismiss();
-                Log.v("TEST", "sign out onFailure ");
+                Log.v("TEST", "sign out onFailure code: " + response.code()
+                    + ", message: " + response.message());
                 if (throwable != null) {
                     Log.v("TEST", throwable.getMessage());
                 }
+                Request req = response.request();
+                Log.v("TEST", "error: request url: " + req.url());
+                Log.v("TEST", "error: request method: " + req.method());
+                Log.v("TEST", "error: request body: " + req.body());
+                Log.v("TEST", "error: request headers: " + req.headers().toString());
             }
 
             @Override

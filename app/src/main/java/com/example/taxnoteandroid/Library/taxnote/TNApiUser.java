@@ -83,7 +83,7 @@ public class TNApiUser extends TNApi {
                 .add("password", password)
                 .add("password_confirmation", passwordConfirm)
                 .build();
-        setRequestBody(requestBody);
+        setFormBody(requestBody);
         setCallback(callback);
         requestApi();
 
@@ -95,7 +95,7 @@ public class TNApiUser extends TNApi {
                 .add("email", email)
                 .add("password", password)
                 .build();
-        setRequestBody(requestBody);
+        setFormBody(requestBody);
         setCallback(callback);
         requestApi();
     }
@@ -104,7 +104,7 @@ public class TNApiUser extends TNApi {
         setHttpMethod(HTTP_METHOD_DELETE);
         setRequestPath(URL_PATH_SIGN_OUT);
 
-        setRequestBody(null);
+        setFormBody(null);
         setCallback(callback);
         requestApi();
     }

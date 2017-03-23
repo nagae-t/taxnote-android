@@ -9,8 +9,9 @@ import com.example.taxnoteandroid.dataManager.SharedPreferencesManager;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import okhttp3.FormBody;
 import okhttp3.Headers;
-import okhttp3.RequestBody;
+import okhttp3.HttpUrl;
 
 /**
  * Created by b0ne on 2017/03/04.
@@ -44,7 +45,7 @@ public class TNApi {
 
     protected Context context;
     private String requestUrl;
-    private RequestBody requestBody;
+    private FormBody formBody;
     private AsyncOkHttpClient.Callback callback;
     private String httpMethod;
 
@@ -88,8 +89,8 @@ public class TNApi {
         requestUrl = url;
     }
 
-    public void setRequestBody(RequestBody reqBody) {
-        requestBody = reqBody;
+    public void setFormBody(FormBody body) {
+        formBody = body;
     }
 
     public void setHttpMethod(String method) {
@@ -114,9 +115,25 @@ public class TNApi {
         String method = httpMethod;
         if (httpMethod == null) method = HTTP_METHOD_GET;
 
+        // GETの場合、URLクエリーを創る
+        if (httpMethod.equals(HTTP_METHOD_GET) && formBody != null) {
+            HttpUrl.Builder urlBuilder = new HttpUrl.Builder()
+                    .scheme("https")
+                    .host("taxnote") // dummy
+                    .addPathSegment("api"); // dummy
+            int formSize = formBody.size();
+            if (formSize > 0) {
+                for (int i = 0; i < formBody.size(); i++) {
+                    urlBuilder.addQueryParameter(formBody.name(i), formBody.value(i));
+                }
+                requestUrl += "?" + urlBuilder.build().query();
+            }
+            formBody = null;
+        }
+
         Headers headers = getHeaders();
         AsyncOkHttpClient.execute(headers,
-                method, requestUrl, requestBody, callback);
+                method, requestUrl, formBody, callback);
     }
 
     public void setIsSyncing(boolean value) {

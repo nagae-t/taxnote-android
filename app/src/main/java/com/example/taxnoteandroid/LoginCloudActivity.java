@@ -15,8 +15,10 @@ import android.view.View;
 
 import com.example.taxnoteandroid.Library.AsyncOkHttpClient;
 import com.example.taxnoteandroid.Library.DialogManager;
+import com.example.taxnoteandroid.Library.taxnote.TNApiModel;
 import com.example.taxnoteandroid.Library.taxnote.TNApiUser;
 import com.example.taxnoteandroid.databinding.ActivityLoginCloudBinding;
+import com.example.taxnoteandroid.model.OrmaDatabase;
 
 import okhttp3.Headers;
 import okhttp3.Response;
@@ -106,6 +108,7 @@ public class LoginCloudActivity extends DefaultCommonActivity {
         dialog.setMessage(getString(R.string.loading));
         dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         dialog.setCancelable(false);
+        dialog.setCanceledOnTouchOutside(false);
         dialog.show();
 
         final TNApiUser apiUser = new TNApiUser(this, email, passwd);
@@ -133,13 +136,32 @@ public class LoginCloudActivity extends DefaultCommonActivity {
 
             @Override
             public void onSuccess(Response response, String content) {
-                dialog.dismiss();
                 Log.v("TEST", "sign in onSuccess content : " + content);
                 Headers headers = response.headers();
                 apiUser.saveLoginWithHttpHeaders(headers);
 
-                setResult(RESULT_OK);
-                finish();
+                TNApiModel apiModel = new TNApiModel(getApplicationContext());
+                //@@ getAllDataAfterLogInWithCompletion ログイン成功後の処理
+                apiModel.resetAllUpdatedKeys();
+                //@@ DB全データの削除？
+                OrmaDatabase _db = TaxnoteApp.getOrmaDatabase();
+                _db.deleteAll();
+                apiModel.getAllDataAfterLogin(new AsyncOkHttpClient.Callback() {
+                    @Override
+                    public void onFailure(Response response, Throwable throwable) {
+                        dialog.dismiss();
+                        Log.v("TEST", "getAllDataAfterLogin onFailure code: " + response.code()
+                                + ", message : " + response.message());
+                    }
+
+                    @Override
+                    public void onSuccess(Response response, String content) {
+                        dialog.dismiss();
+                        Log.v("TEST", "getAllDataAfterLogin onSuccess ");
+                        setResult(RESULT_OK);
+                        finish();
+                    }
+                });
             }
         });
     }

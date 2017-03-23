@@ -23,10 +23,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
-import java.util.Map;
-
 import okhttp3.FormBody;
-import okhttp3.RequestBody;
 import okhttp3.Response;
 
 /**
@@ -42,9 +39,11 @@ public class TNApiModel extends TNApi {
     private static final String KEY_SYNC_UPDATED_SUMMARY = "KEY_SYNC_UPDATED_SUMMARY";
     private static final String KEY_SYNC_UPDATED_RECURRING = "KEY_SYNC_UPDATED_RECURRING";
 
+    private JsonParser jsParser;
 
     public TNApiModel(Context context) {
         super(context);
+        this.jsParser = new JsonParser();
     }
 
     //--------------------------------------------------------------//
@@ -73,82 +72,163 @@ public class TNApiModel extends TNApi {
     //    -- Get Method --
     //--------------------------------------------------------------//
 
-    public void getProjects(AsyncOkHttpClient.Callback callback) {
+    public void getProjects(final AsyncOkHttpClient.Callback callback) {
         setHttpMethod(HTTP_METHOD_GET);
         setRequestPath(URL_PATH_PROJECT);
 
-        setRequestBody(getUpdatedAtParams(KEY_SYNC_UPDATED_PROJECT));
-        setCallback(callback);
+        setFormBody(getUpdatedAtParams(KEY_SYNC_UPDATED_PROJECT));
+        setCallback(new AsyncOkHttpClient.Callback() {
+            @Override
+            public void onFailure(Response response, Throwable throwable) {
+                callback.onFailure(response, throwable);
+            }
+
+            @Override
+            public void onSuccess(Response response, String content) {
+
+                JsonArray jsArray = jsParser.parse(content).getAsJsonArray();
+                updateProjects(jsArray);
+                callback.onSuccess(response, content);
+            }
+        });
+
         requestApi();
     }
 
-    public void getReasons(AsyncOkHttpClient.Callback callback) {
+    public void getReasons(final AsyncOkHttpClient.Callback callback) {
         setHttpMethod(HTTP_METHOD_GET);
         setRequestPath(URL_PATH_REASON);
 
-        setRequestBody(getUpdatedAtParams(KEY_SYNC_UPDATED_REASON));
-        setCallback(callback);
+        setFormBody(getUpdatedAtParams(KEY_SYNC_UPDATED_REASON));
+        setCallback(new AsyncOkHttpClient.Callback() {
+            @Override
+            public void onFailure(Response response, Throwable throwable) {
+                callback.onFailure(response, throwable);
+            }
+
+            @Override
+            public void onSuccess(Response response, String content) {
+
+                JsonArray jsArray = jsParser.parse(content).getAsJsonArray();
+                updateReasons(jsArray);
+                callback.onSuccess(response, content);
+            }
+        });
         requestApi();
     }
 
-    public void getAccounts(AsyncOkHttpClient.Callback callback) {
+    public void getAccounts(final AsyncOkHttpClient.Callback callback) {
         setHttpMethod(HTTP_METHOD_GET);
         setRequestPath(URL_PATH_ACCOUNT);
 
-        setRequestBody(getUpdatedAtParams(KEY_SYNC_UPDATED_ACCOUNT));
-        setCallback(callback);
+        setFormBody(getUpdatedAtParams(KEY_SYNC_UPDATED_ACCOUNT));
+        setCallback(new AsyncOkHttpClient.Callback() {
+            @Override
+            public void onFailure(Response response, Throwable throwable) {
+                callback.onFailure(response, throwable);
+            }
+
+            @Override
+            public void onSuccess(Response response, String content) {
+
+                JsonArray jsArray = jsParser.parse(content).getAsJsonArray();
+                updateAccounts(jsArray);
+                callback.onSuccess(response, content);
+            }
+        });
         requestApi();
     }
 
-    public void getSummaries(AsyncOkHttpClient.Callback callback) {
+    public void getSummaries(final AsyncOkHttpClient.Callback callback) {
         setHttpMethod(HTTP_METHOD_GET);
         setRequestPath(URL_PATH_SUMMARY);
 
-        setRequestBody(getUpdatedAtParams(KEY_SYNC_UPDATED_SUMMARY));
-        setCallback(callback);
+        setFormBody(getUpdatedAtParams(KEY_SYNC_UPDATED_SUMMARY));
+        setCallback(new AsyncOkHttpClient.Callback() {
+            @Override
+            public void onFailure(Response response, Throwable throwable) {
+                callback.onFailure(response, throwable);
+            }
+
+            @Override
+            public void onSuccess(Response response, String content) {
+
+                JsonArray jsArray = jsParser.parse(content).getAsJsonArray();
+                updateSummaries(jsArray);
+                callback.onSuccess(response, content);
+            }
+        });
         requestApi();
     }
 
-    public void getRecurrings(AsyncOkHttpClient.Callback callback) {
+    public void getRecurrings(final AsyncOkHttpClient.Callback callback) {
         setHttpMethod(HTTP_METHOD_GET);
         setRequestPath(URL_PATH_RECURRING);
 
-        setRequestBody(getUpdatedAtParams(KEY_SYNC_UPDATED_RECURRING));
-        setCallback(callback);
+        setFormBody(getUpdatedAtParams(KEY_SYNC_UPDATED_RECURRING));
+        setCallback(new AsyncOkHttpClient.Callback() {
+            @Override
+            public void onFailure(Response response, Throwable throwable) {
+                callback.onFailure(response, throwable);
+            }
+
+            @Override
+            public void onSuccess(Response response, String content) {
+
+                JsonArray jsArray = jsParser.parse(content).getAsJsonArray();
+                updateRecurrings(jsArray);
+                callback.onSuccess(response, content);
+            }
+        });
         requestApi();
     }
 
-    public void getEntries(AsyncOkHttpClient.Callback callback) {
+    public void getEntries(final AsyncOkHttpClient.Callback callback) {
         setHttpMethod(HTTP_METHOD_GET);
         setRequestPath(URL_PATH_ENTRY);
 
-        setRequestBody(getUpdatedAtParams(KEY_SYNC_UPDATED_ENTRY));
-        setCallback(callback);
+        setFormBody(getUpdatedAtParams(KEY_SYNC_UPDATED_ENTRY));
+        setCallback(new AsyncOkHttpClient.Callback() {
+            @Override
+            public void onFailure(Response response, Throwable throwable) {
+                callback.onFailure(response, throwable);
+            }
+
+            @Override
+            public void onSuccess(Response response, String content) {
+
+                JsonArray jsArray = jsParser.parse(content).getAsJsonArray();
+                updateEntries(jsArray);
+                callback.onSuccess(response, content);
+            }
+        });
         requestApi();
     }
 
-    private RequestBody getUpdatedAtParams(String key) {
+    private FormBody getUpdatedAtParams(String key) {
         long updated = getSyncUpdated(key);
         if (updated == 0) return null;
 
-        return new FormBody.Builder()
+        FormBody form = new FormBody.Builder()
                 .add("updated_at", String.valueOf(updated))
                 .build();
+
+        return form;
     }
 
     private void showLogOnSuccess(String content) {
+        /*
         JsonParser parser = new JsonParser();
         JsonArray jsArr = parser.parse(content).getAsJsonArray();
-        jsArr.iterator();
         for (JsonElement jsElement : jsArr) {
             JsonObject obj = jsElement.getAsJsonObject();
             for (Map.Entry<String, JsonElement> entry : obj.entrySet()) {
                 Log.v("TEST", "key: " + entry.getKey() + " | " + entry.getValue());
             }
             Log.v("TEST", "........................");
-        }
+        }*/
     }
-    public void getAllData(final AsyncOkHttpClient.Callback callback) {
+    public void getAllDataAfterLogin(final AsyncOkHttpClient.Callback callback) {
         if (isSyncing()) return;
 
         setIsSyncing(true);
@@ -251,7 +331,7 @@ public class TNApiModel extends TNApi {
         setHttpMethod(HTTP_METHOD_POST);
         setRequestPath(URL_PATH_PROJECT);
 
-//        setRequestBody();
+//        setFormBody();
         setCallback(callback);
         requestApi();
     }
