@@ -210,7 +210,7 @@ public class EntryTabReasonSelectFragment extends Fragment {
     private void loadCurrentAccount() {
 
         AccountDataManager accountDataManager = new AccountDataManager(getContext());
-        account = accountDataManager.findCurrentSelectedAccount(getContext(), isExpense);
+        account = accountDataManager.findCurrentSelectedAccount(isExpense);
 
         ((TextView) getView().findViewById(R.id.account_text_view)).setText(account.name);
     }

@@ -53,9 +53,9 @@ public class ProjectDataManager {
         return ormaDatabase.selectFromProject().uuidEq(uuid).valueOrNull();
     }
 
-    public boolean getDecimalStatusWithContect(Context context) {
+    public boolean getDecimalStatusWithContect() {
 
-        String currentProjectUuid   = SharedPreferencesManager.getUuidForCurrentProject(context);
+        String currentProjectUuid   = SharedPreferencesManager.getUuidForCurrentProject(mContext);
         Project project             = findByUuid(currentProjectUuid);
         return project.decimal;
     }

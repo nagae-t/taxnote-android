@@ -13,8 +13,10 @@ import java.util.List;
 public class AccountDataManager {
 
     private OrmaDatabase ormaDatabase;
+    private Context mContext;
 
     public AccountDataManager(Context context) {
+        this.mContext = context;
         ormaDatabase = TaxnoteApp.getOrmaDatabase();
     }
 
@@ -46,10 +48,10 @@ public class AccountDataManager {
         return ormaDatabase.selectFromAccount().uuidEq(uuid).valueOrNull();
     }
 
-    public List<Account> findAllWithIsExpense(boolean isExpense, Context context) {
+    public List<Account> findAllWithIsExpense(boolean isExpense) {
 
         // Get the current project
-        ProjectDataManager projectDataManager = new ProjectDataManager(context);
+        ProjectDataManager projectDataManager = new ProjectDataManager(mContext);
         Project project = projectDataManager.findCurrentProjectWithContext();
 
         List accounts = ormaDatabase.selectFromAccount().where(Account_Schema.INSTANCE.deleted.getQualifiedName() + " = 0  AND "
@@ -63,12 +65,12 @@ public class AccountDataManager {
         return accounts;
     }
 
-    public Account findCurrentSelectedAccount(Context context, boolean isExpense) {
+    public Account findCurrentSelectedAccount(boolean isExpense) {
 
         Account account;
 
         // Get the current project
-        ProjectDataManager projectDataManager = new ProjectDataManager(context);
+        ProjectDataManager projectDataManager = new ProjectDataManager(mContext);
         Project project = projectDataManager.findCurrentProjectWithContext();
 
         // Get the current selected account
@@ -83,7 +85,7 @@ public class AccountDataManager {
         }
 
         // Get the first account from account list
-        List<Account> accounts = findAllWithIsExpense(isExpense, context);
+        List<Account> accounts = findAllWithIsExpense(isExpense);
         if (accounts != null && accounts.size() > 0) {
             account = accounts.get(0);
         }

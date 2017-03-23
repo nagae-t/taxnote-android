@@ -304,7 +304,7 @@ public class AccountSelectActivity extends DefaultCommonActivity {
 
         public void onAccountDataManagerChanged() {
             Log.d(this.getClass().getSimpleName() + ":435", "onAccountDataManagerChanged() が呼ばれた。");
-            accountList = accountDataManager.findAllWithIsExpense(isExpense, AccountSelectActivity.this);
+            accountList = accountDataManager.findAllWithIsExpense(isExpense);
             this.notifyDataSetChanged();
         }
     }
@@ -494,7 +494,7 @@ public class AccountSelectActivity extends DefaultCommonActivity {
                             Project project = projectDataManager.findCurrentProjectWithContext();
 
                             AccountDataManager accountDataManager = new AccountDataManager(AccountSelectActivity.this);
-                            List<Account> accountList = accountDataManager.findAllWithIsExpense(isExpense, context);
+                            List<Account> accountList = accountDataManager.findAllWithIsExpense(isExpense);
 
                             Account account = new Account();
                             account.name = newName;
