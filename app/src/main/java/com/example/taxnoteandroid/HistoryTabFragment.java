@@ -89,7 +89,7 @@ public class HistoryTabFragment extends Fragment {
         mEntryAdapter = new CommonEntryRecyclerAdapter(mContext);
 
         EntryDataManager entryDataManager   = new EntryDataManager(getContext());
-        List<Entry> entries                 = entryDataManager.findAll(getContext(), null, false);
+        List<Entry> entries                 = entryDataManager.findAll(null, false);
 
         if (entries == null || entries.isEmpty()) {
 

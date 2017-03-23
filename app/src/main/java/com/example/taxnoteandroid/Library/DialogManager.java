@@ -336,7 +336,7 @@ public class DialogManager {
         }
 
         EntryDataManager entryDataManager = new EntryDataManager(context);
-        List<Entry> entries = entryDataManager.findAll(context, null, true);
+        List<Entry> entries = entryDataManager.findAll(null, true);
 
         if (entries.size() < 5) {
             return;
@@ -407,7 +407,7 @@ public class DialogManager {
         }
 
         EntryDataManager entryDataManager = new EntryDataManager(context);
-        List<Entry> entries = entryDataManager.findAll(context, null, true);
+        List<Entry> entries = entryDataManager.findAll(null, true);
 
         if (entries.size() < 4) {
             return;

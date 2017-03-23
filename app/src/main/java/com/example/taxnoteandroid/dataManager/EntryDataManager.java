@@ -62,9 +62,9 @@ public class EntryDataManager {
         return ormaDatabase.selectFromEntry().toList();
     }
 
-    public List<Entry> findAll(Context context, long[] startAndEndDate, Boolean asc) {
+    public List<Entry> findAll(long[] startAndEndDate, Boolean asc) {
 
-        ProjectDataManager projectDataManager   = new ProjectDataManager(context);
+        ProjectDataManager projectDataManager   = new ProjectDataManager(mContext);
         Project project                         = projectDataManager.findCurrentProjectWithContext();
 
         List<Entry> entries;
@@ -174,7 +174,7 @@ public class EntryDataManager {
      */
     public List<Entry> searchBy(String word, String reasonName, long[] startEndDate) {
         List<Entry> entries = new ArrayList<>();
-        List<Entry> searchTargets = findAll(mContext, startEndDate, false);
+        List<Entry> searchTargets = findAll(startEndDate, false);
         for(Entry entry : searchTargets) {
 
             Pattern wordPattern = Pattern.compile(Pattern.quote(word));

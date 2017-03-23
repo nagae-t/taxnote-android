@@ -33,7 +33,7 @@ public class EntryLimitManager {
         long[] startAndEndDate  = getStartAndEndDate(date);
 
         EntryDataManager entryDataManager   = new EntryDataManager(context);
-        List<Entry> entries                 = entryDataManager.findAll(context, startAndEndDate, false);
+        List<Entry> entries                 = entryDataManager.findAll(startAndEndDate, false);
 
         // Check the count of entries within the month of the current date
         if (entries.size() < limitNumberOfEntryPerMonth) {

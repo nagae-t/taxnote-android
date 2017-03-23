@@ -11,9 +11,11 @@ import java.util.List;
 public class RecurringDataManager {
 
     private OrmaDatabase ormaDatabase;
+    private Context mContext;
 
     public RecurringDataManager(Context context) {
-      ormaDatabase = TaxnoteApp.getOrmaDatabase();
+        this.mContext = context;
+        ormaDatabase = TaxnoteApp.getOrmaDatabase();
     }
 
 

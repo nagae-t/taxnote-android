@@ -103,7 +103,7 @@ public class GraphTabFragment extends Fragment  {
         SharedPreferencesManager.saveProfitLossReportPeriodType(mContext, periodType);
         SharedPreferencesManager.saveGraphReportIsExpenseType(mContext, isExpense);
 
-        List<Entry> entries = mEntryDataManager.findAll(mContext, null, true);
+        List<Entry> entries = mEntryDataManager.findAll(null, true);
         List<Calendar> calendars = reportGrouping.getReportCalendars(mClosingDateIndex, entries);
         mPagerAdapter = new GraphContentFragmentPagerAdapter(
                 getChildFragmentManager(), reportGrouping, calendars, isExpense);

@@ -209,7 +209,7 @@ public class HistoryListDataActivity extends DefaultCommonActivity {
             List<Entry> entries;
 
             if (isBalance) {
-                entries = mEntryManager.findAll(context, startEndDate, false);
+                entries = mEntryManager.findAll(startEndDate, false);
             } else {
                 List<Entry> _entries = mEntryManager.findAll(startEndDate, isExpense, false);
                 entries = new ArrayList<>();

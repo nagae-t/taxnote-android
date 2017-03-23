@@ -148,7 +148,7 @@ public class ProfitLossExportActivity extends DefaultCommonActivity {
             EntryDataManager entryManager = new EntryDataManager(context);
             boolean isShowBalanceCarryForward = SharedPreferencesManager.getBalanceCarryForward(context);
             List<Entry> resultEntries = new ArrayList<>();
-            List<Entry> entries = entryManager.findAll(context, startEndDate, false);
+            List<Entry> entries = entryManager.findAll(startEndDate, false);
 
             Entry incomeSection = new Entry();
             incomeSection.viewType = CommonEntryRecyclerAdapter.VIEW_ITEM_HEADER;

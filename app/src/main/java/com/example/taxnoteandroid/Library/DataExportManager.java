@@ -508,29 +508,29 @@ public class DataExportManager implements TaxnoteConsts {
         switch (exportRangeType) {
 
             case EXPORT_RANGE_TYPE_ALL:
-                entries = entryDataManager.findAll(context, null, true);
+                entries = entryDataManager.findAll(null, true);
                 break;
 
             case EXPORT_RANGE_TYPE_THIS_MONTH:
                 startEnd = getThisMonthStartAndEndDate();
-                entries = entryDataManager.findAll(context, startEnd, true);
+                entries = entryDataManager.findAll(startEnd, true);
                 break;
 
             case EXPORT_RANGE_TYPE_LAST_MONTH:
                 startEnd = getLastMonthStartAndEndDate();
-                entries = entryDataManager.findAll(context, startEnd, true);
+                entries = entryDataManager.findAll(startEnd, true);
                 break;
 
             case EXPORT_RANGE_TYPE_CUSTOM:
                 startEnd = getCustomStartAndEndDate(context);
-                entries = entryDataManager.findAll(context, startEnd, true);
+                entries = entryDataManager.findAll(startEnd, true);
                 break;
 
             case EXPORT_PROFIT_LOSS_FORMAT_TYPE_CSV: //@@ 多分使わない
                 return new ArrayList<>();
 
             default:
-                entries = entryDataManager.findAll(context, null, true);
+                entries = entryDataManager.findAll(null, true);
                 break;
         }
 

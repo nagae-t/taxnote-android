@@ -107,7 +107,7 @@ public class ReportFragment extends Fragment {
         // 期間タイプをデフォルト値として保存
         SharedPreferencesManager.saveProfitLossReportPeriodType(mContext, periodType);
 
-        List<Entry> entries = mEntryDataManager.findAll(mContext, null, true);
+        List<Entry> entries = mEntryDataManager.findAll(null, true);
         List<Calendar> calendars = reportGrouping.getReportCalendars(mClosingDateIndex, entries);
         mPagerAdapter = new ReportContentFragmentPagerAdapter(getChildFragmentManager(), reportGrouping, calendars);
         binding.pager.setAdapter(mPagerAdapter);
