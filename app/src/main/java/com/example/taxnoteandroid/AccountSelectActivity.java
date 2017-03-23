@@ -8,7 +8,6 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
@@ -492,7 +491,7 @@ public class AccountSelectActivity extends DefaultCommonActivity {
                             }
 
                             ProjectDataManager projectDataManager = new ProjectDataManager(context);
-                            Project project = projectDataManager.findCurrentProjectWithContext(context);
+                            Project project = projectDataManager.findCurrentProjectWithContext();
 
                             AccountDataManager accountDataManager = new AccountDataManager(AccountSelectActivity.this);
                             List<Account> accountList = accountDataManager.findAllWithIsExpense(isExpense, context);

@@ -65,7 +65,7 @@ public class EntryDataManager {
     public List<Entry> findAll(Context context, long[] startAndEndDate, Boolean asc) {
 
         ProjectDataManager projectDataManager   = new ProjectDataManager(context);
-        Project project                         = projectDataManager.findCurrentProjectWithContext(context);
+        Project project                         = projectDataManager.findCurrentProjectWithContext();
 
         List<Entry> entries;
         String orderSpec = (asc) ? OrderSpec.ASC : OrderSpec.DESC;
@@ -99,7 +99,7 @@ public class EntryDataManager {
 
     public int count(long[] startEndDate) {
         ProjectDataManager projectDataManager   = new ProjectDataManager(mContext);
-        Project project                         = projectDataManager.findCurrentProjectWithContext(mContext);
+        Project project                         = projectDataManager.findCurrentProjectWithContext();
         long startDate  = startEndDate[0];
         long endDate    = startEndDate[1];
         int countData = ormaDatabase.selectFromEntry().
@@ -114,7 +114,7 @@ public class EntryDataManager {
     // 収入・支出別
     public List<Entry> findAll(long[] startAndEndDate, boolean isExpense, Boolean asc) {
         ProjectDataManager projectDataManager   = new ProjectDataManager(mContext);
-        Project project                         = projectDataManager.findCurrentProjectWithContext(mContext);
+        Project project                         = projectDataManager.findCurrentProjectWithContext();
 
         List<Entry> entries;
         String orderSpec = (asc) ? OrderSpec.ASC : OrderSpec.DESC;
@@ -147,7 +147,7 @@ public class EntryDataManager {
     //@@ 未完成、まだデバッグ中
     public List<Entry> findAll(String word) {
         ProjectDataManager projectDataManager   = new ProjectDataManager(mContext);
-        Project project                         = projectDataManager.findCurrentProjectWithContext(mContext);
+        Project project                         = projectDataManager.findCurrentProjectWithContext();
         List<Entry> entries = new ArrayList<>();
         String orderSpec = OrderSpec.DESC;
 
@@ -240,7 +240,7 @@ public class EntryDataManager {
 
     public long findSumBalance(long endDate) {
         ProjectDataManager projectDataManager   = new ProjectDataManager(mContext);
-        Project project                         = projectDataManager.findCurrentProjectWithContext(mContext);
+        Project project                         = projectDataManager.findCurrentProjectWithContext();
 
         String schemeDelete = Entry_Schema.INSTANCE.deleted.getQualifiedName();
         String schemeIsExpense = Entry_Schema.INSTANCE.isExpense.getQualifiedName();

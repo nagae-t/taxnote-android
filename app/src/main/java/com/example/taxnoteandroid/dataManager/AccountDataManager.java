@@ -50,7 +50,7 @@ public class AccountDataManager {
 
         // Get the current project
         ProjectDataManager projectDataManager = new ProjectDataManager(context);
-        Project project = projectDataManager.findCurrentProjectWithContext(context);
+        Project project = projectDataManager.findCurrentProjectWithContext();
 
         List accounts = ormaDatabase.selectFromAccount().where(Account_Schema.INSTANCE.deleted.getQualifiedName() + " = 0  AND "
                         + Account_Schema.INSTANCE.isExpense.getQualifiedName() + " = ?",
@@ -69,7 +69,7 @@ public class AccountDataManager {
 
         // Get the current project
         ProjectDataManager projectDataManager = new ProjectDataManager(context);
-        Project project = projectDataManager.findCurrentProjectWithContext(context);
+        Project project = projectDataManager.findCurrentProjectWithContext();
 
         // Get the current selected account
         if (isExpense) {

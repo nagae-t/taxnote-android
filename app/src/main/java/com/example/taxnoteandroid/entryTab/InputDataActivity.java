@@ -356,7 +356,7 @@ public class InputDataActivity extends AppCompatActivity {
         }
 
         ProjectDataManager projectDataManager = new ProjectDataManager(this);
-        Project project = projectDataManager.findCurrentProjectWithContext(this);
+        Project project = projectDataManager.findCurrentProjectWithContext();
 
         Entry entry = new Entry();
         entry.date = date;

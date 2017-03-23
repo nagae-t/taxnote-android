@@ -42,9 +42,9 @@ public class ProjectDataManager {
     //    -- Read --
     //--------------------------------------------------------------//
 
-    public Project findCurrentProjectWithContext(Context context) {
+    public Project findCurrentProjectWithContext() {
 
-        String currentProjectUuid   = SharedPreferencesManager.getUuidForCurrentProject(context);
+        String currentProjectUuid   = SharedPreferencesManager.getUuidForCurrentProject(mContext);
         Project project             = findByUuid(currentProjectUuid);
         return project;
     }

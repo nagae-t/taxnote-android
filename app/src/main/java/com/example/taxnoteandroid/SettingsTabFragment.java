@@ -357,7 +357,7 @@ public class SettingsTabFragment extends Fragment {
     }
 
     private void checkCurrentProjectToRadio() {
-        mCurrentProject = mProjectDataManager.findCurrentProjectWithContext(mContext);
+        mCurrentProject = mProjectDataManager.findCurrentProjectWithContext();
         if (mCurrentProject.isMaster) return;
 
         LinearLayout subProjectView = binding.subProjectRadioLayout;
@@ -393,7 +393,6 @@ public class SettingsTabFragment extends Fragment {
                 if (mEditingProject.isMaster) return;
 
                 // can not remove current project
-//                mCurrentProject = mProjectDataManager.findCurrentProjectWithContext(mContext);
                 if (selectedUuid.equals(mCurrentProject.uuid)) {
                     DialogManager.showOKOnlyAlert(getActivity(), null,
                             mContext.getString(R.string.delete_current_project_message));
@@ -457,7 +456,7 @@ public class SettingsTabFragment extends Fragment {
 
         // Set current decimal status
         final ProjectDataManager projectDataManager   = new ProjectDataManager(getActivity());
-        final Project project                         = projectDataManager.findCurrentProjectWithContext(getActivity());
+        final Project project                         = projectDataManager.findCurrentProjectWithContext();
         binding.decimalSwitch.setChecked(project.decimal);
 
         binding.decimalSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {

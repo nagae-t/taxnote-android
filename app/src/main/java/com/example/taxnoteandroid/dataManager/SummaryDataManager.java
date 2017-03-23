@@ -51,7 +51,7 @@ public class SummaryDataManager {
 
         // Get the current project
         ProjectDataManager projectDataManager = new ProjectDataManager(context);
-        Project project = projectDataManager.findCurrentProjectWithContext(context);
+        Project project = projectDataManager.findCurrentProjectWithContext();
 
         List summaries = ormaDatabase.selectFromSummary()
                 .where(Summary_Schema.INSTANCE.deleted.getQualifiedName() + " = 0")

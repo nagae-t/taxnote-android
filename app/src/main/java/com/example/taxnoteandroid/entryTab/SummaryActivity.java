@@ -473,7 +473,7 @@ public class SummaryActivity extends AppCompatActivity {
                             }
 
                             ProjectDataManager projectDataManager = new ProjectDataManager(context);
-                            Project project = projectDataManager.findCurrentProjectWithContext(context);
+                            Project project = projectDataManager.findCurrentProjectWithContext();
 
                             SummaryDataManager summaryDataManager = new SummaryDataManager(SummaryActivity.this);
                             List<Summary> summaryList = summaryDataManager.findAllWithReason(reason, context);
