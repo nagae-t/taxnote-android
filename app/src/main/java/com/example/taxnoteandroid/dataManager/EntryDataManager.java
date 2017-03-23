@@ -8,6 +8,7 @@ import com.example.taxnoteandroid.model.Account;
 import com.example.taxnoteandroid.model.Entry;
 import com.example.taxnoteandroid.model.Entry_Schema;
 import com.example.taxnoteandroid.model.Entry_Selector;
+import com.example.taxnoteandroid.model.Entry_Updater;
 import com.example.taxnoteandroid.model.OrmaDatabase;
 import com.example.taxnoteandroid.model.Project;
 import com.example.taxnoteandroid.model.Reason;
@@ -284,6 +285,24 @@ public class EntryDataManager {
 
     public int updatePrice(long id, long price) {
         return ormaDatabase.updateEntry().idEq(id).price(price).execute();
+    }
+
+    public void update(Entry entry) {
+        Entry_Updater updater = ormaDatabase.updateEntry();
+        updater.idEq(entry.id)
+                .date(entry.date)
+                .updated(entry.updated)
+                .price(entry.price)
+                .deleted(entry.deleted)
+                .isExpense(entry.isExpense)
+                .needSave(entry.needSave)
+                .needSync(entry.needSync)
+                .uuid(entry.uuid)
+                .memo(entry.memo)
+                .project(entry.project)
+                .reason(entry.reason)
+                .account(entry.account)
+                .execute();
     }
 
 

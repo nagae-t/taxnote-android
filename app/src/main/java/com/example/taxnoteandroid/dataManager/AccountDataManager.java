@@ -5,6 +5,7 @@ import android.content.Context;
 import com.example.taxnoteandroid.TaxnoteApp;
 import com.example.taxnoteandroid.model.Account;
 import com.example.taxnoteandroid.model.Account_Schema;
+import com.example.taxnoteandroid.model.Account_Updater;
 import com.example.taxnoteandroid.model.OrmaDatabase;
 import com.example.taxnoteandroid.model.Project;
 
@@ -100,6 +101,20 @@ public class AccountDataManager {
 
     public int updateName(long id, String name) {
         return ormaDatabase.updateAccount().idEq(id).name(name).execute();
+    }
+
+    public void update(Account account) {
+        Account_Updater updater = ormaDatabase.updateAccount();
+        updater.idEq(account.id)
+                .order(account.order)
+                .deleted(account.deleted)
+                .isExpense(account.isExpense)
+                .needSave(account.needSave)
+                .needSync(account.needSync)
+                .uuid(account.uuid)
+                .name(account.name)
+                .project(account.project)
+                .execute();
     }
 
 

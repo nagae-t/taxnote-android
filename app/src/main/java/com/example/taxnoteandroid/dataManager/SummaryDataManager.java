@@ -8,6 +8,7 @@ import com.example.taxnoteandroid.model.Project;
 import com.example.taxnoteandroid.model.Reason;
 import com.example.taxnoteandroid.model.Summary;
 import com.example.taxnoteandroid.model.Summary_Schema;
+import com.example.taxnoteandroid.model.Summary_Updater;
 
 import java.util.List;
 
@@ -72,6 +73,19 @@ public class SummaryDataManager {
 
     public int updateName(long id, String name) {
         return ormaDatabase.updateSummary().idEq(id).name(name).execute();
+    }
+
+    public void update(Summary summary) {
+        Summary_Updater updater = ormaDatabase.updateSummary();
+        updater.idEq(summary.id)
+                .order(summary.order)
+                .needSave(summary.needSave)
+                .needSync(summary.needSync)
+                .uuid(summary.uuid)
+                .name(summary.name)
+                .project(summary.project)
+                .reason(summary.reason)
+                .execute();
     }
 
 

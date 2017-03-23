@@ -5,6 +5,10 @@ import android.content.Context;
 import com.example.taxnoteandroid.dataManager.ProjectDataManager;
 
 import java.text.DecimalFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Locale;
 
 /**
  * Created by umemotonon on 2016/12/24.
@@ -46,5 +50,18 @@ public class ValueConverter {
         }
 
         return priceString;
+    }
+
+    public static long dateString2long(String dateString) {
+        if (dateString == null) return 0;
+
+        Calendar cal = Calendar.getInstance();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault());
+        try {
+            cal.setTime(sdf.parse(dateString));
+        } catch (ParseException e) {
+            return 0;
+        }
+        return cal.getTimeInMillis();
     }
 }

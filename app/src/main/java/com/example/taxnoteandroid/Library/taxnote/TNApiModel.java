@@ -4,11 +4,20 @@ import android.content.Context;
 import android.util.Log;
 
 import com.example.taxnoteandroid.Library.AsyncOkHttpClient;
+import com.example.taxnoteandroid.Library.ValueConverter;
+import com.example.taxnoteandroid.dataManager.AccountDataManager;
+import com.example.taxnoteandroid.dataManager.EntryDataManager;
 import com.example.taxnoteandroid.dataManager.ProjectDataManager;
 import com.example.taxnoteandroid.dataManager.ReasonDataManager;
+import com.example.taxnoteandroid.dataManager.RecurringDataManager;
 import com.example.taxnoteandroid.dataManager.SharedPreferencesManager;
+import com.example.taxnoteandroid.dataManager.SummaryDataManager;
+import com.example.taxnoteandroid.model.Account;
+import com.example.taxnoteandroid.model.Entry;
 import com.example.taxnoteandroid.model.Project;
 import com.example.taxnoteandroid.model.Reason;
+import com.example.taxnoteandroid.model.Recurring;
+import com.example.taxnoteandroid.model.Summary;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -277,7 +286,7 @@ public class TNApiModel extends TNApi {
             String uuid = obj.get("uuid").getAsString();
             Project project = projectDm.findByUuid(uuid);
 
-            // Delete it if deleted is YES
+            // Delete it if deleted is true
             if (deleted) {
                 if (project != null) {
                     projectDm.delete(project.id);
@@ -308,17 +317,17 @@ public class TNApiModel extends TNApi {
                     String subscriptionType = obj.get("subscription_type").getAsString();
                 }
 
-            }
-            if (isNewProject) {
-                projectDm.save(project);
-            } else {
-                projectDm.update(project);
+                if (isNewProject) {
+                    projectDm.save(project);
+                } else {
+                    projectDm.update(project);
+                }
             }
 
-            // save sync updated
-            long nowTime = System.currentTimeMillis() + 1000; // 1秒足すようだ
-            saveSyncUpdated(KEY_SYNC_UPDATED_PROJECT, nowTime);
         }
+        // save sync updated
+        long nowTime = System.currentTimeMillis() + 1000; // 1秒足すようだ
+        saveSyncUpdated(KEY_SYNC_UPDATED_PROJECT, nowTime);
     }
 
     private void updateReasons(JsonArray array) {
@@ -332,7 +341,7 @@ public class TNApiModel extends TNApi {
             String uuid = obj.get("uuid").getAsString();
             Reason reason = reasonDm.findByUuid(uuid);
 
-            // Delete it if deleted is YES
+            // Delete it if deleted is true
             if (deleted) {
                 if (reason != null) reasonDm.delete(reason.id);
             } else { // Update
@@ -348,43 +357,200 @@ public class TNApiModel extends TNApi {
                 reason.isExpense = obj.get("is_expense").getAsBoolean();
                 reason.details = obj.get("details").getAsString();
                 reason.project = projectDm.findByUuid(obj.get("project_uuid").getAsString());
-            }
-            if (isNewReason) {
-                reasonDm.save(reason);
-            } else {
-                reasonDm.update(reason);
+
+                if (isNewReason) {
+                    reasonDm.save(reason);
+                } else {
+                    reasonDm.update(reason);
+                }
             }
 
-            // save sync updated
-            long nowTime = System.currentTimeMillis() + 1000; // 1秒足すようだ
-            saveSyncUpdated(KEY_SYNC_UPDATED_REASON, nowTime);
         }
+        // save sync updated
+        long nowTime = System.currentTimeMillis() + 1000; // 1秒足すようだ
+        saveSyncUpdated(KEY_SYNC_UPDATED_REASON, nowTime);
     }
 
     private void updateAccounts(JsonArray array) {
+        AccountDataManager accountDm = new AccountDataManager(context);
+        ProjectDataManager projectDm = new ProjectDataManager(context);
         for (JsonElement jsElement : array) {
             JsonObject obj = jsElement.getAsJsonObject();
+
+            boolean isNewAcccount = false;
+            boolean deleted = obj.get("deleted").getAsBoolean();
+            String uuid = obj.get("uuid").getAsString();
+            Account account = accountDm.findByUuid(uuid);
+
+            // Delete id if deleted is true
+            if (deleted) {
+                if (account != null) accountDm.delete(account.id);
+
+            } else { // Update
+
+                if (account == null) {
+                    isNewAcccount = true;
+                    account = new Account();
+                    account.needSave = false;
+                }
+
+                account.uuid = uuid;
+                account.name = obj.get("name").getAsString();
+                account.order = obj.get("order").getAsLong();
+                account.isExpense = obj.get("is_expense").getAsBoolean();
+                account.project = projectDm.findByUuid(obj.get("project_uuid").getAsString());
+
+                if (isNewAcccount) {
+                    accountDm.save(account);
+                } else {
+                    accountDm.update(account);
+                }
+            }
+
+
         }
+        // save sync updated
+        long nowTime = System.currentTimeMillis() + 1000; // 1秒足すようだ
+        saveSyncUpdated(KEY_SYNC_UPDATED_ACCOUNT, nowTime);
     }
 
     private void updateSummaries(JsonArray array) {
+        SummaryDataManager summaryDm = new SummaryDataManager(context);
+        ReasonDataManager reasonDm = new ReasonDataManager(context);
+        ProjectDataManager projectDm = new ProjectDataManager(context);
         for (JsonElement jsElement : array) {
             JsonObject obj = jsElement.getAsJsonObject();
+
+            boolean isNewSummary = false;
+            boolean deleted = obj.get("deleted").getAsBoolean();
+            String uuid = obj.get("uuid").getAsString();
+            Summary summary = summaryDm.findByUuid(uuid);
+
+            if (deleted) {
+                if (summary != null) summaryDm.delete(summary.id);
+            } else { // Update
+
+                if (summary == null) {
+                    isNewSummary = true;
+                    summary = new Summary();
+                    summary.needSave = false;
+                }
+
+                summary.uuid = uuid;
+                summary.name = obj.get("name").getAsString();
+                summary.order = obj.get("order").getAsLong();
+                summary.project = projectDm.findByUuid(obj.get("project_uuid").getAsString());
+                summary.reason = reasonDm.findByUuid(obj.get("reason_uuid").getAsString());
+
+                if (isNewSummary) {
+                    summaryDm.save(summary);
+                } else {
+                    summaryDm.update(summary);
+                }
+            }
         }
+        // save sync updated
+        long nowTime = System.currentTimeMillis() + 1000; // 1秒足すようだ
+        saveSyncUpdated(KEY_SYNC_UPDATED_SUMMARY, nowTime);
     }
 
     private void updateRecurrings(JsonArray array) {
+        RecurringDataManager recDm = new RecurringDataManager(context);
+        ReasonDataManager reasonDm = new ReasonDataManager(context);
+        AccountDataManager accountDm = new AccountDataManager(context);
+        ProjectDataManager projectDm = new ProjectDataManager(context);
 
         for (JsonElement jsElement : array) {
             JsonObject obj = jsElement.getAsJsonObject();
+
+            boolean isNewRec = false;
+            boolean deleted = obj.get("deleted").getAsBoolean();
+            String uuid = obj.get("uuid").getAsString();
+            Recurring recurring = recDm.findByUuid(uuid);
+
+            if (deleted) {
+                if (recurring != null) recDm.delete(recurring.id);
+
+            } else { // Update
+
+                if (recurring == null) {
+                    isNewRec = true;
+                    recurring = new Recurring();
+                    recurring.needSave = false;
+                }
+
+                recurring.uuid = uuid;
+                recurring.dateIndex = obj.get("date").getAsLong();
+                recurring.timezone = obj.get("timezone").getAsString();
+                recurring.memo = obj.get("memo").getAsString();
+                recurring.price = obj.get("price").getAsLong();
+                recurring.isExpense = obj.get("is_expense").getAsBoolean();
+                recurring.order = obj.get("order").getAsLong();
+                recurring.reason = reasonDm.findByUuid(obj.get("reason_uuid").getAsString());
+                recurring.account = accountDm.findByUuid(obj.get("account_uuid").getAsString());
+                recurring.project = projectDm.findByUuid(obj.get("project_uuid").getAsString());
+
+                if (isNewRec) {
+                    recDm.save(recurring);
+                } else {
+                    recDm.update(recurring);
+                }
+            }
         }
+
+        // save sync updated
+        long nowTime = System.currentTimeMillis() + 1000; // 1秒足すようだ
+        saveSyncUpdated(KEY_SYNC_UPDATED_RECURRING, nowTime);
     }
 
     private void updateEntries(JsonArray array) {
+        EntryDataManager entryDm = new EntryDataManager(context);
+        ReasonDataManager reasonDm = new ReasonDataManager(context);
+        AccountDataManager accountDm = new AccountDataManager(context);
+        ProjectDataManager projectDm = new ProjectDataManager(context);
 
         for (JsonElement jsElement : array) {
             JsonObject obj = jsElement.getAsJsonObject();
+
+            boolean isNewEntry = false;
+            boolean deleted = obj.get("deleted").getAsBoolean();
+            String uuid = obj.get("uuid").getAsString();
+            Entry entry = entryDm.findByUuid(uuid);
+
+            if (deleted) {
+                if (entry != null) entryDm.delete(entry.id);
+
+            } else { // Update
+
+                if (entry == null) {
+                    isNewEntry = true;
+                    entry = new Entry();
+                    entry.needSave = false;
+                }
+
+                entry.uuid = uuid;
+                entry.date = ValueConverter.dateString2long(obj.get("date").getAsString());
+                entry.updated = ValueConverter.dateString2long(obj.get("updated_mobile").getAsString());
+                entry.memo = obj.get("memo").getAsString();
+                entry.price = obj.get("price").getAsLong();
+                entry.isExpense = obj.get("is_expense").getAsBoolean();
+                entry.project = projectDm.findByUuid(obj.get("project_uuid").getAsString());
+                entry.reason = reasonDm.findByUuid(obj.get("reason_uuid").getAsString());
+                entry.account = accountDm.findByUuid(obj.get("account_uuid").getAsString());
+
+                if (isNewEntry) {
+                    entryDm.save(entry);
+                } else {
+                    entryDm.update(entry);
+                }
+            }
+
+
         }
+
+        // save sync updated
+        long nowTime = System.currentTimeMillis() + 1000; // 1秒足すようだ
+        saveSyncUpdated(KEY_SYNC_UPDATED_ENTRY, nowTime);
     }
 
 

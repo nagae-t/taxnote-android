@@ -5,6 +5,7 @@ import android.content.Context;
 import com.example.taxnoteandroid.TaxnoteApp;
 import com.example.taxnoteandroid.model.OrmaDatabase;
 import com.example.taxnoteandroid.model.Recurring;
+import com.example.taxnoteandroid.model.Recurring_Updater;
 
 import java.util.List;
 
@@ -53,6 +54,25 @@ public class RecurringDataManager {
 
     public int updateRecurring(Recurring recurring) {
         return ormaDatabase.updateRecurring().idEq(recurring.id).execute();
+    }
+
+    public void update(Recurring rec) {
+        Recurring_Updater updater = ormaDatabase.updateRecurring();
+        updater.idEq(rec.id)
+                .order(rec.order)
+                .dateIndex(rec.dateIndex)
+                .price(rec.price)
+                .deleted(rec.deleted)
+                .isExpense(rec.isExpense)
+                .needSave(rec.needSave)
+                .needSync(rec.needSync)
+                .uuid(rec.uuid)
+                .timezone(rec.timezone)
+                .memo(rec.memo)
+                .project(rec.project)
+                .reason(rec.reason)
+                .account(rec.account)
+                .execute();
     }
 
 
