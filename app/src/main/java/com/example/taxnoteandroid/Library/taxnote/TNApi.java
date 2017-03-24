@@ -71,16 +71,26 @@ public class TNApi {
         SharedPreferencesManager.saveUserApiLoginValue(context, KEY_USER_UID, uid);
         SharedPreferencesManager.saveUserApiLoginValue(context, KEY_USER_ACCESS_TOKEN, accessToken);
         SharedPreferencesManager.saveUserApiLoginValue(context, KEY_USER_CLIENT, client);
+
+        this.loginUid = uid;
+        this.loginAccessToken = accessToken;
+        this.loginClient = client;
     }
 
     protected void deleteLoginData() {
         SharedPreferencesManager.saveUserApiLoginValue(context, KEY_USER_UID, null);
         SharedPreferencesManager.saveUserApiLoginValue(context, KEY_USER_ACCESS_TOKEN, null);
         SharedPreferencesManager.saveUserApiLoginValue(context, KEY_USER_CLIENT, null);
+        this.loginUid = null;
     }
 
     protected String getLoginUid() {
         return loginUid;
+    }
+
+    public boolean isLoggingIn() {
+        if (loginUid != null) return true;
+        return false;
     }
 
     protected void setRequestPath(String path) {

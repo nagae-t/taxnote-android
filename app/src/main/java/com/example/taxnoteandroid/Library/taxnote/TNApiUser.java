@@ -6,6 +6,7 @@ import com.example.taxnoteandroid.Library.AsyncOkHttpClient;
 
 import okhttp3.FormBody;
 import okhttp3.Headers;
+import okhttp3.Response;
 
 /**
  * Created by b0ne on 2017/03/17.
@@ -75,27 +76,50 @@ public class TNApiUser extends TNApi {
         super.deleteLoginData();
     }
 
-    public void register(AsyncOkHttpClient.Callback callback) {
+    public void register(final AsyncOkHttpClient.Callback callback) {
         setRequestPath(URL_PATH_REGISTER);
-        FormBody requestBody = new FormBody.Builder()
+        final FormBody requestBody = new FormBody.Builder()
                 .add("email", email)
                 .add("password", password)
                 .add("password_confirmation", passwordConfirm)
                 .build();
         setFormBody(requestBody);
-        setCallback(callback);
+        setCallback(new AsyncOkHttpClient.Callback() {
+            @Override
+            public void onFailure(Response response, Throwable throwable) {
+                callback.onFailure(response, throwable);
+            }
+
+            @Override
+            public void onSuccess(Response response, String content) {
+                saveLoginWithHttpHeaders(response.headers());
+                callback.onSuccess(response, content);
+            }
+        });
         requestApi();
 
     }
 
-    public void signIn(AsyncOkHttpClient.Callback callback) {
+    public void signIn(final AsyncOkHttpClient.Callback callback) {
         setRequestPath(URL_PATH_SIGN_IN);
         FormBody requestBody = new FormBody.Builder()
                 .add("email", email)
                 .add("password", password)
                 .build();
         setFormBody(requestBody);
-        setCallback(callback);
+        setCallback(new AsyncOkHttpClient.Callback() {
+            @Override
+            public void onFailure(Response response, Throwable throwable) {
+                callback.onFailure(response, throwable);
+            }
+
+            @Override
+            public void onSuccess(Response response, String content) {
+                Headers headers = response.headers();
+                saveLoginWithHttpHeaders(headers);
+                callback.onSuccess(response, content);
+            }
+        });
         requestApi();
     }
 

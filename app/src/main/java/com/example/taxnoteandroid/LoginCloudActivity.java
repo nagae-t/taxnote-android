@@ -18,7 +18,6 @@ import com.example.taxnoteandroid.Library.DialogManager;
 import com.example.taxnoteandroid.Library.taxnote.TNApiUser;
 import com.example.taxnoteandroid.databinding.ActivityLoginCloudBinding;
 
-import okhttp3.Headers;
 import okhttp3.Response;
 
 /**
@@ -85,6 +84,7 @@ public class LoginCloudActivity extends DefaultCommonActivity {
         }
     };
 
+    // ログインまたはアカウント作成の入力チェックと確認ダイアログ表示
     private void showLoginConfirm() {
         final String email = binding.emailInput.getText().toString();
         final String passwd = binding.passwdInput.getText().toString();
@@ -118,12 +118,21 @@ public class LoginCloudActivity extends DefaultCommonActivity {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         if (mViewType == VIEW_TYPE_REGISTER) {
             // Show confirm register
-
+            builder.setTitle(email)
+                    .setMessage(R.string.confirm_email)
+                    .setNegativeButton(android.R.string.cancel, null)
+                    .setPositiveButton(R.string.cloud_register, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            sendRegister(email, passwd);
+                        }
+                    })
+                    .show();
         } else {
 
             // Show confirm sync data dialog message
-            builder.setTitle(getResources().getString(R.string.login_confirm_title))
-                    .setMessage(getResources().getString(R.string.login_confirm_desc))
+            builder.setTitle(R.string.login_confirm_title)
+                    .setMessage(R.string.login_confirm_desc)
                     .setNegativeButton(android.R.string.cancel, null)
                     .setPositiveButton(R.string.login, new DialogInterface.OnClickListener() {
                         @Override
@@ -171,8 +180,6 @@ public class LoginCloudActivity extends DefaultCommonActivity {
             @Override
             public void onSuccess(Response response, String content) {
                 Log.v("TEST", "sign in onSuccess content : " + content);
-                Headers headers = response.headers();
-                apiUser.saveLoginWithHttpHeaders(headers);
 
                 dialog.dismiss();
                 setResult(RESULT_OK);
@@ -202,6 +209,33 @@ public class LoginCloudActivity extends DefaultCommonActivity {
                         finish();
                     }
                 });*/
+            }
+        });
+    }
+
+    private void sendRegister(String email, String passwd) {
+
+        // Progress dialog
+        final ProgressDialog dialog = new ProgressDialog(this);
+        dialog.setMessage(getString(R.string.loading));
+        dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        dialog.setCancelable(false);
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.show();
+
+        final TNApiUser apiUser = new TNApiUser(this, email, passwd);
+        apiUser.setPasswordConfirm(passwd);
+        apiUser.register(new AsyncOkHttpClient.Callback() {
+            @Override
+            public void onFailure(Response response, Throwable throwable) {
+                dialog.dismiss();
+            }
+
+            @Override
+            public void onSuccess(Response response, String content) {
+
+                //@@ saveAllDataAfterRegisterWithCompletion
+                //dialog.dismiss();
             }
         });
     }

@@ -316,7 +316,7 @@
     <string name="cloud_register">アカウント作成</string>
     <string name="taxnote_cloud_first_free">Taxnoteクラウド（初回無料）</string>
     <string name="taxnote_cloud_login_desc">Taxnoteクラウド専用アカウントでログインできます。（アカウントはTaxnoteクラウドをPlayストアで購読した後に作成できます。）</string>
-    <string name="taxnote_cloud_register_desc">現在Taxnoteクラウドを購読中ですが、自動共有（自動バックアップ)を有効にするには専用アカウントでログインする必要があります。（GooglePlayストアIDとは別のTaxnote専用アカウントです。）</string>
+    <string name="taxnote_cloud_register_desc">現在Taxnoteクラウドを購読中ですが、自動共有（自動バックアップ)を有効にするには専用アカウントでログインする必要があります。\n（GooglePlayストアIDとは別のTaxnote専用アカウントです。）</string>
     <string name="email_address">メールアドレス</string>
     <string name="password">パスワード</string>
     <string name="password_confrim">確認のためパスワード再入力</string>
