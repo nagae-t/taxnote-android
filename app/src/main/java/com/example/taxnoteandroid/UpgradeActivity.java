@@ -241,19 +241,9 @@ public class UpgradeActivity extends DefaultCommonActivity {
     //--------------------------------------------------------------//
 
     private void setTaxnoteCloud() {
-        binding.btnLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                LoginCloudActivity.startForResult(UpgradeActivity.this, REQUEST_CODE_CLOUD_LOGIN);
-            }
-        });
+        binding.btnLogin.setOnClickListener(taxnoteClondOnClick);
 
-        binding.cloudMemberLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                showMemberDialogItems();
-            }
-        });
+        binding.cloudMemberLayout.setOnClickListener(taxnoteClondOnClick);
 
         String userEmail = mApiUser.getEmail();
         if (userEmail != null) {
@@ -262,6 +252,22 @@ public class UpgradeActivity extends DefaultCommonActivity {
             binding.email.setText(userEmail);
         }
     }
+    private View.OnClickListener taxnoteClondOnClick = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            int viewId = view.getId();
+            switch (viewId) {
+                case R.id.btn_login:
+                    LoginCloudActivity.startForResult(UpgradeActivity.this,
+                            REQUEST_CODE_CLOUD_LOGIN,
+                            LoginCloudActivity.VIEW_TYPE_LOGIN);
+                    break;
+                case R.id.cloud_member_layout:
+                    showMemberDialogItems();
+                    break;
+            }
+        }
+    };
 
     private void showMemberDialogItems() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -304,6 +310,10 @@ public class UpgradeActivity extends DefaultCommonActivity {
             @Override
             public void onFailure(Response response, Throwable throwable) {
                 dialog.dismiss();
+
+                // debug 保存しているtokenを削除
+                mApiUser.deleteLoginData();
+
                 Log.v("TEST", "sign out onFailure ");
                 if (throwable != null) {
                     Log.v("TEST", throwable.getMessage());

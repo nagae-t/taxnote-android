@@ -15,10 +15,8 @@ import android.view.View;
 
 import com.example.taxnoteandroid.Library.AsyncOkHttpClient;
 import com.example.taxnoteandroid.Library.DialogManager;
-import com.example.taxnoteandroid.Library.taxnote.TNApiModel;
 import com.example.taxnoteandroid.Library.taxnote.TNApiUser;
 import com.example.taxnoteandroid.databinding.ActivityLoginCloudBinding;
-import com.example.taxnoteandroid.model.OrmaDatabase;
 
 import okhttp3.Headers;
 import okhttp3.Response;
@@ -31,14 +29,20 @@ public class LoginCloudActivity extends DefaultCommonActivity {
 
     private ActivityLoginCloudBinding binding;
 
+    private static final String KEY_VIEW_TYPE = "view_type";
+    public static final int VIEW_TYPE_LOGIN = 0;
+    public static final int VIEW_TYPE_REGISTER = 1;
+
     public static void start(Context context) {
         Intent intent = new Intent(context, LoginCloudActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.putExtra(KEY_VIEW_TYPE, VIEW_TYPE_LOGIN);
         context.startActivity(intent);
     }
 
-    public static void startForResult(Activity activity, int requestCode) {
+    public static void startForResult(Activity activity, int requestCode, int viewType) {
         Intent intent = new Intent(activity.getApplicationContext(), LoginCloudActivity.class);
+        intent.putExtra(KEY_VIEW_TYPE, viewType);
         activity.startActivityForResult(intent, requestCode);
     }
 
@@ -140,6 +144,11 @@ public class LoginCloudActivity extends DefaultCommonActivity {
                 Headers headers = response.headers();
                 apiUser.saveLoginWithHttpHeaders(headers);
 
+                dialog.dismiss();
+                setResult(RESULT_OK);
+                finish();
+
+                /*
                 TNApiModel apiModel = new TNApiModel(getApplicationContext());
                 //@@ getAllDataAfterLogInWithCompletion ログイン成功後の処理
                 apiModel.resetAllUpdatedKeys();
@@ -162,7 +171,7 @@ public class LoginCloudActivity extends DefaultCommonActivity {
                         setResult(RESULT_OK);
                         finish();
                     }
-                });
+                });*/
             }
         });
     }

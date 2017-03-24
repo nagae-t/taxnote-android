@@ -19,6 +19,7 @@ import okhttp3.HttpUrl;
 
 public class TNApi {
 
+    private static final String SECRET_FOR_SUBSCRIPTION_CHECK = "pgehz98bptpu6j9dnp7wf33sz";
     private static final String KEY_IS_SYNCING_DATA = "is_syncing_data";
 
     protected static final String URL_PATH_RECURRING = "/v1/recurrings";
@@ -44,6 +45,7 @@ public class TNApi {
 
 
     protected Context context;
+    private String requestUrlPath;
     private String requestUrl;
     private FormBody formBody;
     private AsyncOkHttpClient.Callback callback;
@@ -82,6 +84,7 @@ public class TNApi {
     }
 
     protected void setRequestPath(String path) {
+        requestUrlPath = path;
         setRequestUrl(BuildConfig.TAXNOTE_API_URI + path);
     }
 
@@ -102,9 +105,13 @@ public class TNApi {
     }
 
     private Headers getHeaders() {
-        if (loginUid == null) return null;
-
         Map<String, String> headerMap = new LinkedHashMap<>();
+        if (requestUrlPath.startsWith(URL_PATH_SUBSCRIPTION)) {
+            headerMap.put("shared-secret", SECRET_FOR_SUBSCRIPTION_CHECK);
+            return Headers.of(headerMap);
+        }
+
+        if (loginUid == null) return null;
         headerMap.put("access-token", loginAccessToken);
         headerMap.put("client", loginClient);
         headerMap.put("uid", loginUid);

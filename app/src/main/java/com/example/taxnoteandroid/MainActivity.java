@@ -117,10 +117,15 @@ public class MainActivity extends DefaultCommonActivity {
         apiModel.testGetProjects(new AsyncOkHttpClient.Callback() {
             @Override
             public void onFailure(Response response, Throwable throwable) {
-                Log.v("TEST", "getProjects onFailure code : " + response.code()
-                        + ", message: " + response.message());
+                Log.v("TEST", "getProjects onFailure ");
+
                 if (throwable != null) {
                     Log.v("TEST", throwable.getLocalizedMessage());
+                }
+
+                if (response != null) {
+                    Log.v("TEST", "getProjects onFailure code: "
+                        + response.code() + ", message: " + response.message());
                 }
             }
 

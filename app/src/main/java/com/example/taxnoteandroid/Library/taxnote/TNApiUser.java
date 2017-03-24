@@ -114,5 +114,15 @@ public class TNApiUser extends TNApi {
     public void updatePassword() {
     }
 
+    public void checkUniqeOfSubscription(AsyncOkHttpClient.Callback callback) {
+        //@@ 課金IDはここで指定する
+        String subscriptionId = "";
+        setRequestPath(URL_PATH_SUBSCRIPTION + "/" + subscriptionId);
+
+        setFormBody(null);
+        setCallback(callback);
+        requestApi();
+    }
+
 
 }
