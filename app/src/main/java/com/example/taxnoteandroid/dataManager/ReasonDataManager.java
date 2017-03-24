@@ -12,6 +12,8 @@ import com.github.gfx.android.orma.Inserter;
 
 import java.util.List;
 
+import static android.R.attr.order;
+
 public class ReasonDataManager {
 
     private OrmaDatabase ormaDatabase;
@@ -76,6 +78,16 @@ public class ReasonDataManager {
         return reasons;
     }
 
+    public List<Reason> findAllNeedSave(boolean isNeedSave) {
+        int needSave = (isNeedSave) ? 1 : 0;
+        List<Reason> reasons = ormaDatabase.selectFromReason()
+                .where(Reason_Schema.INSTANCE.deleted.getQualifiedName() + " = 0")
+                .and()
+                .where(Reason_Schema.INSTANCE.needSave.getQualifiedName() + " = " + needSave)
+                .toList();
+        return reasons;
+    }
+
 
     //--------------------------------------------------------------//
     //    -- Update --
@@ -87,6 +99,10 @@ public class ReasonDataManager {
 
     public int updateOrder(long id, int order) {
         return ormaDatabase.updateReason().idEq(id).order(order).execute();
+    }
+
+    public int updateNeedSave(long id, boolean needSave) {
+        return ormaDatabase.updateReason().idEq(id).needSave(needSave).execute();
     }
 
     public void update(Reason reason) {

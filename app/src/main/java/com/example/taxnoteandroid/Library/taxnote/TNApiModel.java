@@ -23,6 +23,8 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
+import java.util.List;
+
 import okhttp3.FormBody;
 import okhttp3.Response;
 
@@ -40,10 +42,24 @@ public class TNApiModel extends TNApi {
     private static final String KEY_SYNC_UPDATED_RECURRING = "KEY_SYNC_UPDATED_RECURRING";
 
     private JsonParser jsParser;
+    private int mCount = 0;
+
+    private ProjectDataManager mProjectDataManager;
+    private ReasonDataManager mReasonDataManager;
+    private AccountDataManager mAccountDataManager;
+    private SummaryDataManager mSummaryDataManager;
+    private RecurringDataManager mRecurringDataManager;
+    private EntryDataManager mEntryDataManager;
 
     public TNApiModel(Context context) {
         super(context);
         this.jsParser = new JsonParser();
+        this.mProjectDataManager = new ProjectDataManager(context);
+        this.mReasonDataManager = new ReasonDataManager(context);
+        this.mAccountDataManager = new AccountDataManager(context);
+        this.mSummaryDataManager = new SummaryDataManager(context);
+        this.mRecurringDataManager = new RecurringDataManager(context);
+        this.mEntryDataManager = new EntryDataManager(context);
     }
 
     //--------------------------------------------------------------//
@@ -337,49 +353,154 @@ public class TNApiModel extends TNApi {
     //    -- Save Method --
     //--------------------------------------------------------------//
 
-    public void saveProject(String uuid, AsyncOkHttpClient.Callback callback) {
+    public void saveProject(String uuid, final AsyncOkHttpClient.Callback callback) {
+        if (!isLoggingIn()) {
+            callback.onSuccess(null, null);
+            return;
+        }
+
+        Project project = mProjectDataManager.findByUuid(uuid);
+        final long projectId = project.id;
+
         setHttpMethod(HTTP_METHOD_POST);
         setRequestPath(URL_PATH_PROJECT);
 
-//        setFormBody();
-        setCallback(callback);
+        // dummy
+        String subsExpires = "2017-05-01 23:23:21 Etc/GMT";
+        String subsId = "xxxxxxxxxxxxxxxxxxxxx01";
+        String subsType = "subs_type_xxxxx01";
+        String subsReceipt = "subs_receipt_xxxxx01";
+
+        FormBody.Builder formBuilder = new FormBody.Builder();
+        formBuilder.add("project[uuid]", project.uuid);
+        formBuilder.add("project[name]", project.name);
+        formBuilder.add("project[order]", String.valueOf(project.order));
+        formBuilder.add("project[master]", String.valueOf(project.isMaster));
+        formBuilder.add("project[account_for_expense]", project.accountUuidForExpense);
+        formBuilder.add("project[account_for_income]", project.accountUuidForIncome);
+        formBuilder.add("project[subscription_expires]", subsExpires);
+        formBuilder.add("project[subscription_transaction]", subsId);
+        formBuilder.add("project[subscription_type]", subsType);
+        formBuilder.add("project[appstore_receipt]", subsReceipt);
+
+        setFormBody(formBuilder.build());
+        setCallback(new AsyncOkHttpClient.Callback() {
+            @Override
+            public void onFailure(Response response, Throwable throwable) {
+                callback.onFailure(response, throwable);
+            }
+
+            @Override
+            public void onSuccess(Response response, String content) {
+                mProjectDataManager.updateNeedSave(projectId, false);
+                callback.onSuccess(response, content);
+            }
+        });
+
         requestApi();
     }
 
-    public void saveReason(String uuid, AsyncOkHttpClient.Callback callback) {
+    public void saveReason(String uuid, final AsyncOkHttpClient.Callback callback) {
     }
 
-    public void saveAccount(String uuid, AsyncOkHttpClient.Callback callback) {
+    public void saveAccount(String uuid, final AsyncOkHttpClient.Callback callback) {
     }
 
-    public void saveSummary(String uuid, AsyncOkHttpClient.Callback callback) {
+    public void saveSummary(String uuid, final AsyncOkHttpClient.Callback callback) {
     }
 
-    public void saveRecurring(String uuid, AsyncOkHttpClient.Callback callback) {
+    public void saveRecurring(String uuid, final AsyncOkHttpClient.Callback callback) {
     }
 
-    public void saveEntry(String uuid, AsyncOkHttpClient.Callback callback) {
+    public void saveEntry(String uuid, final AsyncOkHttpClient.Callback callback) {
     }
 
+    public void saveAllNeedSaveProjects(final AsyncOkHttpClient.Callback callback) {
+        List<Project> projects = mProjectDataManager.findAllNeedSave(true);
+        final int projectSize = projects.size();
+        if (projectSize == 0) {
+            callback.onSuccess(null, null);
+        }
+
+        mCount = 0;
+        for (Project project : projects) {
+            saveProject(project.uuid, new AsyncOkHttpClient.Callback() {
+                @Override
+                public void onFailure(Response response, Throwable throwable) {
+                    callback.onFailure(response, throwable);
+                }
+
+                @Override
+                public void onSuccess(Response response, String content) {
+                    mCount++;
+                    if (mCount >= projectSize)
+                        callback.onSuccess(response, content);
+                }
+            });
+        }
+    }
+
+    public void saveAllNeedSaveReasons(final AsyncOkHttpClient.Callback callback) {
+        ReasonDataManager reasonDm = new ReasonDataManager(context);
+        List<Reason> reasons = reasonDm.findAllNeedSave(true);
+        final int reasonSize = reasons.size();
+        if (reasonSize == 0) {
+            callback.onSuccess(null, null);
+        }
+
+        mCount = 0;
+        for (Reason reason : reasons) {
+            saveReason(reason.uuid, new AsyncOkHttpClient.Callback() {
+                @Override
+                public void onFailure(Response response, Throwable throwable) {
+                    callback.onFailure(response, throwable);
+                }
+
+                @Override
+                public void onSuccess(Response response, String content) {
+
+                }
+            });
+        }
+    }
+
+    public void saveAllNeedSaveAccounts(final AsyncOkHttpClient.Callback callback) {
+
+    }
+
+    public void saveAllNeedSaveSummaries(final AsyncOkHttpClient.Callback callback) {
+
+    }
+
+    public void saveAllNeedSaveRecurrings(final AsyncOkHttpClient.Callback callback) {
+
+    }
+
+    public void saveAllNeedSaveEntries(final AsyncOkHttpClient.Callback callback) {
+
+    }
+
+    public void saveAllDataAfterRegister() {
+
+    }
 
     //--------------------------------------------------------------//
     //    -- Update Method --
     //--------------------------------------------------------------//
 
     private void updateProjects(JsonArray array) {
-        ProjectDataManager projectDm = new ProjectDataManager(context);
         for (JsonElement jsElement : array) {
             JsonObject obj = jsElement.getAsJsonObject();
 
             boolean isNewProject = false;
             boolean deleted = obj.get("deleted").getAsBoolean();
             String uuid = obj.get("uuid").getAsString();
-            Project project = projectDm.findByUuid(uuid);
+            Project project = mProjectDataManager.findByUuid(uuid);
 
             // Delete it if deleted is true
             if (deleted) {
                 if (project != null) {
-                    projectDm.delete(project.id);
+                    mProjectDataManager.delete(project.id);
                 }
 
             } else { // Update
@@ -408,9 +529,9 @@ public class TNApiModel extends TNApi {
                 }
 
                 if (isNewProject) {
-                    projectDm.save(project);
+                    mProjectDataManager.save(project);
                 } else {
-                    projectDm.update(project);
+                    mProjectDataManager.update(project);
                 }
             }
 
@@ -421,19 +542,17 @@ public class TNApiModel extends TNApi {
     }
 
     private void updateReasons(JsonArray array) {
-        ReasonDataManager reasonDm = new ReasonDataManager(context);
-        ProjectDataManager projectDm = new ProjectDataManager(context);
         for (JsonElement jsElement : array) {
             JsonObject obj = jsElement.getAsJsonObject();
 
             boolean isNewReason = false;
             boolean deleted = obj.get("deleted").getAsBoolean();
             String uuid = obj.get("uuid").getAsString();
-            Reason reason = reasonDm.findByUuid(uuid);
+            Reason reason = mReasonDataManager.findByUuid(uuid);
 
             // Delete it if deleted is true
             if (deleted) {
-                if (reason != null) reasonDm.delete(reason.id);
+                if (reason != null) mRecurringDataManager.delete(reason.id);
             } else { // Update
                 if (reason == null) {
                     isNewReason = true;
@@ -446,12 +565,12 @@ public class TNApiModel extends TNApi {
                 reason.order = obj.get("order").getAsLong();
                 reason.isExpense = obj.get("is_expense").getAsBoolean();
                 reason.details = obj.get("details").getAsString();
-                reason.project = projectDm.findByUuid(obj.get("project_uuid").getAsString());
+                reason.project = mProjectDataManager.findByUuid(obj.get("project_uuid").getAsString());
 
                 if (isNewReason) {
-                    reasonDm.save(reason);
+                    mReasonDataManager.save(reason);
                 } else {
-                    reasonDm.update(reason);
+                    mReasonDataManager.update(reason);
                 }
             }
 
@@ -462,19 +581,17 @@ public class TNApiModel extends TNApi {
     }
 
     private void updateAccounts(JsonArray array) {
-        AccountDataManager accountDm = new AccountDataManager(context);
-        ProjectDataManager projectDm = new ProjectDataManager(context);
         for (JsonElement jsElement : array) {
             JsonObject obj = jsElement.getAsJsonObject();
 
             boolean isNewAcccount = false;
             boolean deleted = obj.get("deleted").getAsBoolean();
             String uuid = obj.get("uuid").getAsString();
-            Account account = accountDm.findByUuid(uuid);
+            Account account = mAccountDataManager.findByUuid(uuid);
 
             // Delete id if deleted is true
             if (deleted) {
-                if (account != null) accountDm.delete(account.id);
+                if (account != null) mAccountDataManager.delete(account.id);
 
             } else { // Update
 
@@ -488,12 +605,12 @@ public class TNApiModel extends TNApi {
                 account.name = obj.get("name").getAsString();
                 account.order = obj.get("order").getAsLong();
                 account.isExpense = obj.get("is_expense").getAsBoolean();
-                account.project = projectDm.findByUuid(obj.get("project_uuid").getAsString());
+                account.project = mProjectDataManager.findByUuid(obj.get("project_uuid").getAsString());
 
                 if (isNewAcccount) {
-                    accountDm.save(account);
+                    mAccountDataManager.save(account);
                 } else {
-                    accountDm.update(account);
+                    mAccountDataManager.update(account);
                 }
             }
 
@@ -505,19 +622,16 @@ public class TNApiModel extends TNApi {
     }
 
     private void updateSummaries(JsonArray array) {
-        SummaryDataManager summaryDm = new SummaryDataManager(context);
-        ReasonDataManager reasonDm = new ReasonDataManager(context);
-        ProjectDataManager projectDm = new ProjectDataManager(context);
         for (JsonElement jsElement : array) {
             JsonObject obj = jsElement.getAsJsonObject();
 
             boolean isNewSummary = false;
             boolean deleted = obj.get("deleted").getAsBoolean();
             String uuid = obj.get("uuid").getAsString();
-            Summary summary = summaryDm.findByUuid(uuid);
+            Summary summary = mSummaryDataManager.findByUuid(uuid);
 
             if (deleted) {
-                if (summary != null) summaryDm.delete(summary.id);
+                if (summary != null) mSummaryDataManager.delete(summary.id);
             } else { // Update
 
                 if (summary == null) {
@@ -529,13 +643,13 @@ public class TNApiModel extends TNApi {
                 summary.uuid = uuid;
                 summary.name = obj.get("name").getAsString();
                 summary.order = obj.get("order").getAsLong();
-                summary.project = projectDm.findByUuid(obj.get("project_uuid").getAsString());
-                summary.reason = reasonDm.findByUuid(obj.get("reason_uuid").getAsString());
+                summary.project = mProjectDataManager.findByUuid(obj.get("project_uuid").getAsString());
+                summary.reason = mReasonDataManager.findByUuid(obj.get("reason_uuid").getAsString());
 
                 if (isNewSummary) {
-                    summaryDm.save(summary);
+                    mSummaryDataManager.save(summary);
                 } else {
-                    summaryDm.update(summary);
+                    mSummaryDataManager.update(summary);
                 }
             }
         }
@@ -545,10 +659,6 @@ public class TNApiModel extends TNApi {
     }
 
     private void updateRecurrings(JsonArray array) {
-        RecurringDataManager recDm = new RecurringDataManager(context);
-        ReasonDataManager reasonDm = new ReasonDataManager(context);
-        AccountDataManager accountDm = new AccountDataManager(context);
-        ProjectDataManager projectDm = new ProjectDataManager(context);
 
         for (JsonElement jsElement : array) {
             JsonObject obj = jsElement.getAsJsonObject();
@@ -556,10 +666,10 @@ public class TNApiModel extends TNApi {
             boolean isNewRec = false;
             boolean deleted = obj.get("deleted").getAsBoolean();
             String uuid = obj.get("uuid").getAsString();
-            Recurring recurring = recDm.findByUuid(uuid);
+            Recurring recurring = mRecurringDataManager.findByUuid(uuid);
 
             if (deleted) {
-                if (recurring != null) recDm.delete(recurring.id);
+                if (recurring != null) mRecurringDataManager.delete(recurring.id);
 
             } else { // Update
 
@@ -576,14 +686,14 @@ public class TNApiModel extends TNApi {
                 recurring.price = obj.get("price").getAsLong();
                 recurring.isExpense = obj.get("is_expense").getAsBoolean();
                 recurring.order = obj.get("order").getAsLong();
-                recurring.reason = reasonDm.findByUuid(obj.get("reason_uuid").getAsString());
-                recurring.account = accountDm.findByUuid(obj.get("account_uuid").getAsString());
-                recurring.project = projectDm.findByUuid(obj.get("project_uuid").getAsString());
+                recurring.reason = mReasonDataManager.findByUuid(obj.get("reason_uuid").getAsString());
+                recurring.account = mAccountDataManager.findByUuid(obj.get("account_uuid").getAsString());
+                recurring.project = mProjectDataManager.findByUuid(obj.get("project_uuid").getAsString());
 
                 if (isNewRec) {
-                    recDm.save(recurring);
+                    mRecurringDataManager.save(recurring);
                 } else {
-                    recDm.update(recurring);
+                    mRecurringDataManager.update(recurring);
                 }
             }
         }
@@ -594,10 +704,6 @@ public class TNApiModel extends TNApi {
     }
 
     private void updateEntries(JsonArray array) {
-        EntryDataManager entryDm = new EntryDataManager(context);
-        ReasonDataManager reasonDm = new ReasonDataManager(context);
-        AccountDataManager accountDm = new AccountDataManager(context);
-        ProjectDataManager projectDm = new ProjectDataManager(context);
 
         for (JsonElement jsElement : array) {
             JsonObject obj = jsElement.getAsJsonObject();
@@ -605,10 +711,10 @@ public class TNApiModel extends TNApi {
             boolean isNewEntry = false;
             boolean deleted = obj.get("deleted").getAsBoolean();
             String uuid = obj.get("uuid").getAsString();
-            Entry entry = entryDm.findByUuid(uuid);
+            Entry entry = mEntryDataManager.findByUuid(uuid);
 
             if (deleted) {
-                if (entry != null) entryDm.delete(entry.id);
+                if (entry != null) mEntryDataManager.delete(entry.id);
 
             } else { // Update
 
@@ -624,14 +730,14 @@ public class TNApiModel extends TNApi {
                 entry.memo = obj.get("memo").getAsString();
                 entry.price = obj.get("price").getAsLong();
                 entry.isExpense = obj.get("is_expense").getAsBoolean();
-                entry.project = projectDm.findByUuid(obj.get("project_uuid").getAsString());
-                entry.reason = reasonDm.findByUuid(obj.get("reason_uuid").getAsString());
-                entry.account = accountDm.findByUuid(obj.get("account_uuid").getAsString());
+                entry.project = mProjectDataManager.findByUuid(obj.get("project_uuid").getAsString());
+                entry.reason = mReasonDataManager.findByUuid(obj.get("reason_uuid").getAsString());
+                entry.account = mAccountDataManager.findByUuid(obj.get("account_uuid").getAsString());
 
                 if (isNewEntry) {
-                    entryDm.save(entry);
+                    mEntryDataManager.save(entry);
                 } else {
-                    entryDm.update(entry);
+                    mEntryDataManager.update(entry);
                 }
             }
 

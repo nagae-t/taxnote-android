@@ -77,6 +77,16 @@ public class ProjectDataManager {
         return projectList;
     }
 
+    public List<Project> findAllNeedSave(boolean isNeedSave) {
+        int needSave = (isNeedSave) ? 1 : 0;
+        List<Project> projectList = ormaDatabase.selectFromProject()
+                .where(Project_Schema.INSTANCE.needSave.getQualifiedName() + " = " + needSave)
+                .toList();
+
+
+        return projectList;
+    }
+
 
     //--------------------------------------------------------------//
     //    -- Update --
@@ -99,6 +109,10 @@ public class ProjectDataManager {
                 .idEq(project.id)
                 .name(project.name)
                 .execute();
+    }
+
+    public int updateNeedSave(long id, boolean needSave) {
+        return ormaDatabase.updateReason().idEq(id).needSave(needSave).execute();
     }
 
     public void update(Project project) {
