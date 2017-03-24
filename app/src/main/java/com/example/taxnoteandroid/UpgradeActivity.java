@@ -38,6 +38,7 @@ public class UpgradeActivity extends DefaultCommonActivity {
     private static final String TAXNOTE_PLUS_ID = "taxnote.plus.sub";
     private static final int REQUEST_CODE_PURCHASE_PREMIUM = 0;
     private static final int REQUEST_CODE_CLOUD_LOGIN = 2;
+    private static final int REQUEST_CODE_CLOUD_REGISTER = 3;
     private IabHelper mBillingHelper;
     private TNApiUser mApiUser;
     private TNApiModel mApiModel;
@@ -150,7 +151,7 @@ public class UpgradeActivity extends DefaultCommonActivity {
 
         if (resultCode == RESULT_OK && requestCode == REQUEST_CODE_CLOUD_LOGIN) {
             mApiUser = new TNApiUser(this);
-            binding.btnLogin.setVisibility(View.GONE);
+            binding.cloudLoginLayout.setVisibility(View.GONE);
             binding.cloudMemberLayout.setVisibility(View.VISIBLE);
             binding.email.setText(mApiUser.getEmail());
 
@@ -241,13 +242,13 @@ public class UpgradeActivity extends DefaultCommonActivity {
     //--------------------------------------------------------------//
 
     private void setTaxnoteCloud() {
-        binding.btnLogin.setOnClickListener(taxnoteClondOnClick);
-
+        binding.cloudRegisterLayout.setOnClickListener(taxnoteClondOnClick);
+        binding.cloudLoginLayout.setOnClickListener(taxnoteClondOnClick);
         binding.cloudMemberLayout.setOnClickListener(taxnoteClondOnClick);
 
         String userEmail = mApiUser.getEmail();
         if (userEmail != null) {
-            binding.btnLogin.setVisibility(View.GONE);
+            binding.cloudLoginLayout.setVisibility(View.GONE);
             binding.cloudMemberLayout.setVisibility(View.VISIBLE);
             binding.email.setText(userEmail);
         }
@@ -257,7 +258,12 @@ public class UpgradeActivity extends DefaultCommonActivity {
         public void onClick(View view) {
             int viewId = view.getId();
             switch (viewId) {
-                case R.id.btn_login:
+                case R.id.cloud_register_layout:
+                    LoginCloudActivity.startForResult(UpgradeActivity.this,
+                            REQUEST_CODE_CLOUD_REGISTER,
+                            LoginCloudActivity.VIEW_TYPE_REGISTER);
+                    break;
+                case R.id.cloud_login_layout:
                     LoginCloudActivity.startForResult(UpgradeActivity.this,
                             REQUEST_CODE_CLOUD_LOGIN,
                             LoginCloudActivity.VIEW_TYPE_LOGIN);
@@ -334,7 +340,7 @@ public class UpgradeActivity extends DefaultCommonActivity {
                 dialog.dismiss();
                 Log.v("TEST", "sign out onSuccess content : " + content);
 
-                binding.btnLogin.setVisibility(View.VISIBLE);
+                binding.cloudLoginLayout.setVisibility(View.VISIBLE);
                 binding.cloudMemberLayout.setVisibility(View.GONE);
 
                 //@@ 保存しているtokenを削除

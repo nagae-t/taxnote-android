@@ -28,6 +28,7 @@ import okhttp3.Response;
 public class LoginCloudActivity extends DefaultCommonActivity {
 
     private ActivityLoginCloudBinding binding;
+    private int mViewType;
 
     private static final String KEY_VIEW_TYPE = "view_type";
     public static final int VIEW_TYPE_LOGIN = 0;
@@ -51,9 +52,19 @@ public class LoginCloudActivity extends DefaultCommonActivity {
         super.onCreate(savedInstanceState);
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_login_cloud);
+        mViewType = getIntent().getIntExtra(KEY_VIEW_TYPE, VIEW_TYPE_LOGIN);
 
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
+
+        // Set view type
+        if (mViewType == VIEW_TYPE_REGISTER) {
+            setTitle(R.string.cloud_register);
+            binding.topDesc.setText(R.string.taxnote_cloud_register_desc);
+            binding.passwdConfirmInputLayout.setVisibility(View.VISIBLE);
+            binding.btnForgotPasswd.setVisibility(View.GONE);
+            binding.btnSendLogin.setText(R.string.cloud_register);
+        }
 
         binding.btnSendLogin.setOnClickListener(onClickAction);
         binding.btnForgotPasswd.setOnClickListener(onClickAction);
@@ -65,7 +76,6 @@ public class LoginCloudActivity extends DefaultCommonActivity {
             int viewId = view.getId();
             switch (viewId) {
                 case R.id.btn_send_login:
-//                    sendLogin();
                     showLoginConfirm();
                     break;
                 case R.id.btn_forgot_passwd:
@@ -78,6 +88,7 @@ public class LoginCloudActivity extends DefaultCommonActivity {
     private void showLoginConfirm() {
         final String email = binding.emailInput.getText().toString();
         final String passwd = binding.passwdInput.getText().toString();
+        final String passwdConfirm = binding.passwdConfirmInput.getText().toString();
 
         if (email.length() == 0) {
             binding.emailInputLayout.setError(getString(R.string.empty_email_input_error));
@@ -90,19 +101,38 @@ public class LoginCloudActivity extends DefaultCommonActivity {
         }
         binding.passwdInputLayout.setErrorEnabled(false);
 
-        // Show dialog message
-        new AlertDialog.Builder(this)
-                .setTitle(getResources().getString(R.string.login_confirm_title))
-                .setMessage(getResources().getString(R.string.login_confirm_desc))
-                .setNegativeButton(android.R.string.cancel, null)
-                .setPositiveButton(R.string.login, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        sendLogin(email, passwd);
-                    }
-                })
-                .show();
+        // 登録の場合のチェック
+        if (mViewType == VIEW_TYPE_REGISTER) {
+            if (passwdConfirm.length() == 0) {
+                binding.passwdConfirmInputLayout.setError(getString(R.string.empty_password_confrim_input_error));
+                return;
+            }
+            binding.passwdConfirmInputLayout.setErrorEnabled(false);
+            if (!passwd.equals(passwdConfirm)) {
+                binding.passwdConfirmInputLayout.setError(getString(R.string.password_confrim_match_error));
+                return;
+            }
+            binding.passwdConfirmInputLayout.setErrorEnabled(false);
+        }
 
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        if (mViewType == VIEW_TYPE_REGISTER) {
+            // Show confirm register
+
+        } else {
+
+            // Show confirm sync data dialog message
+            builder.setTitle(getResources().getString(R.string.login_confirm_title))
+                    .setMessage(getResources().getString(R.string.login_confirm_desc))
+                    .setNegativeButton(android.R.string.cancel, null)
+                    .setPositiveButton(R.string.login, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            sendLogin(email, passwd);
+                        }
+                    })
+                    .show();
+        }
     }
 
     private void sendLogin(String email, String passwd) {
