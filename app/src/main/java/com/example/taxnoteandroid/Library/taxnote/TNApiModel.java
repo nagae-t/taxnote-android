@@ -833,20 +833,7 @@ public class TNApiModel extends TNApi {
                                             public void onSuccess(Response response, String content) {
                                                 Log.v("TEST", "saveAllNeedSaveData onSuccess --- Recurrings");
 
-                                                saveAllNeedSaveEntries(new AsyncOkHttpClient.Callback() {
-                                                    @Override
-                                                    public void onFailure(Response response, Throwable throwable) {
-                                                        Log.e(LTAG, "saveAllNeedSaveData onFailure --- Entries");
-                                                        callback.onFailure(response, throwable);
-                                                    }
-
-                                                    @Override
-                                                    public void onSuccess(Response response, String content) {
-                                                        Log.v("TEST", "saveAllNeedSaveData onSuccess --- Entries");
-
-                                                        callback.onSuccess(response, content);
-                                                    }
-                                                });
+                                                saveAllNeedSaveEntries(callback);
                                             }
                                         });
                                     }
@@ -1358,7 +1345,7 @@ public class TNApiModel extends TNApi {
         requestApi();
     }
 
-    private void updateSummay(String uuid, final AsyncOkHttpClient.Callback callback) {
+    private void updateSummary(String uuid, final AsyncOkHttpClient.Callback callback) {
         Summary summary = mSummaryDataManager.findByUuid(uuid);
         final long summaryId = summary.id;
 
@@ -1478,16 +1465,218 @@ public class TNApiModel extends TNApi {
         requestApi();
     }
 
-    private void updateAllNeedSyncProjects() {
+    private void updateAllNeedSyncProjects(final AsyncOkHttpClient.Callback callback) {
+        List<Project> projects = mProjectDataManager.findAllNeedSync(true);
+        final int projectSize = projects.size();
+        if (projectSize == 0) {
+            callback.onSuccess(null, null);
+        }
 
+        mCount = 0;
+        for (Project project : projects) {
+            updateProject(project.uuid, new AsyncOkHttpClient.Callback() {
+                @Override
+                public void onFailure(Response response, Throwable throwable) {
+                    if (callback != null)
+                        callback.onFailure(response, throwable);
+                }
+
+                @Override
+                public void onSuccess(Response response, String content) {
+                    mCount++;
+                    if (mCount >= projectSize) {
+                        if (callback != null)
+                            callback.onSuccess(response, content);
+                    }
+                }
+            });
+        }
+    }
+
+    private void updateAllNeedSyncReasons(final AsyncOkHttpClient.Callback callback) {
+        List<Reason> reasons = mReasonDataManager.findAllNeedSync(true);
+        final int reasonSize = reasons.size();
+        if (reasonSize == 0) {
+            callback.onSuccess(null, null);
+        }
+
+        mCount = 0;
+        for (Reason reason : reasons) {
+            updateReason(reason.uuid, new AsyncOkHttpClient.Callback() {
+                @Override
+                public void onFailure(Response response, Throwable throwable) {
+                    callback.onFailure(response, throwable);
+                }
+
+                @Override
+                public void onSuccess(Response response, String content) {
+                    mCount++;
+                    if (mCount >= reasonSize)
+                        callback.onSuccess(response, content);
+                }
+            });
+        }
+    }
+
+    private void updateAllNeedSyncAccounts(final AsyncOkHttpClient.Callback callback) {
+        List<Account> accounts = mAccountDataManager.findAllNeedSync(true);
+        final int accountSize = accounts.size();
+        if (accountSize == 0) {
+            callback.onSuccess(null, null);
+        }
+
+        mCount = 0;
+        for (Account account : accounts) {
+            updateAccount(account.uuid, new AsyncOkHttpClient.Callback() {
+                @Override
+                public void onFailure(Response response, Throwable throwable) {
+                    callback.onFailure(response, throwable);
+                }
+
+                @Override
+                public void onSuccess(Response response, String content) {
+                    mCount++;
+                    if (mCount >= accountSize)
+                        callback.onSuccess(response, content);
+                }
+            });
+        }
+    }
+
+    private void updateAllNeedSyncSummaries(final AsyncOkHttpClient.Callback callback) {
+        List<Summary> summaries = mSummaryDataManager.findAllNeedSync(true);
+        final int summarySize = summaries.size();
+        if (summarySize == 0) {
+            callback.onSuccess(null, null);
+        }
+
+        mCount = 0;
+        for (Summary summary : summaries) {
+            updateSummary(summary.uuid, new AsyncOkHttpClient.Callback() {
+                @Override
+                public void onFailure(Response response, Throwable throwable) {
+                    callback.onFailure(response, throwable);
+                }
+
+                @Override
+                public void onSuccess(Response response, String content) {
+                    mCount++;
+                    if (mCount >= summarySize)
+                        callback.onSuccess(response, content);
+                }
+            });
+        }
+    }
+
+    private void updateAllNeedSyncRecurrings(final AsyncOkHttpClient.Callback callback) {
+        List<Recurring> recurrings = mRecurringDataManager.findAllNeedSync(true);
+        final int recurringSize = recurrings.size();
+        if (recurringSize == 0) {
+            callback.onSuccess(null, null);
+        }
+
+        mCount = 0;
+        for (Recurring recurring : recurrings) {
+            updateRecurring(recurring.uuid, new AsyncOkHttpClient.Callback() {
+                @Override
+                public void onFailure(Response response, Throwable throwable) {
+                    callback.onFailure(response, throwable);
+                }
+
+                @Override
+                public void onSuccess(Response response, String content) {
+                    mCount++;
+                    if (mCount >= recurringSize)
+                        callback.onSuccess(response, content);
+                }
+            });
+        }
+    }
+
+    private void updateAllNeedSyncEntries(final AsyncOkHttpClient.Callback callback) {
+        List<Entry> entries = mEntryDataManager.findAllNeedSync(true);
+        final int entrySize = entries.size();
+        if (entrySize == 0) {
+            callback.onSuccess(null, null);
+        }
+
+        mCount = 0;
+        for (Entry entry : entries) {
+            updateEntry(entry.uuid, new AsyncOkHttpClient.Callback() {
+                @Override
+                public void onFailure(Response response, Throwable throwable) {
+                    callback.onFailure(response, throwable);
+                }
+
+                @Override
+                public void onSuccess(Response response, String content) {
+                    mCount++;
+                    if (mCount >= entrySize)
+                        callback.onSuccess(response, content);
+                }
+            });
+        }
     }
 
     public void updateAllNeedSyncData(final AsyncOkHttpClient.Callback callback) {
-        if (isLoggingIn()) {
+        if (!isLoggingIn()) {
             if (callback != null)
                 callback.onSuccess(null, null);
             return;
         }
+
+        updateAllNeedSyncProjects(new AsyncOkHttpClient.Callback() {
+            @Override
+            public void onFailure(Response response, Throwable throwable) {
+                callback.onFailure(response, throwable);
+            }
+
+            @Override
+            public void onSuccess(Response response, String content) {
+                updateAllNeedSyncReasons(new AsyncOkHttpClient.Callback() {
+                    @Override
+                    public void onFailure(Response response, Throwable throwable) {
+                        callback.onFailure(response, throwable);
+                    }
+
+                    @Override
+                    public void onSuccess(Response response, String content) {
+                        updateAllNeedSyncAccounts(new AsyncOkHttpClient.Callback() {
+                            @Override
+                            public void onFailure(Response response, Throwable throwable) {
+                                callback.onFailure(response, throwable);
+                            }
+
+                            @Override
+                            public void onSuccess(Response response, String content) {
+                                updateAllNeedSyncSummaries(new AsyncOkHttpClient.Callback() {
+                                    @Override
+                                    public void onFailure(Response response, Throwable throwable) {
+                                        callback.onFailure(response, throwable);
+                                    }
+
+                                    @Override
+                                    public void onSuccess(Response response, String content) {
+                                        updateAllNeedSyncRecurrings(new AsyncOkHttpClient.Callback() {
+                                            @Override
+                                            public void onFailure(Response response, Throwable throwable) {
+                                                callback.onFailure(response, throwable);
+                                            }
+
+                                            @Override
+                                            public void onSuccess(Response response, String content) {
+
+                                                updateAllNeedSyncEntries(callback);
+                                            }
+                                        });
+                                    }
+                                });
+                            }
+                        });
+                    }
+                });
+            }
+        });
     }
 
 
