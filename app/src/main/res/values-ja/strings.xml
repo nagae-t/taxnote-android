@@ -330,6 +330,8 @@
     <string name="login_error_desc">メールアドレスとパスワードを確認してください。</string>
     <string name="login_confirm_title">ログインすると、現在のデータは上書きされます</string>
     <string name="login_confirm_desc">ログインすると、このデバイスにあるデータは削除され、サーバに保存されているデータを取得して上書きします。ログインしてもいいですか？</string>
+    <string name="login_success_wait_fetching">ログイン完了しました。データを取得しています。数分以上かかることもありますが、この画面を開いたまま、しばらくお待ちください。</string>
+    <string name="fetch_all_after_login_done">データの取得が完了しました。</string>
     <string name="logout">ログアウト</string>
     <string name="change_password">パスワードの変更</string>
     <string name="delete_account">アカウントの削除</string>

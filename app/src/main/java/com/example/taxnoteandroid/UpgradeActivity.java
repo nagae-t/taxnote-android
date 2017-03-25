@@ -78,7 +78,8 @@ public class UpgradeActivity extends DefaultCommonActivity {
             try {
                 mBillingHelper.dispose();
             } catch (IabHelper.IabAsyncInProgressException e) {
-                e.printStackTrace();
+//                e.printStackTrace();
+                Log.e("ERROR", e.getLocalizedMessage());
             }
         }
         mBillingHelper = null;
@@ -150,21 +151,21 @@ public class UpgradeActivity extends DefaultCommonActivity {
             super.onActivityResult(requestCode, resultCode, data);
         }
 
-        if (resultCode == RESULT_OK && requestCode == REQUEST_CODE_CLOUD_LOGIN) {
+        if (resultCode == RESULT_OK) {
             binding.cloudLoginLayout.setVisibility(View.GONE);
             binding.cloudRegisterLayout.setVisibility(View.GONE);
             binding.cloudMemberLayout.setVisibility(View.VISIBLE);
             binding.email.setText(mApiUser.getEmail());
+            if (requestCode == REQUEST_CODE_CLOUD_LOGIN) {
+                DialogManager.showOKOnlyAlert(this,
+                        R.string.thx_for_waiting,
+                        R.string.fetch_all_after_login_done);
 
-        } else if (resultCode == RESULT_OK && requestCode == REQUEST_CODE_CLOUD_REGISTER) {
-            binding.cloudLoginLayout.setVisibility(View.GONE);
-            binding.cloudRegisterLayout.setVisibility(View.GONE);
-            binding.cloudMemberLayout.setVisibility(View.VISIBLE);
-            binding.email.setText(mApiUser.getEmail());
-
-            DialogManager.showOKOnlyAlert(this,
-                    R.string.thx_for_waiting,
-                    R.string.upload_all_after_register_done);
+            } else if (requestCode == REQUEST_CODE_CLOUD_REGISTER) {
+                DialogManager.showOKOnlyAlert(this,
+                        R.string.thx_for_waiting,
+                        R.string.upload_all_after_register_done);
+            }
         }
     }
 

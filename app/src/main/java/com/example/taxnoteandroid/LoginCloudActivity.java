@@ -162,19 +162,21 @@ public class LoginCloudActivity extends DefaultCommonActivity {
             public void onFailure(Response response, Throwable throwable) {
                 dialog.dismiss();
 
-                int httpStatusCode = response.code();
-                if (httpStatusCode == 401) {
-                    DialogManager.showOKOnlyAlert(LoginCloudActivity.this,
-                            getResources().getString(R.string.login_error),
-                            getResources().getString(R.string.login_error_desc));
-                } else {
-                    String errorMsg = response.message();
-                    if (throwable != null) {
-                        errorMsg = throwable.getLocalizedMessage();
+                if (response != null) {
+                    int httpStatusCode = response.code();
+                    if (httpStatusCode == 401) {
+                        DialogManager.showOKOnlyAlert(LoginCloudActivity.this,
+                                getResources().getString(R.string.login_error),
+                                getResources().getString(R.string.login_error_desc));
+                    } else {
+                        String errorMsg = response.message();
+                        if (throwable != null) {
+                            errorMsg = throwable.getLocalizedMessage();
+                        }
+                        DialogManager.showOKOnlyAlert(LoginCloudActivity.this,
+                                getResources().getString(R.string.login_error),
+                                errorMsg);
                     }
-                    DialogManager.showOKOnlyAlert(LoginCloudActivity.this,
-                            getResources().getString(R.string.login_error),
-                            errorMsg);
                 }
 
             }
@@ -187,6 +189,7 @@ public class LoginCloudActivity extends DefaultCommonActivity {
 //                setResult(RESULT_OK);
 //                finish();
 
+                dialog.setMessage(getString(R.string.login_success_wait_fetching));
                 /**/
                 final TNApiModel apiModel = new TNApiModel(getApplicationContext());
                 //@@  ログイン成功後の処理
@@ -210,8 +213,7 @@ public class LoginCloudActivity extends DefaultCommonActivity {
                     public void onSuccess(Response response, String content) {
                         apiModel.setIsSyncing(false);
                         dialog.dismiss();
-                        Log.v("TEST", "getAllDataAfterLogin onSuccess ");
-                        Log.v("TEST", "getAllDataAfterLogin headers: " + response.headers().toString());
+                        Log.v("TEST", "getAllDataAfterLogin onSuccess finish");
                         setResult(RESULT_OK);
                         finish();
                     }
