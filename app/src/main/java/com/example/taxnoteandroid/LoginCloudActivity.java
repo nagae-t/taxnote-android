@@ -15,6 +15,7 @@ import android.view.View;
 
 import com.example.taxnoteandroid.Library.AsyncOkHttpClient;
 import com.example.taxnoteandroid.Library.DialogManager;
+import com.example.taxnoteandroid.Library.taxnote.TNApiModel;
 import com.example.taxnoteandroid.Library.taxnote.TNApiUser;
 import com.example.taxnoteandroid.databinding.ActivityLoginCloudBinding;
 
@@ -234,10 +235,23 @@ public class LoginCloudActivity extends DefaultCommonActivity {
 
             @Override
             public void onSuccess(Response response, String content) {
-                dialog.dismiss();
+//                dialog.dismiss();
 
+                dialog.setMessage("アカウント作成完了\nデータアップロード中です、少々お待ちを");
                 //@@ saveAllDataAfterRegisterWithCompletion
-                //dialog.dismiss();
+                final TNApiModel apiModel = new TNApiModel(getApplicationContext());
+                apiModel.saveAllDataAfterRegister(new AsyncOkHttpClient.Callback() {
+                    @Override
+                    public void onFailure(Response response, Throwable throwable) {
+                        dialog.dismiss();
+                    }
+
+                    @Override
+                    public void onSuccess(Response response, String content) {
+
+                    }
+                });
+
             }
         });
     }

@@ -34,6 +34,8 @@ import okhttp3.Response;
 
 public class TNApiModel extends TNApi {
 
+    private static final String LTAG = TNApiModel.class.getSimpleName();
+
     private static final String KEY_SYNC_UPDATED_PROJECT = "KEY_SYNC_UPDATED_PROJECT";
     private static final String KEY_SYNC_UPDATED_ACCOUNT = "KEY_SYNC_UPDATED_ACCOUNT";
     private static final String KEY_SYNC_UPDATED_REASON = "KEY_SYNC_UPDATED_REASON";
@@ -262,6 +264,7 @@ public class TNApiModel extends TNApi {
         getProjects(new AsyncOkHttpClient.Callback() {
             @Override
             public void onFailure(Response response, Throwable throwable) {
+                Log.e(LTAG, "getAllDataAfterLogin onFailure --- Projects");
                 setIsSyncing(false);
                 callback.onFailure(response, throwable);
             }
@@ -275,6 +278,7 @@ public class TNApiModel extends TNApi {
                 getReasons(new AsyncOkHttpClient.Callback() {
                     @Override
                     public void onFailure(Response response, Throwable throwable) {
+                        Log.e(LTAG, "getAllDataAfterLogin onFailure --- Reasons");
                         setIsSyncing(false);
                         callback.onFailure(response, throwable);
                     }
@@ -287,6 +291,7 @@ public class TNApiModel extends TNApi {
                         getAccounts(new AsyncOkHttpClient.Callback() {
                             @Override
                             public void onFailure(Response response, Throwable throwable) {
+                                Log.e(LTAG, "getAllDataAfterLogin onFailure --- Accounts");
                                 setIsSyncing(false);
                                 callback.onFailure(response, throwable);
                             }
@@ -299,6 +304,7 @@ public class TNApiModel extends TNApi {
                                 getSummaries(new AsyncOkHttpClient.Callback() {
                                     @Override
                                     public void onFailure(Response response, Throwable throwable) {
+                                        Log.e(LTAG, "getAllDataAfterLogin onFailure --- Summaries");
                                         setIsSyncing(false);
                                         callback.onFailure(response, throwable);
                                     }
@@ -311,6 +317,7 @@ public class TNApiModel extends TNApi {
                                         getRecurrings(new AsyncOkHttpClient.Callback() {
                                             @Override
                                             public void onFailure(Response response, Throwable throwable) {
+                                                Log.e(LTAG, "getAllDataAfterLogin onFailure --- Recurrings");
                                                 setIsSyncing(false);
                                                 callback.onFailure(response, throwable);
                                             }
@@ -323,6 +330,7 @@ public class TNApiModel extends TNApi {
                                                 getEntries(new AsyncOkHttpClient.Callback() {
                                                     @Override
                                                     public void onFailure(Response response, Throwable throwable) {
+                                                        Log.e(LTAG, "getAllDataAfterLogin onFailure --- Entries");
                                                         setIsSyncing(false);
                                                         callback.onFailure(response, throwable);
                                                     }
@@ -384,12 +392,10 @@ public class TNApiModel extends TNApi {
         setCallback(new AsyncOkHttpClient.Callback() {
             @Override
             public void onFailure(Response response, Throwable throwable) {
-                Log.v("TEST", "saveProject(uuid) onFailure ");
+                Log.e(LTAG, "saveProject(uuid) onFailure");
                 if (response != null) {
-                    Log.v("TEST", "saveProject(uuid) onFailure response.code: " + response.code());
-                    Log.v("TEST", "saveProject(uuid) onFailure headers.code: " + response.headers());
-                    Log.v("TEST", "saveProject(uuid) onFailure request.body: " + response.request().body());
-                    Log.v("TEST", "saveProject(uuid) onFailure response.body: " + response.body());
+                    Log.e(LTAG, "saveProject(uuid) onFailure response.code: " + response.code()
+                            + ", message: " + response.message());
                 }
                 callback.onFailure(response, throwable);
             }
@@ -426,6 +432,11 @@ public class TNApiModel extends TNApi {
         setCallback(new AsyncOkHttpClient.Callback() {
             @Override
             public void onFailure(Response response, Throwable throwable) {
+                Log.e(LTAG, "saveReason(uuid) onFailure");
+                if (response != null) {
+                    Log.e(LTAG, "saveReason(uuid) onFailure response.code: " + response.code()
+                            + ", message: " + response.message());
+                }
                 callback.onFailure(response, throwable);
             }
 
@@ -457,6 +468,11 @@ public class TNApiModel extends TNApi {
         setCallback(new AsyncOkHttpClient.Callback() {
             @Override
             public void onFailure(Response response, Throwable throwable) {
+                Log.e(LTAG, "saveAccount(uuid) onFailure");
+                if (response != null) {
+                    Log.e(LTAG, "saveAccount(uuid) onFailure response.code: " + response.code()
+                            + ", message: " + response.message());
+                }
                 callback.onFailure(response, throwable);
             }
 
@@ -487,6 +503,11 @@ public class TNApiModel extends TNApi {
         setCallback(new AsyncOkHttpClient.Callback() {
             @Override
             public void onFailure(Response response, Throwable throwable) {
+                Log.e(LTAG, "saveSummary(uuid) onFailure");
+                if (response != null) {
+                    Log.e(LTAG, "saveSummary(uuid) onFailure response.code: " + response.code()
+                            + ", message: " + response.message());
+                }
                 callback.onFailure(response, throwable);
             }
 
@@ -524,6 +545,11 @@ public class TNApiModel extends TNApi {
         setCallback(new AsyncOkHttpClient.Callback() {
             @Override
             public void onFailure(Response response, Throwable throwable) {
+                Log.e(LTAG, "saveRecurring(uuid) onFailure");
+                if (response != null) {
+                    Log.e(LTAG, "saveRecurring(uuid) onFailure response.code: " + response.code()
+                            + ", message: " + response.message());
+                }
                 callback.onFailure(response, throwable);
             }
 
@@ -560,6 +586,11 @@ public class TNApiModel extends TNApi {
         setCallback(new AsyncOkHttpClient.Callback() {
             @Override
             public void onFailure(Response response, Throwable throwable) {
+                Log.e(LTAG, "saveEntry(uuid) onFailure");
+                if (response != null) {
+                    Log.e(LTAG, "saveEntry(uuid) onFailure response.code: " + response.code()
+                            + ", message: " + response.message());
+                }
                 callback.onFailure(response, throwable);
             }
 
@@ -572,7 +603,7 @@ public class TNApiModel extends TNApi {
         requestApi();
     }
 
-    public void saveAllNeedSaveProjects(final AsyncOkHttpClient.Callback callback) {
+    private void saveAllNeedSaveProjects(final AsyncOkHttpClient.Callback callback) {
         List<Project> projects = mProjectDataManager.findAllNeedSave(true);
         final int projectSize = projects.size();
         if (projectSize == 0) {
@@ -603,7 +634,7 @@ public class TNApiModel extends TNApi {
         }
     }
 
-    public void saveAllNeedSaveReasons(final AsyncOkHttpClient.Callback callback) {
+    private void saveAllNeedSaveReasons(final AsyncOkHttpClient.Callback callback) {
         List<Reason> reasons = mReasonDataManager.findAllNeedSave(true);
         final int reasonSize = reasons.size();
         if (reasonSize == 0) {
@@ -628,7 +659,7 @@ public class TNApiModel extends TNApi {
         }
     }
 
-    public void saveAllNeedSaveAccounts(final AsyncOkHttpClient.Callback callback) {
+    private void saveAllNeedSaveAccounts(final AsyncOkHttpClient.Callback callback) {
         List<Account> accounts = mAccountDataManager.findAllNeedSave(true);
         final int accountSize = accounts.size();
         if (accountSize == 0) {
@@ -653,7 +684,7 @@ public class TNApiModel extends TNApi {
         }
     }
 
-    public void saveAllNeedSaveSummaries(final AsyncOkHttpClient.Callback callback) {
+    private void saveAllNeedSaveSummaries(final AsyncOkHttpClient.Callback callback) {
         List<Summary> summaries = mSummaryDataManager.findAllNeedSave(true);
         final int summarySize = summaries.size();
         if (summarySize == 0) {
@@ -678,7 +709,7 @@ public class TNApiModel extends TNApi {
         }
     }
 
-    public void saveAllNeedSaveRecurrings(final AsyncOkHttpClient.Callback callback) {
+    private void saveAllNeedSaveRecurrings(final AsyncOkHttpClient.Callback callback) {
         List<Recurring> recurrings = mRecurringDataManager.findAllNeedSave(true);
         final int recurringSize = recurrings.size();
         if (recurringSize == 0) {
@@ -703,7 +734,7 @@ public class TNApiModel extends TNApi {
         }
     }
 
-    public void saveAllNeedSaveEntries(final AsyncOkHttpClient.Callback callback) {
+    private void saveAllNeedSaveEntries(final AsyncOkHttpClient.Callback callback) {
         List<Entry> entries = mEntryDataManager.findAllNeedSave(true);
         final int entrySize = entries.size();
         if (entrySize == 0) {
@@ -735,7 +766,7 @@ public class TNApiModel extends TNApi {
         saveAllNeedSaveProjects(new AsyncOkHttpClient.Callback() {
             @Override
             public void onFailure(Response response, Throwable throwable) {
-                Log.v("TEST", "saveAllDataAfterRegister onFailure --- Projects");
+                Log.e(LTAG, "saveAllDataAfterRegister onFailure --- Projects");
                 callback.onFailure(response, throwable);
             }
 
@@ -746,7 +777,7 @@ public class TNApiModel extends TNApi {
                 saveAllNeedSaveReasons(new AsyncOkHttpClient.Callback() {
                     @Override
                     public void onFailure(Response response, Throwable throwable) {
-                        Log.v("TEST", "saveAllDataAfterRegister onFailure --- Reasons");
+                        Log.e(LTAG, "saveAllDataAfterRegister onFailure --- Reasons");
                         callback.onFailure(response, throwable);
                     }
 
@@ -757,7 +788,7 @@ public class TNApiModel extends TNApi {
                         saveAllNeedSaveAccounts(new AsyncOkHttpClient.Callback() {
                             @Override
                             public void onFailure(Response response, Throwable throwable) {
-                                Log.v("TEST", "saveAllDataAfterRegister onFailure --- Accounts");
+                                Log.e(LTAG, "saveAllDataAfterRegister onFailure --- Accounts");
                                 callback.onFailure(response, throwable);
                             }
 
@@ -768,6 +799,7 @@ public class TNApiModel extends TNApi {
                                 saveAllNeedSaveSummaries(new AsyncOkHttpClient.Callback() {
                                     @Override
                                     public void onFailure(Response response, Throwable throwable) {
+                                        Log.e(LTAG, "saveAllDataAfterRegister onFailure --- Summaries");
                                         callback.onFailure(response, throwable);
                                     }
 
@@ -778,6 +810,7 @@ public class TNApiModel extends TNApi {
                                         saveAllNeedSaveRecurrings(new AsyncOkHttpClient.Callback() {
                                             @Override
                                             public void onFailure(Response response, Throwable throwable) {
+                                                Log.e(LTAG, "saveAllDataAfterRegister onFailure --- Recurrings");
                                                 callback.onFailure(response, throwable);
                                             }
 
@@ -788,6 +821,7 @@ public class TNApiModel extends TNApi {
                                                 saveAllNeedSaveEntries(new AsyncOkHttpClient.Callback() {
                                                     @Override
                                                     public void onFailure(Response response, Throwable throwable) {
+                                                        Log.e(LTAG, "saveAllDataAfterRegister onFailure --- Entries");
                                                         callback.onFailure(response, throwable);
                                                     }
 
