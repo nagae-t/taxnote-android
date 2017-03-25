@@ -12,6 +12,8 @@ import com.example.taxnoteandroid.model.Entry_Updater;
 import com.example.taxnoteandroid.model.OrmaDatabase;
 import com.example.taxnoteandroid.model.Project;
 import com.example.taxnoteandroid.model.Reason;
+import com.example.taxnoteandroid.model.Recurring;
+import com.example.taxnoteandroid.model.Recurring_Schema;
 import com.github.gfx.android.orma.OrderSpec;
 
 import java.util.ArrayList;
@@ -57,6 +59,16 @@ public class EntryDataManager {
 
     public Entry findByUuid(String uuid) {
         return ormaDatabase.selectFromEntry().where(Entry_Schema.INSTANCE.uuid.getQualifiedName() + " = ?", uuid).valueOrNull();
+    }
+
+    public List<Entry> findAllNeedSave(boolean isNeedSave) {
+        int needSave = (isNeedSave) ? 1 : 0;
+        List<Entry> entries = ormaDatabase.selectFromEntry()
+                .where(Entry_Schema.INSTANCE.deleted.getQualifiedName() + " = 0")
+                .and()
+                .where(Entry_Schema.INSTANCE.needSave.getQualifiedName() + " = " + needSave)
+                .toList();
+        return entries;
     }
 
     public List<Entry> findAll() {

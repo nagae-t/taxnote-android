@@ -596,8 +596,7 @@ public class TNApiModel extends TNApi {
     }
 
     public void saveAllNeedSaveReasons(final AsyncOkHttpClient.Callback callback) {
-        ReasonDataManager reasonDm = new ReasonDataManager(context);
-        List<Reason> reasons = reasonDm.findAllNeedSave(true);
+        List<Reason> reasons = mReasonDataManager.findAllNeedSave(true);
         final int reasonSize = reasons.size();
         if (reasonSize == 0) {
             callback.onSuccess(null, null);
@@ -613,30 +612,191 @@ public class TNApiModel extends TNApi {
 
                 @Override
                 public void onSuccess(Response response, String content) {
-
+                    mCount++;
+                    if (mCount >= reasonSize)
+                        callback.onSuccess(response, content);
                 }
             });
         }
     }
 
     public void saveAllNeedSaveAccounts(final AsyncOkHttpClient.Callback callback) {
+        List<Account> accounts = mAccountDataManager.findAllNeedSave(true);
+        final int accountSize = accounts.size();
+        if (accountSize == 0) {
+            callback.onSuccess(null, null);
+        }
 
+        mCount = 0;
+        for (Account account : accounts) {
+            saveAccount(account.uuid, new AsyncOkHttpClient.Callback() {
+                @Override
+                public void onFailure(Response response, Throwable throwable) {
+                    callback.onFailure(response, throwable);
+                }
+
+                @Override
+                public void onSuccess(Response response, String content) {
+                    mCount++;
+                    if (mCount >= accountSize)
+                        callback.onSuccess(response, content);
+                }
+            });
+        }
     }
 
     public void saveAllNeedSaveSummaries(final AsyncOkHttpClient.Callback callback) {
+        List<Summary> summaries = mSummaryDataManager.findAllNeedSave(true);
+        final int summarySize = summaries.size();
+        if (summarySize == 0) {
+            callback.onSuccess(null, null);
+        }
 
+        mCount = 0;
+        for (Summary summary : summaries) {
+            saveSummary(summary.uuid, new AsyncOkHttpClient.Callback() {
+                @Override
+                public void onFailure(Response response, Throwable throwable) {
+                    callback.onFailure(response, throwable);
+                }
+
+                @Override
+                public void onSuccess(Response response, String content) {
+                    mCount++;
+                    if (mCount >= summarySize)
+                        callback.onSuccess(response, content);
+                }
+            });
+        }
     }
 
     public void saveAllNeedSaveRecurrings(final AsyncOkHttpClient.Callback callback) {
+        List<Recurring> recurrings = mRecurringDataManager.findAllNeedSave(true);
+        final int recurringSize = recurrings.size();
+        if (recurringSize == 0) {
+            callback.onSuccess(null, null);
+        }
 
+        mCount = 0;
+        for (Recurring recurring : recurrings) {
+            saveRecurring(recurring.uuid, new AsyncOkHttpClient.Callback() {
+                @Override
+                public void onFailure(Response response, Throwable throwable) {
+                    callback.onFailure(response, throwable);
+                }
+
+                @Override
+                public void onSuccess(Response response, String content) {
+                    mCount++;
+                    if (mCount >= recurringSize)
+                        callback.onSuccess(response, content);
+                }
+            });
+        }
     }
 
     public void saveAllNeedSaveEntries(final AsyncOkHttpClient.Callback callback) {
+        List<Entry> entries = mEntryDataManager.findAllNeedSave(true);
+        final int entrySize = entries.size();
+        if (entrySize == 0) {
+            callback.onSuccess(null, null);
+        }
 
+        //@@ iOSでは100件ずつ繰り返してやるらしい
+
+        mCount = 0;
+        for (Entry entry : entries) {
+            saveEntry(entry.uuid, new AsyncOkHttpClient.Callback() {
+                @Override
+                public void onFailure(Response response, Throwable throwable) {
+                    callback.onFailure(response, throwable);
+                }
+
+                @Override
+                public void onSuccess(Response response, String content) {
+                    mCount++;
+                    if (mCount >= entrySize)
+                        callback.onSuccess(response, content);
+                }
+            });
+        }
     }
 
-    public void saveAllDataAfterRegister() {
+    public void saveAllDataAfterRegister(final AsyncOkHttpClient.Callback callback) {
 
+        saveAllNeedSaveProjects(new AsyncOkHttpClient.Callback() {
+            @Override
+            public void onFailure(Response response, Throwable throwable) {
+                callback.onFailure(response, throwable);
+            }
+
+            @Override
+            public void onSuccess(Response response, String content) {
+                Log.v("TEST", "saveAllDataAfterRegister onSuccess --- Projects");
+
+                saveAllNeedSaveReasons(new AsyncOkHttpClient.Callback() {
+                    @Override
+                    public void onFailure(Response response, Throwable throwable) {
+                        callback.onFailure(response, throwable);
+                    }
+
+                    @Override
+                    public void onSuccess(Response response, String content) {
+                        Log.v("TEST", "saveAllDataAfterRegister onSuccess --- Reasons");
+
+                        saveAllNeedSaveAccounts(new AsyncOkHttpClient.Callback() {
+                            @Override
+                            public void onFailure(Response response, Throwable throwable) {
+                                callback.onFailure(response, throwable);
+                            }
+
+                            @Override
+                            public void onSuccess(Response response, String content) {
+                                Log.v("TEST", "saveAllDataAfterRegister onSuccess --- Accounts");
+
+                                saveAllNeedSaveSummaries(new AsyncOkHttpClient.Callback() {
+                                    @Override
+                                    public void onFailure(Response response, Throwable throwable) {
+                                        callback.onFailure(response, throwable);
+                                    }
+
+                                    @Override
+                                    public void onSuccess(Response response, String content) {
+                                        Log.v("TEST", "saveAllDataAfterRegister onSuccess --- Summaries");
+
+                                        saveAllNeedSaveRecurrings(new AsyncOkHttpClient.Callback() {
+                                            @Override
+                                            public void onFailure(Response response, Throwable throwable) {
+                                                callback.onFailure(response, throwable);
+                                            }
+
+                                            @Override
+                                            public void onSuccess(Response response, String content) {
+                                                Log.v("TEST", "saveAllDataAfterRegister onSuccess --- Recurrings");
+
+                                                saveAllNeedSaveEntries(new AsyncOkHttpClient.Callback() {
+                                                    @Override
+                                                    public void onFailure(Response response, Throwable throwable) {
+                                                        callback.onFailure(response, throwable);
+                                                    }
+
+                                                    @Override
+                                                    public void onSuccess(Response response, String content) {
+                                                        Log.v("TEST", "saveAllDataAfterRegister onSuccess --- Entries");
+
+                                                        callback.onSuccess(response, content);
+                                                    }
+                                                });
+                                            }
+                                        });
+                                    }
+                                });
+                            }
+                        });
+                    }
+                });
+            }
+        });
     }
 
     //--------------------------------------------------------------//

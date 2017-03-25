@@ -5,7 +5,9 @@ import android.content.Context;
 import com.example.taxnoteandroid.TaxnoteApp;
 import com.example.taxnoteandroid.model.OrmaDatabase;
 import com.example.taxnoteandroid.model.Recurring;
+import com.example.taxnoteandroid.model.Recurring_Schema;
 import com.example.taxnoteandroid.model.Recurring_Updater;
+import com.example.taxnoteandroid.model.Summary_Schema;
 
 import java.util.List;
 
@@ -45,6 +47,16 @@ public class RecurringDataManager {
 
     public Recurring findByUuid(String uuid) {
         return ormaDatabase.selectFromRecurring().uuidEq(uuid).valueOrNull();
+    }
+
+    public List<Recurring> findAllNeedSave(boolean isNeedSave) {
+        int needSave = (isNeedSave) ? 1 : 0;
+        List<Recurring> recurrings = ormaDatabase.selectFromRecurring()
+                .where(Recurring_Schema.INSTANCE.deleted.getQualifiedName() + " = 0")
+                .and()
+                .where(Recurring_Schema.INSTANCE.needSave.getQualifiedName() + " = " + needSave)
+                .toList();
+        return recurrings;
     }
 
 

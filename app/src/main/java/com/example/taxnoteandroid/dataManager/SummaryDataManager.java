@@ -3,6 +3,8 @@ package com.example.taxnoteandroid.dataManager;
 import android.content.Context;
 
 import com.example.taxnoteandroid.TaxnoteApp;
+import com.example.taxnoteandroid.model.Account;
+import com.example.taxnoteandroid.model.Account_Schema;
 import com.example.taxnoteandroid.model.OrmaDatabase;
 import com.example.taxnoteandroid.model.Project;
 import com.example.taxnoteandroid.model.Reason;
@@ -63,6 +65,16 @@ public class SummaryDataManager {
                 .orderBy(Summary_Schema.INSTANCE.order.getQualifiedName())
                 .toList();
 
+        return summaries;
+    }
+
+    public List<Summary> findAllNeedSave(boolean isNeedSave) {
+        int needSave = (isNeedSave) ? 1 : 0;
+        List<Summary> summaries = ormaDatabase.selectFromSummary()
+                .where(Summary_Schema.INSTANCE.deleted.getQualifiedName() + " = 0")
+                .and()
+                .where(Summary_Schema.INSTANCE.needSave.getQualifiedName() + " = " + needSave)
+                .toList();
         return summaries;
     }
 

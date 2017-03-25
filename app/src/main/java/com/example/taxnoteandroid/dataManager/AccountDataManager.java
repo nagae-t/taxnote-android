@@ -8,6 +8,8 @@ import com.example.taxnoteandroid.model.Account_Schema;
 import com.example.taxnoteandroid.model.Account_Updater;
 import com.example.taxnoteandroid.model.OrmaDatabase;
 import com.example.taxnoteandroid.model.Project;
+import com.example.taxnoteandroid.model.Reason;
+import com.example.taxnoteandroid.model.Reason_Schema;
 
 import java.util.List;
 
@@ -92,6 +94,16 @@ public class AccountDataManager {
         }
 
         return account;
+    }
+
+    public List<Account> findAllNeedSave(boolean isNeedSave) {
+        int needSave = (isNeedSave) ? 1 : 0;
+        List<Account> accounts = ormaDatabase.selectFromAccount()
+                .where(Account_Schema.INSTANCE.deleted.getQualifiedName() + " = 0")
+                .and()
+                .where(Account_Schema.INSTANCE.needSave.getQualifiedName() + " = " + needSave)
+                .toList();
+        return accounts;
     }
 
 
