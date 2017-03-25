@@ -1,6 +1,7 @@
 package com.example.taxnoteandroid.Library.taxnote;
 
 import android.content.Context;
+import android.os.AsyncTask;
 import android.util.Log;
 
 import com.example.taxnoteandroid.Library.AsyncOkHttpClient;
@@ -24,6 +25,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import java.util.List;
+import java.util.Map;
 
 import okhttp3.FormBody;
 import okhttp3.Response;
@@ -115,8 +117,11 @@ public class TNApiModel extends TNApi {
             public void onSuccess(Response response, String content) {
 
                 JsonArray jsArray = jsParser.parse(content).getAsJsonArray();
-                updateProjects(jsArray);
-                callback.onSuccess(response, content);
+//                updateProjects(jsArray);
+//                callback.onSuccess(response, content);
+
+                executeUpdateTask(UpdateAsyncTask.TYPE_PROJECT,
+                        jsArray, callback, response, content);
             }
         });
 
@@ -138,8 +143,11 @@ public class TNApiModel extends TNApi {
             public void onSuccess(Response response, String content) {
 
                 JsonArray jsArray = jsParser.parse(content).getAsJsonArray();
-                updateReasons(jsArray);
-                callback.onSuccess(response, content);
+//                updateReasons(jsArray);
+//                callback.onSuccess(response, content);
+
+                executeUpdateTask(UpdateAsyncTask.TYPE_REASON,
+                        jsArray, callback, response, content);
             }
         });
         requestApi();
@@ -160,8 +168,11 @@ public class TNApiModel extends TNApi {
             public void onSuccess(Response response, String content) {
 
                 JsonArray jsArray = jsParser.parse(content).getAsJsonArray();
-                updateAccounts(jsArray);
-                callback.onSuccess(response, content);
+//                updateAccounts(jsArray);
+//                callback.onSuccess(response, content);
+
+                executeUpdateTask(UpdateAsyncTask.TYPE_ACCOUNT,
+                        jsArray, callback, response, content);
             }
         });
         requestApi();
@@ -182,8 +193,11 @@ public class TNApiModel extends TNApi {
             public void onSuccess(Response response, String content) {
 
                 JsonArray jsArray = jsParser.parse(content).getAsJsonArray();
-                updateSummaries(jsArray);
-                callback.onSuccess(response, content);
+//                updateSummaries(jsArray);
+//                callback.onSuccess(response, content);
+
+                executeUpdateTask(UpdateAsyncTask.TYPE_SUMMARY,
+                        jsArray, callback, response, content);
             }
         });
         requestApi();
@@ -204,8 +218,11 @@ public class TNApiModel extends TNApi {
             public void onSuccess(Response response, String content) {
 
                 JsonArray jsArray = jsParser.parse(content).getAsJsonArray();
-                updateRecurrings(jsArray);
-                callback.onSuccess(response, content);
+//                updateRecurrings(jsArray);
+//                callback.onSuccess(response, content);
+
+                executeUpdateTask(UpdateAsyncTask.TYPE_RECURRING,
+                        jsArray, callback, response, content);
             }
         });
         requestApi();
@@ -226,8 +243,11 @@ public class TNApiModel extends TNApi {
             public void onSuccess(Response response, String content) {
 
                 JsonArray jsArray = jsParser.parse(content).getAsJsonArray();
-                updateEntries(jsArray);
-                callback.onSuccess(response, content);
+//                updateEntries(jsArray);
+//                callback.onSuccess(response, content);
+
+                executeUpdateTask(UpdateAsyncTask.TYPE_ENTRY,
+                        jsArray, callback, response, content);
             }
         });
         requestApi();
@@ -245,7 +265,7 @@ public class TNApiModel extends TNApi {
     }
 
     private void showLogOnSuccess(String content) {
-        /*
+        /**/
         JsonParser parser = new JsonParser();
         JsonArray jsArr = parser.parse(content).getAsJsonArray();
         for (JsonElement jsElement : jsArr) {
@@ -254,18 +274,14 @@ public class TNApiModel extends TNApi {
                 Log.v("TEST", "key: " + entry.getKey() + " | " + entry.getValue());
             }
             Log.v("TEST", "........................");
-        }*/
+        }/**/
     }
     public void getAllDataAfterLogin(final AsyncOkHttpClient.Callback callback) {
-        if (isSyncing()) return;
-
-        setIsSyncing(true);
 
         getProjects(new AsyncOkHttpClient.Callback() {
             @Override
             public void onFailure(Response response, Throwable throwable) {
                 Log.e(LTAG, "getAllDataAfterLogin onFailure --- Projects");
-                setIsSyncing(false);
                 callback.onFailure(response, throwable);
             }
 
@@ -279,7 +295,6 @@ public class TNApiModel extends TNApi {
                     @Override
                     public void onFailure(Response response, Throwable throwable) {
                         Log.e(LTAG, "getAllDataAfterLogin onFailure --- Reasons");
-                        setIsSyncing(false);
                         callback.onFailure(response, throwable);
                     }
 
@@ -292,7 +307,6 @@ public class TNApiModel extends TNApi {
                             @Override
                             public void onFailure(Response response, Throwable throwable) {
                                 Log.e(LTAG, "getAllDataAfterLogin onFailure --- Accounts");
-                                setIsSyncing(false);
                                 callback.onFailure(response, throwable);
                             }
 
@@ -305,7 +319,6 @@ public class TNApiModel extends TNApi {
                                     @Override
                                     public void onFailure(Response response, Throwable throwable) {
                                         Log.e(LTAG, "getAllDataAfterLogin onFailure --- Summaries");
-                                        setIsSyncing(false);
                                         callback.onFailure(response, throwable);
                                     }
 
@@ -318,7 +331,6 @@ public class TNApiModel extends TNApi {
                                             @Override
                                             public void onFailure(Response response, Throwable throwable) {
                                                 Log.e(LTAG, "getAllDataAfterLogin onFailure --- Recurrings");
-                                                setIsSyncing(false);
                                                 callback.onFailure(response, throwable);
                                             }
 
@@ -331,7 +343,6 @@ public class TNApiModel extends TNApi {
                                                     @Override
                                                     public void onFailure(Response response, Throwable throwable) {
                                                         Log.e(LTAG, "getAllDataAfterLogin onFailure --- Entries");
-                                                        setIsSyncing(false);
                                                         callback.onFailure(response, throwable);
                                                     }
 
@@ -340,7 +351,6 @@ public class TNApiModel extends TNApi {
                                                         Log.v("TEST", "onSuccess----Entries :");
                                                         showLogOnSuccess(content);
 
-                                                        setIsSyncing(false);
                                                         callback.onSuccess(response, content);
                                                     }
                                                 });
@@ -1107,6 +1117,68 @@ public class TNApiModel extends TNApi {
         // save sync updated
         long nowTime = System.currentTimeMillis() + 1000; // 1秒足すようだ
         saveSyncUpdated(KEY_SYNC_UPDATED_ENTRY, nowTime);
+    }
+
+    private  void executeUpdateTask(int type, JsonArray jsonArray,
+                                    AsyncOkHttpClient.Callback callback,
+                                    Response response, String resContent) {
+
+        new UpdateAsyncTask(type, callback, response, resContent)
+                .execute(jsonArray);
+    }
+    private class UpdateAsyncTask extends AsyncTask<JsonArray, Void, Void> {
+        private final int mType;
+        private final AsyncOkHttpClient.Callback callback;
+        private final Response mResponse;
+        private final String mResContent;
+
+        private static final int TYPE_PROJECT = 1;
+        private static final int TYPE_REASON = 2;
+        private static final int TYPE_ACCOUNT = 3;
+        private static final int TYPE_SUMMARY = 4;
+        private static final int TYPE_RECURRING = 5;
+        private static final int TYPE_ENTRY = 6;
+
+
+        private UpdateAsyncTask(int type, AsyncOkHttpClient.Callback callback,
+                               Response response, String resContent) {
+            this.mType = type;
+            this.callback = callback;
+            this.mResponse = response;
+            this.mResContent = resContent;
+        }
+
+        @Override
+        protected Void doInBackground(JsonArray... jsonArrays) {
+            Log.v("TEST", "UpdateAsyncTask type: " + mType);
+            JsonArray array = jsonArrays[0];
+            switch (mType) {
+                case TYPE_PROJECT:
+                    updateProjects(array);
+                    break;
+                case TYPE_REASON:
+                    updateReasons(array);
+                    break;
+                case TYPE_ACCOUNT:
+                    updateAccounts(array);
+                    break;
+                case TYPE_SUMMARY:
+                    updateSummaries(array);
+                    break;
+                case TYPE_RECURRING:
+                    updateRecurrings(array);
+                    break;
+                case TYPE_ENTRY:
+                    updateEntries(array);
+                    break;
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void result) {
+            callback.onSuccess(mResponse, mResContent);
+        }
     }
 
 

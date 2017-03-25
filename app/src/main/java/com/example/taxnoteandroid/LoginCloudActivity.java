@@ -18,6 +18,7 @@ import com.example.taxnoteandroid.Library.DialogManager;
 import com.example.taxnoteandroid.Library.taxnote.TNApiModel;
 import com.example.taxnoteandroid.Library.taxnote.TNApiUser;
 import com.example.taxnoteandroid.databinding.ActivityLoginCloudBinding;
+import com.example.taxnoteandroid.model.OrmaDatabase;
 
 import okhttp3.Response;
 
@@ -182,20 +183,24 @@ public class LoginCloudActivity extends DefaultCommonActivity {
             public void onSuccess(Response response, String content) {
                 Log.v("TEST", "sign in onSuccess content : " + content);
 
-                dialog.dismiss();
-                setResult(RESULT_OK);
-                finish();
+//                dialog.dismiss();
+//                setResult(RESULT_OK);
+//                finish();
 
-                /*
-                TNApiModel apiModel = new TNApiModel(getApplicationContext());
-                //@@ getAllDataAfterLogInWithCompletion ログイン成功後の処理
+                /**/
+                final TNApiModel apiModel = new TNApiModel(getApplicationContext());
+                //@@  ログイン成功後の処理
                 apiModel.resetAllUpdatedKeys();
                 //@@ DB全データの削除？
                 OrmaDatabase _db = TaxnoteApp.getOrmaDatabase();
                 _db.deleteAll();
+
+                if (apiModel.isSyncing()) return;
+                apiModel.setIsSyncing(true);
                 apiModel.getAllDataAfterLogin(new AsyncOkHttpClient.Callback() {
                     @Override
                     public void onFailure(Response response, Throwable throwable) {
+                        apiModel.setIsSyncing(false);
                         dialog.dismiss();
                         Log.v("TEST", "getAllDataAfterLogin onFailure code: " + response.code()
                                 + ", message : " + response.message());
@@ -203,13 +208,14 @@ public class LoginCloudActivity extends DefaultCommonActivity {
 
                     @Override
                     public void onSuccess(Response response, String content) {
+                        apiModel.setIsSyncing(false);
                         dialog.dismiss();
                         Log.v("TEST", "getAllDataAfterLogin onSuccess ");
                         Log.v("TEST", "getAllDataAfterLogin headers: " + response.headers().toString());
                         setResult(RESULT_OK);
                         finish();
                     }
-                });*/
+                });/**/
             }
         });
     }
