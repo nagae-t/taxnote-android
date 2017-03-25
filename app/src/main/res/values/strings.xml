@@ -86,7 +86,7 @@
     <string name="thanks_for_purchase">Thank you for upgrading! Please use this button again when you need to check your status or restore purchases.</string>
     <string name="upgrade_is_active">Active</string>
     <string name="taxnote_plus_descriptions">With Taxnote Plus, you can unlock 15 entries limit per month.\n\nPlease use this button again when you need to check your status or restore purchases.</string>    <string name="frequently_asked_questions">Help</string>
-    <string name="ask_questions_or_request">Send Feedback</string>
+    <string name="ask_questions_or_request">Ask Anything</string>
     <string name="version">Version</string>
     <string name="upgrade_to_plus_unlock_the_limit">You can register for free up to 15 entries on the same month.  Please upgrade to Taxnote Plus for unlimited entry.\n\nIf you already upgraded before, you can restore it for free.</string>    <string name="upgrade">Upgrade</string>
     <string name="share_taxnote">Share Taxnote</string>
@@ -208,7 +208,7 @@
     <string name="tap_project_to_edit_name">You can rename it if you tap a book.</string>
 
 
-    <string name="data_backup">Data Backup</string>
+    <string name="data_backup">Data Backup and Transfer</string>
     <string name="data_import">Data Import</string>
     <string name="taxnote_data_import">Import data into Taxnote</string>
     <string name="loading">Loading...</string>
