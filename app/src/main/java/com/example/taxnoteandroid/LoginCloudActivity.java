@@ -214,6 +214,7 @@ public class LoginCloudActivity extends DefaultCommonActivity {
     }
 
     private void sendRegister(String email, String passwd) {
+        Log.v("TEST", "sendRegister");
 
         // Progress dialog
         final ProgressDialog dialog = new ProgressDialog(this);
@@ -233,6 +234,7 @@ public class LoginCloudActivity extends DefaultCommonActivity {
 
             @Override
             public void onSuccess(Response response, String content) {
+                dialog.dismiss();
 
                 //@@ saveAllDataAfterRegisterWithCompletion
                 //dialog.dismiss();

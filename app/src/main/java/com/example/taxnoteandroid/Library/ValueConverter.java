@@ -64,4 +64,12 @@ public class ValueConverter {
         }
         return cal.getTimeInMillis();
     }
+
+    public static String long2dateString(long time) {
+        if (time <= 0) return "";
+        Calendar cal = Calendar.getInstance();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault());
+        cal.setTimeInMillis(time);
+        return sdf.format(cal.getTime());
+    }
 }

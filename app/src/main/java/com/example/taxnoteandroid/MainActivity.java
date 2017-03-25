@@ -18,7 +18,6 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.example.taxnoteandroid.Library.AsyncOkHttpClient;
 import com.example.taxnoteandroid.Library.DialogManager;
 import com.example.taxnoteandroid.Library.TNAppNotification;
 import com.example.taxnoteandroid.Library.taxnote.TNApiModel;
@@ -27,18 +26,11 @@ import com.example.taxnoteandroid.dataManager.EntryDataManager;
 import com.example.taxnoteandroid.dataManager.SharedPreferencesManager;
 import com.example.taxnoteandroid.databinding.ActivityMainBinding;
 import com.example.taxnoteandroid.entryTab.EntryTabFragment;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import com.helpshift.support.Support;
 import com.kobakei.ratethisapp.RateThisApp;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
 
 import java.lang.reflect.Field;
-import java.util.Map;
-
-import okhttp3.Response;
 
 import static com.example.taxnoteandroid.R.string.report;
 import static com.example.taxnoteandroid.TaxnoteConsts.MIXPANEL_TOKEN;
@@ -113,7 +105,37 @@ public class MainActivity extends DefaultCommonActivity {
         // debug api
         TNApiModel apiModel = new TNApiModel(this);
 
-        /**/
+        /*
+        // Progress dialog
+        final ProgressDialog dialog = new ProgressDialog(this);
+        dialog.setMessage(getString(R.string.loading));
+        dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        dialog.setCancelable(false);
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.show();
+
+        apiModel.saveAllDataAfterRegister(new AsyncOkHttpClient.Callback() {
+            @Override
+            public void onFailure(Response response, Throwable throwable) {
+                dialog.dismiss();
+                Log.v("TEST", "saveAllDataAfterRegister onFailure");
+                if (response != null) {
+                    Log.v("TEST", "Error response.code: " + response.code());
+                    Log.v("TEST", "Error response.message: " + response.message());
+                }
+                if (throwable != null) {
+                    Log.v("TEST", "Error LocalizedMessage: " + throwable.getLocalizedMessage());
+                }
+            }
+
+            @Override
+            public void onSuccess(Response response, String content) {
+                dialog.dismiss();
+                Log.v("TEST", "saveAllDataAfterRegister onSuccess");
+            }
+        });*/
+
+        /*
         apiModel.testGetProjects(new AsyncOkHttpClient.Callback() {
             @Override
             public void onFailure(Response response, Throwable throwable) {
@@ -134,7 +156,6 @@ public class MainActivity extends DefaultCommonActivity {
                 Log.v("TEST", "getProjects onSuccess content : ");
                 JsonParser parser = new JsonParser();
                 JsonArray jsArr = parser.parse(content).getAsJsonArray();
-                jsArr.iterator();
                 for (JsonElement jsElement : jsArr) {
                     JsonObject obj = jsElement.getAsJsonObject();
                     for (Map.Entry<String, JsonElement> entry : obj.entrySet()) {
@@ -142,20 +163,8 @@ public class MainActivity extends DefaultCommonActivity {
                     }
                 }
             }
-        }); /**/
+        }); */
 
-        /*
-        apiModel.getAllData(new AsyncOkHttpClient.Callback() {
-            @Override
-            public void onFailure(Response response, Throwable throwable) {
-
-            }
-
-            @Override
-            public void onSuccess(Response response, String content) {
-
-            }
-        });*/
     }
 
     @Override

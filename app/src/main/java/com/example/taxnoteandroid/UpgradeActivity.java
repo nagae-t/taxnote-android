@@ -242,18 +242,19 @@ public class UpgradeActivity extends DefaultCommonActivity {
     //--------------------------------------------------------------//
 
     private void setTaxnoteCloud() {
-        binding.cloudRegisterLayout.setOnClickListener(taxnoteClondOnClick);
-        binding.cloudLoginLayout.setOnClickListener(taxnoteClondOnClick);
-        binding.cloudMemberLayout.setOnClickListener(taxnoteClondOnClick);
+        binding.cloudRegisterLayout.setOnClickListener(taxnoteCloudOnClick);
+        binding.cloudLoginLayout.setOnClickListener(taxnoteCloudOnClick);
+        binding.cloudMemberLayout.setOnClickListener(taxnoteCloudOnClick);
 
         String userEmail = mApiUser.getEmail();
         if (userEmail != null) {
             binding.cloudLoginLayout.setVisibility(View.GONE);
+            binding.cloudRegisterLayout.setVisibility(View.GONE);
             binding.cloudMemberLayout.setVisibility(View.VISIBLE);
             binding.email.setText(userEmail);
         }
     }
-    private View.OnClickListener taxnoteClondOnClick = new View.OnClickListener() {
+    private View.OnClickListener taxnoteCloudOnClick = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
             int viewId = view.getId();

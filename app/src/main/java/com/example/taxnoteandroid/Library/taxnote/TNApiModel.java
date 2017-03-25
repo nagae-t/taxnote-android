@@ -369,6 +369,7 @@ public class TNApiModel extends TNApi {
                 .add("project[name]", project.name)
                 .add("project[order]", String.valueOf(project.order))
                 .add("project[master]", String.valueOf(project.isMaster))
+                .add("project[decimal]", String.valueOf(project.decimal))
                 .add("project[account_for_expense]", project.accountUuidForExpense)
                 .add("project[account_for_income]", project.accountUuidForIncome)
                 .add("project[subscription_expires]", subsExpires)
@@ -383,6 +384,13 @@ public class TNApiModel extends TNApi {
         setCallback(new AsyncOkHttpClient.Callback() {
             @Override
             public void onFailure(Response response, Throwable throwable) {
+                Log.v("TEST", "saveProject(uuid) onFailure ");
+                if (response != null) {
+                    Log.v("TEST", "saveProject(uuid) onFailure response.code: " + response.code());
+                    Log.v("TEST", "saveProject(uuid) onFailure headers.code: " + response.headers());
+                    Log.v("TEST", "saveProject(uuid) onFailure request.body: " + response.request().body());
+                    Log.v("TEST", "saveProject(uuid) onFailure response.body: " + response.body());
+                }
                 callback.onFailure(response, throwable);
             }
 
@@ -535,15 +543,15 @@ public class TNApiModel extends TNApi {
         String memo = (entry.memo != null) ? entry.memo : "";
 
         FormBody.Builder formBuilder = new FormBody.Builder()
-                .add("recurring[uuid]", entry.uuid)
-                .add("recurring[date]", String.valueOf(entry.date))
-                .add("recurring[memo]", memo)
-                .add("recurring[price]", String.valueOf(entry.price))
-                .add("recurring[is_expense]", String.valueOf(entry.isExpense))
-                .add("recurring[updated_mobile]", String.valueOf(entry.updated))
-                .add("recurring[reason_uuid]", entry.reason.uuid)
-                .add("recurring[account_uuid]", entry.account.uuid)
-                .add("recurring[project_uuid]", entry.project.uuid);
+                .add("entry[uuid]", entry.uuid)
+                .add("entry[date]", ValueConverter.long2dateString(entry.date))
+                .add("entry[memo]", memo)
+                .add("entry[price]", String.valueOf(entry.price))
+                .add("entry[is_expense]", String.valueOf(entry.isExpense))
+                .add("entry[updated_mobile]", ValueConverter.long2dateString(entry.updated))
+                .add("entry[reason_uuid]", entry.reason.uuid)
+                .add("entry[account_uuid]", entry.account.uuid)
+                .add("entry[project_uuid]", entry.project.uuid);
 
         setHttpMethod(HTTP_METHOD_POST);
         setRequestPath(URL_PATH_ENTRY);
@@ -727,6 +735,7 @@ public class TNApiModel extends TNApi {
         saveAllNeedSaveProjects(new AsyncOkHttpClient.Callback() {
             @Override
             public void onFailure(Response response, Throwable throwable) {
+                Log.v("TEST", "saveAllDataAfterRegister onFailure --- Projects");
                 callback.onFailure(response, throwable);
             }
 
@@ -737,6 +746,7 @@ public class TNApiModel extends TNApi {
                 saveAllNeedSaveReasons(new AsyncOkHttpClient.Callback() {
                     @Override
                     public void onFailure(Response response, Throwable throwable) {
+                        Log.v("TEST", "saveAllDataAfterRegister onFailure --- Reasons");
                         callback.onFailure(response, throwable);
                     }
 
@@ -747,6 +757,7 @@ public class TNApiModel extends TNApi {
                         saveAllNeedSaveAccounts(new AsyncOkHttpClient.Callback() {
                             @Override
                             public void onFailure(Response response, Throwable throwable) {
+                                Log.v("TEST", "saveAllDataAfterRegister onFailure --- Accounts");
                                 callback.onFailure(response, throwable);
                             }
 
