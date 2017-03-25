@@ -76,9 +76,8 @@ public class UpgradeActivity extends DefaultCommonActivity {
 
         if (mBillingHelper != null) {
             try {
-                mBillingHelper.dispose();
-            } catch (IabHelper.IabAsyncInProgressException e) {
-//                e.printStackTrace();
+                mBillingHelper.disposeWhenFinished();
+            } catch (Exception e) {
                 Log.e("ERROR", e.getLocalizedMessage());
             }
         }
