@@ -75,6 +75,10 @@ public class SummaryDataManager {
         return ormaDatabase.updateSummary().idEq(id).name(name).execute();
     }
 
+    public int updateNeedSave(long id, boolean needSave) {
+        return ormaDatabase.updateSummary().idEq(id).needSave(needSave).execute();
+    }
+
     public void update(Summary summary) {
         Summary_Updater updater = ormaDatabase.updateSummary();
         updater.idEq(summary.id)

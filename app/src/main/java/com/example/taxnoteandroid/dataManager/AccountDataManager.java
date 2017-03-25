@@ -103,6 +103,10 @@ public class AccountDataManager {
         return ormaDatabase.updateAccount().idEq(id).name(name).execute();
     }
 
+    public int updateNeedSave(long id, boolean needSave) {
+        return ormaDatabase.updateAccount().idEq(id).needSave(needSave).execute();
+    }
+
     public void update(Account account) {
         Account_Updater updater = ormaDatabase.updateAccount();
         updater.idEq(account.id)

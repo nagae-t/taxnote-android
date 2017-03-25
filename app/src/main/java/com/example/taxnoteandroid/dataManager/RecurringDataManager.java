@@ -56,6 +56,10 @@ public class RecurringDataManager {
         return ormaDatabase.updateRecurring().idEq(recurring.id).execute();
     }
 
+    public int updateNeedSave(long id, boolean needSave) {
+        return ormaDatabase.updateRecurring().idEq(id).needSave(needSave).execute();
+    }
+
     public void update(Recurring rec) {
         Recurring_Updater updater = ormaDatabase.updateRecurring();
         updater.idEq(rec.id)

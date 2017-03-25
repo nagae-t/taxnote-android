@@ -287,6 +287,10 @@ public class EntryDataManager {
         return ormaDatabase.updateEntry().idEq(id).price(price).execute();
     }
 
+    public int updateNeedSave(long id, boolean needSave) {
+        return ormaDatabase.updateEntry().idEq(id).needSave(needSave).execute();
+    }
+
     public void update(Entry entry) {
         Entry_Updater updater = ormaDatabase.updateEntry();
         updater.idEq(entry.id)

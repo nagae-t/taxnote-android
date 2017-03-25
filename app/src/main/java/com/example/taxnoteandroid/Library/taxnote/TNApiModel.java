@@ -353,17 +353,10 @@ public class TNApiModel extends TNApi {
     //    -- Save Method --
     //--------------------------------------------------------------//
 
-    public void saveProject(String uuid, final AsyncOkHttpClient.Callback callback) {
-        if (!isLoggingIn()) {
-            callback.onSuccess(null, null);
-            return;
-        }
+    private void saveProject(String uuid, final AsyncOkHttpClient.Callback callback) {
 
         Project project = mProjectDataManager.findByUuid(uuid);
         final long projectId = project.id;
-
-        setHttpMethod(HTTP_METHOD_POST);
-        setRequestPath(URL_PATH_PROJECT);
 
         // dummy
         String subsExpires = "2017-05-01 23:23:21 Etc/GMT";
@@ -371,17 +364,20 @@ public class TNApiModel extends TNApi {
         String subsType = "subs_type_xxxxx01";
         String subsReceipt = "subs_receipt_xxxxx01";
 
-        FormBody.Builder formBuilder = new FormBody.Builder();
-        formBuilder.add("project[uuid]", project.uuid);
-        formBuilder.add("project[name]", project.name);
-        formBuilder.add("project[order]", String.valueOf(project.order));
-        formBuilder.add("project[master]", String.valueOf(project.isMaster));
-        formBuilder.add("project[account_for_expense]", project.accountUuidForExpense);
-        formBuilder.add("project[account_for_income]", project.accountUuidForIncome);
-        formBuilder.add("project[subscription_expires]", subsExpires);
-        formBuilder.add("project[subscription_transaction]", subsId);
-        formBuilder.add("project[subscription_type]", subsType);
-        formBuilder.add("project[appstore_receipt]", subsReceipt);
+        FormBody.Builder formBuilder = new FormBody.Builder()
+                .add("project[uuid]", project.uuid)
+                .add("project[name]", project.name)
+                .add("project[order]", String.valueOf(project.order))
+                .add("project[master]", String.valueOf(project.isMaster))
+                .add("project[account_for_expense]", project.accountUuidForExpense)
+                .add("project[account_for_income]", project.accountUuidForIncome)
+                .add("project[subscription_expires]", subsExpires)
+                .add("project[subscription_transaction]", subsId)
+                .add("project[subscription_type]", subsType)
+                .add("project[appstore_receipt]", subsReceipt);
+
+        setHttpMethod(HTTP_METHOD_POST);
+        setRequestPath(URL_PATH_PROJECT);
 
         setFormBody(formBuilder.build());
         setCallback(new AsyncOkHttpClient.Callback() {
@@ -400,19 +396,172 @@ public class TNApiModel extends TNApi {
         requestApi();
     }
 
-    public void saveReason(String uuid, final AsyncOkHttpClient.Callback callback) {
+    private void saveReason(String uuid, final AsyncOkHttpClient.Callback callback) {
+
+        Reason reason = mReasonDataManager.findByUuid(uuid);
+        final long reasonId = reason.id;
+
+        String details = (reason.details != null) ? reason.details : "";
+
+        FormBody.Builder formBuilder = new FormBody.Builder()
+                .add("reason[uuid]", reason.uuid)
+                .add("reason[name]", reason.name)
+                .add("reason[details]", details)
+                .add("reason[order]", String.valueOf(reason.order))
+                .add("reason[is_expense]", String.valueOf(reason.isExpense))
+                .add("reason[project_uuid]", reason.project.uuid);
+
+        setHttpMethod(HTTP_METHOD_POST);
+        setRequestPath(URL_PATH_REASON);
+
+        setFormBody(formBuilder.build());
+        setCallback(new AsyncOkHttpClient.Callback() {
+            @Override
+            public void onFailure(Response response, Throwable throwable) {
+                callback.onFailure(response, throwable);
+            }
+
+            @Override
+            public void onSuccess(Response response, String content) {
+                mReasonDataManager.updateNeedSave(reasonId, false);
+                callback.onSuccess(response, content);
+            }
+        });
+        requestApi();
     }
 
-    public void saveAccount(String uuid, final AsyncOkHttpClient.Callback callback) {
+    private void saveAccount(String uuid, final AsyncOkHttpClient.Callback callback) {
+
+        Account account = mAccountDataManager.findByUuid(uuid);
+        final long accountId = account.id;
+
+        FormBody.Builder formBuilder = new FormBody.Builder()
+                .add("account[uuid]", account.uuid)
+                .add("account[name]", account.name)
+                .add("account[order]", String.valueOf(account.order))
+                .add("account[is_expense]", String.valueOf(account.isExpense))
+                .add("account[project_uuid]", account.project.uuid);
+
+        setHttpMethod(HTTP_METHOD_POST);
+        setRequestPath(URL_PATH_ACCOUNT);
+
+        setFormBody(formBuilder.build());
+        setCallback(new AsyncOkHttpClient.Callback() {
+            @Override
+            public void onFailure(Response response, Throwable throwable) {
+                callback.onFailure(response, throwable);
+            }
+
+            @Override
+            public void onSuccess(Response response, String content) {
+                mAccountDataManager.updateNeedSave(accountId, false);
+                callback.onSuccess(response, content);
+            }
+        });
+        requestApi();
     }
 
-    public void saveSummary(String uuid, final AsyncOkHttpClient.Callback callback) {
+    private void saveSummary(String uuid, final AsyncOkHttpClient.Callback callback) {
+        Summary summary = mSummaryDataManager.findByUuid(uuid);
+        final long summaryId = summary.id;
+
+        FormBody.Builder formBuilder = new FormBody.Builder()
+                .add("summary[uuid]", summary.uuid)
+                .add("summary[name]", summary.name)
+                .add("summary[order]", String.valueOf(summary.order))
+                .add("summary[reason_uuid]", summary.reason.uuid)
+                .add("summary[project_uuid]", summary.project.uuid);
+
+        setHttpMethod(HTTP_METHOD_POST);
+        setRequestPath(URL_PATH_SUMMARY);
+
+        setFormBody(formBuilder.build());
+        setCallback(new AsyncOkHttpClient.Callback() {
+            @Override
+            public void onFailure(Response response, Throwable throwable) {
+                callback.onFailure(response, throwable);
+            }
+
+            @Override
+            public void onSuccess(Response response, String content) {
+                mSummaryDataManager.updateNeedSave(summaryId, false);
+                callback.onSuccess(response, content);
+            }
+        });
+        requestApi();
     }
 
-    public void saveRecurring(String uuid, final AsyncOkHttpClient.Callback callback) {
+    private void saveRecurring(String uuid, final AsyncOkHttpClient.Callback callback) {
+        Recurring recurring = mRecurringDataManager.findByUuid(uuid);
+        final long recurringId = recurring.id;
+
+        String memo = (recurring.memo != null) ? recurring.memo : "";
+
+        FormBody.Builder formBuilder = new FormBody.Builder()
+                .add("recurring[uuid]", recurring.uuid)
+                .add("recurring[date]", String.valueOf(recurring.dateIndex))
+                .add("recurring[timezone]", recurring.timezone)
+                .add("recurring[memo]", memo)
+                .add("recurring[price]", String.valueOf(recurring.price))
+                .add("recurring[is_expense]", String.valueOf(recurring.isExpense))
+                .add("recurring[order]", String.valueOf(recurring.order))
+                .add("recurring[reason_uuid]", recurring.reason.uuid)
+                .add("recurring[account_uuid]", recurring.account.uuid)
+                .add("recurring[project_uuid]", recurring.project.uuid);
+
+        setHttpMethod(HTTP_METHOD_POST);
+        setRequestPath(URL_PATH_RECURRING);
+
+        setFormBody(formBuilder.build());
+        setCallback(new AsyncOkHttpClient.Callback() {
+            @Override
+            public void onFailure(Response response, Throwable throwable) {
+                callback.onFailure(response, throwable);
+            }
+
+            @Override
+            public void onSuccess(Response response, String content) {
+                mRecurringDataManager.updateNeedSave(recurringId, false);
+                callback.onSuccess(response, content);
+            }
+        });
+        requestApi();
     }
 
-    public void saveEntry(String uuid, final AsyncOkHttpClient.Callback callback) {
+    private void saveEntry(String uuid, final AsyncOkHttpClient.Callback callback) {
+        Entry entry = mEntryDataManager.findByUuid(uuid);
+        final long entryId = entry.id;
+
+        String memo = (entry.memo != null) ? entry.memo : "";
+
+        FormBody.Builder formBuilder = new FormBody.Builder()
+                .add("recurring[uuid]", entry.uuid)
+                .add("recurring[date]", String.valueOf(entry.date))
+                .add("recurring[memo]", memo)
+                .add("recurring[price]", String.valueOf(entry.price))
+                .add("recurring[is_expense]", String.valueOf(entry.isExpense))
+                .add("recurring[updated_mobile]", String.valueOf(entry.updated))
+                .add("recurring[reason_uuid]", entry.reason.uuid)
+                .add("recurring[account_uuid]", entry.account.uuid)
+                .add("recurring[project_uuid]", entry.project.uuid);
+
+        setHttpMethod(HTTP_METHOD_POST);
+        setRequestPath(URL_PATH_ENTRY);
+
+        setFormBody(formBuilder.build());
+        setCallback(new AsyncOkHttpClient.Callback() {
+            @Override
+            public void onFailure(Response response, Throwable throwable) {
+                callback.onFailure(response, throwable);
+            }
+
+            @Override
+            public void onSuccess(Response response, String content) {
+                mEntryDataManager.updateNeedSave(entryId, false);
+                callback.onSuccess(response, content);
+            }
+        });
+        requestApi();
     }
 
     public void saveAllNeedSaveProjects(final AsyncOkHttpClient.Callback callback) {
@@ -420,6 +569,12 @@ public class TNApiModel extends TNApi {
         final int projectSize = projects.size();
         if (projectSize == 0) {
             callback.onSuccess(null, null);
+        }
+
+        //@@ ログインしている、かつ 課金有効の場合のみ
+        if (!isLoggingIn()) {
+            callback.onSuccess(null, null);
+            return;
         }
 
         mCount = 0;
