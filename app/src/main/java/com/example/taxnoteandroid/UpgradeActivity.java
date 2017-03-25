@@ -154,7 +154,9 @@ public class UpgradeActivity extends DefaultCommonActivity {
             binding.cloudLoginLayout.setVisibility(View.GONE);
             binding.cloudRegisterLayout.setVisibility(View.GONE);
             binding.cloudMemberLayout.setVisibility(View.VISIBLE);
+            mApiUser = new TNApiUser(this);
             binding.email.setText(mApiUser.getEmail());
+
             if (requestCode == REQUEST_CODE_CLOUD_LOGIN) {
                 DialogManager.showOKOnlyAlert(this,
                         R.string.thx_for_waiting,

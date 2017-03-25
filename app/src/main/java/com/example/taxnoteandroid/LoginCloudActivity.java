@@ -15,6 +15,7 @@ import android.view.View;
 
 import com.example.taxnoteandroid.Library.AsyncOkHttpClient;
 import com.example.taxnoteandroid.Library.DialogManager;
+import com.example.taxnoteandroid.Library.KeyboardUtil;
 import com.example.taxnoteandroid.Library.taxnote.TNApiModel;
 import com.example.taxnoteandroid.Library.taxnote.TNApiUser;
 import com.example.taxnoteandroid.databinding.ActivityLoginCloudBinding;
@@ -74,6 +75,7 @@ public class LoginCloudActivity extends DefaultCommonActivity {
     private View.OnClickListener onClickAction = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
+            KeyboardUtil.hideKeyboard(LoginCloudActivity.this, view);
             int viewId = view.getId();
             switch (viewId) {
                 case R.id.btn_send_login:
@@ -147,7 +149,6 @@ public class LoginCloudActivity extends DefaultCommonActivity {
     }
 
     private void sendLogin(String email, String passwd) {
-
         // Progress dialog
         final ProgressDialog dialog = new ProgressDialog(this);
         dialog.setMessage(getString(R.string.loading));
@@ -183,29 +184,27 @@ public class LoginCloudActivity extends DefaultCommonActivity {
 
             @Override
             public void onSuccess(Response response, String content) {
-                Log.v("TEST", "sign in onSuccess content : " + content);
-
-//                dialog.dismiss();
-//                setResult(RESULT_OK);
-//                finish();
 
                 dialog.setMessage(getString(R.string.login_success_wait_fetching));
                 /**/
                 final TNApiModel apiModel = new TNApiModel(getApplicationContext());
                 //@@  ログイン成功後の処理
                 apiModel.resetAllUpdatedKeys();
-                //@@ DB全データの削除？
+                //@@ DB全データの削除
                 OrmaDatabase _db = TaxnoteApp.getOrmaDatabase();
                 _db.deleteAll();
 
                 if (apiModel.isSyncing()) return;
+
                 apiModel.setIsSyncing(true);
                 apiModel.getAllDataAfterLogin(new AsyncOkHttpClient.Callback() {
                     @Override
                     public void onFailure(Response response, Throwable throwable) {
                         apiModel.setIsSyncing(false);
                         dialog.dismiss();
-                        Log.v("TEST", "getAllDataAfterLogin onFailure code: " + response.code()
+                        Log.e("ERROR", "getAllDataAfterLogin onFailure code: ");
+                        if (response != null)
+                            Log.e("ERROR", "response.code: " + response.code()
                                 + ", message : " + response.message());
                     }
 
@@ -223,8 +222,6 @@ public class LoginCloudActivity extends DefaultCommonActivity {
     }
 
     private void sendRegister(String email, String passwd) {
-        Log.v("TEST", "sendRegister");
-
         // Progress dialog
         final ProgressDialog dialog = new ProgressDialog(this);
         dialog.setMessage(getString(R.string.loading));
@@ -239,6 +236,16 @@ public class LoginCloudActivity extends DefaultCommonActivity {
             @Override
             public void onFailure(Response response, Throwable throwable) {
                 dialog.dismiss();
+
+                String errorMsg = "";
+                if (response != null) {
+                    errorMsg = response.message();
+                } else if (throwable != null) {
+                    errorMsg = throwable.getLocalizedMessage();
+                }
+                DialogManager.showOKOnlyAlert(LoginCloudActivity.this,
+                        getString(R.string.register_error),
+                        errorMsg);
             }
 
             @Override
@@ -258,8 +265,7 @@ public class LoginCloudActivity extends DefaultCommonActivity {
                             errorMsg = throwable.getLocalizedMessage();
                         }
                         DialogManager.showOKOnlyAlert(LoginCloudActivity.this,
-                                getString(R.string.register_error),
-                                errorMsg);
+                                "Error", errorMsg);
                     }
 
                     @Override
