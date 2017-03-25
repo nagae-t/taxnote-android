@@ -189,7 +189,6 @@ public class LoginCloudActivity extends DefaultCommonActivity {
                 /**/
                 final TNApiModel apiModel = new TNApiModel(getApplicationContext());
                 //@@  ログイン成功後の処理
-                apiModel.resetAllUpdatedKeys();
                 //@@ DB全データの削除
                 OrmaDatabase _db = TaxnoteApp.getOrmaDatabase();
                 _db.deleteAll();
@@ -254,9 +253,11 @@ public class LoginCloudActivity extends DefaultCommonActivity {
                 dialog.setMessage(getString(R.string.register_success_wait_uploading));
 
                 final TNApiModel apiModel = new TNApiModel(getApplicationContext());
+                apiModel.setIsSyncing(true);
                 apiModel.saveAllDataAfterRegister(new AsyncOkHttpClient.Callback() {
                     @Override
                     public void onFailure(Response response, Throwable throwable) {
+                        apiModel.setIsSyncing(false);
                         dialog.dismiss();
                         String errorMsg = "";
                         if (response != null) {
@@ -270,6 +271,7 @@ public class LoginCloudActivity extends DefaultCommonActivity {
 
                     @Override
                     public void onSuccess(Response response, String content) {
+                        apiModel.setIsSyncing(false);
                         dialog.dismiss();
                         setResult(RESULT_OK);
                         finish();

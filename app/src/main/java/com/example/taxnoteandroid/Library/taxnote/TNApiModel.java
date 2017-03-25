@@ -276,12 +276,12 @@ public class TNApiModel extends TNApi {
             Log.v("TEST", "........................");
         }/**/
     }
-    public void getAllDataAfterLogin(final AsyncOkHttpClient.Callback callback) {
 
+    private void getAllData(final AsyncOkHttpClient.Callback callback) {
         getProjects(new AsyncOkHttpClient.Callback() {
             @Override
             public void onFailure(Response response, Throwable throwable) {
-                Log.e(LTAG, "getAllDataAfterLogin onFailure --- Projects");
+                Log.e(LTAG, "getAllData onFailure --- Projects");
                 callback.onFailure(response, throwable);
             }
 
@@ -294,7 +294,7 @@ public class TNApiModel extends TNApi {
                 getReasons(new AsyncOkHttpClient.Callback() {
                     @Override
                     public void onFailure(Response response, Throwable throwable) {
-                        Log.e(LTAG, "getAllDataAfterLogin onFailure --- Reasons");
+                        Log.e(LTAG, "getAllData onFailure --- Reasons");
                         callback.onFailure(response, throwable);
                     }
 
@@ -306,7 +306,7 @@ public class TNApiModel extends TNApi {
                         getAccounts(new AsyncOkHttpClient.Callback() {
                             @Override
                             public void onFailure(Response response, Throwable throwable) {
-                                Log.e(LTAG, "getAllDataAfterLogin onFailure --- Accounts");
+                                Log.e(LTAG, "getAllData onFailure --- Accounts");
                                 callback.onFailure(response, throwable);
                             }
 
@@ -318,7 +318,7 @@ public class TNApiModel extends TNApi {
                                 getSummaries(new AsyncOkHttpClient.Callback() {
                                     @Override
                                     public void onFailure(Response response, Throwable throwable) {
-                                        Log.e(LTAG, "getAllDataAfterLogin onFailure --- Summaries");
+                                        Log.e(LTAG, "getAllData onFailure --- Summaries");
                                         callback.onFailure(response, throwable);
                                     }
 
@@ -330,7 +330,7 @@ public class TNApiModel extends TNApi {
                                         getRecurrings(new AsyncOkHttpClient.Callback() {
                                             @Override
                                             public void onFailure(Response response, Throwable throwable) {
-                                                Log.e(LTAG, "getAllDataAfterLogin onFailure --- Recurrings");
+                                                Log.e(LTAG, "getAllData onFailure --- Recurrings");
                                                 callback.onFailure(response, throwable);
                                             }
 
@@ -342,7 +342,7 @@ public class TNApiModel extends TNApi {
                                                 getEntries(new AsyncOkHttpClient.Callback() {
                                                     @Override
                                                     public void onFailure(Response response, Throwable throwable) {
-                                                        Log.e(LTAG, "getAllDataAfterLogin onFailure --- Entries");
+                                                        Log.e(LTAG, "getAllData onFailure --- Entries");
                                                         callback.onFailure(response, throwable);
                                                     }
 
@@ -364,6 +364,11 @@ public class TNApiModel extends TNApi {
                 });
             }
         });
+    }
+
+    public void getAllDataAfterLogin(final AsyncOkHttpClient.Callback callback) {
+        resetAllUpdatedKeys();
+        getAllData(callback);
     }
 
 
@@ -771,73 +776,73 @@ public class TNApiModel extends TNApi {
         }
     }
 
-    public void saveAllDataAfterRegister(final AsyncOkHttpClient.Callback callback) {
+    private void saveAllNeedSaveData(final AsyncOkHttpClient.Callback callback) {
 
         saveAllNeedSaveProjects(new AsyncOkHttpClient.Callback() {
             @Override
             public void onFailure(Response response, Throwable throwable) {
-                Log.e(LTAG, "saveAllDataAfterRegister onFailure --- Projects");
+                Log.e(LTAG, "saveAllNeedSaveData onFailure --- Projects");
                 callback.onFailure(response, throwable);
             }
 
             @Override
             public void onSuccess(Response response, String content) {
-                Log.v("TEST", "saveAllDataAfterRegister onSuccess --- Projects");
+                Log.v("TEST", "saveAllNeedSaveData onSuccess --- Projects");
 
                 saveAllNeedSaveReasons(new AsyncOkHttpClient.Callback() {
                     @Override
                     public void onFailure(Response response, Throwable throwable) {
-                        Log.e(LTAG, "saveAllDataAfterRegister onFailure --- Reasons");
+                        Log.e(LTAG, "saveAllNeedSaveData onFailure --- Reasons");
                         callback.onFailure(response, throwable);
                     }
 
                     @Override
                     public void onSuccess(Response response, String content) {
-                        Log.v("TEST", "saveAllDataAfterRegister onSuccess --- Reasons");
+                        Log.v("TEST", "saveAllNeedSaveData onSuccess --- Reasons");
 
                         saveAllNeedSaveAccounts(new AsyncOkHttpClient.Callback() {
                             @Override
                             public void onFailure(Response response, Throwable throwable) {
-                                Log.e(LTAG, "saveAllDataAfterRegister onFailure --- Accounts");
+                                Log.e(LTAG, "saveAllNeedSaveData onFailure --- Accounts");
                                 callback.onFailure(response, throwable);
                             }
 
                             @Override
                             public void onSuccess(Response response, String content) {
-                                Log.v("TEST", "saveAllDataAfterRegister onSuccess --- Accounts");
+                                Log.v("TEST", "saveAllNeedSaveData onSuccess --- Accounts");
 
                                 saveAllNeedSaveSummaries(new AsyncOkHttpClient.Callback() {
                                     @Override
                                     public void onFailure(Response response, Throwable throwable) {
-                                        Log.e(LTAG, "saveAllDataAfterRegister onFailure --- Summaries");
+                                        Log.e(LTAG, "saveAllNeedSaveData onFailure --- Summaries");
                                         callback.onFailure(response, throwable);
                                     }
 
                                     @Override
                                     public void onSuccess(Response response, String content) {
-                                        Log.v("TEST", "saveAllDataAfterRegister onSuccess --- Summaries");
+                                        Log.v("TEST", "saveAllNeedSaveData onSuccess --- Summaries");
 
                                         saveAllNeedSaveRecurrings(new AsyncOkHttpClient.Callback() {
                                             @Override
                                             public void onFailure(Response response, Throwable throwable) {
-                                                Log.e(LTAG, "saveAllDataAfterRegister onFailure --- Recurrings");
+                                                Log.e(LTAG, "saveAllNeedSaveData onFailure --- Recurrings");
                                                 callback.onFailure(response, throwable);
                                             }
 
                                             @Override
                                             public void onSuccess(Response response, String content) {
-                                                Log.v("TEST", "saveAllDataAfterRegister onSuccess --- Recurrings");
+                                                Log.v("TEST", "saveAllNeedSaveData onSuccess --- Recurrings");
 
                                                 saveAllNeedSaveEntries(new AsyncOkHttpClient.Callback() {
                                                     @Override
                                                     public void onFailure(Response response, Throwable throwable) {
-                                                        Log.e(LTAG, "saveAllDataAfterRegister onFailure --- Entries");
+                                                        Log.e(LTAG, "saveAllNeedSaveData onFailure --- Entries");
                                                         callback.onFailure(response, throwable);
                                                     }
 
                                                     @Override
                                                     public void onSuccess(Response response, String content) {
-                                                        Log.v("TEST", "saveAllDataAfterRegister onSuccess --- Entries");
+                                                        Log.v("TEST", "saveAllNeedSaveData onSuccess --- Entries");
 
                                                         callback.onSuccess(response, content);
                                                     }
@@ -852,6 +857,10 @@ public class TNApiModel extends TNApi {
                 });
             }
         });
+    }
+
+    public void saveAllDataAfterRegister(AsyncOkHttpClient.Callback callback) {
+        saveAllNeedSaveData(callback);
     }
 
     //--------------------------------------------------------------//

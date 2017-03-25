@@ -323,6 +323,7 @@ public class UpgradeActivity extends DefaultCommonActivity {
         dialog.show();
 
         //@@ modelデータの同期
+        //logOutAfterSavingAllDataWithCompletion
 
         //@@ ログアウト処理
         mApiUser.signOut(new AsyncOkHttpClient.Callback() {
