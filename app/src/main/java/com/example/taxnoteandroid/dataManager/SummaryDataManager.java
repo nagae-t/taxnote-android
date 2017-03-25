@@ -78,6 +78,16 @@ public class SummaryDataManager {
         return summaries;
     }
 
+    public List<Summary> findAllNeedSync(boolean isNeedSync) {
+        int needSync = (isNeedSync) ? 1 : 0;
+        List<Summary> summaries = ormaDatabase.selectFromSummary()
+                .where(Summary_Schema.INSTANCE.deleted.getQualifiedName() + " = 0")
+                .and()
+                .where(Summary_Schema.INSTANCE.needSync.getQualifiedName() + " = " + needSync)
+                .toList();
+        return summaries;
+    }
+
 
     //--------------------------------------------------------------//
     //    -- Update --
@@ -89,6 +99,10 @@ public class SummaryDataManager {
 
     public int updateNeedSave(long id, boolean needSave) {
         return ormaDatabase.updateSummary().idEq(id).needSave(needSave).execute();
+    }
+
+    public int updateNeedSync(long id, boolean needSync) {
+        return ormaDatabase.updateSummary().idEq(id).needSync(needSync).execute();
     }
 
     public void update(Summary summary) {

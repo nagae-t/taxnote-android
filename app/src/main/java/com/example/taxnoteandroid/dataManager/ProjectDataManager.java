@@ -82,8 +82,14 @@ public class ProjectDataManager {
         List<Project> projectList = ormaDatabase.selectFromProject()
                 .where(Project_Schema.INSTANCE.needSave.getQualifiedName() + " = " + needSave)
                 .toList();
+        return projectList;
+    }
 
-
+    public List<Project> findAllNeedSync(boolean isNeedSync) {
+        int needSync = (isNeedSync) ? 1 : 0;
+        List<Project> projectList = ormaDatabase.selectFromProject()
+                .where(Project_Schema.INSTANCE.needSync.getQualifiedName() + " = " + needSync)
+                .toList();
         return projectList;
     }
 
@@ -112,7 +118,11 @@ public class ProjectDataManager {
     }
 
     public int updateNeedSave(long id, boolean needSave) {
-        return ormaDatabase.updateReason().idEq(id).needSave(needSave).execute();
+        return ormaDatabase.updateProject().idEq(id).needSave(needSave).execute();
+    }
+
+    public int updateNeedSync(long id, boolean needSync) {
+        return ormaDatabase.updateProject().idEq(id).needSync(needSync).execute();
     }
 
     public void update(Project project) {

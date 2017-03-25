@@ -117,10 +117,10 @@ public class TNApiModel extends TNApi {
             public void onSuccess(Response response, String content) {
 
                 JsonArray jsArray = jsParser.parse(content).getAsJsonArray();
-//                updateProjects(jsArray);
+//                updateDbProjects(jsArray);
 //                callback.onSuccess(response, content);
 
-                executeUpdateTask(UpdateAsyncTask.TYPE_PROJECT,
+                executeUpdateDbTask(UpdateDbAsyncTask.TYPE_PROJECT,
                         jsArray, callback, response, content);
             }
         });
@@ -143,10 +143,10 @@ public class TNApiModel extends TNApi {
             public void onSuccess(Response response, String content) {
 
                 JsonArray jsArray = jsParser.parse(content).getAsJsonArray();
-//                updateReasons(jsArray);
+//                updateDbReasons(jsArray);
 //                callback.onSuccess(response, content);
 
-                executeUpdateTask(UpdateAsyncTask.TYPE_REASON,
+                executeUpdateDbTask(UpdateDbAsyncTask.TYPE_REASON,
                         jsArray, callback, response, content);
             }
         });
@@ -168,10 +168,10 @@ public class TNApiModel extends TNApi {
             public void onSuccess(Response response, String content) {
 
                 JsonArray jsArray = jsParser.parse(content).getAsJsonArray();
-//                updateAccounts(jsArray);
+//                updateDbAccounts(jsArray);
 //                callback.onSuccess(response, content);
 
-                executeUpdateTask(UpdateAsyncTask.TYPE_ACCOUNT,
+                executeUpdateDbTask(UpdateDbAsyncTask.TYPE_ACCOUNT,
                         jsArray, callback, response, content);
             }
         });
@@ -193,10 +193,10 @@ public class TNApiModel extends TNApi {
             public void onSuccess(Response response, String content) {
 
                 JsonArray jsArray = jsParser.parse(content).getAsJsonArray();
-//                updateSummaries(jsArray);
+//                updateDbSummaries(jsArray);
 //                callback.onSuccess(response, content);
 
-                executeUpdateTask(UpdateAsyncTask.TYPE_SUMMARY,
+                executeUpdateDbTask(UpdateDbAsyncTask.TYPE_SUMMARY,
                         jsArray, callback, response, content);
             }
         });
@@ -218,10 +218,10 @@ public class TNApiModel extends TNApi {
             public void onSuccess(Response response, String content) {
 
                 JsonArray jsArray = jsParser.parse(content).getAsJsonArray();
-//                updateRecurrings(jsArray);
+//                updateDbRecurrings(jsArray);
 //                callback.onSuccess(response, content);
 
-                executeUpdateTask(UpdateAsyncTask.TYPE_RECURRING,
+                executeUpdateDbTask(UpdateDbAsyncTask.TYPE_RECURRING,
                         jsArray, callback, response, content);
             }
         });
@@ -243,10 +243,10 @@ public class TNApiModel extends TNApi {
             public void onSuccess(Response response, String content) {
 
                 JsonArray jsArray = jsParser.parse(content).getAsJsonArray();
-//                updateEntries(jsArray);
+//                updateDbEntries(jsArray);
 //                callback.onSuccess(response, content);
 
-                executeUpdateTask(UpdateAsyncTask.TYPE_ENTRY,
+                executeUpdateDbTask(UpdateDbAsyncTask.TYPE_ENTRY,
                         jsArray, callback, response, content);
             }
         });
@@ -863,11 +863,54 @@ public class TNApiModel extends TNApi {
         saveAllNeedSaveData(callback);
     }
 
+    public void saveAllNeedSaveSyncDeletedData(AsyncOkHttpClient.Callback callback) {
+        //@@ check network
+
+        // check login
+        if (!isLoggingIn()) {
+            if (callback != null)
+                callback.onSuccess(null, null);
+            return;
+        }
+
+        if (isSyncing()) {
+            if (callback != null)
+                callback.onSuccess(null, null);
+            return;
+        }
+
+        setIsSyncing(true);
+
+        saveAllNeedSaveData(new AsyncOkHttpClient.Callback() {
+            @Override
+            public void onFailure(Response response, Throwable throwable) {
+                setIsSyncing(false);
+            }
+
+            @Override
+            public void onSuccess(Response response, String content) {
+
+                updateAllNeedSyncData(new AsyncOkHttpClient.Callback() {
+                    @Override
+                    public void onFailure(Response response, Throwable throwable) {
+                        setIsSyncing(false);
+                    }
+
+                    @Override
+                    public void onSuccess(Response response, String content) {
+                        setIsSyncing(false);
+                        //@@ updateAllDeletedDataWithCompletion
+                    }
+                });
+            }
+        });
+    }
+
     //--------------------------------------------------------------//
     //    -- Update Method --
     //--------------------------------------------------------------//
 
-    private void updateProjects(JsonArray array) {
+    private void updateDbProjects(JsonArray array) {
         for (JsonElement jsElement : array) {
             JsonObject obj = jsElement.getAsJsonObject();
 
@@ -920,7 +963,7 @@ public class TNApiModel extends TNApi {
         saveSyncUpdated(KEY_SYNC_UPDATED_PROJECT, nowTime);
     }
 
-    private void updateReasons(JsonArray array) {
+    private void updateDbReasons(JsonArray array) {
         for (JsonElement jsElement : array) {
             JsonObject obj = jsElement.getAsJsonObject();
 
@@ -959,7 +1002,7 @@ public class TNApiModel extends TNApi {
         saveSyncUpdated(KEY_SYNC_UPDATED_REASON, nowTime);
     }
 
-    private void updateAccounts(JsonArray array) {
+    private void updateDbAccounts(JsonArray array) {
         for (JsonElement jsElement : array) {
             JsonObject obj = jsElement.getAsJsonObject();
 
@@ -1000,7 +1043,7 @@ public class TNApiModel extends TNApi {
         saveSyncUpdated(KEY_SYNC_UPDATED_ACCOUNT, nowTime);
     }
 
-    private void updateSummaries(JsonArray array) {
+    private void updateDbSummaries(JsonArray array) {
         for (JsonElement jsElement : array) {
             JsonObject obj = jsElement.getAsJsonObject();
 
@@ -1037,7 +1080,7 @@ public class TNApiModel extends TNApi {
         saveSyncUpdated(KEY_SYNC_UPDATED_SUMMARY, nowTime);
     }
 
-    private void updateRecurrings(JsonArray array) {
+    private void updateDbRecurrings(JsonArray array) {
 
         for (JsonElement jsElement : array) {
             JsonObject obj = jsElement.getAsJsonObject();
@@ -1082,7 +1125,7 @@ public class TNApiModel extends TNApi {
         saveSyncUpdated(KEY_SYNC_UPDATED_RECURRING, nowTime);
     }
 
-    private void updateEntries(JsonArray array) {
+    private void updateDbEntries(JsonArray array) {
 
         for (JsonElement jsElement : array) {
             JsonObject obj = jsElement.getAsJsonObject();
@@ -1128,14 +1171,14 @@ public class TNApiModel extends TNApi {
         saveSyncUpdated(KEY_SYNC_UPDATED_ENTRY, nowTime);
     }
 
-    private  void executeUpdateTask(int type, JsonArray jsonArray,
-                                    AsyncOkHttpClient.Callback callback,
-                                    Response response, String resContent) {
+    private  void executeUpdateDbTask(int type, JsonArray jsonArray,
+                                      AsyncOkHttpClient.Callback callback,
+                                      Response response, String resContent) {
 
-        new UpdateAsyncTask(type, callback, response, resContent)
+        new UpdateDbAsyncTask(type, callback, response, resContent)
                 .execute(jsonArray);
     }
-    private class UpdateAsyncTask extends AsyncTask<JsonArray, Void, Void> {
+    private class UpdateDbAsyncTask extends AsyncTask<JsonArray, Void, Void> {
         private final int mType;
         private final AsyncOkHttpClient.Callback callback;
         private final Response mResponse;
@@ -1149,8 +1192,8 @@ public class TNApiModel extends TNApi {
         private static final int TYPE_ENTRY = 6;
 
 
-        private UpdateAsyncTask(int type, AsyncOkHttpClient.Callback callback,
-                               Response response, String resContent) {
+        private UpdateDbAsyncTask(int type, AsyncOkHttpClient.Callback callback,
+                                  Response response, String resContent) {
             this.mType = type;
             this.callback = callback;
             this.mResponse = response;
@@ -1163,22 +1206,22 @@ public class TNApiModel extends TNApi {
             JsonArray array = jsonArrays[0];
             switch (mType) {
                 case TYPE_PROJECT:
-                    updateProjects(array);
+                    updateDbProjects(array);
                     break;
                 case TYPE_REASON:
-                    updateReasons(array);
+                    updateDbReasons(array);
                     break;
                 case TYPE_ACCOUNT:
-                    updateAccounts(array);
+                    updateDbAccounts(array);
                     break;
                 case TYPE_SUMMARY:
-                    updateSummaries(array);
+                    updateDbSummaries(array);
                     break;
                 case TYPE_RECURRING:
-                    updateRecurrings(array);
+                    updateDbRecurrings(array);
                     break;
                 case TYPE_ENTRY:
-                    updateEntries(array);
+                    updateDbEntries(array);
                     break;
             }
             return null;
@@ -1187,6 +1230,263 @@ public class TNApiModel extends TNApi {
         @Override
         protected void onPostExecute(Void result) {
             callback.onSuccess(mResponse, mResContent);
+        }
+    }
+
+    private void updateProject(String uuid, final AsyncOkHttpClient.Callback callback) {
+        Project project = mProjectDataManager.findByUuid(uuid);
+        final long projectId = project.id;
+
+        FormBody.Builder formBuilder = new FormBody.Builder();
+        formBuilder
+                .add("project[name]", project.name)
+                .add("project[order]", String.valueOf(project.order))
+                .add("project[master]", String.valueOf(project.isMaster))
+                .add("project[decimal]", String.valueOf(project.decimal))
+                .add("project[account_for_expense]", project.accountUuidForExpense)
+                .add("project[account_for_income]", project.accountUuidForIncome);
+        if (project.isMaster) {
+            // dummy
+            String subsExpires = "2017-05-01 23:23:21 Etc/GMT";
+            String subsId = "xxxxxxxxxxxxxxxxxxxxx01";
+            String subsType = "subs_type_xxxxx01";
+            String subsReceipt = "subs_receipt_xxxxx01";
+
+            formBuilder
+                    .add("project[subscription_expires]", subsExpires)
+                    .add("project[subscription_transaction]", subsId)
+                    .add("project[subscription_type]", subsType)
+                    .add("project[appstore_receipt]", subsReceipt);
+        }
+
+        setHttpMethod(HTTP_METHOD_PUT);
+        setRequestPath(URL_PATH_PROJECT + "/" + project.uuid);
+
+        setFormBody(formBuilder.build());
+        setCallback(new AsyncOkHttpClient.Callback() {
+            @Override
+            public void onFailure(Response response, Throwable throwable) {
+                Log.e(LTAG, "updateProject(uuid) onFailure");
+                if (response != null) {
+                    Log.e(LTAG, "updateProject(uuid) onFailure response.code: " + response.code()
+                            + ", message: " + response.message());
+                }
+                callback.onFailure(response, throwable);
+            }
+
+            @Override
+            public void onSuccess(Response response, String content) {
+                mProjectDataManager.updateNeedSync(projectId, false);
+                callback.onSuccess(response, content);
+            }
+        });
+
+        requestApi();
+    }
+
+    private void updateReason(String uuid, final AsyncOkHttpClient.Callback callback) {
+        Reason reason = mReasonDataManager.findByUuid(uuid);
+        final long reasonId = reason.id;
+
+        String details = (reason.details != null) ? reason.details : "";
+
+        FormBody.Builder formBuilder = new FormBody.Builder();
+        formBuilder
+                .add("reason[name]", reason.name)
+                .add("reason[details]", details)
+                .add("reason[order]", String.valueOf(reason.order))
+                .add("reason[is_expense]", String.valueOf(reason.isExpense));
+
+        setHttpMethod(HTTP_METHOD_PUT);
+        setRequestPath(URL_PATH_REASON + "/" + reason.uuid);
+
+        setFormBody(formBuilder.build());
+        setCallback(new AsyncOkHttpClient.Callback() {
+            @Override
+            public void onFailure(Response response, Throwable throwable) {
+                Log.e(LTAG, "updateReason(uuid) onFailure");
+                if (response != null) {
+                    Log.e(LTAG, "updateReason(uuid) onFailure response.code: " + response.code()
+                            + ", message: " + response.message());
+                }
+                callback.onFailure(response, throwable);
+            }
+
+            @Override
+            public void onSuccess(Response response, String content) {
+                mReasonDataManager.updateNeedSync(reasonId, false);
+                callback.onSuccess(response, content);
+            }
+        });
+
+        requestApi();
+    }
+
+    private void updateAccount(String uuid, final AsyncOkHttpClient.Callback callback) {
+        Account account = mAccountDataManager.findByUuid(uuid);
+        final long accountId = account.id;
+
+
+        FormBody.Builder formBuilder = new FormBody.Builder();
+        formBuilder
+                .add("account[name]", account.name)
+                .add("account[order]", String.valueOf(account.order))
+                .add("account[is_expense]", String.valueOf(account.isExpense));
+
+        setHttpMethod(HTTP_METHOD_PUT);
+        setRequestPath(URL_PATH_ACCOUNT + "/" + account.uuid);
+
+        setFormBody(formBuilder.build());
+        setCallback(new AsyncOkHttpClient.Callback() {
+            @Override
+            public void onFailure(Response response, Throwable throwable) {
+                Log.e(LTAG, "updateAccount(uuid) onFailure");
+                if (response != null) {
+                    Log.e(LTAG, "updateAccount(uuid) onFailure response.code: " + response.code()
+                            + ", message: " + response.message());
+                }
+                callback.onFailure(response, throwable);
+            }
+
+            @Override
+            public void onSuccess(Response response, String content) {
+                mAccountDataManager.updateNeedSync(accountId, false);
+                callback.onSuccess(response, content);
+            }
+        });
+
+        requestApi();
+    }
+
+    private void updateSummay(String uuid, final AsyncOkHttpClient.Callback callback) {
+        Summary summary = mSummaryDataManager.findByUuid(uuid);
+        final long summaryId = summary.id;
+
+
+        FormBody.Builder formBuilder = new FormBody.Builder();
+        formBuilder
+                .add("summary[name]", summary.name)
+                .add("summary[order]", String.valueOf(summary.order));
+
+        setHttpMethod(HTTP_METHOD_PUT);
+        setRequestPath(URL_PATH_SUMMARY + "/" + summary.uuid);
+
+        setFormBody(formBuilder.build());
+        setCallback(new AsyncOkHttpClient.Callback() {
+            @Override
+            public void onFailure(Response response, Throwable throwable) {
+                Log.e(LTAG, "updateSummay(uuid) onFailure");
+                if (response != null) {
+                    Log.e(LTAG, "updateSummay(uuid) onFailure response.code: " + response.code()
+                            + ", message: " + response.message());
+                }
+                callback.onFailure(response, throwable);
+            }
+
+            @Override
+            public void onSuccess(Response response, String content) {
+                mSummaryDataManager.updateNeedSync(summaryId, false);
+                callback.onSuccess(response, content);
+            }
+        });
+
+        requestApi();
+    }
+
+    private void updateRecurring(String uuid, final AsyncOkHttpClient.Callback callback) {
+        Recurring recurring = mRecurringDataManager.findByUuid(uuid);
+        final long recurringId = recurring.id;
+
+        String memo = (recurring.memo != null) ? recurring.memo : "";
+
+        FormBody.Builder formBuilder = new FormBody.Builder();
+        formBuilder
+                .add("recurring[date]", String.valueOf(recurring.dateIndex))
+                .add("recurring[timezone]", recurring.timezone)
+                .add("recurring[memo]", memo)
+                .add("recurring[price]", String.valueOf(recurring.price))
+                .add("recurring[is_expense]", String.valueOf(recurring.isExpense))
+                .add("recurring[order]", String.valueOf(recurring.order))
+                .add("recurring[reason_uuid]", recurring.reason.uuid)
+                .add("recurring[account_uuid]", recurring.account.uuid)
+                .add("recurring[project_uuid]", recurring.project.uuid);
+
+        setHttpMethod(HTTP_METHOD_PUT);
+        setRequestPath(URL_PATH_RECURRING + "/" + recurring.uuid);
+
+        setFormBody(formBuilder.build());
+        setCallback(new AsyncOkHttpClient.Callback() {
+            @Override
+            public void onFailure(Response response, Throwable throwable) {
+                Log.e(LTAG, "updateRecurring(uuid) onFailure");
+                if (response != null) {
+                    Log.e(LTAG, "updateRecurring(uuid) onFailure response.code: " + response.code()
+                            + ", message: " + response.message());
+                }
+                callback.onFailure(response, throwable);
+            }
+
+            @Override
+            public void onSuccess(Response response, String content) {
+                mRecurringDataManager.updateNeedSync(recurringId, false);
+                callback.onSuccess(response, content);
+            }
+        });
+
+        requestApi();
+    }
+
+    private void updateEntry(String uuid, final AsyncOkHttpClient.Callback callback) {
+        Entry entry = mEntryDataManager.findByUuid(uuid);
+        final long entryId = entry.id;
+
+        String memo = (entry.memo != null) ? entry.memo : "";
+
+        FormBody.Builder formBuilder = new FormBody.Builder();
+        formBuilder
+                .add("entry[date]", ValueConverter.long2dateString(entry.date))
+                .add("entry[memo]", memo)
+                .add("entry[price]", String.valueOf(entry.price))
+                .add("entry[is_expense]", String.valueOf(entry.isExpense))
+                .add("entry[updated_mobile]", ValueConverter.long2dateString(entry.updated))
+                .add("entry[reason_uuid]", entry.reason.uuid)
+                .add("entry[account_uuid]", entry.account.uuid)
+                .add("entry[project_uuid]", entry.project.uuid);
+
+        setHttpMethod(HTTP_METHOD_PUT);
+        setRequestPath(URL_PATH_ENTRY + "/" + entry.uuid);
+
+        setFormBody(formBuilder.build());
+        setCallback(new AsyncOkHttpClient.Callback() {
+            @Override
+            public void onFailure(Response response, Throwable throwable) {
+                Log.e(LTAG, "updateEntry(uuid) onFailure");
+                if (response != null) {
+                    Log.e(LTAG, "updateEntry(uuid) onFailure response.code: " + response.code()
+                            + ", message: " + response.message());
+                }
+                callback.onFailure(response, throwable);
+            }
+
+            @Override
+            public void onSuccess(Response response, String content) {
+                mEntryDataManager.updateNeedSync(entryId, false);
+                callback.onSuccess(response, content);
+            }
+        });
+
+        requestApi();
+    }
+
+    private void updateAllNeedSyncProjects() {
+
+    }
+
+    public void updateAllNeedSyncData(final AsyncOkHttpClient.Callback callback) {
+        if (isLoggingIn()) {
+            if (callback != null)
+                callback.onSuccess(null, null);
+            return;
         }
     }
 

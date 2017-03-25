@@ -139,6 +139,11 @@ public class TNApiUser extends TNApi {
         requestApi();
     }
 
+    // saveAllNeedSaveSyncDeletedDataWithCompletion
+    public void signOutAfterSaveAllData(final AsyncOkHttpClient.Callback callback) {
+
+    }
+
     public void sendForgotPassword() {
     }
 

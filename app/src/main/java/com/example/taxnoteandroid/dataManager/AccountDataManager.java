@@ -106,6 +106,16 @@ public class AccountDataManager {
         return accounts;
     }
 
+    public List<Account> findAllNeedSync(boolean isNeedSync) {
+        int needSync = (isNeedSync) ? 1 : 0;
+        List<Account> accounts = ormaDatabase.selectFromAccount()
+                .where(Account_Schema.INSTANCE.deleted.getQualifiedName() + " = 0")
+                .and()
+                .where(Account_Schema.INSTANCE.needSync.getQualifiedName() + " = " + needSync)
+                .toList();
+        return accounts;
+    }
+
 
     //--------------------------------------------------------------//
     //    -- Update --
@@ -117,6 +127,10 @@ public class AccountDataManager {
 
     public int updateNeedSave(long id, boolean needSave) {
         return ormaDatabase.updateAccount().idEq(id).needSave(needSave).execute();
+    }
+
+    public int updateNeedSync(long id, boolean needSync) {
+        return ormaDatabase.updateAccount().idEq(id).needSync(needSync).execute();
     }
 
     public void update(Account account) {

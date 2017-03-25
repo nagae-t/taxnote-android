@@ -88,6 +88,16 @@ public class ReasonDataManager {
         return reasons;
     }
 
+    public List<Reason> findAllNeedSync(boolean isNeedSync) {
+        int needSync = (isNeedSync) ? 1 : 0;
+        List<Reason> reasons = ormaDatabase.selectFromReason()
+                .where(Reason_Schema.INSTANCE.deleted.getQualifiedName() + " = 0")
+                .and()
+                .where(Reason_Schema.INSTANCE.needSync.getQualifiedName() + " = " + needSync)
+                .toList();
+        return reasons;
+    }
+
 
     //--------------------------------------------------------------//
     //    -- Update --
@@ -103,6 +113,10 @@ public class ReasonDataManager {
 
     public int updateNeedSave(long id, boolean needSave) {
         return ormaDatabase.updateReason().idEq(id).needSave(needSave).execute();
+    }
+
+    public int updateNeedSync(long id, boolean needSync) {
+        return ormaDatabase.updateReason().idEq(id).needSync(needSync).execute();
     }
 
     public void update(Reason reason) {

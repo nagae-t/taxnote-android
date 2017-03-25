@@ -71,6 +71,16 @@ public class EntryDataManager {
         return entries;
     }
 
+    public List<Entry> findAllNeedSync(boolean isNeedSync) {
+        int needSync = (isNeedSync) ? 1 : 0;
+        List<Entry> entries = ormaDatabase.selectFromEntry()
+                .where(Entry_Schema.INSTANCE.deleted.getQualifiedName() + " = 0")
+                .and()
+                .where(Entry_Schema.INSTANCE.needSync.getQualifiedName() + " = " + needSync)
+                .toList();
+        return entries;
+    }
+
     public List<Entry> findAll() {
         return ormaDatabase.selectFromEntry().toList();
     }
@@ -301,6 +311,10 @@ public class EntryDataManager {
 
     public int updateNeedSave(long id, boolean needSave) {
         return ormaDatabase.updateEntry().idEq(id).needSave(needSave).execute();
+    }
+
+    public int updateNeedSync(long id, boolean needSync) {
+        return ormaDatabase.updateEntry().idEq(id).needSync(needSync).execute();
     }
 
     public void update(Entry entry) {

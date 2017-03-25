@@ -59,6 +59,16 @@ public class RecurringDataManager {
         return recurrings;
     }
 
+    public List<Recurring> findAllNeedSync(boolean isNeedSync) {
+        int needSync = (isNeedSync) ? 1 : 0;
+        List<Recurring> recurrings = ormaDatabase.selectFromRecurring()
+                .where(Recurring_Schema.INSTANCE.deleted.getQualifiedName() + " = 0")
+                .and()
+                .where(Recurring_Schema.INSTANCE.needSync.getQualifiedName() + " = " + needSync)
+                .toList();
+        return recurrings;
+    }
+
 
     //--------------------------------------------------------------//
     //    -- Update --
@@ -70,6 +80,10 @@ public class RecurringDataManager {
 
     public int updateNeedSave(long id, boolean needSave) {
         return ormaDatabase.updateRecurring().idEq(id).needSave(needSave).execute();
+    }
+
+    public int updateNeedSync(long id, boolean needSync) {
+        return ormaDatabase.updateRecurring().idEq(id).needSync(needSync).execute();
     }
 
     public void update(Recurring rec) {
