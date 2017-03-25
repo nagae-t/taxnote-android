@@ -69,6 +69,15 @@ public class DialogManager {
                 .show();
     }
 
+    public static void showOKOnlyAlert(Context context, int titleRes, int messageRes) {
+
+        new AlertDialog.Builder(context)
+                .setTitle(titleRes)
+                .setMessage(messageRes)
+                .setPositiveButton("OK", null)
+                .show();
+    }
+
     public static void showFirstLaunchMessage(final Context context, final FragmentManager fragmentManager) {
 
         // Show the dialog only one time

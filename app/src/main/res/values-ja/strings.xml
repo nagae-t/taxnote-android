@@ -334,6 +334,10 @@
     <string name="change_password">パスワードの変更</string>
     <string name="delete_account">アカウントの削除</string>
     <string name="confirm_email">このメールアドレスでよろしいですか？</string>
+    <string name="register_success_wait_uploading">専用アカウントの登録完了\nデータをアップロードしています。数分以上かかることもありますが、この画面を開いたまま、しばらくお待ちください。</string>
+    <string name="thx_for_waiting">お待たせしました</string>
+    <string name="upload_all_after_register_done">データのアップロードが完了しました。\n他のデバイスとデータを同期するには、他のデバイスから、今回作成したアカウントを使ってログインしてください。</string>
+    <string name="register_error">アカウント登録エラー</string>
 
 
 

@@ -235,20 +235,30 @@ public class LoginCloudActivity extends DefaultCommonActivity {
 
             @Override
             public void onSuccess(Response response, String content) {
-//                dialog.dismiss();
 
-                dialog.setMessage("アカウント作成完了\nデータアップロード中です、少々お待ちを");
-                //@@ saveAllDataAfterRegisterWithCompletion
+                dialog.setMessage(getString(R.string.register_success_wait_uploading));
+
                 final TNApiModel apiModel = new TNApiModel(getApplicationContext());
                 apiModel.saveAllDataAfterRegister(new AsyncOkHttpClient.Callback() {
                     @Override
                     public void onFailure(Response response, Throwable throwable) {
                         dialog.dismiss();
+                        String errorMsg = "";
+                        if (response != null) {
+                            errorMsg = response.message();
+                        } else if (throwable != null) {
+                            errorMsg = throwable.getLocalizedMessage();
+                        }
+                        DialogManager.showOKOnlyAlert(LoginCloudActivity.this,
+                                getString(R.string.register_error),
+                                errorMsg);
                     }
 
                     @Override
                     public void onSuccess(Response response, String content) {
-
+                        dialog.dismiss();
+                        setResult(RESULT_OK);
+                        finish();
                     }
                 });
 

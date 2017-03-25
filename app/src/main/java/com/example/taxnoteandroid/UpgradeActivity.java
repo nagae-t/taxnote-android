@@ -12,6 +12,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.example.taxnoteandroid.Library.AsyncOkHttpClient;
+import com.example.taxnoteandroid.Library.DialogManager;
 import com.example.taxnoteandroid.Library.UpgradeManger;
 import com.example.taxnoteandroid.Library.billing.IabHelper;
 import com.example.taxnoteandroid.Library.billing.IabResult;
@@ -150,11 +151,20 @@ public class UpgradeActivity extends DefaultCommonActivity {
         }
 
         if (resultCode == RESULT_OK && requestCode == REQUEST_CODE_CLOUD_LOGIN) {
-            mApiUser = new TNApiUser(this);
             binding.cloudLoginLayout.setVisibility(View.GONE);
+            binding.cloudRegisterLayout.setVisibility(View.GONE);
             binding.cloudMemberLayout.setVisibility(View.VISIBLE);
             binding.email.setText(mApiUser.getEmail());
 
+        } else if (resultCode == RESULT_OK && requestCode == REQUEST_CODE_CLOUD_REGISTER) {
+            binding.cloudLoginLayout.setVisibility(View.GONE);
+            binding.cloudRegisterLayout.setVisibility(View.GONE);
+            binding.cloudMemberLayout.setVisibility(View.VISIBLE);
+            binding.email.setText(mApiUser.getEmail());
+
+            DialogManager.showOKOnlyAlert(this,
+                    R.string.thx_for_waiting,
+                    R.string.upload_all_after_register_done);
         }
     }
 
