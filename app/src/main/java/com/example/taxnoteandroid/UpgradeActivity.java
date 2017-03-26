@@ -321,12 +321,8 @@ public class UpgradeActivity extends DefaultCommonActivity {
         dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         dialog.setCancelable(false);
         dialog.show();
-
-        //@@ modelデータの同期
-        //logOutAfterSavingAllDataWithCompletion
-
-        //@@ ログアウト処理
-        mApiUser.signOut(new AsyncOkHttpClient.Callback() {
+        
+        mApiUser.signOutAfterSaveAllData(mApiModel, new AsyncOkHttpClient.Callback() {
             @Override
             public void onFailure(Response response, Throwable throwable) {
                 dialog.dismiss();
@@ -356,14 +352,8 @@ public class UpgradeActivity extends DefaultCommonActivity {
 
                 binding.cloudLoginLayout.setVisibility(View.VISIBLE);
                 binding.cloudMemberLayout.setVisibility(View.GONE);
-
-                //@@ 保存しているtokenを削除
-                mApiUser.deleteLoginData();
-
-                //@@ Sbscription情報を削除
-
-                //@@ iOS: ApiGetHandler.resetAllUpdatedAtKeys model更新キーをリセットする
             }
         });
+
     }
 }

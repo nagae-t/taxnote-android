@@ -850,7 +850,7 @@ public class TNApiModel extends TNApi {
         saveAllNeedSaveData(callback);
     }
 
-    public void saveAllNeedSaveSyncDeletedData(AsyncOkHttpClient.Callback callback) {
+    public void saveAllNeedSaveSyncDeletedData(final AsyncOkHttpClient.Callback callback) {
         //@@ check network
 
         // check login
@@ -881,12 +881,25 @@ public class TNApiModel extends TNApi {
                     @Override
                     public void onFailure(Response response, Throwable throwable) {
                         setIsSyncing(false);
+                        callback.onFailure(response, throwable);
                     }
 
                     @Override
                     public void onSuccess(Response response, String content) {
-                        setIsSyncing(false);
-                        //@@ updateAllDeletedDataWithCompletion
+
+                        updateAllDeletedData(new AsyncOkHttpClient.Callback() {
+                            @Override
+                            public void onFailure(Response response, Throwable throwable) {
+                                setIsSyncing(false);
+                                callback.onFailure(response, throwable);
+                            }
+
+                            @Override
+                            public void onSuccess(Response response, String content) {
+                                setIsSyncing(false);
+                                callback.onSuccess(response, content);
+                            }
+                        });
                     }
                 });
             }
@@ -1995,6 +2008,65 @@ public class TNApiModel extends TNApi {
                 }
             });
         }
+    }
+
+    public void updateAllDeletedData(final AsyncOkHttpClient.Callback callback) {
+        if (!isLoggingIn()) {
+            callback.onSuccess(null, null);
+            return;
+        }
+
+        deleteAllProjects(new AsyncOkHttpClient.Callback() {
+            @Override
+            public void onFailure(Response response, Throwable throwable) {
+                callback.onFailure(response, throwable);
+            }
+
+            @Override
+            public void onSuccess(Response response, String content) {
+                deleteAllReasons(new AsyncOkHttpClient.Callback() {
+                    @Override
+                    public void onFailure(Response response, Throwable throwable) {
+                        callback.onFailure(response, throwable);
+                    }
+
+                    @Override
+                    public void onSuccess(Response response, String content) {
+                        deleteAllAccounts(new AsyncOkHttpClient.Callback() {
+                            @Override
+                            public void onFailure(Response response, Throwable throwable) {
+                                callback.onFailure(response, throwable);
+                            }
+
+                            @Override
+                            public void onSuccess(Response response, String content) {
+                                deleteAllSummaries(new AsyncOkHttpClient.Callback() {
+                                    @Override
+                                    public void onFailure(Response response, Throwable throwable) {
+                                        callback.onFailure(response, throwable);
+                                    }
+
+                                    @Override
+                                    public void onSuccess(Response response, String content) {
+                                        deleteAllRecurrings(new AsyncOkHttpClient.Callback() {
+                                            @Override
+                                            public void onFailure(Response response, Throwable throwable) {
+                                                callback.onFailure(response, throwable);
+                                            }
+
+                                            @Override
+                                            public void onSuccess(Response response, String content) {
+                                                deleteAllEntries(callback);
+                                            }
+                                        });
+                                    }
+                                });
+                            }
+                        });
+                    }
+                });
+            }
+        });
     }
 
 }

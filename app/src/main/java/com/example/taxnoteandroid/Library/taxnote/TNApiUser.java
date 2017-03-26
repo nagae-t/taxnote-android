@@ -130,18 +130,49 @@ public class TNApiUser extends TNApi {
         requestApi();
     }
 
-    public void signOut(AsyncOkHttpClient.Callback callback) {
+    private void signOut(final TNApiModel apiModel, final AsyncOkHttpClient.Callback callback) {
         setHttpMethod(HTTP_METHOD_DELETE);
         setRequestPath(URL_PATH_SIGN_OUT);
 
         setFormBody(null);
-        setCallback(callback);
+        setCallback(new AsyncOkHttpClient.Callback() {
+            @Override
+            public void onFailure(Response response, Throwable throwable) {
+                callback.onFailure(response, throwable);
+            }
+
+            @Override
+            public void onSuccess(Response response, String content) {
+                clearAccountData(apiModel);
+
+                callback.onSuccess(response, content);
+            }
+        });
         requestApi();
     }
 
-    // saveAllNeedSaveSyncDeletedDataWithCompletion
-    public void signOutAfterSaveAllData(final AsyncOkHttpClient.Callback callback) {
+    private void clearAccountData(TNApiModel apiModel) {
+        //@@ 保存しているtokenを削除
+        //@@ iOS [KPTaxnoteApiUserHandler logOutFromSubscriptionAccount];
+        //@@ Sbscription情報を削除
+        deleteLoginData();
+        apiModel.resetAllUpdatedKeys();
+    }
 
+
+    public void signOutAfterSaveAllData(final TNApiModel apiModel, final AsyncOkHttpClient.Callback callback) {
+
+        apiModel.saveAllNeedSaveSyncDeletedData(new AsyncOkHttpClient.Callback() {
+            @Override
+            public void onFailure(Response response, Throwable throwable) {
+                callback.onFailure(response, throwable);
+            }
+
+            @Override
+            public void onSuccess(Response response, String content) {
+                signOut(apiModel, callback);
+            }
+        });
     }
 
     public void sendForgotPassword() {
