@@ -116,6 +116,14 @@ public class AccountDataManager {
         return accounts;
     }
 
+    public List<Account> findAllDeleted(boolean isDeleted) {
+        int deleted = (isDeleted) ? 1 : 0;
+        List<Account> accounts = ormaDatabase.selectFromAccount()
+                .where(Account_Schema.INSTANCE.deleted.getQualifiedName() + " = " + deleted)
+                .toList();
+        return accounts;
+    }
+
 
     //--------------------------------------------------------------//
     //    -- Update --

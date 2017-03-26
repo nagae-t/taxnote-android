@@ -81,6 +81,14 @@ public class EntryDataManager {
         return entries;
     }
 
+    public List<Entry> findAllDeleted(boolean isDeleted) {
+        int deleted = (isDeleted) ? 1 : 0;
+        List<Entry> entries = ormaDatabase.selectFromEntry()
+                .where(Entry_Schema.INSTANCE.deleted.getQualifiedName() + " = " + deleted)
+                .toList();
+        return entries;
+    }
+
     public List<Entry> findAll() {
         return ormaDatabase.selectFromEntry().toList();
     }

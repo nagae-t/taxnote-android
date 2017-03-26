@@ -98,6 +98,14 @@ public class ReasonDataManager {
         return reasons;
     }
 
+    public List<Reason> findAllDeleted(boolean isDeleted) {
+        int deleted = (isDeleted) ? 1 : 0;
+        List<Reason> reasons = ormaDatabase.selectFromReason()
+                .where(Reason_Schema.INSTANCE.deleted.getQualifiedName() + " = " + deleted)
+                .toList();
+        return reasons;
+    }
+
 
     //--------------------------------------------------------------//
     //    -- Update --

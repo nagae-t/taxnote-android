@@ -69,6 +69,14 @@ public class RecurringDataManager {
         return recurrings;
     }
 
+    public List<Recurring> findAllDeleted(boolean isDeleted) {
+        int deleted = (isDeleted) ? 1 : 0;
+        List<Recurring> recurrings = ormaDatabase.selectFromRecurring()
+                .where(Recurring_Schema.INSTANCE.deleted.getQualifiedName() + " = " + deleted)
+                .toList();
+        return recurrings;
+    }
+
 
     //--------------------------------------------------------------//
     //    -- Update --

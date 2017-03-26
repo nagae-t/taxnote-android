@@ -93,6 +93,14 @@ public class ProjectDataManager {
         return projectList;
     }
 
+    public List<Project> findAllDeleted(boolean isDeleted) {
+        int deleted = (isDeleted) ? 1 : 0;
+        List<Project> projectList = ormaDatabase.selectFromProject()
+                .where(Project_Schema.INSTANCE.deleted.getQualifiedName() + " = " + deleted)
+                .toList();
+        return projectList;
+    }
+
 
     //--------------------------------------------------------------//
     //    -- Update --

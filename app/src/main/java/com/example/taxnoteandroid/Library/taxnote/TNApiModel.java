@@ -1711,5 +1711,290 @@ public class TNApiModel extends TNApi {
         requestApi();
     }
 
+    private void deleteReason(final String uuid, final AsyncOkHttpClient.Callback callback) {
+
+        setHttpMethod(HTTP_METHOD_DELETE);
+        setRequestPath(URL_PATH_REASON + "/" + uuid);
+
+        setFormBody(null);
+        setCallback(new AsyncOkHttpClient.Callback() {
+            @Override
+            public void onFailure(Response response, Throwable throwable) {
+                Log.e(LTAG, "deleteReason(uuid) onFailure");
+                if (response != null) {
+                    Log.e(LTAG, "deleteReason(uuid) onFailure response.code: " + response.code()
+                            + ", message: " + response.message());
+                }
+                callback.onFailure(response, throwable);
+            }
+
+            @Override
+            public void onSuccess(Response response, String content) {
+                mReasonDataManager.delete(uuid);
+                callback.onSuccess(response, content);
+            }
+        });
+
+        requestApi();
+    }
+
+    private void deleteAccount(final String uuid, final AsyncOkHttpClient.Callback callback) {
+
+        setHttpMethod(HTTP_METHOD_DELETE);
+        setRequestPath(URL_PATH_ACCOUNT + "/" + uuid);
+
+        setFormBody(null);
+        setCallback(new AsyncOkHttpClient.Callback() {
+            @Override
+            public void onFailure(Response response, Throwable throwable) {
+                Log.e(LTAG, "deleteAccount(uuid) onFailure");
+                if (response != null) {
+                    Log.e(LTAG, "deleteAccount(uuid) onFailure response.code: " + response.code()
+                            + ", message: " + response.message());
+                }
+                callback.onFailure(response, throwable);
+            }
+
+            @Override
+            public void onSuccess(Response response, String content) {
+                mAccountDataManager.delete(uuid);
+                callback.onSuccess(response, content);
+            }
+        });
+
+        requestApi();
+
+    }
+
+    private void deleteSummary(final String uuid, final AsyncOkHttpClient.Callback callback) {
+
+        setHttpMethod(HTTP_METHOD_DELETE);
+        setRequestPath(URL_PATH_SUMMARY + "/" + uuid);
+
+        setFormBody(null);
+        setCallback(new AsyncOkHttpClient.Callback() {
+            @Override
+            public void onFailure(Response response, Throwable throwable) {
+                Log.e(LTAG, "deleteSummary(uuid) onFailure");
+                if (response != null) {
+                    Log.e(LTAG, "deleteSummary(uuid) onFailure response.code: " + response.code()
+                            + ", message: " + response.message());
+                }
+                callback.onFailure(response, throwable);
+            }
+
+            @Override
+            public void onSuccess(Response response, String content) {
+                mSummaryDataManager.delete(uuid);
+                callback.onSuccess(response, content);
+            }
+        });
+
+        requestApi();
+    }
+
+    private void deleteRecurring(final String uuid, final AsyncOkHttpClient.Callback callback) {
+
+        setHttpMethod(HTTP_METHOD_DELETE);
+        setRequestPath(URL_PATH_RECURRING + "/" + uuid);
+
+        setFormBody(null);
+        setCallback(new AsyncOkHttpClient.Callback() {
+            @Override
+            public void onFailure(Response response, Throwable throwable) {
+                Log.e(LTAG, "deleteRecurring(uuid) onFailure");
+                if (response != null) {
+                    Log.e(LTAG, "deleteRecurring(uuid) onFailure response.code: " + response.code()
+                            + ", message: " + response.message());
+                }
+                callback.onFailure(response, throwable);
+            }
+
+            @Override
+            public void onSuccess(Response response, String content) {
+                mRecurringDataManager.delete(uuid);
+                callback.onSuccess(response, content);
+            }
+        });
+
+        requestApi();
+    }
+
+    private void deleteEntry(final String uuid, final AsyncOkHttpClient.Callback callback) {
+
+        setHttpMethod(HTTP_METHOD_DELETE);
+        setRequestPath(URL_PATH_ENTRY + "/" + uuid);
+
+        setFormBody(null);
+        setCallback(new AsyncOkHttpClient.Callback() {
+            @Override
+            public void onFailure(Response response, Throwable throwable) {
+                Log.e(LTAG, "deleteEntry(uuid) onFailure");
+                if (response != null) {
+                    Log.e(LTAG, "deleteEntry(uuid) onFailure response.code: " + response.code()
+                            + ", message: " + response.message());
+                }
+                callback.onFailure(response, throwable);
+            }
+
+            @Override
+            public void onSuccess(Response response, String content) {
+                mEntryDataManager.delete(uuid);
+                callback.onSuccess(response, content);
+            }
+        });
+
+        requestApi();
+    }
+
+    private void deleteAllProjects(final AsyncOkHttpClient.Callback callback) {
+        List<Project> projects = mProjectDataManager.findAllDeleted(true);
+        final int projectSize = projects.size();
+        if (projectSize == 0) {
+            callback.onSuccess(null, null);
+        }
+
+        mCount = 0;
+        for (Project project : projects) {
+            deleteProject(project.uuid, new AsyncOkHttpClient.Callback() {
+                @Override
+                public void onFailure(Response response, Throwable throwable) {
+                    callback.onFailure(response, throwable);
+                }
+
+                @Override
+                public void onSuccess(Response response, String content) {
+                    mCount++;
+                    if (mCount >= projectSize)
+                        callback.onSuccess(response, content);
+                }
+            });
+        }
+    }
+
+    private void deleteAllReasons(final AsyncOkHttpClient.Callback callback) {
+        List<Reason> reasons = mReasonDataManager.findAllDeleted(true);
+        final int reasonSize = reasons.size();
+        if (reasonSize == 0) {
+            callback.onSuccess(null, null);
+        }
+
+        mCount = 0;
+        for (Reason reason : reasons) {
+            deleteReason(reason.uuid, new AsyncOkHttpClient.Callback() {
+                @Override
+                public void onFailure(Response response, Throwable throwable) {
+                    callback.onFailure(response, throwable);
+                }
+
+                @Override
+                public void onSuccess(Response response, String content) {
+                    mCount++;
+                    if (mCount >= reasonSize)
+                        callback.onSuccess(response, content);
+                }
+            });
+        }
+    }
+
+    private void deleteAllAccounts(final AsyncOkHttpClient.Callback callback) {
+        List<Account> accounts = mAccountDataManager.findAllDeleted(true);
+        final int accountSize = accounts.size();
+        if (accountSize == 0) {
+            callback.onSuccess(null, null);
+        }
+
+        mCount = 0;
+        for (Account account : accounts) {
+            deleteAccount(account.uuid, new AsyncOkHttpClient.Callback() {
+                @Override
+                public void onFailure(Response response, Throwable throwable) {
+                    callback.onFailure(response, throwable);
+                }
+
+                @Override
+                public void onSuccess(Response response, String content) {
+                    mCount++;
+                    if (mCount >= accountSize)
+                        callback.onSuccess(response, content);
+                }
+            });
+        }
+    }
+
+    private void deleteAllSummaries(final AsyncOkHttpClient.Callback callback) {
+        List<Summary> summaries = mSummaryDataManager.findAllDeleted(true);
+        final int summarySize = summaries.size();
+        if (summarySize == 0) {
+            callback.onSuccess(null, null);
+        }
+
+        mCount = 0;
+        for (Summary summary : summaries) {
+            deleteSummary(summary.uuid, new AsyncOkHttpClient.Callback() {
+                @Override
+                public void onFailure(Response response, Throwable throwable) {
+                    callback.onFailure(response, throwable);
+                }
+
+                @Override
+                public void onSuccess(Response response, String content) {
+                    mCount++;
+                    if (mCount >= summarySize)
+                        callback.onSuccess(response, content);
+                }
+            });
+        }
+    }
+
+    private void deleteAllRecurrings(final AsyncOkHttpClient.Callback callback) {
+        List<Recurring> recurrings = mRecurringDataManager.findAllDeleted(true);
+        final int recurringSize = recurrings.size();
+        if (recurringSize == 0) {
+            callback.onSuccess(null, null);
+        }
+
+        mCount = 0;
+        for (Recurring recurring : recurrings) {
+            deleteRecurring(recurring.uuid, new AsyncOkHttpClient.Callback() {
+                @Override
+                public void onFailure(Response response, Throwable throwable) {
+                    callback.onFailure(response, throwable);
+                }
+
+                @Override
+                public void onSuccess(Response response, String content) {
+                    mCount++;
+                    if (mCount >= recurringSize)
+                        callback.onSuccess(response, content);
+                }
+            });
+        }
+    }
+
+    private void deleteAllEntries(final AsyncOkHttpClient.Callback callback) {
+        List<Entry> entries = mEntryDataManager.findAllDeleted(true);
+        final int entrySize = entries.size();
+        if (entrySize == 0) {
+            callback.onSuccess(null, null);
+        }
+
+        mCount = 0;
+        for (Entry entry : entries) {
+            deleteEntry(entry.uuid, new AsyncOkHttpClient.Callback() {
+                @Override
+                public void onFailure(Response response, Throwable throwable) {
+                    callback.onFailure(response, throwable);
+                }
+
+                @Override
+                public void onSuccess(Response response, String content) {
+                    mCount++;
+                    if (mCount >= entrySize)
+                        callback.onSuccess(response, content);
+                }
+            });
+        }
+    }
 
 }

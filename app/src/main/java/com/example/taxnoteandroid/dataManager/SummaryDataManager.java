@@ -88,6 +88,14 @@ public class SummaryDataManager {
         return summaries;
     }
 
+    public List<Summary> findAllDeleted(boolean isDeleted) {
+        int deleted = (isDeleted) ? 1 : 0;
+        List<Summary> summaries = ormaDatabase.selectFromSummary()
+                .where(Summary_Schema.INSTANCE.deleted.getQualifiedName() + " = " + deleted)
+                .toList();
+        return summaries;
+    }
+
 
     //--------------------------------------------------------------//
     //    -- Update --
