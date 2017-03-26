@@ -1618,7 +1618,7 @@ public class TNApiModel extends TNApi {
         }
     }
 
-    public void updateAllNeedSyncData(final AsyncOkHttpClient.Callback callback) {
+    private void updateAllNeedSyncData(final AsyncOkHttpClient.Callback callback) {
         if (!isLoggingIn()) {
             if (callback != null)
                 callback.onSuccess(null, null);
@@ -1683,4 +1683,33 @@ public class TNApiModel extends TNApi {
     //--------------------------------------------------------------//
     //    -- Delete Method --
     //--------------------------------------------------------------//
+
+    private void deleteProject(final String uuid, final AsyncOkHttpClient.Callback callback) {
+
+        setHttpMethod(HTTP_METHOD_DELETE);
+        setRequestPath(URL_PATH_PROJECT + "/" + uuid);
+
+        setFormBody(null);
+        setCallback(new AsyncOkHttpClient.Callback() {
+            @Override
+            public void onFailure(Response response, Throwable throwable) {
+                Log.e(LTAG, "deleteProject(uuid) onFailure");
+                if (response != null) {
+                    Log.e(LTAG, "deleteProject(uuid) onFailure response.code: " + response.code()
+                            + ", message: " + response.message());
+                }
+                callback.onFailure(response, throwable);
+            }
+
+            @Override
+            public void onSuccess(Response response, String content) {
+                mProjectDataManager.delete(uuid);
+                callback.onSuccess(response, content);
+            }
+        });
+
+        requestApi();
+    }
+
+
 }

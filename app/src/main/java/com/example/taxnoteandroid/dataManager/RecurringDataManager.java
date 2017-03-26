@@ -113,4 +113,8 @@ public class RecurringDataManager {
     public int delete(long id) {
         return ormaDatabase.deleteFromRecurring().idEq(id).execute();
     }
+
+    public int delete(String uuid) {
+        return ormaDatabase.deleteFromRecurring().uuidEq(uuid).execute();
+    }
 }

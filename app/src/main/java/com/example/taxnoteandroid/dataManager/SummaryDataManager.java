@@ -127,6 +127,9 @@ public class SummaryDataManager {
         return ormaDatabase.deleteFromSummary().idEq(id).execute();
     }
 
+    public int delete(String uuid) {
+        return ormaDatabase.deleteFromSummary().uuidEq(uuid).execute();
+    }
 
     //--------------------------------------------------------------//
     //    -- Change order --

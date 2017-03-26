@@ -344,6 +344,12 @@ public class EntryDataManager {
         return ormaDatabase.deleteFromEntry().idEq(id).execute();
     }
 
+    public int delete(String uuid) {
+        return ormaDatabase.deleteFromEntry()
+                .where(Entry_Schema.INSTANCE.uuid.getQualifiedName() + " = ?", uuid)
+                .execute();
+    }
+
 
     /**
      * Data Grouping for report.

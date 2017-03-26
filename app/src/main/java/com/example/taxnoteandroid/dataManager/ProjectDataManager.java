@@ -148,4 +148,8 @@ public class ProjectDataManager {
     public int delete(long id) {
         return ormaDatabase.deleteFromProject().idEq(id).execute();
     }
+
+    public int delete(String uuid) {
+        return ormaDatabase.deleteFromProject().uuidEq(uuid).execute();
+    }
 }

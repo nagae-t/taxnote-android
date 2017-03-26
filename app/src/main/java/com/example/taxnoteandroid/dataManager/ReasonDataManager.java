@@ -143,5 +143,8 @@ public class ReasonDataManager {
         return ormaDatabase.deleteFromReason().idEq(id).execute();
     }
 
+    public int delete(String uuid) {
+        return ormaDatabase.deleteFromReason().uuidEq(uuid).execute();
+    }
 
 }

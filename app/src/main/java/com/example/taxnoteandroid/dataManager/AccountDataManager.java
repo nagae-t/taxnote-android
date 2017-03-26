@@ -156,6 +156,10 @@ public class AccountDataManager {
         return ormaDatabase.deleteFromAccount().idEq(id).execute();
     }
 
+    public int delete(String uuid) {
+        return ormaDatabase.deleteFromAccount().uuidEq(uuid).execute();
+    }
+
     //--------------------------------------------------------------//
     //    -- Change order --
     //--------------------------------------------------------------//
