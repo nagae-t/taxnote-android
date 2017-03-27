@@ -15,6 +15,7 @@ import okhttp3.Response;
 
 public class TNApiUser extends TNApi {
 
+    private static final String LTAG = TNApiUser.class.getSimpleName();
 
     private String email;
     private String password;
@@ -138,6 +139,11 @@ public class TNApiUser extends TNApi {
         setCallback(new AsyncOkHttpClient.Callback() {
             @Override
             public void onFailure(Response response, Throwable throwable) {
+                Log.e(LTAG, "signOut onFailure ");
+                if (response != null) {
+                    Log.e(LTAG, "signOut onFailure code: " + response.code()
+                            + ", message: " + response.message());
+                }
                 callback.onFailure(response, throwable);
             }
 
@@ -151,7 +157,7 @@ public class TNApiUser extends TNApi {
         requestApi();
     }
 
-    private void clearAccountData(TNApiModel apiModel) {
+    public void clearAccountData(TNApiModel apiModel) {
         //@@ 保存しているtokenを削除
         //@@ iOS [KPTaxnoteApiUserHandler logOutFromSubscriptionAccount];
         //@@ Sbscription情報を削除

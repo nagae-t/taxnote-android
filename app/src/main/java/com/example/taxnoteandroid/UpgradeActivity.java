@@ -321,14 +321,14 @@ public class UpgradeActivity extends DefaultCommonActivity {
         dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         dialog.setCancelable(false);
         dialog.show();
-        
+
         mApiUser.signOutAfterSaveAllData(mApiModel, new AsyncOkHttpClient.Callback() {
             @Override
             public void onFailure(Response response, Throwable throwable) {
                 dialog.dismiss();
 
                 // debug 保存しているtokenを削除
-                mApiUser.deleteLoginData();
+                mApiUser.clearAccountData(mApiModel);
 
                 Log.v("TEST", "sign out onFailure ");
                 if (throwable != null) {

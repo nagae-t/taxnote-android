@@ -161,6 +161,7 @@ public class LoginCloudActivity extends DefaultCommonActivity {
         apiUser.signIn(new AsyncOkHttpClient.Callback() {
             @Override
             public void onFailure(Response response, Throwable throwable) {
+                Log.e("ERROR", "sendLogin onFailure");
                 dialog.dismiss();
 
                 if (response != null) {
@@ -186,7 +187,7 @@ public class LoginCloudActivity extends DefaultCommonActivity {
             public void onSuccess(Response response, String content) {
 
                 dialog.setMessage(getString(R.string.login_success_wait_fetching));
-                /**/
+
                 final TNApiModel apiModel = new TNApiModel(getApplicationContext());
                 //@@  ログイン成功後の処理
                 //@@ DB全データの削除
@@ -211,11 +212,11 @@ public class LoginCloudActivity extends DefaultCommonActivity {
                     public void onSuccess(Response response, String content) {
                         apiModel.setIsSyncing(false);
                         dialog.dismiss();
-                        Log.v("TEST", "getAllDataAfterLogin onSuccess finish");
+
                         setResult(RESULT_OK);
                         finish();
                     }
-                });/**/
+                });
             }
         });
     }

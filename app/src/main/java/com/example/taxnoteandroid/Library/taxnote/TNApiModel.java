@@ -25,7 +25,6 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import java.util.List;
-import java.util.Map;
 
 import okhttp3.FormBody;
 import okhttp3.Response;
@@ -265,7 +264,7 @@ public class TNApiModel extends TNApi {
     }
 
     private void showLogOnSuccess(String content) {
-        /**/
+        /*
         JsonParser parser = new JsonParser();
         JsonArray jsArr = parser.parse(content).getAsJsonArray();
         for (JsonElement jsElement : jsArr) {
@@ -274,7 +273,7 @@ public class TNApiModel extends TNApi {
                 Log.v("TEST", "key: " + entry.getKey() + " | " + entry.getValue());
             }
             Log.v("TEST", "........................");
-        }/**/
+        }*/
     }
 
     private void getAllData(final AsyncOkHttpClient.Callback callback) {
@@ -1202,7 +1201,6 @@ public class TNApiModel extends TNApi {
 
         @Override
         protected Void doInBackground(JsonArray... jsonArrays) {
-            Log.v("TEST", "UpdateAsyncTask type: " + mType);
             JsonArray array = jsonArrays[0];
             switch (mType) {
                 case TYPE_PROJECT:
@@ -1641,6 +1639,7 @@ public class TNApiModel extends TNApi {
         updateAllNeedSyncProjects(new AsyncOkHttpClient.Callback() {
             @Override
             public void onFailure(Response response, Throwable throwable) {
+                Log.e(LTAG, "updateAllNeedSyncData onFailure --- Projects");
                 callback.onFailure(response, throwable);
             }
 
@@ -1649,6 +1648,7 @@ public class TNApiModel extends TNApi {
                 updateAllNeedSyncReasons(new AsyncOkHttpClient.Callback() {
                     @Override
                     public void onFailure(Response response, Throwable throwable) {
+                        Log.e(LTAG, "updateAllNeedSyncData onFailure --- Reasons");
                         callback.onFailure(response, throwable);
                     }
 
@@ -1657,6 +1657,7 @@ public class TNApiModel extends TNApi {
                         updateAllNeedSyncAccounts(new AsyncOkHttpClient.Callback() {
                             @Override
                             public void onFailure(Response response, Throwable throwable) {
+                                Log.e(LTAG, "updateAllNeedSyncData onFailure --- Accounts");
                                 callback.onFailure(response, throwable);
                             }
 
@@ -1665,6 +1666,7 @@ public class TNApiModel extends TNApi {
                                 updateAllNeedSyncSummaries(new AsyncOkHttpClient.Callback() {
                                     @Override
                                     public void onFailure(Response response, Throwable throwable) {
+                                        Log.e(LTAG, "updateAllNeedSyncData onFailure --- Summaries");
                                         callback.onFailure(response, throwable);
                                     }
 
@@ -1673,6 +1675,7 @@ public class TNApiModel extends TNApi {
                                         updateAllNeedSyncRecurrings(new AsyncOkHttpClient.Callback() {
                                             @Override
                                             public void onFailure(Response response, Throwable throwable) {
+                                                Log.e(LTAG, "updateAllNeedSyncData onFailure --- Recurrings");
                                                 callback.onFailure(response, throwable);
                                             }
 
@@ -2019,6 +2022,7 @@ public class TNApiModel extends TNApi {
         deleteAllProjects(new AsyncOkHttpClient.Callback() {
             @Override
             public void onFailure(Response response, Throwable throwable) {
+                Log.e(LTAG, "updateAllDeletedData onFailure --- Projects");
                 callback.onFailure(response, throwable);
             }
 
@@ -2027,6 +2031,7 @@ public class TNApiModel extends TNApi {
                 deleteAllReasons(new AsyncOkHttpClient.Callback() {
                     @Override
                     public void onFailure(Response response, Throwable throwable) {
+                        Log.e(LTAG, "updateAllDeletedData onFailure --- Reasons");
                         callback.onFailure(response, throwable);
                     }
 
@@ -2035,6 +2040,7 @@ public class TNApiModel extends TNApi {
                         deleteAllAccounts(new AsyncOkHttpClient.Callback() {
                             @Override
                             public void onFailure(Response response, Throwable throwable) {
+                                Log.e(LTAG, "updateAllDeletedData onFailure --- Accounts");
                                 callback.onFailure(response, throwable);
                             }
 
@@ -2043,6 +2049,7 @@ public class TNApiModel extends TNApi {
                                 deleteAllSummaries(new AsyncOkHttpClient.Callback() {
                                     @Override
                                     public void onFailure(Response response, Throwable throwable) {
+                                        Log.e(LTAG, "updateAllDeletedData onFailure --- Summaries");
                                         callback.onFailure(response, throwable);
                                     }
 
@@ -2051,6 +2058,7 @@ public class TNApiModel extends TNApi {
                                         deleteAllRecurrings(new AsyncOkHttpClient.Callback() {
                                             @Override
                                             public void onFailure(Response response, Throwable throwable) {
+                                                Log.e(LTAG, "updateAllDeletedData onFailure --- Recurrings");
                                                 callback.onFailure(response, throwable);
                                             }
 
