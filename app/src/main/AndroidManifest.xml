@@ -83,6 +83,9 @@
         <activity android:name=".LoginCloudActivity"
             android:label="@string/login"
             android:screenOrientation="portrait" />
+        <activity android:name=".ChangePasswordActivity"
+            android:label="@string/change_password"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ImportFilterActivity"
             android:label="@string/taxnote_data_import"

@@ -26,7 +26,6 @@ import com.helpshift.support.Support;
 import com.kobakei.ratethisapp.RateThisApp;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
 
-import okhttp3.Request;
 import okhttp3.Response;
 
 import static com.example.taxnoteandroid.TaxnoteConsts.MIXPANEL_TOKEN;
@@ -301,6 +300,7 @@ public class UpgradeActivity extends DefaultCommonActivity {
                         sendSignOut();
                         break;
                     case 1: //@@ パスワードの変更
+                        ChangePasswordActivity.start(UpgradeActivity.this);
                         break;
                     case 2: //@@ アカウントの削除
                         break;
@@ -325,24 +325,16 @@ public class UpgradeActivity extends DefaultCommonActivity {
         mApiUser.signOutAfterSaveAllData(mApiModel, new AsyncOkHttpClient.Callback() {
             @Override
             public void onFailure(Response response, Throwable throwable) {
+                Log.e("ERROR", "sendSignOut onFailure ");
+                if (response != null) {
+                    Log.e("ERROR", "sendSignOut response code: " + response.code()
+                            + ", message: " + response.message());
+                }
                 dialog.dismiss();
 
                 // debug 保存しているtokenを削除
                 mApiUser.clearAccountData(mApiModel);
 
-                Log.v("TEST", "sign out onFailure ");
-                if (throwable != null) {
-                    Log.v("TEST", throwable.getMessage());
-                }
-                if (response != null) {
-                    Request req = response.request();
-                    Log.v("TEST", "error: response code: " + response.code());
-                    Log.v("TEST", "error: response message: " + response.message());
-                    Log.v("TEST", "error: request url: " + req.url());
-                    Log.v("TEST", "error: request method: " + req.method());
-                    Log.v("TEST", "error: request body: " + req.body());
-                    Log.v("TEST", "error: request headers: " + req.headers().toString());
-                }
             }
 
             @Override
