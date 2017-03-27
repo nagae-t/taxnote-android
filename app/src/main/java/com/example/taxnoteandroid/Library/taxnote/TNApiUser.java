@@ -184,7 +184,16 @@ public class TNApiUser extends TNApi {
     public void sendForgotPassword() {
     }
 
-    public void updatePassword() {
+    public void updatePassword(String password, final AsyncOkHttpClient.Callback callback) {
+        setHttpMethod(HTTP_METHOD_PUT);
+        setRequestPath(URL_PATH_PASSWORD_RESET);
+        FormBody requestBody = new FormBody.Builder()
+                .add("password", password)
+                .add("password_confirmation", password)
+                .build();
+        setFormBody(requestBody);
+        setCallback(callback);
+        requestApi();
     }
 
     public void checkUniqeOfSubscription(AsyncOkHttpClient.Callback callback) {

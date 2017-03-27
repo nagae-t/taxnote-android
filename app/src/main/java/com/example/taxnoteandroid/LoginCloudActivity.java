@@ -104,6 +104,11 @@ public class LoginCloudActivity extends DefaultCommonActivity {
             return;
         }
         binding.passwdInputLayout.setErrorEnabled(false);
+        if (passwd.length() < 8) {
+            binding.passwdInputLayout.setError(getString(R.string.password_is_too_short));
+            return;
+        }
+        binding.passwdInputLayout.setErrorEnabled(false);
 
         // 登録の場合のチェック
         if (mViewType == VIEW_TYPE_REGISTER) {

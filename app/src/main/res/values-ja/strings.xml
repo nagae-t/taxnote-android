@@ -326,6 +326,7 @@
     <string name="empty_password_input_error">パスワードを入力してください。</string>
     <string name="empty_password_confrim_input_error">確認のためパスワードを再入力してください。</string>
     <string name="password_confrim_match_error">再入力したパスワードが一致しません。</string>
+    <string name="password_is_too_short">パスワードは8文字以上を入力してください。</string>
     <string name="cloud">クラウド</string>
     <string name="login_error">ログインできません</string>
     <string name="login_error_desc">メールアドレスとパスワードを確認してください。</string>
@@ -336,6 +337,7 @@
     <string name="logout">ログアウト</string>
     <string name="change_password">パスワードの変更</string>
     <string name="change_password_desc">新しいパスワードを8文字以上で入力してください。</string>
+    <string name="change_password_done">パスワードを変更しました。</string>
     <string name="delete_account">アカウントの削除</string>
     <string name="confirm_email">このメールアドレスでよろしいですか？</string>
     <string name="register_success_wait_uploading">専用アカウントの登録完了\nデータをアップロードしています。数分以上かかることもありますが、この画面を開いたまま、しばらくお待ちください。</string>

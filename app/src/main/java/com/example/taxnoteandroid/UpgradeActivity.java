@@ -39,6 +39,7 @@ public class UpgradeActivity extends DefaultCommonActivity {
     private static final int REQUEST_CODE_PURCHASE_PREMIUM = 0;
     private static final int REQUEST_CODE_CLOUD_LOGIN = 2;
     private static final int REQUEST_CODE_CLOUD_REGISTER = 3;
+    private static final int REQUEST_CODE_CLOUD_CHANGE_PASSWD = 4;
     private IabHelper mBillingHelper;
     private TNApiUser mApiUser;
     private TNApiModel mApiModel;
@@ -150,21 +151,25 @@ public class UpgradeActivity extends DefaultCommonActivity {
         }
 
         if (resultCode == RESULT_OK) {
-            binding.cloudLoginLayout.setVisibility(View.GONE);
-            binding.cloudRegisterLayout.setVisibility(View.GONE);
-            binding.cloudMemberLayout.setVisibility(View.VISIBLE);
-            mApiUser = new TNApiUser(this);
-            binding.email.setText(mApiUser.getEmail());
+            if (requestCode != REQUEST_CODE_CLOUD_CHANGE_PASSWD) {
+                binding.cloudLoginLayout.setVisibility(View.GONE);
+                binding.cloudRegisterLayout.setVisibility(View.GONE);
+                binding.cloudMemberLayout.setVisibility(View.VISIBLE);
+                mApiUser = new TNApiUser(this);
+                binding.email.setText(mApiUser.getEmail());
 
-            if (requestCode == REQUEST_CODE_CLOUD_LOGIN) {
-                DialogManager.showOKOnlyAlert(this,
-                        R.string.thx_for_waiting,
-                        R.string.fetch_all_after_login_done);
+                if (requestCode == REQUEST_CODE_CLOUD_LOGIN) {
+                    DialogManager.showOKOnlyAlert(this,
+                            R.string.thx_for_waiting,
+                            R.string.fetch_all_after_login_done);
 
-            } else if (requestCode == REQUEST_CODE_CLOUD_REGISTER) {
-                DialogManager.showOKOnlyAlert(this,
-                        R.string.thx_for_waiting,
-                        R.string.upload_all_after_register_done);
+                } else if (requestCode == REQUEST_CODE_CLOUD_REGISTER) {
+                    DialogManager.showOKOnlyAlert(this,
+                            R.string.thx_for_waiting,
+                            R.string.upload_all_after_register_done);
+                }
+            } else {
+                DialogManager.showOKOnlyAlert(this, null, getString(R.string.change_password_done));
             }
         }
     }
@@ -300,7 +305,8 @@ public class UpgradeActivity extends DefaultCommonActivity {
                         sendSignOut();
                         break;
                     case 1: //@@ パスワードの変更
-                        ChangePasswordActivity.start(UpgradeActivity.this);
+                        ChangePasswordActivity.startForResult(
+                                UpgradeActivity.this, REQUEST_CODE_CLOUD_CHANGE_PASSWD);
                         break;
                     case 2: //@@ アカウントの削除
                         break;
