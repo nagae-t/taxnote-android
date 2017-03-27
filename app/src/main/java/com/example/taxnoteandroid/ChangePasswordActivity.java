@@ -59,7 +59,7 @@ public class ChangePasswordActivity extends DefaultCommonActivity {
 
     private void sendChangePassword() {
         String passwd = binding.passwdInput.getText().toString();
-         String passwdConfirm = binding.passwdConfirmInput.getText().toString();
+        String passwdConfirm = binding.passwdConfirmInput.getText().toString();
         if (passwd.length() == 0) {
             binding.passwdInputLayout.setError(getString(R.string.empty_password_input_error));
             return;
@@ -113,7 +113,6 @@ public class ChangePasswordActivity extends DefaultCommonActivity {
             @Override
             public void onSuccess(Response response, String content) {
                 dialog.dismiss();
-                Log.v("TEST", "sendChangePassword onSuccess");
                 setResult(RESULT_OK);
                 finish();
             }

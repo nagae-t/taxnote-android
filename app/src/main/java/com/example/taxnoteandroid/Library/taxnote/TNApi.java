@@ -1,6 +1,8 @@
 package com.example.taxnoteandroid.Library.taxnote;
 
 import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 
 import com.example.taxnoteandroid.BuildConfig;
 import com.example.taxnoteandroid.Library.AsyncOkHttpClient;
@@ -159,5 +161,20 @@ public class TNApi {
 
     public boolean isSyncing() {
         return SharedPreferencesManager.getBoolean(context, KEY_IS_SYNCING_DATA);
+    }
+
+    /**
+     * ネットワークアクセス可能かどうか確認する
+     *
+     * @param context
+     * @return
+     */
+    public static boolean isNetworkConnected(Context context) {
+        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo ni = cm.getActiveNetworkInfo();
+        if (ni != null) {
+            return cm.getActiveNetworkInfo().isConnected();
+        }
+        return false;
     }
 }

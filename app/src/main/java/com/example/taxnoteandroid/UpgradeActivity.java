@@ -18,6 +18,7 @@ import com.example.taxnoteandroid.Library.billing.IabHelper;
 import com.example.taxnoteandroid.Library.billing.IabResult;
 import com.example.taxnoteandroid.Library.billing.Inventory;
 import com.example.taxnoteandroid.Library.billing.Purchase;
+import com.example.taxnoteandroid.Library.taxnote.TNApi;
 import com.example.taxnoteandroid.Library.taxnote.TNApiModel;
 import com.example.taxnoteandroid.Library.taxnote.TNApiUser;
 import com.example.taxnoteandroid.dataManager.SharedPreferencesManager;
@@ -276,14 +277,24 @@ public class UpgradeActivity extends DefaultCommonActivity {
             int viewId = view.getId();
             switch (viewId) {
                 case R.id.cloud_register_layout:
-                    LoginCloudActivity.startForResult(UpgradeActivity.this,
-                            REQUEST_CODE_CLOUD_REGISTER,
-                            LoginCloudActivity.VIEW_TYPE_REGISTER);
+                    if (TNApi.isNetworkConnected(getApplicationContext())) {
+                        LoginCloudActivity.startForResult(UpgradeActivity.this,
+                                REQUEST_CODE_CLOUD_REGISTER,
+                                LoginCloudActivity.VIEW_TYPE_REGISTER);
+                    } else {
+                        DialogManager.showOKOnlyAlert(UpgradeActivity.this,
+                                null, getString(R.string.network_not_connection));
+                    }
                     break;
                 case R.id.cloud_login_layout:
-                    LoginCloudActivity.startForResult(UpgradeActivity.this,
-                            REQUEST_CODE_CLOUD_LOGIN,
-                            LoginCloudActivity.VIEW_TYPE_LOGIN);
+                    if (TNApi.isNetworkConnected(getApplicationContext())) {
+                        LoginCloudActivity.startForResult(UpgradeActivity.this,
+                                REQUEST_CODE_CLOUD_LOGIN,
+                                LoginCloudActivity.VIEW_TYPE_LOGIN);
+                    } else {
+                        DialogManager.showOKOnlyAlert(UpgradeActivity.this,
+                                null, getString(R.string.network_not_connection));
+                    }
                     break;
                 case R.id.cloud_member_layout:
                     showMemberDialogItems();
@@ -305,8 +316,13 @@ public class UpgradeActivity extends DefaultCommonActivity {
                         sendSignOut();
                         break;
                     case 1: //@@ パスワードの変更
-                        ChangePasswordActivity.startForResult(
-                                UpgradeActivity.this, REQUEST_CODE_CLOUD_CHANGE_PASSWD);
+                        if (TNApi.isNetworkConnected(getApplicationContext())) {
+                            ChangePasswordActivity.startForResult(
+                                    UpgradeActivity.this, REQUEST_CODE_CLOUD_CHANGE_PASSWD);
+                        } else {
+                            DialogManager.showOKOnlyAlert(UpgradeActivity.this,
+                                    null, getString(R.string.network_not_connection));
+                        }
                         break;
                     case 2: //@@ アカウントの削除
                         break;
@@ -328,6 +344,14 @@ public class UpgradeActivity extends DefaultCommonActivity {
         dialog.setCancelable(false);
         dialog.show();
 
+        if (!TNApi.isNetworkConnected(this)) {
+            mApiUser.clearAccountData(mApiModel);
+            binding.cloudLoginLayout.setVisibility(View.VISIBLE);
+            binding.cloudMemberLayout.setVisibility(View.GONE);
+            dialog.dismiss();
+            return;
+        }
+
         mApiUser.signOutAfterSaveAllData(mApiModel, new AsyncOkHttpClient.Callback() {
             @Override
             public void onFailure(Response response, Throwable throwable) {
@@ -340,6 +364,8 @@ public class UpgradeActivity extends DefaultCommonActivity {
 
                 // debug 保存しているtokenを削除
                 mApiUser.clearAccountData(mApiModel);
+                binding.cloudLoginLayout.setVisibility(View.VISIBLE);
+                binding.cloudMemberLayout.setVisibility(View.GONE);
 
             }
 
@@ -352,6 +378,5 @@ public class UpgradeActivity extends DefaultCommonActivity {
                 binding.cloudMemberLayout.setVisibility(View.GONE);
             }
         });
-
     }
 }

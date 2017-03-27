@@ -346,6 +346,6 @@
     <string name="register_error">アカウント登録エラー</string>
     <string name="update">更新する</string>
 
-
+    <string name="network_not_connection">インターネットへの接続が確認できません。</string>
 
 </resources>
