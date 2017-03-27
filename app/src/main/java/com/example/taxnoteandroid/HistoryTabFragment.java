@@ -3,13 +3,18 @@ package com.example.taxnoteandroid;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.taxnoteandroid.Library.AsyncOkHttpClient;
 import com.example.taxnoteandroid.Library.DialogManager;
 import com.example.taxnoteandroid.Library.ValueConverter;
+import com.example.taxnoteandroid.Library.taxnote.TNApi;
+import com.example.taxnoteandroid.Library.taxnote.TNApiModel;
 import com.example.taxnoteandroid.dataManager.EntryDataManager;
 import com.example.taxnoteandroid.dataManager.SharedPreferencesManager;
 import com.example.taxnoteandroid.databinding.FragmentHistoryTabBinding;
@@ -21,6 +26,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import okhttp3.Response;
+
 /**
  * 仕訳帳の画面
  */
@@ -29,6 +36,7 @@ public class HistoryTabFragment extends Fragment {
     private FragmentHistoryTabBinding binding;
     private CommonEntryRecyclerAdapter mEntryAdapter;
     private Context mContext;
+    private TNApiModel mApiModel;
 
     public HistoryTabFragment() {
         // Required empty public constructor
@@ -57,12 +65,29 @@ public class HistoryTabFragment extends Fragment {
         mContext = getActivity().getApplicationContext();
 
         mEntryAdapter = new CommonEntryRecyclerAdapter(mContext);
+
+        mApiModel = new TNApiModel(mContext);
+        if (!mApiModel.isLoggingIn()) binding.refreshLayout.setEnabled(false);
+
+        binding.refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                if (!TNApi.isNetworkConnected(mContext) || !mApiModel.isLoggingIn()
+                        || mApiModel.isSyncing()) {
+                    binding.refreshLayout.setRefreshing(false);
+                    return;
+                }
+
+                refreshSyncData();
+            }
+        });
     }
 
     @Override
     public void onResume() {
         super.onResume();
         loadHistoryData();
+
     }
 
     @Override
@@ -75,6 +100,30 @@ public class HistoryTabFragment extends Fragment {
                 DialogManager.showDataExportSuggestMessage(getActivity(), getFragmentManager());
             }
         }
+    }
+
+    private void refreshSyncData() {
+        mApiModel.syncData(true, new AsyncOkHttpClient.Callback() {
+            @Override
+            public void onFailure(Response response, Throwable throwable) {
+                Log.e("Error", "refreshSyncData onFailure");
+                binding.refreshLayout.setRefreshing(false);
+                String errorMsg = "";
+                if (response != null) {
+                    errorMsg = response.message();
+                }
+                DialogManager.showOKOnlyAlert(getActivity(),
+                        "Error", errorMsg);
+
+            }
+
+            @Override
+            public void onSuccess(Response response, String content) {
+                Log.v("TEST", "refreshSyncData onSuccess");
+                binding.refreshLayout.setRefreshing(false);
+                loadHistoryData();
+            }
+        });
     }
 
 
