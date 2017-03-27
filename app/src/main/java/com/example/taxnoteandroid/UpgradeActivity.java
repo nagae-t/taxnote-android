@@ -12,6 +12,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.example.taxnoteandroid.Library.AsyncOkHttpClient;
+import com.example.taxnoteandroid.Library.BroadcastUtil;
 import com.example.taxnoteandroid.Library.DialogManager;
 import com.example.taxnoteandroid.Library.UpgradeManger;
 import com.example.taxnoteandroid.Library.billing.IabHelper;
@@ -169,6 +170,7 @@ public class UpgradeActivity extends DefaultCommonActivity {
                             R.string.thx_for_waiting,
                             R.string.upload_all_after_register_done);
                 }
+                BroadcastUtil.sendAfterLogin(UpgradeActivity.this, true);
             } else {
                 DialogManager.showOKOnlyAlert(this, null, getString(R.string.change_password_done));
             }
@@ -362,10 +364,11 @@ public class UpgradeActivity extends DefaultCommonActivity {
                 }
                 dialog.dismiss();
 
-                // debug 保存しているtokenを削除
+                // 保存しているtokenを削除
                 mApiUser.clearAccountData(mApiModel);
                 binding.cloudLoginLayout.setVisibility(View.VISIBLE);
                 binding.cloudMemberLayout.setVisibility(View.GONE);
+                BroadcastUtil.sendAfterLogin(UpgradeActivity.this, false);
 
             }
 
@@ -376,6 +379,7 @@ public class UpgradeActivity extends DefaultCommonActivity {
 
                 binding.cloudLoginLayout.setVisibility(View.VISIBLE);
                 binding.cloudMemberLayout.setVisibility(View.GONE);
+                BroadcastUtil.sendAfterLogin(UpgradeActivity.this, false);
             }
         });
     }

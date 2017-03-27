@@ -18,6 +18,7 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.example.taxnoteandroid.Library.BroadcastUtil;
 import com.example.taxnoteandroid.Library.DialogManager;
 import com.example.taxnoteandroid.Library.TNAppNotification;
 import com.example.taxnoteandroid.Library.taxnote.TNApiModel;
@@ -42,12 +43,22 @@ public class MainActivity extends DefaultCommonActivity {
     private int mBottomNaviSelected = 0;
     private boolean mGraphMenuIsExpense = true;
 
+    public static final String BROADCAST_AFTER_LOGIN
+            = "broadcast_main_after_login";
     public static final String BROADCAST_REPORT_RELOAD
             = "broadcast_main_report_reload";
     public static final String BROADCAST_RESTART_APP
             = "broadcast_main_restart_app";
     public static final String BROADCAST_SWITCH_GRAPH_EXPENSE
             = "broadcast_main_switch_graph_expense";
+
+    private final BroadcastReceiver mAfterLoginReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            boolean isLoggingIn = intent.getBooleanExtra(BroadcastUtil.KEY_IS_LOGGING_IN, false);
+            afterLogin(isLoggingIn);
+        }
+    };
 
     /**
      * Broadcast for get new home timeline
@@ -90,6 +101,7 @@ public class MainActivity extends DefaultCommonActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        registerReceiver(mAfterLoginReceiver, new IntentFilter(BROADCAST_AFTER_LOGIN));
         registerReceiver(mReportReloadReceiver, new IntentFilter(BROADCAST_REPORT_RELOAD));
         registerReceiver(mRestartAppReceiver, new IntentFilter(BROADCAST_RESTART_APP));
         registerReceiver(mSwitchGraphExpenseReceiver, new IntentFilter(BROADCAST_SWITCH_GRAPH_EXPENSE));
@@ -293,6 +305,25 @@ public class MainActivity extends DefaultCommonActivity {
         }
     }
 
+    private void afterLogin(boolean isLoggingIn) {
+        if (mTabPagerAdapter == null) return;
+        CustomViewPager pager = binding.pager;
+        HistoryTabFragment historyTabFragment = (HistoryTabFragment) mTabPagerAdapter
+                .instantiateItem(pager, 1);
+        if (historyTabFragment != null)
+            historyTabFragment.afterLogin();
+
+        ReportFragment reportFragment = (ReportFragment) mTabPagerAdapter
+                .instantiateItem(pager, 2);
+        if (reportFragment != null)
+            reportFragment.reloadData();
+
+        GraphTabFragment graphFragment = (GraphTabFragment) mTabPagerAdapter
+                .instantiateItem(pager, 3);
+        if (graphFragment != null)
+            graphFragment.reloadData();
+    }
+
     private void reportSwitchPeriod(int type) {
         if (mTabPagerAdapter == null) return;
 
@@ -467,6 +498,7 @@ public class MainActivity extends DefaultCommonActivity {
 
     @Override
     protected void onDestroy() {
+        unregisterReceiver(mAfterLoginReceiver);
         unregisterReceiver(mReportReloadReceiver);
         unregisterReceiver(mRestartAppReceiver);
         unregisterReceiver(mSwitchGraphExpenseReceiver);

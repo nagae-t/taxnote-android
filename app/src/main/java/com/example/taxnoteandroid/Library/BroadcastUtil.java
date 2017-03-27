@@ -10,10 +10,17 @@ import com.example.taxnoteandroid.MainActivity;
  */
 
 public class BroadcastUtil {
+    public static final String KEY_IS_LOGGING_IN = "is_logging_in";
 
     public static void sendRestartApp(Activity activity) {
         activity.sendBroadcast(
                 new Intent(MainActivity.BROADCAST_RESTART_APP));
+    }
+
+    public static void sendAfterLogin(Activity activity, boolean isLoggingIn) {
+        Intent intent = new Intent(MainActivity.BROADCAST_AFTER_LOGIN);
+        intent.putExtra(KEY_IS_LOGGING_IN, isLoggingIn);
+        activity.sendBroadcast(intent);
     }
 
     public static void sendReloadReport(Activity activity) {

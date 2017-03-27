@@ -102,6 +102,15 @@ public class HistoryTabFragment extends Fragment {
         }
     }
 
+    public void afterLogin() {
+        mApiModel = new TNApiModel(mContext);
+        if (mApiModel.isLoggingIn()) {
+            binding.refreshLayout.setEnabled(true);
+        } else {
+            binding.refreshLayout.setEnabled(false);
+        }
+    }
+
     private void refreshSyncData() {
         mApiModel.syncData(true, new AsyncOkHttpClient.Callback() {
             @Override
