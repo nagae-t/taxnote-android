@@ -102,69 +102,9 @@ public class MainActivity extends DefaultCommonActivity {
 
         TNAppNotification.cancel(this, TNAppNotification.DAILY_ALERT_INPUT_FORGET_ID);
 
-        // debug api
+        // 起動時にデータの同期を行う
         TNApiModel apiModel = new TNApiModel(this);
-
-        /*
-        // Progress dialog
-        final ProgressDialog dialog = new ProgressDialog(this);
-        dialog.setMessage(getString(R.string.loading));
-        dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        dialog.setCancelable(false);
-        dialog.setCanceledOnTouchOutside(false);
-        dialog.show();
-
-        apiModel.saveAllDataAfterRegister(new AsyncOkHttpClient.Callback() {
-            @Override
-            public void onFailure(Response response, Throwable throwable) {
-                dialog.dismiss();
-                Log.v("TEST", "saveAllDataAfterRegister onFailure");
-                if (response != null) {
-                    Log.v("TEST", "Error response.code: " + response.code());
-                    Log.v("TEST", "Error response.message: " + response.message());
-                }
-                if (throwable != null) {
-                    Log.v("TEST", "Error LocalizedMessage: " + throwable.getLocalizedMessage());
-                }
-            }
-
-            @Override
-            public void onSuccess(Response response, String content) {
-                dialog.dismiss();
-                Log.v("TEST", "saveAllDataAfterRegister onSuccess");
-            }
-        });*/
-
-        /*
-        apiModel.testGetProjects(new AsyncOkHttpClient.Callback() {
-            @Override
-            public void onFailure(Response response, Throwable throwable) {
-                Log.v("TEST", "getProjects onFailure ");
-
-                if (throwable != null) {
-                    Log.v("TEST", throwable.getLocalizedMessage());
-                }
-
-                if (response != null) {
-                    Log.v("TEST", "getProjects onFailure code: "
-                        + response.code() + ", message: " + response.message());
-                }
-            }
-
-            @Override
-            public void onSuccess(Response response, String content) {
-                Log.v("TEST", "getProjects onSuccess content : ");
-                JsonParser parser = new JsonParser();
-                JsonArray jsArr = parser.parse(content).getAsJsonArray();
-                for (JsonElement jsElement : jsArr) {
-                    JsonObject obj = jsElement.getAsJsonObject();
-                    for (Map.Entry<String, JsonElement> entry : obj.entrySet()) {
-                        Log.v("TEST", "key: " + entry.getKey() + " | " + entry.getValue());
-                    }
-                }
-            }
-        }); */
-
+        apiModel.syncData(false, null);
     }
 
     @Override

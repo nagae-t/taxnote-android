@@ -345,6 +345,7 @@
     <string name="upload_all_after_register_done">データのアップロードが完了しました。\n他のデバイスとデータを同期するには、他のデバイスから、今回作成したアカウントを使ってログインしてください。</string>
     <string name="register_error">アカウント登録エラー</string>
     <string name="update">更新する</string>
+    <string name="updating_data">データを更新中です...</string>
 
     <string name="network_not_connection">インターネットへの接続が確認できません。</string>
 

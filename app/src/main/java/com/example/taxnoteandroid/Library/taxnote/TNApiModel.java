@@ -5,7 +5,9 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.example.taxnoteandroid.Library.AsyncOkHttpClient;
+import com.example.taxnoteandroid.Library.DialogManager;
 import com.example.taxnoteandroid.Library.ValueConverter;
+import com.example.taxnoteandroid.R;
 import com.example.taxnoteandroid.dataManager.AccountDataManager;
 import com.example.taxnoteandroid.dataManager.EntryDataManager;
 import com.example.taxnoteandroid.dataManager.ProjectDataManager;
@@ -2073,6 +2075,53 @@ public class TNApiModel extends TNApi {
                         });
                     }
                 });
+            }
+        });
+    }
+
+
+    // Sync Data
+
+    public void syncData(boolean isShowMessage, final AsyncOkHttpClient.Callback callback) {
+        if (!isLoggingIn() || !isNetworkConnected(context)) {
+            if (callback != null)
+                callback.onSuccess(null, null);
+            return;
+        }
+
+        //@@ If premium is not available, check the latest premium expired date from Taxnote Cloud server
+        //@@ iOSでは subscriptionのチェックなどを行う
+
+
+        // show updating data message
+        if (!isSyncing()) {
+            DialogManager.showToast(context, context.getString(R.string.updating_data));
+        }
+
+        // Start sync data
+        saveAllNeedSaveSyncDeletedData(new AsyncOkHttpClient.Callback() {
+            @Override
+            public void onFailure(Response response, Throwable throwable) {
+                Log.e(LTAG, "syncData onFailure");
+                if (callback != null)
+                    callback.onFailure(response, throwable);
+            }
+
+            @Override
+            public void onSuccess(Response response, String content) {
+                if (callback == null) {
+                    getAllData(new AsyncOkHttpClient.Callback() {
+                        @Override
+                        public void onFailure(Response response, Throwable throwable) {
+                        }
+
+                        @Override
+                        public void onSuccess(Response response, String content) {
+                        }
+                    });
+                } else {
+                    getAllData(callback);
+                }
             }
         });
     }
