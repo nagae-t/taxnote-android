@@ -123,6 +123,8 @@ public class SearchEntryActivity extends DefaultCommonActivity {
         });
         binding.entries.setAdapter(mEntryAdapter);
 
+        binding.refreshLayout.setEnabled(false);
+
     }
 
     @Override

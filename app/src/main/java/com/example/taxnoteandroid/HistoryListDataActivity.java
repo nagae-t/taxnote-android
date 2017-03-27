@@ -110,6 +110,8 @@ public class HistoryListDataActivity extends DefaultCommonActivity {
         actionBar.setDisplayHomeAsUpEnabled(true);
 
         mStartEndDate = EntryLimitManager.getStartAndEndDate(this, mPeriodType, targetCalendar);
+
+        binding.refreshLayout.setEnabled(false);
     }
 
     @Override

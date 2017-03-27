@@ -6,13 +6,19 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.taxnoteandroid.Library.AsyncOkHttpClient;
+import com.example.taxnoteandroid.Library.DialogManager;
 import com.example.taxnoteandroid.Library.EntryLimitManager;
 import com.example.taxnoteandroid.Library.ValueConverter;
+import com.example.taxnoteandroid.Library.taxnote.TNApi;
+import com.example.taxnoteandroid.Library.taxnote.TNApiModel;
 import com.example.taxnoteandroid.dataManager.EntryDataManager;
 import com.example.taxnoteandroid.dataManager.SharedPreferencesManager;
 import com.example.taxnoteandroid.databinding.FragmentReportContentBinding;
@@ -23,6 +29,8 @@ import java.util.Calendar;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+
+import okhttp3.Response;
 
 public class ReportContentFragment extends Fragment {
 
@@ -36,6 +44,8 @@ public class ReportContentFragment extends Fragment {
     private EntryDataManager mEntryManager;
     private Calendar mTargetCalendar;
     private int mPeriodType;
+
+    private TNApiModel mApiModel;
 
     public ReportContentFragment() {
     }
@@ -60,6 +70,8 @@ public class ReportContentFragment extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mContext = getActivity().getApplicationContext();
+        mApiModel = new TNApiModel(mContext);
+        if (!mApiModel.isLoggingIn()) binding.refreshLayout.setEnabled(false);
 
         mEntryManager = new EntryDataManager(mContext);
         mPeriodType = SharedPreferencesManager.getProfitLossReportPeriodType(mContext);
@@ -69,6 +81,19 @@ public class ReportContentFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 HistoryListDataActivity.startForBalance(mContext, mTargetCalendar);
+            }
+        });
+
+        binding.refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                if (!TNApi.isNetworkConnected(mContext) || !mApiModel.isLoggingIn()
+                        || mApiModel.isSyncing()) {
+                    binding.refreshLayout.setRefreshing(false);
+                    return;
+                }
+
+                refreshSyncData();
             }
         });
     }
@@ -82,17 +107,44 @@ public class ReportContentFragment extends Fragment {
     public void onResume() {
         super.onResume();
 
+        loadReportData();
+    }
+
+    private void refreshSyncData() {
+        mApiModel.syncData(true, new AsyncOkHttpClient.Callback() {
+            @Override
+            public void onFailure(Response response, Throwable throwable) {
+                Log.e("Error", "refreshSyncData onFailure");
+                binding.refreshLayout.setRefreshing(false);
+                String errorMsg = "";
+                if (response != null) {
+                    errorMsg = response.message();
+                }
+                DialogManager.showOKOnlyAlert(getActivity(),
+                        "Error", errorMsg);
+
+            }
+
+            @Override
+            public void onSuccess(Response response, String content) {
+                Log.v("TEST", "refreshSyncData onSuccess");
+                binding.refreshLayout.setRefreshing(false);
+                loadReportData();
+            }
+        });
+    }
+
+    private void loadReportData() {
         isShowBalanceCarryForward = SharedPreferencesManager.getBalanceCarryForward(mContext);
-        String blanceText = mContext.getString(R.string.Balance);
+        String balanceText = mContext.getString(R.string.Balance);
         if (isShowBalanceCarryForward)
-            blanceText = mContext.getString(R.string.Balance)
-                + mContext.getString(R.string.balance_carry_forward_view);
-        binding.balanceTv.setText(blanceText);
+            balanceText = mContext.getString(R.string.Balance)
+                    + mContext.getString(R.string.balance_carry_forward_view);
+        binding.balanceTv.setText(balanceText);
 
         long[] startEndDate = EntryLimitManager.getStartAndEndDate(mContext, mPeriodType, mTargetCalendar);
         new ReportDataTask().execute(startEndDate);
     }
-
 
     private void setTopBalanceValue(long price) {
         // 残高の表示
