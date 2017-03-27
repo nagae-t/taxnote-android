@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.support.v4.content.IntentCompat;
 import android.support.v7.app.AppCompatActivity;
 
+import com.example.taxnoteandroid.Library.BroadcastUtil;
 import com.example.taxnoteandroid.MainActivity;
 import com.example.taxnoteandroid.R;
 import com.example.taxnoteandroid.model.Account;
@@ -203,8 +204,7 @@ public class DefaultDataInstaller {
     }
 
     public static void restartApp(AppCompatActivity activity) {
-        Context context = activity.getApplicationContext();
-        context.sendBroadcast(new Intent(MainActivity.BROADCAST_RESTART_APP));
+        BroadcastUtil.sendRestartApp(activity);
         Intent mainIntent = new Intent(getApplicationContext(), MainActivity.class);
         Intent intentCompat = IntentCompat.makeRestartActivityTask(mainIntent.getComponent());
         activity.startActivity(intentCompat);

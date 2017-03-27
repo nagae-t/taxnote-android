@@ -13,6 +13,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.example.taxnoteandroid.Library.BroadcastUtil;
 import com.example.taxnoteandroid.Library.DialogManager;
 import com.example.taxnoteandroid.Library.EntryLimitManager;
 import com.example.taxnoteandroid.Library.ValueConverter;
@@ -184,7 +185,7 @@ public class HistoryListDataActivity extends DefaultCommonActivity {
                         mEntryAdapter.clearAll();
                         mEntryAdapter.notifyDataSetChanged();
                         DialogManager.showToast(context, context.getString(R.string.delete_done));
-                        sendBroadcast(new Intent(MainActivity.BROADCAST_REPORT_RELOAD));
+                        BroadcastUtil.sendReloadReport(HistoryListDataActivity.this);
                         finish();
 
                         dialogInterface.dismiss();

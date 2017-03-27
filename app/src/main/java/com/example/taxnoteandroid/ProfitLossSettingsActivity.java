@@ -11,6 +11,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.CompoundButton;
 
+import com.example.taxnoteandroid.Library.BroadcastUtil;
 import com.example.taxnoteandroid.dataManager.SharedPreferencesManager;
 import com.example.taxnoteandroid.databinding.ActivityProfitLossSettingsBinding;
 
@@ -61,7 +62,7 @@ public class ProfitLossSettingsActivity extends DefaultCommonActivity {
                         SharedPreferencesManager.saveMonthlyClosingDateIndex(
                                 getApplicationContext(), i);
                         binding.monthlyClosingDateValue.setText(dateList[i]);
-                        sendBroadcast(new Intent(MainActivity.BROADCAST_REPORT_RELOAD));
+                        BroadcastUtil.sendReloadReport(ProfitLossSettingsActivity.this);
                     }
                 });
             }
@@ -82,7 +83,7 @@ public class ProfitLossSettingsActivity extends DefaultCommonActivity {
                         SharedPreferencesManager.saveStartMonthOfYearIndex(
                                 getApplicationContext(), i);
                         binding.startMonthOfYearValue.setText(monthItems[i]);
-                        sendBroadcast(new Intent(MainActivity.BROADCAST_REPORT_RELOAD));
+                        BroadcastUtil.sendReloadReport(ProfitLossSettingsActivity.this);
                     }
                 });
             }

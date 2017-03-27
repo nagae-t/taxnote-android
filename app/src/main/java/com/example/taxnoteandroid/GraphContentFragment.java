@@ -1,7 +1,6 @@
 package com.example.taxnoteandroid;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -10,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.taxnoteandroid.Library.BroadcastUtil;
 import com.example.taxnoteandroid.Library.EntryLimitManager;
 import com.example.taxnoteandroid.dataManager.EntryDataManager;
 import com.example.taxnoteandroid.dataManager.SharedPreferencesManager;
@@ -135,7 +135,7 @@ public class GraphContentFragment extends Fragment {
             mRecyclerAdapter.setOnGraphClickListener(new GraphHistoryRecyclerAdapter.OnGraphClickListener() {
                 @Override
                 public void onClick(View view, PieChart chart) {
-                    view.getContext().sendBroadcast(new Intent(MainActivity.BROADCAST_SWITCH_GRAPH_EXPENSE));
+                    BroadcastUtil.sendSwitchGraphExpense(getActivity());
                 }
             });
             binding.recyclerContent.setAdapter(mRecyclerAdapter);

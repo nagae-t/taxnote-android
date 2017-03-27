@@ -7,12 +7,12 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.ShareCompat;
-import android.support.v4.content.IntentCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
 import com.example.taxnoteandroid.Library.DialogManager;
 import com.example.taxnoteandroid.Library.FileUtil;
+import com.example.taxnoteandroid.dataManager.DefaultDataInstaller;
 import com.example.taxnoteandroid.dataManager.SharedPreferencesManager;
 import com.example.taxnoteandroid.databinding.ActivityImportFilterBinding;
 
@@ -46,11 +46,7 @@ public class ImportFilterActivity extends AppCompatActivity {
         binding.btnRestart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                sendBroadcast(new Intent(MainActivity.BROADCAST_RESTART_APP));
-                finish();
-                Intent i = new Intent(getApplicationContext(), MainActivity.class);
-                Intent intentCompat = IntentCompat.makeRestartActivityTask(i.getComponent());
-                startActivity(intentCompat);
+                DefaultDataInstaller.restartApp(ImportFilterActivity.this);
 
             }
         });
