@@ -1214,7 +1214,13 @@ public class TNApiModel extends TNApi {
         }
     }
 
-    private void updateProject(String uuid, final AsyncOkHttpClient.Callback callback) {
+    public void updateProject(String uuid, final AsyncOkHttpClient.Callback callback) {
+        if (!isLoggingIn() || !TNApi.isNetworkConnected(context)) {
+            if (callback != null)
+                callback.onSuccess(null, null);
+            return;
+        }
+
         Project project = mProjectDataManager.findByUuid(uuid);
         final long projectId = project.id;
 
@@ -1252,13 +1258,15 @@ public class TNApiModel extends TNApi {
                     Log.e(LTAG, "updateProject(uuid) onFailure response.code: " + response.code()
                             + ", message: " + response.message());
                 }
-                callback.onFailure(response, throwable);
+                if (callback != null)
+                    callback.onFailure(response, throwable);
             }
 
             @Override
             public void onSuccess(Response response, String content) {
                 mProjectDataManager.updateNeedSync(projectId, false);
-                callback.onSuccess(response, content);
+                if (callback != null)
+                    callback.onSuccess(response, content);
             }
         });
 

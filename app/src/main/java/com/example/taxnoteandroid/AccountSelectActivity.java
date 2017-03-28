@@ -21,6 +21,7 @@ import android.widget.EditText;
 
 import com.example.taxnoteandroid.Library.DialogManager;
 import com.example.taxnoteandroid.Library.KeyboardUtil;
+import com.example.taxnoteandroid.Library.taxnote.TNApiModel;
 import com.example.taxnoteandroid.dataManager.AccountDataManager;
 import com.example.taxnoteandroid.dataManager.EntryDataManager;
 import com.example.taxnoteandroid.dataManager.ProjectDataManager;
@@ -48,6 +49,8 @@ public class AccountSelectActivity extends DefaultCommonActivity {
     private MyRecyclerViewAdapter adapter; // 2017/01/30 E.Nozaki
     private List<Account> accountList = null; // 2017/01/30 E.Nozaki
 
+    private TNApiModel mApiModel;
+
     public static Intent createIntent(Context context, boolean isExpense) {
         Intent i = new Intent(context, AccountSelectActivity.class);
         i.putExtra(EXTRA_ISEXPENSE, isExpense);
@@ -62,6 +65,8 @@ public class AccountSelectActivity extends DefaultCommonActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_account_select);
+
+        mApiModel = new TNApiModel(this);
 
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
@@ -465,6 +470,9 @@ public class AccountSelectActivity extends DefaultCommonActivity {
                 project.accountUuidForIncome = account.uuid;
                 projectDataManager.updateAccountUuidForIncome(project);
             }
+
+            // Sync update project
+            mApiModel.updateProject(uuid, null);
 
             DialogManager.showToast(AccountSelectActivity.this, account.name);
             finish();
