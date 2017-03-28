@@ -12,6 +12,7 @@ import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 
 import com.example.taxnoteandroid.Library.AsyncOkHttpClient;
 import com.example.taxnoteandroid.Library.DialogManager;
@@ -82,7 +83,7 @@ public class LoginCloudActivity extends DefaultCommonActivity {
                     showLoginConfirm();
                     break;
                 case R.id.btn_forgot_passwd:
-                    sendForgotPasswd();
+                    showForgotPasswordDialog();
                     break;
             }
         }
@@ -286,6 +287,57 @@ public class LoginCloudActivity extends DefaultCommonActivity {
 
             }
         });
+    }
+
+    private void showForgotPasswordDialog() {
+        String inputEmail = binding.emailInput.getText().toString();
+
+        final TNSimpleDialogFragment dialogFragment = TNSimpleDialogFragment.newInstance();
+        dialogFragment.setTitle(getString(R.string.reset_password));
+//        dialogFragment.setContentViewId(R.layout.forgot_password_dialog);
+        dialogFragment.setPositiveBtnText(getString(R.string.send));
+        dialogFragment.setNegativeBtnText(getString(android.R.string.cancel));
+
+        View _view = getLayoutInflater().inflate(R.layout.forgot_password_dialog, null);
+        if (inputEmail.length() > 0) {
+            EditText ed = (EditText) _view.findViewById(R.id.email_input);
+            ed.setText(inputEmail);
+        }
+        dialogFragment.setDialogView(_view);
+        final View dialogView = dialogFragment.getDialogView();
+
+        dialogFragment.setDialogListener(new TNSimpleDialogFragment.TNSimpleDialogListener() {
+            @Override
+            public void onPositiveBtnClick(DialogInterface dialogInterface, int i, String tag) {
+                EditText ed = (EditText) dialogView.findViewById(R.id.email_input);
+                if (ed != null)
+                    Log.v("TEST", "input email on forgot password : " + ed.getText());
+
+
+                // sendForgotPasswd()
+            }
+
+            @Override
+            public void onNeutralBtnClick(DialogInterface dialogInterface, int i, String tag) {
+
+            }
+
+            @Override
+            public void onNegativeBtnClick(DialogInterface dialogInterface, int i, String tag) {
+
+            }
+
+            @Override
+            public void onDialogCancel(DialogInterface dialogInterface, String tag) {
+
+            }
+
+            @Override
+            public void onDialogDismiss(DialogInterface dialogInterface, String tag) {
+
+            }
+        });
+        dialogFragment.show(getSupportFragmentManager(), null);
     }
 
     private void sendForgotPasswd() {

@@ -63,8 +63,10 @@ public class TNSimpleDialogFragment extends DialogFragment
         }
 
         int contentViewId = getContentViewId();
-        if(contentViewId != DEFAULT_INT_VALUE){
+        if(contentViewId != DEFAULT_INT_VALUE) {
             mDialogView = getActivity().getLayoutInflater().inflate(contentViewId, null);
+            builder.setView(mDialogView);
+        } else if (mDialogView != null) {
             builder.setView(mDialogView);
         }
 
@@ -129,6 +131,14 @@ public class TNSimpleDialogFragment extends DialogFragment
 
     public int getContentViewId() {
         return getArguments().getInt(KEY_DIALOG_CONTENT_VIEW, DEFAULT_INT_VALUE);
+    }
+
+    public void setDialogView(View view) {
+        this.mDialogView = view;
+    }
+
+    public View getDialogView() {
+        return mDialogView;
     }
 
     public void setPositiveBtnText(String text) {

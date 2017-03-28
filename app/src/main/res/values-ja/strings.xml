@@ -338,6 +338,9 @@
     <string name="change_password">パスワードの変更</string>
     <string name="change_password_desc">新しいパスワードを8文字以上で入力してください。</string>
     <string name="change_password_done">パスワードを変更しました。</string>
+    <string name="reset_password">パスワードの再設定</string>
+    <string name="reset_password_desc">Taxnoteクラウドに登録したメールアドレスに、パスワードを再設定できるリンクを送信します。</string>
+
     <string name="delete_account">アカウントの削除</string>
     <string name="confirm_email">このメールアドレスでよろしいですか？</string>
     <string name="register_success_wait_uploading">専用アカウントの登録完了\nデータをアップロードしています。数分以上かかることもありますが、この画面を開いたまま、しばらくお待ちください。</string>
@@ -346,6 +349,7 @@
     <string name="register_error">アカウント登録エラー</string>
     <string name="update">更新する</string>
     <string name="updating_data">データを更新中です...</string>
+    <string name="send">送信</string>
 
     <string name="network_not_connection">インターネットへの接続が確認できません。</string>
 
