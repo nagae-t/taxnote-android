@@ -20,7 +20,7 @@
             android:minHeight="48dp"
             android:paddingEnd="16dp"
             android:paddingStart="16dp"
-            android:textColor="@color/primary"
+            android:textColor="?attr/colorPrimary"
             android:text="@string/data_export_start" />
 
 

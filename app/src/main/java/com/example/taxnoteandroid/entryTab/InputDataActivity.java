@@ -7,7 +7,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
 import android.view.Menu;
@@ -18,7 +17,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.android.calculator2.Calculator;
+import com.example.taxnoteandroid.DefaultCommonActivity;
 import com.example.taxnoteandroid.CalculatorActivity;
 import com.example.taxnoteandroid.Library.DialogManager;
 import com.example.taxnoteandroid.Library.EntryLimitManager;
@@ -46,7 +45,7 @@ import java.util.UUID;
 
 import static com.example.taxnoteandroid.TaxnoteConsts.MIXPANEL_TOKEN;
 
-public class InputDataActivity extends AppCompatActivity {
+public class InputDataActivity extends DefaultCommonActivity {
 
     private TextView priceTextView;
     private static final String EXTRA_IS_EXPENSE = "isExpense";
@@ -450,7 +449,7 @@ public class InputDataActivity extends AppCompatActivity {
 
         if (requestCode == 1 && resultCode == RESULT_OK) {
 
-            currentPrice = data.getLongExtra(Calculator.KEY_CURRENT_PRICE, 0);
+            currentPrice = data.getLongExtra(CalculatorActivity.KEY_CURRENT_PRICE, 0);
             String priceString = ValueConverter.formatPrice(InputDataActivity.this ,currentPrice);
             priceTextView.setText(priceString);
         }
