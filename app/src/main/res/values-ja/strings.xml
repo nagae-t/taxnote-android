@@ -340,6 +340,10 @@
     <string name="change_password_done">パスワードを変更しました。</string>
     <string name="reset_password">パスワードの再設定</string>
     <string name="reset_password_desc">Taxnoteクラウドに登録したメールアドレスに、パスワードを再設定できるリンクを送信します。</string>
+    <string name="non_registered_email">登録されていないメールアドレスです</string>
+    <string name="non_registered_email_desc">Taxnoteクラウドに指定したメールアドレスが登録されていません。</string>
+    <string name="reset_password_sent">送信完了</string>
+    <string name="reset_password_sent_desc">パスワードをリセットできるリンクを送信しました。メールが届かない時は、迷惑フォルダに入ってないかチェックしてみてください。</string>
 
     <string name="delete_account">アカウントの削除</string>
     <string name="confirm_email">このメールアドレスでよろしいですか？</string>

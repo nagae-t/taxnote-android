@@ -181,7 +181,19 @@ public class TNApiUser extends TNApi {
         });
     }
 
-    public void sendForgotPassword() {
+    public void sendForgotPassword(final AsyncOkHttpClient.Callback callback) {
+
+        setHttpMethod(HTTP_METHOD_POST);
+        setRequestPath(URL_PATH_PASSWORD_RESET);
+
+        FormBody formBody = new FormBody.Builder()
+                .add("email", email)
+                .add("redirect_url", "http://taxnoteapp.com/")
+                .build();
+
+        setFormBody(formBody);
+        setCallback(callback);
+        requestApi();
     }
 
     public void updatePassword(String password, final AsyncOkHttpClient.Callback callback) {

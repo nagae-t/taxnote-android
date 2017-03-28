@@ -156,11 +156,7 @@ public class LoginCloudActivity extends DefaultCommonActivity {
 
     private void sendLogin(String email, String passwd) {
         // Progress dialog
-        final ProgressDialog dialog = new ProgressDialog(this);
-        dialog.setMessage(getString(R.string.loading));
-        dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        dialog.setCancelable(false);
-        dialog.setCanceledOnTouchOutside(false);
+        final ProgressDialog dialog = getLoadingDialog();
         dialog.show();
 
         final TNApiUser apiUser = new TNApiUser(this, email, passwd);
@@ -229,11 +225,7 @@ public class LoginCloudActivity extends DefaultCommonActivity {
 
     private void sendRegister(String email, String passwd) {
         // Progress dialog
-        final ProgressDialog dialog = new ProgressDialog(this);
-        dialog.setMessage(getString(R.string.loading));
-        dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        dialog.setCancelable(false);
-        dialog.setCanceledOnTouchOutside(false);
+        final ProgressDialog dialog = getLoadingDialog();
         dialog.show();
 
         final TNApiUser apiUser = new TNApiUser(this, email, passwd);
@@ -294,7 +286,6 @@ public class LoginCloudActivity extends DefaultCommonActivity {
 
         final TNSimpleDialogFragment dialogFragment = TNSimpleDialogFragment.newInstance();
         dialogFragment.setTitle(getString(R.string.reset_password));
-//        dialogFragment.setContentViewId(R.layout.forgot_password_dialog);
         dialogFragment.setPositiveBtnText(getString(R.string.send));
         dialogFragment.setNegativeBtnText(getString(android.R.string.cancel));
 
@@ -309,12 +300,18 @@ public class LoginCloudActivity extends DefaultCommonActivity {
         dialogFragment.setDialogListener(new TNSimpleDialogFragment.TNSimpleDialogListener() {
             @Override
             public void onPositiveBtnClick(DialogInterface dialogInterface, int i, String tag) {
+                KeyboardUtil.hideKeyboard(LoginCloudActivity.this, dialogView);
                 EditText ed = (EditText) dialogView.findViewById(R.id.email_input);
-                if (ed != null)
-                    Log.v("TEST", "input email on forgot password : " + ed.getText());
+                if (ed == null) return;
 
+                String targetEmail = ed.getText().toString();
+                if (targetEmail.length() == 0) {
+                    DialogManager.showOKOnlyAlert(getApplicationContext(), null,
+                            getString(R.string.empty_email_input_error));
+                    return;
+                }
 
-                // sendForgotPasswd()
+                 sendForgotPasswd(targetEmail);
             }
 
             @Override
@@ -340,8 +337,37 @@ public class LoginCloudActivity extends DefaultCommonActivity {
         dialogFragment.show(getSupportFragmentManager(), null);
     }
 
-    private void sendForgotPasswd() {
+    private void sendForgotPasswd(String email) {
+        final ProgressDialog loadingDialog = getLoadingDialog();
+        loadingDialog.show();
 
+        final TNApiUser apiUser = new TNApiUser(this);
+        apiUser.setEmail(email);
+        apiUser.sendForgotPassword(new AsyncOkHttpClient.Callback() {
+            @Override
+            public void onFailure(Response response, Throwable throwable) {
+                loadingDialog.dismiss();
+                Log.e("ERROR", "sendForgotPasswd onFailure");
+                if (response != null) {
+                    String errorMsg = response.message();
+                    int httpCode = response.code();
+                    if (httpCode == 404) {
+                        DialogManager.showOKOnlyAlert(LoginCloudActivity.this,
+                                R.string.non_registered_email, R.string.non_registered_email_desc);
+                    } else {
+                        DialogManager.showOKOnlyAlert(LoginCloudActivity.this,
+                                "Error", errorMsg);
+                    }
+                }
+            }
+
+            @Override
+            public void onSuccess(Response response, String content) {
+                loadingDialog.dismiss();
+                DialogManager.showOKOnlyAlert(LoginCloudActivity.this,
+                        R.string.reset_password_sent, R.string.reset_password_sent_desc);
+            }
+        });
     }
 
     @Override
@@ -352,5 +378,14 @@ public class LoginCloudActivity extends DefaultCommonActivity {
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private ProgressDialog getLoadingDialog(){
+        final ProgressDialog dialog = new ProgressDialog(this);
+        dialog.setMessage(getString(R.string.loading));
+        dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        dialog.setCancelable(false);
+        dialog.setCanceledOnTouchOutside(false);
+        return dialog;
     }
 }
