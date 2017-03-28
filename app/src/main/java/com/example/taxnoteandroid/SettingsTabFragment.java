@@ -13,6 +13,7 @@ import android.support.v4.widget.CompoundButtonCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatRadioButton;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,8 +25,12 @@ import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
+import com.example.taxnoteandroid.Library.AsyncOkHttpClient;
 import com.example.taxnoteandroid.Library.DialogManager;
 import com.example.taxnoteandroid.Library.FileUtil;
+import com.example.taxnoteandroid.Library.taxnote.TNApi;
+import com.example.taxnoteandroid.Library.taxnote.TNApiModel;
+import com.example.taxnoteandroid.Library.taxnote.TNApiUser;
 import com.example.taxnoteandroid.dataManager.DefaultDataInstaller;
 import com.example.taxnoteandroid.dataManager.ProjectDataManager;
 import com.example.taxnoteandroid.dataManager.SharedPreferencesManager;
@@ -34,6 +39,8 @@ import com.example.taxnoteandroid.model.Project;
 import com.helpshift.support.Support;
 
 import java.util.List;
+
+import okhttp3.Response;
 
 
 public class SettingsTabFragment extends Fragment {
@@ -47,6 +54,9 @@ public class SettingsTabFragment extends Fragment {
     private List<Project> mAllProjects;
     private Project mEditingProject;
     private Project mCurrentProject;
+
+    private TNApiUser mApiUser;
+    private TNApiModel mApiModel;
 
     public SettingsTabFragment() {
         // Required empty public constructor
@@ -73,6 +83,9 @@ public class SettingsTabFragment extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mContext = getActivity().getApplicationContext();
+        mApiUser = new TNApiUser(mContext);
+        mApiModel = new TNApiModel(mContext);
+
         mFragmentManager = getFragmentManager();
         mInflater = (LayoutInflater)getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
@@ -210,9 +223,8 @@ public class SettingsTabFragment extends Fragment {
                     //@@ 新しく追加した帳簿をcurrentにしてアプリを再起動すると
                     // 「帳簿を作成したよー」のメッセージが表示されなくなる
 
-//                    checkCurrentProjectToRadio()
-                    // restart
-//                    DefaultDataInstaller.restartApp((AppCompatActivity) getActivity());
+                    // データの同期
+                    sendCloudSyncData();
 
                     break;
                 case ProjectEditorDialogFragment.TYPE_EDIT_NAME:
@@ -221,6 +233,22 @@ public class SettingsTabFragment extends Fragment {
             }
         }
     };
+
+    private void sendCloudSyncData() {
+        if (!TNApi.isNetworkConnected(mContext) || !mApiUser.isLoggingIn()
+                || mApiModel.isSyncing()) return;
+
+        mApiModel.saveAllNeedSaveSyncDeletedData(new AsyncOkHttpClient.Callback() {
+            @Override
+            public void onFailure(Response response, Throwable throwable) {
+                Log.e("ERROR", "sendCloudSyncData saveAllNeedSaveSyncDeletedData onFailure");
+            }
+
+            @Override
+            public void onSuccess(Response response, String content) {
+            }
+        });
+    }
 
     private void addSubProjectView(Project project) {
         final View viewRow = mInflater.inflate(R.layout.project_multi_row, binding.subProjectRadioLayout, false);
