@@ -43,9 +43,14 @@
             style="@style/section_header"
             android:text="@string/entry_tab_fragment_select_reason" />
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/reason_list"
+        <android.support.v4.widget.SwipeRefreshLayout
+            android:id="@+id/refresh_layout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent">
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/reason_list"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </android.support.v4.widget.SwipeRefreshLayout>
     </LinearLayout>
 </layout>

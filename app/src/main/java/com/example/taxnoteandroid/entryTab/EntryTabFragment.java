@@ -20,6 +20,9 @@ import com.helpshift.support.Support;
 
 public class EntryTabFragment extends Fragment {
 
+    private ViewPager mPager;
+    private TabPagerAdapter mPagerAdapter;
+
     public EntryTabFragment() {
         // Required empty public constructor
     }
@@ -36,9 +39,10 @@ public class EntryTabFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_entry_tab, container, false);
 
         TabLayout tabLayout = (TabLayout) v.findViewById(R.id.tab);
-        final ViewPager viewPager = (ViewPager) v.findViewById(R.id.pager);
-        viewPager.setAdapter(new TabPagerAdapter(getChildFragmentManager()));
-        tabLayout.setupWithViewPager(viewPager);
+        mPager = (ViewPager) v.findViewById(R.id.pager);
+        mPagerAdapter = new TabPagerAdapter(getChildFragmentManager());
+        mPager.setAdapter(mPagerAdapter);
+        tabLayout.setupWithViewPager(mPager);
 
         // Reset selected date
         SharedPreferencesManager.saveCurrentSelectedDate(getActivity(),System.currentTimeMillis());
@@ -69,7 +73,15 @@ public class EntryTabFragment extends Fragment {
         }
     }
 
-    class TabPagerAdapter extends FragmentPagerAdapter {
+    public void afterLogin() {
+        EntryTabReasonSelectFragment fragment1 = (EntryTabReasonSelectFragment)mPagerAdapter.instantiateItem(mPager, 0);
+        if (fragment1 != null) fragment1.afterLogin();
+
+        EntryTabReasonSelectFragment fragment2 = (EntryTabReasonSelectFragment)mPagerAdapter.instantiateItem(mPager, 1);
+        if (fragment2 != null) fragment2.afterLogin();
+    }
+
+    private class TabPagerAdapter extends FragmentPagerAdapter {
 
         public TabPagerAdapter(FragmentManager fm) {
             super(fm);

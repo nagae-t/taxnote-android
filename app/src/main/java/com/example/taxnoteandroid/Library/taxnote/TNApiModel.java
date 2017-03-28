@@ -118,9 +118,6 @@ public class TNApiModel extends TNApi {
             public void onSuccess(Response response, String content) {
 
                 JsonArray jsArray = jsParser.parse(content).getAsJsonArray();
-//                updateDbProjects(jsArray);
-//                callback.onSuccess(response, content);
-
                 executeUpdateDbTask(UpdateDbAsyncTask.TYPE_PROJECT,
                         jsArray, callback, response, content);
             }
@@ -144,9 +141,6 @@ public class TNApiModel extends TNApi {
             public void onSuccess(Response response, String content) {
 
                 JsonArray jsArray = jsParser.parse(content).getAsJsonArray();
-//                updateDbReasons(jsArray);
-//                callback.onSuccess(response, content);
-
                 executeUpdateDbTask(UpdateDbAsyncTask.TYPE_REASON,
                         jsArray, callback, response, content);
             }
@@ -169,9 +163,6 @@ public class TNApiModel extends TNApi {
             public void onSuccess(Response response, String content) {
 
                 JsonArray jsArray = jsParser.parse(content).getAsJsonArray();
-//                updateDbAccounts(jsArray);
-//                callback.onSuccess(response, content);
-
                 executeUpdateDbTask(UpdateDbAsyncTask.TYPE_ACCOUNT,
                         jsArray, callback, response, content);
             }
@@ -194,9 +185,6 @@ public class TNApiModel extends TNApi {
             public void onSuccess(Response response, String content) {
 
                 JsonArray jsArray = jsParser.parse(content).getAsJsonArray();
-//                updateDbSummaries(jsArray);
-//                callback.onSuccess(response, content);
-
                 executeUpdateDbTask(UpdateDbAsyncTask.TYPE_SUMMARY,
                         jsArray, callback, response, content);
             }
@@ -219,9 +207,6 @@ public class TNApiModel extends TNApi {
             public void onSuccess(Response response, String content) {
 
                 JsonArray jsArray = jsParser.parse(content).getAsJsonArray();
-//                updateDbRecurrings(jsArray);
-//                callback.onSuccess(response, content);
-
                 executeUpdateDbTask(UpdateDbAsyncTask.TYPE_RECURRING,
                         jsArray, callback, response, content);
             }
@@ -244,9 +229,6 @@ public class TNApiModel extends TNApi {
             public void onSuccess(Response response, String content) {
 
                 JsonArray jsArray = jsParser.parse(content).getAsJsonArray();
-//                updateDbEntries(jsArray);
-//                callback.onSuccess(response, content);
-
                 executeUpdateDbTask(UpdateDbAsyncTask.TYPE_ENTRY,
                         jsArray, callback, response, content);
             }
@@ -887,7 +869,6 @@ public class TNApiModel extends TNApi {
 
                     @Override
                     public void onSuccess(Response response, String content) {
-
                         updateAllDeletedData(new AsyncOkHttpClient.Callback() {
                             @Override
                             public void onFailure(Response response, Throwable throwable) {
@@ -1172,7 +1153,7 @@ public class TNApiModel extends TNApi {
         saveSyncUpdated(KEY_SYNC_UPDATED_ENTRY, nowTime);
     }
 
-    private  void executeUpdateDbTask(int type, JsonArray jsonArray,
+    private void executeUpdateDbTask(int type, JsonArray jsonArray,
                                       AsyncOkHttpClient.Callback callback,
                                       Response response, String resContent) {
 
@@ -2083,7 +2064,7 @@ public class TNApiModel extends TNApi {
     // Sync Data
 
     public void syncData(boolean isShowMessage, final AsyncOkHttpClient.Callback callback) {
-        if (!isLoggingIn() || !isNetworkConnected(context)) {
+        if (!isLoggingIn() || !isNetworkConnected(context) || isSyncing()) {
             if (callback != null)
                 callback.onSuccess(null, null);
             return;
@@ -2109,19 +2090,23 @@ public class TNApiModel extends TNApi {
 
             @Override
             public void onSuccess(Response response, String content) {
-                if (callback == null) {
-                    getAllData(new AsyncOkHttpClient.Callback() {
-                        @Override
-                        public void onFailure(Response response, Throwable throwable) {
-                        }
+                setIsSyncing(true);
 
-                        @Override
-                        public void onSuccess(Response response, String content) {
-                        }
-                    });
-                } else {
-                    getAllData(callback);
-                }
+                getAllData(new AsyncOkHttpClient.Callback() {
+                    @Override
+                    public void onFailure(Response response, Throwable throwable) {
+                        setIsSyncing(false);
+                        if (callback != null)
+                            callback.onFailure(response, throwable);
+                    }
+
+                    @Override
+                    public void onSuccess(Response response, String content) {
+                        setIsSyncing(false);
+                        if (callback != null)
+                            callback.onSuccess(response, content);
+                    }
+                });
             }
         });
     }

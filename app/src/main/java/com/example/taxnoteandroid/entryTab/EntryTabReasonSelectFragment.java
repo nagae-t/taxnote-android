@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
@@ -25,8 +26,11 @@ import android.widget.TextView;
 import com.example.taxnoteandroid.AccountSelectActivity;
 import com.example.taxnoteandroid.DatePickerDialogFragment;
 import com.example.taxnoteandroid.DividerDecoration;
+import com.example.taxnoteandroid.Library.AsyncOkHttpClient;
 import com.example.taxnoteandroid.Library.DialogManager;
 import com.example.taxnoteandroid.Library.KeyboardUtil;
+import com.example.taxnoteandroid.Library.taxnote.TNApi;
+import com.example.taxnoteandroid.Library.taxnote.TNApiModel;
 import com.example.taxnoteandroid.R;
 import com.example.taxnoteandroid.dataManager.AccountDataManager;
 import com.example.taxnoteandroid.dataManager.EntryDataManager;
@@ -47,6 +51,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
+import okhttp3.Response;
+
 public class EntryTabReasonSelectFragment extends Fragment {
 
     private static final String EXTRA_IS_EXPENSE = "isExpense";
@@ -61,6 +67,9 @@ public class EntryTabReasonSelectFragment extends Fragment {
     private FragmentEntryTabReasonSelectBinding binding;
     private ReasonDataManager reasonDataManager;
     private List<Reason> reasonList;
+
+    private Context mContext;
+    private TNApiModel mApiModel;
 
     public EntryTabReasonSelectFragment() {
         // Required empty public constructor
@@ -94,19 +103,72 @@ public class EntryTabReasonSelectFragment extends Fragment {
         binding = FragmentEntryTabReasonSelectBinding.inflate(inflater, container, false);
         binding.setIsExpense(isExpense);
 
-        View view = binding.getRoot();
+        binding.reasonList.addItemDecoration(new DividerDecoration(getContext()));
+        binding.reasonList.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        return view;
+        return binding.getRoot();
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        mContext = getActivity().getApplicationContext();
+        mApiModel = new TNApiModel(mContext);
+        if (!mApiModel.isLoggingIn()) binding.refreshLayout.setEnabled(false);
+
         reasonDataManager = new ReasonDataManager(getActivity().getApplicationContext());
         setDateView();
         setAccountView(getView());
         setReasonList(getView());
+
+        binding.refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                mApiModel = new TNApiModel(mContext);
+                if (!TNApi.isNetworkConnected(mContext) || !mApiModel.isLoggingIn()
+                        || mApiModel.isSyncing()) {
+                    binding.refreshLayout.setRefreshing(false);
+                    return;
+                }
+
+                refreshSyncData();
+            }
+        });
+    }
+
+    private void refreshSyncData() {
+        mApiModel.syncData(true, new AsyncOkHttpClient.Callback() {
+            @Override
+            public void onFailure(Response response, Throwable throwable) {
+                Log.e("Error", "refreshSyncData onFailure");
+                binding.refreshLayout.setRefreshing(false);
+                String errorMsg = "";
+                if (response != null) {
+                    errorMsg = response.message();
+                }
+                DialogManager.showOKOnlyAlert(getActivity(),
+                        "Error", errorMsg);
+
+            }
+
+            @Override
+            public void onSuccess(Response response, String content) {
+                Log.v("TEST", "refreshSyncData onSuccess");
+                binding.refreshLayout.setRefreshing(false);
+                setReasonList(getView());
+                loadCurrentAccount();
+            }
+        });
+    }
+
+    public void afterLogin() {
+        mApiModel = new TNApiModel(mContext);
+        if (mApiModel.isLoggingIn()) {
+            binding.refreshLayout.setEnabled(true);
+        } else {
+            binding.refreshLayout.setEnabled(false);
+        }
     }
 
     @Override
@@ -141,17 +203,12 @@ public class EntryTabReasonSelectFragment extends Fragment {
 
         // Adapter
         adapter = new MyRecyclerViewAdapter();
-
-        // RecyclerView
-        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.reason_list);
-        recyclerView.addItemDecoration(new DividerDecoration(getContext()));
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        recyclerView.setAdapter(adapter); // 2017/01/17 E.Nozaki recyclerView.setAdapter(reasonListAdapter);
+        binding.reasonList.setAdapter(adapter);
 
         // Attach recyclerView to ItemTouchHelper so that you can drag and drop the items in order to change the order.
         ItemTouchHelper.Callback callback = new ItemTouchHelperCallback();
         ItemTouchHelper helper = new ItemTouchHelper(callback);
-        helper.attachToRecyclerView(recyclerView);
+        helper.attachToRecyclerView(binding.reasonList);
     }
 
 

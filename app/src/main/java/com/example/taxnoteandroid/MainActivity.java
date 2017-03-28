@@ -308,6 +308,12 @@ public class MainActivity extends DefaultCommonActivity {
     private void afterLogin(boolean isLoggingIn) {
         if (mTabPagerAdapter == null) return;
         CustomViewPager pager = binding.pager;
+
+        EntryTabFragment entryTabFragment = (EntryTabFragment) mTabPagerAdapter
+                .instantiateItem(pager, 0);
+        if (entryTabFragment != null)
+            entryTabFragment.afterLogin();
+
         HistoryTabFragment historyTabFragment = (HistoryTabFragment) mTabPagerAdapter
                 .instantiateItem(pager, 1);
         if (historyTabFragment != null)
