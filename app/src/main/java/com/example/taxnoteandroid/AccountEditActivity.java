@@ -13,10 +13,12 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.example.taxnoteandroid.Library.DialogManager;
+import com.example.taxnoteandroid.Library.taxnote.TNApiModel;
 import com.example.taxnoteandroid.dataManager.AccountDataManager;
 import com.example.taxnoteandroid.dataManager.EntryDataManager;
 import com.example.taxnoteandroid.dataManager.ReasonDataManager;
 import com.example.taxnoteandroid.model.Account;
+import com.example.taxnoteandroid.model.Entry;
 import com.example.taxnoteandroid.model.Reason;
 
 import java.util.List;
@@ -30,9 +32,16 @@ public class AccountEditActivity extends DefaultCommonActivity {
     public boolean isAccount;
     public long entryId;
 
+    private Entry mEntry;
+    private EntryDataManager entryDataManager;
+    private TNApiModel mApiModel;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        mApiModel = new TNApiModel(this);
+        entryDataManager   = new EntryDataManager(this);
 
         setContentView(R.layout.activity_account_edit);
         setIntentData();
@@ -65,6 +74,7 @@ public class AccountEditActivity extends DefaultCommonActivity {
         isExpense       = intent.getBooleanExtra(EXTRA_IS_EXPENSE, false);
         isAccount       = intent.getBooleanExtra(EXTRA_IS_ACCOUNT, false);
         entryId         = intent.getLongExtra(EXTRA_ENTRY_ID, 0);
+        mEntry = entryDataManager.findById(entryId);
     }
 
 
@@ -104,9 +114,9 @@ public class AccountEditActivity extends DefaultCommonActivity {
                 Account account = (Account) (listView.getItemAtPosition(position));
 
                 // Update account
-                EntryDataManager entryDataManager   = new EntryDataManager(AccountEditActivity.this);
                 long updated                        = entryDataManager.updateAccount(entryId, account);
 
+                mApiModel.updateEntry(mEntry.uuid, null);
                 if (updated != 0) {
 
                     // Show update dialog
@@ -114,11 +124,12 @@ public class AccountEditActivity extends DefaultCommonActivity {
 
                     finish();
                 }
+
             }
         });
     }
 
-    class CategorySelectAdapter extends ArrayAdapter<Account> {
+    private class CategorySelectAdapter extends ArrayAdapter<Account> {
 
         private LayoutInflater layoutInflater;
 
@@ -164,9 +175,9 @@ public class AccountEditActivity extends DefaultCommonActivity {
                 Reason reason = (Reason) (listView.getItemAtPosition(position));
 
                 // Update account
-                EntryDataManager entryDataManager   = new EntryDataManager(AccountEditActivity.this);
                 long updated                        = entryDataManager.updateReason(entryId, reason);
 
+                mApiModel.updateEntry(mEntry.uuid, null);
                 if (updated != 0) {
 
                     // Show update dialog
@@ -178,7 +189,7 @@ public class AccountEditActivity extends DefaultCommonActivity {
         });
     }
 
-    class ReasonSelectAdapter extends ArrayAdapter<Reason> {
+    private class ReasonSelectAdapter extends ArrayAdapter<Reason> {
 
         private LayoutInflater layoutInflater;
 

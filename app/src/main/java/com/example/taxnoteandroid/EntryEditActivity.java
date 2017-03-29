@@ -15,6 +15,7 @@ import android.widget.EditText;
 
 import com.example.taxnoteandroid.Library.DialogManager;
 import com.example.taxnoteandroid.Library.ValueConverter;
+import com.example.taxnoteandroid.Library.taxnote.TNApiModel;
 import com.example.taxnoteandroid.dataManager.EntryDataManager;
 import com.example.taxnoteandroid.databinding.ActivityEntryEditBinding;
 import com.example.taxnoteandroid.model.Entry;
@@ -29,6 +30,7 @@ public class EntryEditActivity extends DefaultCommonActivity {
     private ActivityEntryEditBinding binding;
     private Entry entry;
     private String entryUuid;
+    private TNApiModel mApiModel;
 
     public static void start(Context context, Entry entry) {
         Intent intent = new Intent(context, EntryEditActivity.class);
@@ -41,6 +43,7 @@ public class EntryEditActivity extends DefaultCommonActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        mApiModel = new TNApiModel(this);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
 
@@ -140,6 +143,8 @@ public class EntryEditActivity extends DefaultCommonActivity {
 
                             loadCurrentDate();
                         }
+
+                        mApiModel.updateEntry(entry.uuid, null);
                     }
                 });
 
@@ -241,6 +246,8 @@ public class EntryEditActivity extends DefaultCommonActivity {
                                     // Update displayed memo
                                     binding.memo.setText(memo);
                                 }
+
+                                mApiModel.updateEntry(entry.uuid, null);
                             }
                         })
                         .setNegativeButton(getResources().getString(R.string.cancel), null)

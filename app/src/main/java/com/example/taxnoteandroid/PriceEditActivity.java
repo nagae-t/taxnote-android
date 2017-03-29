@@ -13,7 +13,9 @@ import android.widget.TextView;
 import com.android.calculator2.Calculator;
 import com.example.taxnoteandroid.Library.DialogManager;
 import com.example.taxnoteandroid.Library.ValueConverter;
+import com.example.taxnoteandroid.Library.taxnote.TNApiModel;
 import com.example.taxnoteandroid.dataManager.EntryDataManager;
+import com.example.taxnoteandroid.model.Entry;
 
 public class PriceEditActivity extends DefaultCommonActivity {
 
@@ -23,6 +25,9 @@ public class PriceEditActivity extends DefaultCommonActivity {
     public long entryId;
     private TextView priceTextView;
 
+    private Entry mEntry;
+    private EntryDataManager entryDataManager;
+    private TNApiModel mApiModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +35,8 @@ public class PriceEditActivity extends DefaultCommonActivity {
 
         setContentView(R.layout.activity_price_edit);
 
+        mApiModel = new TNApiModel(this);
+        entryDataManager = new EntryDataManager(this);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
 
@@ -59,6 +66,7 @@ public class PriceEditActivity extends DefaultCommonActivity {
         Intent intent = getIntent();
         currentPrice = intent.getLongExtra(EXTRA_CURRENT_PRICE, 0);
         entryId = intent.getLongExtra(EXTRA_ENTRY_ID, 0);
+        mEntry = entryDataManager.findById(entryId);
     }
 
 
@@ -117,6 +125,7 @@ public class PriceEditActivity extends DefaultCommonActivity {
         EntryDataManager entryDataManager = new EntryDataManager(PriceEditActivity.this);
         long updated = entryDataManager.updatePrice(entryId, currentPrice);
 
+        mApiModel.updateEntry(mEntry.uuid, null);
         if (updated != 0) {
 
             // Show update dialog

@@ -1454,7 +1454,13 @@ public class TNApiModel extends TNApi {
         requestApi();
     }
 
-    private void updateEntry(String uuid, final AsyncOkHttpClient.Callback callback) {
+    public void updateEntry(String uuid, final AsyncOkHttpClient.Callback callback) {
+        if (!isLoggingIn() || !TNApi.isNetworkConnected(context)) {
+            if (callback != null)
+                callback.onSuccess(null, null);
+            return;
+        }
+
         Entry entry = mEntryDataManager.findByUuid(uuid);
         final long entryId = entry.id;
 
@@ -1483,13 +1489,15 @@ public class TNApiModel extends TNApi {
                     Log.e(LTAG, "updateEntry(uuid) onFailure response.code: " + response.code()
                             + ", message: " + response.message());
                 }
-                callback.onFailure(response, throwable);
+                if (callback != null)
+                    callback.onFailure(response, throwable);
             }
 
             @Override
             public void onSuccess(Response response, String content) {
                 mEntryDataManager.updateNeedSync(entryId, false);
-                callback.onSuccess(response, content);
+                if (callback != null)
+                    callback.onSuccess(response, content);
             }
         });
 

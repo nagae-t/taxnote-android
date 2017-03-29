@@ -61,6 +61,10 @@ public class EntryDataManager {
         return ormaDatabase.selectFromEntry().where(Entry_Schema.INSTANCE.uuid.getQualifiedName() + " = ?", uuid).valueOrNull();
     }
 
+    public Entry findById(long id) {
+        return ormaDatabase.selectFromEntry().idEq(id).valueOrNull();
+    }
+
     public List<Entry> findAllNeedSave(boolean isNeedSave) {
         int needSave = (isNeedSave) ? 1 : 0;
         List<Entry> entries = ormaDatabase.selectFromEntry()
@@ -298,23 +302,38 @@ public class EntryDataManager {
     //--------------------------------------------------------------//
 
     public int updateDate(long id, long date) {
-        return ormaDatabase.updateEntry().idEq(id).date(date).execute();
+        return ormaDatabase.updateEntry().idEq(id)
+                .date(date)
+                .needSync(true)
+                .execute();
     }
 
     public int updateAccount(long id, Account account) {
-        return ormaDatabase.updateEntry().idEq(id).account(account).execute();
+        return ormaDatabase.updateEntry().idEq(id)
+                .account(account)
+                .needSync(true)
+                .execute();
     }
 
     public int updateReason(long id, Reason reason) {
-        return ormaDatabase.updateEntry().idEq(id).reason(reason).execute();
+        return ormaDatabase.updateEntry().idEq(id)
+                .reason(reason)
+                .needSync(true)
+                .execute();
     }
 
     public int updateMemo(long id, String memo) {
-        return ormaDatabase.updateEntry().idEq(id).memo(memo).execute();
+        return ormaDatabase.updateEntry().idEq(id)
+                .memo(memo)
+                .needSync(true)
+                .execute();
     }
 
     public int updatePrice(long id, long price) {
-        return ormaDatabase.updateEntry().idEq(id).price(price).execute();
+        return ormaDatabase.updateEntry().idEq(id)
+                .price(price)
+                .needSync(true)
+                .execute();
     }
 
     public int updateNeedSave(long id, boolean needSave) {
