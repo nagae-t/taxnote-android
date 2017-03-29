@@ -173,6 +173,9 @@ public class AccountDataManager {
     //--------------------------------------------------------------//
 
     public int updateOrder(long id, int order) {
-        return ormaDatabase.updateAccount().idEq(id).order(order).execute(); // 2017/01/30 E.Nozaki
+        return ormaDatabase.updateAccount().idEq(id)
+                .order(order)
+                .needSync(true)
+                .execute();
     }
 }

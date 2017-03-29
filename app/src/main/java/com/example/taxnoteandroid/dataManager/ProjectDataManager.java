@@ -107,21 +107,31 @@ public class ProjectDataManager {
     //--------------------------------------------------------------//
 
     public int updateAccountUuidForExpense(Project project) {
-        return ormaDatabase.updateProject().idEq(project.id).accountUuidForExpense(project.accountUuidForExpense).execute();
+        return ormaDatabase.updateProject().idEq(project.id)
+                .accountUuidForExpense(project.accountUuidForExpense)
+                .needSync(true)
+                .execute();
     }
 
     public int updateAccountUuidForIncome(Project project) {
-        return ormaDatabase.updateProject().idEq(project.id).accountUuidForIncome(project.accountUuidForIncome).execute();
+        return ormaDatabase.updateProject().idEq(project.id)
+                .accountUuidForIncome(project.accountUuidForIncome)
+                .needSync(true)
+                .execute();
     }
 
     public int updateDecimal(Project project, boolean decimalStatus) {
-        return ormaDatabase.updateProject().idEq(project.id).decimal(decimalStatus).execute();
+        return ormaDatabase.updateProject().idEq(project.id)
+                .decimal(decimalStatus)
+                .needSync(true)
+                .execute();
     }
 
     public void updateName(Project project) {
         ormaDatabase.updateProject()
                 .idEq(project.id)
                 .name(project.name)
+                .needSync(true)
                 .execute();
     }
 

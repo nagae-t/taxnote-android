@@ -447,7 +447,12 @@ public class TNApiModel extends TNApi {
         requestApi();
     }
 
-    private void saveAccount(String uuid, final AsyncOkHttpClient.Callback callback) {
+    public void saveAccount(String uuid, final AsyncOkHttpClient.Callback callback) {
+        if (!isLoggingIn() || !TNApi.isNetworkConnected(context)) {
+            if (callback != null)
+                callback.onSuccess(null, null);
+            return;
+        }
 
         Account account = mAccountDataManager.findByUuid(uuid);
         final long accountId = account.id;
@@ -471,13 +476,15 @@ public class TNApiModel extends TNApi {
                     Log.e(LTAG, "saveAccount(uuid) onFailure response.code: " + response.code()
                             + ", message: " + response.message());
                 }
-                callback.onFailure(response, throwable);
+                if (callback != null)
+                    callback.onFailure(response, throwable);
             }
 
             @Override
             public void onSuccess(Response response, String content) {
                 mAccountDataManager.updateNeedSave(accountId, false);
-                callback.onSuccess(response, content);
+                if (callback != null)
+                    callback.onSuccess(response, content);
             }
         });
         requestApi();
@@ -1274,6 +1281,12 @@ public class TNApiModel extends TNApi {
     }
 
     private void updateReason(String uuid, final AsyncOkHttpClient.Callback callback) {
+        if (!isLoggingIn() || !TNApi.isNetworkConnected(context)) {
+            if (callback != null)
+                callback.onSuccess(null, null);
+            return;
+        }
+
         Reason reason = mReasonDataManager.findByUuid(uuid);
         final long reasonId = reason.id;
 
@@ -1298,23 +1311,30 @@ public class TNApiModel extends TNApi {
                     Log.e(LTAG, "updateReason(uuid) onFailure response.code: " + response.code()
                             + ", message: " + response.message());
                 }
-                callback.onFailure(response, throwable);
+                if (callback != null)
+                    callback.onFailure(response, throwable);
             }
 
             @Override
             public void onSuccess(Response response, String content) {
                 mReasonDataManager.updateNeedSync(reasonId, false);
-                callback.onSuccess(response, content);
+                if (callback != null)
+                    callback.onSuccess(response, content);
             }
         });
 
         requestApi();
     }
 
-    private void updateAccount(String uuid, final AsyncOkHttpClient.Callback callback) {
+    public void updateAccount(String uuid, final AsyncOkHttpClient.Callback callback) {
+        if (!isLoggingIn() || !TNApi.isNetworkConnected(context)) {
+            if (callback != null)
+                callback.onSuccess(null, null);
+            return;
+        }
+
         Account account = mAccountDataManager.findByUuid(uuid);
         final long accountId = account.id;
-
 
         FormBody.Builder formBuilder = new FormBody.Builder();
         formBuilder
@@ -1334,13 +1354,15 @@ public class TNApiModel extends TNApi {
                     Log.e(LTAG, "updateAccount(uuid) onFailure response.code: " + response.code()
                             + ", message: " + response.message());
                 }
-                callback.onFailure(response, throwable);
+                if (callback != null)
+                    callback.onFailure(response, throwable);
             }
 
             @Override
             public void onSuccess(Response response, String content) {
                 mAccountDataManager.updateNeedSync(accountId, false);
-                callback.onSuccess(response, content);
+                if (callback != null)
+                    callback.onSuccess(response, content);
             }
         });
 

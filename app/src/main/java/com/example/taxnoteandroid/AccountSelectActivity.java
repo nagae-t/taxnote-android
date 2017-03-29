@@ -185,6 +185,8 @@ public class AccountSelectActivity extends DefaultCommonActivity {
                             DialogManager.showToast(AccountSelectActivity.this, newName);
                         }
 
+                        mApiModel.updateAccount(account.uuid, null);
+
                         dialogInterface.dismiss();
                     }
                 })
@@ -360,7 +362,10 @@ public class AccountSelectActivity extends DefaultCommonActivity {
             Collections.swap(accountList, position_from, position_to);
             adapter.notifyItemMoved(position_from, position_to);
             for (int i = 0; i < size; i++) {
-                accountDataManager.updateOrder(accountList.get(i).id, i); // Update database
+                Account account = accountList.get(i);
+                accountDataManager.updateOrder(account.id, i); // Update database
+
+                mApiModel.updateAccount(account.uuid, null);
             }
 
             return true;
@@ -527,6 +532,8 @@ public class AccountSelectActivity extends DefaultCommonActivity {
 
                                 DialogManager.showToast(context, newName);
                             }
+
+                            mApiModel.saveAccount(account.uuid, null);
                         }
                     })
                     .setNegativeButton(getResources().getString(R.string.cancel), new DialogInterface.OnClickListener() {
