@@ -218,5 +218,32 @@ public class TNApiUser extends TNApi {
         requestApi();
     }
 
+    public void deleteSubscriptionAccount(final TNApiModel apiModel, final AsyncOkHttpClient.Callback callback) {
+        setHttpMethod(HTTP_METHOD_DELETE);
+
+        //@@ 課金IDはここで指定する
+        String subscriptionId = "";
+        setRequestPath(URL_PATH_SUBSCRIPTION + "/" + subscriptionId);
+        setFormBody(null);
+
+        setCallback(new AsyncOkHttpClient.Callback() {
+            @Override
+            public void onFailure(Response response, Throwable throwable) {
+                clearAccountData(apiModel);
+                callback.onFailure(response, throwable);
+            }
+
+            @Override
+            public void onSuccess(Response response, String content) {
+                //@@ ログアウト処理など
+                clearAccountData(apiModel);
+
+                callback.onSuccess(response, content);
+            }
+        });
+
+        requestApi();
+    }
+
 
 }

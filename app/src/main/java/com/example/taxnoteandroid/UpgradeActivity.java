@@ -397,15 +397,44 @@ public class UpgradeActivity extends DefaultCommonActivity {
                 .setPositiveButton(R.string.Delete, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        sendDeleteAcction();
+                        sendDeleteAccount();
                     }
                 });
         builder.create().show();
 
     }
 
-    private void sendDeleteAcction() {
+    private void sendDeleteAccount() {
+        // Progress dialog
+        final ProgressDialog dialog = new ProgressDialog(this);
+        dialog.setMessage(getString(R.string.loading));
+        dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        dialog.setCancelable(false);
+        dialog.show();
 
-        //@@ deleteSubscriptionAccountWithCompletion
+        mApiUser.deleteSubscriptionAccount(mApiModel, new AsyncOkHttpClient.Callback() {
+            @Override
+            public void onFailure(Response response, Throwable throwable) {
+                Log.e("ERROR", "sendSignOut onFailure ");
+                if (response != null) {
+                    Log.e("ERROR", "sendSignOut response code: " + response.code()
+                            + ", message: " + response.message());
+                }
+                dialog.dismiss();
+
+                binding.cloudLoginLayout.setVisibility(View.VISIBLE);
+                binding.cloudMemberLayout.setVisibility(View.GONE);
+                BroadcastUtil.sendAfterLogin(UpgradeActivity.this, false);
+            }
+
+            @Override
+            public void onSuccess(Response response, String content) {
+                dialog.dismiss();
+
+                binding.cloudLoginLayout.setVisibility(View.VISIBLE);
+                binding.cloudMemberLayout.setVisibility(View.GONE);
+                BroadcastUtil.sendAfterLogin(UpgradeActivity.this, false);
+            }
+        });
     }
 }
