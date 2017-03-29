@@ -130,7 +130,17 @@ public class AccountDataManager {
     //--------------------------------------------------------------//
 
     public int updateName(long id, String name) {
-        return ormaDatabase.updateAccount().idEq(id).name(name).execute();
+        return ormaDatabase.updateAccount().idEq(id)
+                .name(name)
+                .needSync(true)
+                .execute();
+    }
+
+    public int updateOrder(long id, int order) {
+        return ormaDatabase.updateAccount().idEq(id)
+                .order(order)
+                .needSync(true)
+                .execute();
     }
 
     public int updateNeedSave(long id, boolean needSave) {
@@ -168,14 +178,4 @@ public class AccountDataManager {
         return ormaDatabase.deleteFromAccount().uuidEq(uuid).execute();
     }
 
-    //--------------------------------------------------------------//
-    //    -- Change order --
-    //--------------------------------------------------------------//
-
-    public int updateOrder(long id, int order) {
-        return ormaDatabase.updateAccount().idEq(id)
-                .order(order)
-                .needSync(true)
-                .execute();
-    }
 }

@@ -23,6 +23,7 @@ import com.example.taxnoteandroid.DefaultCommonActivity;
 import com.example.taxnoteandroid.DividerDecoration;
 import com.example.taxnoteandroid.Library.DialogManager;
 import com.example.taxnoteandroid.Library.KeyboardUtil;
+import com.example.taxnoteandroid.Library.taxnote.TNApiModel;
 import com.example.taxnoteandroid.R;
 import com.example.taxnoteandroid.dataManager.ProjectDataManager;
 import com.example.taxnoteandroid.dataManager.SummaryDataManager;
@@ -52,6 +53,8 @@ public class SummaryActivity extends DefaultCommonActivity {
     public Reason reason;
     public long date;
 
+    private TNApiModel mApiModel;
+
     private SummaryDataManager summaryDataManager = new SummaryDataManager(this);  // 2017/01/30 E.Nozaki
     private MyRecyclerViewAdapter adapter; // 2017/01/30 E.Nozaki
     private List<Summary> summaryList = null; // 2017/01/30 E.Nozaki
@@ -73,6 +76,7 @@ public class SummaryActivity extends DefaultCommonActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_summary);
 
+        mApiModel = new TNApiModel(this);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
 
@@ -352,7 +356,10 @@ public class SummaryActivity extends DefaultCommonActivity {
             Collections.swap(summaryList, position_from, position_to);
             adapter.notifyItemMoved(position_from, position_to);
             for (int i = 0; i < size; i++) {
-                summaryDataManager.updateOrder(summaryList.get(i).id, i); // Update database
+                Summary summary = summaryList.get(i);
+                summaryDataManager.updateOrder(summary.id, i); // Update database
+
+                mApiModel.updateSummary(summary.uuid, null);
             }
 
             return true;
@@ -499,6 +506,8 @@ public class SummaryActivity extends DefaultCommonActivity {
                                 adapter.onSummaryDataManagerChanged();
                                 dialogInterface.dismiss();
                                 DialogManager.showToast(context, newName);
+
+                                mApiModel.saveSummary(summary.uuid, null);
                             }
                         }
                     })

@@ -7,7 +7,7 @@ import com.github.gfx.android.orma.annotation.Table;
 import org.parceler.Parcel;
 
 /**
- * 備考（メモ）データ
+ * 科目データ（勘定科目の備考）
  */
 
 @Parcel

@@ -102,7 +102,17 @@ public class SummaryDataManager {
     //--------------------------------------------------------------//
 
     public int updateName(long id, String name) {
-        return ormaDatabase.updateSummary().idEq(id).name(name).execute();
+        return ormaDatabase.updateSummary().idEq(id)
+                .name(name)
+                .needSync(true)
+                .execute();
+    }
+
+    public int updateOrder(long id, int order) {
+        return ormaDatabase.updateSummary().idEq(id)
+                .order(order)
+                .needSync(true)
+                .execute();
     }
 
     public int updateNeedSave(long id, boolean needSave) {
@@ -139,11 +149,4 @@ public class SummaryDataManager {
         return ormaDatabase.deleteFromSummary().uuidEq(uuid).execute();
     }
 
-    //--------------------------------------------------------------//
-    //    -- Change order --
-    //--------------------------------------------------------------//
-
-    public int updateOrder(long id, int order) {
-        return ormaDatabase.updateSummary().idEq(id).order(order).execute(); // 2017/01/30 E.Nozaki
-    }
 }
