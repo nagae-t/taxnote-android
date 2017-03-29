@@ -22,6 +22,7 @@ import com.example.taxnoteandroid.CalculatorActivity;
 import com.example.taxnoteandroid.Library.DialogManager;
 import com.example.taxnoteandroid.Library.EntryLimitManager;
 import com.example.taxnoteandroid.Library.ValueConverter;
+import com.example.taxnoteandroid.Library.taxnote.TNApiModel;
 import com.example.taxnoteandroid.R;
 import com.example.taxnoteandroid.UpgradeActivity;
 import com.example.taxnoteandroid.dataManager.EntryDataManager;
@@ -59,6 +60,8 @@ public class InputDataActivity extends DefaultCommonActivity {
     private  String dateString;
     public boolean pinButton = false;
 
+    private TNApiModel mApiModel;
+
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
      * See https://g.co/AppIndexing/AndroidStudio for more information.
@@ -71,6 +74,8 @@ public class InputDataActivity extends DefaultCommonActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_input_data);
+
+        mApiModel = new TNApiModel(this);
 
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
@@ -376,6 +381,8 @@ public class InputDataActivity extends DefaultCommonActivity {
             SharedPreferencesManager.saveFirstRegisterDone(InputDataActivity.this);
 
             DialogManager.showInputDataToast(this, dateString,entry);
+
+            mApiModel.saveEntry(entry.uuid, null);
 
             // Stay in this screen when pinButton is true
             if (pinButton) {

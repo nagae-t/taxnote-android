@@ -274,6 +274,9 @@ public class SettingsTabFragment extends Fragment {
         if (mEditingProject == null) return;
         mEditingProject.name = newName;
         mProjectDataManager.updateName(mEditingProject);
+
+        mApiModel.updateAccount(mEditingProject.uuid, null);
+
         mAllProjects = mProjectDataManager.findAll();
         if (mEditingProject.isMaster) {
             binding.mainProjectRadio.setText(newName);
@@ -491,6 +494,8 @@ public class SettingsTabFragment extends Fragment {
             @Override
             public void onCheckedChanged(CompoundButton buttonView,boolean isChecked) {
                 projectDataManager.updateDecimal(project, isChecked);
+
+                mApiModel.updateProject(project.uuid, null);
             }
         });
     }
