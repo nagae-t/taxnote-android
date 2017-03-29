@@ -346,6 +346,7 @@
     <string name="reset_password_sent_desc">パスワードをリセットできるリンクを送信しました。メールが届かない時は、迷惑フォルダに入ってないかチェックしてみてください。</string>
 
     <string name="delete_account">アカウントの削除</string>
+    <string name="delete_account_desc">アカウントを削除していいですか？\nサーバに保存されているデータがすべて消去されます。(現在使っている端末上のデータは消去されません。)</string>
     <string name="confirm_email">このメールアドレスでよろしいですか？</string>
     <string name="register_success_wait_uploading">専用アカウントの登録完了\nデータをアップロードしています。数分以上かかることもありますが、この画面を開いたまま、しばらくお待ちください。</string>
     <string name="thx_for_waiting">お待たせしました</string>

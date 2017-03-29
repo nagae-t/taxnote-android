@@ -327,6 +327,7 @@ public class UpgradeActivity extends DefaultCommonActivity {
                         }
                         break;
                     case 2: //@@ アカウントの削除
+                        showConfirmDeleteAccount();
                         break;
                 }
             }
@@ -382,5 +383,29 @@ public class UpgradeActivity extends DefaultCommonActivity {
                 BroadcastUtil.sendAfterLogin(UpgradeActivity.this, false);
             }
         });
+    }
+
+    private void showConfirmDeleteAccount() {
+        if (!mApiUser.isLoggingIn()) return;
+
+        String email = mApiUser.getEmail();
+        String deleteAccMsg = email + "\n" + getString(R.string.delete_account_desc);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this)
+                .setTitle(R.string.delete_account)
+                .setMessage(deleteAccMsg)
+                .setNegativeButton(android.R.string.cancel, null)
+                .setPositiveButton(R.string.Delete, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        sendDeleteAcction();
+                    }
+                });
+        builder.create().show();
+
+    }
+
+    private void sendDeleteAcction() {
+
+        //@@ deleteSubscriptionAccountWithCompletion
     }
 }
