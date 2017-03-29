@@ -208,10 +208,12 @@ public class TNApiUser extends TNApi {
         requestApi();
     }
 
-    public void checkUniqeOfSubscription(AsyncOkHttpClient.Callback callback) {
-        //@@ 課金IDはここで指定する
-        String subscriptionId = "";
-        setRequestPath(URL_PATH_SUBSCRIPTION + "/" + subscriptionId);
+    public void checkUniqueOfSubscription(AsyncOkHttpClient.Callback callback) {
+        setHttpMethod(HTTP_METHOD_GET);
+
+        //@@ 課金のTransactionIdはここで指定する
+        String transactionId = "";
+        setRequestPath(URL_PATH_SUBSCRIPTION + "/" + transactionId);
 
         setFormBody(null);
         setCallback(callback);
@@ -221,9 +223,9 @@ public class TNApiUser extends TNApi {
     public void deleteSubscriptionAccount(final TNApiModel apiModel, final AsyncOkHttpClient.Callback callback) {
         setHttpMethod(HTTP_METHOD_DELETE);
 
-        //@@ 課金IDはここで指定する
-        String subscriptionId = "";
-        setRequestPath(URL_PATH_SUBSCRIPTION + "/" + subscriptionId);
+        //@@ 課金のTransactionIdはここで指定する
+        String transactionId = "";
+        setRequestPath(URL_PATH_SUBSCRIPTION + "/" + transactionId);
         setFormBody(null);
 
         setCallback(new AsyncOkHttpClient.Callback() {

@@ -388,6 +388,12 @@ public class UpgradeActivity extends DefaultCommonActivity {
     private void showConfirmDeleteAccount() {
         if (!mApiUser.isLoggingIn()) return;
 
+        if (!TNApi.isNetworkConnected(this)) {
+            DialogManager.showOKOnlyAlert(UpgradeActivity.this,
+                    null, getString(R.string.network_not_connection));
+            return;
+        }
+
         String email = mApiUser.getEmail();
         String deleteAccMsg = email + "\n" + getString(R.string.delete_account_desc);
         AlertDialog.Builder builder = new AlertDialog.Builder(this)
@@ -405,6 +411,11 @@ public class UpgradeActivity extends DefaultCommonActivity {
     }
 
     private void sendDeleteAccount() {
+        if (!TNApi.isNetworkConnected(this)) {
+            DialogManager.showToast(this, getString(R.string.network_not_connection));
+            return;
+        }
+
         // Progress dialog
         final ProgressDialog dialog = new ProgressDialog(this);
         dialog.setMessage(getString(R.string.loading));
