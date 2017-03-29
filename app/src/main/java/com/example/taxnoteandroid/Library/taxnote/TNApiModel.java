@@ -878,7 +878,8 @@ public class TNApiModel extends TNApi {
                     @Override
                     public void onFailure(Response response, Throwable throwable) {
                         setIsSyncing(false);
-                        callback.onFailure(response, throwable);
+                        if (callback != null)
+                            callback.onFailure(response, throwable);
                     }
 
                     @Override
@@ -887,13 +888,15 @@ public class TNApiModel extends TNApi {
                             @Override
                             public void onFailure(Response response, Throwable throwable) {
                                 setIsSyncing(false);
-                                callback.onFailure(response, throwable);
+                                if (callback != null)
+                                    callback.onFailure(response, throwable);
                             }
 
                             @Override
                             public void onSuccess(Response response, String content) {
                                 setIsSyncing(false);
-                                callback.onSuccess(response, content);
+                                if (callback != null)
+                                    callback.onSuccess(response, content);
                             }
                         });
                     }

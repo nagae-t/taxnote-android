@@ -17,6 +17,7 @@ import com.example.taxnoteandroid.Library.BroadcastUtil;
 import com.example.taxnoteandroid.Library.DialogManager;
 import com.example.taxnoteandroid.Library.EntryLimitManager;
 import com.example.taxnoteandroid.Library.ValueConverter;
+import com.example.taxnoteandroid.Library.taxnote.TNApiModel;
 import com.example.taxnoteandroid.dataManager.EntryDataManager;
 import com.example.taxnoteandroid.dataManager.SharedPreferencesManager;
 import com.example.taxnoteandroid.databinding.ActivityEntryCommonBinding;
@@ -43,6 +44,8 @@ public class HistoryListDataActivity extends DefaultCommonActivity {
     private boolean mIsBalance;
     private long[] mStartEndDate;
     private String mReasonName = null;
+
+    private TNApiModel mApiModel;
 
     private static final String KEY_TARGET_CALENDAR = "target_calendar";
     private static final String KEY_REASON_NAME = "reason_name";
@@ -83,6 +86,7 @@ public class HistoryListDataActivity extends DefaultCommonActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        mApiModel = new TNApiModel(this);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_entry_common);
         binding.entries.setLayoutManager(new LinearLayoutManager(this));
         binding.entries.addItemDecoration(new DividerDecoration(this));
@@ -184,6 +188,9 @@ public class HistoryListDataActivity extends DefaultCommonActivity {
                         }
                         mEntryAdapter.clearAll();
                         mEntryAdapter.notifyDataSetChanged();
+
+                        mApiModel.saveAllNeedSaveSyncDeletedData(null);
+
                         DialogManager.showToast(context, context.getString(R.string.delete_done));
                         BroadcastUtil.sendReloadReport(HistoryListDataActivity.this);
                         finish();
