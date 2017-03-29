@@ -68,9 +68,9 @@ public class ReasonDataManager {
         ProjectDataManager projectDataManager   = new ProjectDataManager(mContext);
         Project project                         = projectDataManager.findCurrentProjectWithContext();
 
-        List reasons = ormaDatabase.selectFromReason().where(Reason_Schema.INSTANCE.deleted.getQualifiedName() + " = 0  AND "
-                        + Reason_Schema.INSTANCE.isExpense.getQualifiedName() + " = ?",
-                isExpense)
+        List reasons = ormaDatabase.selectFromReason()
+                .where(Reason_Schema.INSTANCE.deleted.getQualifiedName() + " = 0  AND "
+                        + Reason_Schema.INSTANCE.isExpense.getQualifiedName() + " = ?", isExpense)
                 .and()
                 .projectEq(project)
                 .orderBy(Reason_Schema.INSTANCE.order.getQualifiedName())

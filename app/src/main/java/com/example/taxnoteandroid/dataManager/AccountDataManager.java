@@ -57,9 +57,9 @@ public class AccountDataManager {
         ProjectDataManager projectDataManager = new ProjectDataManager(mContext);
         Project project = projectDataManager.findCurrentProjectWithContext();
 
-        List accounts = ormaDatabase.selectFromAccount().where(Account_Schema.INSTANCE.deleted.getQualifiedName() + " = 0  AND "
-                        + Account_Schema.INSTANCE.isExpense.getQualifiedName() + " = ?",
-                isExpense)
+        List accounts = ormaDatabase.selectFromAccount()
+                .where(Account_Schema.INSTANCE.deleted.getQualifiedName() + " = 0 AND "
+                        + Account_Schema.INSTANCE.isExpense.getQualifiedName() + " = ?", isExpense)
                 .and()
                 .projectEq(project)
                 .orderBy(Account_Schema.INSTANCE.order.getQualifiedName())

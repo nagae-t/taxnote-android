@@ -7,6 +7,7 @@ import com.example.taxnoteandroid.model.OrmaDatabase;
 import com.example.taxnoteandroid.model.Project;
 import com.example.taxnoteandroid.model.Project_Schema;
 import com.example.taxnoteandroid.model.Project_Updater;
+import com.example.taxnoteandroid.model.Reason_Schema;
 
 import java.util.List;
 
@@ -71,6 +72,7 @@ public class ProjectDataManager {
         int master = (isMaster) ? 1 : 0;
         List<Project> projectList = ormaDatabase.selectFromProject()
                 .where(Project_Schema.INSTANCE.isMaster.getQualifiedName() + " = " + master)
+                .where(Project_Schema.INSTANCE.deleted.getQualifiedName() + " = 0")
                 .toList();
 
 
@@ -80,6 +82,7 @@ public class ProjectDataManager {
     public List<Project> findAllNeedSave(boolean isNeedSave) {
         int needSave = (isNeedSave) ? 1 : 0;
         List<Project> projectList = ormaDatabase.selectFromProject()
+                .where(Project_Schema.INSTANCE.deleted.getQualifiedName() + " = 0")
                 .where(Project_Schema.INSTANCE.needSave.getQualifiedName() + " = " + needSave)
                 .toList();
         return projectList;
@@ -88,6 +91,7 @@ public class ProjectDataManager {
     public List<Project> findAllNeedSync(boolean isNeedSync) {
         int needSync = (isNeedSync) ? 1 : 0;
         List<Project> projectList = ormaDatabase.selectFromProject()
+                .where(Project_Schema.INSTANCE.deleted.getQualifiedName() + " = 0")
                 .where(Project_Schema.INSTANCE.needSync.getQualifiedName() + " = " + needSync)
                 .toList();
         return projectList;

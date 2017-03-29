@@ -133,7 +133,7 @@ public class SettingsTabFragment extends Fragment {
     //--------------------------------------------------------------//
 
     private void setMultipleProject() {
-        mAllProjects = mProjectDataManager.findAll();
+        mAllProjects = mProjectDataManager.findAllDeleted(false);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         String addTitle = mContext.getString(R.string.add_new_project);
@@ -214,7 +214,7 @@ public class SettingsTabFragment extends Fragment {
                     int projectSize = mProjectDataManager.allSize();
                     Project newProject = DefaultDataInstaller.addNewProjectByName(mContext, newName, projectSize);
                     addSubProjectView(newProject);
-                    mAllProjects = mProjectDataManager.findAll();
+                    mAllProjects = mProjectDataManager.findAllDeleted(false);
                     checkCurrentProjectToRadio();
 
                     // show message
@@ -277,7 +277,7 @@ public class SettingsTabFragment extends Fragment {
 
         mApiModel.updateAccount(mEditingProject.uuid, null);
 
-        mAllProjects = mProjectDataManager.findAll();
+        mAllProjects = mProjectDataManager.findAllDeleted(false);
         if (mEditingProject.isMaster) {
             binding.mainProjectRadio.setText(newName);
             mEditingProject = null;
@@ -441,7 +441,7 @@ public class SettingsTabFragment extends Fragment {
                                 mProjectDataManager.delete(mEditingProject.id);
 
                                 binding.subProjectRadioLayout.removeView(parentRowView);
-                                mAllProjects = mProjectDataManager.findAll();
+                                mAllProjects = mProjectDataManager.findAllDeleted(false);
 
                                 dialogInterface.dismiss();
                             }
