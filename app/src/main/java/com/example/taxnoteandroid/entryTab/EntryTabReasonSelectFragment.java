@@ -341,6 +341,9 @@ public class EntryTabReasonSelectFragment extends Fragment {
 
                                 DialogManager.showToast(getActivity(), reasonName);
                             }
+
+                            mApiModel.updateReason(reason.uuid, null);
+
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -445,7 +448,10 @@ public class EntryTabReasonSelectFragment extends Fragment {
             Collections.swap(reasonList, position_from, position_to);
             adapter.notifyItemMoved(position_from, position_to);
             for (int i = 0; i < size; i++) {
-                reasonDataManager.updateOrder(reasonList.get(i).id, i); // Update database
+                Reason reason = reasonList.get(i);
+                reasonDataManager.updateOrder(reason.id, i); // Update database
+
+                mApiModel.updateReason(reason.uuid, null);
             }
 
             return true;
@@ -663,6 +669,9 @@ public class EntryTabReasonSelectFragment extends Fragment {
                                     dialogInterface.dismiss();
                                     DialogManager.showToast(context, newName);
                                 }
+
+                                mApiModel.saveReason(reason.uuid, null);
+
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }

@@ -408,7 +408,12 @@ public class TNApiModel extends TNApi {
         requestApi();
     }
 
-    private void saveReason(String uuid, final AsyncOkHttpClient.Callback callback) {
+    public void saveReason(String uuid, final AsyncOkHttpClient.Callback callback) {
+        if (!isLoggingIn() || !TNApi.isNetworkConnected(context)) {
+            if (callback != null)
+                callback.onSuccess(null, null);
+            return;
+        }
 
         Reason reason = mReasonDataManager.findByUuid(uuid);
         final long reasonId = reason.id;
@@ -435,13 +440,15 @@ public class TNApiModel extends TNApi {
                     Log.e(LTAG, "saveReason(uuid) onFailure response.code: " + response.code()
                             + ", message: " + response.message());
                 }
-                callback.onFailure(response, throwable);
+                if (callback != null)
+                    callback.onFailure(response, throwable);
             }
 
             @Override
             public void onSuccess(Response response, String content) {
                 mReasonDataManager.updateNeedSave(reasonId, false);
-                callback.onSuccess(response, content);
+                if (callback != null)
+                    callback.onSuccess(response, content);
             }
         });
         requestApi();
@@ -1280,7 +1287,7 @@ public class TNApiModel extends TNApi {
         requestApi();
     }
 
-    private void updateReason(String uuid, final AsyncOkHttpClient.Callback callback) {
+    public void updateReason(String uuid, final AsyncOkHttpClient.Callback callback) {
         if (!isLoggingIn() || !TNApi.isNetworkConnected(context)) {
             if (callback != null)
                 callback.onSuccess(null, null);

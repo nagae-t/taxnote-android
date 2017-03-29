@@ -4,13 +4,19 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.taxnoteandroid.Library.AsyncOkHttpClient;
 import com.example.taxnoteandroid.Library.BroadcastUtil;
+import com.example.taxnoteandroid.Library.DialogManager;
 import com.example.taxnoteandroid.Library.EntryLimitManager;
+import com.example.taxnoteandroid.Library.taxnote.TNApi;
+import com.example.taxnoteandroid.Library.taxnote.TNApiModel;
 import com.example.taxnoteandroid.dataManager.EntryDataManager;
 import com.example.taxnoteandroid.dataManager.SharedPreferencesManager;
 import com.example.taxnoteandroid.databinding.FragmentGraphContentBinding;
@@ -23,6 +29,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import okhttp3.Response;
+
 /**
  * Created by b0ne on 2017/02/28.
  */
@@ -34,6 +42,8 @@ public class GraphContentFragment extends Fragment {
     private GraphHistoryRecyclerAdapter mRecyclerAdapter;
     private EntryDataManager mEntryManager;
     private int mPeriodType;
+
+    private TNApiModel mApiModel;
 
     private static final String KEY_TARGET_CALENDAR = "TARGET_CALENDAR";
     private static final String KEY_IS_EXPENSE= "IS_EXPENSE";
@@ -59,23 +69,63 @@ public class GraphContentFragment extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mContext = getActivity().getApplicationContext();
+        mApiModel = new TNApiModel(mContext);
+        if (!mApiModel.isLoggingIn()) binding.refreshLayout.setEnabled(false);
 
         mPeriodType = SharedPreferencesManager.getProfitLossReportPeriodType(mContext);
         mEntryManager = new EntryDataManager(mContext);
 
+        binding.refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                if (!TNApi.isNetworkConnected(mContext) || !mApiModel.isLoggingIn()
+                        || mApiModel.isSyncing()) {
+                    binding.refreshLayout.setRefreshing(false);
+                    return;
+                }
+
+                refreshSyncData();
+            }
+        });
     }
 
     @Override
     public void onResume() {
         super.onResume();
 
+        loadGraphData();
+    }
+
+    private void refreshSyncData() {
+        mApiModel.syncData(true, new AsyncOkHttpClient.Callback() {
+            @Override
+            public void onFailure(Response response, Throwable throwable) {
+                Log.e("Error", "refreshSyncData onFailure");
+                binding.refreshLayout.setRefreshing(false);
+                String errorMsg = "";
+                if (response != null) {
+                    errorMsg = response.message();
+                }
+                DialogManager.showOKOnlyAlert(getActivity(),
+                        "Error", errorMsg);
+
+            }
+
+            @Override
+            public void onSuccess(Response response, String content) {
+                binding.refreshLayout.setRefreshing(false);
+                loadGraphData();
+            }
+        });
+    }
+
+    private void loadGraphData() {
         Calendar targetCalendar  = (Calendar) getArguments().getSerializable(KEY_TARGET_CALENDAR);
         boolean isExpense = getArguments().getBoolean(KEY_IS_EXPENSE, true);
 
         long[] startEndDate = EntryLimitManager.getStartAndEndDate(mContext, mPeriodType, targetCalendar);
         new EntryDataTask(isExpense).execute(startEndDate);
     }
-
 
     private class EntryDataTask extends AsyncTask<long[], Integer, List<Entry>> {
         private boolean isExpense;

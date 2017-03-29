@@ -112,11 +112,17 @@ public class ReasonDataManager {
     //--------------------------------------------------------------//
 
     public int updateName(long id, String name) {
-        return ormaDatabase.updateReason().idEq(id).name(name).execute();
+        return ormaDatabase.updateReason().idEq(id)
+                .name(name)
+                .needSync(true)
+                .execute();
     }
 
     public int updateOrder(long id, int order) {
-        return ormaDatabase.updateReason().idEq(id).order(order).execute();
+        return ormaDatabase.updateReason().idEq(id)
+                .order(order)
+                .needSync(true)
+                .execute();
     }
 
     public int updateNeedSave(long id, boolean needSave) {
