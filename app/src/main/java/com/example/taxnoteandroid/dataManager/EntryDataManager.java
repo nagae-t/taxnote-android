@@ -1,6 +1,7 @@
 package com.example.taxnoteandroid.dataManager;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.example.taxnoteandroid.Library.EntryLimitManager;
 import com.example.taxnoteandroid.Library.taxnote.TNApiModel;
@@ -14,7 +15,6 @@ import com.example.taxnoteandroid.model.Entry_Updater;
 import com.example.taxnoteandroid.model.OrmaDatabase;
 import com.example.taxnoteandroid.model.Project;
 import com.example.taxnoteandroid.model.Reason;
-import com.example.taxnoteandroid.model.Recurring;
 import com.github.gfx.android.orma.OrderSpec;
 
 import java.util.ArrayList;
@@ -390,9 +390,11 @@ public class EntryDataManager {
     }
 
     public int delete(String uuid) {
-        return ormaDatabase.deleteFromEntry()
-                .where(Entry_Schema.INSTANCE.uuid.getQualifiedName() + " = ?", uuid)
-                .execute();
+        Entry entry = findByUuid(uuid);
+        if (entry == null) {
+            return 0;
+        }
+        return delete(entry.id);
     }
 
 

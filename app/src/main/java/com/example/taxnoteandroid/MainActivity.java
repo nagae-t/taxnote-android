@@ -116,6 +116,7 @@ public class MainActivity extends DefaultCommonActivity {
 
         // 起動時にデータの同期を行う
         TNApiModel apiModel = new TNApiModel(this);
+        apiModel.setIsSyncing(false);
         apiModel.syncData(false, null);
     }
 
