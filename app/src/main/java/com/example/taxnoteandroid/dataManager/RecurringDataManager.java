@@ -2,12 +2,14 @@ package com.example.taxnoteandroid.dataManager;
 
 import android.content.Context;
 
+import com.example.taxnoteandroid.Library.taxnote.TNApiModel;
+import com.example.taxnoteandroid.Library.taxnote.TNApiUser;
 import com.example.taxnoteandroid.TaxnoteApp;
 import com.example.taxnoteandroid.model.OrmaDatabase;
 import com.example.taxnoteandroid.model.Recurring;
 import com.example.taxnoteandroid.model.Recurring_Schema;
 import com.example.taxnoteandroid.model.Recurring_Updater;
-import com.example.taxnoteandroid.model.Summary_Schema;
+import com.example.taxnoteandroid.model.Summary;
 
 import java.util.List;
 
@@ -111,6 +113,23 @@ public class RecurringDataManager {
                 .reason(rec.reason)
                 .account(rec.account)
                 .execute();
+    }
+
+    public void updateSetDeleted(String uuid, TNApiModel apiModel) {
+        boolean isLoggingIn = TNApiUser.isLoggingIn(mContext);
+        Recurring recurring = findByUuid(uuid);
+        if (recurring == null) return;
+
+        if (isLoggingIn) {
+            ormaDatabase.updateRecurring().uuid(uuid)
+                    .deleted(true)
+                    .execute();
+
+            // send api
+            apiModel.deleteRecurring(uuid, null);
+        } else {
+            delete(recurring.id);
+        }
     }
 
 

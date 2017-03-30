@@ -3,6 +3,8 @@ package com.example.taxnoteandroid.dataManager;
 import android.content.Context;
 
 import com.example.taxnoteandroid.Library.EntryLimitManager;
+import com.example.taxnoteandroid.Library.taxnote.TNApiModel;
+import com.example.taxnoteandroid.Library.taxnote.TNApiUser;
 import com.example.taxnoteandroid.TaxnoteApp;
 import com.example.taxnoteandroid.model.Account;
 import com.example.taxnoteandroid.model.Entry;
@@ -13,7 +15,6 @@ import com.example.taxnoteandroid.model.OrmaDatabase;
 import com.example.taxnoteandroid.model.Project;
 import com.example.taxnoteandroid.model.Reason;
 import com.example.taxnoteandroid.model.Recurring;
-import com.example.taxnoteandroid.model.Recurring_Schema;
 import com.github.gfx.android.orma.OrderSpec;
 
 import java.util.ArrayList;
@@ -360,6 +361,23 @@ public class EntryDataManager {
                 .reason(entry.reason)
                 .account(entry.account)
                 .execute();
+    }
+
+    public void updateSetDeleted(String uuid, TNApiModel apiModel) {
+        boolean isLoggingIn = TNApiUser.isLoggingIn(mContext);
+        Entry entry = findByUuid(uuid);
+        if (entry == null) return;
+
+        if (isLoggingIn) {
+            ormaDatabase.updateEntry().uuid(uuid)
+                    .deleted(true)
+                    .execute();
+
+            // send api
+            apiModel.deleteEntry(uuid, null);
+        } else {
+            delete(entry.id);
+        }
     }
 
 

@@ -2,9 +2,10 @@ package com.example.taxnoteandroid.dataManager;
 
 import android.content.Context;
 
+import com.example.taxnoteandroid.Library.taxnote.TNApiModel;
+import com.example.taxnoteandroid.Library.taxnote.TNApiUser;
 import com.example.taxnoteandroid.TaxnoteApp;
 import com.example.taxnoteandroid.model.Account;
-import com.example.taxnoteandroid.model.Account_Schema;
 import com.example.taxnoteandroid.model.OrmaDatabase;
 import com.example.taxnoteandroid.model.Project;
 import com.example.taxnoteandroid.model.Reason;
@@ -134,6 +135,23 @@ public class SummaryDataManager {
                 .project(summary.project)
                 .reason(summary.reason)
                 .execute();
+    }
+
+    public void updateSetDeleted(String uuid, TNApiModel apiModel) {
+        boolean isLoggingIn = TNApiUser.isLoggingIn(mContext);
+        Summary summary = findByUuid(uuid);
+        if (summary == null) return;
+
+        if (isLoggingIn) {
+            ormaDatabase.updateSummary().uuid(uuid)
+                    .deleted(true)
+                    .execute();
+
+            // send api
+            apiModel.deleteSummary(uuid, null);
+        } else {
+            delete(summary.id);
+        }
     }
 
 

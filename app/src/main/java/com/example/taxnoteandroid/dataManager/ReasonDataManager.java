@@ -2,6 +2,8 @@ package com.example.taxnoteandroid.dataManager;
 
 import android.content.Context;
 
+import com.example.taxnoteandroid.Library.taxnote.TNApiModel;
+import com.example.taxnoteandroid.Library.taxnote.TNApiUser;
 import com.example.taxnoteandroid.TaxnoteApp;
 import com.example.taxnoteandroid.model.OrmaDatabase;
 import com.example.taxnoteandroid.model.Project;
@@ -11,8 +13,6 @@ import com.example.taxnoteandroid.model.Reason_Updater;
 import com.github.gfx.android.orma.Inserter;
 
 import java.util.List;
-
-import static android.R.attr.order;
 
 public class ReasonDataManager {
 
@@ -148,7 +148,25 @@ public class ReasonDataManager {
                 .execute();
     }
 
-    
+    public void updateSetDeleted(String uuid, TNApiModel apiModel) {
+        boolean isLoggingIn = TNApiUser.isLoggingIn(mContext);
+        Reason reason = findByUuid(uuid);
+        if (reason == null) return;
+
+        if (isLoggingIn) {
+            ormaDatabase.updateReason().uuid(uuid)
+                    .deleted(true)
+                    .execute();
+
+            // send api
+            apiModel.deleteReason(uuid, null);
+        } else {
+            delete(reason.id);
+        }
+
+    }
+
+
     //--------------------------------------------------------------//
     //    -- Delete --
     //--------------------------------------------------------------//

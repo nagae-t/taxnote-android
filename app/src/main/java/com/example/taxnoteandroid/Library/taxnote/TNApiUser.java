@@ -4,6 +4,7 @@ import android.content.Context;
 import android.util.Log;
 
 import com.example.taxnoteandroid.Library.AsyncOkHttpClient;
+import com.example.taxnoteandroid.dataManager.SharedPreferencesManager;
 
 import okhttp3.FormBody;
 import okhttp3.Headers;
@@ -20,6 +21,8 @@ public class TNApiUser extends TNApi {
     private String email;
     private String password;
     private String passwordConfirm;
+
+    private static final String KEY_USER_UID = "TAXNOTE_USER_UID";
 
     public TNApiUser(Context context) {
         super(context);
@@ -248,4 +251,11 @@ public class TNApiUser extends TNApi {
     }
 
 
+    public static boolean isLoggingIn(Context context) {
+        String userUid = SharedPreferencesManager.getUserApiLoginValue(context, KEY_USER_UID);
+        if (userUid != null) {
+            return true;
+        }
+        return false;
+    }
 }

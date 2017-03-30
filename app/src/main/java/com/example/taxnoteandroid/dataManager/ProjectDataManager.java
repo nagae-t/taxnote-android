@@ -2,12 +2,13 @@ package com.example.taxnoteandroid.dataManager;
 
 import android.content.Context;
 
+import com.example.taxnoteandroid.Library.taxnote.TNApiModel;
+import com.example.taxnoteandroid.Library.taxnote.TNApiUser;
 import com.example.taxnoteandroid.TaxnoteApp;
 import com.example.taxnoteandroid.model.OrmaDatabase;
 import com.example.taxnoteandroid.model.Project;
 import com.example.taxnoteandroid.model.Project_Schema;
 import com.example.taxnoteandroid.model.Project_Updater;
-import com.example.taxnoteandroid.model.Reason_Schema;
 
 import java.util.List;
 
@@ -160,6 +161,24 @@ public class ProjectDataManager {
                 .accountUuidForExpense(project.accountUuidForExpense)
                 .accountUuidForIncome(project.accountUuidForIncome)
                 .execute();
+    }
+
+    public void updateSetDeleted(String uuid, TNApiModel apiModel) {
+        boolean isLoggingIn = TNApiUser.isLoggingIn(mContext);
+        Project project = findByUuid(uuid);
+        if (project == null) return;
+
+        if (isLoggingIn) {
+            ormaDatabase.updateProject().uuid(uuid)
+                    .deleted(true)
+                    .execute();
+
+            // send api
+            apiModel.deleteProject(uuid, null);
+        } else {
+            delete(project.id);
+        }
+
     }
 
 

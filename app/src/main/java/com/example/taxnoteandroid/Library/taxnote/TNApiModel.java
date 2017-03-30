@@ -1755,7 +1755,12 @@ public class TNApiModel extends TNApi {
     //    -- Delete Method --
     //--------------------------------------------------------------//
 
-    private void deleteProject(final String uuid, final AsyncOkHttpClient.Callback callback) {
+    public void deleteProject(final String uuid, final AsyncOkHttpClient.Callback callback) {
+        if (!isLoggingIn() || !TNApi.isNetworkConnected(context)) {
+            if (callback != null)
+                callback.onSuccess(null, null);
+            return;
+        }
 
         setHttpMethod(HTTP_METHOD_DELETE);
         setRequestPath(URL_PATH_PROJECT + "/" + uuid);
@@ -1769,20 +1774,27 @@ public class TNApiModel extends TNApi {
                     Log.e(LTAG, "deleteProject(uuid) onFailure response.code: " + response.code()
                             + ", message: " + response.message());
                 }
-                callback.onFailure(response, throwable);
+                if (callback != null)
+                    callback.onFailure(response, throwable);
             }
 
             @Override
             public void onSuccess(Response response, String content) {
                 mProjectDataManager.delete(uuid);
-                callback.onSuccess(response, content);
+                if (callback != null)
+                    callback.onSuccess(response, content);
             }
         });
 
         requestApi();
     }
 
-    private void deleteReason(final String uuid, final AsyncOkHttpClient.Callback callback) {
+    public void deleteReason(final String uuid, final AsyncOkHttpClient.Callback callback) {
+        if (!isLoggingIn() || !TNApi.isNetworkConnected(context)) {
+            if (callback != null)
+                callback.onSuccess(null, null);
+            return;
+        }
 
         setHttpMethod(HTTP_METHOD_DELETE);
         setRequestPath(URL_PATH_REASON + "/" + uuid);
@@ -1796,20 +1808,27 @@ public class TNApiModel extends TNApi {
                     Log.e(LTAG, "deleteReason(uuid) onFailure response.code: " + response.code()
                             + ", message: " + response.message());
                 }
-                callback.onFailure(response, throwable);
+                if (callback != null)
+                    callback.onFailure(response, throwable);
             }
 
             @Override
             public void onSuccess(Response response, String content) {
                 mReasonDataManager.delete(uuid);
-                callback.onSuccess(response, content);
+                if (callback != null)
+                    callback.onSuccess(response, content);
             }
         });
 
         requestApi();
     }
 
-    private void deleteAccount(final String uuid, final AsyncOkHttpClient.Callback callback) {
+    public void deleteAccount(final String uuid, final AsyncOkHttpClient.Callback callback) {
+        if (!isLoggingIn() || !TNApi.isNetworkConnected(context)) {
+            if (callback != null)
+                callback.onSuccess(null, null);
+            return;
+        }
 
         setHttpMethod(HTTP_METHOD_DELETE);
         setRequestPath(URL_PATH_ACCOUNT + "/" + uuid);
@@ -1823,13 +1842,15 @@ public class TNApiModel extends TNApi {
                     Log.e(LTAG, "deleteAccount(uuid) onFailure response.code: " + response.code()
                             + ", message: " + response.message());
                 }
-                callback.onFailure(response, throwable);
+                if (callback != null)
+                    callback.onFailure(response, throwable);
             }
 
             @Override
             public void onSuccess(Response response, String content) {
                 mAccountDataManager.delete(uuid);
-                callback.onSuccess(response, content);
+                if (callback != null)
+                    callback.onSuccess(response, content);
             }
         });
 
@@ -1837,7 +1858,12 @@ public class TNApiModel extends TNApi {
 
     }
 
-    private void deleteSummary(final String uuid, final AsyncOkHttpClient.Callback callback) {
+    public void deleteSummary(final String uuid, final AsyncOkHttpClient.Callback callback) {
+        if (!isLoggingIn() || !TNApi.isNetworkConnected(context)) {
+            if (callback != null)
+                callback.onSuccess(null, null);
+            return;
+        }
 
         setHttpMethod(HTTP_METHOD_DELETE);
         setRequestPath(URL_PATH_SUMMARY + "/" + uuid);
@@ -1851,20 +1877,27 @@ public class TNApiModel extends TNApi {
                     Log.e(LTAG, "deleteSummary(uuid) onFailure response.code: " + response.code()
                             + ", message: " + response.message());
                 }
-                callback.onFailure(response, throwable);
+                if (callback != null)
+                    callback.onFailure(response, throwable);
             }
 
             @Override
             public void onSuccess(Response response, String content) {
                 mSummaryDataManager.delete(uuid);
-                callback.onSuccess(response, content);
+                if (callback != null)
+                    callback.onSuccess(response, content);
             }
         });
 
         requestApi();
     }
 
-    private void deleteRecurring(final String uuid, final AsyncOkHttpClient.Callback callback) {
+    public void deleteRecurring(final String uuid, final AsyncOkHttpClient.Callback callback) {
+        if (!isLoggingIn() || !TNApi.isNetworkConnected(context)) {
+            if (callback != null)
+                callback.onSuccess(null, null);
+            return;
+        }
 
         setHttpMethod(HTTP_METHOD_DELETE);
         setRequestPath(URL_PATH_RECURRING + "/" + uuid);
@@ -1878,20 +1911,27 @@ public class TNApiModel extends TNApi {
                     Log.e(LTAG, "deleteRecurring(uuid) onFailure response.code: " + response.code()
                             + ", message: " + response.message());
                 }
-                callback.onFailure(response, throwable);
+                if (callback != null)
+                    callback.onFailure(response, throwable);
             }
 
             @Override
             public void onSuccess(Response response, String content) {
                 mRecurringDataManager.delete(uuid);
-                callback.onSuccess(response, content);
+                if (callback != null)
+                    callback.onSuccess(response, content);
             }
         });
 
         requestApi();
     }
 
-    private void deleteEntry(final String uuid, final AsyncOkHttpClient.Callback callback) {
+    public void deleteEntry(final String uuid, final AsyncOkHttpClient.Callback callback) {
+        if (!isLoggingIn() || !TNApi.isNetworkConnected(context)) {
+            if (callback != null)
+                callback.onSuccess(null, null);
+            return;
+        }
 
         setHttpMethod(HTTP_METHOD_DELETE);
         setRequestPath(URL_PATH_ENTRY + "/" + uuid);
@@ -1905,13 +1945,15 @@ public class TNApiModel extends TNApi {
                     Log.e(LTAG, "deleteEntry(uuid) onFailure response.code: " + response.code()
                             + ", message: " + response.message());
                 }
-                callback.onFailure(response, throwable);
+                if (callback != null)
+                    callback.onFailure(response, throwable);
             }
 
             @Override
             public void onSuccess(Response response, String content) {
                 mEntryDataManager.delete(uuid);
-                callback.onSuccess(response, content);
+                if (callback != null)
+                    callback.onSuccess(response, content);
             }
         });
 
