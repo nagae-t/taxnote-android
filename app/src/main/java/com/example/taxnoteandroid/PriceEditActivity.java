@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.calculator2.Calculator;
+import com.example.taxnoteandroid.Library.BroadcastUtil;
 import com.example.taxnoteandroid.Library.DialogManager;
 import com.example.taxnoteandroid.Library.ValueConverter;
 import com.example.taxnoteandroid.Library.taxnote.TNApiModel;
@@ -127,6 +128,7 @@ public class PriceEditActivity extends DefaultCommonActivity {
 
         mApiModel.updateEntry(mEntry.uuid, null);
         if (updated != 0) {
+            BroadcastUtil.sendReloadReport(PriceEditActivity.this);
 
             // Show update dialog
             String priceString = ValueConverter.formatPrice(PriceEditActivity.this ,currentPrice);

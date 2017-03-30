@@ -1,8 +1,10 @@
 package com.example.taxnoteandroid;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.databinding.DataBindingUtil;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -52,6 +54,17 @@ public class HistoryListDataActivity extends DefaultCommonActivity {
     private static final String KEY_IS_BALANCE = "is_balance";
     private static final String KEY_IS_EXPENSE = "is_expense";
 
+    public static final String BROADCAST_DATA_RELOAD
+            = "broadcast_history_list_reload";
+
+    private final BroadcastReceiver mReloadReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (mStartEndDate != null)
+                loadEntryData(mStartEndDate, mIsBalance, mIsExpense);
+        }
+    };
+
     /**
      * 残高のコンテンツ
      * @param context
@@ -86,6 +99,8 @@ public class HistoryListDataActivity extends DefaultCommonActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        registerReceiver(mReloadReceiver, new IntentFilter(BROADCAST_DATA_RELOAD));
+
         mApiModel = new TNApiModel(this);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_entry_common);
         binding.entries.setLayoutManager(new LinearLayoutManager(this));
@@ -117,12 +132,12 @@ public class HistoryListDataActivity extends DefaultCommonActivity {
         mStartEndDate = EntryLimitManager.getStartAndEndDate(this, mPeriodType, targetCalendar);
 
         binding.refreshLayout.setEnabled(false);
+        loadEntryData(mStartEndDate, mIsBalance, mIsExpense);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        loadEntryData(mStartEndDate, mIsBalance, mIsExpense);
     }
 
     private String getCalendarStringFromPeriodType(Calendar c) {
@@ -203,6 +218,12 @@ public class HistoryListDataActivity extends DefaultCommonActivity {
                 })
                 .setNegativeButton(getString(R.string.cancel), null)
                 .show();
+    }
+
+    @Override
+    protected void onDestroy() {
+        unregisterReceiver(mReloadReceiver);
+        super.onDestroy();
     }
 
     private class HistoryDataTask extends AsyncTask<long[], Integer, List<Entry>> {
