@@ -127,7 +127,6 @@ public class ReportContentFragment extends Fragment {
 
             @Override
             public void onSuccess(Response response, String content) {
-                Log.v("TEST", "refreshSyncData onSuccess");
                 binding.refreshLayout.setRefreshing(false);
                 loadReportData();
             }

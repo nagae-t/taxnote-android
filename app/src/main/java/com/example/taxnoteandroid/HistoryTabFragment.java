@@ -1,6 +1,7 @@
 package com.example.taxnoteandroid;
 
 import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -81,13 +82,12 @@ public class HistoryTabFragment extends Fragment {
                 refreshSyncData();
             }
         });
+        loadHistoryData();
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        loadHistoryData();
-
     }
 
     @Override
@@ -96,7 +96,6 @@ public class HistoryTabFragment extends Fragment {
 
         if (this.isVisible()) {
             if (isVisibleToUser) {
-                loadHistoryData();
                 DialogManager.showDataExportSuggestMessage(getActivity(), getFragmentManager());
             }
         }
@@ -128,7 +127,6 @@ public class HistoryTabFragment extends Fragment {
 
             @Override
             public void onSuccess(Response response, String content) {
-                Log.v("TEST", "refreshSyncData onSuccess");
                 binding.refreshLayout.setRefreshing(false);
                 loadHistoryData();
             }
@@ -140,80 +138,99 @@ public class HistoryTabFragment extends Fragment {
     //    -- History View --
     //--------------------------------------------------------------//
 
-    private void loadHistoryData() {
+    public void loadHistoryData() {
         if (mEntryAdapter != null) {
             mEntryAdapter.clearAll();
         }
         mEntryAdapter = new CommonEntryRecyclerAdapter(mContext);
 
-        EntryDataManager entryDataManager   = new EntryDataManager(getContext());
-        List<Entry> entries                 = entryDataManager.findAll(null, false);
+        binding.empty.setText(mContext.getString(R.string.loading));
+        new EntryDataTask().execute(0);
+    }
 
-        if (entries == null || entries.isEmpty()) {
+    private class EntryDataTask extends AsyncTask<Integer, Integer, List<Entry>> {
 
-            binding.empty.setText(getResources().getString(R.string.history_data_empty));
-            binding.empty.setVisibility(View.VISIBLE);
-        } else {
-            binding.empty.setVisibility(View.GONE);
-        }
+        @Override
+        protected List<Entry> doInBackground(Integer... integers) {
+            List<Entry> entryData = new ArrayList<>();
 
-        List<Entry> entryData = new ArrayList<>();
-        Map<String, List<Entry>> map2 = new LinkedHashMap<>();
+            EntryDataManager entryDataManager   = new EntryDataManager(getContext());
+            List<Entry> entries                 = entryDataManager.findAll(null, false);
 
-        // 入力日ごとにグルーピング
-        for (Entry entry : entries) {
-
-            // Format date to string
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat(getResources().getString(R.string.date_string_format_to_year_month_day_weekday));
-            String dateString = simpleDateFormat.format(entry.date);
-
-            if (!map2.containsKey(dateString)) {
-                List<Entry> entryList = new ArrayList<>();
-                entryList.add(entry);
-                map2.put(dateString, entryList);
-            } else {
-                List<Entry> entryList = map2.get(dateString);
-                entryList.add(entry);
-                map2.put(dateString, entryList);
+            if (entries == null || entries.isEmpty() || entries.size() == 0) {
+                return entryData;
             }
-        }
 
-        // RecyclerViewに渡すためにMapをListに変換する
-        for (Map.Entry<String, List<Entry>> e : map2.entrySet()) {
+            Map<String, List<Entry>> map2 = new LinkedHashMap<>();
 
-            Entry headerItem = new Entry();
-            headerItem.dateString = e.getKey();
-            headerItem.viewType = CommonEntryRecyclerAdapter.VIEW_ITEM_HEADER;
-            entryData.add(headerItem);
+            // 入力日ごとにグルーピング
+            for (Entry entry : entries) {
 
-            long totalPrice = 0;
+                // Format date to string
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat(getResources().getString(R.string.date_string_format_to_year_month_day_weekday));
+                String dateString = simpleDateFormat.format(entry.date);
 
-            for (Entry _entry : e.getValue()) {
-
-                // Calculate total price
-                if (_entry.isExpense) {
-                    totalPrice -= _entry.price;
+                if (!map2.containsKey(dateString)) {
+                    List<Entry> entryList = new ArrayList<>();
+                    entryList.add(entry);
+                    map2.put(dateString, entryList);
                 } else {
-                    totalPrice += _entry.price;
+                    List<Entry> entryList = map2.get(dateString);
+                    entryList.add(entry);
+                    map2.put(dateString, entryList);
+                }
+            }
+
+            // RecyclerViewに渡すためにMapをListに変換する
+            for (Map.Entry<String, List<Entry>> e : map2.entrySet()) {
+
+                Entry headerItem = new Entry();
+                headerItem.dateString = e.getKey();
+                headerItem.viewType = CommonEntryRecyclerAdapter.VIEW_ITEM_HEADER;
+                entryData.add(headerItem);
+
+                long totalPrice = 0;
+
+                for (Entry _entry : e.getValue()) {
+
+                    // Calculate total price
+                    if (_entry.isExpense) {
+                        totalPrice -= _entry.price;
+                    } else {
+                        totalPrice += _entry.price;
+                    }
+
+                    _entry.viewType = CommonEntryRecyclerAdapter.VIEW_ITEM_CELL;
+                    entryData.add(_entry);
                 }
 
-                _entry.viewType = CommonEntryRecyclerAdapter.VIEW_ITEM_CELL;
-                entryData.add(_entry);
+                // Format the totalPrice
+                headerItem.sumString = ValueConverter.formatPrice(getActivity(), totalPrice);
             }
 
-            // Format the totalPrice
-            headerItem.sumString = ValueConverter.formatPrice(getActivity(), totalPrice);
+            return entryData;
         }
 
-        mEntryAdapter.addAll(entryData);
-        mEntryAdapter.setOnItemClickListener(new CommonEntryRecyclerAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(View view, int position, Entry entry) {
-                SharedPreferencesManager.saveTapHereHistoryEditDone(getActivity());
-                EntryEditActivity.start(mContext, entry);
+        @Override
+        protected void onPostExecute(List<Entry> result) {
+            if (result.size() == 0) {
+
+                binding.empty.setText(getResources().getString(R.string.history_data_empty));
+                binding.empty.setVisibility(View.VISIBLE);
+            } else {
+                binding.empty.setVisibility(View.GONE);
             }
-        });
-        binding.history.setAdapter(mEntryAdapter);
+
+            mEntryAdapter.addAll(result);
+            mEntryAdapter.setOnItemClickListener(new CommonEntryRecyclerAdapter.OnItemClickListener() {
+                @Override
+                public void onItemClick(View view, int position, Entry entry) {
+                    SharedPreferencesManager.saveTapHereHistoryEditDone(getActivity());
+                    EntryEditActivity.start(mContext, entry);
+                }
+            });
+            binding.history.setAdapter(mEntryAdapter);
+        }
     }
 
 }

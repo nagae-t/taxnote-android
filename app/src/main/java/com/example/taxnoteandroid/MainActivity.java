@@ -259,12 +259,10 @@ public class MainActivity extends DefaultCommonActivity {
                     case R.id.tab3:
                         binding.pager.setCurrentItem(2, false);
                         setTitle(getString(R.string.report));
-                        reportReload();
                         break;
                     case R.id.tab4:
                         binding.pager.setCurrentItem(3, false);
                         setTitle(getString(R.string.Graph));
-                        reportReload();
                         break;
                     case R.id.tab5:
                         binding.pager.setCurrentItem(4, false);
@@ -369,19 +367,21 @@ public class MainActivity extends DefaultCommonActivity {
         if (mTabPagerAdapter == null) return;
 
         CustomViewPager pager = binding.pager;
-        if (mBottomNaviSelected == R.id.tab3) {
-            ReportFragment reportFragment =
-                    (ReportFragment) mTabPagerAdapter.instantiateItem(pager, 2);
-            if (reportFragment == null) return;
 
-            reportFragment.reloadData();
-        } else if (mBottomNaviSelected == R.id.tab4) {
-            GraphTabFragment graphFragment = (GraphTabFragment) mTabPagerAdapter
-                    .instantiateItem(pager, pager.getCurrentItem());
-            if (graphFragment == null) return;
+        HistoryTabFragment historyFragment =
+                (HistoryTabFragment) mTabPagerAdapter.instantiateItem(pager, 1);
+        if (historyFragment != null)
+            historyFragment.loadHistoryData();
 
+        ReportFragment reportFragment =
+                (ReportFragment) mTabPagerAdapter.instantiateItem(pager, 2);
+        if (reportFragment != null)
+           reportFragment.reloadData();
+
+        GraphTabFragment graphFragment =
+                (GraphTabFragment) mTabPagerAdapter.instantiateItem(pager, 3);
+        if (graphFragment != null)
             graphFragment.reloadData();
-        }
     }
 
     private long[] getReportStartEndDate() {
