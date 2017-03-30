@@ -143,7 +143,7 @@ public class SummaryDataManager {
         if (summary == null) return;
 
         if (isLoggingIn) {
-            ormaDatabase.updateSummary().uuid(uuid)
+            ormaDatabase.updateSummary().uuidEq(uuid)
                     .deleted(true)
                     .execute();
 

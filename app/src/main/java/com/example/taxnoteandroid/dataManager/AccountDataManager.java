@@ -172,7 +172,7 @@ public class AccountDataManager {
         if (account == null) return;
 
         if (isLoggingIn) {
-            ormaDatabase.updateAccount().uuid(uuid)
+            ormaDatabase.updateAccount().uuidEq(uuid)
                     .deleted(true)
                     .execute();
 

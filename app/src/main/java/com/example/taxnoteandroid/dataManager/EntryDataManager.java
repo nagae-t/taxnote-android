@@ -369,7 +369,7 @@ public class EntryDataManager {
         if (entry == null) return;
 
         if (isLoggingIn) {
-            ormaDatabase.updateEntry().uuid(uuid)
+            ormaDatabase.updateEntry().idEq(entry.id)
                     .deleted(true)
                     .execute();
 

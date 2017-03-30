@@ -232,13 +232,11 @@ public class AccountSelectActivity extends DefaultCommonActivity {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
 
-                        long deleted = accountDataManager.delete(account.id);
+                        accountDataManager.updateSetDeleted(account.uuid, mApiModel);
 
-                        if (deleted != 0) {
-                            adapter.onAccountDataManagerChanged();
-                            String message = account.name + getResources().getString(R.string.delete_done_after_title);
-                            DialogManager.showToast(AccountSelectActivity.this, message);
-                        }
+                        adapter.onAccountDataManagerChanged();
+                        String message = account.name + getResources().getString(R.string.delete_done_after_title);
+                        DialogManager.showToast(AccountSelectActivity.this, message);
 
                         dialogInterface.dismiss();
                     }

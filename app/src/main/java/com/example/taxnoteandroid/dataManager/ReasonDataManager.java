@@ -154,7 +154,7 @@ public class ReasonDataManager {
         if (reason == null) return;
 
         if (isLoggingIn) {
-            ormaDatabase.updateReason().uuid(uuid)
+            ormaDatabase.updateReason().uuidEq(uuid)
                     .deleted(true)
                     .execute();
 

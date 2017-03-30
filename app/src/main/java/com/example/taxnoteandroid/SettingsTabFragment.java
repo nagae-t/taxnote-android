@@ -437,8 +437,8 @@ public class SettingsTabFragment extends Fragment {
                         .setPositiveButton(getString(R.string.Delete), new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
-                                // remove the Project from DB
-                                mProjectDataManager.delete(mEditingProject.id);
+
+                                mProjectDataManager.updateSetDeleted(mEditingProject.uuid, mApiModel);
 
                                 binding.subProjectRadioLayout.removeView(parentRowView);
                                 mAllProjects = mProjectDataManager.findAllDeleted(false);

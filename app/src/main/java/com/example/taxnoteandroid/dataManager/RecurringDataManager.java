@@ -121,7 +121,7 @@ public class RecurringDataManager {
         if (recurring == null) return;
 
         if (isLoggingIn) {
-            ormaDatabase.updateRecurring().uuid(uuid)
+            ormaDatabase.updateRecurring().uuidEq(uuid)
                     .deleted(true)
                     .execute();
 

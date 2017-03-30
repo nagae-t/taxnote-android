@@ -169,7 +169,7 @@ public class ProjectDataManager {
         if (project == null) return;
 
         if (isLoggingIn) {
-            ormaDatabase.updateProject().uuid(uuid)
+            ormaDatabase.updateProject().uuidEq(uuid)
                     .deleted(true)
                     .execute();
 

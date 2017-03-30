@@ -208,12 +208,10 @@ public class SummaryActivity extends DefaultCommonActivity {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
 
-                        long deleted = summaryDataManager.delete(summary.id);
-                        if (deleted != 0) {
-                            adapter.onSummaryDataManagerChanged();
-                            String message = summary.name + getResources().getString(R.string.delete_done_after_title);
-                            DialogManager.showToast(SummaryActivity.this, message);
-                        }
+                        summaryDataManager.updateSetDeleted(summary.uuid, mApiModel);
+                        adapter.onSummaryDataManagerChanged();
+                        String message = summary.name + getResources().getString(R.string.delete_done_after_title);
+                        DialogManager.showToast(SummaryActivity.this, message);
 
                         dialogInterface.dismiss();
                     }

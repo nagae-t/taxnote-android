@@ -31,6 +31,7 @@ public class EntryEditActivity extends DefaultCommonActivity {
     private Entry entry;
     private String entryUuid;
     private TNApiModel mApiModel;
+    private EntryDataManager entryDataManager;
 
     public static void start(Context context, Entry entry) {
         Intent intent = new Intent(context, EntryEditActivity.class);
@@ -44,6 +45,8 @@ public class EntryEditActivity extends DefaultCommonActivity {
         super.onCreate(savedInstanceState);
 
         mApiModel = new TNApiModel(this);
+        entryDataManager = new EntryDataManager(this);
+
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
 
@@ -105,8 +108,7 @@ public class EntryEditActivity extends DefaultCommonActivity {
     private void loadData() {
 
         // Load the latest entry
-        EntryDataManager entryDataManager   = new EntryDataManager(EntryEditActivity.this);
-        entry                               = entryDataManager.findByUuid(entryUuid);
+        entry = entryDataManager.findByUuid(entryUuid);
 
         binding.setEntry(entry);
         loadCurrentDate();
@@ -132,8 +134,7 @@ public class EntryEditActivity extends DefaultCommonActivity {
                         entry.date = calendar.getTimeInMillis();
 
                         // Update
-                        EntryDataManager entryDataManager   = new EntryDataManager(EntryEditActivity.this);
-                        long updated                        = entryDataManager.updateDate(entry.id, entry.date);
+                        long updated = entryDataManager.updateDate(entry.id, entry.date);
 
                         if (updated != 0) {
 
@@ -235,8 +236,7 @@ public class EntryEditActivity extends DefaultCommonActivity {
                                 String memo = editText.getText().toString();
 
                                 // Update
-                                EntryDataManager entryDataManager   = new EntryDataManager(EntryEditActivity.this);
-                                long updated                        = entryDataManager.updateMemo(entry.id, memo);
+                                long updated = entryDataManager.updateMemo(entry.id, memo);
 
                                 if (updated != 0) {
 
@@ -303,16 +303,14 @@ public class EntryEditActivity extends DefaultCommonActivity {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
 
-                        EntryDataManager entryDataManager = new EntryDataManager(EntryEditActivity.this);
-                        long deleted = entryDataManager.delete(entry.id);
-
-                        if (deleted != 0) {
-
-                            DialogManager.showToast(EntryEditActivity.this, getResources().getString(R.string.delete_done));
-                            finish();
-                        }
-
                         dialogInterface.dismiss();
+
+                        entryDataManager.updateSetDeleted(entry.uuid, mApiModel);
+
+
+                        DialogManager.showToast(EntryEditActivity.this, getResources().getString(R.string.delete_done));
+                        finish();
+
                     }
                 })
                 .setNegativeButton(getResources().getString(R.string.cancel), null)

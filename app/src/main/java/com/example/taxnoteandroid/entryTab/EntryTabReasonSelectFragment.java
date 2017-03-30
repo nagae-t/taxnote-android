@@ -391,7 +391,8 @@ public class EntryTabReasonSelectFragment extends Fragment {
                     public void onClick(DialogInterface dialogInterface, int i) {
 
                         dialogInterface.dismiss();
-                        reasonDataManager.delete(reason.id);
+                        reasonDataManager.updateSetDeleted(reason.uuid, mApiModel);
+
                         adapter.onReasonDataManagerChanged();
 
                         String message = reason.name + getResources().getString(R.string.delete_done_after_title);

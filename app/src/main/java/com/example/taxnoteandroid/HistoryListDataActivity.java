@@ -183,8 +183,9 @@ public class HistoryListDataActivity extends DefaultCommonActivity {
 
                         List<Entry> dataList = mEntryAdapter.getItems();
                         for (Entry entry : dataList) {
-                            if (entry.dateString == null)
-                                mEntryManager.delete(entry.id);
+                            if (entry.dateString == null) {
+                                mEntryManager.updateSetDeleted(entry.uuid, mApiModel);
+                            }
                         }
                         mEntryAdapter.clearAll();
                         mEntryAdapter.notifyDataSetChanged();
