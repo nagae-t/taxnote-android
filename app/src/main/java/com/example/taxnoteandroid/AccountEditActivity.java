@@ -4,7 +4,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v7.app.ActionBar;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -12,6 +14,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.example.taxnoteandroid.Library.BroadcastUtil;
 import com.example.taxnoteandroid.Library.DialogManager;
 import com.example.taxnoteandroid.Library.taxnote.TNApiModel;
 import com.example.taxnoteandroid.dataManager.AccountDataManager;
@@ -43,17 +46,31 @@ public class AccountEditActivity extends DefaultCommonActivity {
         mApiModel = new TNApiModel(this);
         entryDataManager   = new EntryDataManager(this);
 
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+
         setContentView(R.layout.activity_account_edit);
         setIntentData();
         setTitle();
 
         if (isAccount) {
+            actionBar.setTitle(R.string.entry_tab_fragment_account);
             setAccountList();
         } else {
+            actionBar.setTitle(R.string.entry_tab_fragment_select_reason);
             setReasonList();
         }
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
     //--------------------------------------------------------------//
     //    -- Intent --
@@ -118,6 +135,7 @@ public class AccountEditActivity extends DefaultCommonActivity {
 
                 mApiModel.updateEntry(mEntry.uuid, null);
                 if (updated != 0) {
+                    BroadcastUtil.sendReloadReport(AccountEditActivity.this);
 
                     // Show update dialog
                     DialogManager.showToast(AccountEditActivity.this, account.name);
@@ -179,6 +197,7 @@ public class AccountEditActivity extends DefaultCommonActivity {
 
                 mApiModel.updateEntry(mEntry.uuid, null);
                 if (updated != 0) {
+                    BroadcastUtil.sendReloadReport(AccountEditActivity.this);
 
                     // Show update dialog
                     DialogManager.showToast(AccountEditActivity.this, reason.name);
