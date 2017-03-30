@@ -94,6 +94,9 @@ public class SettingsTabFragment extends Fragment {
         setViews();
     }
 
+    public void afterLogin() {
+        setMultipleProject();
+    }
 
     //--------------------------------------------------------------//
     //    -- Display Part --
@@ -303,9 +306,9 @@ public class SettingsTabFragment extends Fragment {
             int viewId = view.getId();
             RadioButton mainRadio = binding.mainProjectRadio;
             if (isProjectEditing) { // edit mode
-                checkCurrentProjectToRadio();
                 setProjectEditing(view);
                 showProjectEditorDialog(ProjectEditorDialogFragment.TYPE_EDIT_NAME);
+                checkCurrentProjectToRadio();
                 return;
             }
 
@@ -325,7 +328,7 @@ public class SettingsTabFragment extends Fragment {
                 AppCompatRadioButton radioBtn = (AppCompatRadioButton) subView.findViewById(R.id.project_radio_btn);
                 String radioTagUuid = radioBtn.getTag().toString();
                 if (!mCurrentProject.uuid.equals(radioTagUuid)) {
-                    if (radioBtn != null && radioTagUuid.equals(view.getTag())) {
+                    if (radioTagUuid.equals(view.getTag())) {
                         tagUuid = radioBtn.getTag().toString();
                         radioBtn.setChecked(true);
 
@@ -389,7 +392,10 @@ public class SettingsTabFragment extends Fragment {
 
     private void checkCurrentProjectToRadio() {
         mCurrentProject = mProjectDataManager.findCurrentProjectWithContext();
-        if (mCurrentProject.isMaster) return;
+        if (mCurrentProject.isMaster) {
+            unCheckAllSubProjectRadio();
+            return;
+        }
 
         LinearLayout subProjectView = binding.subProjectRadioLayout;
 
@@ -471,11 +477,11 @@ public class SettingsTabFragment extends Fragment {
         settingsProjectBtn.setText(mContext.getString(R.string.project_settings));
         if (!isProjectEditing) {
             settingsProjectBtn.setText(mContext.getString(R.string.project_settings_finish));
+            DialogManager.showToast(mContext, mContext.getString(R.string.tap_project_to_edit_name));
         }
 
         isProjectEditing = !isProjectEditing;
 
-        DialogManager.showToast(mContext, mContext.getString(R.string.tap_project_to_edit_name));
     }
 
 

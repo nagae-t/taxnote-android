@@ -327,25 +327,27 @@ public class MainActivity extends DefaultCommonActivity {
                 .instantiateItem(pager, 3);
         if (graphFragment != null)
             graphFragment.reloadData();
+
+        SettingsTabFragment settingsFragment = (SettingsTabFragment) mTabPagerAdapter
+                .instantiateItem(pager, 4);
+        if (settingsFragment != null)
+            settingsFragment.afterLogin();
     }
 
     private void reportSwitchPeriod(int type) {
         if (mTabPagerAdapter == null) return;
 
         CustomViewPager pager = binding.pager;
-        if (mBottomNaviSelected == R.id.tab3) {
-            ReportFragment reportFragment = (ReportFragment) mTabPagerAdapter
-                    .instantiateItem(pager, pager.getCurrentItem());
-            if (reportFragment == null) return;
 
+        ReportFragment reportFragment = (ReportFragment) mTabPagerAdapter
+                .instantiateItem(pager, 2);
+        if (reportFragment != null)
             reportFragment.switchReportPeriod(type);
-        } else if (mBottomNaviSelected == R.id.tab4) {
-            GraphTabFragment graphFragment = (GraphTabFragment) mTabPagerAdapter
-                    .instantiateItem(pager, pager.getCurrentItem());
-            if (graphFragment == null) return;
 
+        GraphTabFragment graphFragment = (GraphTabFragment) mTabPagerAdapter
+                .instantiateItem(pager, 3);
+        if (graphFragment != null)
             graphFragment.switchDataView(type);
-        }
     }
 
     private void reportSwitchView(boolean isExpense) {
