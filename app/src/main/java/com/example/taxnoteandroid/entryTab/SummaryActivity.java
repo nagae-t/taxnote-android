@@ -21,6 +21,7 @@ import android.widget.EditText;
 
 import com.example.taxnoteandroid.DefaultCommonActivity;
 import com.example.taxnoteandroid.DividerDecoration;
+import com.example.taxnoteandroid.Library.BroadcastUtil;
 import com.example.taxnoteandroid.Library.DialogManager;
 import com.example.taxnoteandroid.Library.KeyboardUtil;
 import com.example.taxnoteandroid.Library.taxnote.TNApiModel;
@@ -235,6 +236,7 @@ public class SummaryActivity extends DefaultCommonActivity {
         // startActivityForResultで呼び出したActivityの処理がどうだったのかを確認する
         // resultCodeがInputDataActivityのsetResultでセットした値
         if (requestCode == 1 && resultCode == RESULT_OK) {
+            BroadcastUtil.sendReloadReport(this);
             finish();
         }
     }

@@ -190,6 +190,8 @@ public class HistoryListDataActivity extends DefaultCommonActivity {
                         mEntryAdapter.clearAll();
                         mEntryAdapter.notifyDataSetChanged();
 
+                        BroadcastUtil.sendReloadReport(HistoryListDataActivity.this);
+
                         mApiModel.saveAllNeedSaveSyncDeletedData(null);
 
                         DialogManager.showToast(context, context.getString(R.string.delete_done));

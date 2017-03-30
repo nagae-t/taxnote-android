@@ -13,6 +13,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 
+import com.example.taxnoteandroid.Library.BroadcastUtil;
 import com.example.taxnoteandroid.Library.DialogManager;
 import com.example.taxnoteandroid.Library.ValueConverter;
 import com.example.taxnoteandroid.Library.taxnote.TNApiModel;
@@ -145,6 +146,8 @@ public class EntryEditActivity extends DefaultCommonActivity {
                             loadCurrentDate();
                         }
 
+                        BroadcastUtil.sendReloadReport(EntryEditActivity.this);
+
                         mApiModel.updateEntry(entry.uuid, null);
                     }
                 });
@@ -247,6 +250,8 @@ public class EntryEditActivity extends DefaultCommonActivity {
                                     binding.memo.setText(memo);
                                 }
 
+                                BroadcastUtil.sendReloadReport(EntryEditActivity.this);
+
                                 mApiModel.updateEntry(entry.uuid, null);
                             }
                         })
@@ -304,6 +309,8 @@ public class EntryEditActivity extends DefaultCommonActivity {
                     public void onClick(DialogInterface dialogInterface, int i) {
 
                         dialogInterface.dismiss();
+
+                        BroadcastUtil.sendReloadReport(EntryEditActivity.this);
 
                         entryDataManager.updateSetDeleted(entry.uuid, mApiModel);
 
