@@ -32,6 +32,7 @@ public class SharedPreferencesManager {
     private static final String PROFIT_LOSS_REPORT_PERIOD_KEY   = "PROFIT_LOSS_REPORT_PERIOD_KEY";
     private static final String GRAPH_REPORT_IS_EXPENSE_KEY     = "GRAPH_REPORT_IS_EXPENSE_KEY";
     private static final String BUSINESS_MODEL_MESSAGE_KEY      = "BUSINESS_MODEL_MESSAGE_KEY";
+    private static final String CHARTS_TAP_SUGGEST_KEY          = "CHARTS_TAP_SUGGEST_KEY";
 
     private static final String BALANCE_CARRY_FORWARD_KEY       = "BALANCE_CARRY_FORWARD_KEY";
     private static final String MONTHLY_CLOSING_DATE_INDEX_KEY  = "MONTHLY_CLOSING_DATE_INDEX_KEY";
@@ -303,6 +304,14 @@ public class SharedPreferencesManager {
 
     public static boolean isBusinessModelMessageDone(Context context) {
         return getSharedPreferences(context).getBoolean(BUSINESS_MODEL_MESSAGE_KEY, false);
+    }
+
+    public static void saveChartsTapMessageDone(Context context) {
+        getSharedPreferences(context).edit().putBoolean(CHARTS_TAP_SUGGEST_KEY, true).apply();
+    }
+
+    public static boolean isChartsTapMessageDone(Context context) {
+        return getSharedPreferences(context).getBoolean(CHARTS_TAP_SUGGEST_KEY, false);
     }
 
 

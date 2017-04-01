@@ -312,4 +312,7 @@
 
     <string name="no_data_to_export_message">出力するデータがありません。入力タブからデータを入力してください。</string>
 
+    <string name="charts_tap_suggest_title">出力するデータがありません。入力タブからデータを入力してください。</string>
+    <string name="charts_tap_suggest_message">出力するデータがありません。入力タブからデータを入力してください。</string>
+
 </resources>

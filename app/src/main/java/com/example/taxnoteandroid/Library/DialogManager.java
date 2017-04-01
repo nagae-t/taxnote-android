@@ -456,6 +456,49 @@ public class DialogManager {
         dialogFragment.show(fragmentManager, null);
     }
 
+    //@@@
+    public static void showChartsTapSuggestMessage(final Context context, FragmentManager fragmentManager) {
+
+        if (SharedPreferencesManager.isChartsTapMessageDone(context)) {
+            return;
+        }
+
+        EntryDataManager entryDataManager = new EntryDataManager(context);
+        List<Entry> entries = entryDataManager.findAll(context, null, true);
+
+        if (entries.size() < 5) {
+            return;
+        }
+
+        SharedPreferencesManager.saveChartsTapMessageDone(context);
+
+        //@@@
+        // Custom Alert
+        final TNSimpleDialogFragment dialogFragment = TNSimpleDialogFragment.newInstance();
+        dialogFragment.setTitle(context.getString(R.string.data_export_suggest_title));
+        dialogFragment.setMessage(context.getString(R.string.data_export_suggest_message));
+
+        dialogFragment.setCloseToFinish(true);
+        dialogFragment.setPositiveBtnText(context.getString(android.R.string.ok));
+
+        dialogFragment.setDialogListener(new TNSimpleDialogFragment.TNSimpleDialogListener() {
+            @Override
+            public void onPositiveBtnClick(DialogInterface dialogInterface, int i, String tag) {
+                dialogInterface.dismiss();
+            }
+            @Override
+            public void onNeutralBtnClick(DialogInterface dialogInterface, int i, String tag) {}
+            @Override
+            public void onNegativeBtnClick(DialogInterface dialogInterface, int i, String tag) {}
+            @Override
+            public void onDialogCancel(DialogInterface dialogInterface, String tag) {}
+            @Override
+            public void onDialogDismiss(DialogInterface dialogInterface, String tag) {}
+        });
+
+        dialogFragment.show(fragmentManager, null);
+    }
+
 
     //--------------------------------------------------------------//
     //    -- Release Note --
@@ -526,8 +569,9 @@ public class DialogManager {
         appUpdater.start();
     }
 
+
     //--------------------------------------------------------------//
-    //    -- Show  Import Data Confirm AlertDialog --
+    //    -- Show Import Data Confirm AlertDialog --
     //--------------------------------------------------------------//
 
     public static void showImportDataConfirm(final Context context, FragmentManager fragmentManager,

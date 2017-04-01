@@ -6,7 +6,6 @@ import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -29,6 +28,7 @@ public class UpgradeActivity extends DefaultCommonActivity {
     private ActivityUpgradeBinding binding;
     private static final String LICENSE_KEY_OF_GOOGLE_PLAY = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAm+14FzQyLcAO7X2zwFDWXwHDuzN8RA60R71JouG5TO6la3xh0A7uWIQ4Y2k1kvqa/fHRAOble7TxIDsy11GsLjD/2sI+e4p4pE5vDKeY3ARBadcQI7iDc/VVnkzCSrZeoGTYinm+99diGn71cGIlF+7ISnh98Kss1zguKLlY+tCkaDDCe+moghLYTvqVuJg27ShVfxxPpWr4gwMusdSMcbJLR6S4ajeWbEtacGAdEJnzQfuAH6RMnt/ggZa4CFRVbNnJA6Eft/CCQL7GFBwBYnkMfG+Jdr+66BcTHbtPP8cE5WdmjGzDje+iy5HGYyIfqiDTdBs178zgWKUS8TM9QwIDAQAB";
     private static final String TAXNOTE_PLUS_ID = "taxnote.plus.sub";
+    private static final String TAXNOTE_PLUS_ID2 = "taxnote.plus.sub2";
     private static final int REQUEST_CODE_PURCHASE_PREMIUM = 0;
     private IabHelper mBillingHelper;
 
@@ -104,11 +104,21 @@ public class UpgradeActivity extends DefaultCommonActivity {
 
             if (result.isFailure()) return;
 
+            //@@@以前の課金アイテム
             Purchase purchase = inventory.getPurchase(TAXNOTE_PLUS_ID);
 
             // Restore purchase
             if (purchase != null) {
                 SharedPreferencesManager.saveTaxnotePlusPurchaseTime(UpgradeActivity.this, purchase.getPurchaseTime());
+                updateUpgradeStatus();
+            }
+
+            // 値上げ後の課金アイテム
+            Purchase purchase2 = inventory.getPurchase(TAXNOTE_PLUS_ID2);
+
+            // Restore purchase
+            if (purchase2 != null) {
+                SharedPreferencesManager.saveTaxnotePlusPurchaseTime(UpgradeActivity.this, purchase2.getPurchaseTime());
                 updateUpgradeStatus();
             }
         }
@@ -120,7 +130,7 @@ public class UpgradeActivity extends DefaultCommonActivity {
 
             if (result.isFailure()) return;
             if (purchase == null) return;
-            if (purchase.getSku().equals(TAXNOTE_PLUS_ID)) {
+            if (purchase.getSku().equals(TAXNOTE_PLUS_ID2)) {
 
                 // Upgrade
                 SharedPreferencesManager.saveTaxnotePlusPurchaseTime(UpgradeActivity.this, purchase.getPurchaseTime());
@@ -185,7 +195,7 @@ public class UpgradeActivity extends DefaultCommonActivity {
 
         if (mBillingHelper.subscriptionsSupported()) {
             try {
-                mBillingHelper.launchSubscriptionPurchaseFlow(UpgradeActivity.this, TAXNOTE_PLUS_ID, REQUEST_CODE_PURCHASE_PREMIUM, mPurchaseFinishedListener);
+                mBillingHelper.launchSubscriptionPurchaseFlow(UpgradeActivity.this, TAXNOTE_PLUS_ID2, REQUEST_CODE_PURCHASE_PREMIUM, mPurchaseFinishedListener);
             } catch (IabHelper.IabAsyncInProgressException e) {
                 e.printStackTrace();
             }
