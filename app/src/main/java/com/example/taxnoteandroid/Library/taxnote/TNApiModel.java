@@ -1,10 +1,12 @@
 package com.example.taxnoteandroid.Library.taxnote;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
 import com.example.taxnoteandroid.Library.AsyncOkHttpClient;
+import com.example.taxnoteandroid.Library.BroadcastUtil;
 import com.example.taxnoteandroid.Library.DialogManager;
 import com.example.taxnoteandroid.Library.ValueConverter;
 import com.example.taxnoteandroid.R;
@@ -228,7 +230,9 @@ public class TNApiModel extends TNApi {
             @Override
             public void onSuccess(Response response, String content) {
 
+                Log.v("TEST", "getEntries content: " + content);
                 JsonArray jsArray = jsParser.parse(content).getAsJsonArray();
+                Log.v("TEST", "getEntries jsArray size: " + jsArray.size());
                 executeUpdateDbTask(UpdateDbAsyncTask.TYPE_ENTRY,
                         jsArray, callback, response, content);
             }
@@ -271,7 +275,7 @@ public class TNApiModel extends TNApi {
             @Override
             public void onSuccess(Response response, String content) {
 
-                Log.v("TEST", "onSuccess----Projects :");
+                Log.v("TEST", "getAllData onSuccess----Projects :");
                 showLogOnSuccess(content);
 
                 getReasons(new AsyncOkHttpClient.Callback() {
@@ -283,7 +287,7 @@ public class TNApiModel extends TNApi {
 
                     @Override
                     public void onSuccess(Response response, String content) {
-                        Log.v("TEST", "onSuccess----Reasons :");
+                        Log.v("TEST", "getAllData onSuccess----Reasons :");
                         showLogOnSuccess(content);
 
                         getAccounts(new AsyncOkHttpClient.Callback() {
@@ -295,7 +299,7 @@ public class TNApiModel extends TNApi {
 
                             @Override
                             public void onSuccess(Response response, String content) {
-                                Log.v("TEST", "onSuccess----Accounts :");
+                                Log.v("TEST", "getAllData onSuccess----Accounts :");
                                 showLogOnSuccess(content);
 
                                 getSummaries(new AsyncOkHttpClient.Callback() {
@@ -307,7 +311,7 @@ public class TNApiModel extends TNApi {
 
                                     @Override
                                     public void onSuccess(Response response, String content) {
-                                        Log.v("TEST", "onSuccess----Summaries :");
+                                        Log.v("TEST", "getAllData onSuccess----Summaries :");
                                         showLogOnSuccess(content);
 
                                         getRecurrings(new AsyncOkHttpClient.Callback() {
@@ -319,7 +323,7 @@ public class TNApiModel extends TNApi {
 
                                             @Override
                                             public void onSuccess(Response response, String content) {
-                                                Log.v("TEST", "onSuccess----Recurrings :");
+                                                Log.v("TEST", "getAllData onSuccess----Recurrings :");
                                                 showLogOnSuccess(content);
 
                                                 getEntries(new AsyncOkHttpClient.Callback() {
@@ -331,7 +335,7 @@ public class TNApiModel extends TNApi {
 
                                                     @Override
                                                     public void onSuccess(Response response, String content) {
-                                                        Log.v("TEST", "onSuccess----Entries :");
+                                                        Log.v("TEST", "getAllData onSuccess----Entries :");
                                                         showLogOnSuccess(content);
 
                                                         callback.onSuccess(response, content);
@@ -1171,9 +1175,13 @@ public class TNApiModel extends TNApi {
                 entry.reason = mReasonDataManager.findByUuid(obj.get("reason_uuid").getAsString());
                 entry.account = mAccountDataManager.findByUuid(obj.get("account_uuid").getAsString());
 
+                Log.v("TEST", "updateDbEntries uuid: " + uuid
+                        + ", price : " + entry.price);
                 if (isNewEntry) {
+                    Log.v("TEST", "updateDbEntries isNewEntry");
                     mEntryDataManager.save(entry);
                 } else {
+                    Log.v("TEST", "updateDbEntries is Not NewEntry");
                     mEntryDataManager.update(entry);
                 }
             }
@@ -2177,7 +2185,7 @@ public class TNApiModel extends TNApi {
 
     // Sync Data
 
-    public void syncData(boolean isShowMessage, final AsyncOkHttpClient.Callback callback) {
+    public void syncData(final Activity activity, boolean isShowMessage, final AsyncOkHttpClient.Callback callback) {
         if (!isLoggingIn() || !isNetworkConnected(context) || isSyncing()) {
             if (callback != null)
                 callback.onSuccess(null, null);
@@ -2219,6 +2227,8 @@ public class TNApiModel extends TNApi {
                         setIsSyncing(false);
                         if (callback != null)
                             callback.onSuccess(response, content);
+
+                        BroadcastUtil.sendReloadReport(activity);
                     }
                 });
             }

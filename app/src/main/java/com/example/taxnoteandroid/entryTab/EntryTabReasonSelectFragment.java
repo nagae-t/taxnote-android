@@ -138,7 +138,7 @@ public class EntryTabReasonSelectFragment extends Fragment {
     }
 
     private void refreshSyncData() {
-        mApiModel.syncData(true, new AsyncOkHttpClient.Callback() {
+        mApiModel.syncData(getActivity(), true, new AsyncOkHttpClient.Callback() {
             @Override
             public void onFailure(Response response, Throwable throwable) {
                 Log.e("Error", "refreshSyncData onFailure");

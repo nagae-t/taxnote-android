@@ -164,6 +164,7 @@ public class UpgradeActivity extends DefaultCommonActivity {
                     DialogManager.showOKOnlyAlert(this,
                             R.string.thx_for_waiting,
                             R.string.fetch_all_after_login_done);
+                    BroadcastUtil.sendReloadReport(UpgradeActivity.this);
 
                 } else if (requestCode == REQUEST_CODE_CLOUD_REGISTER) {
                     DialogManager.showOKOnlyAlert(this,
