@@ -229,10 +229,7 @@ public class TNApiModel extends TNApi {
 
             @Override
             public void onSuccess(Response response, String content) {
-
-                Log.v("TEST", "getEntries content: " + content);
                 JsonArray jsArray = jsParser.parse(content).getAsJsonArray();
-                Log.v("TEST", "getEntries jsArray size: " + jsArray.size());
                 executeUpdateDbTask(UpdateDbAsyncTask.TYPE_ENTRY,
                         jsArray, callback, response, content);
             }
@@ -244,8 +241,14 @@ public class TNApiModel extends TNApi {
         long updated = getSyncUpdated(key);
         if (updated == 0) return null;
 
+
+        String timeStr = String.valueOf(updated);
+        StringBuilder sb = new StringBuilder();
+        sb.append(timeStr);
+        sb.insert(timeStr.length()-3, ".");
+        String updatedString = new String(sb);
         FormBody form = new FormBody.Builder()
-                .add("updated_at", String.valueOf(updated))
+                .add("updated_at", updatedString)
                 .build();
 
         return form;
