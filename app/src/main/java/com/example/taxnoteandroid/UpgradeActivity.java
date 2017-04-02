@@ -42,7 +42,6 @@ public class UpgradeActivity extends DefaultCommonActivity {
         actionBar.setDisplayHomeAsUpEnabled(true);
 
         setViews();
-
         setupBilling();
     }
 
@@ -104,7 +103,7 @@ public class UpgradeActivity extends DefaultCommonActivity {
 
             if (result.isFailure()) return;
 
-            //@@@以前の課金アイテム
+            // Previous Item
             Purchase purchase = inventory.getPurchase(TAXNOTE_PLUS_ID);
 
             // Restore purchase
@@ -113,7 +112,7 @@ public class UpgradeActivity extends DefaultCommonActivity {
                 updateUpgradeStatus();
             }
 
-            // 値上げ後の課金アイテム
+            // New Item
             Purchase purchase2 = inventory.getPurchase(TAXNOTE_PLUS_ID2);
 
             // Restore purchase
