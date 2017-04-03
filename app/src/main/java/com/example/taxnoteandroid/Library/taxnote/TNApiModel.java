@@ -3,6 +3,7 @@ package com.example.taxnoteandroid.Library.taxnote;
 import android.app.Activity;
 import android.content.Context;
 import android.os.AsyncTask;
+import android.os.Handler;
 import android.util.Log;
 
 import com.example.taxnoteandroid.Library.AsyncOkHttpClient;
@@ -50,6 +51,7 @@ public class TNApiModel extends TNApi {
 
     private JsonParser jsParser;
     private int mCount = 0;
+    private boolean mEntrySaveAllAgain = false;
 
     private ProjectDataManager mProjectDataManager;
     private ReasonDataManager mReasonDataManager;
@@ -776,7 +778,14 @@ public class TNApiModel extends TNApi {
             callback.onSuccess(null, null);
         }
 
+        mEntrySaveAllAgain = false;
+
         //@@ iOSでは100件ずつ繰り返してやるらしい
+        // サーバー側の負荷を考慮してまずは50件ずつ
+        if (entries.size() > 50) {
+            entries = entries.subList(0, 50);
+            mEntrySaveAllAgain = true;
+        }
 
         mCount = 0;
         for (Entry entry : entries) {
@@ -789,10 +798,28 @@ public class TNApiModel extends TNApi {
                 @Override
                 public void onSuccess(Response response, String content) {
                     mCount++;
-                    if (mCount >= entrySize)
-                        callback.onSuccess(response, content);
+                    if (mCount >= entrySize) {
+                        if (mEntrySaveAllAgain) {
+                            // call save entries again after delay 1.5 sec
+                            new Handler().postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    saveAllNeedSaveEntries(callback);
+                                }
+                            }, 1500);
+
+                        } else {
+                            callback.onSuccess(response, content);
+                        }
+                    }
                 }
             });
+
+            // sleep
+            try{
+                Thread.sleep(100);
+            }catch (InterruptedException e){
+            }
         }
     }
 
