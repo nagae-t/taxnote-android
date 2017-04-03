@@ -385,6 +385,11 @@ public class MainActivity extends DefaultCommonActivity {
                 (GraphTabFragment) mTabPagerAdapter.instantiateItem(pager, 3);
         if (graphFragment != null)
             graphFragment.reloadData();
+
+        SettingsTabFragment settingsFragment =
+                (SettingsTabFragment) mTabPagerAdapter.instantiateItem(pager, 4);
+        if (settingsFragment != null)
+            settingsFragment.afterLogin();
     }
 
     private long[] getReportStartEndDate() {
