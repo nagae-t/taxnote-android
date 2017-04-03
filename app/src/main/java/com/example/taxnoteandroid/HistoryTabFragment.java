@@ -25,6 +25,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import okhttp3.Response;
@@ -167,7 +168,9 @@ public class HistoryTabFragment extends Fragment {
             for (Entry entry : entries) {
 
                 // Format date to string
-                SimpleDateFormat simpleDateFormat = new SimpleDateFormat(getResources().getString(R.string.date_string_format_to_year_month_day_weekday));
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
+                        getResources().getString(R.string.date_string_format_to_year_month_day_weekday),
+                        Locale.getDefault());
                 String dateString = simpleDateFormat.format(entry.date);
 
                 if (!map2.containsKey(dateString)) {

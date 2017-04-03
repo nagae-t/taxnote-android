@@ -167,7 +167,10 @@ public class LoginCloudActivity extends DefaultCommonActivity {
                 dialog.dismiss();
 
                 if (response != null) {
+                    Log.v("ERROR", "sendLogin onFailure header : " + response.headers());
                     int httpStatusCode = response.code();
+                    Log.v("ERROR", "sendLogin onFailure http code: " + httpStatusCode
+                            + ", message: " + response.message());
                     if (httpStatusCode == 401) {
                         DialogManager.showOKOnlyAlert(LoginCloudActivity.this,
                                 getResources().getString(R.string.login_error),
@@ -208,6 +211,8 @@ public class LoginCloudActivity extends DefaultCommonActivity {
                         if (response != null)
                             Log.e("ERROR", "response.code: " + response.code()
                                 + ", message : " + response.message());
+                        if (throwable != null)
+                            Log.e("ERROR", "message: " + throwable.getLocalizedMessage());
                     }
 
                     @Override

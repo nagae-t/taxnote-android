@@ -1178,6 +1178,7 @@ public class TNApiModel extends TNApi {
 
         for (JsonElement jsElement : array) {
             JsonObject obj = jsElement.getAsJsonObject();
+            Log.v("TEST", "updateDbEntries obj: " + obj.toString());
 
             boolean isNewEntry = false;
             boolean deleted = obj.get("deleted").getAsBoolean();
@@ -1205,13 +1206,10 @@ public class TNApiModel extends TNApi {
                 entry.reason = mReasonDataManager.findByUuid(obj.get("reason_uuid").getAsString());
                 entry.account = mAccountDataManager.findByUuid(obj.get("account_uuid").getAsString());
 
-                Log.v("TEST", "updateDbEntries uuid: " + uuid
-                        + ", price : " + entry.price);
                 if (isNewEntry) {
                     Log.v("TEST", "updateDbEntries isNewEntry");
                     mEntryDataManager.save(entry);
                 } else {
-                    Log.v("TEST", "updateDbEntries is Not NewEntry");
                     mEntryDataManager.update(entry);
                 }
             }
