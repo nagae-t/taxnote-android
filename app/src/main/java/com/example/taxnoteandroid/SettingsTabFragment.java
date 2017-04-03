@@ -137,6 +137,7 @@ public class SettingsTabFragment extends Fragment {
 
     private void setMultipleProject() {
         mAllProjects = mProjectDataManager.findAllDeleted(false);
+        binding.subProjectRadioLayout.removeAllViewsInLayout();
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         String addTitle = mContext.getString(R.string.add_new_project);
