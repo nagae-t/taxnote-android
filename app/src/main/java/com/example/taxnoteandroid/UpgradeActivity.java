@@ -377,7 +377,6 @@ public class UpgradeActivity extends DefaultCommonActivity {
             @Override
             public void onSuccess(Response response, String content) {
                 dialog.dismiss();
-                Log.v("TEST", "sign out onSuccess content : " + content);
 
                 binding.cloudLoginLayout.setVisibility(View.VISIBLE);
                 binding.cloudMemberLayout.setVisibility(View.GONE);

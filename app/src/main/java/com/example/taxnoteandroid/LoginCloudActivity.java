@@ -186,6 +186,9 @@ public class LoginCloudActivity extends DefaultCommonActivity {
                     }
                 }
 
+                if (throwable != null)
+                    Log.e("ERROR", "sendLogin onFailure : " + throwable.getLocalizedMessage());
+
             }
 
             @Override
@@ -201,13 +204,20 @@ public class LoginCloudActivity extends DefaultCommonActivity {
 
                 if (apiModel.isSyncing()) return;
 
+                // ログイン後にデータを同期するがその前に少しまつ
+                // sleep
+                try{
+                    Thread.sleep(300);
+                }catch (InterruptedException e){
+                }
+
                 apiModel.setIsSyncing(true);
                 apiModel.getAllDataAfterLogin(new AsyncOkHttpClient.Callback() {
                     @Override
                     public void onFailure(Response response, Throwable throwable) {
                         apiModel.setIsSyncing(false);
                         dialog.dismiss();
-                        Log.e("ERROR", "getAllDataAfterLogin onFailure code: ");
+                        Log.e("ERROR", "getAllDataAfterLogin onFailure ");
                         if (response != null)
                             Log.e("ERROR", "response.code: " + response.code()
                                 + ", message : " + response.message());
