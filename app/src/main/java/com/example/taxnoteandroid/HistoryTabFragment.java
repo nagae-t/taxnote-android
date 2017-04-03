@@ -66,8 +66,6 @@ public class HistoryTabFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         mContext = getActivity().getApplicationContext();
 
-        mEntryAdapter = new CommonEntryRecyclerAdapter(mContext);
-
         mApiModel = new TNApiModel(mContext);
         if (!mApiModel.isLoggingIn()) binding.refreshLayout.setEnabled(false);
 
@@ -129,7 +127,6 @@ public class HistoryTabFragment extends Fragment {
             @Override
             public void onSuccess(Response response, String content) {
                 binding.refreshLayout.setRefreshing(false);
-                loadHistoryData();
             }
         });
     }
@@ -141,7 +138,7 @@ public class HistoryTabFragment extends Fragment {
 
     public void loadHistoryData() {
         if (mEntryAdapter != null) {
-            mEntryAdapter.clearAll();
+            mEntryAdapter.clearAllToNotifyData();
         }
         mEntryAdapter = new CommonEntryRecyclerAdapter(mContext);
 
