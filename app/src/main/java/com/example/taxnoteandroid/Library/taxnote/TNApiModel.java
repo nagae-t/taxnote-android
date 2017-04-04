@@ -753,12 +753,13 @@ public class TNApiModel extends TNApi {
     }
 
     private void saveAllNeedSaveEntries(final AsyncOkHttpClient.Callback callback) {
-        int limitSendCount = 70;
+        int limitSendCount = 100;
         List<Entry> entries = mEntryDataManager.findAllNeedSave(true);
         if (entries.size() == 0) {
             callback.onSuccess(null, null);
         }
 
+        Log.v("TEST", "start : " + System.currentTimeMillis()/1000);
         mEntrySaveAllAgain = false;
 
         //@@ iOSでは100件ずつ繰り返してやるらしい
@@ -796,17 +797,18 @@ public class TNApiModel extends TNApi {
                                                   Log.v("TEST", "SAVE ENTRIES runt save again ");
                                                   saveAllNeedSaveEntries(callback);
                                               }
-                                          }, 1200);
+                                          }, 1000);
 
                                       } else {
-                                          Log.v("TEST", "SAVE ENTRIES finished ");
+                                          Log.v("TEST", "SAVE ENTRIES finished : " + System.currentTimeMillis()/1000);
+
                                           callback.onSuccess(response, content);
                                       }
                                   }
                               }
                           });
                       }
-                  }, 60);
+                  }, 20);
         }
     }
 

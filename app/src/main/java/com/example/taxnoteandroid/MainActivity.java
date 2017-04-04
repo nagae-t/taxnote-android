@@ -118,12 +118,14 @@ public class MainActivity extends DefaultCommonActivity {
 
         // 起動時にデータの同期を行う
         TNApiModel apiModel = new TNApiModel(this);
-//        apiModel.syncData(this, false, null);
+        apiModel.syncData(this, false, null);
+        /*
+        debug
         EntryDataManager entryDm = new EntryDataManager(this);
         List<Entry> entries = entryDm.findAllDeleted(false);
         for (Entry entry : entries) {
             entryDm.updateNeedSave(entry.id, true);
-        }
+        }*/
 
     }
 
