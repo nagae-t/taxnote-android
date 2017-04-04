@@ -27,11 +27,13 @@ import com.example.taxnoteandroid.dataManager.EntryDataManager;
 import com.example.taxnoteandroid.dataManager.SharedPreferencesManager;
 import com.example.taxnoteandroid.databinding.ActivityMainBinding;
 import com.example.taxnoteandroid.entryTab.EntryTabFragment;
+import com.example.taxnoteandroid.model.Entry;
 import com.helpshift.support.Support;
 import com.kobakei.ratethisapp.RateThisApp;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
 
 import java.lang.reflect.Field;
+import java.util.List;
 
 import static com.example.taxnoteandroid.R.string.report;
 import static com.example.taxnoteandroid.TaxnoteConsts.MIXPANEL_TOKEN;
@@ -116,7 +118,12 @@ public class MainActivity extends DefaultCommonActivity {
 
         // 起動時にデータの同期を行う
         TNApiModel apiModel = new TNApiModel(this);
-        apiModel.syncData(this, false, null);
+//        apiModel.syncData(this, false, null);
+        EntryDataManager entryDm = new EntryDataManager(this);
+        List<Entry> entries = entryDm.findAllDeleted(false);
+        for (Entry entry : entries) {
+            entryDm.updateNeedSave(entry.id, true);
+        }
 
     }
 

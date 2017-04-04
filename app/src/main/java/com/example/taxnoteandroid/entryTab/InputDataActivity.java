@@ -9,6 +9,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -17,8 +18,9 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.taxnoteandroid.DefaultCommonActivity;
 import com.example.taxnoteandroid.CalculatorActivity;
+import com.example.taxnoteandroid.DefaultCommonActivity;
+import com.example.taxnoteandroid.Library.BroadcastUtil;
 import com.example.taxnoteandroid.Library.DialogManager;
 import com.example.taxnoteandroid.Library.EntryLimitManager;
 import com.example.taxnoteandroid.Library.ValueConverter;
@@ -144,6 +146,8 @@ public class InputDataActivity extends DefaultCommonActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
+                if (pinButton)
+                    BroadcastUtil.sendReloadReport(this);
                 finish();
                 return true;
             case R.id.pin_button:
@@ -345,8 +349,9 @@ public class InputDataActivity extends DefaultCommonActivity {
 
         // Entry limit for free users check
         if (limitNewEntry) {
-            showUpgradeSuggest();
-            return;
+            // debug
+//            showUpgradeSuggest();
+//            return;
         }
 
         EntryDataManager entryDataManager = new EntryDataManager(InputDataActivity.this);
@@ -460,6 +465,15 @@ public class InputDataActivity extends DefaultCommonActivity {
             String priceString = ValueConverter.formatPrice(InputDataActivity.this ,currentPrice);
             priceTextView.setText(priceString);
         }
+    }
+
+
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK && pinButton) {
+            BroadcastUtil.sendReloadReport(this);
+        }
+        return super.onKeyDown(keyCode, event);
+
     }
 
 }

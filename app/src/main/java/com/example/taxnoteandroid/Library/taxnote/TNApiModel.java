@@ -256,19 +256,6 @@ public class TNApiModel extends TNApi {
         return form;
     }
 
-    private void showLogOnSuccess(String content) {
-        /*
-        JsonParser parser = new JsonParser();
-        JsonArray jsArr = parser.parse(content).getAsJsonArray();
-        for (JsonElement jsElement : jsArr) {
-            JsonObject obj = jsElement.getAsJsonObject();
-            for (Map.Entry<String, JsonElement> entry : obj.entrySet()) {
-                Log.v("TEST", "key: " + entry.getKey() + " | " + entry.getValue());
-            }
-            Log.v("TEST", "........................");
-        }*/
-    }
-
     private void getAllData(final AsyncOkHttpClient.Callback callback) {
         getProjects(new AsyncOkHttpClient.Callback() {
             @Override
@@ -281,7 +268,6 @@ public class TNApiModel extends TNApi {
             public void onSuccess(Response response, String content) {
 
                 Log.v("TEST", "getAllData onSuccess----Projects :");
-                showLogOnSuccess(content);
 
                 getReasons(new AsyncOkHttpClient.Callback() {
                     @Override
@@ -293,7 +279,6 @@ public class TNApiModel extends TNApi {
                     @Override
                     public void onSuccess(Response response, String content) {
                         Log.v("TEST", "getAllData onSuccess----Reasons :");
-                        showLogOnSuccess(content);
 
                         getAccounts(new AsyncOkHttpClient.Callback() {
                             @Override
@@ -305,7 +290,6 @@ public class TNApiModel extends TNApi {
                             @Override
                             public void onSuccess(Response response, String content) {
                                 Log.v("TEST", "getAllData onSuccess----Accounts :");
-                                showLogOnSuccess(content);
 
                                 getSummaries(new AsyncOkHttpClient.Callback() {
                                     @Override
@@ -317,7 +301,6 @@ public class TNApiModel extends TNApi {
                                     @Override
                                     public void onSuccess(Response response, String content) {
                                         Log.v("TEST", "getAllData onSuccess----Summaries :");
-                                        showLogOnSuccess(content);
 
                                         getRecurrings(new AsyncOkHttpClient.Callback() {
                                             @Override
@@ -329,7 +312,6 @@ public class TNApiModel extends TNApi {
                                             @Override
                                             public void onSuccess(Response response, String content) {
                                                 Log.v("TEST", "getAllData onSuccess----Recurrings :");
-                                                showLogOnSuccess(content);
 
                                                 getEntries(new AsyncOkHttpClient.Callback() {
                                                     @Override
@@ -341,7 +323,6 @@ public class TNApiModel extends TNApi {
                                                     @Override
                                                     public void onSuccess(Response response, String content) {
                                                         Log.v("TEST", "getAllData onSuccess----Entries :");
-                                                        showLogOnSuccess(content);
 
                                                         callback.onSuccess(response, content);
                                                     }
@@ -772,9 +753,9 @@ public class TNApiModel extends TNApi {
     }
 
     private void saveAllNeedSaveEntries(final AsyncOkHttpClient.Callback callback) {
+        int limitSendCount = 70;
         List<Entry> entries = mEntryDataManager.findAllNeedSave(true);
-        final int entrySize = entries.size();
-        if (entrySize == 0) {
+        if (entries.size() == 0) {
             callback.onSuccess(null, null);
         }
 
@@ -782,44 +763,50 @@ public class TNApiModel extends TNApi {
 
         //@@ iOSでは100件ずつ繰り返してやるらしい
         // サーバー側の負荷を考慮してまずは50件ずつ
-        if (entries.size() > 50) {
-            entries = entries.subList(0, 50);
+        if (entries.size() > limitSendCount) {
+            entries = entries.subList(0, limitSendCount);
+            Log.v("TEST", "SAVE ENTRIES set save again = true ");
             mEntrySaveAllAgain = true;
         }
+        final int entrySize = entries.size();
 
         mCount = 0;
-        for (Entry entry : entries) {
-            saveEntry(entry.uuid, new AsyncOkHttpClient.Callback() {
-                @Override
-                public void onFailure(Response response, Throwable throwable) {
-                    callback.onFailure(response, throwable);
-                }
+        for (final Entry entry : entries) {
+            new Handler().postDelayed(
+                new Runnable() {
 
-                @Override
-                public void onSuccess(Response response, String content) {
-                    mCount++;
-                    if (mCount >= entrySize) {
-                        if (mEntrySaveAllAgain) {
-                            // call save entries again after delay 1.5 sec
-                            new Handler().postDelayed(new Runnable() {
-                                @Override
-                                public void run() {
-                                    saveAllNeedSaveEntries(callback);
-                                }
-                            }, 1500);
+                      @Override
+                      public void run() {
 
-                        } else {
-                            callback.onSuccess(response, content);
-                        }
-                    }
-                }
-            });
+                          saveEntry(entry.uuid, new AsyncOkHttpClient.Callback() {
+                              @Override
+                              public void onFailure(Response response, Throwable throwable) {
+                                  callback.onFailure(response, throwable);
+                              }
 
-            // sleep
-            try{
-                Thread.sleep(100);
-            }catch (InterruptedException e){
-            }
+                              @Override
+                              public void onSuccess(Response response, String content) {
+                                  mCount++;
+                                  if (mCount >= entrySize) {
+                                      if (mEntrySaveAllAgain) {
+                                          // call save entries again after delay 1.5 sec
+                                          new Handler().postDelayed(new Runnable() {
+                                              @Override
+                                              public void run() {
+                                                  Log.v("TEST", "SAVE ENTRIES runt save again ");
+                                                  saveAllNeedSaveEntries(callback);
+                                              }
+                                          }, 1200);
+
+                                      } else {
+                                          Log.v("TEST", "SAVE ENTRIES finished ");
+                                          callback.onSuccess(response, content);
+                                      }
+                                  }
+                              }
+                          });
+                      }
+                  }, 60);
         }
     }
 
@@ -1178,7 +1165,6 @@ public class TNApiModel extends TNApi {
 
         for (JsonElement jsElement : array) {
             JsonObject obj = jsElement.getAsJsonObject();
-            Log.v("TEST", "updateDbEntries obj: " + obj.toString());
 
             boolean isNewEntry = false;
             boolean deleted = obj.get("deleted").getAsBoolean();
@@ -1207,7 +1193,6 @@ public class TNApiModel extends TNApi {
                 entry.account = mAccountDataManager.findByUuid(obj.get("account_uuid").getAsString());
 
                 if (isNewEntry) {
-                    Log.v("TEST", "updateDbEntries isNewEntry");
                     mEntryDataManager.save(entry);
                 } else {
                     mEntryDataManager.update(entry);
