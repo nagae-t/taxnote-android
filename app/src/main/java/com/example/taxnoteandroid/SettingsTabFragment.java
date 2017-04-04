@@ -83,8 +83,6 @@ public class SettingsTabFragment extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mContext = getActivity().getApplicationContext();
-        mApiUser = new TNApiUser(mContext);
-        mApiModel = new TNApiModel(mContext);
 
         mFragmentManager = getFragmentManager();
         mInflater = (LayoutInflater)getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -136,6 +134,9 @@ public class SettingsTabFragment extends Fragment {
     //--------------------------------------------------------------//
 
     private void setMultipleProject() {
+        mApiUser = new TNApiUser(mContext);
+        mApiModel = new TNApiModel(mContext);
+
         mAllProjects = mProjectDataManager.findAllDeleted(false);
         binding.subProjectRadioLayout.removeAllViewsInLayout();
 
@@ -279,7 +280,7 @@ public class SettingsTabFragment extends Fragment {
         mEditingProject.name = newName;
         mProjectDataManager.updateName(mEditingProject);
 
-        mApiModel.updateAccount(mEditingProject.uuid, null);
+        mApiModel.updateProject(mEditingProject.uuid, null);
 
         mAllProjects = mProjectDataManager.findAllDeleted(false);
         if (mEditingProject.isMaster) {
