@@ -103,15 +103,14 @@ public class UpgradeActivity extends DefaultCommonActivity {
 
             if (result.isFailure()) return;
 
-            //@@@ここ一時的なテスト！！
-//            // Previous Item
-//            Purchase purchase = inventory.getPurchase(TAXNOTE_PLUS_ID);
-//
-//            // Restore purchase
-//            if (purchase != null) {
-//                SharedPreferencesManager.saveTaxnotePlusPurchaseTime(UpgradeActivity.this, purchase.getPurchaseTime());
-//                updateUpgradeStatus();
-//            }
+            // Previous Item
+            Purchase purchase = inventory.getPurchase(TAXNOTE_PLUS_ID);
+
+            // Restore purchase
+            if (purchase != null) {
+                SharedPreferencesManager.saveTaxnotePlusPurchaseTime(UpgradeActivity.this, purchase.getPurchaseTime());
+                updateUpgradeStatus();
+            }
 
             // New Item
             Purchase purchase2 = inventory.getPurchase(TAXNOTE_PLUS_ID2);
