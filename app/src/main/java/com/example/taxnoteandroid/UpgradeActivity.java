@@ -47,6 +47,8 @@ public class UpgradeActivity extends DefaultCommonActivity {
     private TNApiUser mApiUser;
     private TNApiModel mApiModel;
 
+    private boolean isTNCloudActive = false;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -132,6 +134,9 @@ public class UpgradeActivity extends DefaultCommonActivity {
 
             // Restore purchase for Taxnote Cloud
             if (purchaseCloud != null) {
+                //@@ debug
+                isTNCloudActive = true;
+
                 //@@ save taxnote cloud purchase time ?
 //                SharedPreferencesManager.saveTaxnotePlusPurchaseTime(UpgradeActivity.this, purchaseCloud.getPurchaseTime());
                 updateUpgradeStatus();
@@ -145,11 +150,21 @@ public class UpgradeActivity extends DefaultCommonActivity {
 
             if (result.isFailure()) return;
             if (purchase == null) return;
-            if (purchase.getSku().equals(UpgradeManger.SKU_TAXNOTE_PLUS_ID)) {
+
+            String purchaseSkuId = purchase.getSku();
+            // Taxnote Plus
+            if (purchaseSkuId.equals(UpgradeManger.SKU_TAXNOTE_PLUS_ID)) {
 
                 // Upgrade
                 SharedPreferencesManager.saveTaxnotePlusPurchaseTime(UpgradeActivity.this, purchase.getPurchaseTime());
                 showUpgradeToTaxnotePlusSuccessDialog();
+                updateUpgradeStatus();
+
+                // Taxnote Cloud
+            } else if (purchaseSkuId.equals(UpgradeManger.SKU_TAXNOTE_CLOUD_ID)) {
+                // showUpgradeToTaxnoteCloudSuccessDialog();
+
+                isTNCloudActive = true;
                 updateUpgradeStatus();
             }
         }
@@ -165,6 +180,10 @@ public class UpgradeActivity extends DefaultCommonActivity {
             if (requestCode != REQUEST_CODE_CLOUD_CHANGE_PASSWD) {
                 binding.cloudLoginLayout.setVisibility(View.GONE);
                 mApiUser = new TNApiUser(this);
+
+                binding.cloudRightTv.setText(R.string.cloud);
+                binding.cloudLeftTv.setText(mApiUser.getEmail());
+                binding.purchaseInfoLayout.setVisibility(View.VISIBLE);
 
                 if (requestCode == REQUEST_CODE_CLOUD_LOGIN) {
                     DialogManager.showOKOnlyAlert(this,
@@ -214,9 +233,11 @@ public class UpgradeActivity extends DefaultCommonActivity {
         }
 
         // taxnote cloud is active
-//        if (UpgradeManger) {
-//
-//        }
+        if (isTNCloudActive) {
+            binding.purchaseInfoLayout.setVisibility(View.VISIBLE);
+            binding.cloudRightTv.setText(R.string.cloud);
+            binding.cloudLeftTv.setText(R.string.cloud_register);
+        }
     }
 
     private void setHelpView() {
@@ -270,6 +291,7 @@ public class UpgradeActivity extends DefaultCommonActivity {
         }
     }
 
+
     //--------------------------------------------------------------//
     //    -- Taxnote cloud login etc... --
     //--------------------------------------------------------------//
@@ -318,18 +340,7 @@ public class UpgradeActivity extends DefaultCommonActivity {
                     }
                     break;
                 case R.id.cloud_purchase_layout:
-                    if (mApiUser.isLoggingIn()) {
-                        showMemberDialogItems();
-                    } else {
-                        if (TNApi.isNetworkConnected(getApplicationContext())) {
-                            LoginCloudActivity.startForResult(UpgradeActivity.this,
-                                    REQUEST_CODE_CLOUD_LOGIN,
-                                    LoginCloudActivity.VIEW_TYPE_LOGIN);
-                        } else {
-                            DialogManager.showOKOnlyAlert(UpgradeActivity.this,
-                                    null, getString(R.string.network_not_connection));
-                        }
-                    }
+                    checkCloudPurchaseAction();
                     break;
                 case R.id.purchase_info_layout:
                     String receiptUrl = "https://play.google.com/store/account?feature=gp_receipt";
@@ -340,6 +351,41 @@ public class UpgradeActivity extends DefaultCommonActivity {
             }
         }
     };
+
+    private void checkCloudPurchaseAction() {
+        if (!isTNCloudActive) {
+            upgradeToTaxnoteCloud();
+        } else {
+            if (mApiUser.isLoggingIn()) {
+                showMemberDialogItems();
+            } else {
+                if (TNApi.isNetworkConnected(getApplicationContext())) {
+                    LoginCloudActivity.startForResult(UpgradeActivity.this,
+                            REQUEST_CODE_CLOUD_LOGIN,
+                            LoginCloudActivity.VIEW_TYPE_LOGIN);
+                } else {
+                    DialogManager.showOKOnlyAlert(UpgradeActivity.this,
+                            null, getString(R.string.network_not_connection));
+                }
+            }
+        }
+    }
+
+    private void upgradeToTaxnoteCloud() {
+        //@@ Taxnoteプラス購入済みか確認してダイアログを表示する
+
+
+        if (!mBillingHelper.subscriptionsSupported()) return;
+
+        try {
+            mBillingHelper.launchSubscriptionPurchaseFlow(UpgradeActivity.this,
+                    UpgradeManger.SKU_TAXNOTE_CLOUD_ID,
+                    REQUEST_CODE_PURCHASE_PREMIUM, mPurchaseFinishedListener);
+        } catch (IabHelper.IabAsyncInProgressException e) {
+            e.printStackTrace();
+        }
+
+    }
 
     private void showMemberDialogItems() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
