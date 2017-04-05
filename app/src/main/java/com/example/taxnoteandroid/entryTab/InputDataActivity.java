@@ -349,9 +349,8 @@ public class InputDataActivity extends DefaultCommonActivity {
 
         // Entry limit for free users check
         if (limitNewEntry) {
-            // debug
-//            showUpgradeSuggest();
-//            return;
+            showUpgradeSuggest();
+            return;
         }
 
         EntryDataManager entryDataManager = new EntryDataManager(InputDataActivity.this);

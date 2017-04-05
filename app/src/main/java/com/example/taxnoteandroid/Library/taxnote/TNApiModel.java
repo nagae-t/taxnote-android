@@ -759,14 +759,12 @@ public class TNApiModel extends TNApi {
             callback.onSuccess(null, null);
         }
 
-        Log.v("TEST", "start : " + System.currentTimeMillis()/1000);
         mEntrySaveAllAgain = false;
 
         //@@ iOSでは100件ずつ繰り返してやるらしい
         // サーバー側の負荷を考慮してまずは50件ずつ
         if (entries.size() > limitSendCount) {
             entries = entries.subList(0, limitSendCount);
-            Log.v("TEST", "SAVE ENTRIES set save again = true ");
             mEntrySaveAllAgain = true;
         }
         final int entrySize = entries.size();
@@ -794,14 +792,11 @@ public class TNApiModel extends TNApi {
                                           new Handler().postDelayed(new Runnable() {
                                               @Override
                                               public void run() {
-                                                  Log.v("TEST", "SAVE ENTRIES runt save again ");
                                                   saveAllNeedSaveEntries(callback);
                                               }
                                           }, 1000);
 
                                       } else {
-                                          Log.v("TEST", "SAVE ENTRIES finished : " + System.currentTimeMillis()/1000);
-
                                           callback.onSuccess(response, content);
                                       }
                                   }
