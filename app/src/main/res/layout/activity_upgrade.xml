@@ -149,7 +149,8 @@
             android:orientation="horizontal"
             android:clickable="true"
             android:paddingEnd="16dp"
-            android:paddingStart="16dp">
+            android:paddingStart="16dp"
+            android:visibility="gone">
             <TextView
                 style="@style/font_style_standard"
                 android:layout_width="0dp"

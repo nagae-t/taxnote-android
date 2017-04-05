@@ -37,8 +37,8 @@ import static com.example.taxnoteandroid.TaxnoteConsts.MIXPANEL_TOKEN;
 public class UpgradeActivity extends DefaultCommonActivity {
 
     private ActivityUpgradeBinding binding;
-    private static final String LICENSE_KEY_OF_GOOGLE_PLAY = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAm+14FzQyLcAO7X2zwFDWXwHDuzN8RA60R71JouG5TO6la3xh0A7uWIQ4Y2k1kvqa/fHRAOble7TxIDsy11GsLjD/2sI+e4p4pE5vDKeY3ARBadcQI7iDc/VVnkzCSrZeoGTYinm+99diGn71cGIlF+7ISnh98Kss1zguKLlY+tCkaDDCe+moghLYTvqVuJg27ShVfxxPpWr4gwMusdSMcbJLR6S4ajeWbEtacGAdEJnzQfuAH6RMnt/ggZa4CFRVbNnJA6Eft/CCQL7GFBwBYnkMfG+Jdr+66BcTHbtPP8cE5WdmjGzDje+iy5HGYyIfqiDTdBs178zgWKUS8TM9QwIDAQAB";
-    private static final String TAXNOTE_PLUS_ID = "taxnote.plus.sub";
+//    private static final String LICENSE_KEY_OF_GOOGLE_PLAY = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAm+14FzQyLcAO7X2zwFDWXwHDuzN8RA60R71JouG5TO6la3xh0A7uWIQ4Y2k1kvqa/fHRAOble7TxIDsy11GsLjD/2sI+e4p4pE5vDKeY3ARBadcQI7iDc/VVnkzCSrZeoGTYinm+99diGn71cGIlF+7ISnh98Kss1zguKLlY+tCkaDDCe+moghLYTvqVuJg27ShVfxxPpWr4gwMusdSMcbJLR6S4ajeWbEtacGAdEJnzQfuAH6RMnt/ggZa4CFRVbNnJA6Eft/CCQL7GFBwBYnkMfG+Jdr+66BcTHbtPP8cE5WdmjGzDje+iy5HGYyIfqiDTdBs178zgWKUS8TM9QwIDAQAB";
+//    private static final String TAXNOTE_PLUS_ID = "taxnote.plus.sub";
     private static final int REQUEST_CODE_PURCHASE_PREMIUM = 0;
     private static final int REQUEST_CODE_CLOUD_LOGIN = 2;
     private static final int REQUEST_CODE_CLOUD_REGISTER = 3;
@@ -94,7 +94,7 @@ public class UpgradeActivity extends DefaultCommonActivity {
 
     private void setupBilling() {
 
-        mBillingHelper = new IabHelper(this, LICENSE_KEY_OF_GOOGLE_PLAY);
+        mBillingHelper = new IabHelper(this, UpgradeManger.GOOGLE_PLAY_LICENSE_KEY);
 //        mBillingHelper.enableDebugLogging(true); // Remove before release
         try {
             mBillingHelper.startSetup(new IabHelper.OnIabSetupFinishedListener() {
@@ -121,11 +121,19 @@ public class UpgradeActivity extends DefaultCommonActivity {
 
             if (result.isFailure()) return;
 
-            Purchase purchase = inventory.getPurchase(TAXNOTE_PLUS_ID);
+            Purchase purchasePlus = inventory.getPurchase(UpgradeManger.SKU_TAXNOTE_PLUS_ID);
+            Purchase purchaseCloud = inventory.getPurchase(UpgradeManger.SKU_TAXNOTE_CLOUD_ID);
 
-            // Restore purchase
-            if (purchase != null) {
-                SharedPreferencesManager.saveTaxnotePlusPurchaseTime(UpgradeActivity.this, purchase.getPurchaseTime());
+            // Restore purchase for Taxnote Plus
+            if (purchasePlus != null) {
+                SharedPreferencesManager.saveTaxnotePlusPurchaseTime(UpgradeActivity.this, purchasePlus.getPurchaseTime());
+                updateUpgradeStatus();
+            }
+
+            // Restore purchase for Taxnote Cloud
+            if (purchaseCloud != null) {
+                //@@ save taxnote cloud purchase time ?
+//                SharedPreferencesManager.saveTaxnotePlusPurchaseTime(UpgradeActivity.this, purchaseCloud.getPurchaseTime());
                 updateUpgradeStatus();
             }
         }
@@ -137,7 +145,7 @@ public class UpgradeActivity extends DefaultCommonActivity {
 
             if (result.isFailure()) return;
             if (purchase == null) return;
-            if (purchase.getSku().equals(TAXNOTE_PLUS_ID)) {
+            if (purchase.getSku().equals(UpgradeManger.SKU_TAXNOTE_PLUS_ID)) {
 
                 // Upgrade
                 SharedPreferencesManager.saveTaxnotePlusPurchaseTime(UpgradeActivity.this, purchase.getPurchaseTime());
@@ -156,10 +164,7 @@ public class UpgradeActivity extends DefaultCommonActivity {
         if (resultCode == RESULT_OK) {
             if (requestCode != REQUEST_CODE_CLOUD_CHANGE_PASSWD) {
                 binding.cloudLoginLayout.setVisibility(View.GONE);
-//                binding.cloudRegisterLayout.setVisibility(View.GONE);
-//                binding.cloudMemberLayout.setVisibility(View.VISIBLE);
                 mApiUser = new TNApiUser(this);
-//                binding.email.setText(mApiUser.getEmail());
 
                 if (requestCode == REQUEST_CODE_CLOUD_LOGIN) {
                     DialogManager.showOKOnlyAlert(this,
@@ -207,6 +212,11 @@ public class UpgradeActivity extends DefaultCommonActivity {
         if (UpgradeManger.taxnotePlusIsActive(this)) {
             binding.upgraded.setText(getResources().getString(R.string.upgrade_is_active));
         }
+
+        // taxnote cloud is active
+//        if (UpgradeManger) {
+//
+//        }
     }
 
     private void setHelpView() {
@@ -228,7 +238,9 @@ public class UpgradeActivity extends DefaultCommonActivity {
 
         if (mBillingHelper.subscriptionsSupported()) {
             try {
-                mBillingHelper.launchSubscriptionPurchaseFlow(UpgradeActivity.this, TAXNOTE_PLUS_ID, REQUEST_CODE_PURCHASE_PREMIUM, mPurchaseFinishedListener);
+                mBillingHelper.launchSubscriptionPurchaseFlow(UpgradeActivity.this,
+                        UpgradeManger.SKU_TAXNOTE_PLUS_ID,
+                        REQUEST_CODE_PURCHASE_PREMIUM, mPurchaseFinishedListener);
             } catch (IabHelper.IabAsyncInProgressException e) {
                 e.printStackTrace();
             }
@@ -264,17 +276,21 @@ public class UpgradeActivity extends DefaultCommonActivity {
 
     private void setTaxnoteCloud() {
         binding.cloudLoginLayout.setOnClickListener(taxnoteCloudOnClick);
-//        binding.cloudMemberLayout.setOnClickListener(taxnoteCloudOnClick);
+        binding.cloudPurchaseLayout.setOnClickListener(taxnoteCloudOnClick);
+        binding.purchaseInfoLayout.setOnClickListener(taxnoteCloudOnClick);
 
         String userEmail = mApiUser.getEmail();
-        if (userEmail != null) {
+        if (userEmail != null) { // Taxnoteアカウントでログインしている場合
             binding.cloudLoginLayout.setVisibility(View.GONE);
             binding.cloudRightTv.setText(R.string.cloud);
             binding.cloudLeftTv.setText(userEmail);
 
-//            binding.cloudMemberLayout.setVisibility(View.VISIBLE);
-//            binding.email.setText(userEmail);
+            binding.purchaseInfoLayout.setVisibility(View.VISIBLE);
         }
+
+        //@@ クラウド購入しているけど、ログインしている、していない、の表示別
+
+
     }
     private View.OnClickListener taxnoteCloudOnClick = new View.OnClickListener() {
         @Override
@@ -302,8 +318,18 @@ public class UpgradeActivity extends DefaultCommonActivity {
                     }
                     break;
                 case R.id.cloud_purchase_layout:
-                    if (mApiUser.isLoggingIn())
+                    if (mApiUser.isLoggingIn()) {
                         showMemberDialogItems();
+                    } else {
+                        if (TNApi.isNetworkConnected(getApplicationContext())) {
+                            LoginCloudActivity.startForResult(UpgradeActivity.this,
+                                    REQUEST_CODE_CLOUD_LOGIN,
+                                    LoginCloudActivity.VIEW_TYPE_LOGIN);
+                        } else {
+                            DialogManager.showOKOnlyAlert(UpgradeActivity.this,
+                                    null, getString(R.string.network_not_connection));
+                        }
+                    }
                     break;
                 case R.id.purchase_info_layout:
                     String receiptUrl = "https://play.google.com/store/account?feature=gp_receipt";
@@ -360,7 +386,6 @@ public class UpgradeActivity extends DefaultCommonActivity {
         if (!TNApi.isNetworkConnected(this)) {
             mApiUser.clearAccountData(mApiModel);
             binding.cloudLoginLayout.setVisibility(View.VISIBLE);
-//            binding.cloudMemberLayout.setVisibility(View.GONE);
             dialog.dismiss();
             return;
         }
@@ -378,7 +403,6 @@ public class UpgradeActivity extends DefaultCommonActivity {
                 // 保存しているtokenを削除
                 mApiUser.clearAccountData(mApiModel);
                 binding.cloudLoginLayout.setVisibility(View.VISIBLE);
-//                binding.cloudMemberLayout.setVisibility(View.GONE);
                 BroadcastUtil.sendAfterLogin(UpgradeActivity.this, false);
 
             }
@@ -387,8 +411,10 @@ public class UpgradeActivity extends DefaultCommonActivity {
             public void onSuccess(Response response, String content) {
                 dialog.dismiss();
 
-                binding.cloudLoginLayout.setVisibility(View.VISIBLE);
-//                binding.cloudMemberLayout.setVisibility(View.GONE);
+                mApiUser = new TNApiUser(getApplicationContext());
+//                binding.cloudLoginLayout.setVisibility(View.VISIBLE);
+                binding.cloudRightTv.setText(R.string.login);
+
                 BroadcastUtil.sendAfterLogin(UpgradeActivity.this, false);
             }
         });
@@ -442,17 +468,16 @@ public class UpgradeActivity extends DefaultCommonActivity {
                 }
                 dialog.dismiss();
 
-                binding.cloudLoginLayout.setVisibility(View.VISIBLE);
-//                binding.cloudMemberLayout.setVisibility(View.GONE);
-                BroadcastUtil.sendAfterLogin(UpgradeActivity.this, false);
+//                binding.cloudLoginLayout.setVisibility(View.VISIBLE);
+//                BroadcastUtil.sendAfterLogin(UpgradeActivity.this, false);
             }
 
             @Override
             public void onSuccess(Response response, String content) {
                 dialog.dismiss();
 
+                mApiUser = new TNApiUser(getApplicationContext());
                 binding.cloudLoginLayout.setVisibility(View.VISIBLE);
-//                binding.cloudMemberLayout.setVisibility(View.GONE);
                 BroadcastUtil.sendAfterLogin(UpgradeActivity.this, false);
             }
         });
