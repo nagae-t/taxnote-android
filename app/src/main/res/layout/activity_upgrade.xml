@@ -79,15 +79,24 @@
             android:paddingEnd="16dp"
             android:paddingStart="16dp">
             <TextView
+                android:id="@+id/cloud_right_tv"
                 style="@style/font_style_standard"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="@string/taxnote_cloud_first_free" />
+            <TextView
+                android:id="@+id/cloud_left_tv"
+                style="@style/font_style_standard"
+                android:textColor="?attr/colorPrimary"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
         </LinearLayout>
         <android.support.v4.widget.Space
             android:layout_width="match_parent"
             android:layout_height="1dp" />
+
+        <!--
         <LinearLayout
             android:background="@drawable/selector_background_colors"
             android:id="@+id/cloud_register_layout"
@@ -112,9 +121,27 @@
                 android:layout_height="wrap_content"
                 android:text="@string/cloud_register" />
         </LinearLayout>
+        -->
         <LinearLayout
             android:background="@drawable/selector_background_colors"
             android:id="@+id/cloud_login_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:minHeight="@dimen/cell_height_standard"
+            android:orientation="horizontal"
+            android:clickable="true"
+            android:paddingEnd="16dp"
+            android:paddingStart="16dp">
+            <TextView
+                style="@style/font_style_standard"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/login" />
+        </LinearLayout>
+        <LinearLayout
+            android:background="@drawable/selector_background_colors"
+            android:id="@+id/purchase_info_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
@@ -128,15 +155,16 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@string/cloud" />
+                android:text="@string/cloud_purchase_status" />
             <TextView
                 style="@style/font_style_standard"
                 android:textColor="?attr/colorPrimary"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/login" />
+                android:text="@string/cloud_purchase_status_control" />
         </LinearLayout>
 
+        <!--
         <LinearLayout
             android:background="@drawable/selector_background_colors"
             android:id="@+id/cloud_member_layout"
@@ -163,7 +191,8 @@
                 android:textColor="?attr/colorPrimary"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
-        </LinearLayout>
+        </LinearLayout> -->
+
         <TextView
             style="@style/font_style_footer"
             android:layout_width="match_parent"

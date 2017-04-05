@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
@@ -155,10 +156,10 @@ public class UpgradeActivity extends DefaultCommonActivity {
         if (resultCode == RESULT_OK) {
             if (requestCode != REQUEST_CODE_CLOUD_CHANGE_PASSWD) {
                 binding.cloudLoginLayout.setVisibility(View.GONE);
-                binding.cloudRegisterLayout.setVisibility(View.GONE);
-                binding.cloudMemberLayout.setVisibility(View.VISIBLE);
+//                binding.cloudRegisterLayout.setVisibility(View.GONE);
+//                binding.cloudMemberLayout.setVisibility(View.VISIBLE);
                 mApiUser = new TNApiUser(this);
-                binding.email.setText(mApiUser.getEmail());
+//                binding.email.setText(mApiUser.getEmail());
 
                 if (requestCode == REQUEST_CODE_CLOUD_LOGIN) {
                     DialogManager.showOKOnlyAlert(this,
@@ -262,16 +263,17 @@ public class UpgradeActivity extends DefaultCommonActivity {
     //--------------------------------------------------------------//
 
     private void setTaxnoteCloud() {
-        binding.cloudRegisterLayout.setOnClickListener(taxnoteCloudOnClick);
         binding.cloudLoginLayout.setOnClickListener(taxnoteCloudOnClick);
-        binding.cloudMemberLayout.setOnClickListener(taxnoteCloudOnClick);
+//        binding.cloudMemberLayout.setOnClickListener(taxnoteCloudOnClick);
 
         String userEmail = mApiUser.getEmail();
         if (userEmail != null) {
             binding.cloudLoginLayout.setVisibility(View.GONE);
-            binding.cloudRegisterLayout.setVisibility(View.GONE);
-            binding.cloudMemberLayout.setVisibility(View.VISIBLE);
-            binding.email.setText(userEmail);
+            binding.cloudRightTv.setText(R.string.cloud);
+            binding.cloudLeftTv.setText(userEmail);
+
+//            binding.cloudMemberLayout.setVisibility(View.VISIBLE);
+//            binding.email.setText(userEmail);
         }
     }
     private View.OnClickListener taxnoteCloudOnClick = new View.OnClickListener() {
@@ -279,16 +281,16 @@ public class UpgradeActivity extends DefaultCommonActivity {
         public void onClick(View view) {
             int viewId = view.getId();
             switch (viewId) {
-                case R.id.cloud_register_layout:
-                    if (TNApi.isNetworkConnected(getApplicationContext())) {
-                        LoginCloudActivity.startForResult(UpgradeActivity.this,
-                                REQUEST_CODE_CLOUD_REGISTER,
-                                LoginCloudActivity.VIEW_TYPE_REGISTER);
-                    } else {
-                        DialogManager.showOKOnlyAlert(UpgradeActivity.this,
-                                null, getString(R.string.network_not_connection));
-                    }
-                    break;
+//                case R.id.cloud_register_layout:
+//                    if (TNApi.isNetworkConnected(getApplicationContext())) {
+//                        LoginCloudActivity.startForResult(UpgradeActivity.this,
+//                                REQUEST_CODE_CLOUD_REGISTER,
+//                                LoginCloudActivity.VIEW_TYPE_REGISTER);
+//                    } else {
+//                        DialogManager.showOKOnlyAlert(UpgradeActivity.this,
+//                                null, getString(R.string.network_not_connection));
+//                    }
+//                    break;
                 case R.id.cloud_login_layout:
                     if (TNApi.isNetworkConnected(getApplicationContext())) {
                         LoginCloudActivity.startForResult(UpgradeActivity.this,
@@ -299,8 +301,15 @@ public class UpgradeActivity extends DefaultCommonActivity {
                                 null, getString(R.string.network_not_connection));
                     }
                     break;
-                case R.id.cloud_member_layout:
-                    showMemberDialogItems();
+                case R.id.cloud_purchase_layout:
+                    if (mApiUser.isLoggingIn())
+                        showMemberDialogItems();
+                    break;
+                case R.id.purchase_info_layout:
+                    String receiptUrl = "https://play.google.com/store/account?feature=gp_receipt";
+                    Uri uri = Uri.parse(receiptUrl);
+                    Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                    startActivity(intent);
                     break;
             }
         }
@@ -351,7 +360,7 @@ public class UpgradeActivity extends DefaultCommonActivity {
         if (!TNApi.isNetworkConnected(this)) {
             mApiUser.clearAccountData(mApiModel);
             binding.cloudLoginLayout.setVisibility(View.VISIBLE);
-            binding.cloudMemberLayout.setVisibility(View.GONE);
+//            binding.cloudMemberLayout.setVisibility(View.GONE);
             dialog.dismiss();
             return;
         }
@@ -369,7 +378,7 @@ public class UpgradeActivity extends DefaultCommonActivity {
                 // 保存しているtokenを削除
                 mApiUser.clearAccountData(mApiModel);
                 binding.cloudLoginLayout.setVisibility(View.VISIBLE);
-                binding.cloudMemberLayout.setVisibility(View.GONE);
+//                binding.cloudMemberLayout.setVisibility(View.GONE);
                 BroadcastUtil.sendAfterLogin(UpgradeActivity.this, false);
 
             }
@@ -379,7 +388,7 @@ public class UpgradeActivity extends DefaultCommonActivity {
                 dialog.dismiss();
 
                 binding.cloudLoginLayout.setVisibility(View.VISIBLE);
-                binding.cloudMemberLayout.setVisibility(View.GONE);
+//                binding.cloudMemberLayout.setVisibility(View.GONE);
                 BroadcastUtil.sendAfterLogin(UpgradeActivity.this, false);
             }
         });
@@ -434,7 +443,7 @@ public class UpgradeActivity extends DefaultCommonActivity {
                 dialog.dismiss();
 
                 binding.cloudLoginLayout.setVisibility(View.VISIBLE);
-                binding.cloudMemberLayout.setVisibility(View.GONE);
+//                binding.cloudMemberLayout.setVisibility(View.GONE);
                 BroadcastUtil.sendAfterLogin(UpgradeActivity.this, false);
             }
 
@@ -443,7 +452,7 @@ public class UpgradeActivity extends DefaultCommonActivity {
                 dialog.dismiss();
 
                 binding.cloudLoginLayout.setVisibility(View.VISIBLE);
-                binding.cloudMemberLayout.setVisibility(View.GONE);
+//                binding.cloudMemberLayout.setVisibility(View.GONE);
                 BroadcastUtil.sendAfterLogin(UpgradeActivity.this, false);
             }
         });
