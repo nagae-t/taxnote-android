@@ -158,9 +158,7 @@ public class UpgradeActivity extends DefaultCommonActivity {
                 updateUpgradeStatus();
 
                 // debug get subscription
-                SubscriptionPurchase subs =  tnApiClient.getSubscription(
-                        UpgradeManger.SKU_TAXNOTE_PLUS_ID1, purchasePlus1.getToken());
-
+                testGetSubscription(UpgradeManger.SKU_TAXNOTE_PLUS_ID1, purchasePlus1.getToken());
 
             }
         }
@@ -184,9 +182,7 @@ public class UpgradeActivity extends DefaultCommonActivity {
                 updateUpgradeStatus();
 
                 // debug get subscription
-                SubscriptionPurchase subs =  tnApiClient.getSubscription(
-                        UpgradeManger.SKU_TAXNOTE_PLUS_ID1, purchase.getToken());
-
+                testGetSubscription(UpgradeManger.SKU_TAXNOTE_PLUS_ID1, purchase.getToken());
 
 
                 // Taxnote Cloud
@@ -556,5 +552,14 @@ public class UpgradeActivity extends DefaultCommonActivity {
                 BroadcastUtil.sendAfterLogin(UpgradeActivity.this, false);
             }
         });
+    }
+
+    private void testGetSubscription(final String skuId, final String purchaseToken) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                tnApiClient.getSubscription(skuId, purchaseToken);
+            }
+        }).start();
     }
 }

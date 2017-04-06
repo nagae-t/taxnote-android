@@ -21,19 +21,19 @@ import android.view.MenuItem;
 import com.example.taxnoteandroid.Library.BroadcastUtil;
 import com.example.taxnoteandroid.Library.DialogManager;
 import com.example.taxnoteandroid.Library.TNAppNotification;
+import com.example.taxnoteandroid.Library.TNGoogleApiClient;
+import com.example.taxnoteandroid.Library.UpgradeManger;
 import com.example.taxnoteandroid.Library.taxnote.TNApiModel;
 import com.example.taxnoteandroid.dataManager.DefaultDataInstaller;
 import com.example.taxnoteandroid.dataManager.EntryDataManager;
 import com.example.taxnoteandroid.dataManager.SharedPreferencesManager;
 import com.example.taxnoteandroid.databinding.ActivityMainBinding;
 import com.example.taxnoteandroid.entryTab.EntryTabFragment;
-import com.example.taxnoteandroid.model.Entry;
 import com.helpshift.support.Support;
 import com.kobakei.ratethisapp.RateThisApp;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
 
 import java.lang.reflect.Field;
-import java.util.List;
 
 import static com.example.taxnoteandroid.R.string.report;
 import static com.example.taxnoteandroid.TaxnoteConsts.MIXPANEL_TOKEN;
@@ -127,8 +127,19 @@ public class MainActivity extends DefaultCommonActivity {
         for (Entry entry : entries) {
             entryDm.updateNeedSave(entry.id, true);
         }*/
+        // debug
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                TNGoogleApiClient apiClient = new TNGoogleApiClient(getApplicationContext());
+//                String purchaseToken = "aaaa";
+//                apiClient.getSubscription(UpgradeManger.SKU_TAXNOTE_PLUS_ID1, purchaseToken);
+//            }
+//        }).start();
 
     }
+
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

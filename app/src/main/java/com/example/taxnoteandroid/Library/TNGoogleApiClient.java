@@ -5,15 +5,18 @@ import android.util.Log;
 
 import com.example.taxnoteandroid.R;
 import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
+import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
 import com.google.api.client.http.HttpTransport;
-import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.services.androidpublisher.AndroidPublisher;
+import com.google.api.services.androidpublisher.AndroidPublisherScopes;
 import com.google.api.services.androidpublisher.model.SubscriptionPurchase;
 
 import java.io.IOException;
 import java.io.InputStream;
+
+import static java.util.Collections.singleton;
 
 // AndroidPublisher.Purchases.Subscription
 
@@ -30,29 +33,28 @@ public class TNGoogleApiClient {
 
     public TNGoogleApiClient(Context context) {
         this.mContext = context;
-
-        HttpTransport httpTransport = new NetHttpTransport.Builder().build();
-        JsonFactory jsonFactory = JacksonFactory.getDefaultInstance();
-        GoogleCredential credential = null;
-        try {
-            InputStream inputStream = context.getResources()
-                    .openRawResource(R.raw.taxnote_google_api_client);
-
-            credential = GoogleCredential.fromStream(inputStream);
-        } catch (Exception e) {
-            Log.e("ERROR", "TNGoogleApiClient init : " + e.getLocalizedMessage());
-        }
-
-        if (credential != null) {
-            mPublisher = new AndroidPublisher.Builder(
-                    httpTransport, jsonFactory, credential)
-                    .setApplicationName("taxnote")
-                    .build();
-        }
     }
 
     public SubscriptionPurchase getSubscription(String subscriptionId, String purchaseToken) {
-        if (mPublisher == null) return null;
+        if (mPublisher == null) {
+            JsonFactory jsonFactory = JacksonFactory.getDefaultInstance();
+            try {
+                HttpTransport httpTransport = GoogleNetHttpTransport.newTrustedTransport();
+                InputStream inputStream = mContext.getResources()
+                        .openRawResource(R.raw.taxnote_google_api_client);
+
+                GoogleCredential credential = GoogleCredential.fromStream(
+                        inputStream, httpTransport, jsonFactory);
+                credential.createScoped(singleton(AndroidPublisherScopes.ANDROIDPUBLISHER));
+
+                mPublisher = new AndroidPublisher.Builder(
+                        httpTransport, jsonFactory, credential)
+                        .setApplicationName("taxnote")
+                        .build();
+            } catch (Exception e) {
+                Log.e("ERROR", "TNGoogleApiClient init : " + e.getLocalizedMessage());
+            }
+        }
 
         String packageName = mContext.getPackageName();
         SubscriptionPurchase subs = null;
