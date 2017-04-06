@@ -70,7 +70,7 @@ public class TNGoogleApiClient {
             e.printStackTrace();
         }
         if (subscription != null) {
-            
+
         }
     }
 }
