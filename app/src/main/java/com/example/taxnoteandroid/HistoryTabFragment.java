@@ -158,7 +158,6 @@ public class HistoryTabFragment extends Fragment {
             if (entries == null || entries.isEmpty() || entries.size() == 0) {
                 return entryData;
             }
-            Log.v("TEST", "AllEntry size : " + entries.size());
 
             Map<String, List<Entry>> map2 = new LinkedHashMap<>();
 

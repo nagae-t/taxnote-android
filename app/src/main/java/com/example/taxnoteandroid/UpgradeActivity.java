@@ -15,6 +15,7 @@ import android.view.View;
 import com.example.taxnoteandroid.Library.AsyncOkHttpClient;
 import com.example.taxnoteandroid.Library.BroadcastUtil;
 import com.example.taxnoteandroid.Library.DialogManager;
+import com.example.taxnoteandroid.Library.TNGoogleApiClient;
 import com.example.taxnoteandroid.Library.UpgradeManger;
 import com.example.taxnoteandroid.Library.billing.IabHelper;
 import com.example.taxnoteandroid.Library.billing.IabResult;
@@ -25,6 +26,7 @@ import com.example.taxnoteandroid.Library.taxnote.TNApiModel;
 import com.example.taxnoteandroid.Library.taxnote.TNApiUser;
 import com.example.taxnoteandroid.dataManager.SharedPreferencesManager;
 import com.example.taxnoteandroid.databinding.ActivityUpgradeBinding;
+import com.google.api.services.androidpublisher.model.SubscriptionPurchase;
 import com.helpshift.support.Support;
 import com.kobakei.ratethisapp.RateThisApp;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
@@ -48,6 +50,8 @@ public class UpgradeActivity extends DefaultCommonActivity {
     private TNApiUser mApiUser;
     private TNApiModel mApiModel;
 
+    private TNGoogleApiClient tnApiClient;
+
     private boolean isTNCloudActive = false;
 
 
@@ -58,6 +62,7 @@ public class UpgradeActivity extends DefaultCommonActivity {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_upgrade);
         mApiUser = new TNApiUser(this);
         mApiModel = new TNApiModel(this);
+        tnApiClient = new TNGoogleApiClient(this);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
 
@@ -151,6 +156,12 @@ public class UpgradeActivity extends DefaultCommonActivity {
             if (purchasePlus1 != null) {
                 SharedPreferencesManager.saveTaxnotePlusPurchaseTime(UpgradeActivity.this, purchasePlus1.getPurchaseTime());
                 updateUpgradeStatus();
+
+                // debug get subscription
+                SubscriptionPurchase subs =  tnApiClient.getSubscription(
+                        UpgradeManger.SKU_TAXNOTE_PLUS_ID1, purchasePlus1.getToken());
+
+
             }
         }
     };
@@ -171,6 +182,12 @@ public class UpgradeActivity extends DefaultCommonActivity {
                 SharedPreferencesManager.saveTaxnotePlusPurchaseTime(UpgradeActivity.this, purchase.getPurchaseTime());
                 showUpgradeToTaxnotePlusSuccessDialog();
                 updateUpgradeStatus();
+
+                // debug get subscription
+                SubscriptionPurchase subs =  tnApiClient.getSubscription(
+                        UpgradeManger.SKU_TAXNOTE_PLUS_ID1, purchase.getToken());
+
+
 
                 // Taxnote Cloud
             } else if (purchaseSkuId.equals(UpgradeManger.SKU_TAXNOTE_CLOUD_ID)) {
