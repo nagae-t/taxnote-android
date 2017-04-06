@@ -36,6 +36,8 @@ public class TNGoogleApiClient {
     }
 
     public SubscriptionPurchase getSubscription(String subscriptionId, String purchaseToken) {
+        Log.v("TEST", "Start getSubscription subscriptionId: " + subscriptionId
+                + ", purchaseToken: " + purchaseToken);
         if (mPublisher == null) {
             JsonFactory jsonFactory = JacksonFactory.getDefaultInstance();
             try {
