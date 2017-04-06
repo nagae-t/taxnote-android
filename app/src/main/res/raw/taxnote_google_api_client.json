@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "api-5043924228936177368-351012",
+  "private_key_id": "1bf325c5f8ba7d7f9219584dfc1c52dab250ff3a",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvwIBADANBgkqhkiG9w0BAQEFAASCBKkwggSlAgEAAoIBAQC0Ibu4qqewr4iF\nFhtEHWnWoF2tyG/s3Qqwc1iNIYooSZSlI9+iQt3u/5q9m+B5NYu+W/XBCTVRzSqG\nlko9lBHDgx+gAa5I4Ij7pDE0qgPJWQ5MlIMEo5Uvd7GAT50o0y/9X+VigskK2IoL\nuhtCeAR0mESuQYwzEFYFYmpRlIIdPLCgAuoWX/i7FFL7UEXxLWl96WQInXL1dwbu\nWm1umoFls0A+ma6BjyMMMjo+NI9qmsR5T+7hEu/CnNRZ4j4pQ8d+wC0Og8f3yXqo\nklBDa6z0j/TQBoXCBcsht9kJX1djAZWI0vznGo12S7S1oohrqPnUmS5stwhiCpg8\nxAaNqng1AgMBAAECggEAEcZeYsucPogjvZY/3InWftJWTCbCPKpXOrA3Jb4Qhwcz\nvtP6ZmWYxtO8Lkeqb+uDvaYPaxwAgfDv6FX+P3NUCWnv/fcMfq6Bdetu25aHRyAd\nlBr3jsahmwyBnHq+tF+albMXzI/BTOuvO5cCx51WOzcnV9aqAgPzqRZcDW7NJBtF\noVs9vQOCssin17dl3zaN7rGF3WTVYS1LtHoX4iTk56dJl+siYMXlHWvzRqZxAZNf\ne1IlPr4CUltLdWQ7qFX+s+RPXuqDGPHQ+7zi62ocAvxjs8IYQE9n8eJ7zxal80Gs\noV9Ed2slEQNgg0PEpC8o9IRzlB7+KIxsEOMDIGsbZQKBgQDceWSTRZdg/RiSem9q\nEaiQXvaOezN2ztJ9a9JaT/dG/36cwDRH0+6j1i+jM0O7/Bsbs9My1lxmfaG/DD9D\nzivPkKTx7/3nRDXmBF2v9BICilJcdUfA5Rl9Vy6j3oCVk/Eidcw03c7KYbY9I5cz\nvpftGHPl2Ne9mcbk1xF1R7NbAwKBgQDRKDT/hO1/dunLflXZwDq89znoZf+qwzdx\nphZe4IlgdXpg8TSASzTUHAoVam6uncnXI2Yl+jIesMmbybXHd0CzVS/OF3EYQvV6\niFesSuA9ZHwc9dl9KE6+Pged2UQiXKMeW/ydQbiGJuT5RF3Abg3gnBrUQKQFfG9h\nAeYvwceeZwKBgQCoGSZF41l36YFCrXclODF9Yeo62FR00VxLpFnN4gp3Z3Xxrdou\nqbfZ0wSfOgb63U0N4h21NRteSYt5Tq0t1ZQxvecFUCYWnjs6FToZXc4dgbkqJYF/\n4S1+E2rMJmmDojjIPWhlJnj0dWutUeWG3lqXu30iUiKrvQOYlyIIeZKWYQKBgQDH\nMLF4f1HnyInTwNdl70qBWDmP+EPKjuwokfJQHSr38CnCVTSY0gbX0nRP/PK33ZGy\nEAZiOKquy9LVSP6TniDCKWjDr1OHtY0vStWkQhLYpPAGbKTaKx8C0vRSAe5/gxXd\n/eDQqxxetn/uXIukjasts71hUsZiayVvj213IedIFQKBgQDavoLPAGfktOc2CNJt\nIGSikgIKLMbsq+N6O0wx81GmCtWDC+HsLAKtCOMxsLEwcReFpdXqfmJ2O0VvhfC3\naTP40XSeOpdHQRwwT4AAn+ddRdfFxetsoFwpOk/8/ysONe+AET6XrgMrWNxc3jDb\nHApOi6Y0lTSfLhEar2M5iD4V2g==\n-----END PRIVATE KEY-----\n",
+  "client_email": "taxnotecloud@api-5043924228936177368-351012.iam.gserviceaccount.com",
+  "client_id": "100867776827890168016",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://accounts.google.com/o/oauth2/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/taxnotecloud%40api-5043924228936177368-351012.iam.gserviceaccount.com"
+}
