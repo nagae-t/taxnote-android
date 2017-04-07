@@ -15,8 +15,7 @@ import com.google.api.services.androidpublisher.model.SubscriptionPurchase;
 
 import java.io.IOException;
 import java.io.InputStream;
-
-import static java.util.Collections.singleton;
+import java.util.Collections;
 
 // AndroidPublisher.Purchases.Subscription
 
@@ -39,7 +38,9 @@ public class TNGoogleApiClient {
         Log.v("TEST", "Start getSubscription subscriptionId: " + subscriptionId
                 + ", purchaseToken: " + purchaseToken);
         if (mPublisher == null) {
+
             JsonFactory jsonFactory = JacksonFactory.getDefaultInstance();
+//            HttpTransport httpTransport = new NetHttpTransport.Builder().build();
             try {
                 HttpTransport httpTransport = GoogleNetHttpTransport.newTrustedTransport();
                 InputStream inputStream = mContext.getResources()
@@ -47,15 +48,19 @@ public class TNGoogleApiClient {
 
                 GoogleCredential credential = GoogleCredential.fromStream(
                         inputStream, httpTransport, jsonFactory);
-                credential.createScoped(singleton(AndroidPublisherScopes.ANDROIDPUBLISHER));
+                credential.createScoped(Collections.singleton(AndroidPublisherScopes.ANDROIDPUBLISHER));
 
-                mPublisher = new AndroidPublisher.Builder(
-                        httpTransport, jsonFactory, credential)
-                        .setApplicationName("taxnote")
-                        .build();
+                if (credential != null) {
+                    mPublisher = new AndroidPublisher.Builder(
+                            httpTransport, jsonFactory, credential)
+                            .setApplicationName("taxnote")
+                            .build();
+                }
             } catch (Exception e) {
                 Log.e("ERROR", "TNGoogleApiClient init : " + e.getLocalizedMessage());
             }
+
+            if (mPublisher == null) return null;
         }
 
         String packageName = mContext.getPackageName();

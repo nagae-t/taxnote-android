@@ -128,14 +128,14 @@ public class MainActivity extends DefaultCommonActivity {
             entryDm.updateNeedSave(entry.id, true);
         }*/
         // debug
-//        new Thread(new Runnable() {
-//            @Override
-//            public void run() {
-//                TNGoogleApiClient apiClient = new TNGoogleApiClient(getApplicationContext());
-//                String purchaseToken = "aaaa";
-//                apiClient.getSubscription(UpgradeManger.SKU_TAXNOTE_PLUS_ID1, purchaseToken);
-//            }
-//        }).start();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                TNGoogleApiClient apiClient = new TNGoogleApiClient(getApplicationContext());
+                String purchaseToken = "bhpkfeamlnboobeklgdlopli.AO-J1OzoDNw4yVo7xAHceh6GH2ddxQEcJSks9_wQ1HvTAMgwSqe6kaGcK5DToF0CvBnEn5dXE52NMJ20tBBYh2R32ptD0DsgamHjmRLa5zP2IHOJXTWox-D3IgrWeENTb3x1dqIi3FjY";
+                apiClient.getSubscription(UpgradeManger.SKU_TAXNOTE_PLUS_ID1, purchaseToken);
+            }
+        }).start();
 
     }
 
