@@ -18,6 +18,8 @@ public class SharedPreferencesManager {
     private static final String EXPORT_RANGE_BEGIN_DATE         = "EXPORT_RANGE_BEGIN_DATE";
     private static final String EXPORT_RANGE_END_DATE           = "EXPORT_RANGE_END_DATE";
     private static final String TAXNOTE_PLUS_PURCHASE_TIME      = "TAXNOTE_PLUS_PURCHASE_TIME";
+    private static final String TAXNOTE_PLUS_EXPIRY_TIME        = "TAXNOTE_PLUS_EXPIRY_TIME";
+    private static final String TAXNOTE_CLOUD_EXPIRY_TIME       = "TAXNOTE_CLOUD_EXPIRY_TIME";
     private static final String HELP_FIRST_LAUNCH_KEY           = "HELP_FIRST_LAUNCH_KEY";
     private static final String HELP_SELECT_SUMMARY_KEY         = "HELP_SELECT_SUMMARY_KEY";
     private static final String HELP_SELECT_REGISTER_KEY        = "HELP_SELECT_REGISTER_KEY";
@@ -235,6 +237,22 @@ public class SharedPreferencesManager {
 
     public static long getTaxnotePlusPurchaseTime(Context context) {
         return getSharedPreferences(context).getLong(TAXNOTE_PLUS_PURCHASE_TIME, 0);
+    }
+
+    public static void saveTaxnotePlusExpiryTime(Context context, long expiryTime) {
+        getSharedPreferences(context).edit().putLong(TAXNOTE_PLUS_EXPIRY_TIME, expiryTime).apply();
+    }
+
+    public static long getTaxnotePlusExpiryTime(Context context) {
+        return getSharedPreferences(context).getLong(TAXNOTE_PLUS_EXPIRY_TIME, 0);
+    }
+
+    public static void saveTaxnoteCloudExpiryTime(Context context, long expiryTime) {
+        getSharedPreferences(context).edit().putLong(TAXNOTE_CLOUD_EXPIRY_TIME, expiryTime).apply();
+    }
+
+    public static long getTaxnoteCloudExpiryTime(Context context) {
+        return getSharedPreferences(context).getLong(TAXNOTE_CLOUD_EXPIRY_TIME, 0);
     }
 
 
