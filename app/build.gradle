@@ -66,6 +66,10 @@ dependencies {
     apt 'com.google.dagger:dagger-compiler:2.9'
     apt 'com.android.databinding:compiler:2.3.0'
 
+    // Google Api Client
+    compile 'com.google.apis:google-api-services-androidpublisher:v2-rev42-1.22.0'
+    compile 'com.google.api-client:google-api-client:1.22.0'
+    compile 'com.google.api-client:google-api-client-gson:1.22.0'
 
     compile project(':libraries:apps-calculator')
 
