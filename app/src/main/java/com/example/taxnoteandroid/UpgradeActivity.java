@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
@@ -49,11 +50,9 @@ public class UpgradeActivity extends DefaultCommonActivity {
     private IabHelper mBillingHelper;
     private TNApiUser mApiUser;
     private TNApiModel mApiModel;
+    private TNGoogleApiClient tnGoogleApi;
 
-    private TNGoogleApiClient tnApiClient;
-
-    private boolean isTNCloudActive = false;
-
+    private ProgressDialog mLoadingProgress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,7 +61,13 @@ public class UpgradeActivity extends DefaultCommonActivity {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_upgrade);
         mApiUser = new TNApiUser(this);
         mApiModel = new TNApiModel(this);
-        tnApiClient = new TNGoogleApiClient(this);
+        tnGoogleApi = new TNGoogleApiClient(this);
+
+        mLoadingProgress = new ProgressDialog(this);
+        mLoadingProgress.setMessage(getString(R.string.loading));
+        mLoadingProgress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        mLoadingProgress.setCancelable(false);
+
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
 
@@ -128,39 +133,18 @@ public class UpgradeActivity extends DefaultCommonActivity {
 
             if (result.isFailure()) return;
 
-            // Previous Item
+            // Restore purchase
             Purchase purchasePlus = inventory.getPurchase(UpgradeManger.SKU_TAXNOTE_PLUS_ID);
+            if (purchasePlus != null)
+                new CheckBillingAsyncTask(false).execute(purchasePlus);
+
+            Purchase purchasePlus1 = inventory.getPurchase(UpgradeManger.SKU_TAXNOTE_PLUS_ID1);
+            if (purchasePlus1 != null)
+                new CheckBillingAsyncTask(false).execute(purchasePlus1);
 
             Purchase purchaseCloud = inventory.getPurchase(UpgradeManger.SKU_TAXNOTE_CLOUD_ID);
-
-            // Restore purchase for Taxnote Plus
-            if (purchasePlus != null) {
-                SharedPreferencesManager.saveTaxnotePlusPurchaseTime(UpgradeActivity.this, purchasePlus.getPurchaseTime());
-                updateUpgradeStatus();
-            }
-
-            // Restore purchase for Taxnote Cloud
-            if (purchaseCloud != null) {
-                //@@ debug
-                isTNCloudActive = true;
-
-                //@@ save taxnote cloud purchase time ?
-//                SharedPreferencesManager.saveTaxnotePlusPurchaseTime(UpgradeActivity.this, purchaseCloud.getPurchaseTime());
-                updateUpgradeStatus();
-            }
-
-            // New Item
-            Purchase purchasePlus1 = inventory.getPurchase(UpgradeManger.SKU_TAXNOTE_PLUS_ID1);
-
-            // Restore purchase
-            if (purchasePlus1 != null) {
-                SharedPreferencesManager.saveTaxnotePlusPurchaseTime(UpgradeActivity.this, purchasePlus1.getPurchaseTime());
-                updateUpgradeStatus();
-
-                // debug get subscription
-                testGetSubscription(UpgradeManger.SKU_TAXNOTE_PLUS_ID1, purchasePlus1.getToken());
-
-            }
+            if (purchaseCloud != null)
+                new CheckBillingAsyncTask(false).execute(purchaseCloud);
         }
     };
 
@@ -171,8 +155,11 @@ public class UpgradeActivity extends DefaultCommonActivity {
             if (result.isFailure()) return;
             if (purchase == null) return;
 
-            String purchaseSkuId = purchase.getSku();
+            // check billing
+            new CheckBillingAsyncTask(true).execute(purchase);
 
+
+            /*
             // Taxnote Plus
             if (purchaseSkuId.equals(UpgradeManger.SKU_TAXNOTE_PLUS_ID1)) {
 
@@ -181,17 +168,13 @@ public class UpgradeActivity extends DefaultCommonActivity {
                 showUpgradeToTaxnotePlusSuccessDialog();
                 updateUpgradeStatus();
 
-                // debug get subscription
-                testGetSubscription(UpgradeManger.SKU_TAXNOTE_PLUS_ID1, purchase.getToken());
-
 
                 // Taxnote Cloud
             } else if (purchaseSkuId.equals(UpgradeManger.SKU_TAXNOTE_CLOUD_ID)) {
                 // showUpgradeToTaxnoteCloudSuccessDialog();
 
-                isTNCloudActive = true;
                 updateUpgradeStatus();
-            }
+            }*/
         }
     };
 
@@ -255,10 +238,11 @@ public class UpgradeActivity extends DefaultCommonActivity {
 
         if (UpgradeManger.taxnotePlusIsActive(this)) {
             binding.upgraded.setText(getResources().getString(R.string.upgrade_is_active));
+            binding.upgradeToPlus.setOnClickListener(null);
         }
 
         // taxnote cloud is active
-        if (isTNCloudActive) {
+        if (UpgradeManger.taxnoteCloudIsActive(this)) {
             binding.purchaseInfoLayout.setVisibility(View.VISIBLE);
             binding.cloudRightTv.setText(R.string.cloud);
             binding.cloudLeftTv.setText(R.string.cloud_register);
@@ -378,7 +362,7 @@ public class UpgradeActivity extends DefaultCommonActivity {
     };
 
     private void checkCloudPurchaseAction() {
-        if (!isTNCloudActive) {
+        if (!UpgradeManger.taxnoteCloudIsActive(this)) {
             upgradeToTaxnoteCloud();
         } else {
             if (mApiUser.isLoggingIn()) {
@@ -397,10 +381,12 @@ public class UpgradeActivity extends DefaultCommonActivity {
     }
 
     private void upgradeToTaxnoteCloud() {
-        //@@ Taxnoteプラス購入済みか確認してダイアログを表示する
-
-
         if (!mBillingHelper.subscriptionsSupported()) return;
+
+        //@@ Taxnoteプラス購入済みか確認してダイアログを表示する
+        if (!UpgradeManger.taxnotePlusIsActive(this)) {
+
+        }
 
         try {
             mBillingHelper.launchSubscriptionPurchaseFlow(UpgradeActivity.this,
@@ -448,16 +434,12 @@ public class UpgradeActivity extends DefaultCommonActivity {
      */
     private void sendSignOut() {
         // Progress dialog
-        final ProgressDialog dialog = new ProgressDialog(this);
-        dialog.setMessage(getString(R.string.loading));
-        dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        dialog.setCancelable(false);
-        dialog.show();
+        mLoadingProgress.show();
 
         if (!TNApi.isNetworkConnected(this)) {
             mApiUser.clearAccountData(mApiModel);
             binding.cloudLoginLayout.setVisibility(View.VISIBLE);
-            dialog.dismiss();
+            mLoadingProgress.dismiss();
             return;
         }
 
@@ -469,7 +451,7 @@ public class UpgradeActivity extends DefaultCommonActivity {
                     Log.e("ERROR", "sendSignOut response code: " + response.code()
                             + ", message: " + response.message());
                 }
-                dialog.dismiss();
+                mLoadingProgress.dismiss();
 
                 // 保存しているtokenを削除
                 mApiUser.clearAccountData(mApiModel);
@@ -480,7 +462,7 @@ public class UpgradeActivity extends DefaultCommonActivity {
 
             @Override
             public void onSuccess(Response response, String content) {
-                dialog.dismiss();
+                mLoadingProgress.dismiss();
 
                 mApiUser = new TNApiUser(getApplicationContext());
 //                binding.cloudLoginLayout.setVisibility(View.VISIBLE);
@@ -523,11 +505,7 @@ public class UpgradeActivity extends DefaultCommonActivity {
         }
 
         // Progress dialog
-        final ProgressDialog dialog = new ProgressDialog(this);
-        dialog.setMessage(getString(R.string.loading));
-        dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        dialog.setCancelable(false);
-        dialog.show();
+        mLoadingProgress.show();
 
         mApiUser.deleteSubscriptionAccount(mApiModel, new AsyncOkHttpClient.Callback() {
             @Override
@@ -537,7 +515,7 @@ public class UpgradeActivity extends DefaultCommonActivity {
                     Log.e("ERROR", "sendSignOut response code: " + response.code()
                             + ", message: " + response.message());
                 }
-                dialog.dismiss();
+                mLoadingProgress.dismiss();
 
 //                binding.cloudLoginLayout.setVisibility(View.VISIBLE);
 //                BroadcastUtil.sendAfterLogin(UpgradeActivity.this, false);
@@ -545,7 +523,7 @@ public class UpgradeActivity extends DefaultCommonActivity {
 
             @Override
             public void onSuccess(Response response, String content) {
-                dialog.dismiss();
+                mLoadingProgress.dismiss();
 
                 mApiUser = new TNApiUser(getApplicationContext());
                 binding.cloudLoginLayout.setVisibility(View.VISIBLE);
@@ -555,11 +533,55 @@ public class UpgradeActivity extends DefaultCommonActivity {
     }
 
     private void testGetSubscription(final String skuId, final String purchaseToken) {
+
         new Thread(new Runnable() {
             @Override
             public void run() {
-                tnApiClient.getSubscription(skuId, purchaseToken);
+                tnGoogleApi.getSubscription(skuId, purchaseToken);
             }
         }).start();
+    }
+
+    private class CheckBillingAsyncTask extends AsyncTask<Purchase, Void, SubscriptionPurchase> {
+        private String subscriptionId;
+        private final boolean isNewPurchased;
+
+        private CheckBillingAsyncTask(boolean isNewPurchased) {
+            this.isNewPurchased = isNewPurchased;
+        }
+
+        @Override
+        protected SubscriptionPurchase doInBackground(Purchase... purchases) {
+            if (tnGoogleApi == null || subscriptionId == null) cancel(true);
+
+            Purchase purchase = purchases[0];
+            subscriptionId =  purchase.getSku();
+            SubscriptionPurchase subPurchase = tnGoogleApi.getSubscription(subscriptionId, purchase.getToken());
+            return subPurchase;
+        }
+
+        @Override
+        protected void onPostExecute(SubscriptionPurchase result) {
+            if (result == null || subscriptionId == null) return;
+
+            switch (subscriptionId) {
+                case UpgradeManger.SKU_TAXNOTE_PLUS_ID:
+                case UpgradeManger.SKU_TAXNOTE_PLUS_ID1:
+                    SharedPreferencesManager.saveTaxnotePlusExpiryTime(
+                            getApplicationContext(), result.getExpiryTimeMillis());
+
+                    if (isNewPurchased)
+                        showUpgradeToTaxnotePlusSuccessDialog();
+                    break;
+                case UpgradeManger.SKU_TAXNOTE_CLOUD_ID:
+                    SharedPreferencesManager.saveTaxnoteCloudExpiryTime(
+                            getApplicationContext(), result.getExpiryTimeMillis());
+                    if (isNewPurchased)
+                        // showUpgradeToTaxnoteCloudSuccessDialog();
+                    break;
+            }
+
+            updateUpgradeStatus();
+        }
     }
 }
