@@ -40,9 +40,6 @@ import static com.example.taxnoteandroid.TaxnoteConsts.MIXPANEL_TOKEN;
 public class UpgradeActivity extends DefaultCommonActivity {
 
     private ActivityUpgradeBinding binding;
-//    private static final String LICENSE_KEY_OF_GOOGLE_PLAY = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAm+14FzQyLcAO7X2zwFDWXwHDuzN8RA60R71JouG5TO6la3xh0A7uWIQ4Y2k1kvqa/fHRAOble7TxIDsy11GsLjD/2sI+e4p4pE5vDKeY3ARBadcQI7iDc/VVnkzCSrZeoGTYinm+99diGn71cGIlF+7ISnh98Kss1zguKLlY+tCkaDDCe+moghLYTvqVuJg27ShVfxxPpWr4gwMusdSMcbJLR6S4ajeWbEtacGAdEJnzQfuAH6RMnt/ggZa4CFRVbNnJA6Eft/CCQL7GFBwBYnkMfG+Jdr+66BcTHbtPP8cE5WdmjGzDje+iy5HGYyIfqiDTdBs178zgWKUS8TM9QwIDAQAB";
-//    private static final String TAXNOTE_PLUS_ID = "taxnote.plus.sub";
-//    private static final String TAXNOTE_PLUS_ID1 = "taxnote.plus.sub1";
     private static final int REQUEST_CODE_PURCHASE_PREMIUM = 0;
     private static final int REQUEST_CODE_CLOUD_LOGIN = 2;
     private static final int REQUEST_CODE_CLOUD_REGISTER = 3;
@@ -517,8 +514,6 @@ public class UpgradeActivity extends DefaultCommonActivity {
                 }
                 mLoadingProgress.dismiss();
 
-//                binding.cloudLoginLayout.setVisibility(View.VISIBLE);
-//                BroadcastUtil.sendAfterLogin(UpgradeActivity.this, false);
             }
 
             @Override
@@ -530,16 +525,6 @@ public class UpgradeActivity extends DefaultCommonActivity {
                 BroadcastUtil.sendAfterLogin(UpgradeActivity.this, false);
             }
         });
-    }
-
-    private void testGetSubscription(final String skuId, final String purchaseToken) {
-
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                tnGoogleApi.getSubscription(skuId, purchaseToken);
-            }
-        }).start();
     }
 
     private class CheckBillingAsyncTask extends AsyncTask<Purchase, Void, SubscriptionPurchase> {
@@ -562,6 +547,8 @@ public class UpgradeActivity extends DefaultCommonActivity {
 
         @Override
         protected void onPostExecute(SubscriptionPurchase result) {
+            if (mLoadingProgress.isShowing()) mLoadingProgress.dismiss();
+
             if (result == null || subscriptionId == null) return;
 
             switch (subscriptionId) {
