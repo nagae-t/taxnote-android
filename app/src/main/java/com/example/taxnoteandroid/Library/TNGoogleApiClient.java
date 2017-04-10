@@ -32,8 +32,6 @@ public class TNGoogleApiClient {
     }
 
     public SubscriptionPurchase getSubscription(String subscriptionId, String purchaseToken) {
-        Log.v("TEST", "Start getSubscription subscriptionId: " + subscriptionId
-                + ", purchaseToken: " + purchaseToken);
         if (mPublisher == null) {
 
             JsonFactory jsonFactory = JacksonFactory.getDefaultInstance();
@@ -69,12 +67,11 @@ public class TNGoogleApiClient {
             Log.e("ERROR", "getSubscription : " + e.getLocalizedMessage());
         }
         if (subs != null) {
-            // subscriptionId
-            Log.v("TEST", "getSubs: subscriptionId: " + subscriptionId);
-            Log.v("TEST", "getSubs: autoRenewing: " + subs.getAutoRenewing());
-            Log.v("TEST", "getSubs: paymentState: " + subs.getPaymentState());
-            Log.v("TEST", "getSubs: startTimeMillis: " + subs.getStartTimeMillis());
-            Log.v("TEST", "getSubs: expiryTimeMillis: " + subs.getExpiryTimeMillis());
+//            Log.v("TEST", "getSubs: subscriptionId: " + subscriptionId);
+//            Log.v("TEST", "getSubs: autoRenewing: " + subs.getAutoRenewing());
+//            Log.v("TEST", "getSubs: paymentState: " + subs.getPaymentState());
+//            Log.v("TEST", "getSubs: startTimeMillis: " + subs.getStartTimeMillis());
+//            Log.v("TEST", "getSubs: expiryTimeMillis: " + subs.getExpiryTimeMillis());
             return subs;
         }
         return null;
