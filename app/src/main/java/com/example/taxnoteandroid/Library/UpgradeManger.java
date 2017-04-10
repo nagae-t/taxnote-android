@@ -4,10 +4,6 @@ import android.content.Context;
 
 import com.example.taxnoteandroid.dataManager.SharedPreferencesManager;
 
-import java.util.Calendar;
-
-//import com.anjlab.android.iab.v3.TransactionDetails;
-
 /**
  * Created by umemotonon on 2017/01/29.
  */
@@ -20,25 +16,16 @@ public class UpgradeManger {
     public static final String SKU_TAXNOTE_CLOUD_ID = "taxnote.cloud.sub";
 
     public static boolean taxnotePlusIsActive(Context context) {
-
-        // Get saved purchaseTime
-        long purchaseTime = SharedPreferencesManager.getTaxnotePlusPurchaseTime(context);
-
-        // Get expireTime
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTimeInMillis(purchaseTime);
-
-        calendar.add(Calendar.YEAR, 1);
-
-        long expireTime = calendar.getTimeInMillis();
+        long expireTime = SharedPreferencesManager.getTaxnotePlusExpiryTime(context);
         long now = System.currentTimeMillis();
 
         return expireTime > now;
     }
 
-//    public static void updateTaxnotePlusSubscriptionStatus(Context context, TransactionDetails details) {
-//
-//        Date purchaseTime = details.purchaseInfo.purchaseData.purchaseTime;
-//        SharedPreferencesManager.saveTaxnotePlusPurchaseTime(context,purchaseTime.getTime());
-//    }
+    public static boolean taxnoteCloudIsActive(Context context) {
+        long expireTime = SharedPreferencesManager.getTaxnoteCloudExpiryTime(context);
+        long now = System.currentTimeMillis();
+
+        return expireTime > now;
+    }
 }
