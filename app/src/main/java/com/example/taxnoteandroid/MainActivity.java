@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.databinding.DataBindingUtil;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.internal.BottomNavigationItemView;
@@ -20,11 +21,18 @@ import android.view.MenuItem;
 
 import com.example.taxnoteandroid.Library.DialogManager;
 import com.example.taxnoteandroid.Library.TNAppNotification;
+import com.example.taxnoteandroid.Library.TNGoogleApiClient;
+import com.example.taxnoteandroid.Library.UpgradeManger;
+import com.example.taxnoteandroid.Library.billing.IabHelper;
+import com.example.taxnoteandroid.Library.billing.IabResult;
+import com.example.taxnoteandroid.Library.billing.Inventory;
+import com.example.taxnoteandroid.Library.billing.Purchase;
 import com.example.taxnoteandroid.dataManager.DefaultDataInstaller;
 import com.example.taxnoteandroid.dataManager.EntryDataManager;
 import com.example.taxnoteandroid.dataManager.SharedPreferencesManager;
 import com.example.taxnoteandroid.databinding.ActivityMainBinding;
 import com.example.taxnoteandroid.entryTab.EntryTabFragment;
+import com.google.api.services.androidpublisher.model.SubscriptionPurchase;
 import com.helpshift.support.Support;
 import com.kobakei.ratethisapp.RateThisApp;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
@@ -40,6 +48,9 @@ public class MainActivity extends DefaultCommonActivity {
     private TabPagerAdapter mTabPagerAdapter;
     private int mBottomNaviSelected = 0;
     private boolean mGraphMenuIsExpense = true;
+
+    private IabHelper mBillingHelper;
+    private TNGoogleApiClient tnGoogleApi;
 
     public static final String BROADCAST_REPORT_RELOAD
             = "broadcast_main_report_reload";
@@ -77,6 +88,28 @@ public class MainActivity extends DefaultCommonActivity {
         }
     };
 
+    /**
+     * Check in app billing finished listener
+     */
+    private IabHelper.QueryInventoryFinishedListener mInventoryListener = new IabHelper.QueryInventoryFinishedListener() {
+
+        public void onQueryInventoryFinished(IabResult result, Inventory inventory) {
+            if (result.isFailure()) return;
+
+            Purchase purchasePlus = inventory.getPurchase(UpgradeManger.SKU_TAXNOTE_PLUS_ID);
+            if (purchasePlus != null)
+                new CheckBillingAsyncTask().execute(purchasePlus);
+
+            Purchase purchasePlus1 = inventory.getPurchase(UpgradeManger.SKU_TAXNOTE_PLUS_ID1);
+            if (purchasePlus1 != null)
+                new CheckBillingAsyncTask().execute(purchasePlus1);
+
+            Purchase purchaseCloud = inventory.getPurchase(UpgradeManger.SKU_TAXNOTE_CLOUD_ID);
+            if (purchaseCloud != null)
+                new CheckBillingAsyncTask().execute(purchaseCloud);
+        }
+    };
+
     @Override
     protected void onStart() {
         super.onStart();
@@ -100,6 +133,32 @@ public class MainActivity extends DefaultCommonActivity {
         setBottomNavigation();
 
         TNAppNotification.cancel(this, TNAppNotification.DAILY_ALERT_INPUT_FORGET_ID);
+
+        checkInAppBilling();
+
+        TNAppNotification.cancel(this, TNAppNotification.DAILY_ALERT_INPUT_FORGET_ID);
+    }
+
+    private void checkInAppBilling() {
+        tnGoogleApi = new TNGoogleApiClient(this);
+        mBillingHelper = new IabHelper(this, UpgradeManger.GOOGLE_PLAY_LICENSE_KEY);
+        try {
+            mBillingHelper.startSetup(new IabHelper.OnIabSetupFinishedListener() {
+
+                public void onIabSetupFinished(IabResult result) {
+
+                    if (result.isFailure()) return;
+
+                    try {
+                        mBillingHelper.queryInventoryAsync(mInventoryListener);
+                    } catch (IabHelper.IabAsyncInProgressException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+        } catch (IabHelper.IabAsyncInProgressException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -466,5 +525,35 @@ public class MainActivity extends DefaultCommonActivity {
         unregisterReceiver(mRestartAppReceiver);
         unregisterReceiver(mSwitchGraphExpenseReceiver);
         super.onDestroy();
+    }
+
+    private class CheckBillingAsyncTask extends AsyncTask<Purchase, Void, SubscriptionPurchase> {
+        private String subscriptionId;
+
+        @Override
+        protected SubscriptionPurchase doInBackground(Purchase... purchases) {
+            if (tnGoogleApi == null) cancel(true);
+
+            Purchase purchase = purchases[0];
+            subscriptionId = purchase.getSku();
+            SubscriptionPurchase subPurchase = tnGoogleApi.getSubscription(subscriptionId, purchase.getToken());
+            return subPurchase;
+        }
+
+        @Override
+        protected void onPostExecute(SubscriptionPurchase result) {
+            if (result == null || subscriptionId == null) return;
+            switch (subscriptionId) {
+                case UpgradeManger.SKU_TAXNOTE_PLUS_ID:
+                case UpgradeManger.SKU_TAXNOTE_PLUS_ID1:
+                    SharedPreferencesManager.saveTaxnotePlusExpiryTime(
+                            getApplicationContext(), result.getExpiryTimeMillis());
+                    break;
+                case UpgradeManger.SKU_TAXNOTE_CLOUD_ID:
+                    SharedPreferencesManager.saveTaxnoteCloudExpiryTime(
+                            getApplicationContext(), result.getExpiryTimeMillis());
+                    break;
+            }
+        }
     }
 }
