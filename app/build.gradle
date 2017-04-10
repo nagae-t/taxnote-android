@@ -48,7 +48,7 @@ android {
             multiDexEnabled true
 
             debuggable true
-//            applicationIdSuffix ".debug"
+            applicationIdSuffix ".debug"
 
             buildConfigField "String", "TAXNOTE_API_URI", "\"https://taxnote-staging.herokuapp.com/api\""
         }

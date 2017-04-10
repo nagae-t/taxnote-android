@@ -5,8 +5,8 @@ import android.util.Log;
 
 import com.example.taxnoteandroid.R;
 import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
-import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
 import com.google.api.client.http.HttpTransport;
+import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.services.androidpublisher.AndroidPublisher;
@@ -40,22 +40,19 @@ public class TNGoogleApiClient {
         if (mPublisher == null) {
 
             JsonFactory jsonFactory = JacksonFactory.getDefaultInstance();
-//            HttpTransport httpTransport = new NetHttpTransport.Builder().build();
+            HttpTransport httpTransport = new NetHttpTransport.Builder().build();
             try {
-                HttpTransport httpTransport = GoogleNetHttpTransport.newTrustedTransport();
                 InputStream inputStream = mContext.getResources()
                         .openRawResource(R.raw.taxnote_google_api_client);
 
                 GoogleCredential credential = GoogleCredential.fromStream(
                         inputStream, httpTransport, jsonFactory);
-                credential.createScoped(Collections.singleton(AndroidPublisherScopes.ANDROIDPUBLISHER));
+                credential = credential.createScoped(Collections.singleton(AndroidPublisherScopes.ANDROIDPUBLISHER));
 
-                if (credential != null) {
-                    mPublisher = new AndroidPublisher.Builder(
-                            httpTransport, jsonFactory, credential)
-                            .setApplicationName("taxnote")
-                            .build();
-                }
+                mPublisher = new AndroidPublisher.Builder(
+                        httpTransport, jsonFactory, credential)
+                        .setApplicationName("taxnote")
+                        .build();
             } catch (Exception e) {
                 Log.e("ERROR", "TNGoogleApiClient init : " + e.getLocalizedMessage());
             }
