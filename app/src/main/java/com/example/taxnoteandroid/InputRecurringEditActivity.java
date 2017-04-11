@@ -9,6 +9,7 @@ import android.view.MenuItem;
 
 import com.example.taxnoteandroid.dataManager.RecurringDataManager;
 import com.example.taxnoteandroid.databinding.ActivityInputRecurringEditBinding;
+import com.example.taxnoteandroid.model.Recurring;
 
 import java.util.TimeZone;
 
@@ -43,9 +44,6 @@ public class InputRecurringEditActivity extends DefaultCommonActivity {
 
         mRecurringDm = new RecurringDataManager(this);
         mRecurringDates = mRecurringDm.getDesignatedDateList();
-//        for (String date : mRecurringDates) {
-//            Log.v("TEST", "date: " + date);
-//        }
 
         boolean isExpense = getIntent().getBooleanExtra(KEY_IS_EXPENSE, false);
         setTitle(R.string.Income);
@@ -53,6 +51,9 @@ public class InputRecurringEditActivity extends DefaultCommonActivity {
             setTitle(R.string.Expense);
         }
 
+        Recurring _rec = new Recurring();
+        _rec.isExpense = isExpense;
+        binding.setRecurring(_rec);
 
     }
 

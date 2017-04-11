@@ -8,6 +8,13 @@
     android:scrollbarStyle="insideOverlay"
     android:fadingEdge="none">
     -->
+
+    <data>
+        <variable
+            name="recurring"
+            type="com.example.taxnoteandroid.model.Recurring" />
+    </data>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -45,26 +52,68 @@
             android:textSize="@dimen/font_size_standard"
             android:clickable="true" />
 
+        <TextView
+            style="@style/section_header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@{recurring.isExpense ? @string/entry_tab_fragment_account : @string/entry_tab_fragment_account2}" />
+        <TextView
+            android:background="@drawable/selector_background_colors"
+            android:id="@+id/account_select"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:textSize="@dimen/font_size_standard"
+            android:clickable="true"
+            android:text="@{recurring.account.name}"/>
 
         <TextView
             style="@style/section_header"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/Timezone" />
-
+            android:text="@string/reason_item" />
+        <TextView
+            android:background="@drawable/selector_background_colors"
+            android:id="@+id/reason_select"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:textSize="@dimen/font_size_standard"
+            android:clickable="true"
+            android:text="@{recurring.reason.name}"/>
 
         <TextView
             style="@style/section_header"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/Timezone" />
-
+            android:text="@string/Details" />
+        <TextView
+            android:background="@drawable/selector_background_colors"
+            android:id="@+id/memo_select"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:textSize="@dimen/font_size_standard"
+            android:clickable="true"
+            android:text="@{recurring.memo}"/>
 
         <TextView
             style="@style/section_header"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/Timezone" />
+            android:text="@string/Price" />
+        <TextView
+            android:background="@drawable/selector_background_colors"
+            android:id="@+id/price_select"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:textSize="@dimen/font_size_standard"
+            android:clickable="true" />
 
     </LinearLayout>
     <!--</ScrollView>-->
