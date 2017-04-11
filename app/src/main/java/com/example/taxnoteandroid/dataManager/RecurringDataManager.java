@@ -4,12 +4,12 @@ import android.content.Context;
 
 import com.example.taxnoteandroid.Library.taxnote.TNApiModel;
 import com.example.taxnoteandroid.Library.taxnote.TNApiUser;
+import com.example.taxnoteandroid.R;
 import com.example.taxnoteandroid.TaxnoteApp;
 import com.example.taxnoteandroid.model.OrmaDatabase;
 import com.example.taxnoteandroid.model.Recurring;
 import com.example.taxnoteandroid.model.Recurring_Schema;
 import com.example.taxnoteandroid.model.Recurring_Updater;
-import com.example.taxnoteandroid.model.Summary;
 
 import java.util.List;
 
@@ -143,5 +143,29 @@ public class RecurringDataManager {
 
     public int delete(String uuid) {
         return ormaDatabase.deleteFromRecurring().uuidEq(uuid).execute();
+    }
+
+
+    //--------------------------------------------------------------//
+    //    -- Other --
+    //--------------------------------------------------------------//
+
+    /**
+     * 指定日一覧を取得する
+     */
+    public String[] getDesignatedDateList() {
+        String[] dayOfMonthList = mContext.getResources().getStringArray(R.array.day_of_month_list);
+        String[] dateList = mContext.getResources().getStringArray(R.array.close_date_list);
+        String[] result = new String[dayOfMonthList.length + dateList.length];
+        int count = 0;
+        for (String day : dayOfMonthList) {
+            result[count] = day;
+            count++;
+        }
+        for (String day : dateList) {
+            result[count] = day;
+            count++;
+        }
+        return result;
     }
 }

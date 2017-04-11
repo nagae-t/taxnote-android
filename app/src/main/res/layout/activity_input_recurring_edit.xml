@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+<!--
+<ScrollView
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:scrollbarStyle="insideOverlay"
+    android:fadingEdge="none">
+    -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        style="@style/font_style_standard"
+        tools:context=".InputRecurringEditActivity">
+
+        <TextView
+            style="@style/section_header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/Timezone" />
+        <TextView
+            android:background="@drawable/selector_background_colors"
+            android:id="@+id/timezone_select"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:textSize="@dimen/font_size_standard"
+            android:clickable="true" />
+
+        <TextView
+            style="@style/section_header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/entry_tab_fragment_date" />
+        <TextView
+            android:background="@drawable/selector_background_colors"
+            android:id="@+id/date_select"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:textSize="@dimen/font_size_standard"
+            android:clickable="true" />
+
+
+        <TextView
+            style="@style/section_header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/Timezone" />
+
+
+        <TextView
+            style="@style/section_header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/Timezone" />
+
+
+        <TextView
+            style="@style/section_header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/Timezone" />
+
+    </LinearLayout>
+    <!--</ScrollView>-->
+</layout>
