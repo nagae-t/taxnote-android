@@ -101,6 +101,9 @@
         <activity android:name=".InputRecurringListActivity"
             android:label="@string/input_recurring_title"
             android:screenOrientation="portrait" />
+        <activity android:name=".InputRecurringEditActivity"
+            android:screenOrientation="portrait" />
+
         <service android:name=".Library.DailyAlertInputForgetService" />
 
         <receiver android:name=".Library.OnBootReceiver"

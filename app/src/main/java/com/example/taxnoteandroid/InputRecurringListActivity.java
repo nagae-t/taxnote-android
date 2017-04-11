@@ -51,8 +51,10 @@ public class InputRecurringListActivity extends DefaultCommonActivity {
                 finish();
                 return true;
             case R.id.action_add_expense:
+                InputRecurringEditActivity.start(this, true);
                 break;
             case R.id.action_add_income:
+                InputRecurringEditActivity.start(this, false);
                 break;
         }
         return super.onOptionsItemSelected(item);
