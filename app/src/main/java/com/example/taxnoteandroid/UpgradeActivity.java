@@ -153,6 +153,7 @@ public class UpgradeActivity extends DefaultCommonActivity {
             if (purchase == null) return;
 
             // check billing
+            mLoadingProgress.show();
             new CheckBillingAsyncTask(true).execute(purchase);
 
 
@@ -537,7 +538,7 @@ public class UpgradeActivity extends DefaultCommonActivity {
 
         @Override
         protected SubscriptionPurchase doInBackground(Purchase... purchases) {
-            if (tnGoogleApi == null || subscriptionId == null) cancel(true);
+            if (tnGoogleApi == null) cancel(true);
 
             Purchase purchase = purchases[0];
             subscriptionId =  purchase.getSku();

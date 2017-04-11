@@ -110,15 +110,15 @@ public class MainActivity extends DefaultCommonActivity {
 
             Purchase purchasePlus = inventory.getPurchase(UpgradeManger.SKU_TAXNOTE_PLUS_ID);
             if (purchasePlus != null)
-                new CheckBillingAsyncTask(UpgradeManger.SKU_TAXNOTE_PLUS_ID).execute(purchasePlus);
+                new CheckBillingAsyncTask().execute(purchasePlus);
 
             Purchase purchasePlus1 = inventory.getPurchase(UpgradeManger.SKU_TAXNOTE_PLUS_ID1);
             if (purchasePlus1 != null)
-                new CheckBillingAsyncTask(UpgradeManger.SKU_TAXNOTE_PLUS_ID1).execute(purchasePlus1);
+                new CheckBillingAsyncTask().execute(purchasePlus1);
 
             Purchase purchaseCloud = inventory.getPurchase(UpgradeManger.SKU_TAXNOTE_CLOUD_ID);
             if (purchaseCloud != null)
-                new CheckBillingAsyncTask(UpgradeManger.SKU_TAXNOTE_CLOUD_ID).execute(purchaseCloud);
+                new CheckBillingAsyncTask().execute(purchaseCloud);
         }
     };
 
@@ -609,17 +609,14 @@ public class MainActivity extends DefaultCommonActivity {
 
 
     private class CheckBillingAsyncTask extends AsyncTask<Purchase, Void, SubscriptionPurchase> {
-        private final String subscriptionId;
-
-        private CheckBillingAsyncTask(String subsId) {
-            this.subscriptionId = subsId;
-        }
+        private String subscriptionId;
 
         @Override
         protected SubscriptionPurchase doInBackground(Purchase... purchases) {
-            if (tnGoogleApi == null || subscriptionId == null) cancel(true);
+            if (tnGoogleApi == null) cancel(true);
 
             Purchase purchase = purchases[0];
+            subscriptionId = purchase.getSku();
             SubscriptionPurchase subPurchase = tnGoogleApi.getSubscription(subscriptionId, purchase.getToken());
             return subPurchase;
         }
@@ -627,7 +624,6 @@ public class MainActivity extends DefaultCommonActivity {
         @Override
         protected void onPostExecute(SubscriptionPurchase result) {
             if (result == null || subscriptionId == null) return;
-            Log.v("TEST", "save "+ subscriptionId + " expiry time  ");
             switch (subscriptionId) {
                 case UpgradeManger.SKU_TAXNOTE_PLUS_ID:
                 case UpgradeManger.SKU_TAXNOTE_PLUS_ID1:
