@@ -362,4 +362,6 @@
 
     <string name="network_not_connection">インターネットへの接続が確認できません。</string>
 
+    <string name="input_recurring_title">指定日に繰り返し入力</string>
+
 </resources>
