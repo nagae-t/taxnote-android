@@ -101,6 +101,14 @@ public class SettingsTabFragment extends Fragment {
     //--------------------------------------------------------------//
 
     private void setViews() {
+        // 指定日に繰り返し入力
+        binding.inputRecurringSettings.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                InputRecurringListActivity.start(getActivity());
+            }
+        });
+
         setUpgradeView();
         setMultipleProject();
         setDecimalSwitch();
