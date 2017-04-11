@@ -6,6 +6,7 @@ import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.LinearLayoutManager;
+import android.view.Menu;
 import android.view.MenuItem;
 
 import com.example.taxnoteandroid.databinding.ActivityEntryCommonBinding;
@@ -38,11 +39,21 @@ public class InputRecurringListActivity extends DefaultCommonActivity {
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_input_recurring, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
                 finish();
                 return true;
+            case R.id.action_add_expense:
+                break;
+            case R.id.action_add_income:
+                break;
         }
         return super.onOptionsItemSelected(item);
     }
