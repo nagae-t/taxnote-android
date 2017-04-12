@@ -97,8 +97,7 @@ public class RecurringRecyclerAdapter extends  RecyclerView.Adapter<BindingHolde
                 RowHistoryCellBinding cellBinding = (RowHistoryCellBinding) holder.binding;
 
                 // price
-                priceString = ValueConverter.formatPriceWithSymbol(
-                        mContext ,recurring.price, recurring.isExpense);
+                priceString = ValueConverter.formatPrice(mContext ,recurring.price);
                 cellBinding.price.setText(priceString);
                 cellBinding.price.setTextColor(priceColor);
 

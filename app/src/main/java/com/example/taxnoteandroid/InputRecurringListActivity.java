@@ -1,7 +1,9 @@
 package com.example.taxnoteandroid;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.databinding.DataBindingUtil;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -30,6 +32,16 @@ public class InputRecurringListActivity extends DefaultCommonActivity {
     private RecurringDataManager mRecurringDm;
     private RecurringRecyclerAdapter mRecyclerAdapter;
 
+    public static final String BROADCAST_RELOAD_DATA
+            = "broadcast_recurring_reload_data";
+
+    private final BroadcastReceiver mReloadDataReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            loadData();
+        }
+    };
+
     public static void start(Context context) {
         Intent intent = new Intent(context, InputRecurringListActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -39,6 +51,8 @@ public class InputRecurringListActivity extends DefaultCommonActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        registerReceiver(mReloadDataReceiver, new IntentFilter(BROADCAST_RELOAD_DATA));
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_entry_common);
         binding.entries.setLayoutManager(new LinearLayoutManager(this));
@@ -80,6 +94,12 @@ public class InputRecurringListActivity extends DefaultCommonActivity {
         }
         mRecyclerAdapter = new RecurringRecyclerAdapter(this);
         new RecurringDataTask().execute(0);
+    }
+
+    @Override
+    protected void onDestroy() {
+        unregisterReceiver(mReloadDataReceiver);
+        super.onDestroy();
     }
 
     private class RecurringDataTask extends AsyncTask<Integer, Integer, List<Recurring>> {
@@ -129,7 +149,8 @@ public class InputRecurringListActivity extends DefaultCommonActivity {
             mRecyclerAdapter.setOnItemClickListener(new RecurringRecyclerAdapter.OnItemClickListener() {
                 @Override
                 public void onItemClick(View view, int position, Recurring item) {
-
+                    if (item != null)
+                        InputRecurringEditActivity.start(getApplicationContext(), item.uuid);
                 }
             });
             binding.entries.setAdapter(mRecyclerAdapter);

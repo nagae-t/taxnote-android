@@ -13,6 +13,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 
+import com.example.taxnoteandroid.Library.BroadcastUtil;
 import com.example.taxnoteandroid.Library.DialogManager;
 import com.example.taxnoteandroid.Library.ValueConverter;
 import com.example.taxnoteandroid.dataManager.AccountDataManager;
@@ -82,9 +83,15 @@ public class InputRecurringEditActivity extends DefaultCommonActivity {
 
         mUuid = getIntent().getStringExtra(KEY_UUID);
         boolean isExpense;
-        if (mUuid == null) {
+        if (mUuid == null) { // set default for new
             isExpense = getIntent().getBooleanExtra(KEY_IS_EXPENSE, false);
             mRecurring.isExpense = isExpense;
+            mRecurring.timezone = TimeZone.getDefault().getID();
+            mRecurring.dateIndex = 0;
+            List<Account> accounts = mAccountDm.findAllWithIsExpense(mRecurring.isExpense);
+            mRecurring.account = accounts.get(0);
+            List<Reason> reasons = mReasonDm.findAllWithIsExpense(mRecurring.isExpense);
+            mRecurring.reason = reasons.get(0);
         } else {
             mRecurring = mRecurringDm.findByUuid(mUuid);
         }
@@ -103,18 +110,10 @@ public class InputRecurringEditActivity extends DefaultCommonActivity {
         binding.memoSelect.setOnClickListener(onItemClick);
         binding.priceSelect.setOnClickListener(onItemClick);
 
-        // set default for new
-        mRecurring.timezone = TimeZone.getDefault().getID();
-        mRecurring.dateIndex = 0;
-        List<Account> accounts = mAccountDm.findAllWithIsExpense(mRecurring.isExpense);
-        mRecurring.account = accounts.get(0);
-        List<Reason> reasons = mReasonDm.findAllWithIsExpense(mRecurring.isExpense);
-        mRecurring.reason = reasons.get(0);
-
         // set view
         binding.setRecurring(mRecurring);
         binding.dateSelect.setText(mRecurringDates[Integer.valueOf(mRecurring.dateIndex+"")]);
-        String priceString = (mRecurring.price == 0) ? "0" : mRecurring.price+"";
+        String priceString = (mRecurring.price == 0) ? "0" : ValueConverter.formatPrice(this,mRecurring.price);
         binding.priceSelect.setText(priceString);
     }
 
@@ -200,9 +199,11 @@ public class InputRecurringEditActivity extends DefaultCommonActivity {
                 binding.setRecurring(mRecurring);
             } else if (requestCode == REQUEST_CODE_PRICE) {
                 mRecurring.price = data.getLongExtra(CalculatorActivity.KEY_CURRENT_PRICE, 0);
-                String priceString = (mRecurring.price == 0) ? "0" : mRecurring.price+"";
+                String priceString = (mRecurring.price == 0) ? "0" : ValueConverter.formatPrice(this,mRecurring.price);
                 binding.priceSelect.setText(priceString);
             }
+
+            updateDbData();
         }
     }
 
@@ -214,6 +215,8 @@ public class InputRecurringEditActivity extends DefaultCommonActivity {
             public void onClick(DialogInterface dialogInterface, int i) {
                 mRecurring.timezone = mTimeZoneAll[i];
                 binding.setRecurring(mRecurring);
+
+                updateDbData();
             }
         });
         AlertDialog menuDialog = builder.create();
@@ -229,6 +232,8 @@ public class InputRecurringEditActivity extends DefaultCommonActivity {
             public void onClick(DialogInterface dialogInterface, int i) {
                 mRecurring.dateIndex = Long.valueOf(i+"");
                 binding.dateSelect.setText(mRecurringDates[i]);
+
+                updateDbData();
             }
         });
         AlertDialog menuDialog = builder.create();
@@ -250,6 +255,8 @@ public class InputRecurringEditActivity extends DefaultCommonActivity {
                         // Get the input string
                         mRecurring.memo = editText.getText().toString();
                         binding.setRecurring(mRecurring);
+
+                        updateDbData();
                     }
                 })
                 .setNegativeButton(getResources().getString(R.string.cancel), null)
@@ -268,11 +275,20 @@ public class InputRecurringEditActivity extends DefaultCommonActivity {
         String savedMessage = dateString + " "
                 + mRecurring.reason.name + " " + priceString;
         DialogManager.showToast(this, savedMessage);
+        BroadcastUtil.sendReloadRecurringList(this);
 
 
         // api save recurring
 
         finish();
+    }
+
+    private void updateDbData() {
+        if (mUuid == null) return;
+
+        mRecurring.needSync = true;
+        mRecurringDm.update(mRecurring);
+        BroadcastUtil.sendReloadRecurringList(this);
     }
 
     private void showConfirmDelete() {

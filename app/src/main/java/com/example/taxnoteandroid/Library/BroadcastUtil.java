@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 
 import com.example.taxnoteandroid.HistoryListDataActivity;
+import com.example.taxnoteandroid.InputRecurringListActivity;
 import com.example.taxnoteandroid.MainActivity;
 
 /**
@@ -31,5 +32,9 @@ public class BroadcastUtil {
 
     public static void sendSwitchGraphExpense(Activity activity) {
         activity.sendBroadcast(new Intent(MainActivity.BROADCAST_SWITCH_GRAPH_EXPENSE));
+    }
+
+    public static void sendReloadRecurringList(Activity activity) {
+        activity.sendBroadcast(new Intent(InputRecurringListActivity.BROADCAST_RELOAD_DATA));
     }
 }
