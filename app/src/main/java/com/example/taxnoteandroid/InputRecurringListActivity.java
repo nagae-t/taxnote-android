@@ -9,12 +9,16 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.example.taxnoteandroid.dataManager.RecurringDataManager;
 import com.example.taxnoteandroid.databinding.ActivityEntryCommonBinding;
 import com.example.taxnoteandroid.model.Recurring;
 
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by b0ne on 2017/04/11.
@@ -25,7 +29,6 @@ public class InputRecurringListActivity extends DefaultCommonActivity {
     private ActivityEntryCommonBinding binding;
     private RecurringDataManager mRecurringDm;
     private RecurringRecyclerAdapter mRecyclerAdapter;
-    private List<Recurring> mDataList;
 
     public static void start(Context context) {
         Intent intent = new Intent(context, InputRecurringListActivity.class);
@@ -83,12 +86,53 @@ public class InputRecurringListActivity extends DefaultCommonActivity {
 
         @Override
         protected List<Recurring> doInBackground(Integer... integers) {
-            return null;
+            List<Recurring> recurringData = new ArrayList<>();
+            List<Recurring> recurrings = mRecurringDm.findCurrentAll();
+            if (recurrings == null || recurrings.size() == 0) return recurringData;
+
+            String[] recDateList = mRecurringDm.getDesignatedDateList();
+            Map<String, List<Recurring>> map = new LinkedHashMap<>();
+
+            // 繰り返し日付でグルーピング
+            for (Recurring _rec : recurrings) {
+                String dateString = recDateList[Integer.valueOf(_rec.dateIndex+"")];
+                List<Recurring> recList = new ArrayList<>();
+                if (!map.containsKey(dateString)) {
+                    recList.add(_rec);
+                } else {
+                    recList = map.get(dateString);
+                    recList.add(_rec);
+                }
+                map.put(dateString, recList);
+            }
+
+            for (Map.Entry<String, List<Recurring>> e : map.entrySet()) {
+                Recurring headerItem = new Recurring();
+                headerItem.titleName = e.getKey();
+                headerItem.viewType = RecurringRecyclerAdapter.VIEW_ITEM_HEADER;
+                recurringData.add(headerItem);
+
+                for (Recurring _rec : e.getValue()) {
+                    _rec.viewType = RecurringRecyclerAdapter.VIEW_ITEM_CELL;
+                    recurringData.add(_rec);
+                }
+            }
+
+            return recurringData;
         }
 
         @Override
         protected void onPostExecute(List<Recurring> result) {
+            if (result == null || result.size() == 0) return;
 
+            mRecyclerAdapter.setItems(result);
+            mRecyclerAdapter.setOnItemClickListener(new RecurringRecyclerAdapter.OnItemClickListener() {
+                @Override
+                public void onItemClick(View view, int position, Recurring item) {
+
+                }
+            });
+            binding.entries.setAdapter(mRecyclerAdapter);
         }
     }
 

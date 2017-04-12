@@ -180,4 +180,12 @@ public class RecurringRecyclerAdapter extends  RecyclerView.Adapter<BindingHolde
         return false;
     }
 
+    public void setOnItemClickListener(final OnItemClickListener listener) {
+        mOnItemClickListener = listener;
+    }
+
+    public void setOnItemLongClickListener(final OnLongItemClickListener listener) {
+        mOnItemLongClickListener = listener;
+    }
+
 }
