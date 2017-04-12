@@ -6,7 +6,6 @@ import com.example.taxnoteandroid.Library.taxnote.TNApiModel;
 import com.example.taxnoteandroid.Library.taxnote.TNApiUser;
 import com.example.taxnoteandroid.R;
 import com.example.taxnoteandroid.TaxnoteApp;
-import com.example.taxnoteandroid.model.Entry_Schema;
 import com.example.taxnoteandroid.model.OrmaDatabase;
 import com.example.taxnoteandroid.model.Project;
 import com.example.taxnoteandroid.model.Recurring;

@@ -1,6 +1,7 @@
 package com.example.taxnoteandroid;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
@@ -50,6 +51,12 @@ public class UpgradeActivity extends DefaultCommonActivity {
     private TNGoogleApiClient tnGoogleApi;
 
     private ProgressDialog mLoadingProgress;
+
+    public static void start(Context context) {
+        Intent intent = new Intent(context, UpgradeActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(intent);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

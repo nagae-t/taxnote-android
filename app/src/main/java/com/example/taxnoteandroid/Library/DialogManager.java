@@ -602,6 +602,25 @@ public class DialogManager {
 
 
     //--------------------------------------------------------------//
+    //    -- Input Recurring With Taxnote Cloud Required Dialog --
+    //--------------------------------------------------------------//
+
+    public static void showRurringTaxnoteCloudRequired(final Activity activity) {
+        new AlertDialog.Builder(activity)
+                .setTitle(R.string.taxnote_cloud_first_free)
+                .setMessage(R.string.recurring_cloud_required_message)
+                .setPositiveButton(R.string.upgrade, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        UpgradeActivity.start(activity);
+                    }
+                })
+                .setNegativeButton(R.string.cancel, null)
+                .show();
+    }
+
+
+    //--------------------------------------------------------------//
     //    -- Custom AlertDialog --
     //--------------------------------------------------------------//
 

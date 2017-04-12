@@ -13,6 +13,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.example.taxnoteandroid.Library.DialogManager;
+import com.example.taxnoteandroid.Library.UpgradeManger;
 import com.example.taxnoteandroid.dataManager.RecurringDataManager;
 import com.example.taxnoteandroid.databinding.ActivityEntryCommonBinding;
 import com.example.taxnoteandroid.model.Recurring;
@@ -64,6 +66,17 @@ public class InputRecurringListActivity extends DefaultCommonActivity {
 
         mRecurringDm = new RecurringDataManager(this);
         loadData();
+
+        showTaxnoteCloudRequiredDialog();
+    }
+
+    private void showTaxnoteCloudRequiredDialog() {
+        if (UpgradeManger.taxnoteCloudIsActive(this)) {
+            return;
+        }
+
+        DialogManager.showRurringTaxnoteCloudRequired(this);
+
     }
 
     @Override

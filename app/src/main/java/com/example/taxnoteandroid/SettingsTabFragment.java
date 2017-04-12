@@ -2,7 +2,6 @@ package com.example.taxnoteandroid;
 
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -130,8 +129,7 @@ public class SettingsTabFragment extends Fragment {
             @Override
             public void onClick(View view) {
 
-                Intent intent = new Intent(getContext(), UpgradeActivity.class);
-                startActivity(intent);
+                UpgradeActivity.start(getContext());
             }
         });
     }

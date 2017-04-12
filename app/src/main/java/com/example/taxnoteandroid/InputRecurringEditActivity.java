@@ -301,8 +301,8 @@ public class InputRecurringEditActivity extends DefaultCommonActivity {
     private void showConfirmDelete() {
         new AlertDialog.Builder(this)
                 .setTitle(null)
-                .setMessage(getResources().getString(R.string.delete_confirm_message))
-                .setPositiveButton(getResources().getString(R.string.Delete), new DialogInterface.OnClickListener() {
+                .setMessage(R.string.delete_confirm_message)
+                .setPositiveButton(R.string.Delete, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         dialogInterface.dismiss();
