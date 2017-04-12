@@ -96,6 +96,11 @@ public class PriceEditActivity extends DefaultCommonActivity {
 
                 if (entryId != 0 && mEntry != null) {
                     saveEntry();
+                } else {
+                    Intent i = new Intent();
+                    i.putExtra(CalculatorActivity.KEY_CURRENT_PRICE, currentPrice);
+                    setResult(RESULT_OK, i);
+                    finish();
                 }
             }
         });

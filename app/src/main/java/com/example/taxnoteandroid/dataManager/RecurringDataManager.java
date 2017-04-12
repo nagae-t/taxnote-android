@@ -7,6 +7,7 @@ import com.example.taxnoteandroid.Library.taxnote.TNApiUser;
 import com.example.taxnoteandroid.R;
 import com.example.taxnoteandroid.TaxnoteApp;
 import com.example.taxnoteandroid.model.OrmaDatabase;
+import com.example.taxnoteandroid.model.Project;
 import com.example.taxnoteandroid.model.Recurring;
 import com.example.taxnoteandroid.model.Recurring_Schema;
 import com.example.taxnoteandroid.model.Recurring_Updater;
@@ -43,6 +44,17 @@ public class RecurringDataManager {
 
     public List<Recurring> findAll() {
         List<Recurring> dataList = ormaDatabase.selectFromRecurring().toList();
+
+        return dataList;
+    }
+
+    public List<Recurring> findCurrentAll() {
+        ProjectDataManager projectDataManager = new ProjectDataManager(mContext);
+        Project project = projectDataManager.findCurrent();
+        List<Recurring> dataList = ormaDatabase.selectFromRecurring()
+                .where(Recurring_Schema.INSTANCE.deleted.getQualifiedName() + " = " + 0)
+                .projectEq(project)
+                .toList();
 
         return dataList;
     }
