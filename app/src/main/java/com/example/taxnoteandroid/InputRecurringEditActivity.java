@@ -16,6 +16,7 @@ import android.widget.EditText;
 import com.example.taxnoteandroid.Library.BroadcastUtil;
 import com.example.taxnoteandroid.Library.DialogManager;
 import com.example.taxnoteandroid.Library.ValueConverter;
+import com.example.taxnoteandroid.Library.taxnote.TNApiModel;
 import com.example.taxnoteandroid.dataManager.AccountDataManager;
 import com.example.taxnoteandroid.dataManager.ProjectDataManager;
 import com.example.taxnoteandroid.dataManager.ReasonDataManager;
@@ -40,6 +41,7 @@ public class InputRecurringEditActivity extends DefaultCommonActivity {
     private AccountDataManager mAccountDm;
     private ReasonDataManager mReasonDm;
     private ProjectDataManager mProjectDm;
+    private TNApiModel mApiModel;
     private String[] mRecurringDates;
     private String[] mTimeZoneAll = TimeZone.getAvailableIDs();
     private Recurring mRecurring;
@@ -74,6 +76,7 @@ public class InputRecurringEditActivity extends DefaultCommonActivity {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
 
+        mApiModel = new TNApiModel(this);
         mRecurring = new Recurring();
         mProjectDm = new ProjectDataManager(this);
         mAccountDm = new AccountDataManager(this);
@@ -220,7 +223,7 @@ public class InputRecurringEditActivity extends DefaultCommonActivity {
             }
         });
         AlertDialog menuDialog = builder.create();
-//        menuDialog.setTitle(title);
+        menuDialog.setTitle(R.string.Timezone);
         menuDialog.show();
     }
 
@@ -237,7 +240,7 @@ public class InputRecurringEditActivity extends DefaultCommonActivity {
             }
         });
         AlertDialog menuDialog = builder.create();
-//        menuDialog.setTitle(title);
+        menuDialog.setTitle(R.string.entry_tab_fragment_date);
         menuDialog.show();
     }
 
@@ -292,10 +295,26 @@ public class InputRecurringEditActivity extends DefaultCommonActivity {
     }
 
     private void showConfirmDelete() {
+        new AlertDialog.Builder(this)
+                .setTitle(null)
+                .setMessage(getResources().getString(R.string.delete_confirm_message))
+                .setPositiveButton(getResources().getString(R.string.Delete), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                        deleteData();
 
+                    }
+                })
+                .setNegativeButton(getResources().getString(R.string.cancel), null)
+                .show();
     }
 
     private void deleteData() {
+        if (mUuid == null) return;
 
+        mRecurringDm.updateSetDeleted(mUuid, mApiModel);
+        BroadcastUtil.sendReloadRecurringList(this);
+        finish();
     }
 }
