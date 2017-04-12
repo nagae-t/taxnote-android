@@ -10,7 +10,6 @@ import com.example.taxnoteandroid.model.Account_Schema;
 import com.example.taxnoteandroid.model.Account_Updater;
 import com.example.taxnoteandroid.model.OrmaDatabase;
 import com.example.taxnoteandroid.model.Project;
-import com.example.taxnoteandroid.model.Reason;
 
 import java.util.List;
 
@@ -56,7 +55,7 @@ public class AccountDataManager {
 
         // Get the current project
         ProjectDataManager projectDataManager = new ProjectDataManager(mContext);
-        Project project = projectDataManager.findCurrentProjectWithContext();
+        Project project = projectDataManager.findCurrent();
 
         List accounts = ormaDatabase.selectFromAccount()
                 .where(Account_Schema.INSTANCE.deleted.getQualifiedName() + " = 0 AND "
@@ -75,7 +74,7 @@ public class AccountDataManager {
 
         // Get the current project
         ProjectDataManager projectDataManager = new ProjectDataManager(mContext);
-        Project project = projectDataManager.findCurrentProjectWithContext();
+        Project project = projectDataManager.findCurrent();
 
         // Get the current selected account
         if (isExpense) {

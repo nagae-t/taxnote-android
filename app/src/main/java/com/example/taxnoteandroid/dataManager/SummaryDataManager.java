@@ -5,7 +5,6 @@ import android.content.Context;
 import com.example.taxnoteandroid.Library.taxnote.TNApiModel;
 import com.example.taxnoteandroid.Library.taxnote.TNApiUser;
 import com.example.taxnoteandroid.TaxnoteApp;
-import com.example.taxnoteandroid.model.Account;
 import com.example.taxnoteandroid.model.OrmaDatabase;
 import com.example.taxnoteandroid.model.Project;
 import com.example.taxnoteandroid.model.Reason;
@@ -57,7 +56,7 @@ public class SummaryDataManager {
 
         // Get the current project
         ProjectDataManager projectDataManager = new ProjectDataManager(mContext);
-        Project project = projectDataManager.findCurrentProjectWithContext();
+        Project project = projectDataManager.findCurrent();
 
         List summaries = ormaDatabase.selectFromSummary()
                 .where(Summary_Schema.INSTANCE.deleted.getQualifiedName() + " = 0")

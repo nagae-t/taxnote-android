@@ -1,7 +1,6 @@
 package com.example.taxnoteandroid.dataManager;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.example.taxnoteandroid.Library.EntryLimitManager;
 import com.example.taxnoteandroid.Library.taxnote.TNApiModel;
@@ -101,7 +100,7 @@ public class EntryDataManager {
     public List<Entry> findAll(long[] startAndEndDate, Boolean asc) {
 
         ProjectDataManager projectDataManager   = new ProjectDataManager(mContext);
-        Project project                         = projectDataManager.findCurrentProjectWithContext();
+        Project project                         = projectDataManager.findCurrent();
 
         List<Entry> entries;
         String orderSpec = (asc) ? OrderSpec.ASC : OrderSpec.DESC;
@@ -135,7 +134,7 @@ public class EntryDataManager {
 
     public int count(long[] startEndDate) {
         ProjectDataManager projectDataManager   = new ProjectDataManager(mContext);
-        Project project                         = projectDataManager.findCurrentProjectWithContext();
+        Project project                         = projectDataManager.findCurrent();
         long startDate  = startEndDate[0];
         long endDate    = startEndDate[1];
         int countData = ormaDatabase.selectFromEntry().
@@ -150,7 +149,7 @@ public class EntryDataManager {
     // 収入・支出別
     public List<Entry> findAll(long[] startAndEndDate, boolean isExpense, Boolean asc) {
         ProjectDataManager projectDataManager   = new ProjectDataManager(mContext);
-        Project project                         = projectDataManager.findCurrentProjectWithContext();
+        Project project                         = projectDataManager.findCurrent();
 
         List<Entry> entries;
         String orderSpec = (asc) ? OrderSpec.ASC : OrderSpec.DESC;
@@ -183,7 +182,7 @@ public class EntryDataManager {
     //@@ 未完成、まだデバッグ中
     public List<Entry> findAll(String word) {
         ProjectDataManager projectDataManager   = new ProjectDataManager(mContext);
-        Project project                         = projectDataManager.findCurrentProjectWithContext();
+        Project project                         = projectDataManager.findCurrent();
         List<Entry> entries = new ArrayList<>();
         String orderSpec = OrderSpec.DESC;
 
@@ -276,7 +275,7 @@ public class EntryDataManager {
 
     public long findSumBalance(long endDate) {
         ProjectDataManager projectDataManager   = new ProjectDataManager(mContext);
-        Project project                         = projectDataManager.findCurrentProjectWithContext();
+        Project project                         = projectDataManager.findCurrent();
 
         String schemeDelete = Entry_Schema.INSTANCE.deleted.getQualifiedName();
         String schemeIsExpense = Entry_Schema.INSTANCE.isExpense.getQualifiedName();

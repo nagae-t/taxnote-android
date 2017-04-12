@@ -480,7 +480,7 @@ public class SummaryActivity extends DefaultCommonActivity {
                             }
 
                             ProjectDataManager projectDataManager = new ProjectDataManager(context);
-                            Project project = projectDataManager.findCurrentProjectWithContext();
+                            Project project = projectDataManager.findCurrent();
 
                             SummaryDataManager summaryDataManager = new SummaryDataManager(SummaryActivity.this);
                             List<Summary> summaryList = summaryDataManager.findAllWithReason(reason);

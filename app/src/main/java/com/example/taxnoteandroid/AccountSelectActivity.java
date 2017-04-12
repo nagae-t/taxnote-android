@@ -502,7 +502,7 @@ public class AccountSelectActivity extends DefaultCommonActivity {
                             }
 
                             ProjectDataManager projectDataManager = new ProjectDataManager(context);
-                            Project project = projectDataManager.findCurrentProjectWithContext();
+                            Project project = projectDataManager.findCurrent();
 
                             AccountDataManager accountDataManager = new AccountDataManager(AccountSelectActivity.this);
                             List<Account> accountList = accountDataManager.findAllWithIsExpense(isExpense);

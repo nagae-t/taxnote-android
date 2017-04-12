@@ -364,7 +364,7 @@ public class InputDataActivity extends DefaultCommonActivity {
         }
 
         ProjectDataManager projectDataManager = new ProjectDataManager(this);
-        Project project = projectDataManager.findCurrentProjectWithContext();
+        Project project = projectDataManager.findCurrent();
 
         Entry entry = new Entry();
         entry.date = date;

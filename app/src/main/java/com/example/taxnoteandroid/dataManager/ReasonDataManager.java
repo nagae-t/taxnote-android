@@ -66,7 +66,7 @@ public class ReasonDataManager {
 
         // Get the current project
         ProjectDataManager projectDataManager   = new ProjectDataManager(mContext);
-        Project project                         = projectDataManager.findCurrentProjectWithContext();
+        Project project                         = projectDataManager.findCurrent();
 
         List reasons = ormaDatabase.selectFromReason()
                 .where(Reason_Schema.INSTANCE.deleted.getQualifiedName() + " = 0  AND "

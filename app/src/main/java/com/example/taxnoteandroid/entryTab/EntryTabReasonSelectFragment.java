@@ -643,7 +643,7 @@ public class EntryTabReasonSelectFragment extends Fragment {
                                 }
 
                                 ProjectDataManager projectDataManager = new ProjectDataManager(context);
-                                Project project = projectDataManager.findCurrentProjectWithContext();
+                                Project project = projectDataManager.findCurrent();
 
                                 List<Reason> reasonList = reasonDataManager.findAllWithIsExpense(isExpense);
 

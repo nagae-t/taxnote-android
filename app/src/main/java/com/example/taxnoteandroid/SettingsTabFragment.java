@@ -401,7 +401,7 @@ public class SettingsTabFragment extends Fragment {
     }
 
     private void checkCurrentProjectToRadio() {
-        mCurrentProject = mProjectDataManager.findCurrentProjectWithContext();
+        mCurrentProject = mProjectDataManager.findCurrent();
         if (mCurrentProject.isMaster) {
             unCheckAllSubProjectRadio();
             return;
@@ -503,7 +503,7 @@ public class SettingsTabFragment extends Fragment {
 
         // Set current decimal status
         final ProjectDataManager projectDataManager   = new ProjectDataManager(getActivity());
-        final Project project                         = projectDataManager.findCurrentProjectWithContext();
+        final Project project                         = projectDataManager.findCurrent();
         binding.decimalSwitch.setChecked(project.decimal);
 
         binding.decimalSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {

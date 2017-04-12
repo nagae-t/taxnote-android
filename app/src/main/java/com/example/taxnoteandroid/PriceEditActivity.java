@@ -1,5 +1,6 @@
 package com.example.taxnoteandroid;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -29,6 +30,12 @@ public class PriceEditActivity extends DefaultCommonActivity {
     private Entry mEntry;
     private EntryDataManager entryDataManager;
     private TNApiModel mApiModel;
+
+    public static void startForRecurring(Activity activity, long currentPrice, int requestCode) {
+        Intent i = new Intent(activity.getApplicationContext(), PriceEditActivity.class);
+        i.putExtra(EXTRA_CURRENT_PRICE, currentPrice);
+        activity.startActivityForResult(i, requestCode);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,7 +74,8 @@ public class PriceEditActivity extends DefaultCommonActivity {
         Intent intent = getIntent();
         currentPrice = intent.getLongExtra(EXTRA_CURRENT_PRICE, 0);
         entryId = intent.getLongExtra(EXTRA_ENTRY_ID, 0);
-        mEntry = entryDataManager.findById(entryId);
+        if (entryId != 0)
+            mEntry = entryDataManager.findById(entryId);
     }
 
 
@@ -85,7 +93,10 @@ public class PriceEditActivity extends DefaultCommonActivity {
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                saveEntry();
+
+                if (entryId != 0 && mEntry != null) {
+                    saveEntry();
+                }
             }
         });
     }
