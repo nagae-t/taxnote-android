@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
@@ -38,6 +39,7 @@ public class InputRecurringEditActivity extends DefaultCommonActivity {
     private Recurring mRecurring;
 
     private static final String KEY_IS_EXPENSE = "is_expense";
+    private static final String KEY_UUID = "recurring_uuid";
     private static final int REQUEST_CODE_ACCOUNT = 1;
     private static final int REQUEST_CODE_REASON = 2;
     private static final int REQUEST_CODE_PRICE = 3;
@@ -46,6 +48,13 @@ public class InputRecurringEditActivity extends DefaultCommonActivity {
         Intent intent = new Intent(context, InputRecurringEditActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.putExtra(KEY_IS_EXPENSE, isExpense);
+        context.startActivity(intent);
+    }
+
+    public static void start(Context context, String uuid) {
+        Intent intent = new Intent(context, InputRecurringEditActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.putExtra(KEY_UUID, uuid);
         context.startActivity(intent);
     }
 
@@ -64,15 +73,20 @@ public class InputRecurringEditActivity extends DefaultCommonActivity {
         mRecurringDm = new RecurringDataManager(this);
         mRecurringDates = mRecurringDm.getDesignatedDateList();
 
-        boolean isExpense = getIntent().getBooleanExtra(KEY_IS_EXPENSE, false);
-        setTitle(R.string.Income);
-        if (isExpense) {
-            setTitle(R.string.Expense);
+        String uuid = getIntent().getStringExtra(KEY_UUID);
+        boolean isExpense;
+        if (uuid == null) {
+            isExpense = getIntent().getBooleanExtra(KEY_IS_EXPENSE, false);
+            mRecurring.isExpense = isExpense;
+        } else {
+            mRecurring = mRecurringDm.findByUuid(uuid);
         }
 
-//        Recurring _rec = new Recurring();
-//        _rec.isExpense = isExpense;
-//        binding.setRecurring(_rec);
+        // set title
+        setTitle(R.string.Income);
+        if (mRecurring.isExpense) {
+            setTitle(R.string.Expense);
+        }
 
         // click action
         binding.timezoneSelect.setOnClickListener(onItemClick);
@@ -83,12 +97,11 @@ public class InputRecurringEditActivity extends DefaultCommonActivity {
         binding.priceSelect.setOnClickListener(onItemClick);
 
         // set default for new
-        mRecurring.isExpense = isExpense;
         mRecurring.timezone = TimeZone.getDefault().getID();
         mRecurring.dateIndex = 0;
-        List<Account> accounts = mAccountDm.findAllWithIsExpense(isExpense);
+        List<Account> accounts = mAccountDm.findAllWithIsExpense(mRecurring.isExpense);
         mRecurring.account = accounts.get(0);
-        List<Reason> reasons = mReasonDm.findAllWithIsExpense(isExpense);
+        List<Reason> reasons = mReasonDm.findAllWithIsExpense(mRecurring.isExpense);
         mRecurring.reason = reasons.get(0);
 
         // set view
@@ -99,11 +112,34 @@ public class InputRecurringEditActivity extends DefaultCommonActivity {
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_input_recurring_edit, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        MenuItem saveMenu = menu.findItem(R.id.action_save);
+        MenuItem deleteMenu = menu.findItem(R.id.action_delete);
+        saveMenu.setVisible(true);
+        deleteMenu.setVisible(false);
+        if (mRecurring.uuid != null) {
+            saveMenu.setVisible(false);
+            deleteMenu.setVisible(true);
+        }
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
                 finish();
                 return true;
+            case R.id.action_save:
+                break;
+            case R.id.action_delete:
+                break;
         }
         return super.onOptionsItemSelected(item);
     }
