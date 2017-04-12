@@ -19,6 +19,7 @@ import com.example.taxnoteandroid.model.Account;
 import com.example.taxnoteandroid.model.Reason;
 import com.example.taxnoteandroid.model.Recurring;
 
+import java.util.List;
 import java.util.TimeZone;
 
 /**
@@ -33,7 +34,7 @@ public class InputRecurringEditActivity extends DefaultCommonActivity {
     private ReasonDataManager mReasonDm;
     private String[] mRecurringDates;
     private String[] mTimeZoneAll = TimeZone.getAvailableIDs();
-    private boolean mIsExpense;
+    private Recurring mRecurring;
 
     private static final String KEY_IS_EXPENSE = "is_expense";
     private static final int REQUEST_CODE_ACCOUNT = 1;
@@ -55,20 +56,21 @@ public class InputRecurringEditActivity extends DefaultCommonActivity {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
 
+        mRecurring = new Recurring();
         mAccountDm = new AccountDataManager(this);
         mReasonDm = new ReasonDataManager(this);
         mRecurringDm = new RecurringDataManager(this);
         mRecurringDates = mRecurringDm.getDesignatedDateList();
 
-        mIsExpense = getIntent().getBooleanExtra(KEY_IS_EXPENSE, false);
+        boolean isExpense = getIntent().getBooleanExtra(KEY_IS_EXPENSE, false);
         setTitle(R.string.Income);
-        if (mIsExpense) {
+        if (isExpense) {
             setTitle(R.string.Expense);
         }
 
-        Recurring _rec = new Recurring();
-        _rec.isExpense = mIsExpense;
-        binding.setRecurring(_rec);
+//        Recurring _rec = new Recurring();
+//        _rec.isExpense = isExpense;
+//        binding.setRecurring(_rec);
 
         // click action
         binding.timezoneSelect.setOnClickListener(onItemClick);
@@ -78,6 +80,20 @@ public class InputRecurringEditActivity extends DefaultCommonActivity {
         binding.memoSelect.setOnClickListener(onItemClick);
         binding.priceSelect.setOnClickListener(onItemClick);
 
+        // set default for new
+        mRecurring.isExpense = isExpense;
+        mRecurring.timezone = TimeZone.getDefault().getID();
+        mRecurring.dateIndex = 0;
+        List<Account> accounts = mAccountDm.findAllWithIsExpense(isExpense);
+        mRecurring.account = accounts.get(0);
+        List<Reason> reasons = mReasonDm.findAllWithIsExpense(isExpense);
+        mRecurring.reason = reasons.get(0);
+
+        // set view
+        binding.setRecurring(mRecurring);
+        binding.dateSelect.setText(mRecurringDates[Integer.valueOf(mRecurring.dateIndex+"")]);
+        String priceString = (mRecurring.price == 0) ? "0" : mRecurring.price+"";
+        binding.priceSelect.setText(priceString);
     }
 
     @Override
@@ -103,11 +119,11 @@ public class InputRecurringEditActivity extends DefaultCommonActivity {
                     break;
                 case R.id.account_select:
                     AccountEditActivity.startForRecurring(InputRecurringEditActivity.this,
-                            mIsExpense, true, REQUEST_CODE_ACCOUNT);
+                            mRecurring.isExpense, true, REQUEST_CODE_ACCOUNT);
                     break;
                 case R.id.reason_select:
                     AccountEditActivity.startForRecurring(InputRecurringEditActivity.this,
-                            mIsExpense, false, REQUEST_CODE_REASON);
+                            mRecurring.isExpense, false, REQUEST_CODE_REASON);
                     break;
                 case R.id.memo_select:
                     break;
@@ -124,16 +140,14 @@ public class InputRecurringEditActivity extends DefaultCommonActivity {
             if (requestCode == REQUEST_CODE_ACCOUNT) {
                 String accountUuid = data.getStringExtra("account_uuid");
                 Account account = mAccountDm.findByUuid(accountUuid);
-                Log.v("TEST", "account uuid : " + account.uuid);
-                Log.v("TEST", "account name : " + account.name);
-                Log.v("TEST", "account isExpense : " + account.isExpense);
+                mRecurring.account = account;
+                binding.setRecurring(mRecurring);
 
             } else if (requestCode == REQUEST_CODE_REASON) {
                 String reasonUuid = data.getStringExtra("reason_uuid");
                 Reason reason = mReasonDm.findByUuid(reasonUuid);
-                Log.v("TEST", "reason uuid : " + reason.uuid);
-                Log.v("TEST", "reason name : " + reason.name);
-                Log.v("TEST", "reason isExpense : " + reason.isExpense);
+                mRecurring.reason = reason;
+                binding.setRecurring(mRecurring);
             }
         }
     }

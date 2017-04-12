@@ -35,7 +35,8 @@
             android:layout_height="0dp"
             android:layout_weight="1"
             android:textSize="@dimen/font_size_standard"
-            android:clickable="true" />
+            android:clickable="true"
+            android:text="@{recurring.timezone}"/>
 
         <TextView
             style="@style/section_header"
@@ -113,7 +114,8 @@
             android:layout_height="0dp"
             android:layout_weight="1"
             android:textSize="@dimen/font_size_standard"
-            android:clickable="true" />
+            android:clickable="true"
+            />
 
     </LinearLayout>
     <!--</ScrollView>-->
