@@ -1,5 +1,6 @@
 package com.example.taxnoteandroid;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -38,6 +39,15 @@ public class AccountEditActivity extends DefaultCommonActivity {
     private Entry mEntry;
     private EntryDataManager entryDataManager;
     private TNApiModel mApiModel;
+
+    public static void startForRecurring(Activity activity, boolean isExpense,
+                                         boolean isAccount, int requestCode) {
+        Intent i = new Intent(activity.getApplicationContext(),
+                AccountEditActivity.class);
+        i.putExtra(EXTRA_IS_EXPENSE, isExpense);
+        i.putExtra(EXTRA_IS_ACCOUNT, isAccount);
+        activity.startActivityForResult(i, requestCode);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -130,8 +140,17 @@ public class AccountEditActivity extends DefaultCommonActivity {
 
                 Account account = (Account) (listView.getItemAtPosition(position));
 
+                if (entryId == 0) {
+                    Intent i = new Intent();
+                    i.putExtra("account_uuid", account.uuid);
+                    setResult(RESULT_OK, i);
+                    finish();
+                    return;
+                }
+
+
                 // Update account
-                long updated                        = entryDataManager.updateAccount(entryId, account);
+                long updated = entryDataManager.updateAccount(entryId, account);
 
                 mApiModel.updateEntry(mEntry.uuid, null);
                 if (updated != 0) {
@@ -192,8 +211,16 @@ public class AccountEditActivity extends DefaultCommonActivity {
 
                 Reason reason = (Reason) (listView.getItemAtPosition(position));
 
+                if (entryId == 0) {
+                    Intent i = new Intent();
+                    i.putExtra("reason_uuid", reason.uuid);
+                    setResult(RESULT_OK, i);
+                    finish();
+                    return;
+                }
+
                 // Update account
-                long updated                        = entryDataManager.updateReason(entryId, reason);
+                long updated = entryDataManager.updateReason(entryId, reason);
 
                 mApiModel.updateEntry(mEntry.uuid, null);
                 if (updated != 0) {
