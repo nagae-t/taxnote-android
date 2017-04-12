@@ -50,4 +50,8 @@ public class Recurring {
 
     @Column(indexed = true)
     public Account account;
+
+    // not column
+    public int viewType;
+    public String titleName;
 }

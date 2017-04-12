@@ -24,7 +24,7 @@ public class InputRecurringListActivity extends DefaultCommonActivity {
 
     private ActivityEntryCommonBinding binding;
     private RecurringDataManager mRecurringDm;
-    private CommonEntryRecyclerAdapter mRecyclerAdapter;
+    private RecurringRecyclerAdapter mRecyclerAdapter;
     private List<Recurring> mDataList;
 
     public static void start(Context context) {
@@ -46,7 +46,7 @@ public class InputRecurringListActivity extends DefaultCommonActivity {
         actionBar.setDisplayHomeAsUpEnabled(true);
 
         mRecurringDm = new RecurringDataManager(this);
-
+        loadData();
     }
 
     @Override
@@ -75,8 +75,8 @@ public class InputRecurringListActivity extends DefaultCommonActivity {
         if (mRecyclerAdapter != null) {
             mRecyclerAdapter.clearAllToNotifyData();
         }
-        mRecyclerAdapter = new CommonEntryRecyclerAdapter(this);
-
+        mRecyclerAdapter = new RecurringRecyclerAdapter(this);
+        new RecurringDataTask().execute(0);
     }
 
     private class RecurringDataTask extends AsyncTask<Integer, Integer, List<Recurring>> {
@@ -84,6 +84,11 @@ public class InputRecurringListActivity extends DefaultCommonActivity {
         @Override
         protected List<Recurring> doInBackground(Integer... integers) {
             return null;
+        }
+
+        @Override
+        protected void onPostExecute(List<Recurring> result) {
+
         }
     }
 
