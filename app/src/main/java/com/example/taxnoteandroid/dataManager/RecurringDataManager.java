@@ -99,9 +99,6 @@ public class RecurringDataManager {
     //    -- Update --
     //--------------------------------------------------------------//
 
-    public int updateRecurring(Recurring recurring) {
-        return ormaDatabase.updateRecurring().idEq(recurring.id).execute();
-    }
 
     public int updateNeedSave(long id, boolean needSave) {
         return ormaDatabase.updateRecurring().idEq(id).needSave(needSave).execute();

@@ -280,8 +280,8 @@ public class InputRecurringEditActivity extends DefaultCommonActivity {
         DialogManager.showToast(this, savedMessage);
         BroadcastUtil.sendReloadRecurringList(this);
 
-
         // api save recurring
+        mApiModel.saveRecurring(mRecurring.uuid, null);
 
         finish();
     }
@@ -291,6 +291,10 @@ public class InputRecurringEditActivity extends DefaultCommonActivity {
 
         mRecurring.needSync = true;
         mRecurringDm.update(mRecurring);
+
+        // api update recurring
+        mApiModel.updateRecurring(mRecurring.uuid, null);
+
         BroadcastUtil.sendReloadRecurringList(this);
     }
 

@@ -211,6 +211,7 @@ public class TNApiModel extends TNApi {
             public void onSuccess(Response response, String content) {
 
                 JsonArray jsArray = jsParser.parse(content).getAsJsonArray();
+                Log.v("TEST", "getRecurrings onSucess: " + jsArray.toString());
                 executeUpdateDbTask(UpdateDbAsyncTask.TYPE_RECURRING,
                         jsArray, callback, response, content);
             }
@@ -530,7 +531,13 @@ public class TNApiModel extends TNApi {
         requestApi();
     }
 
-    private void saveRecurring(String uuid, final AsyncOkHttpClient.Callback callback) {
+    public void saveRecurring(String uuid, final AsyncOkHttpClient.Callback callback) {
+        if (!isLoggingIn() || !TNApi.isNetworkConnected(context)) {
+            if (callback != null)
+                callback.onSuccess(null, null);
+            return;
+        }
+
         Recurring recurring = mRecurringDataManager.findByUuid(uuid);
         final long recurringId = recurring.id;
 
@@ -560,13 +567,15 @@ public class TNApiModel extends TNApi {
                     Log.e(LTAG, "saveRecurring(uuid) onFailure response.code: " + response.code()
                             + ", message: " + response.message());
                 }
-                callback.onFailure(response, throwable);
+                if (callback != null)
+                    callback.onFailure(response, throwable);
             }
 
             @Override
             public void onSuccess(Response response, String content) {
                 mRecurringDataManager.updateNeedSave(recurringId, false);
-                callback.onSuccess(response, content);
+                if (callback != null)
+                    callback.onSuccess(response, content);
             }
         });
         requestApi();
@@ -1456,7 +1465,13 @@ public class TNApiModel extends TNApi {
         requestApi();
     }
 
-    private void updateRecurring(String uuid, final AsyncOkHttpClient.Callback callback) {
+    public void updateRecurring(String uuid, final AsyncOkHttpClient.Callback callback) {
+        if (!isLoggingIn() || !TNApi.isNetworkConnected(context)) {
+            if (callback != null)
+                callback.onSuccess(null, null);
+            return;
+        }
+
         Recurring recurring = mRecurringDataManager.findByUuid(uuid);
         final long recurringId = recurring.id;
 
@@ -1486,13 +1501,15 @@ public class TNApiModel extends TNApi {
                     Log.e(LTAG, "updateRecurring(uuid) onFailure response.code: " + response.code()
                             + ", message: " + response.message());
                 }
-                callback.onFailure(response, throwable);
+                if (callback != null)
+                    callback.onFailure(response, throwable);
             }
 
             @Override
             public void onSuccess(Response response, String content) {
                 mRecurringDataManager.updateNeedSync(recurringId, false);
-                callback.onSuccess(response, content);
+                if (callback != null)
+                    callback.onSuccess(response, content);
             }
         });
 
