@@ -7,9 +7,10 @@ import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
-import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 
 import com.example.taxnoteandroid.dataManager.AccountDataManager;
 import com.example.taxnoteandroid.dataManager.ReasonDataManager;
@@ -39,6 +40,7 @@ public class InputRecurringEditActivity extends DefaultCommonActivity {
     private static final String KEY_IS_EXPENSE = "is_expense";
     private static final int REQUEST_CODE_ACCOUNT = 1;
     private static final int REQUEST_CODE_REASON = 2;
+    private static final int REQUEST_CODE_PRICE = 3;
 
     public static void start(Context context, boolean isExpense) {
         Intent intent = new Intent(context, InputRecurringEditActivity.class);
@@ -126,8 +128,11 @@ public class InputRecurringEditActivity extends DefaultCommonActivity {
                             mRecurring.isExpense, false, REQUEST_CODE_REASON);
                     break;
                 case R.id.memo_select:
+                    showMemoInputDialog();
                     break;
                 case R.id.price_select:
+                    CalculatorActivity.startForResult(InputRecurringEditActivity.this,
+                            mRecurring.price, REQUEST_CODE_PRICE);
                     break;
             }
         }
@@ -148,6 +153,10 @@ public class InputRecurringEditActivity extends DefaultCommonActivity {
                 Reason reason = mReasonDm.findByUuid(reasonUuid);
                 mRecurring.reason = reason;
                 binding.setRecurring(mRecurring);
+            } else if (requestCode == REQUEST_CODE_PRICE) {
+                mRecurring.price = data.getLongExtra(CalculatorActivity.KEY_CURRENT_PRICE, 0);
+                String priceString = (mRecurring.price == 0) ? "0" : mRecurring.price+"";
+                binding.priceSelect.setText(priceString);
             }
         }
     }
@@ -178,5 +187,25 @@ public class InputRecurringEditActivity extends DefaultCommonActivity {
         AlertDialog menuDialog = builder.create();
 //        menuDialog.setTitle(title);
         menuDialog.show();
+    }
+
+    private void showMemoInputDialog() {
+        final View textInputView    = LayoutInflater.from(this).inflate(R.layout.dialog_text_input, null);
+        final EditText editText     = (EditText) textInputView.findViewById(R.id.edit);
+        editText.setText(mRecurring.memo);
+        new AlertDialog.Builder(this)
+                .setView(textInputView)
+                .setTitle(getString(R.string.Details))
+                .setPositiveButton(getResources().getString(R.string.done), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                        // Get the input string
+                        mRecurring.memo = editText.getText().toString();
+                        binding.setRecurring(mRecurring);
+                    }
+                })
+                .setNegativeButton(getResources().getString(R.string.cancel), null)
+                .show();
     }
 }
