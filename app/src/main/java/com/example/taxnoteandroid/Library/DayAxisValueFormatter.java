@@ -1,8 +1,12 @@
 package com.example.taxnoteandroid.Library;
 
+import android.content.Context;
+
 import com.github.mikephil.charting.charts.BarLineChartBase;
 import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.formatter.IAxisValueFormatter;
+
+import java.util.Locale;
 
 /**
  * Created by b0ne on 2017/04/13.
@@ -10,14 +14,22 @@ import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 
 public class DayAxisValueFormatter implements IAxisValueFormatter {
 
-    protected String[] mMonths = new String[]{
-            "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
-    };
-
+    private Context mContext;
     private BarLineChartBase<?> chart;
+    private int mValueType = 1;
 
-    public DayAxisValueFormatter(BarLineChartBase<?> chart) {
+    private static final int VALUE_TYPE_MONTH = 1;
+    private static final int VALUE_TYPE_YEAR = 2;
+
+    public static DayAxisValueFormatter newInstance(Context context, BarLineChartBase<?> chart, int valueType) {
+        DayAxisValueFormatter valueFormatter = new DayAxisValueFormatter(context, chart, valueType);
+        return valueFormatter;
+    }
+
+    public DayAxisValueFormatter(Context context, BarLineChartBase<?> chart, int valueType) {
+        this.mContext = context;
         this.chart = chart;
+        this.mValueType = valueType;
     }
 
     @Override
@@ -28,44 +40,48 @@ public class DayAxisValueFormatter implements IAxisValueFormatter {
         int year = determineYear(days);
 
         int month = determineMonth(days);
-        String monthName = mMonths[month % mMonths.length];
+//        String[] months = mContext.getResources().getStringArray(R.array.month_list);
+//        String monthName = mMonths[month % mMonths.length];
         String yearName = String.valueOf(year);
 
-        if (chart.getVisibleXRange() > 30 * 6) {
+//        if (chart.getVisibleXRange() > 30 * 6) {
+//            return monthName + " " + yearName;
+//        }
 
-            return monthName + " " + yearName;
-        } else {
+        int dayOfMonth = determineDayOfMonth(days, month + 12 * (year - 2016));
 
-            int dayOfMonth = determineDayOfMonth(days, month + 12 * (year - 2016));
+        String appendix = "th";
 
-            String appendix = "th";
-
-            switch (dayOfMonth) {
-                case 1:
-                    appendix = "st";
-                    break;
-                case 2:
-                    appendix = "nd";
-                    break;
-                case 3:
-                    appendix = "rd";
-                    break;
-                case 21:
-                    appendix = "st";
-                    break;
-                case 22:
-                    appendix = "nd";
-                    break;
-                case 23:
-                    appendix = "rd";
-                    break;
-                case 31:
-                    appendix = "st";
-                    break;
-            }
-
-            return dayOfMonth == 0 ? "" : dayOfMonth + appendix + " " + monthName;
+        switch (dayOfMonth) {
+            case 1:
+                appendix = "st";
+                break;
+            case 2:
+                appendix = "nd";
+                break;
+            case 3:
+                appendix = "rd";
+                break;
+            case 21:
+                appendix = "st";
+                break;
+            case 22:
+                appendix = "nd";
+                break;
+            case 23:
+                appendix = "rd";
+                break;
+            case 31:
+                appendix = "st";
+                break;
         }
+
+        // 日本語の場合
+        if (Locale.getDefault().getLanguage().equals("ja")) {
+            appendix = "日";
+        }
+        return dayOfMonth == 0 ? "" : dayOfMonth + appendix;
+//            return dayOfMonth == 0 ? "" : dayOfMonth + appendix + " " + monthName;
     }
 
     private int getDaysForMonth(int month, int year) {

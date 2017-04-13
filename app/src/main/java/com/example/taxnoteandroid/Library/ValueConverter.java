@@ -20,7 +20,7 @@ public class ValueConverter {
     public static String formatPrice(Context context, long price) {
 
         ProjectDataManager projectDataManager = new ProjectDataManager(context);
-        boolean decimalStatus = projectDataManager.getDecimalStatusWithContect();
+        boolean decimalStatus = projectDataManager.getDecimalStatus();
         String priceString;
 
         if (decimalStatus) {

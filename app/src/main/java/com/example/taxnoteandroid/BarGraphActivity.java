@@ -14,6 +14,7 @@ import android.view.MenuItem;
 import android.widget.TextView;
 
 import com.example.taxnoteandroid.Library.DayAxisValueFormatter;
+import com.example.taxnoteandroid.dataManager.ProjectDataManager;
 import com.example.taxnoteandroid.databinding.ActivityBarGraphBinding;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.components.AxisBase;
@@ -45,6 +46,8 @@ public class BarGraphActivity extends DefaultCommonActivity implements OnChartVa
     private ActivityBarGraphBinding binding;
     protected BarChart mChart;
 
+    private ProjectDataManager mProjectDm;
+
     private static final String KEY_IS_EXPENSE = "is_expense";
     private static final String KEY_TARGET_CALENDAR = "target_calendar";
     private static final String KEY_PERIOD_TYPE = "period_type";
@@ -69,12 +72,13 @@ public class BarGraphActivity extends DefaultCommonActivity implements OnChartVa
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
 
+        mProjectDm = new ProjectDataManager(this);
+
         mChart = binding.chart1;
         mChart.setOnChartValueSelectedListener(this);
 
         mChart.setDrawBarShadow(false);
         mChart.setDrawValueAboveBar(true);
-
         mChart.getDescription().setEnabled(false);
 
         // if more than 60 entries are displayed in the chart, no values will be
@@ -87,7 +91,8 @@ public class BarGraphActivity extends DefaultCommonActivity implements OnChartVa
         mChart.setDrawGridBackground(false);
         // mChart.setDrawYLabels(false);
 
-        IAxisValueFormatter xAxisFormatter = new DayAxisValueFormatter(mChart);
+        // X軸の設定
+        IAxisValueFormatter xAxisFormatter = DayAxisValueFormatter.newInstance(this, mChart, 1);
 
         XAxis xAxis = mChart.getXAxis();
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
@@ -98,20 +103,15 @@ public class BarGraphActivity extends DefaultCommonActivity implements OnChartVa
 
         IAxisValueFormatter custom = new MyAxisValueFormatter();
 
+        // Y軸の設定
         YAxis leftAxis = mChart.getAxisLeft();
         leftAxis.setLabelCount(8, false);
         leftAxis.setValueFormatter(custom);
         leftAxis.setPosition(YAxis.YAxisLabelPosition.OUTSIDE_CHART);
-        leftAxis.setSpaceTop(15f);
+        leftAxis.setSpaceTop(8f);
         leftAxis.setAxisMinimum(0f); // this replaces setStartAtZero(true)
 
         mChart.getAxisRight().setEnabled(false);
-//        YAxis rightAxis = mChart.getAxisRight();
-//        rightAxis.setDrawGridLines(false);
-//        rightAxis.setLabelCount(8, false);
-//        rightAxis.setValueFormatter(custom);
-//        rightAxis.setSpaceTop(15f);
-//        rightAxis.setAxisMinimum(0f); // this replaces setStartAtZero(true)
 
         Legend l = mChart.getLegend();
         l.setVerticalAlignment(Legend.LegendVerticalAlignment.BOTTOM);
@@ -129,7 +129,7 @@ public class BarGraphActivity extends DefaultCommonActivity implements OnChartVa
 
         XYMarkerView mv = new XYMarkerView(this, xAxisFormatter);
         mv.setChartView(mChart); // For bounds control
-        mChart.setMarker(mv); // Set the marker to the chart
+//        mChart.setMarker(mv); // Set the marker to the chart
 
         setData(12, 50);
 
@@ -137,7 +137,7 @@ public class BarGraphActivity extends DefaultCommonActivity implements OnChartVa
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_input_recurring_edit, menu);
+        getMenuInflater().inflate(R.menu.menu_bar_graph, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -156,6 +156,11 @@ public class BarGraphActivity extends DefaultCommonActivity implements OnChartVa
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     *
+     * @param count
+     * @param range
+     */
     private void setData(int count, float range) {
 
         float start = 1f;
@@ -180,8 +185,7 @@ public class BarGraphActivity extends DefaultCommonActivity implements OnChartVa
         TypedValue barColorTv = new TypedValue();
         getTheme().resolveAttribute(R.attr.colorPrimary, barColorTv, true);
         set1.setDrawIcons(false);
-//        set1.setColor(barColorTv.resourceId);
-        set1.setColor(ContextCompat.getColor(this, R.color.primary));
+        set1.setColor(ContextCompat.getColor(this, barColorTv.resourceId));
         List<IBarDataSet> dataSets = new ArrayList<>();
         dataSets.add(set1);
         BarData data = new BarData(dataSets);
@@ -236,20 +240,28 @@ public class BarGraphActivity extends DefaultCommonActivity implements OnChartVa
 
     @Override
     public void onNothingSelected() {
-
     }
 
     private class MyAxisValueFormatter implements IAxisValueFormatter {
 
         private DecimalFormat mFormat;
+        private boolean isDecimal;
 
         private MyAxisValueFormatter() {
-            mFormat = new DecimalFormat("###,###,###,##0.0");
+            isDecimal = mProjectDm.getDecimalStatus();
+            mFormat = (isDecimal) ?
+                    new DecimalFormat("#,##0.00") :
+                    new DecimalFormat("#,###");
         }
 
         @Override
         public String getFormattedValue(float value, AxisBase axis) {
-            return mFormat.format(value) + " $";
+            if (isDecimal) {
+                Double doubleVal = value / 100D;
+                return mFormat.format(doubleVal);
+            } else {
+                return mFormat.format(value);
+            }
         }
     }
 
