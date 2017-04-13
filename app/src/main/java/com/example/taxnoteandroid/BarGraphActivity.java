@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
@@ -28,12 +29,12 @@ import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
-import com.github.mikephil.charting.utils.ColorTemplate;
 import com.github.mikephil.charting.utils.MPPointF;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 /**
  * Created by b0ne on 2017/04/13.
@@ -104,12 +105,13 @@ public class BarGraphActivity extends DefaultCommonActivity implements OnChartVa
         leftAxis.setSpaceTop(15f);
         leftAxis.setAxisMinimum(0f); // this replaces setStartAtZero(true)
 
-        YAxis rightAxis = mChart.getAxisRight();
-        rightAxis.setDrawGridLines(false);
-        rightAxis.setLabelCount(8, false);
-        rightAxis.setValueFormatter(custom);
-        rightAxis.setSpaceTop(15f);
-        rightAxis.setAxisMinimum(0f); // this replaces setStartAtZero(true)
+        mChart.getAxisRight().setEnabled(false);
+//        YAxis rightAxis = mChart.getAxisRight();
+//        rightAxis.setDrawGridLines(false);
+//        rightAxis.setLabelCount(8, false);
+//        rightAxis.setValueFormatter(custom);
+//        rightAxis.setSpaceTop(15f);
+//        rightAxis.setAxisMinimum(0f); // this replaces setStartAtZero(true)
 
         Legend l = mChart.getLegend();
         l.setVerticalAlignment(Legend.LegendVerticalAlignment.BOTTOM);
@@ -164,15 +166,29 @@ public class BarGraphActivity extends DefaultCommonActivity implements OnChartVa
             float mult = (range + 1);
             float val = (float) (Math.random() * mult);
 
-            if (Math.random() * 100 < 25) {
-                yVals1.add(new BarEntry(i, val, ContextCompat.getDrawable(this, R.drawable.ic_delete_forever_black_24dp)));
-            } else {
-                yVals1.add(new BarEntry(i, val));
-            }
+//            if (Math.random() * 100 < 25) {
+//                yVals1.add(new BarEntry(i, val, ContextCompat.getDrawable(this, R.drawable.ic_delete_forever_black_24dp)));
+//            } else {
+//                yVals1.add(new BarEntry(i, val));
+//            }
+            yVals1.add(new BarEntry(i, val));
         }
 
-        BarDataSet set1;
+//        BarDataSet set1;
+        /**/
+        BarDataSet set1 = new BarDataSet(yVals1, null);
+        TypedValue barColorTv = new TypedValue();
+        getTheme().resolveAttribute(R.attr.colorPrimary, barColorTv, true);
+        set1.setDrawIcons(false);
+//        set1.setColor(barColorTv.resourceId);
+        set1.setColor(ContextCompat.getColor(this, R.color.primary));
+        List<IBarDataSet> dataSets = new ArrayList<>();
+        dataSets.add(set1);
+        BarData data = new BarData(dataSets);
+        mChart.setData(data);
+        mChart.getLegend().setEnabled(false); /**/
 
+        /*
         if (mChart.getData() != null &&
                 mChart.getData().getDataSetCount() > 0) {
             set1 = (BarDataSet) mChart.getData().getDataSetByIndex(0);
@@ -186,7 +202,7 @@ public class BarGraphActivity extends DefaultCommonActivity implements OnChartVa
 
             set1.setColors(ColorTemplate.MATERIAL_COLORS);
 
-            ArrayList<IBarDataSet> dataSets = new ArrayList<IBarDataSet>();
+            ArrayList<IBarDataSet> dataSets = new ArrayList<>();
             dataSets.add(set1);
 
             BarData data = new BarData(dataSets);
@@ -194,7 +210,7 @@ public class BarGraphActivity extends DefaultCommonActivity implements OnChartVa
             data.setBarWidth(0.9f);
 
             mChart.setData(data);
-        }
+        } */
     }
 
     protected RectF mOnValueSelectedRectF = new RectF();

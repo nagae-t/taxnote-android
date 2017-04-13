@@ -110,7 +110,7 @@ public class GraphHistoryRecyclerAdapter extends RecyclerView.Adapter<BindingHol
     }
 
     @Override
-    public void onBindViewHolder(BindingHolder holder, int position) {
+    public void onBindViewHolder(BindingHolder holder, final int position) {
         int viewType = holder.getItemViewType();
         final Entry entry = mDataList.get(position);
 
@@ -173,6 +173,13 @@ public class GraphHistoryRecyclerAdapter extends RecyclerView.Adapter<BindingHol
                 cellBinding.price.setTextColor(priceColor);
                 cellBinding.price.setText(priceString);
                 cellBinding.labelName.setText(entry.titleName);
+                cellBinding.getRoot().setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        if (mOnItemClickListener != null)
+                            mOnItemClickListener.onItemClick(view, position, entry);
+                    }
+                });
                 break;
         }
     }

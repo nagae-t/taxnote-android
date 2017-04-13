@@ -87,13 +87,12 @@ public class GraphContentFragment extends Fragment {
                 refreshSyncData();
             }
         });
+        loadGraphData();
     }
 
     @Override
     public void onResume() {
         super.onResume();
-
-        loadGraphData();
     }
 
     private void refreshSyncData() {
@@ -189,6 +188,14 @@ public class GraphContentFragment extends Fragment {
                 }
             });
             binding.recyclerContent.setAdapter(mRecyclerAdapter);
+            mRecyclerAdapter.setOnItemClickListener(new GraphHistoryRecyclerAdapter.OnItemClickListener() {
+                @Override
+                public void onItemClick(View view, int position, Entry item) {
+                    boolean isExpense = getArguments().getBoolean(KEY_IS_EXPENSE, true);
+                    Calendar targetCalendar  = (Calendar) getArguments().getSerializable(KEY_TARGET_CALENDAR);
+                    BarGraphActivity.start(mContext, isExpense, targetCalendar, mPeriodType);
+                }
+            });
         }
     }
 }
