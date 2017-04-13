@@ -211,7 +211,6 @@ public class TNApiModel extends TNApi {
             public void onSuccess(Response response, String content) {
 
                 JsonArray jsArray = jsParser.parse(content).getAsJsonArray();
-                Log.v("TEST", "getRecurrings onSucess: " + jsArray.toString());
                 executeUpdateDbTask(UpdateDbAsyncTask.TYPE_RECURRING,
                         jsArray, callback, response, content);
             }

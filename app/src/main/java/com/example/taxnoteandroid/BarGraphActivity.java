@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.graphics.RectF;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
@@ -11,21 +12,23 @@ import android.util.Log;
 import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.TextView;
 
 import com.example.taxnoteandroid.Library.DayAxisValueFormatter;
+import com.example.taxnoteandroid.Library.EntryLimitManager;
+import com.example.taxnoteandroid.dataManager.EntryDataManager;
 import com.example.taxnoteandroid.dataManager.ProjectDataManager;
+import com.example.taxnoteandroid.dataManager.ReasonDataManager;
 import com.example.taxnoteandroid.databinding.ActivityBarGraphBinding;
+import com.example.taxnoteandroid.model.Entry;
+import com.example.taxnoteandroid.model.Reason;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.Legend;
-import com.github.mikephil.charting.components.MarkerView;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
-import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
@@ -33,9 +36,13 @@ import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.utils.MPPointF;
 
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 /**
  * Created by b0ne on 2017/04/13.
@@ -47,18 +54,34 @@ public class BarGraphActivity extends DefaultCommonActivity implements OnChartVa
     protected BarChart mChart;
 
     private ProjectDataManager mProjectDm;
+    private EntryDataManager mEntryDm;
+    private ReasonDataManager mReasonDm;
+    private Reason mReason = null;
+
+    private int mXNum = 0;
 
     private static final String KEY_IS_EXPENSE = "is_expense";
     private static final String KEY_TARGET_CALENDAR = "target_calendar";
     private static final String KEY_PERIOD_TYPE = "period_type";
+    private static final String KEY_REASON_UUID = "reason_uuid";
 
-    public static final int PERIOD_TYPE_MONTH = 1;
-    public static final int PERIOD_TYPE_YEAR = 2;
+    public static final int PERIOD_TYPE_YEAR = 1;
+    public static final int PERIOD_TYPE_MONTH = 2;
 
     public static void start(Context context, boolean isExpense, Calendar targetCalender, int periodType) {
         Intent intent = new Intent(context, BarGraphActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.putExtra(KEY_IS_EXPENSE, isExpense);
+        intent.putExtra(KEY_TARGET_CALENDAR, targetCalender);
+        intent.putExtra(KEY_PERIOD_TYPE, periodType);
+        context.startActivity(intent);
+    }
+
+    public static void startForReason(Context context, String reasonUuid,
+                                      Calendar targetCalender, int periodType) {
+        Intent intent = new Intent(context, BarGraphActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.putExtra(KEY_REASON_UUID, reasonUuid);
         intent.putExtra(KEY_TARGET_CALENDAR, targetCalender);
         intent.putExtra(KEY_PERIOD_TYPE, periodType);
         context.startActivity(intent);
@@ -73,6 +96,17 @@ public class BarGraphActivity extends DefaultCommonActivity implements OnChartVa
         actionBar.setDisplayHomeAsUpEnabled(true);
 
         mProjectDm = new ProjectDataManager(this);
+        mEntryDm = new EntryDataManager(this);
+        mReasonDm = new ReasonDataManager(this);
+
+        boolean isExpense = getIntent().getBooleanExtra(KEY_IS_EXPENSE, true);
+        String reasonUuid = getIntent().getStringExtra(KEY_REASON_UUID);
+        if (reasonUuid != null) {
+            mReason = mReasonDm.findByUuid(reasonUuid);
+            isExpense = mReason.isExpense;
+        }
+        int periodType = getIntent().getIntExtra(KEY_PERIOD_TYPE, 2);
+        Calendar targetCalendar = (Calendar) getIntent().getSerializableExtra(KEY_TARGET_CALENDAR);
 
         mChart = binding.chart1;
         mChart.setOnChartValueSelectedListener(this);
@@ -81,57 +115,14 @@ public class BarGraphActivity extends DefaultCommonActivity implements OnChartVa
         mChart.setDrawValueAboveBar(true);
         mChart.getDescription().setEnabled(false);
 
-        // if more than 60 entries are displayed in the chart, no values will be
-        // drawn
-        mChart.setMaxVisibleValueCount(60);
-
         // scaling can now only be done on x- and y-axis separately
         mChart.setPinchZoom(false);
 
         mChart.setDrawGridBackground(false);
-        // mChart.setDrawYLabels(false);
 
-        // X軸の設定
-        IAxisValueFormatter xAxisFormatter = DayAxisValueFormatter.newInstance(this, mChart, 1);
 
-        XAxis xAxis = mChart.getXAxis();
-        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
-        xAxis.setDrawGridLines(false);
-        xAxis.setGranularity(1f); // only intervals of 1 day
-        xAxis.setLabelCount(7);
-        xAxis.setValueFormatter(xAxisFormatter);
-
-        IAxisValueFormatter custom = new MyAxisValueFormatter();
-
-        // Y軸の設定
-        YAxis leftAxis = mChart.getAxisLeft();
-        leftAxis.setLabelCount(8, false);
-        leftAxis.setValueFormatter(custom);
-        leftAxis.setPosition(YAxis.YAxisLabelPosition.OUTSIDE_CHART);
-        leftAxis.setSpaceTop(8f);
-        leftAxis.setAxisMinimum(0f); // this replaces setStartAtZero(true)
-
-        mChart.getAxisRight().setEnabled(false);
-
-        Legend l = mChart.getLegend();
-        l.setVerticalAlignment(Legend.LegendVerticalAlignment.BOTTOM);
-        l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.LEFT);
-        l.setOrientation(Legend.LegendOrientation.HORIZONTAL);
-        l.setDrawInside(false);
-        l.setForm(Legend.LegendForm.SQUARE);
-        l.setFormSize(9f);
-        l.setTextSize(11f);
-        l.setXEntrySpace(4f);
-        // l.setExtra(ColorTemplate.VORDIPLOM_COLORS, new String[] { "abc",
-        // "def", "ghj", "ikl", "mno" });
-        // l.setCustom(ColorTemplate.VORDIPLOM_COLORS, new String[] { "abc",
-        // "def", "ghj", "ikl", "mno" });
-
-        XYMarkerView mv = new XYMarkerView(this, xAxisFormatter);
-        mv.setChartView(mChart); // For bounds control
-//        mChart.setMarker(mv); // Set the marker to the chart
-
-        setData(12, 50);
+        long[] startEndDate = EntryLimitManager.getStartAndEndDate(this, periodType, targetCalendar);
+        new EntryDataTask(isExpense).execute(startEndDate);
 
     }
 
@@ -220,7 +211,7 @@ public class BarGraphActivity extends DefaultCommonActivity implements OnChartVa
     protected RectF mOnValueSelectedRectF = new RectF();
 
     @Override
-    public void onValueSelected(Entry e, Highlight h) {
+    public void onValueSelected(com.github.mikephil.charting.data.Entry e, Highlight h) {
         if (e == null)
             return;
 
@@ -265,6 +256,7 @@ public class BarGraphActivity extends DefaultCommonActivity implements OnChartVa
         }
     }
 
+    /*
     private class XYMarkerView extends MarkerView {
 
         private TextView tvContent;
@@ -293,6 +285,137 @@ public class BarGraphActivity extends DefaultCommonActivity implements OnChartVa
         @Override
         public MPPointF getOffset() {
             return new MPPointF(-(getWidth() / 2), -getHeight());
+        }
+    }*/
+
+    private class EntryDataTask extends AsyncTask<long[], Integer, ArrayList<BarEntry>> {
+        private boolean isExpense;
+
+        public EntryDataTask(boolean isExpense) {
+            this.isExpense = isExpense;
+        }
+
+        @Override
+        protected ArrayList<BarEntry> doInBackground(long[]... longs) {
+            long[] startEndDate = longs[0];
+
+            // debug
+            Calendar startCal = Calendar.getInstance();
+            startCal.clear();
+            startCal.setTimeInMillis(startEndDate[0]);
+            Calendar endCal = Calendar.getInstance();
+            endCal.clear();
+            endCal.setTimeInMillis(startEndDate[1]);
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
+                    getString(R.string.date_string_format_to_year_month_day),
+                    Locale.getDefault());
+            String startCalStr = simpleDateFormat.format(startCal.getTime());
+            String endCalStr = simpleDateFormat.format(endCal.getTime());
+            // 差分の日数を計算
+            final long DAY_MILLISECONDS = 1000 * 60 * 60 * 24;
+            long diff =  endCal.getTimeInMillis() - startCal.getTimeInMillis();
+            mXNum = (int)(diff / DAY_MILLISECONDS);
+            Log.v("TEST", "startCal : " + startCalStr + ", endCal : " + endCalStr
+                    + ", dayDiff : " + mXNum);
+
+            ArrayList<BarEntry> entryData = new ArrayList<>();
+            List<Entry> entries = mEntryDm.findAll(startEndDate, isExpense, true);
+
+            Map<String, Long> entryMap = new LinkedHashMap<>();
+            for (Entry entry : entries) {
+                Calendar calendar = Calendar.getInstance();
+                calendar.clear();
+                calendar.setTimeInMillis(entry.date);
+
+                calendar.set(calendar.get(Calendar.YEAR),
+                        calendar.get(Calendar.MONTH),
+                        calendar.get(Calendar.DATE), 0, 0, 0);
+                String dateStr = calendar.get(Calendar.YEAR) + "_"
+                        + calendar.get(Calendar.MONTH) + "_"
+                        + calendar.get(Calendar.DATE);
+
+                if (entryMap.containsKey(dateStr)) {
+                    entryMap.put(dateStr, entryMap.get(dateStr)+entry.price);
+                } else {
+                    entryMap.put(dateStr, entry.price);
+                }
+            }
+
+//            int startDate = startCal.get(Calendar.DATE);
+            for (int i=0; i<mXNum; i++) {
+                Calendar _cal = (Calendar) startCal.clone();
+                _cal.set(_cal.get(Calendar.YEAR), _cal.get(Calendar.MONTH),
+                        _cal.get(Calendar.DATE), 0, 0, 0);
+                if (i > 0) _cal.add(Calendar.DAY_OF_MONTH, i);
+//                String _calStr = simpleDateFormat.format(_cal.getTime());
+                String dateStr = _cal.get(Calendar.YEAR) + "_"
+                        + _cal.get(Calendar.MONTH) + "_"
+                        + _cal.get(Calendar.DATE);
+                Long _price = entryMap.get(dateStr);
+                long price = (_price == null) ? 0 : _price;
+
+                BarEntry barEntry = new BarEntry(i, (float)price);
+                entryData.add(barEntry);
+            }
+
+            return entryData;
+        }
+
+        @Override
+        protected void onPostExecute(ArrayList<BarEntry> result) {
+            if (result == null || result.size() == 0) return;
+
+
+            // if more than 60 entries are displayed in the chart, no values will be
+            // drawn
+            mChart.setMaxVisibleValueCount(result.size()+1);
+
+            // X軸の設定
+            IAxisValueFormatter xAxisFormatter = DayAxisValueFormatter.newInstance(
+                    getApplicationContext(), mChart, 1);
+
+            XAxis xAxis = mChart.getXAxis();
+            xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+            xAxis.setDrawGridLines(false);
+            xAxis.setGranularity(1f); // only intervals of 1 day
+            xAxis.setLabelCount(7);
+            xAxis.setValueFormatter(xAxisFormatter);
+
+            IAxisValueFormatter custom = new MyAxisValueFormatter();
+
+            // Y軸の設定
+            YAxis leftAxis = mChart.getAxisLeft();
+            leftAxis.setLabelCount(8, false);
+            leftAxis.setValueFormatter(custom);
+            leftAxis.setPosition(YAxis.YAxisLabelPosition.OUTSIDE_CHART);
+            leftAxis.setSpaceTop(8f);
+            leftAxis.setAxisMinimum(0f); // this replaces setStartAtZero(true)
+
+            mChart.getAxisRight().setEnabled(false);
+
+            Legend l = mChart.getLegend();
+            l.setVerticalAlignment(Legend.LegendVerticalAlignment.BOTTOM);
+            l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.LEFT);
+            l.setOrientation(Legend.LegendOrientation.HORIZONTAL);
+            l.setDrawInside(false);
+            l.setForm(Legend.LegendForm.SQUARE);
+            l.setFormSize(9f);
+            l.setTextSize(11f);
+            l.setXEntrySpace(4f);
+
+//            setData(12, 50);
+
+            BarDataSet set1 = new BarDataSet(result, null);
+            TypedValue barColorTv = new TypedValue();
+            getTheme().resolveAttribute(R.attr.colorPrimary, barColorTv, true);
+            set1.setDrawIcons(false);
+            set1.setColor(ContextCompat.getColor(
+                    getApplicationContext(), barColorTv.resourceId));
+            List<IBarDataSet> dataSets = new ArrayList<>();
+            dataSets.add(set1);
+            BarData data = new BarData(dataSets);
+            mChart.setData(data);
+            mChart.getLegend().setEnabled(false);
         }
     }
 }

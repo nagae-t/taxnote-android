@@ -18,8 +18,8 @@ public class DayAxisValueFormatter implements IAxisValueFormatter {
     private BarLineChartBase<?> chart;
     private int mValueType = 1;
 
-    private static final int VALUE_TYPE_MONTH = 1;
-    private static final int VALUE_TYPE_YEAR = 2;
+    private static final int VALUE_TYPE_YEAR = 1;
+    private static final int VALUE_TYPE_MONTH = 2;
 
     public static DayAxisValueFormatter newInstance(Context context, BarLineChartBase<?> chart, int valueType) {
         DayAxisValueFormatter valueFormatter = new DayAxisValueFormatter(context, chart, valueType);
