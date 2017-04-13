@@ -80,6 +80,8 @@
         <activity android:name=".ProfitLossExportActivity"
             android:label="@string/profit_loss_export"
             android:screenOrientation="portrait" />
+        <activity android:name=".BarGraphActivity"
+            android:screenOrientation="portrait" />
         <activity android:name=".LoginCloudActivity"
             android:label="@string/login"
             android:screenOrientation="portrait" />

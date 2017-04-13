@@ -111,7 +111,7 @@ dependencies {
     apt 'org.parceler:parceler:1.1.6'
 
     // MPAndroidChart
-    compile 'com.github.PhilJay:MPAndroidChart:v3.0.1'
+    compile 'com.github.PhilJay:MPAndroidChart:v3.0.2'
 
     // OkHttp
     compile 'com.squareup.okhttp3:okhttp:3.4.1'
