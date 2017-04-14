@@ -15,6 +15,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.example.taxnoteandroid.Library.DayAxisValueFormatter;
+import com.example.taxnoteandroid.Library.DialogManager;
 import com.example.taxnoteandroid.Library.EntryLimitManager;
 import com.example.taxnoteandroid.dataManager.EntryDataManager;
 import com.example.taxnoteandroid.dataManager.ProjectDataManager;
@@ -61,6 +62,7 @@ public class BarGraphActivity extends DefaultCommonActivity implements OnChartVa
     private int mPeriodType;
     private Calendar mTargetCalendar;
     private ArrayList<BarEntry> mBarEntries;
+    private List<Calendar> mCalendars;
 
     private int mXNum = 0;
 
@@ -106,6 +108,12 @@ public class BarGraphActivity extends DefaultCommonActivity implements OnChartVa
         if (mPeriodType > EntryDataManager.PERIOD_TYPE_MONTH)
             mPeriodType = EntryDataManager.PERIOD_TYPE_MONTH;
 
+        setTitleName();
+
+        loadDataToView();
+    }
+
+    private void setTitleName() {
         String titleDateFormat = (mPeriodType == EntryDataManager.PERIOD_TYPE_MONTH)
                 ? getString(R.string.date_string_format_to_year_month)
                 : getString(R.string.date_string_format_to_year);
@@ -123,8 +131,6 @@ public class BarGraphActivity extends DefaultCommonActivity implements OnChartVa
             titleName = titleDateString + " " + mReason.name;
         }
         setTitle(titleName);
-
-        loadDataToView();
     }
 
     private void loadDataToView() {
@@ -159,6 +165,9 @@ public class BarGraphActivity extends DefaultCommonActivity implements OnChartVa
                 return true;
             case R.id.action_is_expense:
                 // switch graph
+                mIsExpense = !mIsExpense;
+                setTitleName();
+                loadDataToView();
                 break;
             case R.id.divide_by_year:
                 mPeriodType = EntryDataManager.PERIOD_TYPE_YEAR;
@@ -180,23 +189,29 @@ public class BarGraphActivity extends DefaultCommonActivity implements OnChartVa
         if (e == null)
             return;
 
-        Log.v("TEST", "entry x: "+ e.getX() + ", y: " + e.getY());
         RectF bounds = mOnValueSelectedRectF;
         mChart.getBarBounds((BarEntry) e, bounds);
         MPPointF position = mChart.getPosition(e, YAxis.AxisDependency.LEFT);
-
-//        Log.v("TEST", "bounds: "+bounds.toString());
-//        Log.v("TEST", "position: "+ position.toString());
-//
-//        Log.v("TEST","x-index low: "
-//                + mChart.getLowestVisibleX() + ", high: "
-//                + mChart.getHighestVisibleX());
-
         MPPointF.recycleInstance(position);
+
+        Log.v("TEST", "entry x: "+ e.getX() + ", y: " + e.getY());
+        if ((int)e.getY() > 0)
+            showBarInfoDialog((int)e.getX(), (long)e.getY());
     }
 
     @Override
     public void onNothingSelected() {
+    }
+
+    private void showBarInfoDialog(int x, long price) {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
+                getString(R.string.date_string_format_to_year_month_day),
+                Locale.getDefault());
+        Calendar _cal = mCalendars.get(x);
+        String calStr = simpleDateFormat.format(_cal.getTime());
+        Log.v("TEST", "calStr: " + calStr);
+        DialogManager.showBarInfoDialog(this,
+                mPeriodType, _cal, mReason, mIsExpense, price);
     }
 
     private class MyAxisValueFormatter implements IAxisValueFormatter {
@@ -238,9 +253,11 @@ public class BarGraphActivity extends DefaultCommonActivity implements OnChartVa
             Calendar startCal = Calendar.getInstance();
             startCal.clear();
             startCal.setTimeInMillis(startEndDate[0]);
+            startCal.set(Calendar.MILLISECOND, 0);
             Calendar endCal = Calendar.getInstance();
             endCal.clear();
             endCal.setTimeInMillis(startEndDate[1]);
+            endCal.set(Calendar.MILLISECOND, 0);
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
                     getString(R.string.date_string_format_to_year_month_day),
                     Locale.getDefault());
@@ -253,6 +270,7 @@ public class BarGraphActivity extends DefaultCommonActivity implements OnChartVa
 
 
             mBarEntries = new ArrayList<>();
+            mCalendars = new ArrayList<>();
             List<Entry> entries = mEntryDm.findAll(startEndDate, isExpense, true);
 
 //            Log.v("TEST", "startCal : " + startCalStr + ", endCal : " + endCalStr
@@ -267,6 +285,7 @@ public class BarGraphActivity extends DefaultCommonActivity implements OnChartVa
                 calendar.set(calendar.get(Calendar.YEAR),
                         calendar.get(Calendar.MONTH),
                         calendar.get(Calendar.DATE), 0, 0, 0);
+                calendar.set(Calendar.MILLISECOND, 0);
                 String periodStr = (isPeriodYear)
                         ? calendar.get(Calendar.YEAR) + "_" + calendar.get(Calendar.MONTH)
                         : calendar.get(Calendar.YEAR) + "_"
@@ -284,6 +303,7 @@ public class BarGraphActivity extends DefaultCommonActivity implements OnChartVa
 //            int startDate = startCal.get(Calendar.DATE);
             for (int i=0; i<mXNum; i++) {
                 Calendar _cal = (Calendar) startCal.clone();
+
                 _cal.set(_cal.get(Calendar.YEAR), _cal.get(Calendar.MONTH),
                         _cal.get(Calendar.DATE), 0, 0, 0);
                 if (i > 0) {
@@ -304,6 +324,7 @@ public class BarGraphActivity extends DefaultCommonActivity implements OnChartVa
 
                 BarEntry barEntry = new BarEntry(i, (float)price);
                 mBarEntries.add(barEntry);
+                mCalendars.add(_cal);
             }
 
             return mBarEntries;

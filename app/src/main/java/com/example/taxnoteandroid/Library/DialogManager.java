@@ -11,16 +11,21 @@ import android.view.Gravity;
 import android.widget.Toast;
 
 import com.example.taxnoteandroid.DataExportActivity;
+import com.example.taxnoteandroid.HistoryListDataActivity;
 import com.example.taxnoteandroid.R;
 import com.example.taxnoteandroid.TNSimpleDialogFragment;
 import com.example.taxnoteandroid.UpgradeActivity;
 import com.example.taxnoteandroid.dataManager.EntryDataManager;
 import com.example.taxnoteandroid.dataManager.SharedPreferencesManager;
 import com.example.taxnoteandroid.model.Entry;
+import com.example.taxnoteandroid.model.Reason;
 import com.github.javiersantos.appupdater.AppUpdater;
 import com.helpshift.support.Support;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by umemotonon on 2016/12/24.
@@ -616,6 +621,40 @@ public class DialogManager {
                     }
                 })
                 .setNegativeButton(R.string.cancel, null)
+                .show();
+    }
+
+
+    //--------------------------------------------------------------//
+    //    -- Bar Graph --
+    //--------------------------------------------------------------//
+
+    public static void showBarInfoDialog(final Activity activity, int periodType,
+                                         final Calendar targetCalendar, Reason reason,
+                                         final boolean isExpense, long price) {
+
+        String dateFormatString = (periodType == EntryDataManager.PERIOD_TYPE_YEAR)
+                ? activity.getString(R.string.date_string_format_to_year_month)
+                : activity.getString(R.string.date_string_format_to_year_month_day);
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
+                dateFormatString, Locale.getDefault());
+        String calStr = simpleDateFormat.format(targetCalendar.getTime());
+        String isExpenseString = (isExpense) ? activity.getString(R.string.Expense)
+                : activity.getString(R.string.Income);
+        String message = calStr + " " + isExpenseString
+                + "\n" + ValueConverter.formatPrice(activity, price);
+        final String reasonName = (reason == null) ? null : reason.name;
+
+        new AlertDialog.Builder(activity)
+                .setMessage(message)
+                .setNeutralButton(R.string.History, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        HistoryListDataActivity.start(activity,
+                                targetCalendar, reasonName, isExpense);
+                    }
+                })
+                .setPositiveButton(android.R.string.ok, null)
                 .show();
     }
 
