@@ -37,7 +37,7 @@ public class DayAxisValueFormatter implements IAxisValueFormatter {
 
 //        int days = (int) value;
         int xVal = (int) value;
-        if (mPeriodType == EntryDataManager.PERIOD_TYPE_YEAR) {
+        if (mPeriodType == EntryDataManager.PERIOD_TYPE_YEAR && xVal < 12) {
             String[] months = mContext.getResources().getStringArray(R.array.month_list);
             return months[xVal];
         }

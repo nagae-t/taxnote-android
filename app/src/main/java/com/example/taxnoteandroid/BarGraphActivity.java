@@ -10,7 +10,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -63,10 +62,9 @@ public class BarGraphActivity extends DefaultCommonActivity implements OnChartVa
     private boolean mIsExpense;
     private int mPeriodType;
     private Calendar mTargetCalendar;
-    private ArrayList<BarEntry> mBarEntries;
     private List<Calendar> mCalendars;
 
-    private int mXNum = 0;
+    private int mSelectedGraphXIndex;
 
     private static final String KEY_IS_EXPENSE = "is_expense";
     private static final String KEY_TARGET_CALENDAR = "target_calendar";
@@ -116,17 +114,10 @@ public class BarGraphActivity extends DefaultCommonActivity implements OnChartVa
         mReasonDm = new ReasonDataManager(this);
 
         mTargetCalendar = (Calendar) getIntent().getSerializableExtra(KEY_TARGET_CALENDAR);
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
-                getString(R.string.date_string_format_to_year_month_day),
-                Locale.getDefault());
-        String targetCalStr = simpleDateFormat.format(mTargetCalendar.getTime());
-        Log.v("TEST", "targetCalStr : " + targetCalStr);
         mIsExpense = getIntent().getBooleanExtra(KEY_IS_EXPENSE, true);
         mPeriodType = getIntent().getIntExtra(KEY_PERIOD_TYPE, 2);
         if (mPeriodType > EntryDataManager.PERIOD_TYPE_MONTH)
             mPeriodType = EntryDataManager.PERIOD_TYPE_MONTH;
-
-        setTitleName();
 
         loadDataToView();
     }
@@ -152,6 +143,7 @@ public class BarGraphActivity extends DefaultCommonActivity implements OnChartVa
     }
 
     private void loadDataToView() {
+        setTitleName();
         binding.chart1.setVisibility(View.GONE);
         long[] startEndDate = EntryLimitManager.getStartAndEndDate(this, mPeriodType, mTargetCalendar);
         new EntryDataTask().execute(startEndDate);
@@ -166,8 +158,8 @@ public class BarGraphActivity extends DefaultCommonActivity implements OnChartVa
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         MenuItem expenseMenu = menu.findItem(R.id.action_is_expense);
-        if (!mIsExpense)
-            expenseMenu.setTitle(R.string.Income);
+        int titleRes = (mIsExpense) ? R.string.Income : R.string.Expense;
+        expenseMenu.setTitle(titleRes);
 
         if (mReason != null)
             expenseMenu.setVisible(false);
@@ -182,40 +174,39 @@ public class BarGraphActivity extends DefaultCommonActivity implements OnChartVa
                 finish();
                 return true;
             case R.id.action_is_expense:
-                // switch graph
                 mIsExpense = !mIsExpense;
-                setTitleName();
+                invalidateOptionsMenu();
                 loadDataToView();
                 break;
             case R.id.divide_by_year:
                 if (mPeriodType == EntryDataManager.PERIOD_TYPE_YEAR)
                     return super.onOptionsItemSelected(item);
                 mPeriodType = EntryDataManager.PERIOD_TYPE_YEAR;
+                mTargetCalendar.set(Calendar.MONTH, 0);
                 loadDataToView();
                 break;
             case R.id.divide_by_month:
                 if (mPeriodType == EntryDataManager.PERIOD_TYPE_MONTH)
                     return super.onOptionsItemSelected(item);
                 mPeriodType = EntryDataManager.PERIOD_TYPE_MONTH;
+                mTargetCalendar.set(Calendar.MONTH, mSelectedGraphXIndex);
                 loadDataToView();
                 break;
         }
         return super.onOptionsItemSelected(item);
     }
 
-
-    protected RectF mOnValueSelectedRectF = new RectF();
-
     @Override
     public void onValueSelected(com.github.mikephil.charting.data.Entry e, Highlight h) {
         if (e == null)
             return;
 
-        RectF bounds = mOnValueSelectedRectF;
+        RectF bounds = new RectF();
         mChart.getBarBounds((BarEntry) e, bounds);
         MPPointF position = mChart.getPosition(e, YAxis.AxisDependency.LEFT);
         MPPointF.recycleInstance(position);
 
+        mSelectedGraphXIndex = (int)e.getX();
         if ((int)e.getY() > 0)
             showBarInfoDialog((int)e.getX(), (long)e.getY());
     }
@@ -283,10 +274,9 @@ public class BarGraphActivity extends DefaultCommonActivity implements OnChartVa
             // 差分の日数を計算
             final long DAY_MILLISECONDS = 1000 * 60 * 60 * 24;
             long diff =  endCal.getTimeInMillis() - startCal.getTimeInMillis();
-            mXNum = (isPeriodYear) ? 12 : (int)(diff / DAY_MILLISECONDS);
+            int xNum = (isPeriodYear) ? 12 : (int)(diff / DAY_MILLISECONDS);
 
-
-            mBarEntries = new ArrayList<>();
+            ArrayList<BarEntry> barEntries = new ArrayList<>();
             mCalendars = new ArrayList<>();
             List<Entry> entries;
             if (mReason == null) {
@@ -304,7 +294,7 @@ public class BarGraphActivity extends DefaultCommonActivity implements OnChartVa
             }
 
 //            Log.v("TEST", "startCal : " + startCalStr + ", endCal : " + endCalStr
-//                    + ", dayDiff : " + mXNum + ", entrySize: " + entries.size());
+//                    + ", dayDiff : " + xNum + ", entrySize: " + entries.size());
 
             Map<String, Long> entryMap = new LinkedHashMap<>();
             for (Entry entry : entries) {
@@ -330,7 +320,7 @@ public class BarGraphActivity extends DefaultCommonActivity implements OnChartVa
                 }
             }
 
-            for (int i=0; i<mXNum; i++) {
+            for (int i = 0; i < xNum; i++) {
                 Calendar _cal = (Calendar) startCal.clone();
 
                 _cal.set(_cal.get(Calendar.YEAR), _cal.get(Calendar.MONTH),
@@ -352,11 +342,11 @@ public class BarGraphActivity extends DefaultCommonActivity implements OnChartVa
                 long price = (_price == null) ? 0 : _price;
 
                 BarEntry barEntry = new BarEntry(i, (float)price);
-                mBarEntries.add(barEntry);
+                barEntries.add(barEntry);
                 mCalendars.add(_cal);
             }
 
-            return mBarEntries;
+            return barEntries;
         }
 
         @Override
