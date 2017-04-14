@@ -23,7 +23,6 @@ import com.example.taxnoteandroid.model.Entry;
 import com.example.taxnoteandroid.model.Reason;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.components.AxisBase;
-import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.BarData;
@@ -57,6 +56,7 @@ public class BarGraphActivity extends DefaultCommonActivity implements OnChartVa
     private EntryDataManager mEntryDm;
     private ReasonDataManager mReasonDm;
     private Reason mReason = null;
+    private boolean mIsExpense;
 
     private int mXNum = 0;
 
@@ -64,9 +64,6 @@ public class BarGraphActivity extends DefaultCommonActivity implements OnChartVa
     private static final String KEY_TARGET_CALENDAR = "target_calendar";
     private static final String KEY_PERIOD_TYPE = "period_type";
     private static final String KEY_REASON_UUID = "reason_uuid";
-
-    public static final int PERIOD_TYPE_YEAR = 1;
-    public static final int PERIOD_TYPE_MONTH = 2;
 
     public static void start(Context context, boolean isExpense, Calendar targetCalender, int periodType) {
         Intent intent = new Intent(context, BarGraphActivity.class);
@@ -99,14 +96,29 @@ public class BarGraphActivity extends DefaultCommonActivity implements OnChartVa
         mEntryDm = new EntryDataManager(this);
         mReasonDm = new ReasonDataManager(this);
 
-        boolean isExpense = getIntent().getBooleanExtra(KEY_IS_EXPENSE, true);
+        Calendar targetCalendar = (Calendar) getIntent().getSerializableExtra(KEY_TARGET_CALENDAR);
+        mIsExpense = getIntent().getBooleanExtra(KEY_IS_EXPENSE, true);
+        int periodType = getIntent().getIntExtra(KEY_PERIOD_TYPE, 2);
+        if (periodType > EntryDataManager.PERIOD_TYPE_MONTH)
+            periodType = EntryDataManager.PERIOD_TYPE_MONTH;
+
+        String titleDateFormat = (periodType == EntryDataManager.PERIOD_TYPE_MONTH)
+                ? getString(R.string.date_string_format_to_year_month)
+                : getString(R.string.date_string_format_to_year);
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
+                titleDateFormat, Locale.getDefault());
+        String isExpenseString = (mIsExpense) ? getString(R.string.Expense)
+                : getString(R.string.Income);
+        String titleDateString = simpleDateFormat.format(targetCalendar.getTime());
+        String titleName = titleDateString + " " + isExpenseString;
+
         String reasonUuid = getIntent().getStringExtra(KEY_REASON_UUID);
         if (reasonUuid != null) {
             mReason = mReasonDm.findByUuid(reasonUuid);
-            isExpense = mReason.isExpense;
+            mIsExpense = mReason.isExpense;
+            titleName = titleDateString + " " + mReason.name;
         }
-        int periodType = getIntent().getIntExtra(KEY_PERIOD_TYPE, 2);
-        Calendar targetCalendar = (Calendar) getIntent().getSerializableExtra(KEY_TARGET_CALENDAR);
+        setTitle(titleName);
 
         mChart = binding.chart1;
         mChart.setOnChartValueSelectedListener(this);
@@ -114,6 +126,8 @@ public class BarGraphActivity extends DefaultCommonActivity implements OnChartVa
         mChart.setDrawBarShadow(false);
         mChart.setDrawValueAboveBar(true);
         mChart.getDescription().setEnabled(false);
+        mChart.setNoDataText(getString(R.string.history_data_empty));
+        mChart.setNoDataTextColor(ContextCompat.getColor(this, R.color.accent));
 
         // scaling can now only be done on x- and y-axis separately
         mChart.setPinchZoom(false);
@@ -122,7 +136,7 @@ public class BarGraphActivity extends DefaultCommonActivity implements OnChartVa
 
 
         long[] startEndDate = EntryLimitManager.getStartAndEndDate(this, periodType, targetCalendar);
-        new EntryDataTask(isExpense).execute(startEndDate);
+        new EntryDataTask(mIsExpense).execute(startEndDate);
 
     }
 
@@ -134,6 +148,10 @@ public class BarGraphActivity extends DefaultCommonActivity implements OnChartVa
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
+        MenuItem expenseMenu = menu.findItem(R.id.action_is_expense);
+        if (!mIsExpense) {
+            expenseMenu.setTitle(R.string.Income);
+        }
         return super.onPrepareOptionsMenu(menu);
     }
 
@@ -143,70 +161,17 @@ public class BarGraphActivity extends DefaultCommonActivity implements OnChartVa
             case android.R.id.home:
                 finish();
                 return true;
+            case R.id.action_is_expense:
+                // switch graph
+                break;
+            case R.id.divide_by_year:
+                break;
+            case R.id.divide_by_month:
+                break;
         }
         return super.onOptionsItemSelected(item);
     }
 
-    /**
-     *
-     * @param count
-     * @param range
-     */
-    private void setData(int count, float range) {
-
-        float start = 1f;
-
-        ArrayList<BarEntry> yVals1 = new ArrayList<>();
-
-        for (int i = (int) start; i < start + count + 1; i++) {
-            float mult = (range + 1);
-            float val = (float) (Math.random() * mult);
-
-//            if (Math.random() * 100 < 25) {
-//                yVals1.add(new BarEntry(i, val, ContextCompat.getDrawable(this, R.drawable.ic_delete_forever_black_24dp)));
-//            } else {
-//                yVals1.add(new BarEntry(i, val));
-//            }
-            yVals1.add(new BarEntry(i, val));
-        }
-
-//        BarDataSet set1;
-        /**/
-        BarDataSet set1 = new BarDataSet(yVals1, null);
-        TypedValue barColorTv = new TypedValue();
-        getTheme().resolveAttribute(R.attr.colorPrimary, barColorTv, true);
-        set1.setDrawIcons(false);
-        set1.setColor(ContextCompat.getColor(this, barColorTv.resourceId));
-        List<IBarDataSet> dataSets = new ArrayList<>();
-        dataSets.add(set1);
-        BarData data = new BarData(dataSets);
-        mChart.setData(data);
-        mChart.getLegend().setEnabled(false); /**/
-
-        /*
-        if (mChart.getData() != null &&
-                mChart.getData().getDataSetCount() > 0) {
-            set1 = (BarDataSet) mChart.getData().getDataSetByIndex(0);
-            set1.setValues(yVals1);
-            mChart.getData().notifyDataChanged();
-            mChart.notifyDataSetChanged();
-        } else {
-            set1 = new BarDataSet(yVals1, "The year 2017");
-
-            set1.setDrawIcons(false);
-
-            set1.setColors(ColorTemplate.MATERIAL_COLORS);
-
-            ArrayList<IBarDataSet> dataSets = new ArrayList<>();
-            dataSets.add(set1);
-
-            BarData data = new BarData(dataSets);
-            data.setValueTextSize(10f);
-            data.setBarWidth(0.9f);
-
-            mChart.setData(data);
-        } */
-    }
 
     protected RectF mOnValueSelectedRectF = new RectF();
 
@@ -335,7 +300,8 @@ public class BarGraphActivity extends DefaultCommonActivity implements OnChartVa
                         + calendar.get(Calendar.DATE);
 
                 if (entryMap.containsKey(dateStr)) {
-                    entryMap.put(dateStr, entryMap.get(dateStr)+entry.price);
+                    Long _price = entryMap.get(dateStr)+entry.price;
+                    entryMap.put(dateStr, _price);
                 } else {
                     entryMap.put(dateStr, entry.price);
                 }
@@ -393,18 +359,7 @@ public class BarGraphActivity extends DefaultCommonActivity implements OnChartVa
 
             mChart.getAxisRight().setEnabled(false);
 
-            Legend l = mChart.getLegend();
-            l.setVerticalAlignment(Legend.LegendVerticalAlignment.BOTTOM);
-            l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.LEFT);
-            l.setOrientation(Legend.LegendOrientation.HORIZONTAL);
-            l.setDrawInside(false);
-            l.setForm(Legend.LegendForm.SQUARE);
-            l.setFormSize(9f);
-            l.setTextSize(11f);
-            l.setXEntrySpace(4f);
-
-//            setData(12, 50);
-
+            // データをグラフに反映
             BarDataSet set1 = new BarDataSet(result, null);
             TypedValue barColorTv = new TypedValue();
             getTheme().resolveAttribute(R.attr.colorPrimary, barColorTv, true);

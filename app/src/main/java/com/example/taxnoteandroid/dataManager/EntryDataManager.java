@@ -28,8 +28,6 @@ public class EntryDataManager {
     public static final int PERIOD_TYPE_YEAR = 1;
     public static final int PERIOD_TYPE_MONTH = 2;
     public static final int PERIOD_TYPE_DAY = 3;
-//    public static final int TYPE_INCOME = 10;
-//    public static final int TYPE_EXPENSE = 11;
 
     private OrmaDatabase ormaDatabase;
     private Context mContext;

@@ -380,4 +380,7 @@
         <item>土曜日</item>
     </string-array>
 
+    <string name="date_string_format_to_year_month">yyyy年M月</string>
+    <string name="date_string_format_to_year">yyyy年</string>
+
 </resources>
