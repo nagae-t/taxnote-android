@@ -2,6 +2,8 @@ package com.example.taxnoteandroid.Library;
 
 import android.content.Context;
 
+import com.example.taxnoteandroid.R;
+import com.example.taxnoteandroid.dataManager.EntryDataManager;
 import com.github.mikephil.charting.charts.BarLineChartBase;
 import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.formatter.IAxisValueFormatter;
@@ -10,49 +12,40 @@ import java.util.Locale;
 
 /**
  * Created by b0ne on 2017/04/13.
+ * https://github.com/PhilJay/MPAndroidChart/blob/master/MPChartExample/src/com/xxmassdeveloper/mpchartexample/custom/DayAxisValueFormatter.java
  */
 
 public class DayAxisValueFormatter implements IAxisValueFormatter {
 
     private Context mContext;
     private BarLineChartBase<?> chart;
-    private int mValueType = 1;
+    private int mPeriodType = 1;
 
-    private static final int VALUE_TYPE_YEAR = 1;
-    private static final int VALUE_TYPE_MONTH = 2;
-
-    public static DayAxisValueFormatter newInstance(Context context, BarLineChartBase<?> chart, int valueType) {
-        DayAxisValueFormatter valueFormatter = new DayAxisValueFormatter(context, chart, valueType);
+    public static DayAxisValueFormatter newInstance(Context context, BarLineChartBase<?> chart, int periodType) {
+        DayAxisValueFormatter valueFormatter = new DayAxisValueFormatter(context, chart, periodType);
         return valueFormatter;
     }
 
-    public DayAxisValueFormatter(Context context, BarLineChartBase<?> chart, int valueType) {
+    public DayAxisValueFormatter(Context context, BarLineChartBase<?> chart, int periodType) {
         this.mContext = context;
         this.chart = chart;
-        this.mValueType = valueType;
+        this.mPeriodType = periodType;
     }
 
     @Override
     public String getFormattedValue(float value, AxisBase axis) {
 
-        int days = (int) value;
+//        int days = (int) value;
+        int xVal = (int) value;
+        if (mPeriodType == EntryDataManager.PERIOD_TYPE_YEAR) {
+            String[] months = mContext.getResources().getStringArray(R.array.month_list);
+            return months[xVal];
+        }
 
-        int year = determineYear(days);
-
-        int month = determineMonth(days);
-//        String[] months = mContext.getResources().getStringArray(R.array.month_list);
-//        String monthName = mMonths[month % mMonths.length];
-        String yearName = String.valueOf(year);
-
-//        if (chart.getVisibleXRange() > 30 * 6) {
-//            return monthName + " " + yearName;
-//        }
-
-        int dayOfMonth = determineDayOfMonth(days, month + 12 * (year - 2016));
-
+        xVal += 1;
         String appendix = "th";
 
-        switch (dayOfMonth) {
+        switch (xVal) {
             case 1:
                 appendix = "st";
                 break;
@@ -80,8 +73,7 @@ public class DayAxisValueFormatter implements IAxisValueFormatter {
         if (Locale.getDefault().getLanguage().equals("ja")) {
             appendix = "日";
         }
-        return dayOfMonth == 0 ? "" : dayOfMonth + appendix;
-//            return dayOfMonth == 0 ? "" : dayOfMonth + appendix + " " + monthName;
+        return xVal == 0 ? "" : xVal + appendix;
     }
 
     private int getDaysForMonth(int month, int year) {

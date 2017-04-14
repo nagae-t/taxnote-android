@@ -57,6 +57,7 @@ public class BarGraphActivity extends DefaultCommonActivity implements OnChartVa
     private ReasonDataManager mReasonDm;
     private Reason mReason = null;
     private boolean mIsExpense;
+    private int mPeriodType;
 
     private int mXNum = 0;
 
@@ -98,11 +99,11 @@ public class BarGraphActivity extends DefaultCommonActivity implements OnChartVa
 
         Calendar targetCalendar = (Calendar) getIntent().getSerializableExtra(KEY_TARGET_CALENDAR);
         mIsExpense = getIntent().getBooleanExtra(KEY_IS_EXPENSE, true);
-        int periodType = getIntent().getIntExtra(KEY_PERIOD_TYPE, 2);
-        if (periodType > EntryDataManager.PERIOD_TYPE_MONTH)
-            periodType = EntryDataManager.PERIOD_TYPE_MONTH;
+        mPeriodType = getIntent().getIntExtra(KEY_PERIOD_TYPE, 2);
+        if (mPeriodType > EntryDataManager.PERIOD_TYPE_MONTH)
+            mPeriodType = EntryDataManager.PERIOD_TYPE_MONTH;
 
-        String titleDateFormat = (periodType == EntryDataManager.PERIOD_TYPE_MONTH)
+        String titleDateFormat = (mPeriodType == EntryDataManager.PERIOD_TYPE_MONTH)
                 ? getString(R.string.date_string_format_to_year_month)
                 : getString(R.string.date_string_format_to_year);
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
@@ -124,8 +125,8 @@ public class BarGraphActivity extends DefaultCommonActivity implements OnChartVa
         mChart.setOnChartValueSelectedListener(this);
 
         mChart.setDrawBarShadow(false);
-        mChart.setDrawValueAboveBar(true);
         mChart.getDescription().setEnabled(false);
+        mChart.getLegend().setEnabled(false);
         mChart.setNoDataText(getString(R.string.history_data_empty));
         mChart.setNoDataTextColor(ContextCompat.getColor(this, R.color.accent));
 
@@ -135,7 +136,7 @@ public class BarGraphActivity extends DefaultCommonActivity implements OnChartVa
         mChart.setDrawGridBackground(false);
 
 
-        long[] startEndDate = EntryLimitManager.getStartAndEndDate(this, periodType, targetCalendar);
+        long[] startEndDate = EntryLimitManager.getStartAndEndDate(this, mPeriodType, targetCalendar);
         new EntryDataTask(mIsExpense).execute(startEndDate);
 
     }
@@ -184,12 +185,12 @@ public class BarGraphActivity extends DefaultCommonActivity implements OnChartVa
         mChart.getBarBounds((BarEntry) e, bounds);
         MPPointF position = mChart.getPosition(e, YAxis.AxisDependency.LEFT);
 
-        Log.i("bounds", bounds.toString());
-        Log.i("position", position.toString());
+        Log.v("TEST", "bounds: "+bounds.toString());
+        Log.v("TEST","position: "+ position.toString());
 
-        Log.i("x-index",
-                "low: " + mChart.getLowestVisibleX() + ", high: "
-                        + mChart.getHighestVisibleX());
+        Log.v("TEST","x-index low: "
+                + mChart.getLowestVisibleX() + ", high: "
+                + mChart.getHighestVisibleX());
 
         MPPointF.recycleInstance(position);
     }
@@ -263,6 +264,7 @@ public class BarGraphActivity extends DefaultCommonActivity implements OnChartVa
         @Override
         protected ArrayList<BarEntry> doInBackground(long[]... longs) {
             long[] startEndDate = longs[0];
+            boolean isPeriodYear = (mPeriodType == EntryDataManager.PERIOD_TYPE_YEAR);
 
             // debug
             Calendar startCal = Calendar.getInstance();
@@ -279,12 +281,14 @@ public class BarGraphActivity extends DefaultCommonActivity implements OnChartVa
             // 差分の日数を計算
             final long DAY_MILLISECONDS = 1000 * 60 * 60 * 24;
             long diff =  endCal.getTimeInMillis() - startCal.getTimeInMillis();
-            mXNum = (int)(diff / DAY_MILLISECONDS);
-            Log.v("TEST", "startCal : " + startCalStr + ", endCal : " + endCalStr
-                    + ", dayDiff : " + mXNum);
+            mXNum = (isPeriodYear) ? 12 : (int)(diff / DAY_MILLISECONDS);
+
 
             ArrayList<BarEntry> entryData = new ArrayList<>();
             List<Entry> entries = mEntryDm.findAll(startEndDate, isExpense, true);
+
+            Log.v("TEST", "startCal : " + startCalStr + ", endCal : " + endCalStr
+                    + ", dayDiff : " + mXNum + ", entrySize: " + entries.size());
 
             Map<String, Long> entryMap = new LinkedHashMap<>();
             for (Entry entry : entries) {
@@ -295,29 +299,40 @@ public class BarGraphActivity extends DefaultCommonActivity implements OnChartVa
                 calendar.set(calendar.get(Calendar.YEAR),
                         calendar.get(Calendar.MONTH),
                         calendar.get(Calendar.DATE), 0, 0, 0);
-                String dateStr = calendar.get(Calendar.YEAR) + "_"
-                        + calendar.get(Calendar.MONTH) + "_"
-                        + calendar.get(Calendar.DATE);
+                String periodStr = (isPeriodYear)
+                        ? calendar.get(Calendar.YEAR) + "_" + calendar.get(Calendar.MONTH)
+                        : calendar.get(Calendar.YEAR) + "_"
+                            + calendar.get(Calendar.MONTH) + "_"
+                            + calendar.get(Calendar.DATE);
 
-                if (entryMap.containsKey(dateStr)) {
-                    Long _price = entryMap.get(dateStr)+entry.price;
-                    entryMap.put(dateStr, _price);
+                if (entryMap.containsKey(periodStr)) {
+                    Long _price = entryMap.get(periodStr)+entry.price;
+                    entryMap.put(periodStr, _price);
                 } else {
-                    entryMap.put(dateStr, entry.price);
+                    entryMap.put(periodStr, entry.price);
                 }
             }
+            Log.v("TEST", "entryMap size: " + entryMap.size());
 
 //            int startDate = startCal.get(Calendar.DATE);
             for (int i=0; i<mXNum; i++) {
                 Calendar _cal = (Calendar) startCal.clone();
                 _cal.set(_cal.get(Calendar.YEAR), _cal.get(Calendar.MONTH),
                         _cal.get(Calendar.DATE), 0, 0, 0);
-                if (i > 0) _cal.add(Calendar.DAY_OF_MONTH, i);
-//                String _calStr = simpleDateFormat.format(_cal.getTime());
-                String dateStr = _cal.get(Calendar.YEAR) + "_"
+                if (i > 0) {
+                    if (isPeriodYear) {
+                        _cal.add(Calendar.MONTH, i);
+                    } else {
+                        _cal.add(Calendar.DAY_OF_MONTH, i);
+                    }
+                }
+
+                String periodStr = (isPeriodYear)
+                        ? _cal.get(Calendar.YEAR) + "_" + _cal.get(Calendar.MONTH)
+                        : _cal.get(Calendar.YEAR) + "_"
                         + _cal.get(Calendar.MONTH) + "_"
                         + _cal.get(Calendar.DATE);
-                Long _price = entryMap.get(dateStr);
+                Long _price = entryMap.get(periodStr);
                 long price = (_price == null) ? 0 : _price;
 
                 BarEntry barEntry = new BarEntry(i, (float)price);
@@ -329,8 +344,7 @@ public class BarGraphActivity extends DefaultCommonActivity implements OnChartVa
 
         @Override
         protected void onPostExecute(ArrayList<BarEntry> result) {
-            if (result == null || result.size() == 0) return;
-
+            if (result == null) return;
 
             // if more than 60 entries are displayed in the chart, no values will be
             // drawn
@@ -338,7 +352,7 @@ public class BarGraphActivity extends DefaultCommonActivity implements OnChartVa
 
             // X軸の設定
             IAxisValueFormatter xAxisFormatter = DayAxisValueFormatter.newInstance(
-                    getApplicationContext(), mChart, 1);
+                    getApplicationContext(), mChart, mPeriodType);
 
             XAxis xAxis = mChart.getXAxis();
             xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
@@ -361,6 +375,7 @@ public class BarGraphActivity extends DefaultCommonActivity implements OnChartVa
 
             // データをグラフに反映
             BarDataSet set1 = new BarDataSet(result, null);
+            set1.setDrawValues(false);
             TypedValue barColorTv = new TypedValue();
             getTheme().resolveAttribute(R.attr.colorPrimary, barColorTv, true);
             set1.setDrawIcons(false);
@@ -370,7 +385,9 @@ public class BarGraphActivity extends DefaultCommonActivity implements OnChartVa
             dataSets.add(set1);
             BarData data = new BarData(dataSets);
             mChart.setData(data);
-            mChart.getLegend().setEnabled(false);
+            mChart.requestFocus();
+            mChart.notifyDataSetChanged();
+            Log.v("TEST", "load bar graph finished");
         }
     }
 }
