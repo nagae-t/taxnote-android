@@ -3,6 +3,7 @@ package com.example.taxnoteandroid.Library;
 import android.app.Activity;
 import android.content.Intent;
 
+import com.example.taxnoteandroid.BarGraphActivity;
 import com.example.taxnoteandroid.HistoryListDataActivity;
 import com.example.taxnoteandroid.InputRecurringListActivity;
 import com.example.taxnoteandroid.MainActivity;
@@ -28,6 +29,7 @@ public class BroadcastUtil {
     public static void sendReloadReport(Activity activity) {
         activity.sendBroadcast(new Intent(MainActivity.BROADCAST_REPORT_RELOAD));
         activity.sendBroadcast(new Intent(HistoryListDataActivity.BROADCAST_DATA_RELOAD));
+        activity.sendBroadcast(new Intent(BarGraphActivity.BROADCAST_RELOAD_DATA));
     }
 
     public static void sendSwitchGraphExpense(Activity activity) {

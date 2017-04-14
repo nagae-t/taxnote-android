@@ -633,7 +633,9 @@ public class DialogManager {
                                          final Calendar targetCalendar, Reason reason,
                                          final boolean isExpense, long price) {
 
-        String dateFormatString = (periodType == EntryDataManager.PERIOD_TYPE_YEAR)
+        final boolean isPeriodYear = (periodType == EntryDataManager.PERIOD_TYPE_YEAR);
+
+        String dateFormatString = (isPeriodYear)
                 ? activity.getString(R.string.date_string_format_to_year_month)
                 : activity.getString(R.string.date_string_format_to_year_month_day);
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
@@ -650,7 +652,9 @@ public class DialogManager {
                 .setNeutralButton(R.string.History, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        HistoryListDataActivity.start(activity,
+                        int _periodType = (isPeriodYear) ? EntryDataManager.PERIOD_TYPE_MONTH
+                                : EntryDataManager.PERIOD_TYPE_DAY;
+                        HistoryListDataActivity.start(activity, _periodType,
                                 targetCalendar, reasonName, isExpense);
                     }
                 })

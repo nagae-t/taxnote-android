@@ -1,14 +1,15 @@
 package com.example.taxnoteandroid;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.databinding.DataBindingUtil;
 import android.graphics.RectF;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -71,6 +72,16 @@ public class BarGraphActivity extends DefaultCommonActivity implements OnChartVa
     private static final String KEY_PERIOD_TYPE = "period_type";
     private static final String KEY_REASON_UUID = "reason_uuid";
 
+    public static final String BROADCAST_RELOAD_DATA
+            = "broadcast_bar_graph_reload_data";
+
+    private final BroadcastReceiver mReloadDataReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            loadDataToView();
+        }
+    };
+
     public static void start(Context context, boolean isExpense, Calendar targetCalender, int periodType) {
         Intent intent = new Intent(context, BarGraphActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -95,6 +106,7 @@ public class BarGraphActivity extends DefaultCommonActivity implements OnChartVa
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_bar_graph);
 
+        registerReceiver(mReloadDataReceiver, new IntentFilter(BROADCAST_RELOAD_DATA));
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
 
@@ -194,7 +206,6 @@ public class BarGraphActivity extends DefaultCommonActivity implements OnChartVa
         MPPointF position = mChart.getPosition(e, YAxis.AxisDependency.LEFT);
         MPPointF.recycleInstance(position);
 
-        Log.v("TEST", "entry x: "+ e.getX() + ", y: " + e.getY());
         if ((int)e.getY() > 0)
             showBarInfoDialog((int)e.getX(), (long)e.getY());
     }
@@ -204,12 +215,7 @@ public class BarGraphActivity extends DefaultCommonActivity implements OnChartVa
     }
 
     private void showBarInfoDialog(int x, long price) {
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
-                getString(R.string.date_string_format_to_year_month_day),
-                Locale.getDefault());
         Calendar _cal = mCalendars.get(x);
-        String calStr = simpleDateFormat.format(_cal.getTime());
-        Log.v("TEST", "calStr: " + calStr);
         DialogManager.showBarInfoDialog(this,
                 mPeriodType, _cal, mReason, mIsExpense, price);
     }
@@ -237,6 +243,12 @@ public class BarGraphActivity extends DefaultCommonActivity implements OnChartVa
         }
     }
 
+    @Override
+    protected void onDestroy() {
+        unregisterReceiver(mReloadDataReceiver);
+        super.onDestroy();
+    }
+
     private class EntryDataTask extends AsyncTask<long[], Integer, ArrayList<BarEntry>> {
         private boolean isExpense;
 
@@ -261,8 +273,8 @@ public class BarGraphActivity extends DefaultCommonActivity implements OnChartVa
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
                     getString(R.string.date_string_format_to_year_month_day),
                     Locale.getDefault());
-            String startCalStr = simpleDateFormat.format(startCal.getTime());
-            String endCalStr = simpleDateFormat.format(endCal.getTime());
+//            String startCalStr = simpleDateFormat.format(startCal.getTime());
+//            String endCalStr = simpleDateFormat.format(endCal.getTime());
             // 差分の日数を計算
             final long DAY_MILLISECONDS = 1000 * 60 * 60 * 24;
             long diff =  endCal.getTimeInMillis() - startCal.getTimeInMillis();
@@ -300,7 +312,6 @@ public class BarGraphActivity extends DefaultCommonActivity implements OnChartVa
                 }
             }
 
-//            int startDate = startCal.get(Calendar.DATE);
             for (int i=0; i<mXNum; i++) {
                 Calendar _cal = (Calendar) startCal.clone();
 

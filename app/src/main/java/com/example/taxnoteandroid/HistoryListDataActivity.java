@@ -30,6 +30,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -50,6 +51,7 @@ public class HistoryListDataActivity extends DefaultCommonActivity {
     private TNApiModel mApiModel;
 
     private static final String KEY_TARGET_CALENDAR = "target_calendar";
+    private static final String KEY_PERIOD_TYPE = "period_type";
     private static final String KEY_REASON_NAME = "reason_name";
     private static final String KEY_IS_BALANCE = "is_balance";
     private static final String KEY_IS_EXPENSE = "is_expense";
@@ -86,9 +88,15 @@ public class HistoryListDataActivity extends DefaultCommonActivity {
      * @param isExpense
      */
     public static void start(Context context, Calendar targetCalendar, String reasonName, boolean isExpense) {
+        start(context, 0, targetCalendar, reasonName, isExpense);
+    }
+
+    public static void start(Context context, int periodType, Calendar targetCalendar,
+                             String reasonName, boolean isExpense) {
         Intent intent = new Intent(context, HistoryListDataActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.putExtra(KEY_TARGET_CALENDAR, targetCalendar);
+        intent.putExtra(KEY_PERIOD_TYPE, periodType);
         intent.putExtra(KEY_REASON_NAME, reasonName);
         intent.putExtra(KEY_IS_EXPENSE, isExpense);
         context.startActivity(intent);
@@ -106,6 +114,8 @@ public class HistoryListDataActivity extends DefaultCommonActivity {
         binding.entries.setLayoutManager(new LinearLayoutManager(this));
         binding.entries.addItemDecoration(new DividerDecoration(this));
         mPeriodType = SharedPreferencesManager.getProfitLossReportPeriodType(this);
+        int _periodType = getIntent().getIntExtra(KEY_PERIOD_TYPE, 0);
+        mPeriodType = (_periodType == 0) ? mPeriodType : _periodType;
 
         mEntryManager = new EntryDataManager(this);
 
@@ -141,15 +151,14 @@ public class HistoryListDataActivity extends DefaultCommonActivity {
     }
 
     private String getCalendarStringFromPeriodType(Calendar c) {
-        switch (mPeriodType) {
-            case EntryDataManager.PERIOD_TYPE_MONTH:
-                return Integer.toString(c.get(Calendar.YEAR))
-                        + "/" + Integer.toString(c.get(Calendar.MONTH) + 1);
-            case EntryDataManager.PERIOD_TYPE_DAY:
-                return Integer.toString(c.get(Calendar.MONTH) + 1)
-                        + "/" + Integer.toString(c.get(Calendar.DATE));
-        }
-        return Integer.toString(c.get(Calendar.YEAR));
+        final boolean isPeriodMonth = (mPeriodType == EntryDataManager.PERIOD_TYPE_MONTH);
+        String dateFormatString = (isPeriodMonth)
+                ? getString(R.string.date_string_format_to_year_month)
+                : getString(R.string.date_string_format_to_year_month_day);
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
+                dateFormatString, Locale.getDefault());
+        String calStr = simpleDateFormat.format(c.getTime());
+        return calStr;
     }
 
     private void loadEntryData(long[] startAndEndDate, boolean isBalance, boolean isExpense) {
