@@ -160,6 +160,7 @@ public class GraphContentFragment extends Fragment {
                     Entry _entry1 = new Entry();
                     _entry1.viewType = GraphHistoryRecyclerAdapter.VIEW_ITEM_CELL;
                     _entry1.titleName = entry.reason.name;
+                    _entry1.reason = entry.reason;
                     _entry1.price += entry.price;
                     _entry1.isExpense = isExpense;
                     entryMap.put(id, _entry1);
@@ -193,7 +194,11 @@ public class GraphContentFragment extends Fragment {
                 public void onItemClick(View view, int position, Entry item) {
                     boolean isExpense = getArguments().getBoolean(KEY_IS_EXPENSE, true);
                     Calendar targetCalendar  = (Calendar) getArguments().getSerializable(KEY_TARGET_CALENDAR);
-                    BarGraphActivity.start(mContext, isExpense, targetCalendar, mPeriodType);
+                    if (item.reason == null) {
+                        BarGraphActivity.start(mContext, isExpense, targetCalendar, mPeriodType);
+                    } else {
+                        BarGraphActivity.startForReason(mContext, item.reason.uuid, targetCalendar, mPeriodType);
+                    }
                 }
             });
         }

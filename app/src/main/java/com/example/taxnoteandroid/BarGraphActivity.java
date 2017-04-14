@@ -10,6 +10,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -115,6 +116,11 @@ public class BarGraphActivity extends DefaultCommonActivity implements OnChartVa
         mReasonDm = new ReasonDataManager(this);
 
         mTargetCalendar = (Calendar) getIntent().getSerializableExtra(KEY_TARGET_CALENDAR);
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
+                getString(R.string.date_string_format_to_year_month_day),
+                Locale.getDefault());
+        String targetCalStr = simpleDateFormat.format(mTargetCalendar.getTime());
+        Log.v("TEST", "targetCalStr : " + targetCalStr);
         mIsExpense = getIntent().getBooleanExtra(KEY_IS_EXPENSE, true);
         mPeriodType = getIntent().getIntExtra(KEY_PERIOD_TYPE, 2);
         if (mPeriodType > EntryDataManager.PERIOD_TYPE_MONTH)
@@ -148,7 +154,7 @@ public class BarGraphActivity extends DefaultCommonActivity implements OnChartVa
     private void loadDataToView() {
         binding.chart1.setVisibility(View.GONE);
         long[] startEndDate = EntryLimitManager.getStartAndEndDate(this, mPeriodType, mTargetCalendar);
-        new EntryDataTask(mIsExpense).execute(startEndDate);
+        new EntryDataTask().execute(startEndDate);
     }
 
     @Override
@@ -182,10 +188,14 @@ public class BarGraphActivity extends DefaultCommonActivity implements OnChartVa
                 loadDataToView();
                 break;
             case R.id.divide_by_year:
+                if (mPeriodType == EntryDataManager.PERIOD_TYPE_YEAR)
+                    return super.onOptionsItemSelected(item);
                 mPeriodType = EntryDataManager.PERIOD_TYPE_YEAR;
                 loadDataToView();
                 break;
             case R.id.divide_by_month:
+                if (mPeriodType == EntryDataManager.PERIOD_TYPE_MONTH)
+                    return super.onOptionsItemSelected(item);
                 mPeriodType = EntryDataManager.PERIOD_TYPE_MONTH;
                 loadDataToView();
                 break;
@@ -250,11 +260,6 @@ public class BarGraphActivity extends DefaultCommonActivity implements OnChartVa
     }
 
     private class EntryDataTask extends AsyncTask<long[], Integer, ArrayList<BarEntry>> {
-        private boolean isExpense;
-
-        public EntryDataTask(boolean isExpense) {
-            this.isExpense = isExpense;
-        }
 
         @Override
         protected ArrayList<BarEntry> doInBackground(long[]... longs) {
@@ -283,7 +288,20 @@ public class BarGraphActivity extends DefaultCommonActivity implements OnChartVa
 
             mBarEntries = new ArrayList<>();
             mCalendars = new ArrayList<>();
-            List<Entry> entries = mEntryDm.findAll(startEndDate, isExpense, true);
+            List<Entry> entries;
+            if (mReason == null) {
+                entries = mEntryDm.findAll(startEndDate, mIsExpense, true);
+            } else {
+                List<Entry> _entries = mEntryDm.findAll(startEndDate, mIsExpense, false);
+                entries = new ArrayList<>();
+
+                // Filter data by reasonName
+                for (Entry _entry : _entries) {
+                    if (_entry.reason.name.equals(mReason.name)) {
+                        entries.add(_entry);
+                    }
+                }
+            }
 
 //            Log.v("TEST", "startCal : " + startCalStr + ", endCal : " + endCalStr
 //                    + ", dayDiff : " + mXNum + ", entrySize: " + entries.size());
