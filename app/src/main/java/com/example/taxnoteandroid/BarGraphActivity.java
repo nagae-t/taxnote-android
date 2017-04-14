@@ -12,6 +12,7 @@ import android.util.Log;
 import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.example.taxnoteandroid.Library.DayAxisValueFormatter;
 import com.example.taxnoteandroid.Library.EntryLimitManager;
@@ -58,6 +59,8 @@ public class BarGraphActivity extends DefaultCommonActivity implements OnChartVa
     private Reason mReason = null;
     private boolean mIsExpense;
     private int mPeriodType;
+    private Calendar mTargetCalendar;
+    private ArrayList<BarEntry> mBarEntries;
 
     private int mXNum = 0;
 
@@ -97,7 +100,7 @@ public class BarGraphActivity extends DefaultCommonActivity implements OnChartVa
         mEntryDm = new EntryDataManager(this);
         mReasonDm = new ReasonDataManager(this);
 
-        Calendar targetCalendar = (Calendar) getIntent().getSerializableExtra(KEY_TARGET_CALENDAR);
+        mTargetCalendar = (Calendar) getIntent().getSerializableExtra(KEY_TARGET_CALENDAR);
         mIsExpense = getIntent().getBooleanExtra(KEY_IS_EXPENSE, true);
         mPeriodType = getIntent().getIntExtra(KEY_PERIOD_TYPE, 2);
         if (mPeriodType > EntryDataManager.PERIOD_TYPE_MONTH)
@@ -110,7 +113,7 @@ public class BarGraphActivity extends DefaultCommonActivity implements OnChartVa
                 titleDateFormat, Locale.getDefault());
         String isExpenseString = (mIsExpense) ? getString(R.string.Expense)
                 : getString(R.string.Income);
-        String titleDateString = simpleDateFormat.format(targetCalendar.getTime());
+        String titleDateString = simpleDateFormat.format(mTargetCalendar.getTime());
         String titleName = titleDateString + " " + isExpenseString;
 
         String reasonUuid = getIntent().getStringExtra(KEY_REASON_UUID);
@@ -121,24 +124,13 @@ public class BarGraphActivity extends DefaultCommonActivity implements OnChartVa
         }
         setTitle(titleName);
 
-        mChart = binding.chart1;
-        mChart.setOnChartValueSelectedListener(this);
+        loadDataToView();
+    }
 
-        mChart.setDrawBarShadow(false);
-        mChart.getDescription().setEnabled(false);
-        mChart.getLegend().setEnabled(false);
-        mChart.setNoDataText(getString(R.string.history_data_empty));
-        mChart.setNoDataTextColor(ContextCompat.getColor(this, R.color.accent));
-
-        // scaling can now only be done on x- and y-axis separately
-        mChart.setPinchZoom(false);
-
-        mChart.setDrawGridBackground(false);
-
-
-        long[] startEndDate = EntryLimitManager.getStartAndEndDate(this, mPeriodType, targetCalendar);
+    private void loadDataToView() {
+        binding.chart1.setVisibility(View.GONE);
+        long[] startEndDate = EntryLimitManager.getStartAndEndDate(this, mPeriodType, mTargetCalendar);
         new EntryDataTask(mIsExpense).execute(startEndDate);
-
     }
 
     @Override
@@ -150,9 +142,12 @@ public class BarGraphActivity extends DefaultCommonActivity implements OnChartVa
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         MenuItem expenseMenu = menu.findItem(R.id.action_is_expense);
-        if (!mIsExpense) {
+        if (!mIsExpense)
             expenseMenu.setTitle(R.string.Income);
-        }
+
+        if (mReason != null)
+            expenseMenu.setVisible(false);
+
         return super.onPrepareOptionsMenu(menu);
     }
 
@@ -166,8 +161,12 @@ public class BarGraphActivity extends DefaultCommonActivity implements OnChartVa
                 // switch graph
                 break;
             case R.id.divide_by_year:
+                mPeriodType = EntryDataManager.PERIOD_TYPE_YEAR;
+                loadDataToView();
                 break;
             case R.id.divide_by_month:
+                mPeriodType = EntryDataManager.PERIOD_TYPE_MONTH;
+                loadDataToView();
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -181,16 +180,17 @@ public class BarGraphActivity extends DefaultCommonActivity implements OnChartVa
         if (e == null)
             return;
 
+        Log.v("TEST", "entry x: "+ e.getX() + ", y: " + e.getY());
         RectF bounds = mOnValueSelectedRectF;
         mChart.getBarBounds((BarEntry) e, bounds);
         MPPointF position = mChart.getPosition(e, YAxis.AxisDependency.LEFT);
 
-        Log.v("TEST", "bounds: "+bounds.toString());
-        Log.v("TEST","position: "+ position.toString());
-
-        Log.v("TEST","x-index low: "
-                + mChart.getLowestVisibleX() + ", high: "
-                + mChart.getHighestVisibleX());
+//        Log.v("TEST", "bounds: "+bounds.toString());
+//        Log.v("TEST", "position: "+ position.toString());
+//
+//        Log.v("TEST","x-index low: "
+//                + mChart.getLowestVisibleX() + ", high: "
+//                + mChart.getHighestVisibleX());
 
         MPPointF.recycleInstance(position);
     }
@@ -222,38 +222,6 @@ public class BarGraphActivity extends DefaultCommonActivity implements OnChartVa
         }
     }
 
-    /*
-    private class XYMarkerView extends MarkerView {
-
-        private TextView tvContent;
-        private IAxisValueFormatter xAxisValueFormatter;
-
-        private DecimalFormat format;
-
-        public XYMarkerView(Context context, IAxisValueFormatter xAxisValueFormatter) {
-            super(context, R.layout.custom_marker_view);
-
-            this.xAxisValueFormatter = xAxisValueFormatter;
-            tvContent = (TextView) findViewById(R.id.tvContent);
-            format = new DecimalFormat("###.0");
-        }
-
-        // callbacks everytime the MarkerView is redrawn, can be used to update the
-        // content (user-interface)
-        @Override
-        public void refreshContent(Entry e, Highlight highlight) {
-
-            tvContent.setText("x: " + xAxisValueFormatter.getFormattedValue(e.getX(), null) + ", y: " + format.format(e.getY()));
-
-            super.refreshContent(e, highlight);
-        }
-
-        @Override
-        public MPPointF getOffset() {
-            return new MPPointF(-(getWidth() / 2), -getHeight());
-        }
-    }*/
-
     private class EntryDataTask extends AsyncTask<long[], Integer, ArrayList<BarEntry>> {
         private boolean isExpense;
 
@@ -284,11 +252,11 @@ public class BarGraphActivity extends DefaultCommonActivity implements OnChartVa
             mXNum = (isPeriodYear) ? 12 : (int)(diff / DAY_MILLISECONDS);
 
 
-            ArrayList<BarEntry> entryData = new ArrayList<>();
+            mBarEntries = new ArrayList<>();
             List<Entry> entries = mEntryDm.findAll(startEndDate, isExpense, true);
 
-            Log.v("TEST", "startCal : " + startCalStr + ", endCal : " + endCalStr
-                    + ", dayDiff : " + mXNum + ", entrySize: " + entries.size());
+//            Log.v("TEST", "startCal : " + startCalStr + ", endCal : " + endCalStr
+//                    + ", dayDiff : " + mXNum + ", entrySize: " + entries.size());
 
             Map<String, Long> entryMap = new LinkedHashMap<>();
             for (Entry entry : entries) {
@@ -312,7 +280,6 @@ public class BarGraphActivity extends DefaultCommonActivity implements OnChartVa
                     entryMap.put(periodStr, entry.price);
                 }
             }
-            Log.v("TEST", "entryMap size: " + entryMap.size());
 
 //            int startDate = startCal.get(Calendar.DATE);
             for (int i=0; i<mXNum; i++) {
@@ -336,19 +303,37 @@ public class BarGraphActivity extends DefaultCommonActivity implements OnChartVa
                 long price = (_price == null) ? 0 : _price;
 
                 BarEntry barEntry = new BarEntry(i, (float)price);
-                entryData.add(barEntry);
+                mBarEntries.add(barEntry);
             }
 
-            return entryData;
+            return mBarEntries;
         }
 
         @Override
         protected void onPostExecute(ArrayList<BarEntry> result) {
             if (result == null) return;
 
+            mChart = binding.chart1;
+            mChart.setOnChartValueSelectedListener(BarGraphActivity.this);
+
+            mChart.setDrawBarShadow(false);
+            mChart.getDescription().setEnabled(false);
+            mChart.getLegend().setEnabled(false);
+
+            // scaling can now only be done on x- and y-axis separately
+            mChart.setPinchZoom(false);
+            mChart.setDrawGridBackground(false);
+            mChart.setNoDataText(getString(R.string.history_data_empty));
+            mChart.setNoDataTextColor(ContextCompat.getColor(
+                    getApplicationContext(), R.color.accent));
+
+            // no data
+            if (result.size() == 0) return;
+
             // if more than 60 entries are displayed in the chart, no values will be
             // drawn
             mChart.setMaxVisibleValueCount(result.size()+1);
+
 
             // X軸の設定
             IAxisValueFormatter xAxisFormatter = DayAxisValueFormatter.newInstance(
@@ -385,9 +370,7 @@ public class BarGraphActivity extends DefaultCommonActivity implements OnChartVa
             dataSets.add(set1);
             BarData data = new BarData(dataSets);
             mChart.setData(data);
-            mChart.requestFocus();
-            mChart.notifyDataSetChanged();
-            Log.v("TEST", "load bar graph finished");
+            mChart.setVisibility(View.VISIBLE);
         }
     }
 }
