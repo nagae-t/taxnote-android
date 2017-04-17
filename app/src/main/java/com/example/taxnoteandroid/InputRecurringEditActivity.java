@@ -250,7 +250,6 @@ public class InputRecurringEditActivity extends DefaultCommonActivity {
         final View textInputView    = LayoutInflater.from(this).inflate(R.layout.dialog_text_input, null);
         final EditText editText     = (EditText) textInputView.findViewById(R.id.edit);
         editText.setText(mRecurring.memo);
-//        KeyboardUtil.showKeyboard(this, editText);
         new AlertDialog.Builder(this)
                 .setView(textInputView)
                 .setTitle(getString(R.string.Details))

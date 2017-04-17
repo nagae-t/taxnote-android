@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.text.format.DateUtils;
@@ -15,6 +16,7 @@ import android.widget.EditText;
 
 import com.example.taxnoteandroid.Library.BroadcastUtil;
 import com.example.taxnoteandroid.Library.DialogManager;
+import com.example.taxnoteandroid.Library.KeyboardUtil;
 import com.example.taxnoteandroid.Library.ValueConverter;
 import com.example.taxnoteandroid.Library.taxnote.TNApiModel;
 import com.example.taxnoteandroid.dataManager.EntryDataManager;
@@ -235,6 +237,7 @@ public class EntryEditActivity extends DefaultCommonActivity {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
 
+                                KeyboardUtil.hideKeyboard(EntryEditActivity.this, editText);
                                 // Get the input string
                                 String memo = editText.getText().toString();
 
@@ -243,7 +246,8 @@ public class EntryEditActivity extends DefaultCommonActivity {
 
                                 if (updated != 0) {
 
-                                    DialogManager.showToast(EntryEditActivity.this, memo);
+                                    if (memo.length() > 0)
+                                        DialogManager.showToast(EntryEditActivity.this, memo);
 
                                     entry.memo = memo;
                                     // Update displayed memo
@@ -255,8 +259,19 @@ public class EntryEditActivity extends DefaultCommonActivity {
                                 mApiModel.updateEntry(entry.uuid, null);
                             }
                         })
-                        .setNegativeButton(getResources().getString(R.string.cancel), null)
+                        .setNegativeButton(getResources().getString(R.string.cancel), new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                KeyboardUtil.hideKeyboard(EntryEditActivity.this, editText);
+                            }
+                        })
                         .show();
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        KeyboardUtil.showKeyboard(EntryEditActivity.this, editText);
+                    }
+                }, 180);
             }
         });
     }
