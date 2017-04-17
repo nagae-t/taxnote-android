@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
@@ -15,6 +16,7 @@ import android.widget.EditText;
 
 import com.example.taxnoteandroid.Library.BroadcastUtil;
 import com.example.taxnoteandroid.Library.DialogManager;
+import com.example.taxnoteandroid.Library.KeyboardUtil;
 import com.example.taxnoteandroid.Library.ValueConverter;
 import com.example.taxnoteandroid.Library.taxnote.TNApiModel;
 import com.example.taxnoteandroid.dataManager.AccountDataManager;
@@ -248,6 +250,7 @@ public class InputRecurringEditActivity extends DefaultCommonActivity {
         final View textInputView    = LayoutInflater.from(this).inflate(R.layout.dialog_text_input, null);
         final EditText editText     = (EditText) textInputView.findViewById(R.id.edit);
         editText.setText(mRecurring.memo);
+//        KeyboardUtil.showKeyboard(this, editText);
         new AlertDialog.Builder(this)
                 .setView(textInputView)
                 .setTitle(getString(R.string.Details))
@@ -255,6 +258,7 @@ public class InputRecurringEditActivity extends DefaultCommonActivity {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
 
+                        KeyboardUtil.hideKeyboard(InputRecurringEditActivity.this, editText);
                         // Get the input string
                         mRecurring.memo = editText.getText().toString();
                         binding.setRecurring(mRecurring);
@@ -262,8 +266,20 @@ public class InputRecurringEditActivity extends DefaultCommonActivity {
                         updateDbData();
                     }
                 })
-                .setNegativeButton(getResources().getString(R.string.cancel), null)
+                .setNegativeButton(getResources().getString(R.string.cancel), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        KeyboardUtil.hideKeyboard(InputRecurringEditActivity.this, editText);
+                    }
+                })
                 .show();
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                editText.requestFocus();
+                KeyboardUtil.showKeyboard(InputRecurringEditActivity.this, editText);
+            }
+        }, 180);
     }
 
     private void saveNewData() {
