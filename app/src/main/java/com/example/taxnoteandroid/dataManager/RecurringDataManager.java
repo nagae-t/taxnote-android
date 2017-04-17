@@ -166,7 +166,7 @@ public class RecurringDataManager {
      */
     public String[] getDesignatedDateList() {
         String[] dayOfMonthList = mContext.getResources().getStringArray(R.array.day_of_month_list);
-        String[] dateList = mContext.getResources().getStringArray(R.array.close_date_list);
+        String[] dateList = mContext.getResources().getStringArray(R.array.normal_date_list);
         String[] result = new String[dayOfMonthList.length + dateList.length];
         int count = 0;
         for (String day : dayOfMonthList) {

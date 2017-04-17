@@ -258,6 +258,36 @@
     </string-array>
 
     <string-array name="close_date_list">
+        <item>2日</item>
+        <item>3日</item>
+        <item>4日</item>
+        <item>5日</item>
+        <item>6日</item>
+        <item>7日</item>
+        <item>8日</item>
+        <item>9日</item>
+        <item>10日</item>
+        <item>11日</item>
+        <item>12日</item>
+        <item>13日</item>
+        <item>14日</item>
+        <item>15日</item>
+        <item>16日</item>
+        <item>17日</item>
+        <item>18日</item>
+        <item>19日</item>
+        <item>20日</item>
+        <item>21日</item>
+        <item>22日</item>
+        <item>23日</item>
+        <item>24日</item>
+        <item>25日</item>
+        <item>26日</item>
+        <item>27日</item>
+        <item>月末</item>
+    </string-array>
+
+    <string-array name="normal_date_list">
         <item>1日</item>
         <item>2日</item>
         <item>3日</item>

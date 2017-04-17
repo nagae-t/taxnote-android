@@ -433,6 +433,7 @@ public class EntryDataManager {
             int cYear = c.get(Calendar.YEAR);
             int cMonth = c.get(Calendar.MONTH);
             int cDate = c.get(Calendar.DATE);
+            int lastDayOfMonthIndex = 26;
 
             long[] startEndDate = EntryLimitManager
                     .getStartAndEndDate(context, _periodType, c);
@@ -449,7 +450,7 @@ public class EntryDataManager {
             int endYear = endCal.get(Calendar.YEAR);
             int endMonth = endCal.get(Calendar.MONTH)+1;
             int endDate = endCal.get(Calendar.DATE) - 1;
-            if (closingDateIndex != 28 && endDate == 0) {
+            if (closingDateIndex != lastDayOfMonthIndex && endDate == 0) {
                 endMonth -= 1;
                 endCal.set(endYear, endMonth, 1);
                 endDate = endCal.getActualMaximum(Calendar.DAY_OF_MONTH);
@@ -459,7 +460,7 @@ public class EntryDataManager {
                 case PERIOD_TYPE_MONTH:
                     String monthTitle = Integer.toString(cYear)
                             + "/" + Integer.toString(cMonth + 1);
-                    if (closingDateIndex != 28) {
+                    if (closingDateIndex != lastDayOfMonthIndex) {
                         String endTitle = " ~ " + endMonth + "/" + endDate;
                         if (startYear != endYear)
                             endTitle = " ~ " + endYear + "/" + endMonth + "/" + endDate;
@@ -482,7 +483,7 @@ public class EntryDataManager {
                         + " ~ " + endYear + "/" + endMonth;
             }
 
-            if (closingDateIndex != 28) {
+            if (closingDateIndex != lastDayOfMonthIndex) {
                 yearTitle = startYear + "/" + startMonth + "/" + startDate
                         + " ~ " + endYear + "/" + endMonth + "/" + endDate;
             }

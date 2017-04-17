@@ -68,12 +68,13 @@ public class EntryLimitManager {
         Calendar startCalendar = (Calendar)c.clone();
         Calendar endCalendar = (Calendar)c.clone();
 
+        int lastDayOfMonthIndex = 26;
         int closingDateIndex = SharedPreferencesManager.getMonthlyClosingDateIndex(context);
         int startMonthIndex = SharedPreferencesManager.getStartMonthOfYearIndex(context);
 
         int startDate = 1;
         int endDate = 1;
-        if (closingDateIndex < 28) {
+        if (closingDateIndex < lastDayOfMonthIndex) {
             startDate = closingDateIndex;
             endDate = closingDateIndex+2;
         }
@@ -87,7 +88,7 @@ public class EntryLimitManager {
             startMonth -= 1;
         }
         // 締め日が14日までなら前月分、または締め日が月末
-        if (startDate < 15 || closingDateIndex == 29) {
+        if (startDate < 15 || closingDateIndex == lastDayOfMonthIndex) {
             endMonth += 1;
         }
 

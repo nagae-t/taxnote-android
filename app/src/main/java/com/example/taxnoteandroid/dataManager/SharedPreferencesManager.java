@@ -204,7 +204,8 @@ public class SharedPreferencesManager {
         getSharedPreferences(context).edit().putInt(MONTHLY_CLOSING_DATE_INDEX_KEY, index).apply();
     }
     public static int  getMonthlyClosingDateIndex(Context context) {
-        return getSharedPreferences(context).getInt(MONTHLY_CLOSING_DATE_INDEX_KEY, 28);
+        int closingDateIndex = getSharedPreferences(context).getInt(MONTHLY_CLOSING_DATE_INDEX_KEY, 26);
+        return closingDateIndex;
     }
 
     public static void saveStartMonthOfYearIndex(Context context, int index) {
