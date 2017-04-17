@@ -191,22 +191,27 @@ public class InputRecurringEditActivity extends DefaultCommonActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK && data != null) {
+            String toastMsg = "";
             if (requestCode == REQUEST_CODE_ACCOUNT) {
                 String accountUuid = data.getStringExtra("account_uuid");
                 Account account = mAccountDm.findByUuid(accountUuid);
                 mRecurring.account = account;
                 binding.setRecurring(mRecurring);
-
+                toastMsg = account.name;
             } else if (requestCode == REQUEST_CODE_REASON) {
                 String reasonUuid = data.getStringExtra("reason_uuid");
                 Reason reason = mReasonDm.findByUuid(reasonUuid);
                 mRecurring.reason = reason;
                 binding.setRecurring(mRecurring);
+                toastMsg = reason.name;
             } else if (requestCode == REQUEST_CODE_PRICE) {
                 mRecurring.price = data.getLongExtra(CalculatorActivity.KEY_CURRENT_PRICE, 0);
                 String priceString = (mRecurring.price == 0) ? "0" : ValueConverter.formatPrice(this,mRecurring.price);
                 binding.priceSelect.setText(priceString);
+                toastMsg = priceString;
             }
+            if (toastMsg.length() > 0)
+                DialogManager.showToast(this, toastMsg);
 
             updateDbData();
         }
@@ -221,6 +226,7 @@ public class InputRecurringEditActivity extends DefaultCommonActivity {
                 mRecurring.timezone = mTimeZoneAll[i];
                 binding.setRecurring(mRecurring);
 
+                DialogManager.showToast(InputRecurringEditActivity.this, mRecurring.timezone);
                 updateDbData();
             }
         });
@@ -238,6 +244,7 @@ public class InputRecurringEditActivity extends DefaultCommonActivity {
                 mRecurring.dateIndex = Long.valueOf(i+"");
                 binding.dateSelect.setText(mRecurringDates[i]);
 
+                DialogManager.showToast(InputRecurringEditActivity.this, mRecurringDates[i]);
                 updateDbData();
             }
         });
@@ -262,6 +269,7 @@ public class InputRecurringEditActivity extends DefaultCommonActivity {
                         mRecurring.memo = editText.getText().toString();
                         binding.setRecurring(mRecurring);
 
+                        DialogManager.showToast(InputRecurringEditActivity.this, mRecurring.memo);
                         updateDbData();
                     }
                 })
