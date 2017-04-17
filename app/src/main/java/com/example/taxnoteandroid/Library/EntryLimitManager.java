@@ -1,11 +1,14 @@
 package com.example.taxnoteandroid.Library;
 
 import android.content.Context;
+import android.util.Log;
 
+import com.example.taxnoteandroid.R;
 import com.example.taxnoteandroid.dataManager.EntryDataManager;
 import com.example.taxnoteandroid.dataManager.SharedPreferencesManager;
 import com.example.taxnoteandroid.model.Entry;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -75,8 +78,8 @@ public class EntryLimitManager {
         int startDate = 1;
         int endDate = 1;
         if (closingDateIndex < lastDayOfMonthIndex) {
-            startDate = closingDateIndex;
-            endDate = closingDateIndex+2;
+            startDate = closingDateIndex+3;
+            endDate = closingDateIndex+3;
         }
         int startMonth = c.get(Calendar.MONTH);
         int startYear = c.get(Calendar.YEAR);
@@ -124,11 +127,11 @@ public class EntryLimitManager {
         long[] result = {startCalendar.getTimeInMillis(), endCalendar.getTimeInMillis()};
 
         // for debug
-//        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
-//                context.getResources().getString(R.string.date_string_format_to_year_month_day));
-//        String startCalStr = simpleDateFormat.format(startCalendar.getTime());
-//        String endCalStr = simpleDateFormat.format(endCalendar.getTime());
-//        Log.v("TEST", "startCal : " + startCalStr + ", endCal : " + endCalStr);
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
+                context.getResources().getString(R.string.date_string_format_to_year_month_day));
+        String startCalStr = simpleDateFormat.format(startCalendar.getTime());
+        String endCalStr = simpleDateFormat.format(endCalendar.getTime());
+        Log.v("TEST", "startCal : " + startCalStr + ", endCal : " + endCalStr);
         return result;
     }
 

@@ -205,6 +205,7 @@ public class SharedPreferencesManager {
     }
     public static int  getMonthlyClosingDateIndex(Context context) {
         int closingDateIndex = getSharedPreferences(context).getInt(MONTHLY_CLOSING_DATE_INDEX_KEY, 26);
+        if (closingDateIndex > 26) closingDateIndex = 26;
         return closingDateIndex;
     }
 

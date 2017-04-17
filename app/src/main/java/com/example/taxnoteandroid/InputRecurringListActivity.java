@@ -15,6 +15,7 @@ import android.view.View;
 
 import com.example.taxnoteandroid.Library.DialogManager;
 import com.example.taxnoteandroid.Library.UpgradeManger;
+import com.example.taxnoteandroid.Library.taxnote.TNApiUser;
 import com.example.taxnoteandroid.dataManager.RecurringDataManager;
 import com.example.taxnoteandroid.databinding.ActivityEntryCommonBinding;
 import com.example.taxnoteandroid.model.Recurring;
@@ -33,6 +34,7 @@ public class InputRecurringListActivity extends DefaultCommonActivity {
     private ActivityEntryCommonBinding binding;
     private RecurringDataManager mRecurringDm;
     private RecurringRecyclerAdapter mRecyclerAdapter;
+    private TNApiUser mApiUser;
 
     public static final String BROADCAST_RELOAD_DATA
             = "broadcast_recurring_reload_data";
@@ -64,6 +66,7 @@ public class InputRecurringListActivity extends DefaultCommonActivity {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
 
+        mApiUser = new TNApiUser(this);
         mRecurringDm = new RecurringDataManager(this);
         loadData();
 
@@ -71,7 +74,7 @@ public class InputRecurringListActivity extends DefaultCommonActivity {
     }
 
     private void showTaxnoteCloudRequiredDialog() {
-        if (UpgradeManger.taxnoteCloudIsActive(this)) {
+        if (mApiUser.isLoggingIn() && UpgradeManger.taxnoteCloudIsActive(this)) {
             return;
         }
 
