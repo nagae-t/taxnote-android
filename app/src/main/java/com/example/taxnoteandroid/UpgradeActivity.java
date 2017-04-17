@@ -275,7 +275,8 @@ public class UpgradeActivity extends DefaultCommonActivity {
             try {
                 mBillingHelper.launchSubscriptionPurchaseFlow(UpgradeActivity.this,
                         UpgradeManger.SKU_TAXNOTE_PLUS_ID1,
-                        REQUEST_CODE_PURCHASE_PREMIUM, mPurchaseFinishedListener);
+                        REQUEST_CODE_PURCHASE_PREMIUM,
+                        mPurchaseFinishedListener);
             } catch (IabHelper.IabAsyncInProgressException e) {
                 e.printStackTrace();
             }
@@ -304,7 +305,6 @@ public class UpgradeActivity extends DefaultCommonActivity {
             mixpanel.track("Taxnote Plus Upgraded");
         }
     }
-
 
     //--------------------------------------------------------------//
     //    -- Taxnote cloud login etc... --
@@ -556,7 +556,6 @@ public class UpgradeActivity extends DefaultCommonActivity {
         @Override
         protected void onPostExecute(SubscriptionPurchase result) {
             if (mLoadingProgress.isShowing()) mLoadingProgress.dismiss();
-
             if (result == null || subscriptionId == null) return;
 
             switch (subscriptionId) {
