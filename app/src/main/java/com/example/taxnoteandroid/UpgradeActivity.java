@@ -538,6 +538,7 @@ public class UpgradeActivity extends DefaultCommonActivity {
     private class CheckBillingAsyncTask extends AsyncTask<Purchase, Void, SubscriptionPurchase> {
         private String subscriptionId;
         private final boolean isNewPurchased;
+        private Purchase mPurchase;
 
         private CheckBillingAsyncTask(boolean isNewPurchased) {
             this.isNewPurchased = isNewPurchased;
@@ -547,9 +548,9 @@ public class UpgradeActivity extends DefaultCommonActivity {
         protected SubscriptionPurchase doInBackground(Purchase... purchases) {
             if (tnGoogleApi == null) cancel(true);
 
-            Purchase purchase = purchases[0];
-            subscriptionId =  purchase.getSku();
-            SubscriptionPurchase subPurchase = tnGoogleApi.getSubscription(subscriptionId, purchase.getToken());
+            mPurchase = purchases[0];
+            subscriptionId =  mPurchase.getSku();
+            SubscriptionPurchase subPurchase = tnGoogleApi.getSubscription(subscriptionId, mPurchase.getToken());
             return subPurchase;
         }
 
@@ -570,6 +571,7 @@ public class UpgradeActivity extends DefaultCommonActivity {
                 case UpgradeManger.SKU_TAXNOTE_CLOUD_ID:
                     SharedPreferencesManager.saveTaxnoteCloudExpiryTime(
                             getApplicationContext(), result.getExpiryTimeMillis());
+                    mApiUser.saveCloudPurchaseInfo(mPurchase);
                     if (isNewPurchased)
                         // showUpgradeToTaxnoteCloudSuccessDialog();
                     break;

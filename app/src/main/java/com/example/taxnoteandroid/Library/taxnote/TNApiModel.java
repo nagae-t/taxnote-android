@@ -9,6 +9,7 @@ import android.util.Log;
 import com.example.taxnoteandroid.Library.AsyncOkHttpClient;
 import com.example.taxnoteandroid.Library.BroadcastUtil;
 import com.example.taxnoteandroid.Library.DialogManager;
+import com.example.taxnoteandroid.Library.UpgradeManger;
 import com.example.taxnoteandroid.Library.ValueConverter;
 import com.example.taxnoteandroid.R;
 import com.example.taxnoteandroid.dataManager.AccountDataManager;
@@ -356,9 +357,11 @@ public class TNApiModel extends TNApi {
 
         // dummy
         String subsExpires = "2017-05-01 23:23:21 Etc/GMT";
-        String subsId = "xxxxxxxxxxxxxxxxxxxxx01";
-        String subsType = "subs_type_xxxxx01";
-        String subsReceipt = "subs_receipt_xxxxx01";
+        String subsId = TNApiUser.getCloudOrderId(context);
+        if (subsId == null) subsId = "";
+        String subsType = UpgradeManger.SKU_TAXNOTE_CLOUD_ID;
+        String subsReceipt = TNApiUser.getCloudPurchaseToken(context);
+        if (subsReceipt == null) subsReceipt = "";
 
         FormBody.Builder formBuilder = new FormBody.Builder()
                 .add("project[uuid]", project.uuid)

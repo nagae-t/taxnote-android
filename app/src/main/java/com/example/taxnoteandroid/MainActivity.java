@@ -29,6 +29,7 @@ import com.example.taxnoteandroid.Library.billing.IabResult;
 import com.example.taxnoteandroid.Library.billing.Inventory;
 import com.example.taxnoteandroid.Library.billing.Purchase;
 import com.example.taxnoteandroid.Library.taxnote.TNApiModel;
+import com.example.taxnoteandroid.Library.taxnote.TNApiUser;
 import com.example.taxnoteandroid.dataManager.DefaultDataInstaller;
 import com.example.taxnoteandroid.dataManager.EntryDataManager;
 import com.example.taxnoteandroid.dataManager.SharedPreferencesManager;
@@ -592,14 +593,15 @@ public class MainActivity extends DefaultCommonActivity {
 
     private class CheckBillingAsyncTask extends AsyncTask<Purchase, Void, SubscriptionPurchase> {
         private String subscriptionId;
+        private Purchase mPurchase;
 
         @Override
         protected SubscriptionPurchase doInBackground(Purchase... purchases) {
             if (tnGoogleApi == null) cancel(true);
 
-            Purchase purchase = purchases[0];
-            subscriptionId = purchase.getSku();
-            SubscriptionPurchase subPurchase = tnGoogleApi.getSubscription(subscriptionId, purchase.getToken());
+            mPurchase = purchases[0];
+            subscriptionId = mPurchase.getSku();
+            SubscriptionPurchase subPurchase = tnGoogleApi.getSubscription(subscriptionId, mPurchase.getToken());
             return subPurchase;
         }
 
@@ -615,6 +617,7 @@ public class MainActivity extends DefaultCommonActivity {
                 case UpgradeManger.SKU_TAXNOTE_CLOUD_ID:
                     SharedPreferencesManager.saveTaxnoteCloudExpiryTime(
                             getApplicationContext(), result.getExpiryTimeMillis());
+                    new TNApiUser(getApplicationContext()).saveCloudPurchaseInfo(mPurchase);
                     break;
             }
         }

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.util.Log;
 
 import com.example.taxnoteandroid.Library.AsyncOkHttpClient;
+import com.example.taxnoteandroid.Library.billing.Purchase;
 import com.example.taxnoteandroid.dataManager.SharedPreferencesManager;
 
 import okhttp3.FormBody;
@@ -23,6 +24,9 @@ public class TNApiUser extends TNApi {
     private String passwordConfirm;
 
     private static final String KEY_USER_UID = "TAXNOTE_USER_UID";
+
+    private static final String KEY_CLOUD_ORDER_ID = "TAXNOTE_CLOUD_ORDER_ID";
+    private static final String KEY_CLOUD_PURCHASE_TOKEN = "TAXNOTE_CLOUD_PURCHASE_TOKEN";
 
     public TNApiUser(Context context) {
         super(context);
@@ -74,6 +78,21 @@ public class TNApiUser extends TNApi {
         String client = headers.get("Client");
         String uid = headers.get("Uid");
         super.saveLoginValue(uid, accessToken, client);
+    }
+
+    public void saveCloudPurchaseInfo(Purchase purchase) {
+        SharedPreferencesManager.saveUserApiLoginValue(context,
+                KEY_CLOUD_ORDER_ID, purchase.getOrderId());
+        SharedPreferencesManager.saveUserApiLoginValue(context,
+                KEY_CLOUD_PURCHASE_TOKEN, purchase.getToken());
+    }
+
+    public static String getCloudOrderId(Context context) {
+        return SharedPreferencesManager.getUserApiLoginValue(context, KEY_CLOUD_ORDER_ID);
+    }
+
+    public static String getCloudPurchaseToken(Context context) {
+        return SharedPreferencesManager.getUserApiLoginValue(context, KEY_CLOUD_PURCHASE_TOKEN);
     }
 
     @Override
@@ -163,7 +182,12 @@ public class TNApiUser extends TNApi {
     public void clearAccountData(TNApiModel apiModel) {
         //@@ 保存しているtokenを削除
         //@@ iOS [KPTaxnoteApiUserHandler logOutFromSubscriptionAccount];
-        //@@ Sbscription情報を削除
+
+        // subscription情報を削除
+        SharedPreferencesManager.saveTaxnoteCloudExpiryTime(context, 0);
+        SharedPreferencesManager.saveUserApiLoginValue(context, KEY_CLOUD_ORDER_ID, null);
+        SharedPreferencesManager.saveUserApiLoginValue(context, KEY_CLOUD_PURCHASE_TOKEN, null);
+
         deleteLoginData();
         apiModel.resetAllUpdatedKeys();
     }
