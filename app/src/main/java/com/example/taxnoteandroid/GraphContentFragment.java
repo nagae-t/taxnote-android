@@ -70,7 +70,8 @@ public class GraphContentFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         mContext = getActivity().getApplicationContext();
         mApiModel = new TNApiModel(mContext);
-        if (!mApiModel.isLoggingIn()) binding.refreshLayout.setEnabled(false);
+        if (!mApiModel.isCloudActive())
+            binding.refreshLayout.setEnabled(false);
 
         mPeriodType = SharedPreferencesManager.getProfitLossReportPeriodType(mContext);
         mEntryManager = new EntryDataManager(mContext);
@@ -79,6 +80,7 @@ public class GraphContentFragment extends Fragment {
             @Override
             public void onRefresh() {
                 if (!TNApi.isNetworkConnected(mContext) || !mApiModel.isLoggingIn()
+                        || !mApiModel.isCloudActive()
                         || mApiModel.isSyncing()) {
                     binding.refreshLayout.setRefreshing(false);
                     return;

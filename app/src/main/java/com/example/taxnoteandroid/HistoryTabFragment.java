@@ -67,12 +67,13 @@ public class HistoryTabFragment extends Fragment {
         mContext = getActivity().getApplicationContext();
 
         mApiModel = new TNApiModel(mContext);
-        if (!mApiModel.isLoggingIn()) binding.refreshLayout.setEnabled(false);
+        if (!mApiModel.isCloudActive()) binding.refreshLayout.setEnabled(false);
 
         binding.refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 if (!TNApi.isNetworkConnected(mContext) || !mApiModel.isLoggingIn()
+                        || !mApiModel.isCloudActive()
                         || mApiModel.isSyncing()) {
                     binding.refreshLayout.setRefreshing(false);
                     return;
@@ -102,7 +103,7 @@ public class HistoryTabFragment extends Fragment {
 
     public void afterLogin() {
         mApiModel = new TNApiModel(mContext);
-        if (mApiModel.isLoggingIn()) {
+        if (mApiModel.isCloudActive()) {
             binding.refreshLayout.setEnabled(true);
         } else {
             binding.refreshLayout.setEnabled(false);

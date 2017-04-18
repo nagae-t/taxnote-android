@@ -6,6 +6,7 @@ import android.net.NetworkInfo;
 
 import com.example.taxnoteandroid.BuildConfig;
 import com.example.taxnoteandroid.Library.AsyncOkHttpClient;
+import com.example.taxnoteandroid.Library.UpgradeManger;
 import com.example.taxnoteandroid.dataManager.SharedPreferencesManager;
 
 import java.util.LinkedHashMap;
@@ -176,5 +177,9 @@ public class TNApi {
             return cm.getActiveNetworkInfo().isConnected();
         }
         return false;
+    }
+
+    public boolean isCloudActive() {
+        return UpgradeManger.taxnoteCloudIsActive(context);
     }
 }

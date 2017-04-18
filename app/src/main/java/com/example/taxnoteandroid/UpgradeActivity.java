@@ -163,23 +163,6 @@ public class UpgradeActivity extends DefaultCommonActivity {
             mLoadingProgress.show();
             new CheckBillingAsyncTask(true).execute(purchase);
 
-
-            /*
-            // Taxnote Plus
-            if (purchaseSkuId.equals(UpgradeManger.SKU_TAXNOTE_PLUS_ID1)) {
-
-                // Upgrade
-                SharedPreferencesManager.saveTaxnotePlusPurchaseTime(UpgradeActivity.this, purchase.getPurchaseTime());
-                showUpgradeToTaxnotePlusSuccessDialog();
-                updateUpgradeStatus();
-
-
-                // Taxnote Cloud
-            } else if (purchaseSkuId.equals(UpgradeManger.SKU_TAXNOTE_CLOUD_ID)) {
-                // showUpgradeToTaxnoteCloudSuccessDialog();
-
-                updateUpgradeStatus();
-            }*/
         }
     };
 
@@ -306,6 +289,13 @@ public class UpgradeActivity extends DefaultCommonActivity {
         }
     }
 
+    private void showUpgradeToTaxnoteCloudSuccessDialog() {
+        if (!UpgradeManger.taxnoteCloudIsActive(this)) return;
+
+        // Taxnoteアカウント作成するようダイアログを表示
+
+    }
+
     //--------------------------------------------------------------//
     //    -- Taxnote cloud login etc... --
     //--------------------------------------------------------------//
@@ -333,16 +323,6 @@ public class UpgradeActivity extends DefaultCommonActivity {
         public void onClick(View view) {
             int viewId = view.getId();
             switch (viewId) {
-//                case R.id.cloud_register_layout:
-//                    if (TNApi.isNetworkConnected(getApplicationContext())) {
-//                        LoginCloudActivity.startForResult(UpgradeActivity.this,
-//                                REQUEST_CODE_CLOUD_REGISTER,
-//                                LoginCloudActivity.VIEW_TYPE_REGISTER);
-//                    } else {
-//                        DialogManager.showOKOnlyAlert(UpgradeActivity.this,
-//                                null, getString(R.string.network_not_connection));
-//                    }
-//                    break;
                 case R.id.cloud_login_layout:
                     if (TNApi.isNetworkConnected(getApplicationContext())) {
                         LoginCloudActivity.startForResult(UpgradeActivity.this,

@@ -14,7 +14,6 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.example.taxnoteandroid.Library.DialogManager;
-import com.example.taxnoteandroid.Library.UpgradeManger;
 import com.example.taxnoteandroid.Library.taxnote.TNApiUser;
 import com.example.taxnoteandroid.dataManager.RecurringDataManager;
 import com.example.taxnoteandroid.databinding.ActivityEntryCommonBinding;
@@ -74,7 +73,7 @@ public class InputRecurringListActivity extends DefaultCommonActivity {
     }
 
     private void showTaxnoteCloudRequiredDialog() {
-        if (mApiUser.isLoggingIn() && UpgradeManger.taxnoteCloudIsActive(this)) {
+        if (mApiUser.isLoggingIn() && mApiUser.isCloudActive()) {
             return;
         }
 

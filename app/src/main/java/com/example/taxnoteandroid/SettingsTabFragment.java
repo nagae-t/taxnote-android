@@ -247,6 +247,7 @@ public class SettingsTabFragment extends Fragment {
 
     private void sendCloudSyncData() {
         if (!TNApi.isNetworkConnected(mContext) || !mApiUser.isLoggingIn()
+                || !mApiModel.isCloudActive()
                 || mApiModel.isSyncing()) return;
 
         mApiModel.saveAllNeedSaveSyncDeletedData(new AsyncOkHttpClient.Callback() {

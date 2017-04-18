@@ -150,8 +150,12 @@ public class MainActivity extends DefaultCommonActivity {
 
         checkInAppBilling();
 
+
         // 起動時にデータの同期を行う
         TNApiModel apiModel = new TNApiModel(this);
+        // debug
+        //new TNApiUser(this).clearAccountData(apiModel);
+
         apiModel.setIsSyncing(false);
         apiModel.syncData(this, false, null);
 
