@@ -571,7 +571,7 @@ public class UpgradeActivity extends DefaultCommonActivity {
                 case UpgradeManger.SKU_TAXNOTE_CLOUD_ID:
                     SharedPreferencesManager.saveTaxnoteCloudExpiryTime(
                             getApplicationContext(), result.getExpiryTimeMillis());
-                    mApiUser.saveCloudPurchaseInfo(mPurchase);
+                    mApiUser.saveCloudPurchaseInfo(mPurchase.getOrderId(), mPurchase.getToken());
                     if (isNewPurchased)
                         // showUpgradeToTaxnoteCloudSuccessDialog();
                     break;

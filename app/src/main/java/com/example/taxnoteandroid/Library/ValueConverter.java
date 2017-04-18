@@ -74,4 +74,16 @@ public class ValueConverter {
         cal.setTimeInMillis(time);
         return sdf.format(cal.getTime());
     }
+
+    public static long cloudExpiryString2long(String expiryString) {
+        Calendar cal = Calendar.getInstance();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss Etc/GMT", Locale.getDefault());
+        sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
+        try {
+            cal.setTime(sdf.parse(expiryString));
+        } catch (ParseException e) {
+            return 0;
+        }
+        return cal.getTimeInMillis();
+    }
 }

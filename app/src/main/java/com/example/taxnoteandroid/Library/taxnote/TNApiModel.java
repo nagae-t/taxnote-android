@@ -945,6 +945,7 @@ public class TNApiModel extends TNApi {
     //--------------------------------------------------------------//
 
     private void updateDbProjects(JsonArray array) {
+        TNApiUser apiUser = new TNApiUser(context);
         for (JsonElement jsElement : array) {
             JsonObject obj = jsElement.getAsJsonObject();
 
@@ -982,6 +983,11 @@ public class TNApiModel extends TNApi {
                     //@@ 購読（課金）の有効期限の保存処理?
                     String expiresDateString = obj.get("subscription_expires").getAsString();
                     String subscriptionType = obj.get("subscription_type").getAsString();
+                    String subsTransaction = obj.get("subscription_transaction").getAsString();
+                    String receiptToken = obj.get("appstore_receipt").getAsString();
+                    apiUser.saveCloudPurchaseInfo(subsTransaction, receiptToken);
+                    long cloudExpiry = ValueConverter.cloudExpiryString2long(expiresDateString);
+                    SharedPreferencesManager.saveTaxnoteCloudExpiryTime(context, cloudExpiry);
                 }
 
                 if (isNewProject) {
@@ -1285,11 +1291,13 @@ public class TNApiModel extends TNApi {
                 .add("project[account_for_expense]", project.accountUuidForExpense)
                 .add("project[account_for_income]", project.accountUuidForIncome);
         if (project.isMaster) {
-            // dummy
-            String subsExpires = "2017-05-01 23:23:21 Etc/GMT";
-            String subsId = "xxxxxxxxxxxxxxxxxxxxx01";
-            String subsType = "subs_type_xxxxx01";
-            String subsReceipt = "subs_receipt_xxxxx01";
+
+            String subsExpires = TNApiUser.getCloudExpiryString(context);
+            String subsId = TNApiUser.getCloudOrderId(context);
+            if (subsId == null) subsId = "";
+            String subsType = UpgradeManger.SKU_TAXNOTE_CLOUD_ID;
+            String subsReceipt = TNApiUser.getCloudPurchaseToken(context);
+            if (subsReceipt == null) subsReceipt = "";
 
             formBuilder
                     .add("project[subscription_expires]", subsExpires)

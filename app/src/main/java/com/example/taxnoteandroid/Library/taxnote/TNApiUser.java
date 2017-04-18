@@ -4,7 +4,6 @@ import android.content.Context;
 import android.util.Log;
 
 import com.example.taxnoteandroid.Library.AsyncOkHttpClient;
-import com.example.taxnoteandroid.Library.billing.Purchase;
 import com.example.taxnoteandroid.dataManager.SharedPreferencesManager;
 
 import java.text.SimpleDateFormat;
@@ -85,11 +84,11 @@ public class TNApiUser extends TNApi {
         super.saveLoginValue(uid, accessToken, client);
     }
 
-    public void saveCloudPurchaseInfo(Purchase purchase) {
+    public void saveCloudPurchaseInfo(String orderId, String purchaseToken) {
         SharedPreferencesManager.saveUserApiLoginValue(context,
-                KEY_CLOUD_ORDER_ID, purchase.getOrderId());
+                KEY_CLOUD_ORDER_ID, orderId);
         SharedPreferencesManager.saveUserApiLoginValue(context,
-                KEY_CLOUD_PURCHASE_TOKEN, purchase.getToken());
+                KEY_CLOUD_PURCHASE_TOKEN, purchaseToken);
     }
 
     static String getCloudOrderId(Context context) {

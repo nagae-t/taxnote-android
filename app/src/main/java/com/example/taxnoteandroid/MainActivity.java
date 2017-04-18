@@ -617,7 +617,8 @@ public class MainActivity extends DefaultCommonActivity {
                 case UpgradeManger.SKU_TAXNOTE_CLOUD_ID:
                     SharedPreferencesManager.saveTaxnoteCloudExpiryTime(
                             getApplicationContext(), result.getExpiryTimeMillis());
-                    new TNApiUser(getApplicationContext()).saveCloudPurchaseInfo(mPurchase);
+                    new TNApiUser(getApplicationContext())
+                            .saveCloudPurchaseInfo(mPurchase.getOrderId(), mPurchase.getToken());
                     break;
             }
         }
