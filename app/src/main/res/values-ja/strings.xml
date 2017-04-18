@@ -237,7 +237,7 @@
     <string name="balance_carry_forward">残高を繰り越す</string>
     <string name="balance_carry_forward_desc">損益表の残高が、以前の残高を繰り越した数値になります。</string>
     <string name="monthly_closing_date">毎月の締め日</string>
-    <string name="monthly_closing_date_desc">1日から14日までを選択した時は、選択した日までが前月分の損益表に表示されます。15日以降を選択した時は、選択した日より後が次月分の損益表に表示されます。例えば、25日を選択した場合、先月25日〜今月24日までが今月分の損益表に表示されます。</string>
+    <string name="monthly_closing_date_desc">1日から14日までを選択した時は、選択した日までが前月分の損益表に表示されます。15日以降を選択した時は、選択した日より後が次月分の損益表に表示されます。例えば、25日を選択した場合、先月26日〜今月25日までが今月分の損益表に表示されます。</string>
     <string name="start_month_of_year">年度の開始月</string>
     <string name="start_month_of_year_desc">損益表で年別表示した時の開始月です。例えば、4月を選択した場合、その年の4月から翌年の3月末まで表示します。月の数字と組み合わせて、2015年4月10日〜2016年4月9日などの年度表示も可能です。</string>
     <string name="balance_carry_forward_view">（繰り越し）</string>
