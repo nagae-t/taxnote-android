@@ -144,6 +144,16 @@ public class EntryDataManager {
         return countData;
     }
 
+    public int countAll() {
+        ProjectDataManager projectDataManager   = new ProjectDataManager(mContext);
+        Project project                         = projectDataManager.findCurrent();
+        int countData = ormaDatabase.selectFromEntry().
+                where(Entry_Schema.INSTANCE.deleted.getQualifiedName() + " = 0")
+                .projectEq(project)
+                .count();
+        return countData;
+    }
+
     // 収入・支出別
     public List<Entry> findAll(long[] startAndEndDate, boolean isExpense, Boolean asc) {
         ProjectDataManager projectDataManager   = new ProjectDataManager(mContext);

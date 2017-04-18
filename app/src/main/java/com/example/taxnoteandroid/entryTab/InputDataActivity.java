@@ -23,6 +23,7 @@ import com.example.taxnoteandroid.DefaultCommonActivity;
 import com.example.taxnoteandroid.Library.BroadcastUtil;
 import com.example.taxnoteandroid.Library.DialogManager;
 import com.example.taxnoteandroid.Library.EntryLimitManager;
+import com.example.taxnoteandroid.Library.UpgradeManger;
 import com.example.taxnoteandroid.Library.ValueConverter;
 import com.example.taxnoteandroid.Library.taxnote.TNApiModel;
 import com.example.taxnoteandroid.R;
@@ -353,6 +354,13 @@ public class InputDataActivity extends DefaultCommonActivity {
             return;
         }
 
+        // Taxnoteクラウド購入なしで追加された帳簿の入力制限あり
+        boolean limitNewEntrySubProject = EntryLimitManager.limitNewEntryAddSubProject(this);
+        if ( !UpgradeManger.taxnoteCloudIsActive(this) && limitNewEntrySubProject) {
+            showUpgradeCloudInputLimit();
+            return;
+        }
+
         EntryDataManager entryDataManager = new EntryDataManager(InputDataActivity.this);
 
         String text = priceTextView.getText().toString().replace(",", "");
@@ -400,6 +408,22 @@ public class InputDataActivity extends DefaultCommonActivity {
         } else {
             DialogManager.showOKOnlyAlert(this, getResources().getString(R.string.Error), null);
         }
+    }
+
+    private void showUpgradeCloudInputLimit() {
+        new AlertDialog.Builder(this)
+                .setTitle(R.string.taxnote_cloud_first_free)
+                .setMessage(R.string.not_cloud_input_limit_message)
+                .setPositiveButton(getResources().getString(R.string.benefits_of_upgrade), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                        // Show upgrade activity
+                        UpgradeActivity.start(InputDataActivity.this);
+                    }
+                })
+                .setNegativeButton(R.string.cancel, null)
+                .show();
     }
 
     private void countAndTrackEntry() {

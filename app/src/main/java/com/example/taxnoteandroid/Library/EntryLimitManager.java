@@ -3,8 +3,10 @@ package com.example.taxnoteandroid.Library;
 import android.content.Context;
 
 import com.example.taxnoteandroid.dataManager.EntryDataManager;
+import com.example.taxnoteandroid.dataManager.ProjectDataManager;
 import com.example.taxnoteandroid.dataManager.SharedPreferencesManager;
 import com.example.taxnoteandroid.model.Entry;
+import com.example.taxnoteandroid.model.Project;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -21,6 +23,7 @@ import java.util.TimeZone;
 public class EntryLimitManager {
 
     private static final long limitNumberOfEntryPerMonth    = 15;
+    private static final long limitEntryAddSubProject = 10;
 
 
     public static boolean limitNewEntryForFreeUsersWithDate(Context context, long date) {
@@ -39,6 +42,18 @@ public class EntryLimitManager {
         if (entries.size() < limitNumberOfEntryPerMonth) {
             return false;
         }
+
+        return true;
+    }
+
+    public static boolean limitNewEntryAddSubProject(Context context) {
+        ProjectDataManager projectDm = new ProjectDataManager(context);
+        EntryDataManager entryDm = new EntryDataManager(context);
+        Project project = projectDm.findCurrent();
+
+        if (project.isMaster) return false;
+
+        if (entryDm.countAll() < limitEntryAddSubProject) return false;
 
         return true;
     }
