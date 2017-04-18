@@ -7,6 +7,11 @@ import com.example.taxnoteandroid.Library.AsyncOkHttpClient;
 import com.example.taxnoteandroid.Library.billing.Purchase;
 import com.example.taxnoteandroid.dataManager.SharedPreferencesManager;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Locale;
+import java.util.TimeZone;
+
 import okhttp3.FormBody;
 import okhttp3.Headers;
 import okhttp3.Response;
@@ -87,12 +92,22 @@ public class TNApiUser extends TNApi {
                 KEY_CLOUD_PURCHASE_TOKEN, purchase.getToken());
     }
 
-    public static String getCloudOrderId(Context context) {
+    static String getCloudOrderId(Context context) {
         return SharedPreferencesManager.getUserApiLoginValue(context, KEY_CLOUD_ORDER_ID);
     }
 
-    public static String getCloudPurchaseToken(Context context) {
+    static String getCloudPurchaseToken(Context context) {
         return SharedPreferencesManager.getUserApiLoginValue(context, KEY_CLOUD_PURCHASE_TOKEN);
+    }
+
+    static String getCloudExpiryString(Context context) {
+        long cloudExpiry = SharedPreferencesManager.getTaxnoteCloudExpiryTime(context);
+        if (cloudExpiry == 0) return "";
+        Calendar cal = Calendar.getInstance();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss Etc/GMT", Locale.getDefault());
+        sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
+        cal.setTimeInMillis(cloudExpiry);
+        return sdf.format(cal.getTime());
     }
 
     @Override

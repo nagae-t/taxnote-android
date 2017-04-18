@@ -98,16 +98,6 @@ public class TNApiModel extends TNApi {
     //    -- Get Method --
     //--------------------------------------------------------------//
 
-    public void testGetProjects(AsyncOkHttpClient.Callback callback) {
-        setHttpMethod(HTTP_METHOD_GET);
-        setRequestPath(URL_PATH_PROJECT);
-
-        setFormBody(getUpdatedAtParams(KEY_SYNC_UPDATED_PROJECT));
-        setCallback(callback);
-
-        requestApi();
-    }
-
     private void getProjects(final AsyncOkHttpClient.Callback callback) {
         setHttpMethod(HTTP_METHOD_GET);
         setRequestPath(URL_PATH_PROJECT);
@@ -355,8 +345,8 @@ public class TNApiModel extends TNApi {
         Project project = mProjectDataManager.findByUuid(uuid);
         final long projectId = project.id;
 
-        // dummy
-        String subsExpires = "2017-05-01 23:23:21 Etc/GMT";
+        // Cloud Purchase Info
+        String subsExpires = TNApiUser.getCloudExpiryString(context);
         String subsId = TNApiUser.getCloudOrderId(context);
         if (subsId == null) subsId = "";
         String subsType = UpgradeManger.SKU_TAXNOTE_CLOUD_ID;
