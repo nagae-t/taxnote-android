@@ -29,6 +29,8 @@ import com.example.taxnoteandroid.Library.taxnote.TNApiUser;
 import com.example.taxnoteandroid.dataManager.SharedPreferencesManager;
 import com.example.taxnoteandroid.databinding.ActivityUpgradeBinding;
 import com.google.api.services.androidpublisher.model.SubscriptionPurchase;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.helpshift.support.Support;
 import com.kobakei.ratethisapp.RateThisApp;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
@@ -292,8 +294,87 @@ public class UpgradeActivity extends DefaultCommonActivity {
     private void showUpgradeToTaxnoteCloudSuccessDialog() {
         if (!UpgradeManger.taxnoteCloudIsActive(this)) return;
 
-        // Taxnoteアカウント作成するようダイアログを表示
+        MixpanelAPI mixpanel = MixpanelAPI.getInstance(this, MIXPANEL_TOKEN);
+        mixpanel.track("Taxnote Cloud Upgraded");
 
+        // Taxnoteアカウント作成するようダイアログを表示
+        showSignupDialog();
+    }
+
+    // Taxnoteアカウント作成するようダイアログを表示
+    private void showSignupDialog() {
+        new AlertDialog.Builder(this)
+                .setTitle(R.string.cloud_sign_up_title)
+                .setMessage(R.string.cloud_sign_up_message)
+                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                    }
+                })
+                .show();
+    }
+
+    // 課金情報とTaxnoteアカウントを調べる
+    private void checkTransaction() {
+        String transactionId = TNApiUser.getCloudOrderId(this);
+        if (transactionId == null) return;
+
+        mLoadingProgress.show();
+        mApiUser.checkUniqueOfSubscription(transactionId, new AsyncOkHttpClient.Callback() {
+            @Override
+            public void onFailure(Response response, Throwable throwable) {
+                mLoadingProgress.dismiss();
+
+                Log.e("ERROR", "checkUniqueOfSubscription onFailure ");
+
+                String errorMsg = "";
+                if (response != null) {
+                    errorMsg = response.message();
+                } else if (throwable != null) {
+                    errorMsg = throwable.getLocalizedMessage();
+                }
+                Log.e("ERROR", "checkUniqueOfSubscription : " + errorMsg);
+//                DialogManager.showOKOnlyAlert(UpgradeActivity.this,
+//                        getString(R.string.Error),
+//                        errorMsg);
+            }
+
+            @Override
+            public void onSuccess(Response response, String content) {
+                mLoadingProgress.dismiss();
+                if (content == null || content.length() == 0) {
+                    LoginCloudActivity.startForResult(UpgradeActivity.this,
+                            REQUEST_CODE_CLOUD_REGISTER,
+                            LoginCloudActivity.VIEW_TYPE_REGISTER);
+                    return;
+                }
+                JsonParser jsonParser = new JsonParser();
+                JsonObject obj = jsonParser.parse(content).getAsJsonObject();
+                String email = obj.get("email").getAsString();
+                showAlreadyLoginEmailDialog(email);
+            }
+        });
+    }
+
+    private void showAlreadyLoginEmailDialog(final String email) {
+        new AlertDialog.Builder(this)
+                .setTitle(email)
+                .setMessage(R.string.cloud_account_exists_message)
+                .setPositiveButton(R.string.login, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                    }
+                })
+                .setNeutralButton(R.string.delete_account, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                    }
+                })
+                .setNegativeButton(android.R.string.cancel, null)
+                .show();
     }
 
     //--------------------------------------------------------------//
@@ -313,11 +394,8 @@ public class UpgradeActivity extends DefaultCommonActivity {
 
             binding.purchaseInfoLayout.setVisibility(View.VISIBLE);
         }
-
-        //@@ クラウド購入しているけど、ログインしている、していない、の表示別
-
-
     }
+
     private View.OnClickListener taxnoteCloudOnClick = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
@@ -355,8 +433,8 @@ public class UpgradeActivity extends DefaultCommonActivity {
             } else {
                 if (TNApi.isNetworkConnected(getApplicationContext())) {
                     LoginCloudActivity.startForResult(UpgradeActivity.this,
-                            REQUEST_CODE_CLOUD_LOGIN,
-                            LoginCloudActivity.VIEW_TYPE_LOGIN);
+                            REQUEST_CODE_CLOUD_REGISTER,
+                            LoginCloudActivity.VIEW_TYPE_REGISTER);
                 } else {
                     DialogManager.showOKOnlyAlert(UpgradeActivity.this,
                             null, getString(R.string.network_not_connection));
@@ -569,8 +647,9 @@ public class UpgradeActivity extends DefaultCommonActivity {
                     SharedPreferencesManager.saveTaxnoteCloudExpiryTime(
                             getApplicationContext(), result.getExpiryTimeMillis());
                     mApiUser.saveCloudPurchaseInfo(mPurchase.getOrderId(), mPurchase.getToken());
+
                     if (isNewPurchased)
-                        // showUpgradeToTaxnoteCloudSuccessDialog();
+                        showUpgradeToTaxnoteCloudSuccessDialog();
                     break;
             }
 

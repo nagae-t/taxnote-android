@@ -91,7 +91,7 @@ public class TNApiUser extends TNApi {
                 KEY_CLOUD_PURCHASE_TOKEN, purchaseToken);
     }
 
-    static String getCloudOrderId(Context context) {
+    public static String getCloudOrderId(Context context) {
         return SharedPreferencesManager.getUserApiLoginValue(context, KEY_CLOUD_ORDER_ID);
     }
 
@@ -103,7 +103,7 @@ public class TNApiUser extends TNApi {
         long cloudExpiry = SharedPreferencesManager.getTaxnoteCloudExpiryTime(context);
         if (cloudExpiry == 0) return "";
         Calendar cal = Calendar.getInstance();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss Etc/GMT", Locale.getDefault());
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss 'Etc/GMT'", Locale.getDefault());
         sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
         cal.setTimeInMillis(cloudExpiry);
         return sdf.format(cal.getTime());
@@ -249,11 +249,8 @@ public class TNApiUser extends TNApi {
         requestApi();
     }
 
-    public void checkUniqueOfSubscription(AsyncOkHttpClient.Callback callback) {
+    public void checkUniqueOfSubscription(String transactionId, final AsyncOkHttpClient.Callback callback) {
         setHttpMethod(HTTP_METHOD_GET);
-
-        //@@ 課金のTransactionIdはここで指定する
-        String transactionId = "";
         setRequestPath(URL_PATH_SUBSCRIPTION + "/" + transactionId);
 
         setFormBody(null);
