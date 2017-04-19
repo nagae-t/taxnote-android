@@ -35,23 +35,32 @@ android {
     dexOptions {
         jumboMode true
     }
+
     buildTypes {
         release {
             multiDexEnabled true
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-
-            buildConfigField "String", "TAXNOTE_API_URI", "\"https://taxnote-staging.herokuapp.com/api\""
         }
         debug {
-
             multiDexEnabled true
-
             debuggable true
+        }
+    }
+
+    productFlavors {
+        taxnoteProduct {
+            buildConfigField "String", "TAXNOTE_API_URI", "\"https://taxnote-staging.herokuapp.com/api\""
+        }
+
+        taxnoteDevelop {
             applicationIdSuffix ".debug"
+            versionNameSuffix = 'dev'
 
             buildConfigField "String", "TAXNOTE_API_URI", "\"https://taxnote-staging.herokuapp.com/api\""
         }
+
+
     }
 }
 
