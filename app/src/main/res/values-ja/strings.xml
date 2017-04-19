@@ -386,6 +386,9 @@
     <string name="updating_data">データを更新中です...</string>
     <string name="send">送信</string>
 
+    <string name="plus_not_bought_title">Taxnoteプラスについて</string>
+    <string name="plus_not_bought_message">「Taxnoteプラス」を購入せずに「Taxnoteクラウド」の購読は可能ですが、月15件の入力制限がそのまま存在するのでご注意ください。</string>
+
     <string name="cloud_purchase_status">購読状況</string>
     <string name="cloud_purchase_status_control">[クラウド 有効] 管理する</string>
     <string name="taxnote_cloud_desc">さらに便利に使いたい方向けのオプションサービスです。\n以下の機能が有効になります。\n1. ３つの帳簿使用\n2. 複数の端末でデータを自動共有（自動バックアップ）\n3. 指定日の繰り返し入力\n4. 時系列チャートの表示\n\n複数人で別々の端末から同時にデータを管理したり、個人と会社など別々の帳簿を作成することもできます。また、家賃など毎月の固定支出などを指定した日に自動入力させることができます。</string>

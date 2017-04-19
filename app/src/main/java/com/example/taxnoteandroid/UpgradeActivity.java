@@ -368,17 +368,34 @@ public class UpgradeActivity extends DefaultCommonActivity {
     private void upgradeToTaxnoteCloud() {
         if (!mBillingHelper.subscriptionsSupported()) return;
 
-        //@@ Taxnoteプラス購入済みか確認してダイアログを表示する
+        // Taxnoteプラス購入済みか確認してダイアログを表示する
         if (!UpgradeManger.taxnotePlusIsActive(this)) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this)
+                    .setTitle(R.string.plus_not_bought_title)
+                    .setMessage(R.string.plus_not_bought_message)
+                    .setNegativeButton(android.R.string.cancel, null)
+                    .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
 
-        }
-
-        try {
-            mBillingHelper.launchSubscriptionPurchaseFlow(UpgradeActivity.this,
-                    UpgradeManger.SKU_TAXNOTE_CLOUD_ID,
-                    REQUEST_CODE_PURCHASE_PREMIUM, mPurchaseFinishedListener);
-        } catch (IabHelper.IabAsyncInProgressException e) {
-            e.printStackTrace();
+                            try {
+                                mBillingHelper.launchSubscriptionPurchaseFlow(UpgradeActivity.this,
+                                        UpgradeManger.SKU_TAXNOTE_CLOUD_ID,
+                                        REQUEST_CODE_PURCHASE_PREMIUM, mPurchaseFinishedListener);
+                            } catch (IabHelper.IabAsyncInProgressException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    });
+            builder.create().show();
+        } else {
+            try {
+                mBillingHelper.launchSubscriptionPurchaseFlow(UpgradeActivity.this,
+                        UpgradeManger.SKU_TAXNOTE_CLOUD_ID,
+                        REQUEST_CODE_PURCHASE_PREMIUM, mPurchaseFinishedListener);
+            } catch (IabHelper.IabAsyncInProgressException e) {
+                e.printStackTrace();
+            }
         }
 
     }
