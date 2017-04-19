@@ -986,7 +986,9 @@ public class TNApiModel extends TNApi {
                     String subsTransaction = obj.get("subscription_transaction").getAsString();
                     String receiptToken = obj.get("appstore_receipt").getAsString();
                     apiUser.saveCloudPurchaseInfo(subsTransaction, receiptToken);
+                    Log.v("TEST", "saveTaxnoteCloudExpiryTime onUpdateDbProjects : " + expiresDateString);
                     long cloudExpiry = ValueConverter.cloudExpiryString2long(expiresDateString);
+                    Log.v("TEST", "saveTaxnoteCloudExpiryTime onUpdateDbProjects : " + cloudExpiry);
                     SharedPreferencesManager.saveTaxnoteCloudExpiryTime(context, cloudExpiry);
                 }
 

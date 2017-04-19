@@ -147,6 +147,7 @@ public class LoginCloudActivity extends DefaultCommonActivity {
                     .setPositiveButton(R.string.login, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
+                            dialogInterface.dismiss();
                             sendLogin(email, passwd);
                         }
                     })
@@ -157,8 +158,10 @@ public class LoginCloudActivity extends DefaultCommonActivity {
     private void sendLogin(String email, String passwd) {
         // Progress dialog
         final ProgressDialog dialog = getLoadingDialog();
-        dialog.show();
+        if (!dialog.isShowing())
+            dialog.show();
 
+        Log.v("TEST", "login 00");
         final TNApiUser apiUser = new TNApiUser(this, email, passwd);
         apiUser.signIn(new AsyncOkHttpClient.Callback() {
             @Override
@@ -194,6 +197,7 @@ public class LoginCloudActivity extends DefaultCommonActivity {
             @Override
             public void onSuccess(Response response, String content) {
 
+                Log.v("TEST", "login 01");
                 dialog.setMessage(getString(R.string.login_success_wait_fetching));
 
                 final TNApiModel apiModel = new TNApiModel(getApplicationContext());
@@ -212,6 +216,7 @@ public class LoginCloudActivity extends DefaultCommonActivity {
                 }
 
                 apiModel.setIsSyncing(true);
+                Log.v("TEST", "login 02");
                 apiModel.getAllDataAfterLogin(new AsyncOkHttpClient.Callback() {
                     @Override
                     public void onFailure(Response response, Throwable throwable) {
@@ -228,7 +233,7 @@ public class LoginCloudActivity extends DefaultCommonActivity {
                     @Override
                     public void onSuccess(Response response, String content) {
                         apiModel.setIsSyncing(false);
-                        dialog.dismiss();
+//                        dialog.dismiss();
 
                         setResult(RESULT_OK);
                         finish();

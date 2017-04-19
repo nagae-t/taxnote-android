@@ -233,14 +233,6 @@ public class SharedPreferencesManager {
     //    -- Upgrade --
     //--------------------------------------------------------------//
 
-    public static void saveTaxnotePlusPurchaseTime(Context context, long purchaseTime) {
-        getSharedPreferences(context).edit().putLong(TAXNOTE_PLUS_PURCHASE_TIME, purchaseTime).apply();
-    }
-
-    public static long getTaxnotePlusPurchaseTime(Context context) {
-        return getSharedPreferences(context).getLong(TAXNOTE_PLUS_PURCHASE_TIME, 0);
-    }
-
     public static void saveTaxnotePlusExpiryTime(Context context, long expiryTime) {
         getSharedPreferences(context).edit().putLong(TAXNOTE_PLUS_EXPIRY_TIME, expiryTime).apply();
     }
