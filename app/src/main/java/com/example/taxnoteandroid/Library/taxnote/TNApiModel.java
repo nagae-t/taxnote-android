@@ -392,7 +392,7 @@ public class TNApiModel extends TNApi {
     }
 
     public void saveReason(String uuid, final AsyncOkHttpClient.Callback callback) {
-        if (!isLoggingIn() || !TNApi.isNetworkConnected(context)) {
+        if (!isLoggingIn() || !isCloudActive() || !TNApi.isNetworkConnected(context)) {
             if (callback != null)
                 callback.onSuccess(null, null);
             return;
@@ -438,7 +438,7 @@ public class TNApiModel extends TNApi {
     }
 
     public void saveAccount(String uuid, final AsyncOkHttpClient.Callback callback) {
-        if (!isLoggingIn() || !TNApi.isNetworkConnected(context)) {
+        if (!isLoggingIn() || !isCloudActive() || !TNApi.isNetworkConnected(context)) {
             if (callback != null)
                 callback.onSuccess(null, null);
             return;
@@ -481,7 +481,7 @@ public class TNApiModel extends TNApi {
     }
 
     public void saveSummary(String uuid, final AsyncOkHttpClient.Callback callback) {
-        if (!isLoggingIn() || !TNApi.isNetworkConnected(context)) {
+        if (!isLoggingIn() || !isCloudActive() || !TNApi.isNetworkConnected(context)) {
             if (callback != null)
                 callback.onSuccess(null, null);
             return;
@@ -524,7 +524,7 @@ public class TNApiModel extends TNApi {
     }
 
     public void saveRecurring(String uuid, final AsyncOkHttpClient.Callback callback) {
-        if (!isLoggingIn() || !TNApi.isNetworkConnected(context)) {
+        if (!isLoggingIn() || !isCloudActive() || !TNApi.isNetworkConnected(context)) {
             if (callback != null)
                 callback.onSuccess(null, null);
             return;
@@ -574,7 +574,7 @@ public class TNApiModel extends TNApi {
     }
 
     public void saveEntry(String uuid, final AsyncOkHttpClient.Callback callback) {
-        if (!isLoggingIn() || !TNApi.isNetworkConnected(context)) {
+        if (!isLoggingIn() || !isCloudActive() || !TNApi.isNetworkConnected(context)) {
             if (callback != null)
                 callback.onSuccess(null, null);
             return;
@@ -629,8 +629,8 @@ public class TNApiModel extends TNApi {
             callback.onSuccess(null, null);
         }
 
-        //@@ ログインしている、かつ 課金有効の場合のみ
-        if (!isLoggingIn()) {
+        // ログインしている、かつ 課金有効の場合のみ
+        if (!isLoggingIn() || !isCloudActive()) {
             callback.onSuccess(null, null);
             return;
         }
@@ -886,13 +886,7 @@ public class TNApiModel extends TNApi {
         //@@ check network
 
         // check login
-        if (!isLoggingIn()) {
-            if (callback != null)
-                callback.onSuccess(null, null);
-            return;
-        }
-
-        if (isSyncing()) {
+        if (!isLoggingIn() || !isCloudActive() || isSyncing()) {
             if (callback != null)
                 callback.onSuccess(null, null);
             return;
@@ -1273,7 +1267,7 @@ public class TNApiModel extends TNApi {
     }
 
     public void updateProject(String uuid, final AsyncOkHttpClient.Callback callback) {
-        if (!isLoggingIn() || !TNApi.isNetworkConnected(context)) {
+        if (!isLoggingIn() || !isCloudActive() || !TNApi.isNetworkConnected(context)) {
             if (callback != null)
                 callback.onSuccess(null, null);
             return;
@@ -1334,7 +1328,7 @@ public class TNApiModel extends TNApi {
     }
 
     public void updateReason(String uuid, final AsyncOkHttpClient.Callback callback) {
-        if (!isLoggingIn() || !TNApi.isNetworkConnected(context)) {
+        if (!isLoggingIn() || !isCloudActive() || !TNApi.isNetworkConnected(context)) {
             if (callback != null)
                 callback.onSuccess(null, null);
             return;
@@ -1380,7 +1374,7 @@ public class TNApiModel extends TNApi {
     }
 
     public void updateAccount(String uuid, final AsyncOkHttpClient.Callback callback) {
-        if (!isLoggingIn() || !TNApi.isNetworkConnected(context)) {
+        if (!isLoggingIn() || !isCloudActive() || !TNApi.isNetworkConnected(context)) {
             if (callback != null)
                 callback.onSuccess(null, null);
             return;
@@ -1423,7 +1417,7 @@ public class TNApiModel extends TNApi {
     }
 
     public void updateSummary(String uuid, final AsyncOkHttpClient.Callback callback) {
-        if (!isLoggingIn() || !TNApi.isNetworkConnected(context)) {
+        if (!isLoggingIn() || !isCloudActive() || !TNApi.isNetworkConnected(context)) {
             if (callback != null)
                 callback.onSuccess(null, null);
             return;
@@ -1466,7 +1460,7 @@ public class TNApiModel extends TNApi {
     }
 
     public void updateRecurring(String uuid, final AsyncOkHttpClient.Callback callback) {
-        if (!isLoggingIn() || !TNApi.isNetworkConnected(context)) {
+        if (!isLoggingIn() || !isCloudActive() || !TNApi.isNetworkConnected(context)) {
             if (callback != null)
                 callback.onSuccess(null, null);
             return;
@@ -1517,7 +1511,7 @@ public class TNApiModel extends TNApi {
     }
 
     public void updateEntry(String uuid, final AsyncOkHttpClient.Callback callback) {
-        if (!isLoggingIn() || !TNApi.isNetworkConnected(context)) {
+        if (!isLoggingIn() || !isCloudActive() || !TNApi.isNetworkConnected(context)) {
             if (callback != null)
                 callback.onSuccess(null, null);
             return;
@@ -1720,7 +1714,7 @@ public class TNApiModel extends TNApi {
     }
 
     private void updateAllNeedSyncData(final AsyncOkHttpClient.Callback callback) {
-        if (!isLoggingIn()) {
+        if (!isLoggingIn() || !isCloudActive()) {
             if (callback != null)
                 callback.onSuccess(null, null);
             return;
@@ -1791,7 +1785,7 @@ public class TNApiModel extends TNApi {
     //--------------------------------------------------------------//
 
     public void deleteProject(final String uuid, final AsyncOkHttpClient.Callback callback) {
-        if (!isLoggingIn() || !TNApi.isNetworkConnected(context)) {
+        if (!isLoggingIn() || !isCloudActive() || !TNApi.isNetworkConnected(context)) {
             if (callback != null)
                 callback.onSuccess(null, null);
             return;
@@ -1825,7 +1819,7 @@ public class TNApiModel extends TNApi {
     }
 
     public void deleteReason(final String uuid, final AsyncOkHttpClient.Callback callback) {
-        if (!isLoggingIn() || !TNApi.isNetworkConnected(context)) {
+        if (!isLoggingIn() || !isCloudActive() || !TNApi.isNetworkConnected(context)) {
             if (callback != null)
                 callback.onSuccess(null, null);
             return;
@@ -1859,7 +1853,7 @@ public class TNApiModel extends TNApi {
     }
 
     public void deleteAccount(final String uuid, final AsyncOkHttpClient.Callback callback) {
-        if (!isLoggingIn() || !TNApi.isNetworkConnected(context)) {
+        if (!isLoggingIn() || !isCloudActive() || !TNApi.isNetworkConnected(context)) {
             if (callback != null)
                 callback.onSuccess(null, null);
             return;
@@ -1894,7 +1888,7 @@ public class TNApiModel extends TNApi {
     }
 
     public void deleteSummary(final String uuid, final AsyncOkHttpClient.Callback callback) {
-        if (!isLoggingIn() || !TNApi.isNetworkConnected(context)) {
+        if (!isLoggingIn() || !isCloudActive() || !TNApi.isNetworkConnected(context)) {
             if (callback != null)
                 callback.onSuccess(null, null);
             return;
@@ -1928,7 +1922,7 @@ public class TNApiModel extends TNApi {
     }
 
     public void deleteRecurring(final String uuid, final AsyncOkHttpClient.Callback callback) {
-        if (!isLoggingIn() || !TNApi.isNetworkConnected(context)) {
+        if (!isLoggingIn() || !isCloudActive() || !TNApi.isNetworkConnected(context)) {
             if (callback != null)
                 callback.onSuccess(null, null);
             return;
@@ -1962,7 +1956,7 @@ public class TNApiModel extends TNApi {
     }
 
     public void deleteEntry(final String uuid, final AsyncOkHttpClient.Callback callback) {
-        if (!isLoggingIn() || !TNApi.isNetworkConnected(context)) {
+        if (!isLoggingIn() || !isCloudActive() || !TNApi.isNetworkConnected(context)) {
             if (callback != null)
                 callback.onSuccess(null, null);
             return;
@@ -2146,7 +2140,7 @@ public class TNApiModel extends TNApi {
     }
 
     public void updateAllDeletedData(final AsyncOkHttpClient.Callback callback) {
-        if (!isLoggingIn()) {
+        if (!isLoggingIn() || !isCloudActive()) {
             callback.onSuccess(null, null);
             return;
         }
@@ -2213,7 +2207,7 @@ public class TNApiModel extends TNApi {
     // Sync Data
 
     public void syncData(final Activity activity, boolean isShowMessage, final AsyncOkHttpClient.Callback callback) {
-        if (!isLoggingIn() || !isNetworkConnected(context) || isSyncing()) {
+        if (!isLoggingIn() || !isCloudActive() || !isNetworkConnected(context) || isSyncing()) {
             if (callback != null)
                 callback.onSuccess(null, null);
             return;
