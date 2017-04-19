@@ -60,6 +60,15 @@ android {
             buildConfigField "String", "TAXNOTE_API_URI", "\"https://taxnote-staging.herokuapp.com/api\""
         }
 
+        zenyProduct {
+            buildConfigField "String", "ZENY_API_URI", "\"https://taxnote-staging.herokuapp.com/api\""
+        }
+
+        zenyDevelop {
+            applicationIdSuffix ".debug"
+            versionNameSuffix = 'dev'
+            buildConfigField "String", "ZENY_API_URI", "\"https://taxnote-staging.herokuapp.com/api\""
+        }
 
     }
 }
