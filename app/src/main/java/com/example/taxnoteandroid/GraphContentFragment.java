@@ -1,10 +1,12 @@
 package com.example.taxnoteandroid;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -199,6 +201,21 @@ public class GraphContentFragment extends Fragment {
                     if (item.reason == null) {
                         BarGraphActivity.start(mContext, isExpense, targetCalendar, mPeriodType);
                     } else {
+                        if (!mApiModel.isCloudActive()) {
+                            // not_cloud_bar_graph
+                            new AlertDialog.Builder(getActivity())
+                                    .setTitle(R.string.taxnote_cloud_first_free)
+                                    .setMessage(R.string.bar_graph_cloud_required_message)
+                                    .setPositiveButton(R.string.upgrade, new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialogInterface, int i) {
+                                            UpgradeActivity.start(getActivity());
+                                        }
+                                    })
+                                    .setNegativeButton(R.string.cancel, null)
+                                    .show();
+                            return;
+                        }
                         BarGraphActivity.startForReason(mContext, item.reason.uuid, targetCalendar, mPeriodType);
                     }
                 }

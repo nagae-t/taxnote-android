@@ -396,6 +396,7 @@
     <string name="cloud_purchase_status_control">[クラウド 有効] 管理する</string>
     <string name="taxnote_cloud_desc">さらに便利に使いたい方向けのオプションサービスです。\n以下の機能が有効になります。\n1. ３つの帳簿使用\n2. 複数の端末でデータを自動共有（自動バックアップ）\n3. 指定日の繰り返し入力\n4. 時系列チャートの表示\n\n複数人で別々の端末から同時にデータを管理したり、個人と会社など別々の帳簿を作成することもできます。また、家賃など毎月の固定支出などを指定した日に自動入力させることができます。</string>
     <string name="not_cloud_input_limit_message">本帳簿以外での入力は、Taxnoteクラウドへの加入が必要です。（お試し入力は10件まで）</string>
+    <string name="bar_graph_cloud_required_message">時系列チャートの表示はTaxnoteクラウドの購読が必要です。(支出・収入の時系列チャートは無料でお試し可能)</string>
 
     <string name="network_not_connection">インターネットへの接続が確認できません。</string>
 
