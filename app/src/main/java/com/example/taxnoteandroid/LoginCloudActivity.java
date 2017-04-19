@@ -34,19 +34,29 @@ public class LoginCloudActivity extends DefaultCommonActivity {
     private int mViewType;
 
     private static final String KEY_VIEW_TYPE = "view_type";
+    private static final String KEY_EMAIL = "email";
     public static final int VIEW_TYPE_LOGIN = 0;
     public static final int VIEW_TYPE_REGISTER = 1;
 
     public static void start(Context context) {
+        start(context, null);
+    }
+
+    public static void start(Context context, String email) {
         Intent intent = new Intent(context, LoginCloudActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.putExtra(KEY_VIEW_TYPE, VIEW_TYPE_LOGIN);
+        intent.putExtra(KEY_EMAIL, email);
         context.startActivity(intent);
     }
 
     public static void startForResult(Activity activity, int requestCode, int viewType) {
+        startForResult(activity, requestCode, viewType, null);
+    }
+    public static void startForResult(Activity activity, int requestCode, int viewType, String email) {
         Intent intent = new Intent(activity.getApplicationContext(), LoginCloudActivity.class);
         intent.putExtra(KEY_VIEW_TYPE, viewType);
+        intent.putExtra(KEY_EMAIL, email);
         activity.startActivityForResult(intent, requestCode);
     }
 

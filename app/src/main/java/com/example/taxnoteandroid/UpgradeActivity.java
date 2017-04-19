@@ -298,18 +298,13 @@ public class UpgradeActivity extends DefaultCommonActivity {
         mixpanel.track("Taxnote Cloud Upgraded");
 
         // Taxnoteアカウント作成するようダイアログを表示
-        showSignupDialog();
-    }
-
-    // Taxnoteアカウント作成するようダイアログを表示
-    private void showSignupDialog() {
         new AlertDialog.Builder(this)
                 .setTitle(R.string.cloud_sign_up_title)
                 .setMessage(R.string.cloud_sign_up_message)
                 .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-
+                        checkTransaction();
                     }
                 })
                 .show();
@@ -358,19 +353,22 @@ public class UpgradeActivity extends DefaultCommonActivity {
     }
 
     private void showAlreadyLoginEmailDialog(final String email) {
+        mApiUser.setEmail(email);
         new AlertDialog.Builder(this)
                 .setTitle(email)
                 .setMessage(R.string.cloud_account_exists_message)
                 .setPositiveButton(R.string.login, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-
+                        LoginCloudActivity.startForResult(UpgradeActivity.this,
+                                REQUEST_CODE_CLOUD_LOGIN,
+                                LoginCloudActivity.VIEW_TYPE_LOGIN, email);
                     }
                 })
                 .setNeutralButton(R.string.delete_account, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-
+                        showConfirmDeleteAccount();
                     }
                 })
                 .setNegativeButton(android.R.string.cancel, null)
@@ -499,7 +497,7 @@ public class UpgradeActivity extends DefaultCommonActivity {
                                     null, getString(R.string.network_not_connection));
                         }
                         break;
-                    case 2: //@@ アカウントの削除
+                    case 2: // アカウントの削除
                         showConfirmDeleteAccount();
                         break;
                 }
@@ -519,7 +517,8 @@ public class UpgradeActivity extends DefaultCommonActivity {
         if (!TNApi.isNetworkConnected(this)) {
             mApiUser.clearAccountData(mApiModel);
             mApiUser = new TNApiUser(getApplicationContext());
-            binding.cloudRightTv.setText(R.string.login);
+            binding.cloudRightTv.setText(R.string.cloud_register);
+            binding.cloudLoginLayout.setVisibility(View.VISIBLE);
             mLoadingProgress.dismiss();
             return;
         }
@@ -537,7 +536,8 @@ public class UpgradeActivity extends DefaultCommonActivity {
                 // 保存しているtokenを削除
                 mApiUser.clearAccountData(mApiModel);
                 mApiUser = new TNApiUser(getApplicationContext());
-                binding.cloudRightTv.setText(R.string.login);
+                binding.cloudRightTv.setText(R.string.cloud_register);
+                binding.cloudLoginLayout.setVisibility(View.VISIBLE);
                 BroadcastUtil.sendAfterLogin(UpgradeActivity.this, false);
 
             }
@@ -547,7 +547,8 @@ public class UpgradeActivity extends DefaultCommonActivity {
                 mLoadingProgress.dismiss();
 
                 mApiUser = new TNApiUser(getApplicationContext());
-                binding.cloudRightTv.setText(R.string.login);
+                binding.cloudRightTv.setText(R.string.cloud_register);
+                binding.cloudLoginLayout.setVisibility(View.VISIBLE);
 
                 BroadcastUtil.sendAfterLogin(UpgradeActivity.this, false);
             }
@@ -651,6 +652,9 @@ public class UpgradeActivity extends DefaultCommonActivity {
 
                     if (isNewPurchased)
                         showUpgradeToTaxnoteCloudSuccessDialog();
+
+                    if (!mApiUser.isLoggingIn())
+                        checkTransaction();
                     break;
             }
 

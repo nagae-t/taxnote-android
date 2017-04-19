@@ -198,9 +198,9 @@ public class TNApiUser extends TNApi {
         //@@ iOS [KPTaxnoteApiUserHandler logOutFromSubscriptionAccount];
 
         // subscription情報を削除
-        SharedPreferencesManager.saveTaxnoteCloudExpiryTime(context, 0);
-        SharedPreferencesManager.saveUserApiLoginValue(context, KEY_CLOUD_ORDER_ID, null);
-        SharedPreferencesManager.saveUserApiLoginValue(context, KEY_CLOUD_PURCHASE_TOKEN, null);
+//        SharedPreferencesManager.saveTaxnoteCloudExpiryTime(context, 0);
+//        SharedPreferencesManager.saveUserApiLoginValue(context, KEY_CLOUD_ORDER_ID, null);
+//        SharedPreferencesManager.saveUserApiLoginValue(context, KEY_CLOUD_PURCHASE_TOKEN, null);
 
         deleteLoginData();
         apiModel.resetAllUpdatedKeys();
