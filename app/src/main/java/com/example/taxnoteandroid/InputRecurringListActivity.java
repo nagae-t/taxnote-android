@@ -77,7 +77,7 @@ public class InputRecurringListActivity extends DefaultCommonActivity {
             return;
         }
 
-        DialogManager.showRurringTaxnoteCloudRequired(this);
+        DialogManager.showRecurringTaxnoteCloudRequired(this);
 
     }
 

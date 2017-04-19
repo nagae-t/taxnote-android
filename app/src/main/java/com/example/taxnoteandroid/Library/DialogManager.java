@@ -610,7 +610,7 @@ public class DialogManager {
     //    -- Input Recurring With Taxnote Cloud Required Dialog --
     //--------------------------------------------------------------//
 
-    public static void showRurringTaxnoteCloudRequired(final Activity activity) {
+    public static void showRecurringTaxnoteCloudRequired(final Activity activity) {
         new AlertDialog.Builder(activity)
                 .setTitle(R.string.taxnote_cloud_first_free)
                 .setMessage(R.string.recurring_cloud_required_message)
