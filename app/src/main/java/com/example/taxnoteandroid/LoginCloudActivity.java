@@ -161,7 +161,6 @@ public class LoginCloudActivity extends DefaultCommonActivity {
         if (!dialog.isShowing())
             dialog.show();
 
-        Log.v("TEST", "login 00");
         final TNApiUser apiUser = new TNApiUser(this, email, passwd);
         apiUser.signIn(new AsyncOkHttpClient.Callback() {
             @Override
@@ -197,7 +196,6 @@ public class LoginCloudActivity extends DefaultCommonActivity {
             @Override
             public void onSuccess(Response response, String content) {
 
-                Log.v("TEST", "login 01");
                 dialog.setMessage(getString(R.string.login_success_wait_fetching));
 
                 final TNApiModel apiModel = new TNApiModel(getApplicationContext());
@@ -216,7 +214,6 @@ public class LoginCloudActivity extends DefaultCommonActivity {
                 }
 
                 apiModel.setIsSyncing(true);
-                Log.v("TEST", "login 02");
                 apiModel.getAllDataAfterLogin(new AsyncOkHttpClient.Callback() {
                     @Override
                     public void onFailure(Response response, Throwable throwable) {
@@ -233,7 +230,6 @@ public class LoginCloudActivity extends DefaultCommonActivity {
                     @Override
                     public void onSuccess(Response response, String content) {
                         apiModel.setIsSyncing(false);
-//                        dialog.dismiss();
 
                         setResult(RESULT_OK);
                         finish();

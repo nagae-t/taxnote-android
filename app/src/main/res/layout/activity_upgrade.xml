@@ -79,14 +79,14 @@
             android:paddingEnd="16dp"
             android:paddingStart="16dp">
             <TextView
-                android:id="@+id/cloud_right_tv"
+                android:id="@+id/cloud_left_tv"
                 style="@style/font_style_standard"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="@string/taxnote_cloud_first_free" />
             <TextView
-                android:id="@+id/cloud_left_tv"
+                android:id="@+id/cloud_right_tv"
                 style="@style/font_style_standard"
                 android:textColor="?attr/colorPrimary"
                 android:layout_width="wrap_content"

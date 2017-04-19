@@ -179,8 +179,8 @@ public class UpgradeActivity extends DefaultCommonActivity {
                 binding.cloudLoginLayout.setVisibility(View.GONE);
                 mApiUser = new TNApiUser(this);
 
-                binding.cloudRightTv.setText(R.string.cloud);
-                binding.cloudLeftTv.setText(mApiUser.getEmail());
+                binding.cloudLeftTv.setText(R.string.cloud);
+                binding.cloudRightTv.setText(mApiUser.getEmail());
                 binding.purchaseInfoLayout.setVisibility(View.VISIBLE);
 
                 if (requestCode == REQUEST_CODE_CLOUD_LOGIN) {
@@ -234,8 +234,8 @@ public class UpgradeActivity extends DefaultCommonActivity {
         // taxnote cloud is active
         if (UpgradeManger.taxnoteCloudIsActive(this)) {
             binding.purchaseInfoLayout.setVisibility(View.VISIBLE);
-            binding.cloudRightTv.setText(R.string.cloud);
-            binding.cloudLeftTv.setText(R.string.cloud_register);
+            binding.cloudLeftTv.setText(R.string.cloud);
+            binding.cloudRightTv.setText(R.string.cloud_register);
         }
     }
 
@@ -389,8 +389,8 @@ public class UpgradeActivity extends DefaultCommonActivity {
         String userEmail = mApiUser.getEmail();
         if (userEmail != null) { // Taxnoteアカウントでログインしている場合
             binding.cloudLoginLayout.setVisibility(View.GONE);
-            binding.cloudRightTv.setText(R.string.cloud);
-            binding.cloudLeftTv.setText(userEmail);
+            binding.cloudLeftTv.setText(R.string.cloud);
+            binding.cloudRightTv.setText(userEmail);
 
             binding.purchaseInfoLayout.setVisibility(View.VISIBLE);
         }
@@ -518,7 +518,8 @@ public class UpgradeActivity extends DefaultCommonActivity {
 
         if (!TNApi.isNetworkConnected(this)) {
             mApiUser.clearAccountData(mApiModel);
-            binding.cloudLoginLayout.setVisibility(View.VISIBLE);
+            mApiUser = new TNApiUser(getApplicationContext());
+            binding.cloudRightTv.setText(R.string.login);
             mLoadingProgress.dismiss();
             return;
         }
@@ -535,7 +536,8 @@ public class UpgradeActivity extends DefaultCommonActivity {
 
                 // 保存しているtokenを削除
                 mApiUser.clearAccountData(mApiModel);
-                binding.cloudLoginLayout.setVisibility(View.VISIBLE);
+                mApiUser = new TNApiUser(getApplicationContext());
+                binding.cloudRightTv.setText(R.string.login);
                 BroadcastUtil.sendAfterLogin(UpgradeActivity.this, false);
 
             }
@@ -545,7 +547,6 @@ public class UpgradeActivity extends DefaultCommonActivity {
                 mLoadingProgress.dismiss();
 
                 mApiUser = new TNApiUser(getApplicationContext());
-//                binding.cloudLoginLayout.setVisibility(View.VISIBLE);
                 binding.cloudRightTv.setText(R.string.login);
 
                 BroadcastUtil.sendAfterLogin(UpgradeActivity.this, false);
