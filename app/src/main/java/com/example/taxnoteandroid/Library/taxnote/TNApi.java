@@ -98,7 +98,7 @@ public class TNApi {
 
     protected void setRequestPath(String path) {
         requestUrlPath = path;
-        setRequestUrl(BuildConfig.TAXNOTE_API_URI + path);
+        setRequestUrl(BuildConfig.SERVICE_API_URI + path);
     }
 
     private void setRequestUrl(String url) {
