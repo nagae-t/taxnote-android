@@ -41,7 +41,7 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
 
-            buildConfigField "String", "TAXNOTE_API_URI", "\"https://taxnote-staging.herokuapp.com/api\""
+            buildConfigField "String", "TAXNOTE_API_URI", "\"https://taxnoteapi.com/api\""
         }
         debug {
 
