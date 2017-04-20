@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">ZenyDev</string>
+
+    <!-- Admob Unit ID -->
+    <string name="admob_banner_unit_id">ca-app-pub-3818406242507081/4087967256</string>
+
 </resources>
