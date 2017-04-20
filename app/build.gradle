@@ -53,7 +53,7 @@ android {
 
     productFlavors {
         taxnoteProduct {
-            buildConfigField "String", "SERVICE_API_URI", "\"https://taxnote-staging.herokuapp.com/api\""
+            buildConfigField "String", "SERVICE_API_URI", "\"https://taxnoteapi.com/api\""
         }
 
         taxnoteDevelop {
@@ -66,16 +66,15 @@ android {
             versionCode 1
             versionName "0.1"
 
-            buildConfigField "String", "SERVICE_API_URI", "\"https://taxnote-staging.herokuapp.com/api\""
+            buildConfigField "String", "SERVICE_API_URI", "\"https://zenyapp.com/api\""
         }
 
         zenyDevelop {
             applicationId "com.nonapp.zeny"
             versionCode 1
             versionName "0.1"
-//            applicationIdSuffix ".debug"
-//            versionNameSuffix = 'dev'
-            buildConfigField "String", "SERVICE_API_URI", "\"https://taxnote-staging.herokuapp.com/api\""
+
+            buildConfigField "String", "SERVICE_API_URI", "\"https://zeny-staging.herokuapp.com/api\""
         }
 
     }
