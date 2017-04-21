@@ -1,0 +1,32 @@
+[
+  {
+    "name": "食費",
+    "isExpense": true,
+    "details": ""
+  },
+  {
+    "name": "交通費",
+    "isExpense": true,
+    "details": ""
+  },
+  {
+    "name": "日用品",
+    "isExpense": true,
+    "details": ""
+  },
+  {
+    "name": "交際費",
+    "isExpense": true,
+    "details": ""
+  },
+  {
+    "name": "給与",
+    "isExpense": false,
+    "details": ""
+  },
+  {
+    "name": "お小遣い",
+    "isExpense": false,
+    "details": ""
+  }
+]

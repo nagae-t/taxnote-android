@@ -1,0 +1,32 @@
+[
+  {
+    "name": "Food",
+    "isExpense": true,
+    "details": ""
+  },
+  {
+    "name": "Travel",
+    "isExpense": true,
+    "details": ""
+  },
+  {
+    "name": "Entertainment",
+    "isExpense": true,
+    "details": ""
+  },
+  {
+    "name": "Groceries",
+    "isExpense": true,
+    "details": ""
+  },
+  {
+    "name": "Salary",
+    "isExpense": false,
+    "details": ""
+  },
+  {
+    "name": "Extra Income",
+    "isExpense": false,
+    "details": ""
+  }
+]
