@@ -113,6 +113,9 @@
                 android:layout_height="wrap_content"
                 android:text="@string/login" />
         </LinearLayout>
+        <android.support.v4.widget.Space
+            android:layout_width="match_parent"
+            android:layout_height="1dp" />
         <LinearLayout
             android:background="@drawable/selector_background_colors"
             android:id="@+id/purchase_info_layout"

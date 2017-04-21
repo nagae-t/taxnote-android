@@ -304,14 +304,14 @@ public class UpgradeActivity extends DefaultCommonActivity {
                 .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        checkTransaction();
+                        checkTransaction(true);
                     }
                 })
                 .show();
     }
 
     // 課金情報とTaxnoteアカウントを調べる
-    private void checkTransaction() {
+    private void checkTransaction(final boolean isMoveNext) {
         String transactionId = TNApiUser.getCloudOrderId(this);
         if (transactionId == null) return;
 
@@ -339,6 +339,7 @@ public class UpgradeActivity extends DefaultCommonActivity {
             public void onSuccess(Response response, String content) {
                 mLoadingProgress.dismiss();
                 if (content == null || content.length() == 0) {
+                    if (!isMoveNext) return;
                     LoginCloudActivity.startForResult(UpgradeActivity.this,
                             REQUEST_CODE_CLOUD_REGISTER,
                             LoginCloudActivity.VIEW_TYPE_REGISTER);
@@ -646,15 +647,20 @@ public class UpgradeActivity extends DefaultCommonActivity {
                         showUpgradeToTaxnotePlusSuccessDialog();
                     break;
                 case UpgradeManger.SKU_TAXNOTE_CLOUD_ID:
+                    long expiryTime = result.getExpiryTimeMillis();
                     SharedPreferencesManager.saveTaxnoteCloudExpiryTime(
-                            getApplicationContext(), result.getExpiryTimeMillis());
-                    mApiUser.saveCloudPurchaseInfo(mPurchase.getOrderId(), mPurchase.getToken());
+                            getApplicationContext(), expiryTime);
+                    String orderId = mPurchase.getOrderId();
+                    if (orderId == null || orderId.length() == 0)
+                        orderId = String.valueOf(expiryTime);
+                    mApiUser.saveCloudPurchaseInfo(orderId, mPurchase.getToken());
 
-                    if (isNewPurchased)
+                    if (isNewPurchased) {
                         showUpgradeToTaxnoteCloudSuccessDialog();
+                    }
 
                     if (!mApiUser.isLoggingIn())
-                        checkTransaction();
+                        checkTransaction(false);
                     break;
             }
 
