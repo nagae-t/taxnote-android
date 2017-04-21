@@ -18,6 +18,7 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.example.taxnoteandroid.Library.BroadcastUtil;
 import com.example.taxnoteandroid.Library.DialogManager;
@@ -30,11 +31,13 @@ import com.example.taxnoteandroid.Library.billing.Inventory;
 import com.example.taxnoteandroid.Library.billing.Purchase;
 import com.example.taxnoteandroid.Library.taxnote.TNApiModel;
 import com.example.taxnoteandroid.Library.taxnote.TNApiUser;
+import com.example.taxnoteandroid.Library.zeny.ZNUtils;
 import com.example.taxnoteandroid.dataManager.DefaultDataInstaller;
 import com.example.taxnoteandroid.dataManager.EntryDataManager;
 import com.example.taxnoteandroid.dataManager.SharedPreferencesManager;
 import com.example.taxnoteandroid.databinding.ActivityMainBinding;
 import com.example.taxnoteandroid.entryTab.EntryTabFragment;
+import com.google.android.gms.ads.AdRequest;
 import com.google.api.services.androidpublisher.model.SubscriptionPurchase;
 import com.helpshift.support.Support;
 import com.kobakei.ratethisapp.RateThisApp;
@@ -54,6 +57,8 @@ public class MainActivity extends DefaultCommonActivity {
 
     private IabHelper mBillingHelper;
     private TNGoogleApiClient tnGoogleApi;
+
+    private AdRequest mAdRequest = null;
 
     public static final String BROADCAST_AFTER_LOGIN
             = "broadcast_main_after_login";
@@ -183,6 +188,16 @@ public class MainActivity extends DefaultCommonActivity {
             }
         });*/
 
+
+        // Zeny Ads
+        if (ZNUtils.isZeny()) {
+            mAdRequest = new AdRequest.Builder()
+                    .addTestDevice("92A2669BB3BA9419A031D355C4103234")
+                    .build();
+
+            binding.adsLayout.setVisibility(View.VISIBLE);
+            binding.adView1.loadAd(mAdRequest);
+        }
     }
 
     private void checkInAppBilling() {
