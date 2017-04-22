@@ -545,6 +545,9 @@ public class MainActivity extends DefaultCommonActivity {
             if (result == null || subscriptionId == null) return;
             switch (subscriptionId) {
                 case UpgradeManger.SKU_TAXNOTE_PLUS_ID:
+                    SharedPreferencesManager.saveTaxnotePlusExpiryTime(
+                            getApplicationContext(), result.getExpiryTimeMillis());
+                    break;
                 case UpgradeManger.SKU_TAXNOTE_PLUS_ID1:
                     SharedPreferencesManager.saveTaxnotePlusExpiryTime(
                             getApplicationContext(), result.getExpiryTimeMillis());
