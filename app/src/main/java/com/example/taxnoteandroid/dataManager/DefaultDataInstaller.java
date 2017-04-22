@@ -6,6 +6,7 @@ import android.support.v4.content.IntentCompat;
 import android.support.v7.app.AppCompatActivity;
 
 import com.example.taxnoteandroid.Library.BroadcastUtil;
+import com.example.taxnoteandroid.Library.zeny.ZNUtils;
 import com.example.taxnoteandroid.MainActivity;
 import com.example.taxnoteandroid.R;
 import com.example.taxnoteandroid.model.Account;
@@ -117,7 +118,9 @@ public class DefaultDataInstaller {
         }.getType();
 
         // Get default json list
-        InputStream inputStream = context.getResources().openRawResource(R.raw.default_reason);
+        int rawReson = R.raw.default_reason;
+        if (ZNUtils.isZeny()) rawReson = R.raw.default_zeny_reason;
+        InputStream inputStream = context.getResources().openRawResource(rawReson);
         JsonReader jsonReader   = new JsonReader(new InputStreamReader(inputStream));
         Gson gson               = new Gson();
         List<Reason> reasons    = gson.fromJson(jsonReader, type);
@@ -140,6 +143,7 @@ public class DefaultDataInstaller {
     }
 
     private static void setDefaultAccountData(Context context, Project project) {
+        if (ZNUtils.isZeny()) return;
 
         Type type = new TypeToken<List<Account>>() {
         }.getType();
@@ -164,6 +168,7 @@ public class DefaultDataInstaller {
     }
 
     private static void setDefaultSummaryData(Context context, Project project, Reason reason) {
+        if (ZNUtils.isZeny()) return;
 
         Type type = new TypeToken<List<DefaultSummary>>() {
         }.getType();
