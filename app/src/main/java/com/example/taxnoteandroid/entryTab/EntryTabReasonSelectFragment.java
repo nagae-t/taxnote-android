@@ -31,6 +31,7 @@ import com.example.taxnoteandroid.Library.DialogManager;
 import com.example.taxnoteandroid.Library.KeyboardUtil;
 import com.example.taxnoteandroid.Library.taxnote.TNApi;
 import com.example.taxnoteandroid.Library.taxnote.TNApiModel;
+import com.example.taxnoteandroid.Library.zeny.ZNUtils;
 import com.example.taxnoteandroid.R;
 import com.example.taxnoteandroid.dataManager.AccountDataManager;
 import com.example.taxnoteandroid.dataManager.EntryDataManager;
@@ -119,7 +120,7 @@ public class EntryTabReasonSelectFragment extends Fragment {
 
         reasonDataManager = new ReasonDataManager(getActivity().getApplicationContext());
         setDateView();
-        setAccountView(getView());
+        setAccountView();
         setReasonList(getView());
 
         binding.refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -154,7 +155,6 @@ public class EntryTabReasonSelectFragment extends Fragment {
 
             @Override
             public void onSuccess(Response response, String content) {
-                Log.v("TEST", "refreshSyncData onSuccess");
                 binding.refreshLayout.setRefreshing(false);
                 setReasonList(getView());
                 loadCurrentAccount();
@@ -255,9 +255,10 @@ public class EntryTabReasonSelectFragment extends Fragment {
         ((TextView) getView().findViewById(R.id.date_text_view)).setText(dateString);
     }
 
-    private void setAccountView(View view) {
+    private void setAccountView() {
+        if (ZNUtils.isZeny()) return;
 
-        view.findViewById(R.id.account_text_view).setOnClickListener(new View.OnClickListener() {
+        binding.accountTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 startActivity(AccountSelectActivity.createIntent(getContext(), isExpense));
@@ -271,11 +272,11 @@ public class EntryTabReasonSelectFragment extends Fragment {
     //--------------------------------------------------------------//
 
     private void loadCurrentAccount() {
+        if (ZNUtils.isZeny()) return;
 
         AccountDataManager accountDataManager = new AccountDataManager(getContext());
         account = accountDataManager.findCurrentSelectedAccount(isExpense);
-
-        ((TextView) getView().findViewById(R.id.account_text_view)).setText(account.name);
+        binding.accountTextView.setText(account.name);
     }
 
 

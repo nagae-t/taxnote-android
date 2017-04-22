@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">ZenyDev</string>
+
+    <string name="entry_tab_fragment_select_reason">カテゴリー</string>
 </resources>
