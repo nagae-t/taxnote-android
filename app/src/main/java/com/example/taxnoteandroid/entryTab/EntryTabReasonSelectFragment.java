@@ -589,7 +589,7 @@ public class EntryTabReasonSelectFragment extends Fragment {
                     this.itemView.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            onClick_Reason(view);
+                            onClick_Reason();
                         }
                     });
 
@@ -617,8 +617,12 @@ public class EntryTabReasonSelectFragment extends Fragment {
             }
         }
 
-        public void onClick_Reason(View view) {
-            startActivity(SummaryActivity.createIntent(getContext(), isExpense, date, account, reason));
+        public void onClick_Reason() {
+            if (ZNUtils.isZeny()) {
+                InputDataActivity.start(getContext(), isExpense, date, reason);
+            } else {
+                startActivity(SummaryActivity.createIntent(getContext(), isExpense, date, account, reason));
+            }
         }
 
         public void onClick_Footer(View view) {

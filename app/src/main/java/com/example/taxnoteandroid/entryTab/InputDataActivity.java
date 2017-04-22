@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
@@ -40,6 +41,7 @@ import com.mixpanel.android.mpmetrics.MixpanelAPI;
 import org.parceler.Parcels;
 
 import java.text.SimpleDateFormat;
+import java.util.Locale;
 import java.util.UUID;
 
 import static com.example.taxnoteandroid.TaxnoteConsts.MIXPANEL_TOKEN;
@@ -66,6 +68,15 @@ public class InputDataActivity extends DefaultCommonActivity {
      */
 //    private GoogleApiClient client;
 
+    public static void start(Context context, boolean isExpense, long date, Reason reason) {
+        Intent i = new Intent(context, InputDataActivity.class);
+
+        i.putExtra(EXTRA_IS_EXPENSE, isExpense);
+        i.putExtra(Reason.class.getName(), Parcels.wrap(reason));
+        i.putExtra(EXTRA_DATE, date);
+        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(i);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -116,9 +127,14 @@ public class InputDataActivity extends DefaultCommonActivity {
 
         isExpense = intent.getBooleanExtra(EXTRA_IS_EXPENSE, false);
         date = intent.getLongExtra(EXTRA_DATE, 0);
-        account = Parcels.unwrap(intent.getParcelableExtra(Account.class.getName()));
         reason = Parcels.unwrap(intent.getParcelableExtra(Reason.class.getName()));
-        summary = Parcels.unwrap(intent.getParcelableExtra(Summary.class.getName()));
+
+        Parcelable accountPar = intent.getParcelableExtra(Account.class.getName());
+        if (accountPar != null)
+            account = Parcels.unwrap(accountPar);
+        Parcelable summPar = intent.getParcelableExtra(Summary.class.getName());
+        if (summPar != null)
+            summary = Parcels.unwrap(summPar);
     }
 
 
@@ -172,22 +188,24 @@ public class InputDataActivity extends DefaultCommonActivity {
 
     private void setTitle() {
 
-        String title;
+        String title = reason.name;
         dateString = getResources().getString(R.string.date_string_today);
 
         // Show the date if it is not today
         if (!DateUtils.isToday(date)) {
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat(getResources().getString(R.string.date_string_format_to_month_day));
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
+                    getResources().getString(R.string.date_string_format_to_month_day),
+                    Locale.getDefault());
             dateString = simpleDateFormat.format(date);
         }
 
-        if (isExpense) {
-            title = dateString + " " + reason.name + "/" + account.name;
-        } else {
-            title = dateString + " " + account.name + "/" + reason.name;
+        if (account != null) {
+            title = (isExpense) ? reason.name + "/" + account.name
+                    : account.name + "/" + reason.name;
         }
 
         setTitle(title);
+        getSupportActionBar().setSubtitle(dateString);
     }
 
     private void setSummary() {
@@ -379,7 +397,7 @@ public class InputDataActivity extends DefaultCommonActivity {
         entry.uuid = UUID.randomUUID().toString();
         entry.project = project;
         entry.reason = reason;
-        entry.account = account;
+        entry.account = (account == null) ? new Account() : account;
         long id = entryDataManager.save(entry);
 
         // Success

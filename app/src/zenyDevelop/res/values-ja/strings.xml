@@ -1,5 +1,9 @@
 <resources>
     <string name="app_name">ZenyDev</string>
 
+    <string name="History">履歴</string>
+
     <string name="entry_tab_fragment_select_reason">カテゴリー</string>
+
+    <string name="save_data">履歴に記録</string>
 </resources>
