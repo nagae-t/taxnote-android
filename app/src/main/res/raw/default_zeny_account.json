@@ -1,0 +1,10 @@
+[
+  {
+    "name": "Cash",
+    "isExpense": true
+  },
+  {
+    "name": "Cash",
+    "isExpense": false
+  }
+]

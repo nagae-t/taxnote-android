@@ -28,6 +28,7 @@ import com.example.taxnoteandroid.Library.ValueConverter;
 import com.example.taxnoteandroid.Library.taxnote.TNApiModel;
 import com.example.taxnoteandroid.R;
 import com.example.taxnoteandroid.UpgradeActivity;
+import com.example.taxnoteandroid.dataManager.AccountDataManager;
 import com.example.taxnoteandroid.dataManager.EntryDataManager;
 import com.example.taxnoteandroid.dataManager.ProjectDataManager;
 import com.example.taxnoteandroid.dataManager.SharedPreferencesManager;
@@ -387,6 +388,7 @@ public class InputDataActivity extends DefaultCommonActivity {
 
         ProjectDataManager projectDataManager = new ProjectDataManager(this);
         Project project = projectDataManager.findCurrent();
+        AccountDataManager accDm = new AccountDataManager(this);
 
         Entry entry = new Entry();
         entry.date = date;
@@ -397,7 +399,7 @@ public class InputDataActivity extends DefaultCommonActivity {
         entry.uuid = UUID.randomUUID().toString();
         entry.project = project;
         entry.reason = reason;
-        entry.account = (account == null) ? new Account() : account;
+        entry.account = (account == null) ? accDm.findCurrentSelectedAccount(isExpense) : account;
         long id = entryDataManager.save(entry);
 
         // Success

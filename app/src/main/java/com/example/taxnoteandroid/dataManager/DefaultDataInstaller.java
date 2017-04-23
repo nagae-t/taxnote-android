@@ -118,8 +118,7 @@ public class DefaultDataInstaller {
         }.getType();
 
         // Get default json list
-        int rawReson = R.raw.default_reason;
-        if (ZNUtils.isZeny()) rawReson = R.raw.default_zeny_reason;
+        int rawReson = (ZNUtils.isZeny()) ? R.raw.default_zeny_reason : R.raw.default_reason;
         InputStream inputStream = context.getResources().openRawResource(rawReson);
         JsonReader jsonReader   = new JsonReader(new InputStreamReader(inputStream));
         Gson gson               = new Gson();
@@ -143,13 +142,13 @@ public class DefaultDataInstaller {
     }
 
     private static void setDefaultAccountData(Context context, Project project) {
-        if (ZNUtils.isZeny()) return;
 
         Type type = new TypeToken<List<Account>>() {
         }.getType();
 
         // Get default json list
-        InputStream inputStream = context.getResources().openRawResource(R.raw.default_account);
+        int rawAccount =  (ZNUtils.isZeny()) ? R.raw.default_zeny_account : R.raw.default_account;
+        InputStream inputStream = context.getResources().openRawResource(rawAccount);
         JsonReader jsonReader   = new JsonReader(new InputStreamReader(inputStream));
         Gson gson               = new Gson();
         List<Account> accounts  = gson.fromJson(jsonReader, type);
