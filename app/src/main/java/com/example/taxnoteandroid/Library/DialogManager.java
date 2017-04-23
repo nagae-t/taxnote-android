@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import com.example.taxnoteandroid.DataExportActivity;
 import com.example.taxnoteandroid.HistoryListDataActivity;
+import com.example.taxnoteandroid.Library.zeny.ZNUtils;
 import com.example.taxnoteandroid.R;
 import com.example.taxnoteandroid.TNSimpleDialogFragment;
 import com.example.taxnoteandroid.UpgradeActivity;
@@ -39,14 +40,17 @@ public class DialogManager {
 
     public static void showInputDataToast(Context context, String dateString, Entry entry) {
 
-        String message;
+        String message = dateString + " ";
         String priceString = ValueConverter.formatPrice(context, entry.price);
 
-        if (entry.isExpense) {
-            message = dateString + " " + entry.reason.name + " / " + entry.account.name + " " + priceString;
+        if (!ZNUtils.isZeny()) {
+            message += (entry.isExpense) ? entry.reason.name + " / " + entry.account.name
+                    : entry.account.name + " / " + entry.reason.name;
         } else {
-            message = dateString + " " + entry.account.name + " / " + entry.reason.name + " " + priceString;
+            message += entry.reason.name;
         }
+
+        message += " " + priceString;
 
         Toast toast = Toast.makeText(context, message, Toast.LENGTH_SHORT);
         toast.setGravity(Gravity.CENTER, 0, 0);

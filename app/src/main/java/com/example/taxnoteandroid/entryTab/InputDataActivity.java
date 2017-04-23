@@ -26,6 +26,7 @@ import com.example.taxnoteandroid.Library.EntryLimitManager;
 import com.example.taxnoteandroid.Library.UpgradeManger;
 import com.example.taxnoteandroid.Library.ValueConverter;
 import com.example.taxnoteandroid.Library.taxnote.TNApiModel;
+import com.example.taxnoteandroid.Library.zeny.ZNUtils;
 import com.example.taxnoteandroid.R;
 import com.example.taxnoteandroid.UpgradeActivity;
 import com.example.taxnoteandroid.dataManager.AccountDataManager;
@@ -417,6 +418,8 @@ public class InputDataActivity extends DefaultCommonActivity {
                 currentPrice = 0;
                 priceTextView.setText(null);
             } else {
+                if (ZNUtils.isZeny()) BroadcastUtil.sendReloadReport(this);
+
                 setResult(RESULT_OK);
                 finish();
             }

@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.taxnoteandroid.Library.ValueConverter;
+import com.example.taxnoteandroid.Library.zeny.ZNUtils;
 import com.example.taxnoteandroid.dataManager.SharedPreferencesManager;
 import com.example.taxnoteandroid.databinding.RowHistoryCellBinding;
 import com.example.taxnoteandroid.databinding.RowHistorySectionHeaderBinding;
@@ -134,10 +135,11 @@ public class CommonEntryRecyclerAdapter extends RecyclerView.Adapter<BindingHold
 
                 // Name
                 String nameText;
-                if (entry.isExpense) {
-                    nameText = entry.reason.name + " / " + entry.account.name;
+                if (!ZNUtils.isZeny()) {
+                    nameText = (entry.isExpense) ? entry.reason.name + " / " + entry.account.name
+                            : entry.account.name + " / " + entry.reason.name;
                 } else {
-                    nameText = entry.account.name + " / " + entry.reason.name;
+                    nameText = entry.reason.name;
                 }
 
                 if (!SharedPreferencesManager.isTapHereHistoryEditDone(mContext)) {
