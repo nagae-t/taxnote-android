@@ -2,6 +2,7 @@
     <string name="app_name">ZenyDev</string>
 
     <string name="History">履歴</string>
+    <string name="report">レポート</string>
     <string name="Details">メモ</string>
 
     <string name="entry_tab_fragment_select_reason">カテゴリー</string>
