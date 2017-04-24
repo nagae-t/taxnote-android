@@ -3,4 +3,23 @@
     <color name="primary">#378ff6</color>
     <color name="primary_dark">#1d69c1</color>
     <color name="primary_light">#a9c9ef</color>
+
+    <!-- Sub Project primary -->
+    <color name="second_primary">#009cc5</color>
+    <color name="second_primary_dark">#027c9c</color>
+    <color name="third_primary">#06ac84</color>
+    <color name="third_primary_dark">#047b5e</color>
+
+    <!-- PieChart Color -->
+    <color name="pie_chart_color1">#53a3fa</color>
+    <color name="pie_chart_color2">#3a95fa</color>
+    <color name="pie_chart_color3">#2188f9</color>
+
+    <color name="second_pie_chart_color1">#00c4f8</color>
+    <color name="second_pie_chart_color2">#00b0df</color>
+    <color name="second_pie_chart_color3">#009cc5</color>
+
+    <color name="third_pie_chart_color1">#00cc9b</color>
+    <color name="third_pie_chart_color2">#00b387</color>
+    <color name="third_pie_chart_color3">#009974</color>
 </resources>
