@@ -14,6 +14,7 @@ public class UpgradeManger {
     public static final String SKU_TAXNOTE_PLUS_ID = "taxnote.plus.sub";
     public static final String SKU_TAXNOTE_PLUS_ID1 = "taxnote.plus.sub1";
     public static final String SKU_TAXNOTE_CLOUD_ID = "taxnote.cloud.sub";
+    public static final String SKU_ZENY_CLOUD_ID = "zeny.cloud.sub";
 
     public static boolean taxnotePlusIsActive(Context context) {
         long expireTime = SharedPreferencesManager.getTaxnotePlusExpiryTime(context);

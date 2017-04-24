@@ -2,6 +2,7 @@ package com.example.taxnoteandroid.Library;
 
 import android.content.Context;
 
+import com.example.taxnoteandroid.Library.zeny.ZNUtils;
 import com.example.taxnoteandroid.dataManager.EntryDataManager;
 import com.example.taxnoteandroid.dataManager.ProjectDataManager;
 import com.example.taxnoteandroid.dataManager.SharedPreferencesManager;
@@ -27,6 +28,7 @@ public class EntryLimitManager {
 
 
     public static boolean limitNewEntryForFreeUsersWithDate(Context context, long date) {
+        if (ZNUtils.isZeny()) return false;
 
         if (UpgradeManger.taxnotePlusIsActive(context)) {
             return false;
@@ -47,6 +49,7 @@ public class EntryLimitManager {
     }
 
     public static boolean limitNewEntryAddSubProject(Context context) {
+
         ProjectDataManager projectDm = new ProjectDataManager(context);
         EntryDataManager entryDm = new EntryDataManager(context);
         Project project = projectDm.findCurrent();
