@@ -55,7 +55,10 @@ public class EntryEditActivity extends DefaultCommonActivity {
 
         setIntent();
         setViews();
-        setTitle(getResources().getString(R.string.edit_entry));
+
+        int titleRes = (entry.isExpense) ? R.string.edit_entry_expense
+                : R.string.edit_entry_income;
+        setTitle(titleRes);
     }
 
     @Override
