@@ -425,6 +425,5 @@
     <string name="edit_entry_income">収入の編集</string>
 
     <string name="data_export_desc">記録したデータをエクセルなどの表計算ソフトに取り込める形式で出力します。</string>
-    <string name="data_export_char_code_desc">文字化けする時は文字コードを変更してください。</string>
 
 </resources>
