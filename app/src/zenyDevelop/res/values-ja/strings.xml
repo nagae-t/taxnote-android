@@ -8,12 +8,23 @@
 
     <string name="entry_tab_fragment_select_reason">カテゴリー</string>
 
+
     <string name="save_data">履歴に記録</string>
 
     <string name="share_taxnote">Zenyをシェアする</string>
     <string name="share_taxnote_title">この会計アプリ便利。</string>
     <string name="share_taxnote_message">この会計アプリ便利。https://play.google.com/store/apps/details?id=com.nonume.zeny</string>
 
+    <string name="master_project_name">メインアカウント</string>
+    <string name="project_settings">アカウントを追加、編集</string>
+    <string name="delete_project_or_edit_name">アカウントを削除・名前変更</string>
+    <string name="new_project_name">新しいアカウントの名前</string>
+    <string name="add_new_project">アカウントを追加</string>
+    <string name="delete_project_confirm_message">このアカウントを削除してもよいですか？</string>
+    <string name="delete_current_project_message">使用中のアカウントは削除できません。他のアカウントに切り替えてから削除してください。</string>
+    <string name="max_add_project_message">追加できるアカウントの上限に達しています。</string>
+    <string name="created_new_project_message">新しいアカウントを作成しました。</string>
+    <string name="tap_project_to_edit_name">アカウント名をタップすると名前を変更できます。</string>
 
     <string name="taxnote_data_import">Zenyへインポート</string>
     <string name="taxnote_cloud_first_free">Zenyプレミアム（初回無料）</string>
