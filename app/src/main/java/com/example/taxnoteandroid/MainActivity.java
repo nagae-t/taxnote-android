@@ -128,7 +128,8 @@ public class MainActivity extends DefaultCommonActivity {
 
             if (ZNUtils.isZeny()) {
                 Purchase purchaseZeny = inventory.getPurchase(UpgradeManger.SKU_ZENY_PREMIUM_ID);
-                new CheckBillingAsyncTask().execute(purchaseZeny);
+                if (purchaseZeny != null)
+                    new CheckBillingAsyncTask().execute(purchaseZeny);
             }
         }
     };
