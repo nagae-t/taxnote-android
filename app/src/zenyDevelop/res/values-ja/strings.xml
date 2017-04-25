@@ -4,6 +4,7 @@
     <string name="History">履歴</string>
     <string name="report">レポート</string>
     <string name="Details">メモ</string>
+    <string name="profit_loss_table">レポート</string>
 
     <string name="entry_tab_fragment_select_reason">カテゴリー</string>
 
@@ -14,5 +15,6 @@
     <string name="share_taxnote_message">この会計アプリ便利。https://play.google.com/store/apps/details?id=com.nonume.zeny</string>
 
 
+    <string name="taxnote_data_import">Zenyへインポート</string>
     <string name="taxnote_cloud_first_free">Zenyプレミアム（初回無料）</string>
 </resources>
