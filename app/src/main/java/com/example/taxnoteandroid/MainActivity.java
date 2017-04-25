@@ -661,6 +661,9 @@ public class MainActivity extends DefaultCommonActivity {
             Context context = getApplicationContext();
             switch (subscriptionId) {
                 case UpgradeManger.SKU_TAXNOTE_PLUS_ID:
+                    SharedPreferencesManager.saveTaxnotePlusExpiryTime(
+                            getApplicationContext(), result.getExpiryTimeMillis());
+                    break;
                 case UpgradeManger.SKU_TAXNOTE_PLUS_ID1:
                     SharedPreferencesManager.saveTaxnotePlusExpiryTime(
                             context, result.getExpiryTimeMillis());

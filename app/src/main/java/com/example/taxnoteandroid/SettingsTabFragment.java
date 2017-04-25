@@ -157,7 +157,7 @@ public class SettingsTabFragment extends Fragment {
                 int projectAllSize = mProjectDataManager.allSize();
                 // 無料版はmaster含めてProject3つまで
                 if (i == 0 && projectAllSize < 3) {
-                    showProjectEditorDialog(ProjectEditorDialogFragment.TYPE_ADD_NEW);
+                    showCloudConfirmAddNewProject();
                 } else if (i == 0 && projectAllSize >= 3) {
                     // 帳簿数上限に達していて「追加」ボタンをしたら何をだすかここに追加
                     DialogManager.showToast(mContext, mContext.getString(R.string.max_add_project_message));
@@ -191,11 +191,32 @@ public class SettingsTabFragment extends Fragment {
         // sub project があれば表示
         List<Project> projects = mProjectDataManager.findAll(false);
         for (int i=0; i<projects.size(); i++) {
-            addSubProjectView(projects.get(i));
+            Project _pj = projects.get(i);
+            _pj.order = i+1;
+            addSubProjectView(_pj);
         }
 
         // set current project radio checked
         checkCurrentProjectToRadio();
+    }
+
+    private void showCloudConfirmAddNewProject() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity())
+                .setTitle(R.string.taxnote_cloud_first_free)
+                .setMessage(R.string.add_project_without_cloud)
+                .setNegativeButton(android.R.string.cancel, null)
+                .setNeutralButton(R.string.benefits_of_upgrade, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        UpgradeActivity.start(getContext());
+                    }
+                }).setPositiveButton(R.string.add_new_project, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        showProjectEditorDialog(ProjectEditorDialogFragment.TYPE_ADD_NEW);
+                    }
+                });
+        builder.create().show();
     }
 
     private void showProjectEditorDialog(int dialogType) {

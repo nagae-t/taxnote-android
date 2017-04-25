@@ -39,6 +39,7 @@ import com.mixpanel.android.mpmetrics.MixpanelAPI;
 import okhttp3.Response;
 
 import static com.example.taxnoteandroid.TaxnoteConsts.MIXPANEL_TOKEN;
+import static com.google.api.client.http.HttpMethods.HEAD;
 
 
 public class UpgradeActivity extends DefaultCommonActivity {
@@ -311,14 +312,14 @@ public class UpgradeActivity extends DefaultCommonActivity {
                 .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        checkTransaction();
+                        checkTransaction(true);
                     }
                 })
                 .show();
     }
 
     // 課金情報とTaxnoteアカウントを調べる
-    private void checkTransaction() {
+    private void checkTransaction(final boolean isMoveNext) {
         String transactionId = TNApiUser.getCloudOrderId(this);
         if (transactionId == null) return;
 
@@ -346,6 +347,7 @@ public class UpgradeActivity extends DefaultCommonActivity {
             public void onSuccess(Response response, String content) {
                 mLoadingProgress.dismiss();
                 if (content == null || content.length() == 0) {
+                    if (!isMoveNext) return;
                     LoginCloudActivity.startForResult(UpgradeActivity.this,
                             REQUEST_CODE_CLOUD_REGISTER,
                             LoginCloudActivity.VIEW_TYPE_REGISTER);
@@ -646,6 +648,9 @@ public class UpgradeActivity extends DefaultCommonActivity {
             Context context = getApplicationContext();
             switch (subscriptionId) {
                 case UpgradeManger.SKU_TAXNOTE_PLUS_ID:
+                    SharedPreferencesManager.saveTaxnotePlusExpiryTime(
+                            context, result.getExpiryTimeMillis());
+                    break;
                 case UpgradeManger.SKU_TAXNOTE_PLUS_ID1:
                     SharedPreferencesManager.saveTaxnotePlusExpiryTime(
                             context, result.getExpiryTimeMillis());
@@ -662,13 +667,20 @@ public class UpgradeActivity extends DefaultCommonActivity {
                         SharedPreferencesManager.saveTaxnoteCloudExpiryTime(
                                 context, result.getExpiryTimeMillis());
                     }
-                    mApiUser.saveCloudPurchaseInfo(mPurchase.getOrderId(), mPurchase.getToken());
 
-                    if (isNewPurchased)
+                    long expiryTime = result.getExpiryTimeMillis();
+                    SharedPreferencesManager.saveTaxnoteCloudExpiryTime(context, expiryTime);
+                    String orderId = mPurchase.getOrderId();
+                    if (orderId == null || orderId.length() == 0)
+                        orderId = String.valueOf(expiryTime);
+                    mApiUser.saveCloudPurchaseInfo(orderId, mPurchase.getToken());
+
+                    if (isNewPurchased) {
                         showUpgradeToTaxnoteCloudSuccessDialog();
+                    }
 
                     if (!mApiUser.isLoggingIn())
-                        checkTransaction();
+                        checkTransaction(false);
                     break;
             }
 
