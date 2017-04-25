@@ -26,6 +26,7 @@ import com.example.taxnoteandroid.Library.billing.Purchase;
 import com.example.taxnoteandroid.Library.taxnote.TNApi;
 import com.example.taxnoteandroid.Library.taxnote.TNApiModel;
 import com.example.taxnoteandroid.Library.taxnote.TNApiUser;
+import com.example.taxnoteandroid.Library.zeny.ZNUtils;
 import com.example.taxnoteandroid.dataManager.SharedPreferencesManager;
 import com.example.taxnoteandroid.databinding.ActivityUpgradeBinding;
 import com.google.api.services.androidpublisher.model.SubscriptionPurchase;
@@ -151,6 +152,11 @@ public class UpgradeActivity extends DefaultCommonActivity {
             Purchase purchaseCloud = inventory.getPurchase(UpgradeManger.SKU_TAXNOTE_CLOUD_ID);
             if (purchaseCloud != null)
                 new CheckBillingAsyncTask(false).execute(purchaseCloud);
+
+            if (ZNUtils.isZeny()) {
+                Purchase purchaseZeny = inventory.getPurchase(UpgradeManger.SKU_ZENY_PREMIUM_ID);
+                new CheckBillingAsyncTask(false).execute(purchaseZeny);
+            }
         }
     };
 
@@ -636,18 +642,25 @@ public class UpgradeActivity extends DefaultCommonActivity {
             if (mLoadingProgress.isShowing()) mLoadingProgress.dismiss();
             if (result == null || subscriptionId == null) return;
 
+            Context context = getApplicationContext();
             switch (subscriptionId) {
                 case UpgradeManger.SKU_TAXNOTE_PLUS_ID:
                 case UpgradeManger.SKU_TAXNOTE_PLUS_ID1:
                     SharedPreferencesManager.saveTaxnotePlusExpiryTime(
-                            getApplicationContext(), result.getExpiryTimeMillis());
+                            context, result.getExpiryTimeMillis());
 
                     if (isNewPurchased)
                         showUpgradeToTaxnotePlusSuccessDialog();
                     break;
                 case UpgradeManger.SKU_TAXNOTE_CLOUD_ID:
-                    SharedPreferencesManager.saveTaxnoteCloudExpiryTime(
-                            getApplicationContext(), result.getExpiryTimeMillis());
+                case UpgradeManger.SKU_ZENY_PREMIUM_ID:
+                    if (ZNUtils.isZeny()) {
+                        SharedPreferencesManager.saveZenyPremiumExpiryTime(
+                                context, result.getExpiryTimeMillis());
+                    } else {
+                        SharedPreferencesManager.saveTaxnoteCloudExpiryTime(
+                                context, result.getExpiryTimeMillis());
+                    }
                     mApiUser.saveCloudPurchaseInfo(mPurchase.getOrderId(), mPurchase.getToken());
 
                     if (isNewPurchased)

@@ -125,6 +125,11 @@ public class MainActivity extends DefaultCommonActivity {
             Purchase purchaseCloud = inventory.getPurchase(UpgradeManger.SKU_TAXNOTE_CLOUD_ID);
             if (purchaseCloud != null)
                 new CheckBillingAsyncTask().execute(purchaseCloud);
+
+            if (ZNUtils.isZeny()) {
+                Purchase purchaseZeny = inventory.getPurchase(UpgradeManger.SKU_ZENY_PREMIUM_ID);
+                new CheckBillingAsyncTask().execute(purchaseZeny);
+            }
         }
     };
 
@@ -651,17 +656,26 @@ public class MainActivity extends DefaultCommonActivity {
         @Override
         protected void onPostExecute(SubscriptionPurchase result) {
             if (result == null || subscriptionId == null) return;
+
+            Context context = getApplicationContext();
             switch (subscriptionId) {
                 case UpgradeManger.SKU_TAXNOTE_PLUS_ID:
                 case UpgradeManger.SKU_TAXNOTE_PLUS_ID1:
                     SharedPreferencesManager.saveTaxnotePlusExpiryTime(
-                            getApplicationContext(), result.getExpiryTimeMillis());
+                            context, result.getExpiryTimeMillis());
                     break;
                 case UpgradeManger.SKU_TAXNOTE_CLOUD_ID:
-                    SharedPreferencesManager.saveTaxnoteCloudExpiryTime(
-                            getApplicationContext(), result.getExpiryTimeMillis());
-                    new TNApiUser(getApplicationContext())
-                            .saveCloudPurchaseInfo(mPurchase.getOrderId(), mPurchase.getToken());
+                case UpgradeManger.SKU_ZENY_PREMIUM_ID:
+                    if (ZNUtils.isZeny()) {
+                        SharedPreferencesManager.saveZenyPremiumExpiryTime(
+                                context, result.getExpiryTimeMillis());
+                    } else {
+                        SharedPreferencesManager.saveTaxnoteCloudExpiryTime(
+                                context, result.getExpiryTimeMillis());
+                    }
+                    new TNApiUser(context).saveCloudPurchaseInfo(
+                            mPurchase.getOrderId(), mPurchase.getToken());
+
                     break;
             }
         }

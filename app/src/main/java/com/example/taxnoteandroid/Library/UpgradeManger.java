@@ -2,6 +2,7 @@ package com.example.taxnoteandroid.Library;
 
 import android.content.Context;
 
+import com.example.taxnoteandroid.Library.zeny.ZNUtils;
 import com.example.taxnoteandroid.dataManager.SharedPreferencesManager;
 
 /**
@@ -24,6 +25,8 @@ public class UpgradeManger {
     }
 
     public static boolean taxnoteCloudIsActive(Context context) {
+        if (ZNUtils.isZeny()) return zenyPremiumIsActive(context);
+
         long expireTime = SharedPreferencesManager.getTaxnoteCloudExpiryTime(context);
         long now = System.currentTimeMillis();
 
@@ -31,6 +34,9 @@ public class UpgradeManger {
     }
 
     public static boolean zenyPremiumIsActive(Context context) {
-        return false;
+        long expireTime = SharedPreferencesManager.getZenyPremiumExpiryTime(context);
+        long now = System.currentTimeMillis();
+
+        return expireTime > now;
     }
 }
