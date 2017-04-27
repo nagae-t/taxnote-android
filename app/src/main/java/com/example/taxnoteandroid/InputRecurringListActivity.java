@@ -158,7 +158,12 @@ public class InputRecurringListActivity extends DefaultCommonActivity {
 
         @Override
         protected void onPostExecute(List<Recurring> result) {
-            if (result == null || result.size() == 0) return;
+            if (result == null || result.size() == 0) {
+                binding.empty.setText(R.string.input_recurring_empty);
+                binding.empty.setVisibility(View.VISIBLE);
+                binding.refreshLayout.setVisibility(View.GONE);
+                return;
+            }
 
             mRecyclerAdapter.setItems(result);
             mRecyclerAdapter.setOnItemClickListener(new RecurringRecyclerAdapter.OnItemClickListener() {
