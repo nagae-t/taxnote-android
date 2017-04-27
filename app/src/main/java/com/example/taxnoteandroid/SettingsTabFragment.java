@@ -25,6 +25,7 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 
 import com.example.taxnoteandroid.Library.AsyncOkHttpClient;
+import com.example.taxnoteandroid.Library.BroadcastUtil;
 import com.example.taxnoteandroid.Library.DialogManager;
 import com.example.taxnoteandroid.Library.FileUtil;
 import com.example.taxnoteandroid.Library.taxnote.TNApi;
@@ -539,6 +540,7 @@ public class SettingsTabFragment extends Fragment {
                 projectDataManager.updateDecimal(project, isChecked);
 
                 mApiModel.updateProject(project.uuid, null);
+                BroadcastUtil.sendReloadReport(getActivity());
             }
         });
     }
