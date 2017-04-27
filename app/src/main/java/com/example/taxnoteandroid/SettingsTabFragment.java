@@ -157,7 +157,11 @@ public class SettingsTabFragment extends Fragment {
                 int projectAllSize = mProjectDataManager.allSize();
                 // 無料版はmaster含めてProject3つまで
                 if (i == 0 && projectAllSize < 3) {
-                    showCloudConfirmAddNewProject();
+                    if (mApiUser.isCloudActive()) {
+                        showProjectEditorDialog(ProjectEditorDialogFragment.TYPE_ADD_NEW);
+                    } else {
+                        showCloudConfirmAddNewProject();
+                    }
                 } else if (i == 0 && projectAllSize >= 3) {
                     // 帳簿数上限に達していて「追加」ボタンをしたら何をだすかここに追加
                     DialogManager.showToast(mContext, mContext.getString(R.string.max_add_project_message));
@@ -187,7 +191,10 @@ public class SettingsTabFragment extends Fragment {
             }
         }
 
-        if (mProjectDataManager.allSize() == 1) return;
+        if (mProjectDataManager.allSize() == 1) {
+            mCurrentProject = mProjectDataManager.findCurrent();
+            return;
+        }
         // sub project があれば表示
         List<Project> projects = mProjectDataManager.findAll(false);
         for (int i=0; i<projects.size(); i++) {
