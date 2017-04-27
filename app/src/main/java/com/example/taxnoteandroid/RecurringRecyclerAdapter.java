@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -27,6 +28,7 @@ public class RecurringRecyclerAdapter extends  RecyclerView.Adapter<BindingHolde
     private Context mContext;
     private RecyclerView mRecyclerView;
     private List<Recurring> mDataList;
+    private TypedValue mIncomePriceTv = new TypedValue();
 
     public static final int VIEW_ITEM_HEADER = 1;
     public static final int VIEW_ITEM_CELL = 2;
@@ -46,6 +48,7 @@ public class RecurringRecyclerAdapter extends  RecyclerView.Adapter<BindingHolde
         super();
         this.mContext = context;
         mDataList = new ArrayList<>();
+        context.getTheme().resolveAttribute(R.attr.colorPrimary, mIncomePriceTv, true);
     }
 
     @Override
@@ -86,7 +89,7 @@ public class RecurringRecyclerAdapter extends  RecyclerView.Adapter<BindingHolde
         final Recurring recurring = mDataList.get(position);
         String priceString;
         int priceColor = (recurring.isExpense) ? ContextCompat.getColor(mContext, R.color.expense)
-                : ContextCompat.getColor(mContext, R.color.primary);
+                : ContextCompat.getColor(mContext, mIncomePriceTv.resourceId);
         switch (viewType) {
             case VIEW_ITEM_HEADER:
                 RowHistorySectionHeaderBinding headerBinding = (RowHistorySectionHeaderBinding) holder.binding;

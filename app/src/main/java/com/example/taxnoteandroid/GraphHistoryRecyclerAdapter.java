@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
+import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -36,6 +37,7 @@ public class GraphHistoryRecyclerAdapter extends RecyclerView.Adapter<BindingHol
     private RecyclerView mRecyclerView;
     private List<Entry> mDataList;
     private PieChart mChart;
+    private TypedValue mIncomePriceTv = new TypedValue();
 
     public static final int VIEW_ITEM_GRAPH = 1;
     public static final int VIEW_ITEM_CELL = 2;
@@ -61,6 +63,7 @@ public class GraphHistoryRecyclerAdapter extends RecyclerView.Adapter<BindingHol
 
         this.mContext = context;
         this.mDataList = new ArrayList<>();
+        context.getTheme().resolveAttribute(R.attr.colorPrimary, mIncomePriceTv, true);
     }
 
     public GraphHistoryRecyclerAdapter(Context context, List<Entry> dataList) {
@@ -68,6 +71,7 @@ public class GraphHistoryRecyclerAdapter extends RecyclerView.Adapter<BindingHol
 
         this.mContext = context;
         this.mDataList = new ArrayList<>();
+        context.getTheme().resolveAttribute(R.attr.colorPrimary, mIncomePriceTv, true);
 
         Entry graphEntry = new Entry();
         graphEntry.viewType = VIEW_ITEM_GRAPH;
@@ -169,7 +173,7 @@ public class GraphHistoryRecyclerAdapter extends RecyclerView.Adapter<BindingHol
                 RowSimpleCellBinding cellBinding = (RowSimpleCellBinding) holder.binding;
                 String priceString = ValueConverter.formatPrice(mContext, entry.price);
                 int priceColor = (entry.isExpense) ? ContextCompat.getColor(mContext, R.color.expense)
-                        : ContextCompat.getColor(mContext, R.color.primary);
+                        : ContextCompat.getColor(mContext, mIncomePriceTv.resourceId);
                 cellBinding.price.setTextColor(priceColor);
                 cellBinding.price.setText(priceString);
                 cellBinding.labelName.setText(entry.titleName);

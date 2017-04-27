@@ -38,7 +38,6 @@ public class ProfitLossExportActivity extends DefaultCommonActivity {
     private ActivityProfitLossExportBinding binding;
     private String mDefaultCharCode;
     private long[] mStartEndDate;
-    private List<Entry> mReportDataResult;
 
     private static final String KEY_TARGET_START_END_DATE = "target_start_end_date";
 
@@ -261,8 +260,6 @@ public class ProfitLossExportActivity extends DefaultCommonActivity {
         @Override
         protected void onPostExecute(List<Entry> result) {
             if (result == null || result.size() == 0) return;
-
-            mReportDataResult = result;
 
             // To export CSV file...
             Calendar endCal = Calendar.getInstance();
