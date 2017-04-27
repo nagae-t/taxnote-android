@@ -23,6 +23,6 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:visibility="gone"
-            android:text="@string/history_data_empty" />
+            android:text="@string/circle_graph_data_empty" />
     </FrameLayout>
 </layout>

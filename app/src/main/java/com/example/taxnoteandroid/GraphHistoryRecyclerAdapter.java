@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.Color;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
@@ -164,6 +163,14 @@ public class GraphHistoryRecyclerAdapter extends RecyclerView.Adapter<BindingHol
                 // entry label styling
                 mChart.setEntryLabelColor(Color.WHITE);
                 mChart.setEntryLabelTextSize(12f);
+
+                if (mDataList.size() == 2) {
+                    graphBinding.chart1.setVisibility(View.GONE);
+                    graphBinding.empty.setVisibility(View.VISIBLE);
+                } else {
+                    graphBinding.chart1.setVisibility(View.VISIBLE);
+                    graphBinding.empty.setVisibility(View.GONE);
+                }
 
                 graphBinding.getRoot().setOnClickListener(new View.OnClickListener() {
                     @Override
