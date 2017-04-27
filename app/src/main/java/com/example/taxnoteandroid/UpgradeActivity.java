@@ -38,6 +38,7 @@ import com.mixpanel.android.mpmetrics.MixpanelAPI;
 
 import okhttp3.Response;
 
+import static android.view.View.Z;
 import static com.example.taxnoteandroid.TaxnoteConsts.MIXPANEL_TOKEN;
 import static com.google.api.client.http.HttpMethods.HEAD;
 
@@ -432,7 +433,7 @@ public class UpgradeActivity extends DefaultCommonActivity {
     };
 
     private void checkCloudPurchaseAction() {
-        if (!UpgradeManger.taxnoteCloudIsActive(this)) {
+        if (!ZNUtils.isZeny() && !UpgradeManger.taxnoteCloudIsActive(this)) {
             upgradeToTaxnoteCloud();
         } else {
             if (mApiUser.isLoggingIn()) {
