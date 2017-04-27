@@ -15,6 +15,9 @@ public class DefaultCommonActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         int themeStyle = SharedPreferencesManager.getAppThemeStyle(this);
         switch (themeStyle) {
+            case 0:
+                setTheme(R.style.AppTheme);
+                break;
             case 1:
                 setTheme(R.style.AppThemeSecond);
                 break;

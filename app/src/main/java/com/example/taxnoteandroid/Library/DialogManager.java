@@ -653,7 +653,7 @@ public class DialogManager {
 
         new AlertDialog.Builder(activity)
                 .setMessage(message)
-                .setNeutralButton(R.string.History, new DialogInterface.OnClickListener() {
+                .setPositiveButton(R.string.History, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         int _periodType = (isPeriodYear) ? EntryDataManager.PERIOD_TYPE_MONTH
@@ -662,7 +662,6 @@ public class DialogManager {
                                 targetCalendar, reasonName, isExpense);
                     }
                 })
-                .setPositiveButton(android.R.string.ok, null)
                 .show();
     }
 

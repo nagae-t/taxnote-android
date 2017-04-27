@@ -3,6 +3,7 @@ package com.example.taxnoteandroid;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.StyleRes;
@@ -19,6 +20,7 @@ public class DatePickerDialogFragment extends AppCompatDialogFragment implements
 
     private OnDateSetListener onDateSetListener;
     private int padding = -1;
+    private Context mContext;
 
     public interface OnDateSetListener {
         void onDateSet(Calendar calendar);
@@ -47,6 +49,7 @@ public class DatePickerDialogFragment extends AppCompatDialogFragment implements
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+        mContext = context;
         if (context instanceof OnDateSetListener) {
             onDateSetListener = (OnDateSetListener) context;
         }
@@ -55,6 +58,7 @@ public class DatePickerDialogFragment extends AppCompatDialogFragment implements
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
+        if (mContext == null) mContext = getContext();
         Bundle bundle = getArguments();
         final Calendar c = Calendar.getInstance();
         c.setTimeInMillis(bundle.getLong(EXTRA_INIT_DATE));
@@ -74,6 +78,19 @@ public class DatePickerDialogFragment extends AppCompatDialogFragment implements
         // [INFO] API 24でThemeが適用されないで、calendarのUIが出るbugがある. https://code.google.com/p/android/issues/detail?id=222208
         DatePicker datePicker = datePickerDialog.getDatePicker();
 //        datePicker.setPadding(padding, padding, padding, padding);
+
+        // 「今日」ボタンを追加
+        datePickerDialog.setButton(DialogInterface.BUTTON_NEUTRAL, mContext.getString(R.string.date_string_today),
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+
+                        if (onDateSetListener != null) {
+                            Calendar calendar = Calendar.getInstance();
+                            onDateSetListener.onDateSet(calendar);
+                        }
+                    }
+                });
+
         return datePickerDialog;
     }
 

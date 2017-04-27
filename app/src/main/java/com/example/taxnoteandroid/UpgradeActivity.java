@@ -240,7 +240,7 @@ public class UpgradeActivity extends DefaultCommonActivity {
         }
 
         // taxnote cloud is active
-        if (UpgradeManger.taxnoteCloudIsActive(this)) {
+        if (UpgradeManger.taxnoteCloudIsActive(this) && !mApiUser.isLoggingIn()) {
             binding.purchaseInfoLayout.setVisibility(View.VISIBLE);
             binding.cloudLeftTv.setText(R.string.cloud);
             binding.cloudRightTv.setText(R.string.cloud_register);

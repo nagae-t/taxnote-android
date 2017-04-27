@@ -24,7 +24,7 @@
                 android:minHeight="48dp"
                 android:orientation="vertical"
                 android:text="@string/send_export"
-                android:textColor="@color/primary" />
+                android:textColor="?attr/colorPrimary" />
 
             <LinearLayout
                 android:id="@+id/char_code_layout"

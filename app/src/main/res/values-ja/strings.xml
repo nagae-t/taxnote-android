@@ -407,6 +407,8 @@
     <string name="Timezone">タイムゾーン</string>
     <string name="reason_item">勘定科目</string>
     <string name="recurring_cloud_required_message">繰り返し入力はクラウド上で実行するので、Taxnoteクラウドへの加入が必要です。</string>
+    <string name="input_recurring_empty">右上の追加ボタンから繰り返し入力を追加できます。</string>
+    <string name="circle_graph_data_empty">入力タブからデータを入力してください。\n（グラフをタップすると支出と収入を切り替えられます）</string>
 
     <string-array name="day_of_month_list">
         <item>毎日</item>

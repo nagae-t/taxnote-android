@@ -81,6 +81,14 @@ public class GraphTabFragment extends Fragment  {
         super.onResume();
     }
 
+    public void replayGraphAnimate() {
+        if (mPagerAdapter == null) return;
+        GraphContentFragment graphFragment =
+                (GraphContentFragment) mPagerAdapter.instantiateItem(binding.pager, binding.pager.getCurrentItem());
+        if (graphFragment != null)
+            graphFragment.replayGraphAnimate();
+    }
+
     public void reloadData() {
         int periodType = SharedPreferencesManager.getProfitLossReportPeriodType(mContext);
         boolean isExpense = SharedPreferencesManager.getGraphReportIsExpenseType(mContext);

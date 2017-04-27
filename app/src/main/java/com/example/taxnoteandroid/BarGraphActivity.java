@@ -13,7 +13,6 @@ import android.support.v7.app.ActionBar;
 import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 
 import com.example.taxnoteandroid.Library.DayAxisValueFormatter;
 import com.example.taxnoteandroid.Library.DialogManager;
@@ -24,6 +23,7 @@ import com.example.taxnoteandroid.dataManager.ReasonDataManager;
 import com.example.taxnoteandroid.databinding.ActivityBarGraphBinding;
 import com.example.taxnoteandroid.model.Entry;
 import com.example.taxnoteandroid.model.Reason;
+import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.XAxis;
@@ -119,6 +119,11 @@ public class BarGraphActivity extends DefaultCommonActivity implements OnChartVa
         if (mPeriodType > EntryDataManager.PERIOD_TYPE_MONTH)
             mPeriodType = EntryDataManager.PERIOD_TYPE_MONTH;
 
+        mChart = binding.chart1;
+        mChart.setNoDataText(getString(R.string.history_data_empty));
+        mChart.setNoDataTextColor(ContextCompat.getColor(
+                getApplicationContext(), R.color.accent));
+
         loadDataToView();
     }
 
@@ -144,7 +149,7 @@ public class BarGraphActivity extends DefaultCommonActivity implements OnChartVa
 
     private void loadDataToView() {
         setTitleName();
-        binding.chart1.setVisibility(View.GONE);
+//        binding.chart1.setVisibility(View.GONE);
         long[] startEndDate = EntryLimitManager.getStartAndEndDate(this, mPeriodType, mTargetCalendar);
         new EntryDataTask().execute(startEndDate);
     }
@@ -353,7 +358,6 @@ public class BarGraphActivity extends DefaultCommonActivity implements OnChartVa
         protected void onPostExecute(ArrayList<BarEntry> result) {
             if (result == null) return;
 
-            mChart = binding.chart1;
             mChart.setOnChartValueSelectedListener(BarGraphActivity.this);
 
             mChart.setDrawBarShadow(false);
@@ -363,9 +367,6 @@ public class BarGraphActivity extends DefaultCommonActivity implements OnChartVa
             // scaling can now only be done on x- and y-axis separately
             mChart.setPinchZoom(false);
             mChart.setDrawGridBackground(false);
-            mChart.setNoDataText(getString(R.string.history_data_empty));
-            mChart.setNoDataTextColor(ContextCompat.getColor(
-                    getApplicationContext(), R.color.accent));
 
             // no data
             if (result.size() == 0) return;
@@ -410,7 +411,9 @@ public class BarGraphActivity extends DefaultCommonActivity implements OnChartVa
             dataSets.add(set1);
             BarData data = new BarData(dataSets);
             mChart.setData(data);
-            mChart.setVisibility(View.VISIBLE);
+//            mChart.setVisibility(View.VISIBLE);
+
+            mChart.animateY(700, Easing.EasingOption.EaseInOutQuad);
         }
     }
 }

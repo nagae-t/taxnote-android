@@ -55,6 +55,9 @@ public class TaxnoteApp extends Application {
         super.attachBaseContext(base);
         int themeStyle = SharedPreferencesManager.getAppThemeStyle(this);
         switch (themeStyle) {
+            case 0:
+                base.setTheme(R.style.AppTheme);
+                break;
             case 1:
                 base.setTheme(R.style.AppThemeSecond);
                 break;

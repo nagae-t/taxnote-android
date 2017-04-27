@@ -9,6 +9,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -147,10 +148,13 @@ public class ReportContentFragment extends Fragment {
     }
 
     private void setTopBalanceValue(long price) {
+        TypedValue incomePriceTv = new TypedValue();
+        mContext.getTheme().resolveAttribute(R.attr.colorPrimary, incomePriceTv, true);
+
         // 残高の表示
         String priceString = ValueConverter.formatPrice(mContext, price);
         int priceColor = (price < 0) ? ContextCompat.getColor(mContext, R.color.expense)
-                : ContextCompat.getColor(mContext, R.color.primary);
+                : ContextCompat.getColor(mContext, incomePriceTv.resourceId);
         priceString = (price > 0) ? "+"+priceString : priceString;
         binding.price.setText(priceString);
         binding.price.setTextColor(priceColor);

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -29,6 +30,7 @@ public class CommonEntryRecyclerAdapter extends RecyclerView.Adapter<BindingHold
     private Context mContext;
     private RecyclerView mRecyclerView;
     private List<Entry> mDataList;
+    private TypedValue mIncomePriceTv = new TypedValue();
 
     public static final int VIEW_ITEM_HEADER = 1;
     public static final int VIEW_ITEM_CELL = 2;
@@ -49,12 +51,14 @@ public class CommonEntryRecyclerAdapter extends RecyclerView.Adapter<BindingHold
         super();
         this.mContext = context;
         mDataList = new ArrayList<>();
+        context.getTheme().resolveAttribute(R.attr.colorPrimary, mIncomePriceTv, true);
     }
 
     public CommonEntryRecyclerAdapter(Context context, List<Entry> entries) {
         super();
         this.mContext = context;
         this.mDataList = entries;
+        context.getTheme().resolveAttribute(R.attr.colorPrimary, mIncomePriceTv, true);
     }
 
     @Override
@@ -114,7 +118,7 @@ public class CommonEntryRecyclerAdapter extends RecyclerView.Adapter<BindingHold
         final Entry entry = mDataList.get(position);
         String priceString;
         int priceColor = (entry.isExpense) ? ContextCompat.getColor(mContext, R.color.expense)
-                : ContextCompat.getColor(mContext, R.color.primary);
+                : ContextCompat.getColor(mContext, mIncomePriceTv.resourceId);
 
         switch (viewType) {
             case VIEW_ITEM_HEADER:
