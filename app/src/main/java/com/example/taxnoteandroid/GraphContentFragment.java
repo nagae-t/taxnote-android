@@ -99,6 +99,11 @@ public class GraphContentFragment extends Fragment {
         super.onResume();
     }
 
+    public void replayGraphAnimate() {
+        if (mRecyclerAdapter != null)
+            mRecyclerAdapter.replayGraphAnimate();
+    }
+
     private void refreshSyncData() {
         mApiModel.syncData(getActivity(), true, new AsyncOkHttpClient.Callback() {
             @Override

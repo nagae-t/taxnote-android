@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
@@ -95,6 +96,11 @@ public class GraphHistoryRecyclerAdapter extends RecyclerView.Adapter<BindingHol
 
     public void setItems(List<Entry> entries) {
         mDataList = entries;
+    }
+
+    public void replayGraphAnimate() {
+        if (mChart == null) return;
+        mChart.animateY(600, Easing.EasingOption.EaseInOutQuad);
     }
 
     @Override

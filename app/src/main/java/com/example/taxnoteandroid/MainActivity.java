@@ -352,6 +352,7 @@ public class MainActivity extends DefaultCommonActivity {
                     case R.id.tab4:
                         binding.pager.setCurrentItem(3, false);
                         setTitle(getString(R.string.Graph));
+                        replayGraphAnimate();
                         break;
                     case R.id.tab5:
                         binding.pager.setCurrentItem(4, false);
@@ -478,6 +479,16 @@ public class MainActivity extends DefaultCommonActivity {
                 (SettingsTabFragment) mTabPagerAdapter.instantiateItem(pager, 4);
         if (settingsFragment != null)
             settingsFragment.afterLogin();
+    }
+
+    private void replayGraphAnimate() {
+        if (mTabPagerAdapter == null) return;
+
+        CustomViewPager pager = binding.pager;
+        GraphTabFragment graphFragment =
+                (GraphTabFragment) mTabPagerAdapter.instantiateItem(pager, 3);
+        if (graphFragment != null)
+            graphFragment.replayGraphAnimate();
     }
 
     private long[] getReportStartEndDate() {
