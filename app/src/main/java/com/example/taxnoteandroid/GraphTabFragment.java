@@ -82,7 +82,7 @@ public class GraphTabFragment extends Fragment  {
     }
 
     public void replayGraphAnimate() {
-        if (mPagerAdapter == null) return;
+        if (mPagerAdapter == null || mPagerAdapter.getCount() == 0) return;
         GraphContentFragment graphFragment =
                 (GraphContentFragment) mPagerAdapter.instantiateItem(binding.pager, binding.pager.getCurrentItem());
         if (graphFragment != null)
