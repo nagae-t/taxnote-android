@@ -309,4 +309,86 @@
     <string name="data_export_details">Details</string>
 
     <string name="no_data_to_export_message">No data exists.  Please enter data from Entry tab.</string>
+
+    <string name="login">Login</string>
+    <string name="cloud_register">Register</string>
+    <string name="taxnote_cloud_first_free">Taxnote Cloud</string>
+    <string name="taxnote_cloud_login_desc">Please login with Taxnote Cloud account. (You can create it after you subscribed to Taxnote Cloud.)</string>
+    <string name="taxnote_cloud_register_desc">Your Taxnote Cloud is active now, but you need to log into your Taxnote account(not AppleID or PlayStoreID) to use cloud sync (auto-backup).</string>
+    <string name="email_address">Email</string>
+    <string name="password">Password</string>
+    <string name="password_confrim">Confirm Password</string>
+    <string name="new_password">New Password</string>
+    <string name="forgot_password">Forgot Password?</string>
+    <string name="empty_email_input_error">Please enter email address.</string>
+    <string name="empty_password_input_error">Please enter password.</string>
+    <string name="empty_password_confrim_input_error">Please enter password again to confirm it.</string>
+    <string name="password_confrim_match_error">Passwords do not match.</string>
+    <string name="password_is_too_short">Password must be over 8 characters in length.</string>
+    <string name="cloud">Cloud</string>
+    <string name="login_error">Login Failed</string>
+    <string name="login_error_desc">Please confirm email and password.</string>
+    <string name="login_confirm_title">Your device data will be overwritten after login</string>
+    <string name="login_confirm_desc">Are you sure to login to your account?  Your current device data will be removed, and it will be overwritten with the account data.</string>
+    <string name="login_success_wait_fetching">Login succeeded and Taxnote is uploading your data now.  It might take a few minutes, but please don\'t close this screen while waiting.</string>
+    <string name="fetch_all_after_login_done">Getting data has finished.</string>
+    <string name="logout">Logout</string>
+    <string name="change_password">Change Password</string>
+    <string name="change_password_desc">Please enter new passwords with over 8 characters in length.</string>
+    <string name="change_password_done">Password has been updated.</string>
+    <string name="reset_password">Reset Password</string>
+    <string name="reset_password_desc">Enter the email address that you used to register.  We\'ll send you an email with a link to reset your password.</string>
+    <string name="non_registered_email">Not Registered Email</string>
+    <string name="non_registered_email_desc">The email address is not registered on Taxnote Cloud.</string>
+    <string name="reset_password_sent">Email Sent Successfully</string>
+    <string name="reset_password_sent_desc">The email with a link to reset your password has been sent.  If you didn\'t receive it shortly, please check spam box.</string>
+
+    <string name="delete_account">Delete Account</string>
+    <string name="delete_account_desc">Are you sure to delete the account?  All of your account data in the Taxnote Cloud server will be removed. (Your current device data will not be removed.)</string>
+    <string name="confirm_email">Is this address correct?</string>
+    <string name="register_success_wait_uploading">Registration Complete!\nIt will start uploading your data.  It might take a few minutes, but please don\'t close this screen while waiting.</string>
+    <string name="thx_for_waiting">Thanks for waiting</string>
+    <string name="upload_all_after_register_done">Uploading has finished.  To sync your data with other devices, please login using the account you created in other devices.</string>
+    <string name="register_error">Registration Error</string>
+    <string name="update">Update</string>
+    <string name="updating_data">Updating...</string>
+    <string name="send">Send</string>
+
+    <string name="plus_not_bought_title">About Taxnote Plus</string>
+    <string name="plus_not_bought_message">You can subscribe to Taxnote Cloud without purchasing Taxnote Plus, but please note that 15 entries/month limit still remains.</string>
+    <string name="cloud_sign_up_title">Please Create a Taxnote Cloud account</string>
+    <string name="cloud_sign_up_message">Your Taxnote Cloud is active now, but please create an account to use cloud sync (auto backup).</string>
+    <string name="cloud_account_exists_message">Your account is already registered with your purchase history.  Please login with this account or delete it to create a new account.</string>
+
+    <string name="cloud_purchase_status">Subscription</string>
+    <string name="cloud_purchase_status_control">[Cloud ON] Manage</string>
+    <string name="taxnote_cloud_desc">Monthly subscription with following features.\n1. Multiple Accounts\n2. Cloud Sync with different devices(auto-backup)\n3. Recurring Entries\n4. Bar Charts</string>
+    <string name="add_project_without_cloud">Please upgrade to Taxnote Cloud to use multiple books.</string>
+    <string name="not_cloud_input_limit_message">Please upgrade to Taxnote Cloud to make an entry with additional books. (You can enter up to 10 with free trial)</string>
+    <string name="bar_graph_cloud_required_message">Please upgrade to Taxnote Cloud to use the bar charts. (You can try Income and Expense bar charts for free)</string>
+
+    <string name="network_not_connection">No network connections.</string>
+
+    <string name="input_recurring_title">Recurring Entries</string>
+    <string name="add_input">Add</string>
+    <string name="Save">Save</string>
+    <string name="Timezone">Timezone</string>
+    <string name="reason_item">Category</string>
+    <string name="recurring_cloud_required_message">You need to subscribe to Taxnote Cloud to use Recurring Entries as it works in the cloud server.</string>
+    <string name="input_recurring_empty">Tap the [Add] button located in the upper right corner to set a new recurring entry.</string>
+    <string name="circle_graph_data_empty">Please enter data from Entry tab.\n(You can switch between expense and income by tapping the pie chart screen.)</string>
+
+    <string-array name="day_of_month_list">
+        <item>Everyday</item>
+        <item>Sunday</item>
+        <item>Monday</item>
+        <item>Tuesday</item>
+        <item>Wednesday</item>
+        <item>Thursday</item>
+        <item>Friday</item>
+        <item>Saturday</item>
+    </string-array>
+
+    <string name="date_string_format_to_year_month">yyyy/M</string>
+    <string name="date_string_format_to_year">yyyy</string>
 </resources>
