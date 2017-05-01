@@ -181,6 +181,7 @@ public class UpgradeActivity extends DefaultCommonActivity {
 
                 binding.cloudLeftTv.setText(R.string.cloud);
                 binding.cloudRightTv.setText(mApiUser.getEmail());
+                binding.cloudPurchaseLayout.setVisibility(View.VISIBLE);
                 binding.purchaseInfoLayout.setVisibility(View.VISIBLE);
 
                 if (requestCode == REQUEST_CODE_CLOUD_LOGIN) {
@@ -234,8 +235,9 @@ public class UpgradeActivity extends DefaultCommonActivity {
         // taxnote cloud is active
         if (UpgradeManger.taxnoteCloudIsActive(this) && !mApiUser.isLoggingIn()) {
             binding.purchaseInfoLayout.setVisibility(View.VISIBLE);
-            binding.cloudLeftTv.setText(R.string.cloud);
-            binding.cloudRightTv.setText(R.string.cloud_register);
+            binding.cloudPurchaseLayout.setVisibility(View.GONE);
+//            binding.cloudLeftTv.setText(R.string.cloud);
+//            binding.cloudRightTv.setText(R.string.cloud_register);
         }
     }
 
@@ -307,7 +309,8 @@ public class UpgradeActivity extends DefaultCommonActivity {
                         checkTransaction(true);
                     }
                 })
-                .show();
+                .setCancelable(false)
+                .create().show();
     }
 
     // 課金情報とTaxnoteアカウントを調べる
@@ -330,9 +333,6 @@ public class UpgradeActivity extends DefaultCommonActivity {
                     errorMsg = throwable.getLocalizedMessage();
                 }
                 Log.e("ERROR", "checkUniqueOfSubscription : " + errorMsg);
-//                DialogManager.showOKOnlyAlert(UpgradeActivity.this,
-//                        getString(R.string.Error),
-//                        errorMsg);
             }
 
             @Override
@@ -373,7 +373,8 @@ public class UpgradeActivity extends DefaultCommonActivity {
                     }
                 })
                 .setNegativeButton(android.R.string.cancel, null)
-                .show();
+                .setCancelable(false)
+                .create().show();
     }
 
     //--------------------------------------------------------------//
@@ -519,6 +520,7 @@ public class UpgradeActivity extends DefaultCommonActivity {
             mApiUser.clearAccountData(mApiModel);
             mApiUser = new TNApiUser(getApplicationContext());
             binding.cloudRightTv.setText(R.string.cloud_register);
+            binding.cloudPurchaseLayout.setVisibility(View.GONE);
             binding.cloudLoginLayout.setVisibility(View.VISIBLE);
             mLoadingProgress.dismiss();
             return;
@@ -538,6 +540,7 @@ public class UpgradeActivity extends DefaultCommonActivity {
                 mApiUser.clearAccountData(mApiModel);
                 mApiUser = new TNApiUser(getApplicationContext());
                 binding.cloudRightTv.setText(R.string.cloud_register);
+                binding.cloudPurchaseLayout.setVisibility(View.GONE);
                 binding.cloudLoginLayout.setVisibility(View.VISIBLE);
                 BroadcastUtil.sendAfterLogin(UpgradeActivity.this, false);
 
@@ -549,6 +552,7 @@ public class UpgradeActivity extends DefaultCommonActivity {
 
                 mApiUser = new TNApiUser(getApplicationContext());
                 binding.cloudRightTv.setText(R.string.cloud_register);
+                binding.cloudPurchaseLayout.setVisibility(View.GONE);
                 binding.cloudLoginLayout.setVisibility(View.VISIBLE);
 
                 BroadcastUtil.sendAfterLogin(UpgradeActivity.this, false);
@@ -654,16 +658,13 @@ public class UpgradeActivity extends DefaultCommonActivity {
                     SharedPreferencesManager.saveTaxnoteCloudExpiryTime(
                             getApplicationContext(), expiryTime);
                     String orderId = mPurchase.getOrderId();
+                    String purchaseToken = mPurchase.getToken();
                     if (orderId == null || orderId.length() == 0)
-                        orderId = String.valueOf(expiryTime);
+                        orderId = purchaseToken.substring(0, 24);
                     mApiUser.saveCloudPurchaseInfo(orderId, mPurchase.getToken());
 
-                    if (isNewPurchased) {
-                        showUpgradeToTaxnoteCloudSuccessDialog();
-                    }
-
                     if (!mApiUser.isLoggingIn())
-                        checkTransaction(false);
+                        showUpgradeToTaxnoteCloudSuccessDialog();
                     break;
             }
 

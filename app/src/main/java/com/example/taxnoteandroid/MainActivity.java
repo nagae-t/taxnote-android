@@ -153,36 +153,13 @@ public class MainActivity extends DefaultCommonActivity {
 
         // 起動時にデータの同期を行う
         TNApiModel apiModel = new TNApiModel(this);
-        // debug
-        //new TNApiUser(this).clearAccountData(apiModel);
 
         apiModel.setIsSyncing(false);
         apiModel.syncData(this, false, null);
 
         // debug
-        /*
-        String transactionId = TNApiUser.getCloudOrderId(this) + "--";
-        new TNApiUser(this).checkUniqueOfSubscription(transactionId, new AsyncOkHttpClient.Callback() {
-            @Override
-            public void onFailure(Response response, Throwable throwable) {
-
-                Log.e("ERROR", "checkUniqueOfSubscription onFailure ");
-
-                String errorMsg = "";
-                if (response != null) {
-                    errorMsg = response.message();
-                } else if (throwable != null) {
-                    errorMsg = throwable.getLocalizedMessage();
-                }
-                Log.e("ERROR", "checkUniqueOfSubscription : " + errorMsg);
-            }
-
-            @Override
-            public void onSuccess(Response response, String content) {
-                Log.v("TEST", "checkUniqueOfSubscription onSuccess : " + content);
-            }
-        });*/
-
+        String tokenStr = "dldloaoihhjcjpiedholbnap.AO-J1Ow4jbNdfMO6kISdFPpPPvnkQl_Nw19M_7EWwT6-Vxra5NJeojJ4e0YYxajkkJjKd9s9hAoN5E1OtiV5E1OwGxSdblZdQUrCn7Hjk8X1kvwhklNJqmrqv-7W_O6ojB4bX61Mx7xd";
+        Log.v("TEST", "substring: " + tokenStr.substring(0, 24));
     }
 
     private void checkInAppBilling() {

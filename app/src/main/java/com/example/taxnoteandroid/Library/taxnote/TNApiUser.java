@@ -125,9 +125,9 @@ public class TNApiUser extends TNApi {
         setCallback(new AsyncOkHttpClient.Callback() {
             @Override
             public void onFailure(Response response, Throwable throwable) {
-                Log.v("TEST", "register onFailure  ");
+                Log.e("ERROR", "register onFailure  ");
                 if (response != null) {
-                    Log.v("TEST", "register onFailure code: " + response.code()
+                    Log.e("ERROR", "register onFailure code: " + response.code()
                             + ", message: " + response.message());
                 }
                 callback.onFailure(response, throwable);
@@ -135,7 +135,6 @@ public class TNApiUser extends TNApi {
 
             @Override
             public void onSuccess(Response response, String content) {
-                Log.v("TEST", "register onSuccess headers : " + response.headers().toString());
                 saveLoginWithHttpHeaders(response.headers());
                 callback.onSuccess(response, content);
             }
