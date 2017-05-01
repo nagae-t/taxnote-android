@@ -28,7 +28,6 @@ import com.example.taxnoteandroid.Library.billing.IabHelper;
 import com.example.taxnoteandroid.Library.billing.IabResult;
 import com.example.taxnoteandroid.Library.billing.Inventory;
 import com.example.taxnoteandroid.Library.billing.Purchase;
-import com.example.taxnoteandroid.Library.taxnote.TNApiModel;
 import com.example.taxnoteandroid.Library.taxnote.TNApiUser;
 import com.example.taxnoteandroid.dataManager.DefaultDataInstaller;
 import com.example.taxnoteandroid.dataManager.EntryDataManager;
@@ -151,15 +150,6 @@ public class MainActivity extends DefaultCommonActivity {
         checkInAppBilling();
 
 
-        // 起動時にデータの同期を行う
-        TNApiModel apiModel = new TNApiModel(this);
-
-        apiModel.setIsSyncing(false);
-        apiModel.syncData(this, false, null);
-
-        // debug
-        String tokenStr = "dldloaoihhjcjpiedholbnap.AO-J1Ow4jbNdfMO6kISdFPpPPvnkQl_Nw19M_7EWwT6-Vxra5NJeojJ4e0YYxajkkJjKd9s9hAoN5E1OtiV5E1OwGxSdblZdQUrCn7Hjk8X1kvwhklNJqmrqv-7W_O6ojB4bX61Mx7xd";
-        Log.v("TEST", "substring: " + tokenStr.substring(0, 24));
     }
 
     private void checkInAppBilling() {

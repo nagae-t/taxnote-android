@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.multidex.MultiDex;
 
 import com.crashlytics.android.Crashlytics;
+import com.example.taxnoteandroid.Library.taxnote.TNApiModel;
 import com.example.taxnoteandroid.dataManager.SharedPreferencesManager;
 import com.example.taxnoteandroid.model.OrmaDatabase;
 import com.github.gfx.android.orma.AccessThreadConstraint;
@@ -78,22 +79,28 @@ public class TaxnoteApp extends Application {
         }
         android.util.Log.d("Helpshift", Support.libraryVersion + " - is the version for gradle");
 
+        registerActivityLifecycleCallbacks(new MyActivityLifecycleCallbacks());
     }
 
     public enum AppStatus {
         BACKGROUND,                // app is background
         RETURNED_TO_FOREGROUND,    // app returned to foreground(or first launch)
-        FOREGROUND;                // app is foreground
+        FOREGROUND                // app is foreground
     }
 
     public class MyActivityLifecycleCallbacks implements ActivityLifecycleCallbacks {
 
         // running activity count
         private int running = 0;
+        private TNApiModel apiModel;
+
+        public MyActivityLifecycleCallbacks() {
+            apiModel = new TNApiModel(getApplicationContext());
+            apiModel.setIsSyncing(false);
+        }
 
         @Override
         public void onActivityCreated(Activity activity, Bundle bundle) {
-
         }
 
         @Override
@@ -111,6 +118,11 @@ public class TaxnoteApp extends Application {
 
         @Override
         public void onActivityResumed(Activity activity) {
+            if (mAppStatus == null || apiModel == null) return;
+            if (mAppStatus == AppStatus.RETURNED_TO_FOREGROUND) {
+                // 起動時、アプリ再表示のときにデータの同期を行う
+                apiModel.syncData(activity, false, null);
+            }
         }
 
         @Override
