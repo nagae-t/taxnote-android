@@ -392,8 +392,8 @@
     <string name="cloud_sign_up_message">Your Taxnote Cloud is active now, but please create an account to use cloud sync (auto backup).</string>
     <string name="cloud_account_exists_message">Your account is already registered with your purchase history.  Please login with this account or delete it to create a new account.</string>
 
-    <string name="cloud_purchase_status">Subscription</string>
-    <string name="cloud_purchase_status_control">[Cloud ON] Manage</string>
+    <string name="cloud_purchase_status">Taxnote Cloud</string>
+    <string name="cloud_purchase_status_control">[Active] Manage</string>
     <string name="taxnote_cloud_desc">Monthly subscription with following features.\n1. Multiple Accounts\n2. Cloud Sync with different devices(auto-backup)\n3. Recurring Entries\n4. Bar Charts</string>
     <string name="add_project_without_cloud">Please upgrade to Taxnote Cloud to use multiple books.</string>
     <string name="not_cloud_input_limit_message">Please upgrade to Taxnote Cloud to make an entry with additional books. (You can enter up to 10 with free trial)</string>
@@ -408,7 +408,7 @@
     <string name="reason_item">Category</string>
     <string name="recurring_cloud_required_message">You need to subscribe to Taxnote Cloud to use Recurring Entries as it works in the cloud server.</string>
     <string name="input_recurring_empty">Tap the [Add] button located in the upper right corner to set a new recurring entry.</string>
-    <string name="circle_graph_data_empty">Please enter data from Entry tab.\n(You can switch between expense and income by tapping the pie chart screen.)</string>
+    <string name="circle_graph_data_empty">Please enter data from Entry tab.\n(You can switch between expense and income by tapping here.)</string>
 
     <string-array name="day_of_month_list">
         <item>Everyday</item>

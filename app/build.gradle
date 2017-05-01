@@ -26,8 +26,8 @@ android {
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
 
-        versionCode 79
-        versionName "1.2.8"
+        versionCode 80
+        versionName "1.2.9"
     }
     dataBinding {
         enabled true
