@@ -79,6 +79,12 @@ public class LoginCloudActivity extends DefaultCommonActivity {
             binding.btnSendLogin.setText(R.string.cloud_register);
         }
 
+        String emailIntent = getIntent().getStringExtra(KEY_EMAIL);
+        if (emailIntent != null) {
+            binding.emailInput.setText(emailIntent);
+            binding.passwdInput.requestFocus();
+        }
+
         binding.btnSendLogin.setOnClickListener(onClickAction);
         binding.btnForgotPasswd.setOnClickListener(onClickAction);
     }

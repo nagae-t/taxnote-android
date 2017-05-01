@@ -299,6 +299,7 @@ public class UpgradeActivity extends DefaultCommonActivity {
         MixpanelAPI mixpanel = MixpanelAPI.getInstance(this, MIXPANEL_TOKEN);
         mixpanel.track("Taxnote Cloud Upgraded");
 
+        if (!isFinishing()) return;
         // Taxnoteアカウント作成するようダイアログを表示
         new AlertDialog.Builder(this)
                 .setTitle(R.string.cloud_sign_up_title)
@@ -316,7 +317,7 @@ public class UpgradeActivity extends DefaultCommonActivity {
     // 課金情報とTaxnoteアカウントを調べる
     private void checkTransaction(final boolean isMoveNext) {
         String transactionId = TNApiUser.getCloudOrderId(this);
-        if (transactionId == null) return;
+        if (transactionId == null || isFinishing()) return;
 
         mLoadingProgress.show();
         mApiUser.checkUniqueOfSubscription(transactionId, new AsyncOkHttpClient.Callback() {
@@ -640,6 +641,7 @@ public class UpgradeActivity extends DefaultCommonActivity {
         protected void onPostExecute(SubscriptionPurchase result) {
             if (mLoadingProgress.isShowing()) mLoadingProgress.dismiss();
             if (result == null || subscriptionId == null) return;
+            if (isFinishing()) return;
 
             switch (subscriptionId) {
                 case UpgradeManger.SKU_TAXNOTE_PLUS_ID:
@@ -663,8 +665,11 @@ public class UpgradeActivity extends DefaultCommonActivity {
                         orderId = purchaseToken.substring(0, 24);
                     mApiUser.saveCloudPurchaseInfo(orderId, mPurchase.getToken());
 
-                    if (!mApiUser.isLoggingIn())
+                    if (isNewPurchased)
                         showUpgradeToTaxnoteCloudSuccessDialog();
+
+                    if (!isNewPurchased && !mApiUser.isLoggingIn())
+                        checkTransaction(false);
                     break;
             }
 
