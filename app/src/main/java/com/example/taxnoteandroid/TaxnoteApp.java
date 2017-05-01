@@ -1,10 +1,13 @@
 package com.example.taxnoteandroid;
 
+import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
+import android.os.Bundle;
 import android.support.multidex.MultiDex;
 
 import com.crashlytics.android.Crashlytics;
+import com.example.taxnoteandroid.Library.taxnote.TNApiModel;
 import com.example.taxnoteandroid.dataManager.SharedPreferencesManager;
 import com.example.taxnoteandroid.model.OrmaDatabase;
 import com.github.gfx.android.orma.AccessThreadConstraint;
@@ -22,33 +25,11 @@ import io.fabric.sdk.android.Fabric;
 
 public class TaxnoteApp extends Application {
     private static OrmaDatabase ormaDatabase = null;
-
+    private AppStatus mAppStatus = AppStatus.FOREGROUND;
 
     public static OrmaDatabase getOrmaDatabase() {
         return ormaDatabase;
     }
-
-//    private static TaxnoteApp sInstance;
-//
-//    private final Billing mBilling = new Billing(this, new Billing.DefaultConfiguration() {
-//        @Override
-//
-//        public String getPublicKey() {
-//            return "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAiqf39c7TtSqe9FV2Xz/Xa2S6dexgD2k5qK1ZnC7uCctI2J+Y8GW1oG2S5wN/zdxB5nlkP/a94GiAZqmxhLknVFqRMq32f4zuT2M8mGxFmCMpqQbvYgI2hDXY0xS7c0EITHNPykTRAqS1tgjuHRDWrNjfae7FuvIEJMe4h41tbYAAdKh8Uv+sv3cVmmTXn2j+Ep42XhE1moLug26orCS7IfKAJjAiRK5lzCaCF3mNqPcjogxjG425P44oVT8Ewnx4+N9qbfkzQueCqkw4mD4UdBABCefjZ6t+N2+ZEwGreV/nu5P7kXOsDZp9SGlNB99rL21Xnpzc+QDQvUkBXlNTWQIDAQAB";
-//        }
-//    });
-//
-//    public TaxnoteApp() {
-//        sInstance = this;
-//    }
-//
-//    public static TaxnoteApp get() {
-//        return sInstance;
-//    }
-//
-//    public Billing getBilling() {
-//        return mBilling;
-//    }
 
     @Override
     protected void attachBaseContext(Context base) {
@@ -98,5 +79,71 @@ public class TaxnoteApp extends Application {
         }
         android.util.Log.d("Helpshift", Support.libraryVersion + " - is the version for gradle");
 
+        registerActivityLifecycleCallbacks(new MyActivityLifecycleCallbacks());
+    }
+
+    public enum AppStatus {
+        BACKGROUND,                // app is background
+        RETURNED_TO_FOREGROUND,    // app returned to foreground(or first launch)
+        FOREGROUND                // app is foreground
+    }
+
+    public class MyActivityLifecycleCallbacks implements ActivityLifecycleCallbacks {
+
+        // running activity count
+        private int running = 0;
+        private TNApiModel apiModel;
+
+        public MyActivityLifecycleCallbacks() {
+            apiModel = new TNApiModel(getApplicationContext());
+            apiModel.setIsSyncing(false);
+        }
+
+        @Override
+        public void onActivityCreated(Activity activity, Bundle bundle) {
+        }
+
+        @Override
+        public void onActivityStarted(Activity activity) {
+            if (++running == 1) {
+                // running activity is 1,
+                // app must be returned from background just now (or first launch)
+                mAppStatus = AppStatus.RETURNED_TO_FOREGROUND;
+            } else if (running > 1) {
+                // 2 or more running activities,
+                // should be foreground already.
+                mAppStatus = AppStatus.FOREGROUND;
+            }
+        }
+
+        @Override
+        public void onActivityResumed(Activity activity) {
+            if (mAppStatus == null || apiModel == null) return;
+            if (mAppStatus == AppStatus.RETURNED_TO_FOREGROUND) {
+                // 起動時、アプリ再表示のときにデータの同期を行う
+                apiModel.syncData(activity, false, null);
+            }
+        }
+
+        @Override
+        public void onActivityPaused(Activity activity) {
+        }
+
+        @Override
+        public void onActivityStopped(Activity activity) {
+            if (--running == 0) {
+                // no active activity
+                // app goes to background
+                mAppStatus = AppStatus.BACKGROUND;
+            }
+        }
+
+        @Override
+        public void onActivitySaveInstanceState(Activity activity, Bundle bundle) {
+        }
+
+        @Override
+        public void onActivityDestroyed(Activity activity) {
+        }
     }
 }

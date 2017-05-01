@@ -29,7 +29,6 @@ import com.example.taxnoteandroid.Library.billing.IabHelper;
 import com.example.taxnoteandroid.Library.billing.IabResult;
 import com.example.taxnoteandroid.Library.billing.Inventory;
 import com.example.taxnoteandroid.Library.billing.Purchase;
-import com.example.taxnoteandroid.Library.taxnote.TNApiModel;
 import com.example.taxnoteandroid.Library.taxnote.TNApiUser;
 import com.example.taxnoteandroid.Library.zeny.ZNUtils;
 import com.example.taxnoteandroid.dataManager.DefaultDataInstaller;
@@ -160,40 +159,6 @@ public class MainActivity extends DefaultCommonActivity {
         TNAppNotification.cancel(this, TNAppNotification.DAILY_ALERT_INPUT_FORGET_ID);
 
         checkInAppBilling();
-
-
-        // 起動時にデータの同期を行う
-        TNApiModel apiModel = new TNApiModel(this);
-        // debug
-        //new TNApiUser(this).clearAccountData(apiModel);
-
-        apiModel.setIsSyncing(false);
-        apiModel.syncData(this, false, null);
-
-        // debug
-        /*
-        String transactionId = TNApiUser.getCloudOrderId(this) + "--";
-        new TNApiUser(this).checkUniqueOfSubscription(transactionId, new AsyncOkHttpClient.Callback() {
-            @Override
-            public void onFailure(Response response, Throwable throwable) {
-
-                Log.e("ERROR", "checkUniqueOfSubscription onFailure ");
-
-                String errorMsg = "";
-                if (response != null) {
-                    errorMsg = response.message();
-                } else if (throwable != null) {
-                    errorMsg = throwable.getLocalizedMessage();
-                }
-                Log.e("ERROR", "checkUniqueOfSubscription : " + errorMsg);
-            }
-
-            @Override
-            public void onSuccess(Response response, String content) {
-                Log.v("TEST", "checkUniqueOfSubscription onSuccess : " + content);
-            }
-        });*/
-
 
         // Zeny Ads
         if (ZNUtils.isZeny()) {
