@@ -86,17 +86,6 @@ public class ProfitLossExportActivity extends DefaultCommonActivity {
             }
         });
 
-
-        // for debug
-//        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
-//                getString(R.string.date_string_format_to_year_month_day));
-//        Calendar startCal = Calendar.getInstance();
-//        startCal.setTimeInMillis(mStartEndDate[0]);
-//        Calendar endCal = Calendar.getInstance();
-//        endCal.setTimeInMillis(mStartEndDate[1]);
-//        String startCalStr = simpleDateFormat.format(startCal.getTime());
-//        String endCalStr = simpleDateFormat.format(endCal.getTime());
-//        Log.v("TEST", "startCal : " + startCalStr + ", endCal : " + endCalStr);
     }
 
     private void showCharCodeMenuDialog() {

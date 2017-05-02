@@ -67,11 +67,6 @@ public class TNGoogleApiClient {
             Log.e("ERROR", "getSubscription : " + e.getLocalizedMessage());
         }
         if (subs != null) {
-//            Log.v("TEST", "getSubs: subscriptionId: " + subscriptionId);
-//            Log.v("TEST", "getSubs: autoRenewing: " + subs.getAutoRenewing());
-//            Log.v("TEST", "getSubs: paymentState: " + subs.getPaymentState());
-//            Log.v("TEST", "getSubs: startTimeMillis: " + subs.getStartTimeMillis());
-//            Log.v("TEST", "getSubs: expiryTimeMillis: " + subs.getExpiryTimeMillis());
             return subs;
         }
         return null;
