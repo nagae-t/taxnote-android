@@ -340,10 +340,26 @@ public class UpgradeActivity extends DefaultCommonActivity {
             public void onSuccess(Response response, String content) {
                 mLoadingProgress.dismiss();
                 if (content == null || content.length() == 0) {
-                    if (!isMoveNext) return;
-                    LoginCloudActivity.startForResult(UpgradeActivity.this,
-                            REQUEST_CODE_CLOUD_REGISTER,
-                            LoginCloudActivity.VIEW_TYPE_REGISTER);
+                    if (isMoveNext) {
+                        LoginCloudActivity.startForResult(UpgradeActivity.this,
+                                REQUEST_CODE_CLOUD_REGISTER,
+                                LoginCloudActivity.VIEW_TYPE_REGISTER);
+                    } else {
+                        // Taxnoteアカウント作成するようダイアログを表示
+                        new AlertDialog.Builder(UpgradeActivity.this)
+                                .setTitle(R.string.cloud_sign_up_title)
+                                .setMessage(R.string.cloud_sign_up_message)
+                                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                        LoginCloudActivity.startForResult(UpgradeActivity.this,
+                                                REQUEST_CODE_CLOUD_REGISTER,
+                                                LoginCloudActivity.VIEW_TYPE_REGISTER);
+                                    }
+                                })
+                                .setCancelable(false)
+                                .create().show();
+                    }
                     return;
                 }
                 JsonParser jsonParser = new JsonParser();
@@ -598,10 +614,13 @@ public class UpgradeActivity extends DefaultCommonActivity {
         mApiUser.deleteSubscriptionAccount(mApiModel, new AsyncOkHttpClient.Callback() {
             @Override
             public void onFailure(Response response, Throwable throwable) {
-                Log.e("ERROR", "sendSignOut onFailure ");
+                Log.e("ERROR", "sendDeleteAccount onFailure ");
                 if (response != null) {
-                    Log.e("ERROR", "sendSignOut response code: " + response.code()
+                    Log.e("ERROR", "sendDeleteAccount response code: " + response.code()
                             + ", message: " + response.message());
+                    String errorMsg = response.message();
+                    DialogManager.showOKOnlyAlert(UpgradeActivity.this,
+                            getString(R.string.Error), errorMsg);
                 }
                 mLoadingProgress.dismiss();
 
@@ -611,7 +630,11 @@ public class UpgradeActivity extends DefaultCommonActivity {
             public void onSuccess(Response response, String content) {
                 mLoadingProgress.dismiss();
 
+                DialogManager.showToast(getApplicationContext(), getString(R.string.delete_done));
+
                 mApiUser = new TNApiUser(getApplicationContext());
+                binding.cloudRightTv.setText(R.string.cloud_register);
+                binding.cloudPurchaseLayout.setVisibility(View.GONE);
                 binding.cloudLoginLayout.setVisibility(View.VISIBLE);
                 BroadcastUtil.sendAfterLogin(UpgradeActivity.this, false);
             }

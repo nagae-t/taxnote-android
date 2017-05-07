@@ -261,14 +261,13 @@ public class TNApiUser extends TNApi {
         setHttpMethod(HTTP_METHOD_DELETE);
 
         //@@ 課金のTransactionIdはここで指定する
-        String transactionId = "";
+        String transactionId = getCloudOrderId(context);
         setRequestPath(URL_PATH_SUBSCRIPTION + "/" + transactionId);
         setFormBody(null);
 
         setCallback(new AsyncOkHttpClient.Callback() {
             @Override
             public void onFailure(Response response, Throwable throwable) {
-                clearAccountData(apiModel);
                 callback.onFailure(response, throwable);
             }
 
