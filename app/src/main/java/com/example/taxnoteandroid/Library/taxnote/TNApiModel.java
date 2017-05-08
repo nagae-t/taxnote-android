@@ -258,7 +258,6 @@ public class TNApiModel extends TNApi {
             @Override
             public void onSuccess(Response response, String content) {
 
-                Log.v("TEST", "getAllData onSuccess----Projects :");
 
                 getReasons(new AsyncOkHttpClient.Callback() {
                     @Override
@@ -269,7 +268,6 @@ public class TNApiModel extends TNApi {
 
                     @Override
                     public void onSuccess(Response response, String content) {
-                        Log.v("TEST", "getAllData onSuccess----Reasons :");
 
                         getAccounts(new AsyncOkHttpClient.Callback() {
                             @Override
@@ -280,7 +278,6 @@ public class TNApiModel extends TNApi {
 
                             @Override
                             public void onSuccess(Response response, String content) {
-                                Log.v("TEST", "getAllData onSuccess----Accounts :");
 
                                 getSummaries(new AsyncOkHttpClient.Callback() {
                                     @Override
@@ -291,7 +288,6 @@ public class TNApiModel extends TNApi {
 
                                     @Override
                                     public void onSuccess(Response response, String content) {
-                                        Log.v("TEST", "getAllData onSuccess----Summaries :");
 
                                         getRecurrings(new AsyncOkHttpClient.Callback() {
                                             @Override
@@ -302,7 +298,6 @@ public class TNApiModel extends TNApi {
 
                                             @Override
                                             public void onSuccess(Response response, String content) {
-                                                Log.v("TEST", "getAllData onSuccess----Recurrings :");
 
                                                 getEntries(new AsyncOkHttpClient.Callback() {
                                                     @Override
@@ -313,7 +308,6 @@ public class TNApiModel extends TNApi {
 
                                                     @Override
                                                     public void onSuccess(Response response, String content) {
-                                                        Log.v("TEST", "getAllData onSuccess----Entries :");
 
                                                         callback.onSuccess(response, content);
                                                     }
@@ -819,7 +813,6 @@ public class TNApiModel extends TNApi {
 
             @Override
             public void onSuccess(Response response, String content) {
-                Log.v("TEST", "saveAllNeedSaveData onSuccess --- Projects");
 
                 saveAllNeedSaveReasons(new AsyncOkHttpClient.Callback() {
                     @Override
@@ -830,7 +823,6 @@ public class TNApiModel extends TNApi {
 
                     @Override
                     public void onSuccess(Response response, String content) {
-                        Log.v("TEST", "saveAllNeedSaveData onSuccess --- Reasons");
 
                         saveAllNeedSaveAccounts(new AsyncOkHttpClient.Callback() {
                             @Override
@@ -841,7 +833,6 @@ public class TNApiModel extends TNApi {
 
                             @Override
                             public void onSuccess(Response response, String content) {
-                                Log.v("TEST", "saveAllNeedSaveData onSuccess --- Accounts");
 
                                 saveAllNeedSaveSummaries(new AsyncOkHttpClient.Callback() {
                                     @Override
@@ -852,7 +843,6 @@ public class TNApiModel extends TNApi {
 
                                     @Override
                                     public void onSuccess(Response response, String content) {
-                                        Log.v("TEST", "saveAllNeedSaveData onSuccess --- Summaries");
 
                                         saveAllNeedSaveRecurrings(new AsyncOkHttpClient.Callback() {
                                             @Override
@@ -863,7 +853,6 @@ public class TNApiModel extends TNApi {
 
                                             @Override
                                             public void onSuccess(Response response, String content) {
-                                                Log.v("TEST", "saveAllNeedSaveData onSuccess --- Recurrings");
 
                                                 saveAllNeedSaveEntries(callback);
                                             }

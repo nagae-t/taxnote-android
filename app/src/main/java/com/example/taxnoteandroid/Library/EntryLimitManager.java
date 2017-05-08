@@ -146,7 +146,6 @@ public class EntryLimitManager {
 //                context.getResources().getString(R.string.date_string_format_to_year_month_day));
 //        String startCalStr = simpleDateFormat.format(startCalendar.getTime());
 //        String endCalStr = simpleDateFormat.format(endCalendar.getTime());
-//        Log.v("TEST", "startCal : " + startCalStr + ", endCal : " + endCalStr);
         return result;
     }
 

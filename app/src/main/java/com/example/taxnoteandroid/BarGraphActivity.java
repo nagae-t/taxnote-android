@@ -271,9 +271,9 @@ public class BarGraphActivity extends DefaultCommonActivity implements OnChartVa
             endCal.clear();
             endCal.setTimeInMillis(startEndDate[1]);
             endCal.set(Calendar.MILLISECOND, 0);
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
-                    getString(R.string.date_string_format_to_year_month_day),
-                    Locale.getDefault());
+//            SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
+//                    getString(R.string.date_string_format_to_year_month_day),
+//                    Locale.getDefault());
 //            String startCalStr = simpleDateFormat.format(startCal.getTime());
 //            String endCalStr = simpleDateFormat.format(endCal.getTime());
             // 差分の日数を計算
@@ -297,9 +297,6 @@ public class BarGraphActivity extends DefaultCommonActivity implements OnChartVa
                     }
                 }
             }
-
-//            Log.v("TEST", "startCal : " + startCalStr + ", endCal : " + endCalStr
-//                    + ", dayDiff : " + xNum + ", entrySize: " + entries.size());
 
             Map<String, Long> entryMap = new LinkedHashMap<>();
             for (Entry entry : entries) {
