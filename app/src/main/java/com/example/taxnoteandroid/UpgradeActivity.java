@@ -451,8 +451,19 @@ public class UpgradeActivity extends DefaultCommonActivity {
     };
 
     private void checkCloudPurchaseAction() {
-        if (!ZNUtils.isZeny() && !UpgradeManger.taxnoteCloudIsActive(this)) {
-            upgradeToTaxnoteCloud();
+
+        if (!UpgradeManger.taxnoteCloudIsActive(this) || !UpgradeManger.zenyPremiumIsActive(this)) {
+            if (ZNUtils.isZeny()) {
+                try {
+                    mBillingHelper.launchSubscriptionPurchaseFlow(UpgradeActivity.this,
+                            UpgradeManger.SKU_ZENY_PREMIUM_ID,
+                            REQUEST_CODE_PURCHASE_PREMIUM, mPurchaseFinishedListener);
+                } catch (IabHelper.IabAsyncInProgressException e) {
+                    e.printStackTrace();
+                }
+            } else {
+                upgradeToTaxnoteCloud();
+            }
         } else {
             if (mApiUser.isLoggingIn()) {
                 showMemberDialogItems();
