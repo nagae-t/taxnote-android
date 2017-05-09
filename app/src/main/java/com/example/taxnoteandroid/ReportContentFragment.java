@@ -72,7 +72,7 @@ public class ReportContentFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         mContext = getActivity().getApplicationContext();
         mApiModel = new TNApiModel(mContext);
-        if (!mApiModel.isCloudActive()) binding.refreshLayout.setEnabled(false);
+        if (!mApiModel.isCloudActive() || !mApiModel.isLoggingIn()) binding.refreshLayout.setEnabled(false);
 
         mEntryManager = new EntryDataManager(mContext);
         mPeriodType = SharedPreferencesManager.getProfitLossReportPeriodType(mContext);

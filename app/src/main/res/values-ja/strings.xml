@@ -429,4 +429,7 @@
 
     <string name="data_export_desc">記録したデータをエクセルなどの表計算ソフトに取り込める形式で出力します。</string>
 
+    <string name="re_login_title">Taxnoteクラウドにログインしてください</string>
+    <string name="re_login_message">セキュリティ保護のため、一定期間を超えると再度ログインしてもらう仕様になっております。</string>
+
 </resources>

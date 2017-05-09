@@ -1,9 +1,15 @@
 package com.example.taxnoteandroid.Library.taxnote;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 
 import com.example.taxnoteandroid.Library.AsyncOkHttpClient;
+import com.example.taxnoteandroid.Library.BroadcastUtil;
+import com.example.taxnoteandroid.R;
+import com.example.taxnoteandroid.UpgradeActivity;
 import com.example.taxnoteandroid.dataManager.SharedPreferencesManager;
 
 import java.text.SimpleDateFormat;
@@ -197,9 +203,8 @@ public class TNApiUser extends TNApi {
         //@@ iOS [KPTaxnoteApiUserHandler logOutFromSubscriptionAccount];
 
         // subscription情報を削除
-//        SharedPreferencesManager.saveTaxnoteCloudExpiryTime(context, 0);
-//        SharedPreferencesManager.saveUserApiLoginValue(context, KEY_CLOUD_ORDER_ID, null);
-//        SharedPreferencesManager.saveUserApiLoginValue(context, KEY_CLOUD_PURCHASE_TOKEN, null);
+        saveCloudPurchaseInfo(null, null);
+        SharedPreferencesManager.saveTaxnoteCloudExpiryTime(context, 0);
 
         deleteLoginData();
         apiModel.resetAllUpdatedKeys();
@@ -283,6 +288,22 @@ public class TNApiUser extends TNApi {
         requestApi();
     }
 
+    public void handleAccountError(Activity activity, TNApiModel apiModel) {
+        clearAccountData(apiModel);
+        BroadcastUtil.sendAfterLogin(activity, false);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+        builder.setTitle(R.string.re_login_title)
+                .setMessage(R.string.re_login_message)
+                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        UpgradeActivity.start(context);
+                    }
+                });
+        builder.create().show();
+
+    }
 
     public static boolean isLoggingIn(Context context) {
         String userUid = SharedPreferencesManager.getUserApiLoginValue(context, KEY_USER_UID);
