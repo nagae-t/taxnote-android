@@ -424,4 +424,7 @@
     <string name="date_string_format_to_year_month">yyyy年M月</string>
     <string name="date_string_format_to_year">yyyy年</string>
 
+    <string name="re_login_title">Taxnoteクラウドにログインしてください</string>
+    <string name="re_login_message">セキュリティ保護のため、一定期間を超えると再度ログインしてもらう仕様になっております。</string>
+
 </resources>

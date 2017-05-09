@@ -2216,6 +2216,17 @@ public class TNApiModel extends TNApi {
             @Override
             public void onFailure(Response response, Throwable throwable) {
                 Log.e(LTAG, "syncData onFailure");
+
+                if (response != null) {
+                    int httpCode = response.code();
+                    if (httpCode == 401) {
+                        // ログアウトするように
+                        TNApiUser apiUser = new TNApiUser(context);
+                        apiUser.handleAccountError(activity, TNApiModel.this);
+                    }
+                }
+
+
                 if (callback != null)
                     callback.onFailure(response, throwable);
             }
@@ -2228,6 +2239,15 @@ public class TNApiModel extends TNApi {
                     @Override
                     public void onFailure(Response response, Throwable throwable) {
                         setIsSyncing(false);
+                        if (response != null) {
+                            int httpCode = response.code();
+                            if (httpCode == 401) {
+                                // ログアウトするように
+                                TNApiUser apiUser = new TNApiUser(context);
+                                apiUser.handleAccountError(activity, TNApiModel.this);
+                            }
+                        }
+
                         if (callback != null)
                             callback.onFailure(response, throwable);
                     }
