@@ -125,9 +125,14 @@ public class EntryTabReasonSelectFragment extends Fragment {
         binding.refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
+                if (!TNApi.isNetworkConnected(mContext)) {
+                    binding.refreshLayout.setRefreshing(false);
+                    DialogManager.showOKOnlyAlert(getActivity(),
+                            null, getString(R.string.network_not_connection));
+                    return;
+                }
                 mApiModel = new TNApiModel(mContext);
-                if (!TNApi.isNetworkConnected(mContext) || !mApiModel.isLoggingIn()
-                        || mApiModel.isSyncing()) {
+                if (!mApiModel.isLoggingIn() || mApiModel.isSyncing()) {
                     binding.refreshLayout.setRefreshing(false);
                     return;
                 }

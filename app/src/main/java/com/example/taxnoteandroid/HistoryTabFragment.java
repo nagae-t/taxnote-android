@@ -72,7 +72,13 @@ public class HistoryTabFragment extends Fragment {
         binding.refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                if (!TNApi.isNetworkConnected(mContext) || !mApiModel.isLoggingIn()
+                if (!TNApi.isNetworkConnected(mContext)) {
+                    binding.refreshLayout.setRefreshing(false);
+                    DialogManager.showOKOnlyAlert(getActivity(),
+                            null, getString(R.string.network_not_connection));
+                    return;
+                }
+                if (!mApiModel.isLoggingIn()
                         || !mApiModel.isCloudActive()
                         || mApiModel.isSyncing()) {
                     binding.refreshLayout.setRefreshing(false);
