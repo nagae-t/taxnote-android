@@ -320,7 +320,8 @@ public class DataExportManager implements TaxnoteConsts {
 
     private File getOutputFile() {
 
-        String fileName = "taxnote";
+        String appName = context.getString(R.string.app_name);
+        String fileName = appName;
 
         // Mode
         if (mode.compareTo(EXPORT_FORMAT_TYPE_CSV) == 0 ||
@@ -374,9 +375,9 @@ public class DataExportManager implements TaxnoteConsts {
             fileName += ".csv";
         }
 
-        return new File(Environment.getExternalStorageDirectory(), "Taxnote/" + System.currentTimeMillis() + "/" + fileName);
+        return new File(Environment.getExternalStorageDirectory(), appName
+                + "/" + System.currentTimeMillis() + "/" + fileName);
 
-//        return new File(context.getCacheDir(), "Taxnote/" + System.currentTimeMillis() + "/" + fileName);
     }
 
     private String getCustomDateRangeStrings() {
@@ -453,9 +454,11 @@ public class DataExportManager implements TaxnoteConsts {
 
     private void shareFileContent(File file) {
 
+        String appName = context.getString(R.string.app_name);
+
         String subjectString = context.getString(R.string.data_export_mail_title);
         if (mode.equals(EXPORT_PROFIT_LOSS_FORMAT_TYPE_CSV)) {
-            subjectString = "Taxnote " + context.getString(R.string.profit_loss_export)
+            subjectString = appName + " " + context.getString(R.string.profit_loss_export)
                 + " (" +getReportStartEndDateString()+ ")";
         }
 

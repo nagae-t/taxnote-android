@@ -26,6 +26,12 @@
     <string name="created_new_project_message">新しいアカウントを作成しました。</string>
     <string name="tap_project_to_edit_name">アカウント名をタップすると名前を変更できます。</string>
 
+    <string name="data_export_mail_title">Zenyデータ出力</string>
+
     <string name="taxnote_data_import">Zenyへインポート</string>
     <string name="taxnote_cloud_first_free">Zenyプレミアム（初回無料）</string>
+
+    <string name="bar_graph_cloud_required_message">時系列チャートの表示はZenyプレミアムの購読が必要です。\n(支出・収入の時系列チャートは無料でお試し可能)</string>
+
+    <string name="profit_loss_export">レポートの出力</string>
 </resources>
