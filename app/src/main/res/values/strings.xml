@@ -423,4 +423,8 @@
 
     <string name="date_string_format_to_year_month">yyyy/M</string>
     <string name="date_string_format_to_year">yyyy</string>
+
+    <string name="re_login_title">Please login to Taxnote Cloud</string>
+    <string name="re_login_message">For security reasons, you should re-login after a certain period of time.</string>
+
 </resources>
