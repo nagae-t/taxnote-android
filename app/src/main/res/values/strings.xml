@@ -220,7 +220,7 @@
     <string name="release_note_message">Taxnote has been updated.  Please check new features, changes, and bug fixes.</string>
 
     <!--//@@ここをアップデートごとに変更-->
-    <string name="release_note_url">http://taxnote.hatenablog.com/entry/2017/03/21/110450</string>
+    <string name="release_note_url">http://taxnote.hatenablog.com/entry/2017/05/12/084155</string>
 
     <string name="update_check_title">Update available</string>
     <string name="update_check_message">Please update to the latest version of Taxnote.</string>
@@ -394,6 +394,7 @@
 
     <string name="cloud_purchase_status">Taxnote Cloud</string>
     <string name="cloud_purchase_status_on">[Active] Manage</string>
+    <string name="cloud_purchase_status_off">[Expired] Subscribe</string>
     <string name="taxnote_cloud_desc">Monthly subscription with following features.\n1. Multiple Accounts\n2. Cloud Sync with different devices(auto-backup)\n3. Recurring Entries\n4. Bar Charts</string>
     <string name="add_project_without_cloud">Please upgrade to Taxnote Cloud to use multiple books.</string>
     <string name="not_cloud_input_limit_message">Please upgrade to Taxnote Cloud to make an entry with additional books. (You can enter up to 10 with free trial)</string>
