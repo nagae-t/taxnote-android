@@ -236,9 +236,16 @@ public class UpgradeActivity extends DefaultCommonActivity {
         if (UpgradeManger.taxnoteCloudIsActive(this) && !mApiUser.isLoggingIn()) {
             binding.purchaseInfoLayout.setVisibility(View.VISIBLE);
             binding.cloudPurchaseLayout.setVisibility(View.GONE);
-//            binding.cloudLeftTv.setText(R.string.cloud);
-//            binding.cloudRightTv.setText(R.string.cloud_register);
         }
+
+        if (mApiModel.isCloudActive()) {
+            binding.purchaseInfoStatus.setText(R.string.cloud_purchase_status_on);
+        }
+        // ログインしていて、有効期限が切れた場合
+        if (mApiUser.isLoggingIn() && !mApiModel.isCloudActive()) {
+            binding.purchaseInfoStatus.setText(R.string.cloud_purchase_status_off);
+        }
+
     }
 
     private void setHelpView() {
@@ -432,17 +439,21 @@ public class UpgradeActivity extends DefaultCommonActivity {
                     checkCloudPurchaseAction();
                     break;
                 case R.id.purchase_info_layout:
-                    String receiptUrl = "https://play.google.com/store/account?feature=gp_receipt";
-                    Uri uri = Uri.parse(receiptUrl);
-                    Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-                    startActivity(intent);
+                    if (mApiModel.isCloudActive()) {
+                        String receiptUrl = "https://play.google.com/store/account?feature=gp_receipt";
+                        Uri uri = Uri.parse(receiptUrl);
+                        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                        startActivity(intent);
+                    } else {
+                        upgradeToTaxnoteCloud();
+                    }
                     break;
             }
         }
     };
 
     private void checkCloudPurchaseAction() {
-        if (!UpgradeManger.taxnoteCloudIsActive(this)) {
+        if (!mApiUser.isLoggingIn() && !UpgradeManger.taxnoteCloudIsActive(this)) {
             upgradeToTaxnoteCloud();
         } else {
             if (mApiUser.isLoggingIn()) {

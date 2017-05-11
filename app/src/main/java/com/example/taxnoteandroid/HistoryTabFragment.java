@@ -234,6 +234,7 @@ public class HistoryTabFragment extends Fragment {
                 public void onItemClick(View view, int position, Entry entry) {
                     SharedPreferencesManager.saveTapHereHistoryEditDone(getActivity());
                     EntryEditActivity.start(mContext, entry);
+                    mEntryAdapter.notifyDataSetChanged();
                 }
             });
             binding.history.setAdapter(mEntryAdapter);

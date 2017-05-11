@@ -135,11 +135,12 @@
                 android:layout_weight="1"
                 android:text="@string/cloud_purchase_status" />
             <TextView
+                android:id="@+id/purchase_info_status"
                 style="@style/font_style_standard"
                 android:textColor="?attr/colorPrimary"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/cloud_purchase_status_control" />
+                android:text="@string/cloud_purchase_status_on" />
         </LinearLayout>
 
         <TextView

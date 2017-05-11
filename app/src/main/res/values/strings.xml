@@ -393,7 +393,7 @@
     <string name="cloud_account_exists_message">Your account is already registered with your purchase history.  Please login with this account or delete it to create a new account.</string>
 
     <string name="cloud_purchase_status">Taxnote Cloud</string>
-    <string name="cloud_purchase_status_control">[Active] Manage</string>
+    <string name="cloud_purchase_status_on">[Active] Manage</string>
     <string name="taxnote_cloud_desc">Monthly subscription with following features.\n1. Multiple Accounts\n2. Cloud Sync with different devices(auto-backup)\n3. Recurring Entries\n4. Bar Charts</string>
     <string name="add_project_without_cloud">Please upgrade to Taxnote Cloud to use multiple books.</string>
     <string name="not_cloud_input_limit_message">Please upgrade to Taxnote Cloud to make an entry with additional books. (You can enter up to 10 with free trial)</string>
