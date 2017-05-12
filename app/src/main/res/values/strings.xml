@@ -220,7 +220,7 @@
     <string name="release_note_message">Taxnote has been updated.  Please check new features, changes, and bug fixes.</string>
 
     <!--//@@ここをアップデートごとに変更-->
-    <string name="release_note_url">http://taxnote.hatenablog.com/entry/2017/05/12/084155</string>
+    <string name="release_note_url">https://medium.com/@Taxnote/taxnote-android-has-cloud-feature-now-823e156dc179</string>
 
     <string name="update_check_title">Update available</string>
     <string name="update_check_message">Please update to the latest version of Taxnote.</string>
