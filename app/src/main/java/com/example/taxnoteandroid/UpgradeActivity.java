@@ -8,9 +8,11 @@ import android.databinding.DataBindingUtil;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -228,7 +230,7 @@ public class UpgradeActivity extends DefaultCommonActivity {
     private void updateUpgradeStatus() {
 
         if (UpgradeManger.taxnotePlusIsActive(this)) {
-            binding.upgraded.setText(getResources().getString(R.string.upgrade_is_active));
+            binding.upgraded.setText(R.string.upgrade_is_active);
             binding.upgradeToPlus.setOnClickListener(null);
         }
 
@@ -239,11 +241,16 @@ public class UpgradeActivity extends DefaultCommonActivity {
         }
 
         if (mApiModel.isCloudActive()) {
+            TypedValue statusOnTv = new TypedValue();
+            getTheme().resolveAttribute(R.attr.colorPrimary, statusOnTv, true);
             binding.purchaseInfoStatus.setText(R.string.cloud_purchase_status_on);
+            binding.purchaseInfoStatus.setTextColor(ContextCompat.getColor(this, statusOnTv.resourceId));
         }
         // ログインしていて、有効期限が切れた場合
         if (mApiUser.isLoggingIn() && !mApiModel.isCloudActive()) {
             binding.purchaseInfoStatus.setText(R.string.cloud_purchase_status_off);
+            binding.purchaseInfoStatus.setTextColor(ContextCompat.getColor(this, R.color.expense));
+
         }
 
     }

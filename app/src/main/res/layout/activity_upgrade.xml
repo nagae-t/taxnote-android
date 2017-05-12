@@ -13,18 +13,6 @@
         android:orientation="vertical"
         tools:context="com.example.taxnoteandroid.SettingsTabFragment">
 
-
-        <!--header example-->
-        <!--<TextView-->
-            <!--style="@style/standard_font_style"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_marginTop="16dp"-->
-            <!--android:gravity="center_vertical"-->
-            <!--android:paddingStart="16dp"-->
-            <!--android:text="買えよ!!"-->
-            <!--android:textColor="@color/primary" />-->
-
         <LinearLayout
             android:background="@drawable/selector_background_colors"
             android:id="@+id/upgrade_to_plus"
@@ -46,9 +34,8 @@
 
             <TextView
                 style="@style/font_style_standard"
-                android:textColor="@color/text_gray"
+                android:textColor="?attr/colorPrimary"
                 android:id="@+id/upgraded"
-                tools:text="有効"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
         </LinearLayout>
