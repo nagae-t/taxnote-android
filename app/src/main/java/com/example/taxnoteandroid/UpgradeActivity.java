@@ -141,7 +141,7 @@ public class UpgradeActivity extends DefaultCommonActivity {
 
             if (result.isFailure()) return;
 
-            // Restore purchase
+            // Restore purchases
             Purchase purchasePlus = inventory.getPurchase(UpgradeManger.SKU_TAXNOTE_PLUS_ID);
             if (purchasePlus != null)
                 new CheckBillingAsyncTask(false).execute(purchasePlus);
@@ -149,6 +149,10 @@ public class UpgradeActivity extends DefaultCommonActivity {
             Purchase purchasePlus1 = inventory.getPurchase(UpgradeManger.SKU_TAXNOTE_PLUS_ID1);
             if (purchasePlus1 != null)
                 new CheckBillingAsyncTask(false).execute(purchasePlus1);
+
+            Purchase purchasePlus2 = inventory.getPurchase(UpgradeManger.SKU_TAXNOTE_PLUS_ID2);
+            if (purchasePlus2 != null)
+                new CheckBillingAsyncTask(false).execute(purchasePlus2);
 
             Purchase purchaseCloud = inventory.getPurchase(UpgradeManger.SKU_TAXNOTE_CLOUD_ID);
             if (purchaseCloud != null)
@@ -275,7 +279,7 @@ public class UpgradeActivity extends DefaultCommonActivity {
         if (mBillingHelper.subscriptionsSupported()) {
             try {
                 mBillingHelper.launchSubscriptionPurchaseFlow(UpgradeActivity.this,
-                        UpgradeManger.SKU_TAXNOTE_PLUS_ID1,
+                        UpgradeManger.SKU_TAXNOTE_PLUS_ID2,
                         REQUEST_CODE_PURCHASE_PREMIUM,
                         mPurchaseFinishedListener);
             } catch (IabHelper.IabAsyncInProgressException e) {
@@ -690,6 +694,10 @@ public class UpgradeActivity extends DefaultCommonActivity {
                             getApplicationContext(), result.getExpiryTimeMillis());
                     break;
                 case UpgradeManger.SKU_TAXNOTE_PLUS_ID1:
+                    SharedPreferencesManager.saveTaxnotePlusExpiryTime(
+                            getApplicationContext(), result.getExpiryTimeMillis());
+                    break;
+                case UpgradeManger.SKU_TAXNOTE_PLUS_ID2:
                     SharedPreferencesManager.saveTaxnotePlusExpiryTime(
                             getApplicationContext(), result.getExpiryTimeMillis());
 
