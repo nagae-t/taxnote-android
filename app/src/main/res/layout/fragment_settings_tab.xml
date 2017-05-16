@@ -186,6 +186,22 @@
             android:layout_width="match_parent"
             android:layout_height="1dp" />
 
+        <TextView
+            style="@style/font_style_standard"
+            android:id="@+id/other_apps"
+            android:background="@drawable/selector_background_colors"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:minHeight="@dimen/cell_height_standard"
+            android:paddingEnd="16dp"
+            android:paddingStart="16dp"
+            android:text="@string/other_apps" />
+
+        <android.support.v4.widget.Space
+            android:layout_width="match_parent"
+            android:layout_height="1dp" />
+
         <LinearLayout
             style="@style/font_style_standard"
             android:layout_width="match_parent"

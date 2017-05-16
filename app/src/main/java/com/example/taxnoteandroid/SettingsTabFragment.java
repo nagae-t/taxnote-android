@@ -2,7 +2,9 @@ package com.example.taxnoteandroid;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.res.ColorStateList;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -649,6 +651,16 @@ public class SettingsTabFragment extends Fragment {
 
                 builder.setType("text/plain");
                 builder.startChooser();
+            }
+        });
+
+        binding.otherApps.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String receiptUrl = "https://play.google.com/store/apps/developer?id=Non+Umemoto";
+                Uri uri = Uri.parse(receiptUrl);
+                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                startActivity(intent);
             }
         });
 
