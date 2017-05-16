@@ -121,6 +121,10 @@ public class MainActivity extends DefaultCommonActivity {
             if (purchasePlus1 != null)
                 new CheckBillingAsyncTask().execute(purchasePlus1);
 
+            Purchase purchasePlus2 = inventory.getPurchase(UpgradeManger.SKU_TAXNOTE_PLUS_ID2);
+            if (purchasePlus2 != null)
+                new CheckBillingAsyncTask().execute(purchasePlus2);
+
             Purchase purchaseCloud = inventory.getPurchase(UpgradeManger.SKU_TAXNOTE_CLOUD_ID);
             if (purchaseCloud != null)
                 new CheckBillingAsyncTask().execute(purchaseCloud);
@@ -643,6 +647,10 @@ public class MainActivity extends DefaultCommonActivity {
                 case UpgradeManger.SKU_TAXNOTE_PLUS_ID1:
                     SharedPreferencesManager.saveTaxnotePlusExpiryTime(
                             context, result.getExpiryTimeMillis());
+                    break;
+                case UpgradeManger.SKU_TAXNOTE_PLUS_ID2:
+                    SharedPreferencesManager.saveTaxnotePlusExpiryTime(
+                            getApplicationContext(), result.getExpiryTimeMillis());
                     break;
                 case UpgradeManger.SKU_TAXNOTE_CLOUD_ID:
                 case UpgradeManger.SKU_ZENY_PREMIUM_ID:

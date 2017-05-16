@@ -8,9 +8,11 @@ import android.databinding.DataBindingUtil;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -142,7 +144,7 @@ public class UpgradeActivity extends DefaultCommonActivity {
 
             if (result.isFailure()) return;
 
-            // Restore purchase
+            // Restore purchases
             Purchase purchasePlus = inventory.getPurchase(UpgradeManger.SKU_TAXNOTE_PLUS_ID);
             if (purchasePlus != null)
                 new CheckBillingAsyncTask(false).execute(purchasePlus);
@@ -150,6 +152,10 @@ public class UpgradeActivity extends DefaultCommonActivity {
             Purchase purchasePlus1 = inventory.getPurchase(UpgradeManger.SKU_TAXNOTE_PLUS_ID1);
             if (purchasePlus1 != null)
                 new CheckBillingAsyncTask(false).execute(purchasePlus1);
+
+            Purchase purchasePlus2 = inventory.getPurchase(UpgradeManger.SKU_TAXNOTE_PLUS_ID2);
+            if (purchasePlus2 != null)
+                new CheckBillingAsyncTask(false).execute(purchasePlus2);
 
             Purchase purchaseCloud = inventory.getPurchase(UpgradeManger.SKU_TAXNOTE_CLOUD_ID);
             if (purchaseCloud != null)
@@ -237,7 +243,7 @@ public class UpgradeActivity extends DefaultCommonActivity {
     private void updateUpgradeStatus() {
 
         if (UpgradeManger.taxnotePlusIsActive(this)) {
-            binding.upgraded.setText(getResources().getString(R.string.upgrade_is_active));
+            binding.upgraded.setText(R.string.upgrade_is_active);
             binding.upgradeToPlus.setOnClickListener(null);
         }
 
@@ -245,9 +251,21 @@ public class UpgradeActivity extends DefaultCommonActivity {
         if (UpgradeManger.taxnoteCloudIsActive(this) && !mApiUser.isLoggingIn()) {
             binding.purchaseInfoLayout.setVisibility(View.VISIBLE);
             binding.cloudPurchaseLayout.setVisibility(View.GONE);
-//            binding.cloudLeftTv.setText(R.string.cloud);
-//            binding.cloudRightTv.setText(R.string.cloud_register);
         }
+
+        if (mApiModel.isCloudActive()) {
+            TypedValue statusOnTv = new TypedValue();
+            getTheme().resolveAttribute(R.attr.colorPrimary, statusOnTv, true);
+            binding.purchaseInfoStatus.setText(R.string.cloud_purchase_status_on);
+            binding.purchaseInfoStatus.setTextColor(ContextCompat.getColor(this, statusOnTv.resourceId));
+        }
+        // ログインしていて、有効期限が切れた場合
+        if (mApiUser.isLoggingIn() && !mApiModel.isCloudActive()) {
+            binding.purchaseInfoStatus.setText(R.string.cloud_purchase_status_off);
+            binding.purchaseInfoStatus.setTextColor(ContextCompat.getColor(this, R.color.expense));
+
+        }
+
     }
 
     private void setHelpView() {
@@ -270,7 +288,7 @@ public class UpgradeActivity extends DefaultCommonActivity {
         if (mBillingHelper.subscriptionsSupported()) {
             try {
                 mBillingHelper.launchSubscriptionPurchaseFlow(UpgradeActivity.this,
-                        UpgradeManger.SKU_TAXNOTE_PLUS_ID1,
+                        UpgradeManger.SKU_TAXNOTE_PLUS_ID2,
                         REQUEST_CODE_PURCHASE_PREMIUM,
                         mPurchaseFinishedListener);
             } catch (IabHelper.IabAsyncInProgressException e) {
@@ -441,10 +459,14 @@ public class UpgradeActivity extends DefaultCommonActivity {
                     checkCloudPurchaseAction();
                     break;
                 case R.id.purchase_info_layout:
-                    String receiptUrl = "https://play.google.com/store/account?feature=gp_receipt";
-                    Uri uri = Uri.parse(receiptUrl);
-                    Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-                    startActivity(intent);
+                    if (mApiModel.isCloudActive()) {
+                        String receiptUrl = "https://play.google.com/store/account?feature=gp_receipt";
+                        Uri uri = Uri.parse(receiptUrl);
+                        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                        startActivity(intent);
+                    } else {
+                        upgradeToTaxnoteCloud();
+                    }
                     break;
             }
         }
@@ -452,18 +474,8 @@ public class UpgradeActivity extends DefaultCommonActivity {
 
     private void checkCloudPurchaseAction() {
 
-        if (!UpgradeManger.taxnoteCloudIsActive(this) || !UpgradeManger.zenyPremiumIsActive(this)) {
-            if (ZNUtils.isZeny()) {
-                try {
-                    mBillingHelper.launchSubscriptionPurchaseFlow(UpgradeActivity.this,
-                            UpgradeManger.SKU_ZENY_PREMIUM_ID,
-                            REQUEST_CODE_PURCHASE_PREMIUM, mPurchaseFinishedListener);
-                } catch (IabHelper.IabAsyncInProgressException e) {
-                    e.printStackTrace();
-                }
-            } else {
-                upgradeToTaxnoteCloud();
-            }
+        if (!mApiUser.isLoggingIn() && !mApiModel.isCloudActive()) {
+            upgradeToTaxnoteCloud();
         } else {
             if (mApiUser.isLoggingIn()) {
                 showMemberDialogItems();
@@ -484,7 +496,7 @@ public class UpgradeActivity extends DefaultCommonActivity {
         if (!mBillingHelper.subscriptionsSupported()) return;
 
         // Taxnoteプラス購入済みか確認してダイアログを表示する
-        if (!UpgradeManger.taxnotePlusIsActive(this)) {
+        if (!ZNUtils.isZeny() && !UpgradeManger.taxnotePlusIsActive(this)) {
             AlertDialog.Builder builder = new AlertDialog.Builder(this)
                     .setTitle(R.string.plus_not_bought_title)
                     .setMessage(R.string.plus_not_bought_message)
@@ -504,10 +516,11 @@ public class UpgradeActivity extends DefaultCommonActivity {
                     });
             builder.create().show();
         } else {
+            String skuId = (ZNUtils.isZeny()) ? UpgradeManger.SKU_ZENY_PREMIUM_ID
+                    : UpgradeManger.SKU_TAXNOTE_CLOUD_ID;
             try {
-                mBillingHelper.launchSubscriptionPurchaseFlow(UpgradeActivity.this,
-                        UpgradeManger.SKU_TAXNOTE_CLOUD_ID,
-                        REQUEST_CODE_PURCHASE_PREMIUM, mPurchaseFinishedListener);
+                    mBillingHelper.launchSubscriptionPurchaseFlow(this, skuId,
+                            REQUEST_CODE_PURCHASE_PREMIUM, mPurchaseFinishedListener);
             } catch (IabHelper.IabAsyncInProgressException e) {
                 e.printStackTrace();
             }
@@ -689,10 +702,8 @@ public class UpgradeActivity extends DefaultCommonActivity {
             Context context = getApplicationContext();
             switch (subscriptionId) {
                 case UpgradeManger.SKU_TAXNOTE_PLUS_ID:
-                    SharedPreferencesManager.saveTaxnotePlusExpiryTime(
-                            context, result.getExpiryTimeMillis());
-                    break;
                 case UpgradeManger.SKU_TAXNOTE_PLUS_ID1:
+                case UpgradeManger.SKU_TAXNOTE_PLUS_ID2:
                     SharedPreferencesManager.saveTaxnotePlusExpiryTime(
                             context, result.getExpiryTimeMillis());
 
@@ -701,16 +712,15 @@ public class UpgradeActivity extends DefaultCommonActivity {
                     break;
                 case UpgradeManger.SKU_TAXNOTE_CLOUD_ID:
                 case UpgradeManger.SKU_ZENY_PREMIUM_ID:
+                    long expiryTime = result.getExpiryTimeMillis();
                     if (ZNUtils.isZeny()) {
                         SharedPreferencesManager.saveZenyPremiumExpiryTime(
-                                context, result.getExpiryTimeMillis());
+                                context, expiryTime);
                     } else {
                         SharedPreferencesManager.saveTaxnoteCloudExpiryTime(
-                                context, result.getExpiryTimeMillis());
+                                context, expiryTime);
                     }
 
-                    long expiryTime = result.getExpiryTimeMillis();
-                    SharedPreferencesManager.saveTaxnoteCloudExpiryTime(context, expiryTime);
                     String orderId = mPurchase.getOrderId();
                     String purchaseToken = mPurchase.getToken();
                     if (orderId == null || orderId.length() == 0)

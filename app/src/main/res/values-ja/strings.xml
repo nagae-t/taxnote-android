@@ -220,7 +220,7 @@
     <string name="release_note_message">Taxnoteが最新版にアップデートされました。新しい機能、変更点、バグ修正などのお知らせをご確認ください。</string>
 
     <!--//@@ここをアップデートごとに変更-->
-    <string name="release_note_url">http://taxnote.hatenablog.com/entry/2017/03/21/110450</string>
+    <string name="release_note_url">http://taxnote.hatenablog.com/entry/2017/05/12/084155</string>
 
     <string name="update_check_title">新しいアップデートがあります</string>
     <string name="update_check_message">Taxnoteの最新版が更新されています。新しいバージョンにアップデートしてください。</string>
@@ -393,7 +393,8 @@
     <string name="cloud_account_exists_message">このアカウントがすでにリンクされています。このアカウントでログインするか、アカウントを削除してから新規作成してください。</string>
 
     <string name="cloud_purchase_status">Taxnoteクラウド</string>
-    <string name="cloud_purchase_status_control">[有効] 管理する</string>
+    <string name="cloud_purchase_status_on">[有効] 管理する</string>
+    <string name="cloud_purchase_status_off">[期間終了] 購読する</string>
     <string name="taxnote_cloud_desc">さらに便利に使いたい方向けのオプションサービスです。\n以下の機能が有効になります。\n1. ３つの帳簿使用\n2. 複数の端末でデータを自動共有（自動バックアップ）\n3. 指定日の繰り返し入力\n4. 時系列チャートの表示\n\n複数人で別々の端末から同時にデータを管理したり、個人と会社など別々の帳簿を作成することもできます。また、家賃など毎月の固定支出などを指定した日に自動入力させることができます。</string>
     <string name="add_project_without_cloud">複数の帳簿を作るには、Taxnoteクラウドへの加入が必要です。</string>
     <string name="not_cloud_input_limit_message">本帳簿以外での入力は、Taxnoteクラウドへの加入が必要です。（お試し入力は10件まで）</string>
