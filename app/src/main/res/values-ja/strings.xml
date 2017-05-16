@@ -428,4 +428,6 @@
     <string name="re_login_title">Taxnoteクラウドにログインしてください</string>
     <string name="re_login_message">セキュリティ保護のため、一定期間を超えると再度ログインしてもらう仕様になっております。</string>
 
+    <string name="other_apps">作者のアプリ</string>
+
 </resources>
