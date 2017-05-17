@@ -435,7 +435,4 @@
 
     <string name="other_apps">作者のアプリ</string>
 
-    <!--//@@@ここなにを入れるか調べる必要あり-->
-    <string name="cloud_purchase_status_control">cloud_purchase_status_control</string>
-
 </resources>
