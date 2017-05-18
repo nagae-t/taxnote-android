@@ -148,7 +148,7 @@
     <string name="help_rename_category_message">You have entries in the history using this category, so the category name in these entries will be also renamed automatically.</string>
     <string name="tap_here">(Tap here)</string>
     <string name="ask_anything_title">Ask Anything</string>
-    <string name="ask_anything_message">Hello, this is Non Umemoto, creator of Taxnote.  If you have any questions or requests, feel free to contact me via the help button.</string>
+    <string name="ask_anything_message">Hello, this is Non Umemoto, creator of the app.  If you have any questions or requests, feel free to contact me via the help button.</string>
     <string name="see_help">Help</string>
     <string name="data_export_suggest_title">Data Export</string>
     <string name="data_export_suggest_message">You can export your data into csv file to open it with Excel or other spreadsheets.</string>
@@ -160,7 +160,7 @@
     //--------------------------------------------------------------//
 
     <string name="rate_app_title">Review Request</string>
-    <string name="rate_app_message">Hi, this is Non Umemoto, creator of Taxnote.  I read all reviews of Taxnote to make it better, so I would really appreciate it if you could review it or just rate it.</string>
+    <string name="rate_app_message">Hi, this is Non Umemoto, creator of the app.  I read all reviews of Taxnote to make it better, so I would really appreciate it if you could review it or just rate it.</string>
     <string name="rate_app_yes_button">OK</string>
     <string name="rate_app_no_button">NO</string>
     <string name="rate_app_cancel_button">Later</string>
@@ -217,13 +217,13 @@
     <string name="import_data_overwrite_confirm_message">Do you want to restore this backup data?  Please note that the current data of your Android device will be overwritten with the new data.</string>
 
     <string name="release_note_title">Update Info :</string>
-    <string name="release_note_message">Taxnote has been updated.  Please check new features, changes, and bug fixes.</string>
+    <string name="release_note_message">The app has been updated.  Please check new features, changes, and bug fixes.</string>
 
     <!--//@@ここをアップデートごとに変更-->
     <string name="release_note_url">https://medium.com/@Taxnote/taxnote-android-has-cloud-feature-now-823e156dc179</string>
 
     <string name="update_check_title">Update available</string>
-    <string name="update_check_message">Please update to the latest version of Taxnote.</string>
+    <string name="update_check_message">Please update to the latest version of this app.</string>
     <string name="update_check_update">Update</string>
     <string name="update_check_later">Later</string>
     <string name="update_check_do_not_show_again">Don\'t show again</string>
@@ -332,7 +332,7 @@
     <string name="alert_input_forget_notify_message">Did you finish your data entry today?</string>
 
     <string name="data_backup_button">Backup</string>
-    <string name="data_backup_message">Backup your Taxnote data into GoogleDrive, Gmail or other services.  You can restore your data when you want to transfer your data to other Android devices.  Please check Help about how you can backup and restore. (You cannot transfer Taxnote data between Android and iOS versions.)</string>
+    <string name="data_backup_message">Backup your app data into GoogleDrive, Gmail or other services.  You can restore your data when you want to transfer your data to other Android devices.  Please check Help about how you can backup and restore. (You cannot transfer Taxnote data between Android and iOS versions.)</string>
 
     <string name="data_export_debit">Debit</string>
     <string name="data_export_account">Debit_Account</string>

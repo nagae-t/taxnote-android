@@ -46,7 +46,7 @@
     <string name="entry_tab_fragment_account2">受け取り方法</string>
     <string name="entry_tab_fragment_select_reason">科目を選択</string>
     <string name="tap_here_to_set_details">備考の入力はここをタップ</string>
-    <string name="save_data">仕訳帳に記録</string>
+    <string name="save_data">記録する</string>
     <string name="delete_done">削除しました。</string>
     <string name="delete_done_after_title">を削除しました。</string>
     <string name="pin_button">連続入力</string>
@@ -138,7 +138,7 @@
     <string name="AlertView_letsbegin">まずは、接待交際費などをタップ</string>
     <string name="AlertView_entryDone">入力完了！</string>
     <string name="AlertView_tapHistory">画面下の仕訳帳タブから編集できます。</string>
-    <string name="AlertView_inputPrice">金額を入力して「仕訳帳に記録」をタップ</string>
+    <string name="AlertView_inputPrice">金額を入力して「記録する」をタップ</string>
     <string name="AlertView_selectSummary">備考をタップ</string>
     <string name="Helpshift_ReplyTitle">返信があります</string>
     <string name="Helpshift_ReplyMessage">あなたのメッセージに返信が届きました。</string>
@@ -147,7 +147,7 @@
     <string name="help_rename_category_message">この科目は仕訳帳にすでに使われているので、該当する仕訳帳内の科目名も自動的に変更されます。</string>
     <string name="tap_here">（ここをタップ）</string>
     <string name="ask_anything_title">質問や要望はお気軽に</string>
-    <string name="ask_anything_message">こんにちは、Taxnoteを開発している梅本です。確定申告やアプリ操作で分からない部分や要望がありましたら、ヘルプからお気軽にお問い合わせください。開発からサポートまでやっているので直接お答えできます。</string>
+    <string name="ask_anything_message">こんにちは、アプリを開発している梅本です。確定申告やアプリ操作で分からない部分や要望がありましたら、ヘルプからお気軽にお問い合わせください。開発からサポートまでやっているので直接お答えできます。</string>
     <string name="see_help">ヘルプを見る</string>
     <string name="data_export_suggest_title">データの出力</string>
     <string name="data_export_suggest_message">右上のボタンから、入力したデータをエクセル、弥生会計、freee、MFクラウドなどに出力できます。</string>
@@ -159,7 +159,7 @@
     //--------------------------------------------------------------//
 
     <string name="rate_app_title">レビューのお願い</string>
-    <string name="rate_app_message">こんにちは、Taxnoteを開発している梅本です。ストアのレビューは全て読んでいるので、よければアプリへの要望を書いてもらえませんか？\n\n例えば、気に入ってて変えて欲しくないところ、今後の要望などを書いてもらえれば。\n\nもちろん一言メッセージや、星をつけるだけでも嬉しいです。\n\n良いレビューが増えるとDL数が増えやすく、開発が継続できるので、気がむいた時にどうぞよろしくお願いします。(ストア画面を下にスクロールするとレビュー画面があります)</string>
+    <string name="rate_app_message">こんにちは、アプリを開発している梅本です。ストアのレビューは全て読んでいるので、よければアプリへの要望を書いてもらえませんか？\n\n例えば、気に入ってて変えて欲しくないところ、今後の要望などを書いてもらえれば。\n\nもちろん一言メッセージや、星をつけるだけでも嬉しいです。\n\n良いレビューが増えるとDL数が増えやすく、開発が継続できるので、気がむいた時にどうぞよろしくお願いします。(ストア画面を下にスクロールするとレビュー画面があります)</string>
     <string name="rate_app_yes_button">レビューを書く</string>
     <string name="rate_app_no_button">やらない</string>
     <string name="rate_app_cancel_button">あとで</string>
@@ -175,7 +175,7 @@
     <string name="hs__conversation_started_message">返信はアプリ内のアラートでおしらせします。</string>
     <string name="hs__conversation_detail_error">検索</string>
     <string name="hs__review_title">アップデートに関して</string>
-    <string name="hs__review_message">こんにちは、Taxnoteを開発している梅本です。今回のアップデートの感想、または今後の要望などあれば遠慮なくお願いします。</string>
+    <string name="hs__review_message">こんにちは、アプリを開発している梅本です。今回のアップデートの感想、または今後の要望などあれば遠慮なくお願いします。</string>
 
 
     //--------------------------------------------------------------//
@@ -217,13 +217,13 @@
     <string name="import_data_overwrite_confirm_message">バックアップデータをインポートすると全ての既存データに上書きされてます。本当にインポートしてよろしいですか？</string>
 
     <string name="release_note_title">最新版の情報 : </string>
-    <string name="release_note_message">Taxnoteが最新版にアップデートされました。新しい機能、変更点、バグ修正などのお知らせをご確認ください。</string>
+    <string name="release_note_message">アプリが最新版にアップデートされました。新しい機能、変更点、バグ修正などのお知らせをご確認ください。</string>
 
     <!--//@@ここをアップデートごとに変更-->
     <string name="release_note_url">http://taxnote.hatenablog.com/entry/2017/05/12/084155</string>
 
     <string name="update_check_title">新しいアップデートがあります</string>
-    <string name="update_check_message">Taxnoteの最新版が更新されています。新しいバージョンにアップデートしてください。</string>
+    <string name="update_check_message">このアプリの最新版が更新されています。新しいバージョンにアップデートしてください。</string>
     <string name="update_check_update">アップデートする</string>
     <string name="update_check_later">あとで</string>
     <string name="update_check_do_not_show_again">アップデートしない</string>
@@ -332,7 +332,7 @@
     <string name="alert_input_forget_notify_message">本日の入力はお済みですか？</string>
 
     <string name="data_backup_button">バックアップ</string>
-    <string name="data_backup_message">Taxnoteに保存したすべてのデータと科目をマイドライブやGmailなどにバックアップし、好きな時に復元ができます。機種変更時や、別の端末にデータを移行したい時も便利です。バックアップと復元の手順は左下のヘルプをご覧ください。（iOS版とは互換性がなく、AndroidとiPhone/iPad端末でデータを移行することはできません。）</string>
+    <string name="data_backup_message">アプリに保存されたすべてのデータと科目をマイドライブやGmailなどにバックアップし、好きな時に復元ができます。機種変更時や、別の端末にデータを移行したい時も便利です。バックアップと復元の手順は左下のヘルプをご覧ください。（iOS版とは互換性がなく、AndroidとiPhone/iPad端末でデータを移行することはできません。）</string>
 
     <string name="data_export_debit">借方金額</string>
     <string name="data_export_account">借方勘定</string>
@@ -395,7 +395,7 @@
     <string name="cloud_purchase_status">Taxnoteクラウド</string>
     <string name="cloud_purchase_status_on">[有効] 管理する</string>
     <string name="cloud_purchase_status_off">[期間終了] 購読する</string>
-    <string name="taxnote_cloud_desc">さらに便利に使いたい方向けのオプションサービスです。\n以下の機能が有効になります。\n1. ３つの帳簿使用\n2. 複数の端末でデータを自動共有（自動バックアップ）\n3. 指定日の繰り返し入力\n4. 時系列チャートの表示\n\n複数人で別々の端末から同時にデータを管理したり、個人と会社など別々の帳簿を作成することもできます。また、家賃など毎月の固定支出などを指定した日に自動入力させることができます。</string>
+    <string name="taxnote_cloud_desc">さらに便利に使いたい方向けのオプションサービスです。\n以下の機能が有効になります。\n1. ３つの帳簿使用\n2. 複数のiOS・Android端末でデータを自動共有\n3. 指定日の繰り返し入力\n4. 時系列チャートの表示\n\n複数人で別々の端末から同時にデータを管理したり、個人と会社など別々の帳簿を作成することもできます。また、家賃など毎月の固定支出などを指定した日に自動入力させることができます。</string>
     <string name="add_project_without_cloud">複数の帳簿を作るには、Taxnoteクラウドへの加入が必要です。</string>
     <string name="not_cloud_input_limit_message">本帳簿以外での入力は、Taxnoteクラウドへの加入が必要です。（お試し入力は10件まで）</string>
     <string name="bar_graph_cloud_required_message">時系列チャートの表示はTaxnoteクラウドの購読が必要です。(支出・収入の時系列チャートは無料でお試し可能)</string>

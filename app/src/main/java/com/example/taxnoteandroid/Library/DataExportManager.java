@@ -9,6 +9,7 @@ import android.os.Environment;
 import android.support.v4.app.ShareCompat;
 
 import com.example.taxnoteandroid.CommonEntryRecyclerAdapter;
+import com.example.taxnoteandroid.Library.zeny.ZNUtils;
 import com.example.taxnoteandroid.R;
 import com.example.taxnoteandroid.TaxnoteConsts;
 import com.example.taxnoteandroid.dataManager.AccountDataManager;
@@ -143,6 +144,13 @@ public class DataExportManager implements TaxnoteConsts {
 
         if (mode.compareTo(EXPORT_FORMAT_TYPE_CSV) == 0) { // CSV
 
+            //@@@ ここ、Zenyと分岐する必要あり
+            if (!ZNUtils.isZeny()) {
+
+            } else {
+
+            }
+
             String date = this.context.getResources().getString(R.string.entry_tab_fragment_date);
             String leftAccountNameColumn = this.context.getResources().getString(R.string.data_export_debit);
             String LeftAccountPriceColumn = this.context.getResources().getString(R.string.data_export_account);
@@ -158,7 +166,6 @@ public class DataExportManager implements TaxnoteConsts {
             setColumn(3, new RightAccountNameColumn());
             setColumn(4, new RightAccountPriceColumn());
             setColumn(5, new SubAccountNameColumn());
-//            setColumn(6, new TotalPriceColumn());
             setSeparator(",");
 
         } else if (mode.compareTo(EXPORT_FORMAT_TYPE_YAYOI) == 0) { // 弥生
