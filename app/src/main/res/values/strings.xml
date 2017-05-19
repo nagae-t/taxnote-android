@@ -37,7 +37,7 @@
     <string name="Error">Error</string>
     <string name="please_enter_price">Please enter the price.</string>
     <string name="history_data_empty">Please enter data from Entry tab.</string>
-    <string name="using_this_account_in_entry_already">You have records using this account, please delete them from the History.</string>
+    <string name="using_this_account_in_entry_already">You have records using this category, please delete them from the History.</string>
 
 
     //--------------------------------------------------------------//

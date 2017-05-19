@@ -58,7 +58,6 @@
     <string name="AlertView_thirdIntroMessage">バナー広告がありますが、無料でもずっと使い続けられます。</string>
     <string name="AlertView_letsbegin">まずは、「食費」などをタップ</string>
     <string name="AlertView_tapHistory">画面下の履歴タブから編集できます。</string>
-    <string name="AlertView_selectSummary">メモをタップ</string>
     <string name="reorder_how_to_message">カテゴリをしばらくタップし続けると色が変わるので、そのまま押し続けながら上下に移動させてください。</string>
     <string name="help_rename_category_message">このカテゴリを使った記録がすでに存在するため、すでに記録した履歴内のカテゴリ名も自動的に変更されます。</string>
     <string name="data_export_suggest_message">右上のボタンから、入力したデータをExcelなどの表計算ソフト形式に出力できます。</string>
