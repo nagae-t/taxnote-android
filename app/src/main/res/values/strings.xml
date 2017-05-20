@@ -160,7 +160,7 @@
     //--------------------------------------------------------------//
 
     <string name="rate_app_title">Review Request</string>
-    <string name="rate_app_message">Hi, this is Non Umemoto, creator of the app.  I read all reviews of Taxnote to make it better, so I would really appreciate it if you could review it or just rate it.</string>
+    <string name="rate_app_message">Hi, this is Non Umemoto, creator of the app.  I read all reviews to make it better, so I would really appreciate it if you could review it or just rate it.</string>
     <string name="rate_app_yes_button">OK</string>
     <string name="rate_app_no_button">NO</string>
     <string name="rate_app_cancel_button">Later</string>
@@ -332,7 +332,7 @@
     <string name="alert_input_forget_notify_message">Did you finish your data entry today?</string>
 
     <string name="data_backup_button">Backup</string>
-    <string name="data_backup_message">Backup your app data into GoogleDrive, Gmail or other services.  You can restore your data when you want to transfer your data to other Android devices.  Please check Help about how you can backup and restore. (You cannot transfer Taxnote data between Android and iOS versions.)</string>
+    <string name="data_backup_message">Backup your app data into GoogleDrive, Gmail or other services.  You can restore your data when you want to transfer your data to other Android devices.  Please check Help about how you can backup and restore. (You cannot transfer data between Android and iOS versions with this feature, to do that, you need to use Cloud Sync of Taxnote Cloud.)</string>
 
     <string name="data_export_debit">Debit</string>
     <string name="data_export_account">Debit_Account</string>

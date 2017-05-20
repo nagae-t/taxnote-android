@@ -332,7 +332,7 @@
     <string name="alert_input_forget_notify_message">本日の入力はお済みですか？</string>
 
     <string name="data_backup_button">バックアップ</string>
-    <string name="data_backup_message">アプリに保存されたすべてのデータと科目をマイドライブやGmailなどにバックアップし、好きな時に復元ができます。機種変更時や、別の端末にデータを移行したい時も便利です。バックアップと復元の手順は左下のヘルプをご覧ください。（iOS版とは互換性がなく、AndroidとiPhone/iPad端末でデータを移行することはできません。）</string>
+    <string name="data_backup_message">アプリに保存されたすべてのデータと科目をマイドライブやGmailなどにバックアップし、好きな時に復元ができます。機種変更時や、別の端末にデータを移行したい時も便利です。バックアップと復元の手順は左下のヘルプをご覧ください。（iOS版とは互換性がなく、AndroidとiPhone/iPad端末でデータを移行するには有料版の自動同期が必要です。）</string>
 
     <string name="data_export_debit">借方金額</string>
     <string name="data_export_account">借方勘定</string>

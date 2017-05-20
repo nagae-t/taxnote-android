@@ -29,7 +29,7 @@
     //--------------------------------------------------------------//
     // -- Help Message --
     //--------------------------------------------------------------//
-    
+
     <string name="AlertView_firstIntroTitle">About Zeny</string>
     <string name="AlertView_firstIntroMessage">Zeny is a simple finance manager.</string>
     <string name="AlertView_secondIntroTitle">Fast</string>
@@ -76,4 +76,8 @@
     <string name="bar_graph_cloud_required_message">Please upgrade to Zeny Premium to use the bar charts. (You can try Income and Expense bar charts for free)</string>
     <string name="recurring_cloud_required_message">You need to subscribe to Zeny Premium to use Recurring Entries as it works in the cloud server.</string>
     <string name="re_login_title">Please login to Zeny Premium</string>
+
+    <string name="alert_notification_desc">If the notification don\'t work, enable Notifications in the Android Settings => Apps => Zeny => Notifications.</string>
+    <string name="data_backup_message">Backup your app data into GoogleDrive, Gmail or other services.  You can restore your data when you want to transfer your data to other Android devices.  Please check Help about how you can backup and restore. (You cannot transfer data between Android and iOS versions with this feature, to do that, you need to use Cloud Sync of Zeny Premium.)</string>
+
 </resources>

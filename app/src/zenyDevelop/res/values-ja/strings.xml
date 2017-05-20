@@ -116,4 +116,7 @@
     <string name="recurring_cloud_required_message">繰り返し入力はサーバ上で実行するので、Zenyプレミアムへの加入が必要です。</string>
     <string name="re_login_title">Zenyプレミアムにログインしてください</string>
 
+
+    <string name="alert_notification_desc">通知が効かない時は端末の設定 => アプリ => Zeny から通知を許可してください。</string>
+
 </resources>
