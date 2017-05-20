@@ -427,7 +427,6 @@
 
     <string name="edit_entry_expense">支出の編集</string>
     <string name="edit_entry_income">収入の編集</string>
-
     <string name="data_export_desc">記録したデータをエクセルなどの表計算ソフトに取り込める形式で出力します。</string>
 
     <string name="re_login_title">Taxnoteクラウドにログインしてください</string>

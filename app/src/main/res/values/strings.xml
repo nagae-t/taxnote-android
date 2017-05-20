@@ -425,6 +425,10 @@
     <string name="date_string_format_to_year_month">yyyy/M</string>
     <string name="date_string_format_to_year">yyyy</string>
 
+    <string name="edit_entry_expense">Edit Expense</string>
+    <string name="edit_entry_income">Edit Income</string>
+
+    <string name="data_export_desc">Export data as format which can be opened by Excel or Google spreadsheet.</string>
     <string name="re_login_title">Please login to Taxnote Cloud</string>
     <string name="re_login_message">For security reasons, you should re-login after a certain period of time.</string>
 
