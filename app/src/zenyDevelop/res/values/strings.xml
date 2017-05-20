@@ -29,68 +29,51 @@
     //--------------------------------------------------------------//
     // -- Help Message --
     //--------------------------------------------------------------//
-
+    
     <string name="AlertView_firstIntroTitle">About Zeny</string>
-    <string name="AlertView_firstIntroMessage">片手で爆速入力できる家計簿アプリです。</string>
-    <string name="AlertView_secondIntroTitle">とにかくシンプル</string>
-    <string name="AlertView_secondIntroMessage">機能やボタンの数は最小限に抑え、シンプルさを追求してます。</string>
-    <string name="AlertView_thirdIntroTitle">無料でも使えます</string>
-    <string name="AlertView_thirdIntroMessage">バナー広告がありますが、無料でもずっと使い続けられます。</string>
-    <string name="AlertView_letsbegin">まずは、「食費」などをタップ</string>
+    <string name="AlertView_firstIntroMessage">Zeny is a simple finance manager.</string>
+    <string name="AlertView_secondIntroTitle">Fast</string>
+    <string name="AlertView_secondIntroMessage">You can make an entry very fast.</string>
+    <string name="AlertView_thirdIntroTitle">Free</string>
+    <string name="AlertView_thirdIntroMessage">You can keep using it for free with ads.</string>
+    <string name="AlertView_letsbegin">Tap [Food] to start.</string>
 
 
     //--------------------------------------------------------------//
     // -- All --
     //--------------------------------------------------------------//
 
-    <!--//@@@ここの途中-->
-    <string name="profit_loss_table">レポート</string>
-    <string name="master_project_name">メインアカウント</string>
-    <string name="project_settings">アカウントを追加、編集</string>
-    <string name="delete_project_or_edit_name">アカウントを削除・名前変更</string>
-    <string name="new_project_name">新しいアカウントの名前</string>
-    <string name="add_new_project">アカウントを追加</string>
-    <string name="delete_project_confirm_message">このアカウントを削除してもよいですか？</string>
-    <string name="delete_current_project_message">使用中のアカウントは削除できません。他のアカウントに切り替えてから削除してください。</string>
-    <string name="max_add_project_message">追加できるアカウントの上限に達しています。</string>
-    <string name="created_new_project_message">新しいアカウントを作成しました。</string>
-    <string name="tap_project_to_edit_name">アカウント名をタップすると名前を変更できます。</string>
+    <string name="project_settings">Add or Edit Accounts</string>
+    <string name="add_new_project">Add an Account</string>
+    <string name="delete_project_confirm_message">Are you sure you want to delete this account?</string>
+    <string name="delete_current_project_message">You cannot delete the account you are using now, please select other account and try again.</string>
+    <string name="max_add_project_message">The maximum numbers of accounts has been reached already.</string>
+    <string name="created_new_project_message">New account has been created!</string>
+    <string name="tap_project_to_edit_name">You can rename it if you tap an account.</string>
+    <string name="taxnote_data_import">Import data into Zeny</string>
 
-    <string name="taxnote_data_import">Zenyへインポート</string>
 
     <!--//@@ここをアップデートごとに変更-->
     <string name="release_note_url">http://taxnote.hatenablog.com/entry/2017/05/12/084155</string>
 
-    <string name="rename_category">カテゴリ名変更</string>
-    <string name="profit_loss_settings">レポートの設定</string>
-    <string name="balance_carry_forward_desc">レポートの残高が、以前の残高を繰り越した数値になります。</string>
-    <string name="monthly_closing_date_desc">1日から14日までを選択した時は、選択した日までが前月分のレポートに表示されます。15日以降を選択した時は、選択した日より後が次月分のレポートに表示されます。例えば、25日を選択した場合、先月26日〜今月25日までが今月分のレポートに表示されます。</string>
-    <string name="start_month_of_year_desc">レポートで年別表示した時の開始月です。例えば、4月を選択した場合、その年の4月から翌年の3月末まで表示します。月の数字と組み合わせて、2015年4月10日〜2016年4月9日などの年度表示も可能です。</string>
-    <string name="profit_loss_export">レポートの出力</string>
+    <string name="data_export_debit">Category</string>
+    <string name="data_export_account">Price</string>
 
 
-    <!--//@@@ここチェックするひつようあり-->
-    <string name="data_export_debit">カテゴリ</string>
-    <string name="data_export_account">金額</string>
-    <string name="data_export_details">メモ</string>
+    <string name="taxnote_cloud_first_free">Zeny Premium</string>
+    <string name="taxnote_cloud_login_desc">Please login with Zeny Premium account. (You can create it after you subscribed to Zeny Premium.)</string>
+    <string name="taxnote_cloud_register_desc">Your Zeny Premium is active now, but you need to log into your Premium account(not AppleID or PlayStoreID) to use cloud sync (auto-backup).</string>
+    <string name="cloud">Premium</string>
+    <string name="non_registered_email_desc">The email address is not registered on Zeny Premium.</string>
 
+    <string name="cloud_sign_up_title">Please Create a Zeny Premium account</string>
+    <string name="cloud_sign_up_message">Your Zeny Premium is active now, but please create an account to use cloud sync (auto backup).</string>
+    <string name="cloud_purchase_status">Zeny Premium</string>
+    <string name="taxnote_cloud_desc">Monthly subscription with following features.\n1. No Ads\n2. Multiple Accounts\n3. Cloud Sync with different devices(auto-backup)\n4. Recurring Entries\n5. Bar Charts</string>
 
-    <string name="taxnote_cloud_first_free">Zenyプレミアム（初回無料）</string>
-    <string name="taxnote_cloud_login_desc">Zenyプレミアム専用アカウントでログインできます。（アカウントはZenyプレミアムを購読した後に作成できます。）</string>
-    <string name="taxnote_cloud_register_desc">現在Zenyプレミアムを購読中ですが、自動共有（自動バックアップ)を有効にするには専用アカウントでログインする必要があります。\n（GooglePlayストアIDとは別のZeny専用アカウントです。）</string>
-    <string name="cloud">プレミアム</string>
-    <string name="reset_password_desc">Zenyプレミアムに登録したメールアドレスに、パスワードを再設定できるリンクを送信します。</string>
-    <string name="non_registered_email_desc">Zenyプレミアムに指定したメールアドレスが登録されていません。</string>
-    <string name="cloud_sign_up_title">プレミアム専用アカウントを作成してください</string>
-    <string name="cloud_sign_up_message">現在、Zenyプレミアムを購読中ですが、専用アカウントを作成することでデータの自動共有（自動バックアップ）が使えます。</string>
-
-    <string name="cloud_purchase_status">Zenyプレミアム</string>
-    <string name="taxnote_cloud_desc">さらに便利に使いたい方向けのオプションサービスです。\n以下の機能が有効になります。\n1. 広告を削除\n2. ３つのアカウント使用\n3. 複数のiOS・Android端末でデータを自動共有\n4. 指定日の繰り返し入力\n5. 時系列チャートの表示\n\n複数人で別々の端末から同時にデータを管理したり、個人と会社など別々のアカウントを作成することもできます。また、家賃など毎月の固定支出などを指定した日に自動入力させることができます。</string>
-    <string name="add_project_without_cloud">複数のアカウントを作るには、Zenyプレミアムへの加入が必要です。</string>
-    <string name="not_cloud_input_limit_message">本アカウント以外での入力は、Zenyプレミアムへの加入が必要です。（お試し入力は10件まで）</string>
-    <string name="bar_graph_cloud_required_message">時系列チャートの表示はZenyプレミアムの購読が必要です。(支出・収入の時系列チャートは無料でお試し可能)</string>
-    <string name="reason_item">カテゴリ</string>
-    <string name="recurring_cloud_required_message">繰り返し入力はサーバ上で実行するので、Zenyプレミアムへの加入が必要です。</string>
-    <string name="re_login_title">Zenyプレミアムにログインしてください</string>
-
+    <string name="add_project_without_cloud">Please upgrade to Zeny Premium to use multiple accounts.</string>
+    <string name="not_cloud_input_limit_message">Please upgrade to Zeny Premium to make an entry with additional accounts. (You can enter up to 10 with free trial)</string>
+    <string name="bar_graph_cloud_required_message">Please upgrade to Zeny Premium to use the bar charts. (You can try Income and Expense bar charts for free)</string>
+    <string name="recurring_cloud_required_message">You need to subscribe to Zeny Premium to use Recurring Entries as it works in the cloud server.</string>
+    <string name="re_login_title">Please login to Zeny Premium</string>
 </resources>

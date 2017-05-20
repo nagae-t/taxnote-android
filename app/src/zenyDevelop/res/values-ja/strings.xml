@@ -92,7 +92,7 @@
     <string name="profit_loss_export">レポートの出力</string>
 
 
-    <!--//@@@ここチェックするひつようあり-->
+    <!--//@@@ここHistoryエクスポートのcsvをチェックするひつようあり-->
     <string name="data_export_debit">カテゴリ</string>
     <string name="data_export_account">金額</string>
     <string name="data_export_details">メモ</string>
