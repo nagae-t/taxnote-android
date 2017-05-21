@@ -33,6 +33,7 @@ import com.example.taxnoteandroid.Library.FileUtil;
 import com.example.taxnoteandroid.Library.taxnote.TNApi;
 import com.example.taxnoteandroid.Library.taxnote.TNApiModel;
 import com.example.taxnoteandroid.Library.taxnote.TNApiUser;
+import com.example.taxnoteandroid.Library.zeny.ZNUtils;
 import com.example.taxnoteandroid.dataManager.DefaultDataInstaller;
 import com.example.taxnoteandroid.dataManager.ProjectDataManager;
 import com.example.taxnoteandroid.dataManager.SharedPreferencesManager;
@@ -627,7 +628,17 @@ public class SettingsTabFragment extends Fragment {
         binding.help.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Support.showFAQSection(getActivity(),"22");
+
+                 binding.help.setOnClickListener(new View.OnClickListener() {
+                     @Override
+                     public void onClick(View view) {
+                         if (!ZNUtils.isZeny()) {
+                             Support.showFAQSection(getActivity(),"22");
+                         } else {
+                             Support.showFAQSection(getActivity(),"27");
+                         }
+                     }
+                 });
             }
         });
     }

@@ -79,8 +79,6 @@ public class ProfitLossExportActivity extends DefaultCommonActivity {
                 }
             });
         } else {
-
-            //@@@ ここZenyにもヘルプつける
             binding.help.setVisibility(View.GONE);
         }
 

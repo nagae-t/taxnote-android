@@ -474,7 +474,6 @@ public class DialogManager {
         dialogFragment.show(fragmentManager, null);
     }
 
-    //@@@
     public static void showChartsTapSuggestMessage(final Context context, FragmentManager fragmentManager) {
 
         if (SharedPreferencesManager.isChartsTapMessageDone(context)) {
@@ -490,7 +489,6 @@ public class DialogManager {
 
         SharedPreferencesManager.saveChartsTapMessageDone(context);
 
-        //@@@
         // Custom Alert
         final TNSimpleDialogFragment dialogFragment = TNSimpleDialogFragment.newInstance();
         dialogFragment.setTitle(context.getString(R.string.data_export_suggest_title));
