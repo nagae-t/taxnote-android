@@ -9,7 +9,7 @@
         app:showAsAction="always" />
 
     <item
-        android:id="@+id/help_in_entry_tab"
+        android:id="@+id/help_in_settings_tab"
         android:title="@string/help"
         android:visible="false"
         app:showAsAction="always" />

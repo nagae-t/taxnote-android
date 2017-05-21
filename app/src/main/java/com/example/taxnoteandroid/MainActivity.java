@@ -207,7 +207,7 @@ public class MainActivity extends DefaultCommonActivity {
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        MenuItem helpMenu = menu.findItem(R.id.help_in_entry_tab);
+        MenuItem helpMenu = menu.findItem(R.id.help_in_settings_tab);
         MenuItem exportMenu = menu.findItem(R.id.data_export);
         MenuItem searchMenu = menu.findItem(R.id.action_search);
         MenuItem periodDivMenu = menu.findItem(R.id.action_period_div);
@@ -226,7 +226,6 @@ public class MainActivity extends DefaultCommonActivity {
         switch (binding.pager.getCurrentItem()) {
 
             case 0: // 入力
-                helpMenu.setVisible(true);
                 break;
             case 1: // 仕訳帳
                 exportMenu.setVisible(true);
@@ -245,6 +244,7 @@ public class MainActivity extends DefaultCommonActivity {
                 isExpenseMenu.setTitle(menuTitle);
                 break;
             case 4: // 設定
+                helpMenu.setVisible(true);
                 break;
         }
         return super.onPrepareOptionsMenu(menu);
@@ -255,8 +255,12 @@ public class MainActivity extends DefaultCommonActivity {
 
         switch (item.getItemId()) {
 
-            case R.id.help_in_entry_tab:
-                Support.showFAQSection(this,"22");
+            case R.id.help_in_settings_tab:
+                if (!ZNUtils.isZeny()) {
+                    Support.showFAQSection(this,"22");
+                } else {
+                    Support.showFAQSection(this,"27");
+                }
                 break;
 
             case R.id.data_export:
