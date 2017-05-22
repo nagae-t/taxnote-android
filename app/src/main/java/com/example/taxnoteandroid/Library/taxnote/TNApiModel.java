@@ -1091,6 +1091,9 @@ public class TNApiModel extends TNApi {
                 summary.project = mProjectDataManager.findByUuid(obj.get("project_uuid").getAsString());
                 summary.reason = mReasonDataManager.findByUuid(obj.get("reason_uuid").getAsString());
 
+                if (summary.reason == null)
+                    continue;
+
                 if (isNewSummary) {
                     mSummaryDataManager.save(summary);
                 } else {
@@ -1135,6 +1138,9 @@ public class TNApiModel extends TNApi {
                 recurring.account = mAccountDataManager.findByUuid(obj.get("account_uuid").getAsString());
                 recurring.project = mProjectDataManager.findByUuid(obj.get("project_uuid").getAsString());
 
+                if (recurring.reason == null || recurring.account == null)
+                    continue;
+
                 if (isNewRec) {
                     mRecurringDataManager.save(recurring);
                 } else {
@@ -1178,6 +1184,9 @@ public class TNApiModel extends TNApi {
                 entry.project = mProjectDataManager.findByUuid(obj.get("project_uuid").getAsString());
                 entry.reason = mReasonDataManager.findByUuid(obj.get("reason_uuid").getAsString());
                 entry.account = mAccountDataManager.findByUuid(obj.get("account_uuid").getAsString());
+
+                if (entry.reason == null || entry.account == null)
+                    continue;
 
                 if (isNewEntry) {
                     mEntryDataManager.save(entry);
