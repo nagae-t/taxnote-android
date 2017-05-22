@@ -273,7 +273,12 @@ public class UpgradeActivity extends DefaultCommonActivity {
         binding.help.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Support.showSingleFAQ(UpgradeActivity.this, "108");
+
+                if (ZNUtils.isZeny()) {
+                    Support.showSingleFAQ(UpgradeActivity.this, "117");
+                } else {
+                    Support.showSingleFAQ(UpgradeActivity.this, "108");
+                }
             }
         });
     }

@@ -600,7 +600,12 @@ public class SettingsTabFragment extends Fragment {
                 .setNeutralButton(getResources().getString(R.string.help), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        Support.showSingleFAQ(getActivity(),"113");
+
+                        if (ZNUtils.isZeny()) {
+                            Support.showSingleFAQ(getActivity(),"116");
+                        } else {
+                            Support.showSingleFAQ(getActivity(),"113");
+                        }
                     }
                 })
                 .setNegativeButton(getResources().getString(R.string.cancel), new DialogInterface.OnClickListener() {

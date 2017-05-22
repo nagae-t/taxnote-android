@@ -90,9 +90,6 @@
     <string name="monthly_closing_date_desc">1日から14日までを選択した時は、選択した日までが前月分のレポートに表示されます。15日以降を選択した時は、選択した日より後が次月分のレポートに表示されます。例えば、25日を選択した場合、先月26日〜今月25日までが今月分のレポートに表示されます。</string>
     <string name="start_month_of_year_desc">レポートで年別表示した時の開始月です。例えば、4月を選択した場合、その年の4月から翌年の3月末まで表示します。月の数字と組み合わせて、2015年4月10日〜2016年4月9日などの年度表示も可能です。</string>
     <string name="profit_loss_export">レポートの出力</string>
-
-
-    <!--//@@@ここHistoryエクスポートのcsvをチェックするひつようあり-->
     <string name="data_export_debit">カテゴリ</string>
     <string name="data_export_account">金額</string>
     <string name="data_export_details">メモ</string>
