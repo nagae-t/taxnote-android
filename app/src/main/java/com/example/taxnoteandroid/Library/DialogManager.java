@@ -402,6 +402,11 @@ public class DialogManager {
     }
 
     public static void showBusinessModelMessage(final Context context, FragmentManager fragmentManager) {
+        
+        // Skip for Zeny
+        if (ZNUtils.isZeny()) {
+            return;
+        }
 
         // Skip Taxnote Plus users
         if (UpgradeManger.taxnotePlusIsActive(context)) {
