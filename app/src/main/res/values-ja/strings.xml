@@ -434,4 +434,8 @@
 
     <string name="other_apps">作者のアプリ</string>
 
+    <string name="data_export_subject">補助科目・税区分を出力</string>
+    <string name="settings_valid">有効</string>
+    <string name="settings_invalid">無効</string>
+
 </resources>

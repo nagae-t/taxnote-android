@@ -93,6 +93,14 @@ public class DataExportActivity extends DefaultCommonActivity {
                 manager.export(); // Generate CSV file and send it by email.
             }
         });
+
+        // 補助科目のボタン
+        binding.dataExportSubjectButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
     }
 
 
