@@ -3,6 +3,7 @@ package com.example.taxnoteandroid.Library;
 import android.content.Context;
 
 import com.example.taxnoteandroid.dataManager.ProjectDataManager;
+import com.example.taxnoteandroid.dataManager.SharedPreferencesManager;
 
 import java.text.DecimalFormat;
 import java.text.ParseException;
@@ -85,5 +86,20 @@ public class ValueConverter {
             return 0;
         }
         return cal.getTimeInMillis();
+    }
+
+    public static String replaceFullMark(String text) {
+        text = text.replace("＠", "@");
+        text = text.replace("￥", "¥");
+        return text;
+    }
+
+    public static String parseAccountName(Context context, String name) {
+        boolean isExportSubject = SharedPreferencesManager.getExportSujectEnable(context);
+        if (!isExportSubject) return name;
+
+        String accountName = "";
+
+        return accountName;
     }
 }

@@ -163,6 +163,10 @@ public class DataExportManager implements TaxnoteConsts {
 
                 // Taxnoteは複式簿記
             } else {
+
+                // 補助科目が有効かどうか
+                boolean isExportSubject = SharedPreferencesManager.getExportSujectEnable(context);
+
                 String date = this.context.getResources().getString(R.string.entry_tab_fragment_date);
                 String leftAccountNameColumn = this.context.getResources().getString(R.string.data_export_debit);
                 String LeftAccountPriceColumn = this.context.getResources().getString(R.string.data_export_account);
