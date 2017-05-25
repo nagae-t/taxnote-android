@@ -1,5 +1,6 @@
 package com.example.taxnoteandroid;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
@@ -129,14 +130,20 @@ public class DataExportActivity extends DefaultCommonActivity {
                 .add(dialogFragment, TAG_EXPORT_SUBJECT_DIALOG_FRAGMENT)
                 .commitAllowingStateLoss();
     }
+    // 補助科目の設定
     private View.OnClickListener exportSubjectBtnOnClick = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
             int viewId = view.getId();
+            Context context = view.getContext();
             switch (viewId) {
                 case R.id.subject_valid_btn:
+                    SharedPreferencesManager.saveExportSubjectEnable(context, true);
+                    binding.dataExportSubjectVal.setText(R.string.settings_valid);
                     break;
                 case R.id.subject_invalid_btn:
+                    SharedPreferencesManager.saveExportSubjectEnable(context, false);
+                    binding.dataExportSubjectVal.setText(R.string.settings_invalid);
                     break;
                 case R.id.subject_help_btn:
                     break;
