@@ -94,12 +94,19 @@ public class ValueConverter {
         return text;
     }
 
-    public static String parseAccountName(Context context, String name) {
+    public static String parseCategoryName(Context context, String name) {
         boolean isExportSubject = SharedPreferencesManager.getExportSujectEnable(context);
         if (!isExportSubject) return name;
 
-        String accountName = "";
+        name = replaceFullMark(name);
+        int index1 = name.indexOf("@");
+        int index2 = name.indexOf("¥");
+        if (index1 > -1) {
+            name = name.substring(0, index1);
+        } else if (index2 > -1) {
+            name = name.substring(0, index2);
+        }
 
-        return accountName;
+        return name;
     }
 }

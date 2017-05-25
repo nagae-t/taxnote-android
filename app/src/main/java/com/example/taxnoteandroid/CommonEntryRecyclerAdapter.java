@@ -140,8 +140,10 @@ public class CommonEntryRecyclerAdapter extends RecyclerView.Adapter<BindingHold
                 // Name
                 String nameText;
                 if (!ZNUtils.isZeny()) {
-                    nameText = (entry.isExpense) ? entry.reason.name + " / " + entry.account.name
-                            : entry.account.name + " / " + entry.reason.name;
+                    String reasonName = ValueConverter.parseCategoryName(mContext, entry.reason.name);
+                    String accName = ValueConverter.parseCategoryName(mContext, entry.account.name);
+                    nameText = (entry.isExpense) ? reasonName + " / " + accName
+                            : accName + " / " + reasonName;
                 } else {
                     nameText = entry.reason.name;
                 }
