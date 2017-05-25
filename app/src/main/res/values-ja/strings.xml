@@ -437,5 +437,6 @@
     <string name="data_export_subject">補助科目・税区分を出力</string>
     <string name="settings_valid">有効</string>
     <string name="settings_invalid">無効</string>
+    <string name="data_export_subject_desc">勘定科目や支払方法を「科目名@補助科目名」と変更すると、補助科目も出力できます。「普通預金@りそな銀行」とすれば、普通預金が科目名、りそな銀行が補助科目となります。「勘定科目名@補助科目名¥税区分名」とすると、税区分も出力できます。詳しくはヘルプをどうぞ。</string>
 
 </resources>
