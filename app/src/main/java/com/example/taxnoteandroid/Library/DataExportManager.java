@@ -249,6 +249,12 @@ public class DataExportManager implements TaxnoteConsts {
             setColumn(11, new DateColumn());
             setColumn(12, new AccountNameColumn());
             setColumn(13, new RightAccountPriceColumn());
+
+            if (isSubjectEnable) {
+                setColumn(6, new DebitTaxNameColumn("対象外"));
+                setColumn(9, new DebitSubAccountColumn());
+            }
+
             setSeparator(",");
 
         } else if (mode.compareTo(EXPORT_FORMAT_TYPE_MFCLOUD) == 0) { // MF Could
@@ -684,12 +690,15 @@ public class DataExportManager implements TaxnoteConsts {
     private class ReasonNameColumn extends Column {
         @Override
         public String getValue() {
+            String name = "";
             if (currentEntry.reason == null) {
-                if (currentEntry.reasonName == null) return "";
-                return currentEntry.reasonName;
+                if (currentEntry.reasonName == null) return name;
+                name = currentEntry.reasonName;
+            } else {
+                name = currentEntry.reason.name;
             }
 
-            return (currentEntry.reason.name);
+            return ValueConverter.parseCategoryName(context, name);
         }
     }
 
@@ -795,6 +804,8 @@ public class DataExportManager implements TaxnoteConsts {
         @Override
         public String getValue() {
             String nameVal = (currentEntry.isExpense ? currentEntry.reason.name : currentEntry.account.name);
+            if (mode.compareTo(EXPORT_FORMAT_TYPE_FREEE) == 0)
+                nameVal = currentEntry.reason.name;
             return ValueConverter.parseSubCategoryName(context, nameVal, defaultName);
         }
     }
@@ -811,6 +822,8 @@ public class DataExportManager implements TaxnoteConsts {
         @Override
         public String getValue() {
             String nameVal = (currentEntry.isExpense ? currentEntry.reason.name : currentEntry.account.name);
+            if (mode.compareTo(EXPORT_FORMAT_TYPE_FREEE) == 0)
+                nameVal = currentEntry.reason.name;
             return ValueConverter.parseTaxPartName(context, nameVal, defaultName);
         }
     }
