@@ -110,8 +110,7 @@ public class ValueConverter {
         return name;
     }
 
-    public static String parseSubCategoryName(Context context, String name) {
-        String defaultName = "";
+    public static String parseSubCategoryName(Context context, String name, String defaultName) {
         boolean isExportSubject = SharedPreferencesManager.getExportSujectEnable(context);
         if (!isExportSubject) return defaultName;
 
@@ -134,8 +133,7 @@ public class ValueConverter {
         return defaultName;
     }
 
-    public static String parseTaxPartName(Context context, String name) {
-        String defaultName = "";
+    public static String parseTaxPartName(Context context, String name, String defaultName) {
         boolean isExportSubject = SharedPreferencesManager.getExportSujectEnable(context);
         if (!isExportSubject) return defaultName;
 

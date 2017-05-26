@@ -226,6 +226,14 @@ public class DataExportManager implements TaxnoteConsts {
             setColumn(16, new MemoNameColumn());
             setColumn(19, new FixedTextColumn("0"));
             setColumn(24, new FixedTextColumn("NO"));
+
+            if (isSubjectEnable) {
+                setColumn(5, new DebitSubAccountColumn());
+                setColumn(7, new DebitTaxNameColumn("対象外"));
+                setColumn(11, new CreditSubAccountColumn());
+                setColumn(13, new CreditTaxNameColumn("対象外"));
+            }
+
             setSeparator("\t");
 
         } else if (mode.compareTo(EXPORT_FORMAT_TYPE_FREEE) == 0) { // Freee
@@ -776,38 +784,66 @@ public class DataExportManager implements TaxnoteConsts {
     }
 
     private class DebitSubAccountColumn extends Column {
+        private String defaultName = "";
+
+        public DebitSubAccountColumn() {
+        }
+        public DebitSubAccountColumn(String _defaultName) {
+            this.defaultName = _defaultName;
+        }
 
         @Override
         public String getValue() {
             String nameVal = (currentEntry.isExpense ? currentEntry.reason.name : currentEntry.account.name);
-            return ValueConverter.parseSubCategoryName(context, nameVal);
+            return ValueConverter.parseSubCategoryName(context, nameVal, defaultName);
         }
     }
 
     private class DebitTaxNameColumn extends Column {
+        private String defaultName = "";
+
+        public DebitTaxNameColumn() {
+        }
+        public DebitTaxNameColumn(String _defaultName) {
+            this.defaultName = _defaultName;
+        }
 
         @Override
         public String getValue() {
             String nameVal = (currentEntry.isExpense ? currentEntry.reason.name : currentEntry.account.name);
-            return ValueConverter.parseTaxPartName(context, nameVal);
+            return ValueConverter.parseTaxPartName(context, nameVal, defaultName);
         }
     }
 
     private class CreditSubAccountColumn extends Column {
+        private String defaultName = "";
+
+        public CreditSubAccountColumn() {
+        }
+        public CreditSubAccountColumn(String _defaultName) {
+            this.defaultName = _defaultName;
+        }
 
         @Override
         public String getValue() {
             String nameVal = (currentEntry.isExpense ? currentEntry.account.name : currentEntry.reason.name);
-            return ValueConverter.parseSubCategoryName(context, nameVal);
+            return ValueConverter.parseSubCategoryName(context, nameVal, defaultName);
         }
     }
 
     private class CreditTaxNameColumn extends Column {
+        private String defaultName = "";
+
+        public CreditTaxNameColumn() {
+        }
+        public CreditTaxNameColumn(String _defaultName) {
+            this.defaultName = _defaultName;
+        }
 
         @Override
         public String getValue() {
             String nameVal = (currentEntry.isExpense ? currentEntry.account.name : currentEntry.reason.name);
-            return ValueConverter.parseTaxPartName(context, nameVal);
+            return ValueConverter.parseTaxPartName(context, nameVal, defaultName);
         }
     }
 
