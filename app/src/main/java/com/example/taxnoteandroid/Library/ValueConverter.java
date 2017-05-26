@@ -111,41 +111,51 @@ public class ValueConverter {
     }
 
     public static String parseSubCategoryName(Context context, String name) {
+        String defaultName = "";
         boolean isExportSubject = SharedPreferencesManager.getExportSujectEnable(context);
-        if (!isExportSubject) return name;
+        if (!isExportSubject) return defaultName;
 
         name = replaceFullMark(name);
         int index1 = name.indexOf("@");
-        int lastIndex = name.length() - 1;
+        int lastIndex = name.length();
         if (index1 > -1) {
             name = name.substring(index1+1, lastIndex);
+            if (name.length() == 0) return defaultName;
 
             int index2 = name.indexOf("¥");
             if (index2 > -1) {
-                name = name.substring(0, index2);
+                String _name = name.substring(0, index2);
+                if (_name.length() > 0)
+                    name = _name;
             }
+            return name;
         }
 
-        return name;
+        return defaultName;
     }
 
     public static String parseTaxPartName(Context context, String name) {
+        String defaultName = "";
         boolean isExportSubject = SharedPreferencesManager.getExportSujectEnable(context);
-        if (!isExportSubject) return name;
+        if (!isExportSubject) return defaultName;
 
         name = replaceFullMark(name);
         int index1 = name.indexOf("¥");
-        int lastIndex = name.length() - 1;
+        int lastIndex = name.length();
         if (index1 > -1) {
             name = name.substring(index1+1, lastIndex);
+            if (name.length() == 0) return defaultName;
 
             int index2 = name.indexOf("@");
             if (index2 > -1) {
-                name = name.substring(0, index2);
+                String _name = name.substring(0, index2);
+                if (_name.length() > 0)
+                    name = _name;
             }
+            return name;
         }
 
-        return name;
+        return defaultName;
     }
 
 }

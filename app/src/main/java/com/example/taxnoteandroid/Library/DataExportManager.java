@@ -171,10 +171,10 @@ public class DataExportManager implements TaxnoteConsts {
                 boolean isExportSubject = SharedPreferencesManager.getExportSujectEnable(context);
 
                 String date = this.context.getResources().getString(R.string.entry_tab_fragment_date);
-                String LeftAccountNameColumn = this.context.getResources().getString(R.string.data_export_debit);
-                String LeftAccountPriceColumn = this.context.getResources().getString(R.string.data_export_account);
-                String RightAccountNameColumn = this.context.getResources().getString(R.string.data_export_credit);
-                String RightAccountPriceColumn = this.context.getResources().getString(R.string.data_export_credit_account);
+                String LeftAccountNameColumn = this.context.getResources().getString(R.string.data_export_account);
+                String LeftAccountPriceColumn = this.context.getResources().getString(R.string.data_export_debit);
+                String RightAccountNameColumn = this.context.getResources().getString(R.string.data_export_credit_account);
+                String RightAccountPriceColumn = this.context.getResources().getString(R.string.data_export_credit);
                 String MemoNameColumn = this.context.getResources().getString(R.string.data_export_details);
 
                 // 補助科目・税区分のカラム
@@ -185,18 +185,18 @@ public class DataExportManager implements TaxnoteConsts {
 
                 if (isExportSubject) {
                     intColumns(10); // CSV column size.
-                    setColumnTitles(date, LeftAccountPriceColumn, debitSubAccountCol, debitTaxNameCol,
-                            LeftAccountNameColumn, RightAccountPriceColumn, creditSubAccountCol,
-                            creditTaxNameCol, RightAccountNameColumn, MemoNameColumn);
+                    setColumnTitles(date, LeftAccountNameColumn, debitSubAccountCol, debitTaxNameCol,
+                            LeftAccountPriceColumn, RightAccountNameColumn, creditSubAccountCol,
+                            creditTaxNameCol, RightAccountPriceColumn, MemoNameColumn);
                     setColumn(0, new DateColumn());
-                    setColumn(1, new LeftAccountPriceColumn());
+                    setColumn(1, new LeftAccountNameColumn());
                     setColumn(2, new DebitSubAccountColumn());
                     setColumn(3, new DebitTaxNameColumn());
-                    setColumn(4, new LeftAccountNameColumn());
-                    setColumn(5, new RightAccountPriceColumn());
+                    setColumn(4, new LeftAccountPriceColumn());
+                    setColumn(5, new RightAccountNameColumn());
                     setColumn(6, new CreditSubAccountColumn());
                     setColumn(7, new CreditTaxNameColumn());
-                    setColumn(8, new RightAccountNameColumn());
+                    setColumn(8, new RightAccountPriceColumn());
                     setColumn(9, new MemoNameColumn());
 
                 } else {
