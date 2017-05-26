@@ -109,4 +109,43 @@ public class ValueConverter {
 
         return name;
     }
+
+    public static String parseSubCategoryName(Context context, String name) {
+        boolean isExportSubject = SharedPreferencesManager.getExportSujectEnable(context);
+        if (!isExportSubject) return name;
+
+        name = replaceFullMark(name);
+        int index1 = name.indexOf("@");
+        int lastIndex = name.length() - 1;
+        if (index1 > -1) {
+            name = name.substring(index1+1, lastIndex);
+
+            int index2 = name.indexOf("¥");
+            if (index2 > -1) {
+                name = name.substring(0, index2);
+            }
+        }
+
+        return name;
+    }
+
+    public static String parseTaxPartName(Context context, String name) {
+        boolean isExportSubject = SharedPreferencesManager.getExportSujectEnable(context);
+        if (!isExportSubject) return name;
+
+        name = replaceFullMark(name);
+        int index1 = name.indexOf("¥");
+        int lastIndex = name.length() - 1;
+        if (index1 > -1) {
+            name = name.substring(index1+1, lastIndex);
+
+            int index2 = name.indexOf("@");
+            if (index2 > -1) {
+                name = name.substring(0, index2);
+            }
+        }
+
+        return name;
+    }
+
 }

@@ -62,16 +62,19 @@ public class DataExportManager implements TaxnoteConsts {
     private long totalPrice = 0;
     private long[] startEndDate;
     private List<Entry> reportData;
+    private boolean isSubjectEnable = false;
 
     public DataExportManager(Activity activity) {
         this.mActivity = activity;
         this.context = activity.getApplicationContext();
+        this.isSubjectEnable = SharedPreferencesManager.getExportSujectEnable(context);
     }
 
 
     public DataExportManager(Activity activity, String mode, String character_code) {
         this.mActivity = activity;
         this.context = activity.getApplicationContext();
+        this.isSubjectEnable = SharedPreferencesManager.getExportSujectEnable(context);
 
         this.setMode(mode);
         this.setCharacterCode(character_code);
@@ -150,15 +153,15 @@ public class DataExportManager implements TaxnoteConsts {
                 String leftAccountNameColumn = this.context.getResources().getString(R.string.data_export_debit);
                 String expenseNameColumn = this.context.getResources().getString(R.string.Expense);
                 String incomeNameColumn = this.context.getResources().getString(R.string.Income);
-                String SubAccountNameColumn = this.context.getResources().getString(R.string.data_export_details);
+                String MemoNameColumn = this.context.getResources().getString(R.string.data_export_details);
 
                 intColumns(5); // CSV column size.
-                setColumnTitles(date, leftAccountNameColumn,expenseNameColumn,incomeNameColumn, SubAccountNameColumn);
+                setColumnTitles(date, leftAccountNameColumn,expenseNameColumn,incomeNameColumn, MemoNameColumn);
                 setColumn(0, new DateColumn());
                 setColumn(1, new LeftAccountNameColumn());
                 setColumn(2, new LeftAccountPriceColumn());
                 setColumn(3, new RightAccountPriceColumn());
-                setColumn(4, new SubAccountNameColumn());
+                setColumn(4, new MemoNameColumn());
                 setSeparator(",");
 
                 // Taxnoteは複式簿記
@@ -168,20 +171,44 @@ public class DataExportManager implements TaxnoteConsts {
                 boolean isExportSubject = SharedPreferencesManager.getExportSujectEnable(context);
 
                 String date = this.context.getResources().getString(R.string.entry_tab_fragment_date);
-                String leftAccountNameColumn = this.context.getResources().getString(R.string.data_export_debit);
+                String LeftAccountNameColumn = this.context.getResources().getString(R.string.data_export_debit);
                 String LeftAccountPriceColumn = this.context.getResources().getString(R.string.data_export_account);
                 String RightAccountNameColumn = this.context.getResources().getString(R.string.data_export_credit);
                 String RightAccountPriceColumn = this.context.getResources().getString(R.string.data_export_credit_account);
-                String SubAccountNameColumn = this.context.getResources().getString(R.string.data_export_details);
+                String MemoNameColumn = this.context.getResources().getString(R.string.data_export_details);
 
-                intColumns(6); // CSV column size.
-                setColumnTitles(date, leftAccountNameColumn, LeftAccountPriceColumn, RightAccountNameColumn, RightAccountPriceColumn, SubAccountNameColumn);
-                setColumn(0, new DateColumn());
-                setColumn(1, new LeftAccountNameColumn());
-                setColumn(2, new LeftAccountPriceColumn());
-                setColumn(3, new RightAccountNameColumn());
-                setColumn(4, new RightAccountPriceColumn());
-                setColumn(5, new SubAccountNameColumn());
+                // 補助科目・税区分のカラム
+                String debitSubAccountCol = context.getString(R.string.data_export_debit_sub_account);
+                String debitTaxNameCol = context.getString(R.string.data_export_debit_tax_name);
+                String creditSubAccountCol = context.getString(R.string.data_export_credit_sub_account);
+                String creditTaxNameCol = context.getString(R.string.data_export_credit_tax_name);
+
+                if (isExportSubject) {
+                    intColumns(10); // CSV column size.
+                    setColumnTitles(date, LeftAccountPriceColumn, debitSubAccountCol, debitTaxNameCol,
+                            LeftAccountNameColumn, RightAccountPriceColumn, creditSubAccountCol,
+                            creditTaxNameCol, RightAccountNameColumn, MemoNameColumn);
+                    setColumn(0, new DateColumn());
+                    setColumn(1, new LeftAccountPriceColumn());
+                    setColumn(2, new DebitSubAccountColumn());
+                    setColumn(3, new DebitTaxNameColumn());
+                    setColumn(4, new LeftAccountNameColumn());
+                    setColumn(5, new RightAccountPriceColumn());
+                    setColumn(6, new CreditSubAccountColumn());
+                    setColumn(7, new CreditTaxNameColumn());
+                    setColumn(8, new RightAccountNameColumn());
+                    setColumn(9, new MemoNameColumn());
+
+                } else {
+                    intColumns(6); // CSV column size.
+                    setColumnTitles(date, LeftAccountNameColumn, LeftAccountPriceColumn, RightAccountNameColumn, RightAccountPriceColumn, MemoNameColumn);
+                    setColumn(0, new DateColumn());
+                    setColumn(1, new LeftAccountNameColumn());
+                    setColumn(2, new LeftAccountPriceColumn());
+                    setColumn(3, new RightAccountNameColumn());
+                    setColumn(4, new RightAccountPriceColumn());
+                    setColumn(5, new MemoNameColumn());
+                }
                 setSeparator(",");
             }
 
@@ -196,7 +223,7 @@ public class DataExportManager implements TaxnoteConsts {
             setColumn(10, new RightAccountNameColumn());
             setColumn(13, new FixedTextColumn("対象外"));
             setColumn(14, new RightAccountPriceColumn());
-            setColumn(16, new SubAccountNameColumn());
+            setColumn(16, new MemoNameColumn());
             setColumn(19, new FixedTextColumn("0"));
             setColumn(24, new FixedTextColumn("NO"));
             setSeparator("\t");
@@ -210,7 +237,7 @@ public class DataExportManager implements TaxnoteConsts {
             setColumn(5, new ReasonNameColumn());
             setColumn(6, new FixedTextColumn("対象外"));
             setColumn(7, new LeftAccountPriceColumn());
-            setColumn(8, new SubAccountNameColumn());
+            setColumn(8, new MemoNameColumn());
             setColumn(11, new DateColumn());
             setColumn(12, new AccountNameColumn());
             setColumn(13, new RightAccountPriceColumn());
@@ -226,7 +253,7 @@ public class DataExportManager implements TaxnoteConsts {
             setColumn(5, new LeftAccountPriceColumn());
             setColumn(6, new RightAccountNameColumn());
             setColumn(9, new RightAccountPriceColumn());
-            setColumn(10, new SubAccountNameColumn());
+            setColumn(10, new MemoNameColumn());
             setSeparator(",");
         } else if (mode.compareTo(EXPORT_PROFIT_LOSS_FORMAT_TYPE_CSV) == 0) { // 損益表の出力
             intColumns(2); // CSV column size.
@@ -640,7 +667,8 @@ public class DataExportManager implements TaxnoteConsts {
                 return currentEntry.reason.name;
 
             } else {
-                return (currentEntry.isExpense ? currentEntry.reason.name : currentEntry.account.name);
+                String nameVal = (currentEntry.isExpense ? currentEntry.reason.name : currentEntry.account.name);
+                return ValueConverter.parseCategoryName(context, nameVal);
             }
         }
     }
@@ -679,7 +707,8 @@ public class DataExportManager implements TaxnoteConsts {
     private class RightAccountNameColumn extends Column {
         @Override
         public String getValue() {
-            return (currentEntry.isExpense ? currentEntry.account.name : currentEntry.reason.name);
+            String nameVal = (currentEntry.isExpense ? currentEntry.account.name : currentEntry.reason.name);
+            return ValueConverter.parseCategoryName(context, nameVal);
         }
     }
 
@@ -695,7 +724,7 @@ public class DataExportManager implements TaxnoteConsts {
         }
     }
 
-    private class SubAccountNameColumn extends Column {
+    private class MemoNameColumn extends Column {
         @Override
         public String getValue() {
             return currentEntry.memo;
@@ -743,6 +772,42 @@ public class DataExportManager implements TaxnoteConsts {
         @Override
         public String getValue() {
             return Long.toString(currentEntry.id);
+        }
+    }
+
+    private class DebitSubAccountColumn extends Column {
+
+        @Override
+        public String getValue() {
+            String nameVal = (currentEntry.isExpense ? currentEntry.reason.name : currentEntry.account.name);
+            return ValueConverter.parseSubCategoryName(context, nameVal);
+        }
+    }
+
+    private class DebitTaxNameColumn extends Column {
+
+        @Override
+        public String getValue() {
+            String nameVal = (currentEntry.isExpense ? currentEntry.reason.name : currentEntry.account.name);
+            return ValueConverter.parseTaxPartName(context, nameVal);
+        }
+    }
+
+    private class CreditSubAccountColumn extends Column {
+
+        @Override
+        public String getValue() {
+            String nameVal = (currentEntry.isExpense ? currentEntry.account.name : currentEntry.reason.name);
+            return ValueConverter.parseSubCategoryName(context, nameVal);
+        }
+    }
+
+    private class CreditTaxNameColumn extends Column {
+
+        @Override
+        public String getValue() {
+            String nameVal = (currentEntry.isExpense ? currentEntry.account.name : currentEntry.reason.name);
+            return ValueConverter.parseTaxPartName(context, nameVal);
         }
     }
 

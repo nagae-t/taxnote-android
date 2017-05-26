@@ -340,6 +340,11 @@
     <string name="data_export_credit_account">貸方勘定</string>
     <string name="data_export_details">備考</string>
 
+    <string name="data_export_debit_sub_account">借方補助科目</string>
+    <string name="data_export_debit_tax_name">借方税区分</string>
+    <string name="data_export_credit_sub_account">貸方税区分</string>
+    <string name="data_export_credit_tax_name">貸方税区分</string>
+
     <string name="no_data_to_export_message">出力するデータがありません。入力タブからデータを入力してください。</string>
 
     <string name="login">ログイン</string>
