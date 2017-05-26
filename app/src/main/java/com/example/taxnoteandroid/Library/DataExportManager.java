@@ -260,7 +260,7 @@ public class DataExportManager implements TaxnoteConsts {
         } else if (mode.compareTo(EXPORT_FORMAT_TYPE_MFCLOUD) == 0) { // MF Could
 
             intColumns(13); // CSV column size.
-            setColumnTitles("取引No", "取引日", "借方勘定科目", "借方補助科目", "借方税区分", "借方金額(円)", "貸方勘定科目", "貸方補助科目", "貸方税区分", "貸方金額(円)", "備考", "仕訳メモ", "");
+            setColumnTitles("取引No", "取引日", "借方勘定科目", "借方補助科目", "借方税区分", "借方金額(円)", "貸方勘定科目", "貸方補助科目", "貸方税区分", "貸方金額(円)", "備考", "仕訳メモ");
             setColumn(0, new IndexColumn());
             setColumn(1, new DateColumn());
             setColumn(2, new LeftAccountNameColumn());
@@ -268,7 +268,16 @@ public class DataExportManager implements TaxnoteConsts {
             setColumn(6, new RightAccountNameColumn());
             setColumn(9, new RightAccountPriceColumn());
             setColumn(10, new MemoNameColumn());
+
+            if (isSubjectEnable) {
+                setColumn(3, new DebitSubAccountColumn());
+                setColumn(4, new DebitTaxNameColumn());
+                setColumn(7, new CreditSubAccountColumn());
+                setColumn(8, new CreditTaxNameColumn());
+            }
+
             setSeparator(",");
+
         } else if (mode.compareTo(EXPORT_PROFIT_LOSS_FORMAT_TYPE_CSV) == 0) { // 損益表の出力
             intColumns(2); // CSV column size.
             String title = context.getString(R.string.profit_loss_export);
@@ -343,6 +352,7 @@ public class DataExportManager implements TaxnoteConsts {
                 entries = reportData;
             }
 
+            int entryCount = 1;
             for (Entry entry : entries) {
 
                 setCurrentEntry(entry);
@@ -351,10 +361,17 @@ public class DataExportManager implements TaxnoteConsts {
                 for (int i = 0; i < line.length; i++) {
                     if (columns[i] != null) {
                         line[i] = columns[i].getValue();
+                        // MFCLOUD の 取引No
+                        if (mode.compareTo(EXPORT_FORMAT_TYPE_MFCLOUD) == 0 && i == 0) {
+                            line[i] = String.valueOf(entryCount);
+                        } else {
+                            line[i] = columns[i].getValue();
+                        }
                     }
                 }
 
                 writer.append(getCSVString(line, ",") + "\n");
+                entryCount++;
             }
 
             return file;
