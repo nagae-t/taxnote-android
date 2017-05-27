@@ -1,0 +1,192 @@
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/header_background"
+        android:orientation="vertical">
+
+
+        <!--Data Export Button-->
+        <TextView
+            android:background="@drawable/selector_background_colors"
+            style="@style/font_style_standard"
+            android:gravity="center"
+            android:id="@+id/data_export_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:minHeight="48dp"
+            android:paddingEnd="16dp"
+            android:paddingStart="16dp"
+            android:textColor="?attr/colorPrimary"
+            android:text="@string/data_export_start" />
+        <TextView
+            style="@style/font_style_footer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginTop="8dp"
+            android:gravity="center_vertical"
+            android:paddingEnd="16dp"
+            android:paddingStart="16dp"
+            android:text="@string/data_export_desc" />
+
+
+        <!--Export Range Button-->
+        <!--Character Code Button-->
+        <LinearLayout
+            android:id="@+id/data_export_range_button"
+            android:background="@drawable/selector_background_colors"
+            style="@style/font_style_standard"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:gravity="center_vertical"
+            android:minHeight="48dp"
+            android:paddingEnd="16dp"
+            android:paddingStart="16dp">
+
+            <TextView
+                style="@style/font_style_standard"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/data_export_range" />
+
+            <TextView
+                style="@style/font_style_standard"
+                android:id="@+id/data_export_range_button_right"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/divider"
+                android:text="すべての期間" />
+        </LinearLayout>
+
+        <android.support.v4.widget.Space
+            android:layout_width="match_parent"
+            android:layout_height="1dp" />
+
+        <LinearLayout
+            android:background="@drawable/selector_background_colors"
+            style="@style/font_style_standard"
+            android:id="@+id/character_code_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:minHeight="48dp"
+            android:paddingEnd="16dp"
+            android:paddingStart="16dp">
+
+            <TextView
+                style="@style/font_style_standard"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/character_code" />
+
+            <TextView
+                style="@style/font_style_standard"
+                android:id="@+id/character_code_button_right"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/divider"
+                tools:text="UTF8" />
+        </LinearLayout>
+        <TextView
+            style="@style/font_style_footer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginTop="8dp"
+            android:gravity="center_vertical"
+            android:paddingEnd="16dp"
+            android:paddingStart="16dp"
+            android:text="@string/character_code_desc" />
+
+
+        <!--Select Range-->
+        <!--CSV Button-->
+        <!--Yayoi Button-->
+        <!--freee Button-->
+        <!--MFCloud Button-->
+        <RadioGroup
+            android:layout_marginTop="20dp"
+            android:id="@+id/export_radio_group"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/selector_background_colors"
+            android:orientation="vertical"
+            android:paddingStart="8dp"
+            android:visibility="gone">
+
+            <RadioButton
+                android:id="@+id/csv_format"
+                style="@style/font_style_standard"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/selector_background_colors"
+                android:checked="true"
+                android:gravity="center_vertical"
+                android:minHeight="48dp"
+                android:paddingEnd="16dp"
+                android:paddingStart="16dp"
+                android:text="@string/csv_format" />
+
+            <RadioButton
+                android:id="@+id/yayoi_format"
+                style="@style/font_style_standard"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/selector_background_colors"
+                android:gravity="center_vertical"
+                android:minHeight="48dp"
+                android:paddingEnd="16dp"
+                android:paddingStart="16dp"
+                android:text="@string/yayoi_format" />
+
+            <RadioButton
+                android:id="@+id/freee_format"
+                style="@style/font_style_standard"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/selector_background_colors"
+                android:gravity="center_vertical"
+                android:minHeight="48dp"
+                android:paddingEnd="16dp"
+                android:paddingStart="16dp"
+                android:text="@string/freee_format" />
+
+            <RadioButton
+                android:id="@+id/mfcloud_format"
+                style="@style/font_style_standard"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/selector_background_colors"
+                android:gravity="center_vertical"
+                android:minHeight="48dp"
+                android:paddingEnd="16dp"
+                android:paddingStart="16dp"
+                android:text="@string/mfcloud_format" />
+        </RadioGroup>
+
+
+        <!--Help Button-->
+        <TextView
+            android:background="@drawable/selector_background_colors"
+            style="@style/font_style_standard"
+            android:id="@+id/data_export_help"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:gravity="center_vertical"
+            android:minHeight="48dp"
+            android:paddingEnd="16dp"
+            android:paddingStart="16dp"
+            android:text="@string/frequently_asked_questions"
+            android:visibility="gone"/>
+
+    </LinearLayout>
+</layout>

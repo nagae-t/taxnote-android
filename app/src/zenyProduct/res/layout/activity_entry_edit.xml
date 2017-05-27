@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="entry"
+            type="com.example.taxnoteandroid.model.Entry" />
+    </data>
+
+    <LinearLayout
+        android:id="@+id/activity_entry_edit"
+        style="@style/font_style_standard"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        tools:context="com.example.taxnoteandroid.EntryEditActivity">
+
+        <TextView
+            style="@style/section_header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/entry_tab_fragment_date" />
+
+        <TextView
+            android:background="@drawable/selector_background_colors"
+            android:id="@+id/date"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize = "@dimen/font_size_standard"
+            android:layout_weight="1" />
+
+        <TextView
+            style="@style/section_header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@{entry.isExpense ? @string/entry_tab_fragment_account : @string/entry_tab_fragment_account2}"
+            android:visibility="gone"/>
+
+        <TextView
+            android:background="@drawable/selector_background_colors"
+            android:id="@+id/account"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textSize = "@dimen/font_size_standard"
+            android:text="@{entry.account.name}"
+            android:visibility="gone"/>
+
+        <TextView
+            style="@style/section_header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/entry_tab_fragment_select_reason" />
+
+        <TextView
+            android:background="@drawable/selector_background_colors"
+            android:id="@+id/reason"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize = "@dimen/font_size_standard"
+            android:text="@{entry.reason.name}"
+            android:layout_weight="1" />
+
+        <TextView
+            style="@style/section_header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/Details" />
+
+        <TextView
+            android:background="@drawable/selector_background_colors"
+            android:id="@+id/memo"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textSize = "@dimen/font_size_standard"
+            android:text="@{entry.memo}" />
+
+        <TextView
+            style="@style/section_header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/Price" />
+
+        <TextView
+            android:background="@drawable/selector_background_colors"
+            android:gravity="center"
+            android:id="@+id/price"
+            android:textSize = "@dimen/font_size_standard"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+
+        <Button
+            android:id="@+id/delete"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textSize = "@dimen/font_size_standard"
+            android:textColor="@color/expense"
+            android:background="@null"
+            android:text="@string/Delete" />
+    </LinearLayout>
+</layout>

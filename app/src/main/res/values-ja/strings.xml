@@ -432,6 +432,9 @@
     <string name="re_login_title">Taxnoteクラウドにログインしてください</string>
     <string name="re_login_message">セキュリティ保護のため、一定期間を超えると再度ログインしてもらう仕様になっております。</string>
 
+    <!-- Admob Unit ID -->
+    <string name="admob_banner_unit_id">ca-app-pub-3818406242507081/8657767657</string>
+
     <string name="other_apps">作者のアプリ</string>
 
 </resources>

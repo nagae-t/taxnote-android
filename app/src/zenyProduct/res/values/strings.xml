@@ -1,3 +1,83 @@
 <resources>
-    <string name="app_name">Zeny</string>
+
+    <string name="app_name">ZenyDev</string>
+
+
+    //--------------------------------------------------------------//
+    // -- Entry Tab --
+    //--------------------------------------------------------------//
+
+    <string name="tap_here_to_set_details">Tap here for details</string>
+
+
+    //--------------------------------------------------------------//
+    // -- Settings --
+    //--------------------------------------------------------------//
+
+    <string name="share_taxnote">Share Zeny</string>
+    <string name="share_taxnote_title">I like this app</string>
+    <string name="share_taxnote_message">I like this app. https://play.google.com/store/apps/details?id=com.nonume.zeny</string>
+
+
+    //--------------------------------------------------------------//
+    // -- Data Export --
+    //--------------------------------------------------------------//
+
+    <string name="data_export_mail_title">Zeny Data Export</string>
+
+
+    //--------------------------------------------------------------//
+    // -- Help Message --
+    //--------------------------------------------------------------//
+
+    <string name="AlertView_firstIntroTitle">About Zeny</string>
+    <string name="AlertView_firstIntroMessage">Zeny is a simple finance manager.</string>
+    <string name="AlertView_secondIntroTitle">Fast</string>
+    <string name="AlertView_secondIntroMessage">You can make an entry very fast.</string>
+    <string name="AlertView_thirdIntroTitle">Free</string>
+    <string name="AlertView_thirdIntroMessage">You can keep using it for free with ads.</string>
+    <string name="AlertView_letsbegin">Tap [Food] to start.</string>
+
+
+    //--------------------------------------------------------------//
+    // -- All --
+    //--------------------------------------------------------------//
+
+    <string name="project_settings">Add or Edit Accounts</string>
+    <string name="add_new_project">Add an Account</string>
+    <string name="delete_project_confirm_message">Are you sure you want to delete this account?</string>
+    <string name="delete_current_project_message">You cannot delete the account you are using now, please select other account and try again.</string>
+    <string name="max_add_project_message">The maximum numbers of accounts has been reached already.</string>
+    <string name="created_new_project_message">New account has been created!</string>
+    <string name="tap_project_to_edit_name">You can rename it if you tap an account.</string>
+    <string name="taxnote_data_import">Import data into Zeny</string>
+
+
+    <!--//@@ここをアップデートごとに変更-->
+    <string name="release_note_url">http://taxnote.hatenablog.com/entry/2017/05/12/084155</string>
+
+    <string name="data_export_debit">Category</string>
+    <string name="data_export_account">Price</string>
+
+
+    <string name="taxnote_cloud_first_free">Zeny Premium</string>
+    <string name="taxnote_cloud_login_desc">Please login with Zeny Premium account. (You can create it after you subscribed to Zeny Premium.)</string>
+    <string name="taxnote_cloud_register_desc">Your Zeny Premium is active now, but you need to log into your Premium account(not AppleID or PlayStoreID) to use cloud sync (auto-backup).</string>
+    <string name="cloud">Premium</string>
+    <string name="non_registered_email_desc">The email address is not registered on Zeny Premium.</string>
+
+    <string name="cloud_sign_up_title">Please Create a Zeny Premium account</string>
+    <string name="cloud_sign_up_message">Your Zeny Premium is active now, but please create an account to use cloud sync (auto backup).</string>
+    <string name="cloud_purchase_status">Zeny Premium</string>
+    <string name="taxnote_cloud_desc">Monthly subscription with following features.\n1. No Ads\n2. Multiple Accounts\n3. Cloud Sync with different devices(auto-backup)\n4. Recurring Entries\n5. Bar Charts</string>
+
+    <string name="add_project_without_cloud">You need to subscribe to Zeny Premium to use multiple accounts, but you can also try it with 10 entries limit for free.</string>
+    <string name="not_cloud_input_limit_message">Please upgrade to Zeny Premium to make an entry with additional accounts. (You can enter up to 10 with free trial)</string>
+    <string name="bar_graph_cloud_required_message">Please upgrade to Zeny Premium to use the bar charts. (You can try Income and Expense bar charts for free)</string>
+    <string name="recurring_cloud_required_message">You need to subscribe to Zeny Premium to use Recurring Entries as it works in the cloud server.</string>
+    <string name="re_login_title">Please login to Zeny Premium</string>
+
+    <string name="alert_notification_desc">If the notification don\'t work, enable Notifications in the Android Settings => Apps => Zeny => Notifications.</string>
+    <string name="data_backup_message">Backup your app data into GoogleDrive, Gmail or other services.  You can restore your data when you want to transfer your data to other Android devices.  Please check Help about how you can backup and restore. (You cannot transfer data between Android and iOS versions with this feature, to do that, you need to use Cloud Sync of Zeny Premium.)</string>
+
 </resources>
