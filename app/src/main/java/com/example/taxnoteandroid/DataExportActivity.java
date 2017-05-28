@@ -1,13 +1,17 @@
 package com.example.taxnoteandroid;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.RadioGroup;
 
 import com.example.taxnoteandroid.Library.DataExportManager;
@@ -32,6 +36,7 @@ public class DataExportActivity extends DefaultCommonActivity {
 
     private ActivityDataExportBinding binding;
 
+    private static final String TAG_EXPORT_SUBJECT_DIALOG_FRAGMENT = "export_subject_dialog_fragment";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,7 +98,63 @@ public class DataExportActivity extends DefaultCommonActivity {
                 manager.export(); // Generate CSV file and send it by email.
             }
         });
+
+        // 補助科目のボタン
+        boolean subjectEnable = SharedPreferencesManager.getExportSujectEnable(this);
+        int enableValRes = (subjectEnable) ? R.string.settings_valid : R.string.settings_invalid;
+        binding.dataExportSubjectVal.setText(enableValRes);
+        binding.dataExportSubjectButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showExportSubjectDialog();
+            }
+        });
     }
+
+    private void showExportSubjectDialog() {
+        final TNSimpleDialogFragment dialogFragment = TNSimpleDialogFragment.newInstance();
+        dialogFragment.setTitle(getString(R.string.data_export_subject));
+
+        View contentView = LayoutInflater.from(this).inflate(R.layout.export_subject_dialog_layout, null);
+        dialogFragment.setDialogView(contentView);
+        Button validBtn = (Button)contentView.findViewById(R.id.subject_valid_btn);
+        Button invalidBtn = (Button)contentView.findViewById(R.id.subject_invalid_btn);
+        Button helpBtn = (Button)contentView.findViewById(R.id.subject_help_btn);
+        validBtn.setOnClickListener(exportSubjectBtnOnClick);
+        invalidBtn.setOnClickListener(exportSubjectBtnOnClick);
+        helpBtn.setOnClickListener(exportSubjectBtnOnClick);
+
+        dialogFragment.setNegativeBtnText(getString(android.R.string.cancel));
+
+        getSupportFragmentManager().beginTransaction()
+                .add(dialogFragment, TAG_EXPORT_SUBJECT_DIALOG_FRAGMENT)
+                .commitAllowingStateLoss();
+    }
+    // 補助科目の設定
+    private View.OnClickListener exportSubjectBtnOnClick = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            int viewId = view.getId();
+            Context context = view.getContext();
+            switch (viewId) {
+                case R.id.subject_valid_btn:
+                    SharedPreferencesManager.saveExportSubjectEnable(context, true);
+                    binding.dataExportSubjectVal.setText(R.string.settings_valid);
+                    break;
+                case R.id.subject_invalid_btn:
+                    SharedPreferencesManager.saveExportSubjectEnable(context, false);
+                    binding.dataExportSubjectVal.setText(R.string.settings_invalid);
+                    break;
+                case R.id.subject_help_btn:
+                    Support.showSingleFAQ(DataExportActivity.this,"104");
+                    break;
+            }
+            Fragment fragment = getSupportFragmentManager()
+                    .findFragmentByTag(TAG_EXPORT_SUBJECT_DIALOG_FRAGMENT);
+            getSupportFragmentManager().beginTransaction()
+                    .remove(fragment).commitAllowingStateLoss();
+        }
+    };
 
 
     //--------------------------------------------------------------//

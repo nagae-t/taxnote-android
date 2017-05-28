@@ -3,6 +3,7 @@ package com.example.taxnoteandroid.Library;
 import android.content.Context;
 
 import com.example.taxnoteandroid.dataManager.ProjectDataManager;
+import com.example.taxnoteandroid.dataManager.SharedPreferencesManager;
 
 import java.text.DecimalFormat;
 import java.text.ParseException;
@@ -86,4 +87,73 @@ public class ValueConverter {
         }
         return cal.getTimeInMillis();
     }
+
+    public static String replaceFullMark(String text) {
+        text = text.replace("＠", "@");
+        text = text.replace("￥", "¥");
+        return text;
+    }
+
+    public static String parseCategoryName(Context context, String name) {
+        boolean isExportSubject = SharedPreferencesManager.getExportSujectEnable(context);
+        if (!isExportSubject) return name;
+
+        name = replaceFullMark(name);
+        int index1 = name.indexOf("@");
+        int index2 = name.indexOf("¥");
+        if (index1 > -1) {
+            name = name.substring(0, index1);
+        } else if (index2 > -1) {
+            name = name.substring(0, index2);
+        }
+
+        return name;
+    }
+
+    public static String parseSubCategoryName(Context context, String name, String defaultName) {
+        boolean isExportSubject = SharedPreferencesManager.getExportSujectEnable(context);
+        if (!isExportSubject) return defaultName;
+
+        name = replaceFullMark(name);
+        int index1 = name.indexOf("@");
+        int lastIndex = name.length();
+        if (index1 > -1) {
+            name = name.substring(index1+1, lastIndex);
+            if (name.length() == 0) return defaultName;
+
+            int index2 = name.indexOf("¥");
+            if (index2 > -1) {
+                String _name = name.substring(0, index2);
+                if (_name.length() > 0)
+                    name = _name;
+            }
+            return name;
+        }
+
+        return defaultName;
+    }
+
+    public static String parseTaxPartName(Context context, String name, String defaultName) {
+        boolean isExportSubject = SharedPreferencesManager.getExportSujectEnable(context);
+        if (!isExportSubject) return defaultName;
+
+        name = replaceFullMark(name);
+        int index1 = name.indexOf("¥");
+        int lastIndex = name.length();
+        if (index1 > -1) {
+            name = name.substring(index1+1, lastIndex);
+            if (name.length() == 0) return defaultName;
+
+            int index2 = name.indexOf("@");
+            if (index2 > -1) {
+                String _name = name.substring(0, index2);
+                if (_name.length() > 0)
+                    name = _name;
+            }
+            return name;
+        }
+
+        return defaultName;
+    }
+
 }

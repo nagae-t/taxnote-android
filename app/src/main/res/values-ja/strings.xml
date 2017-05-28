@@ -340,6 +340,11 @@
     <string name="data_export_credit_account">貸方勘定</string>
     <string name="data_export_details">備考</string>
 
+    <string name="data_export_debit_sub_account">借方補助科目</string>
+    <string name="data_export_debit_tax_name">借方税区分</string>
+    <string name="data_export_credit_sub_account">貸方税区分</string>
+    <string name="data_export_credit_tax_name">貸方税区分</string>
+
     <string name="no_data_to_export_message">出力するデータがありません。入力タブからデータを入力してください。</string>
 
     <string name="login">ログイン</string>
@@ -436,5 +441,10 @@
     <string name="admob_banner_unit_id">ca-app-pub-3818406242507081/8657767657</string>
 
     <string name="other_apps">作者のアプリ</string>
+
+    <string name="data_export_subject">補助科目・税区分を出力</string>
+    <string name="settings_valid">有効</string>
+    <string name="settings_invalid">無効</string>
+    <string name="data_export_subject_desc">勘定科目や支払方法を「科目名@補助科目名」と変更すると、補助科目も出力できます。「普通預金@りそな銀行」とすれば、普通預金が科目名、りそな銀行が補助科目となります。「勘定科目名@補助科目名¥税区分名」とすると、税区分も出力できます。詳しくはヘルプをどうぞ。</string>
 
 </resources>

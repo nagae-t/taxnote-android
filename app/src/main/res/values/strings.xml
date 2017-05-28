@@ -340,6 +340,11 @@
     <string name="data_export_credit_account">Credit_Account</string>
     <string name="data_export_details">Details</string>
 
+    <string name="data_export_debit_sub_account">Debit SubAccount</string>
+    <string name="data_export_debit_tax_name">Debit Tax</string>
+    <string name="data_export_credit_sub_account">Credit SubAccount</string>
+    <string name="data_export_credit_tax_name">Credit Tax</string>
+
     <string name="no_data_to_export_message">No data exists.  Please enter data from Entry tab.</string>
 
     <string name="login">Login</string>
@@ -437,5 +442,9 @@
 
     <string name="other_apps">My Apps</string>
 
+    <string name="data_export_subject">SubCategory･TaxCategory</string>
+    <string name="settings_valid">ON</string>
+    <string name="settings_invalid">OFF</string>
+    <string name="data_export_subject_desc">If you name each account and category with @ and ¥, you can export subCategory and taxCategory in CSV.  If you name an account as [Cash@PettyCash@ExcludedTax], account name is Cash, SubAccount name is PettyCash, and taxCategory is ExcludedTax.</string>
 
 </resources>

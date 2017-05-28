@@ -13,11 +13,11 @@ public class SharedPreferencesManager {
     private static final String IS_DEFAULT_DATABASE_SET_KEY     = "IS_DEFAULT_DATABASE_SET_KEY";
     private static final String UUID_FOR_CURRENT_KEY            = "UUID_FOR_CURRENT_KEY";
     private static final String CHARACTER_CODE_FOR_CURRENT_KEY  = "CHARACTER_CODE_FOR_CURRENT_KEY";
+    private static final String EXPORT_SUBJECT_ENABLE_KEY       = "EXPORT_SUBJECT_ENABLE_KEY";
     private static final String EXPORT_FORMAT_FOR_CURRENT_KEY   = "EXPORT_FORMAT_FOR_CURRENT_KEY";
     private static final String EXPORT_RANGE_TYPE_KEY           = "EXPORT_RANGE_TYPE_KEY";
     private static final String EXPORT_RANGE_BEGIN_DATE         = "EXPORT_RANGE_BEGIN_DATE";
     private static final String EXPORT_RANGE_END_DATE           = "EXPORT_RANGE_END_DATE";
-    private static final String TAXNOTE_PLUS_PURCHASE_TIME      = "TAXNOTE_PLUS_PURCHASE_TIME";
     private static final String TAXNOTE_PLUS_EXPIRY_TIME        = "TAXNOTE_PLUS_EXPIRY_TIME";
     private static final String TAXNOTE_CLOUD_EXPIRY_TIME       = "TAXNOTE_CLOUD_EXPIRY_TIME";
     private static final String ZENY_PREMIUM_EXPIRY_TIME       = "ZENY_PREMIUM_EXPIRY_TIME";
@@ -139,6 +139,15 @@ public class SharedPreferencesManager {
     //--------------------------------------------------------------//
     //    -- Data Export --
     //--------------------------------------------------------------//
+
+    public static void saveExportSubjectEnable(Context context, boolean val) {
+        getSharedPreferences(context).edit().putBoolean(EXPORT_SUBJECT_ENABLE_KEY, val).apply();
+    }
+
+    public static boolean getExportSujectEnable(Context context) {
+        return getSharedPreferences(context).getBoolean(EXPORT_SUBJECT_ENABLE_KEY, false);
+    }
+
 
     public static void saveCurrentCharacterCode(Context context, String characterCode) {
         getSharedPreferences(context).edit().putString(CHARACTER_CODE_FOR_CURRENT_KEY, characterCode).apply();

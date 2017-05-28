@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="10dp">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="4dp"
+        android:textSize="@dimen/font_size_standard"
+        android:textColor="@color/primary_text"
+        android:text="@string/data_export_subject_desc"/>
+
+    <Button
+        android:id="@+id/subject_valid_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:background="?attr/selectableItemBackground"
+        android:textColor="@color/accent"
+        android:text="@string/settings_valid"/>
+    <Button
+        android:id="@+id/subject_invalid_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/selectableItemBackground"
+        android:textColor="@color/accent"
+        android:text="@string/settings_invalid"/>
+    <Button
+        android:id="@+id/subject_help_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/selectableItemBackground"
+        android:textColor="@color/accent"
+        android:text="@string/frequently_asked_questions"/>
+</LinearLayout>
