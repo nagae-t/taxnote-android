@@ -33,9 +33,38 @@
             android:paddingStart="16dp"
             android:text="@string/data_export_desc" />
 
-
         <!--Export Range Button-->
         <!--Character Code Button-->
+
+        <LinearLayout
+            android:id="@+id/data_export_subject_button"
+            android:background="@drawable/selector_background_colors"
+            style="@style/font_style_standard"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:gravity="center_vertical"
+            android:minHeight="48dp"
+            android:paddingEnd="16dp"
+            android:paddingStart="16dp"
+            android:visibility="gone">
+
+            <TextView
+                style="@style/font_style_standard"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/data_export_subject" />
+
+            <TextView
+                style="@style/font_style_standard"
+                android:id="@+id/data_export_subject_val"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/divider"
+                android:text="@string/settings_invalid" />
+        </LinearLayout>
+
         <LinearLayout
             android:id="@+id/data_export_range_button"
             android:background="@drawable/selector_background_colors"
