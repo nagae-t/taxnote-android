@@ -321,8 +321,11 @@ public class DialogManager {
         dialogFragment.setDialogListener(new TNSimpleDialogFragment.TNSimpleDialogListener() {
             @Override
             public void onPositiveBtnClick(DialogInterface dialogInterface, int i, String tag) {
-
-                Support.showFAQSection((Activity) context, "22");
+                if (ZNUtils.isZeny()) {
+                    Support.showFAQSection((Activity) context, "27");
+                } else {
+                    Support.showFAQSection((Activity) context, "22");
+                }
                 dialogInterface.dismiss();
             }
 
