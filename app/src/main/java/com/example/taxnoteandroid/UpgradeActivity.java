@@ -575,7 +575,6 @@ public class UpgradeActivity extends DefaultCommonActivity {
         // Progress dialog
         mLoadingProgress.show();
 
-        BroadcastUtil.sendAdviewToggle(UpgradeActivity.this);
         if (!TNApi.isNetworkConnected(this)) {
             mApiUser.clearAccountData(mApiModel);
             mApiUser = new TNApiUser(getApplicationContext());
@@ -583,6 +582,7 @@ public class UpgradeActivity extends DefaultCommonActivity {
             binding.cloudPurchaseLayout.setVisibility(View.GONE);
             binding.cloudLoginLayout.setVisibility(View.VISIBLE);
             mLoadingProgress.dismiss();
+            BroadcastUtil.sendAdviewToggle(UpgradeActivity.this);
             return;
         }
 

@@ -76,6 +76,8 @@ public class MainActivity extends DefaultCommonActivity {
         public void onReceive(Context context, Intent intent) {
             boolean isLoggingIn = intent.getBooleanExtra(BroadcastUtil.KEY_IS_LOGGING_IN, false);
             afterLogin(isLoggingIn);
+
+            toggleAdview();
         }
     };
 
@@ -113,11 +115,7 @@ public class MainActivity extends DefaultCommonActivity {
         public void onReceive(Context context, Intent intent) {
             if (!ZNUtils.isZeny()) return;
 
-            if (UpgradeManger.zenyPremiumIsActive(context)) {
-                binding.adsLayout.setVisibility(View.GONE);
-            } else {
-                binding.adsLayout.setVisibility(View.VISIBLE);
-            }
+            toggleAdview();
         }
     };
 
@@ -182,13 +180,23 @@ public class MainActivity extends DefaultCommonActivity {
         checkInAppBilling();
 
         // Zeny Ads
-        if (ZNUtils.isZeny() && !UpgradeManger.zenyPremiumIsActive(this)) {
-            mAdRequest = new AdRequest.Builder()
-                    .addTestDevice("92A2669BB3BA9419A031D355C4103234")
-                    .build();
+        toggleAdview();
+    }
+
+    // Zeny Ads
+    private void toggleAdview() {
+        if (!ZNUtils.isZeny()) return;
+
+        if (!UpgradeManger.zenyPremiumIsActive(this)) {
+            if (mAdRequest == null)
+                mAdRequest = new AdRequest.Builder()
+                        .addTestDevice("92A2669BB3BA9419A031D355C4103234")
+                        .build();
 
             binding.adsLayout.setVisibility(View.VISIBLE);
             binding.adView1.loadAd(mAdRequest);
+        } else {
+            binding.adsLayout.setVisibility(View.GONE);
         }
     }
 
