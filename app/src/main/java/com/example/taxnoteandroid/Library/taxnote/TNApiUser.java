@@ -205,6 +205,7 @@ public class TNApiUser extends TNApi {
         // subscription情報を削除
         saveCloudPurchaseInfo(null, null);
         SharedPreferencesManager.saveTaxnoteCloudExpiryTime(context, 0);
+        SharedPreferencesManager.saveZenyPremiumExpiryTime(context, 0);
 
         deleteLoginData();
         apiModel.resetAllUpdatedKeys();
