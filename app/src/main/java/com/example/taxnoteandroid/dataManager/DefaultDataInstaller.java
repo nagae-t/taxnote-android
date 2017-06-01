@@ -141,7 +141,7 @@ public class DefaultDataInstaller {
         }
     }
 
-    private static void setDefaultAccountData(Context context, Project project) {
+    public static void setDefaultAccountData(Context context, Project project) {
 
         Type type = new TypeToken<List<Account>>() {
         }.getType();

@@ -14,6 +14,7 @@ import com.example.taxnoteandroid.Library.ValueConverter;
 import com.example.taxnoteandroid.Library.zeny.ZNUtils;
 import com.example.taxnoteandroid.R;
 import com.example.taxnoteandroid.dataManager.AccountDataManager;
+import com.example.taxnoteandroid.dataManager.DefaultDataInstaller;
 import com.example.taxnoteandroid.dataManager.EntryDataManager;
 import com.example.taxnoteandroid.dataManager.ProjectDataManager;
 import com.example.taxnoteandroid.dataManager.ReasonDataManager;
@@ -145,6 +146,11 @@ public class TNApiModel extends TNApi {
     }
 
     private void getAccounts(final AsyncOkHttpClient.Callback callback) {
+        if (ZNUtils.isZeny()) {
+            callback.onSuccess(null, null);
+            return;
+        }
+
         setHttpMethod(HTTP_METHOD_GET);
         setRequestPath(URL_PATH_ACCOUNT);
 
@@ -674,6 +680,11 @@ public class TNApiModel extends TNApi {
     }
 
     private void saveAllNeedSaveAccounts(final AsyncOkHttpClient.Callback callback) {
+        if (ZNUtils.isZeny()) {
+            callback.onSuccess(null, null);
+            return;
+        }
+
         List<Account> accounts = mAccountDataManager.findAllNeedSave(true);
         final int accountSize = accounts.size();
         if (accountSize == 0) {
@@ -980,7 +991,12 @@ public class TNApiModel extends TNApi {
                 }
 
                 if (isNewProject) {
-                    mProjectDataManager.save(project);
+                    long projectId = mProjectDataManager.save(project);
+                    project.id = projectId;
+
+                    if (ZNUtils.isZeny()) { // zenyの場合はdummyのaccountが必要
+                        DefaultDataInstaller.setDefaultAccountData(context, project);
+                    }
                 } else {
                     mProjectDataManager.update(project);
                 }
@@ -1626,6 +1642,11 @@ public class TNApiModel extends TNApi {
     }
 
     private void updateAllNeedSyncAccounts(final AsyncOkHttpClient.Callback callback) {
+        if (ZNUtils.isZeny()) {
+            callback.onSuccess(null, null);
+            return;
+        }
+
         List<Account> accounts = mAccountDataManager.findAllNeedSync(true);
         final int accountSize = accounts.size();
         if (accountSize == 0) {
@@ -2052,6 +2073,11 @@ public class TNApiModel extends TNApi {
     }
 
     private void deleteAllAccounts(final AsyncOkHttpClient.Callback callback) {
+        if (ZNUtils.isZeny()) {
+            callback.onSuccess(null, null);
+            return;
+        }
+
         List<Account> accounts = mAccountDataManager.findAllDeleted(true);
         final int accountSize = accounts.size();
         if (accountSize == 0) {
