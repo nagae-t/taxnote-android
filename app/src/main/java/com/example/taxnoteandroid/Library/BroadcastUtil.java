@@ -39,4 +39,8 @@ public class BroadcastUtil {
     public static void sendReloadRecurringList(Activity activity) {
         activity.sendBroadcast(new Intent(InputRecurringListActivity.BROADCAST_RELOAD_DATA));
     }
+
+    public static void sendAdviewToggle(Activity activity) {
+        activity.sendBroadcast(new Intent(MainActivity.BROADCAST_ADVIEW_TOGGLE));
+    }
 }

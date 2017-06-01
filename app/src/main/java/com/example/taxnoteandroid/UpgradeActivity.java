@@ -40,9 +40,7 @@ import com.mixpanel.android.mpmetrics.MixpanelAPI;
 
 import okhttp3.Response;
 
-import static android.view.View.Z;
 import static com.example.taxnoteandroid.TaxnoteConsts.MIXPANEL_TOKEN;
-import static com.google.api.client.http.HttpMethods.HEAD;
 
 
 public class UpgradeActivity extends DefaultCommonActivity {
@@ -577,6 +575,7 @@ public class UpgradeActivity extends DefaultCommonActivity {
         // Progress dialog
         mLoadingProgress.show();
 
+        BroadcastUtil.sendAdviewToggle(UpgradeActivity.this);
         if (!TNApi.isNetworkConnected(this)) {
             mApiUser.clearAccountData(mApiModel);
             mApiUser = new TNApiUser(getApplicationContext());
@@ -727,6 +726,7 @@ public class UpgradeActivity extends DefaultCommonActivity {
                     if (ZNUtils.isZeny()) {
                         SharedPreferencesManager.saveZenyPremiumExpiryTime(
                                 context, expiryTime);
+                        BroadcastUtil.sendAdviewToggle(UpgradeActivity.this);
                     } else {
                         SharedPreferencesManager.saveTaxnoteCloudExpiryTime(
                                 context, expiryTime);

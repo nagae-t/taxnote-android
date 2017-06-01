@@ -68,6 +68,9 @@ public class MainActivity extends DefaultCommonActivity {
     public static final String BROADCAST_SWITCH_GRAPH_EXPENSE
             = "broadcast_main_switch_graph_expense";
 
+    public static final String BROADCAST_ADVIEW_TOGGLE
+            = "broadcast_main_adview_toggle";
+
     private final BroadcastReceiver mAfterLoginReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -102,6 +105,19 @@ public class MainActivity extends DefaultCommonActivity {
         public void onReceive(Context context, Intent intent) {
             finish();
             System.exit(0);
+        }
+    };
+
+    private final BroadcastReceiver mAdviewToggleReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (!ZNUtils.isZeny()) return;
+
+            if (UpgradeManger.zenyPremiumIsActive(context)) {
+                binding.adsLayout.setVisibility(View.GONE);
+            } else {
+                binding.adsLayout.setVisibility(View.VISIBLE);
+            }
         }
     };
 
@@ -153,6 +169,7 @@ public class MainActivity extends DefaultCommonActivity {
         registerReceiver(mReportReloadReceiver, new IntentFilter(BROADCAST_REPORT_RELOAD));
         registerReceiver(mRestartAppReceiver, new IntentFilter(BROADCAST_RESTART_APP));
         registerReceiver(mSwitchGraphExpenseReceiver, new IntentFilter(BROADCAST_SWITCH_GRAPH_EXPENSE));
+        registerReceiver(mAdviewToggleReceiver, new IntentFilter(BROADCAST_ADVIEW_TOGGLE));
 
         DefaultDataInstaller.installDefaultUserAndCategories(this);
 
@@ -165,7 +182,7 @@ public class MainActivity extends DefaultCommonActivity {
         checkInAppBilling();
 
         // Zeny Ads
-        if (ZNUtils.isZeny()) {
+        if (ZNUtils.isZeny() && !UpgradeManger.zenyPremiumIsActive(this)) {
             mAdRequest = new AdRequest.Builder()
                     .addTestDevice("92A2669BB3BA9419A031D355C4103234")
                     .build();
@@ -610,6 +627,7 @@ public class MainActivity extends DefaultCommonActivity {
         unregisterReceiver(mReportReloadReceiver);
         unregisterReceiver(mRestartAppReceiver);
         unregisterReceiver(mSwitchGraphExpenseReceiver);
+        unregisterReceiver(mAdviewToggleReceiver);
         super.onDestroy();
 
 
