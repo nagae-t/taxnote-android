@@ -11,6 +11,7 @@ import com.example.taxnoteandroid.Library.BroadcastUtil;
 import com.example.taxnoteandroid.Library.DialogManager;
 import com.example.taxnoteandroid.Library.UpgradeManger;
 import com.example.taxnoteandroid.Library.ValueConverter;
+import com.example.taxnoteandroid.Library.zeny.ZNUtils;
 import com.example.taxnoteandroid.R;
 import com.example.taxnoteandroid.dataManager.AccountDataManager;
 import com.example.taxnoteandroid.dataManager.EntryDataManager;
@@ -955,8 +956,13 @@ public class TNApiModel extends TNApi {
                 project.order = obj.get("order").getAsLong();
                 project.isMaster = obj.get("master").getAsBoolean();
                 project.decimal = obj.get("decimal").getAsBoolean();
-                project.accountUuidForExpense = obj.get("account_for_expense").getAsString();
-                project.accountUuidForIncome = obj.get("account_for_income").getAsString();
+                if (ZNUtils.isZeny()) {
+                    project.accountUuidForExpense = "";
+                    project.accountUuidForIncome = "";
+                } else {
+                    project.accountUuidForExpense = obj.get("account_for_expense").getAsString();
+                    project.accountUuidForIncome = obj.get("account_for_income").getAsString();
+                }
 
                 if (project.isMaster) {
                     // Set master as current project
@@ -1135,10 +1141,14 @@ public class TNApiModel extends TNApi {
                 recurring.isExpense = obj.get("is_expense").getAsBoolean();
                 recurring.order = obj.get("order").getAsLong();
                 recurring.reason = mReasonDataManager.findByUuid(obj.get("reason_uuid").getAsString());
-                recurring.account = mAccountDataManager.findByUuid(obj.get("account_uuid").getAsString());
                 recurring.project = mProjectDataManager.findByUuid(obj.get("project_uuid").getAsString());
+                if (ZNUtils.isZeny()) {
+                    recurring.account = mAccountDataManager.findCurrentSelectedAccount(recurring.isExpense);
+                } else {
+                    recurring.account = mAccountDataManager.findByUuid(obj.get("account_uuid").getAsString());
+                }
 
-                if (recurring.reason == null || recurring.account == null)
+                if ((!ZNUtils.isZeny()) && (recurring.reason == null || recurring.account == null))
                     continue;
 
                 if (isNewRec) {
@@ -1183,9 +1193,13 @@ public class TNApiModel extends TNApi {
                 entry.isExpense = obj.get("is_expense").getAsBoolean();
                 entry.project = mProjectDataManager.findByUuid(obj.get("project_uuid").getAsString());
                 entry.reason = mReasonDataManager.findByUuid(obj.get("reason_uuid").getAsString());
-                entry.account = mAccountDataManager.findByUuid(obj.get("account_uuid").getAsString());
+                if (ZNUtils.isZeny()) {
+                    entry.account = mAccountDataManager.findCurrentSelectedAccount(entry.isExpense);
+                } else {
+                    entry.account = mAccountDataManager.findByUuid(obj.get("account_uuid").getAsString());
+                }
 
-                if (entry.reason == null || entry.account == null)
+                if ((!ZNUtils.isZeny()) && (entry.reason == null || entry.account == null))
                     continue;
 
                 if (isNewEntry) {
