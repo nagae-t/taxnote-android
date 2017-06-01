@@ -327,10 +327,15 @@ public class UpgradeActivity extends DefaultCommonActivity {
     }
 
     private void showUpgradeToTaxnoteCloudSuccessDialog() {
-        if (!UpgradeManger.taxnoteCloudIsActive(this)) return;
+//        if (!UpgradeManger.taxnoteCloudIsActive(this)) return;
+        if (!mApiModel.isCloudActive()) return;
 
         MixpanelAPI mixpanel = MixpanelAPI.getInstance(this, MIXPANEL_TOKEN);
-        mixpanel.track("Taxnote Cloud Upgraded");
+        if (ZNUtils.isZeny()) {
+            mixpanel.track("Zeny Premium Upgraded");
+        } else {
+            mixpanel.track("Taxnote Cloud Upgraded");
+        }
 
         if (!isFinishing()) return;
         // Taxnoteアカウント作成するようダイアログを表示
