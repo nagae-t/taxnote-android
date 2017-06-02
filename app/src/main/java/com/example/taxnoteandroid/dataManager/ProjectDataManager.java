@@ -25,7 +25,9 @@ public class ProjectDataManager {
     }
 
     public int allSize() {
-        return ormaDatabase.selectFromProject().count();
+        return ormaDatabase.selectFromProject()
+                .where(Project_Schema.INSTANCE.deleted.getQualifiedName() + " = 0")
+                .count();
     }
 
     //--------------------------------------------------------------//

@@ -345,12 +345,14 @@ public class TNApiModel extends TNApi {
 
         Project project = mProjectDataManager.findByUuid(uuid);
         final long projectId = project.id;
+        boolean isZeny = ZNUtils.isZeny();
 
         // Cloud Purchase Info
         String subsExpires = TNApiUser.getCloudExpiryString(context);
         String subsId = TNApiUser.getCloudOrderId(context);
         if (subsId == null) subsId = "";
-        String subsType = UpgradeManger.SKU_TAXNOTE_CLOUD_ID;
+        String subsType = (isZeny) ? UpgradeManger.SKU_ZENY_PREMIUM_ID
+            : UpgradeManger.SKU_TAXNOTE_CLOUD_ID;
         String subsReceipt = TNApiUser.getCloudPurchaseToken(context);
         if (subsReceipt == null) subsReceipt = "";
 
@@ -360,12 +362,14 @@ public class TNApiModel extends TNApi {
                 .add("project[order]", String.valueOf(project.order))
                 .add("project[master]", String.valueOf(project.isMaster))
                 .add("project[decimal]", String.valueOf(project.decimal))
-                .add("project[account_for_expense]", project.accountUuidForExpense)
-                .add("project[account_for_income]", project.accountUuidForIncome)
                 .add("project[subscription_expires]", subsExpires)
                 .add("project[subscription_transaction]", subsId)
                 .add("project[subscription_type]", subsType)
                 .add("project[appstore_receipt]", subsReceipt);
+        if (!isZeny) {
+            formBuilder.add("project[account_for_expense]", project.accountUuidForExpense)
+                    .add("project[account_for_income]", project.accountUuidForIncome);
+        }
 
         setHttpMethod(HTTP_METHOD_POST);
         setRequestPath(URL_PATH_PROJECT);
@@ -378,6 +382,10 @@ public class TNApiModel extends TNApi {
                 if (response != null) {
                     Log.e(LTAG, "saveProject(uuid) onFailure response.code: " + response.code()
                             + ", message: " + response.message());
+                }
+                if (throwable != null) {
+                    Log.e(LTAG, "saveProject(uuid) onFailure LocalizedMessage: "
+                            + throwable.getLocalizedMessage());
                 }
                 callback.onFailure(response, throwable);
             }
@@ -1307,15 +1315,18 @@ public class TNApiModel extends TNApi {
 
         Project project = mProjectDataManager.findByUuid(uuid);
         final long projectId = project.id;
+        boolean isZeny = ZNUtils.isZeny();
 
         FormBody.Builder formBuilder = new FormBody.Builder();
         formBuilder
                 .add("project[name]", project.name)
                 .add("project[order]", String.valueOf(project.order))
                 .add("project[master]", String.valueOf(project.isMaster))
-                .add("project[decimal]", String.valueOf(project.decimal))
-                .add("project[account_for_expense]", project.accountUuidForExpense)
-                .add("project[account_for_income]", project.accountUuidForIncome);
+                .add("project[decimal]", String.valueOf(project.decimal));
+        if (!isZeny) {
+            formBuilder.add("project[account_for_expense]", project.accountUuidForExpense)
+                    .add("project[account_for_income]", project.accountUuidForIncome);
+        }
         if (project.isMaster) {
 
             String subsExpires = TNApiUser.getCloudExpiryString(context);

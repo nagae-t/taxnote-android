@@ -8,6 +8,7 @@ import android.util.Log;
 
 import com.example.taxnoteandroid.Library.AsyncOkHttpClient;
 import com.example.taxnoteandroid.Library.BroadcastUtil;
+import com.example.taxnoteandroid.Library.zeny.ZNUtils;
 import com.example.taxnoteandroid.R;
 import com.example.taxnoteandroid.UpgradeActivity;
 import com.example.taxnoteandroid.dataManager.SharedPreferencesManager;
@@ -106,7 +107,8 @@ public class TNApiUser extends TNApi {
     }
 
     static String getCloudExpiryString(Context context) {
-        long cloudExpiry = SharedPreferencesManager.getTaxnoteCloudExpiryTime(context);
+        long cloudExpiry = (ZNUtils.isZeny()) ? SharedPreferencesManager.getZenyPremiumExpiryTime(context)
+                : SharedPreferencesManager.getTaxnoteCloudExpiryTime(context);
         if (cloudExpiry == 0) return "";
         Calendar cal = Calendar.getInstance();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss 'Etc/GMT'", Locale.getDefault());
