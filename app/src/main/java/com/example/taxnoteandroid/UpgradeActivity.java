@@ -122,7 +122,10 @@ public class UpgradeActivity extends DefaultCommonActivity {
 
                 public void onIabSetupFinished(IabResult result) {
 
-                    if (result.isFailure()) return;
+                    if (result.isFailure()) {
+                        Log.v("TEST", "mBillingHelper.startSetup Failure message: " + result.getMessage());
+                        return;
+                    }
 
                     try {
                         mBillingHelper.queryInventoryAsync(mGotInventoryListener);
@@ -160,9 +163,12 @@ public class UpgradeActivity extends DefaultCommonActivity {
                 new CheckBillingAsyncTask(false).execute(purchaseCloud);
 
             if (ZNUtils.isZeny()) {
+                Log.v("TEST", "Zeny QueryInventoryFinishedListener");
                 Purchase purchaseZeny = inventory.getPurchase(UpgradeManger.SKU_ZENY_PREMIUM_ID);
-                if (purchaseZeny != null)
+                if (purchaseZeny != null) {
+                    Log.v("TEST", "Zeny QueryInventoryFinishedListener purchaseZeny = " + purchaseZeny.toString());
                     new CheckBillingAsyncTask(false).execute(purchaseZeny);
+                }
             }
         }
     };
@@ -326,7 +332,9 @@ public class UpgradeActivity extends DefaultCommonActivity {
 
     private void showUpgradeToTaxnoteCloudSuccessDialog() {
 //        if (!UpgradeManger.taxnoteCloudIsActive(this)) return;
+        Log.v("TEST", "showUpgradeToTaxnoteCloudSuccessDialog 0");
         if (!mApiModel.isCloudActive()) return;
+        Log.v("TEST", "showUpgradeToTaxnoteCloudSuccessDialog 1");
 
         MixpanelAPI mixpanel = MixpanelAPI.getInstance(this, MIXPANEL_TOKEN);
         if (ZNUtils.isZeny()) {
@@ -336,6 +344,7 @@ public class UpgradeActivity extends DefaultCommonActivity {
         }
 
         if (!isFinishing()) return;
+        Log.v("TEST", "showUpgradeToTaxnoteCloudSuccessDialog 2");
         // Taxnoteアカウント作成するようダイアログを表示
         new AlertDialog.Builder(this)
                 .setTitle(R.string.cloud_sign_up_title)
@@ -710,6 +719,9 @@ public class UpgradeActivity extends DefaultCommonActivity {
             if (isFinishing()) return;
 
             Context context = getApplicationContext();
+            mApiModel = new TNApiModel(context);
+            Log.v("TEST", "CheckBillingAsyncTask subscriptionId : " + subscriptionId
+                    + ", test 0");
             switch (subscriptionId) {
                 case UpgradeManger.SKU_TAXNOTE_PLUS_ID:
                 case UpgradeManger.SKU_TAXNOTE_PLUS_ID1:
@@ -722,6 +734,8 @@ public class UpgradeActivity extends DefaultCommonActivity {
                     break;
                 case UpgradeManger.SKU_TAXNOTE_CLOUD_ID:
                 case UpgradeManger.SKU_ZENY_PREMIUM_ID:
+                    Log.v("TEST", "CheckBillingAsyncTask subscriptionId : " + subscriptionId
+                        + ", test 1");
                     long expiryTime = result.getExpiryTimeMillis();
                     if (ZNUtils.isZeny()) {
                         SharedPreferencesManager.saveZenyPremiumExpiryTime(
