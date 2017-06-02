@@ -130,6 +130,7 @@ public class UpgradeActivity extends DefaultCommonActivity {
                     try {
                         mBillingHelper.queryInventoryAsync(mGotInventoryListener);
                     } catch (IabHelper.IabAsyncInProgressException e) {
+                        Log.v("TEST", "mBillingHelper.startSetup catch e: " + e.getMessage());
                         e.printStackTrace();
                     }
                 }
@@ -143,7 +144,10 @@ public class UpgradeActivity extends DefaultCommonActivity {
 
         public void onQueryInventoryFinished(IabResult result, Inventory inventory) {
 
-            if (result.isFailure()) return;
+            if (result.isFailure()) {
+                Log.v("TEST", "IabHelper.QueryInventoryFinishedListener Failure message: " + result.getMessage());
+                return;
+            }
 
             // Restore purchases
             Purchase purchasePlus = inventory.getPurchase(UpgradeManger.SKU_TAXNOTE_PLUS_ID);
