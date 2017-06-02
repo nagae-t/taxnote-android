@@ -55,6 +55,7 @@
 
         <TextView
             style="@style/section_header"
+            android:id="@+id/account_header"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@{recurring.isExpense ? @string/entry_tab_fragment_account : @string/entry_tab_fragment_account2}" />

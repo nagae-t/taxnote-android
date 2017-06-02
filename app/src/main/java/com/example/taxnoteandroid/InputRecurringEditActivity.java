@@ -19,6 +19,7 @@ import com.example.taxnoteandroid.Library.DialogManager;
 import com.example.taxnoteandroid.Library.KeyboardUtil;
 import com.example.taxnoteandroid.Library.ValueConverter;
 import com.example.taxnoteandroid.Library.taxnote.TNApiModel;
+import com.example.taxnoteandroid.Library.zeny.ZNUtils;
 import com.example.taxnoteandroid.dataManager.AccountDataManager;
 import com.example.taxnoteandroid.dataManager.ProjectDataManager;
 import com.example.taxnoteandroid.dataManager.ReasonDataManager;
@@ -31,6 +32,8 @@ import com.example.taxnoteandroid.model.Recurring;
 import java.util.List;
 import java.util.TimeZone;
 import java.util.UUID;
+
+import static android.view.View.Z;
 
 /**
  * Created by b0ne on 2017/04/11.
@@ -120,6 +123,11 @@ public class InputRecurringEditActivity extends DefaultCommonActivity {
         binding.dateSelect.setText(mRecurringDates[Integer.valueOf(mRecurring.dateIndex+"")]);
         String priceString = (mRecurring.price == 0) ? "0" : ValueConverter.formatPrice(this,mRecurring.price);
         binding.priceSelect.setText(priceString);
+
+        if (ZNUtils.isZeny()) {
+            binding.accountHeader.setVisibility(View.GONE);
+            binding.accountSelect.setVisibility(View.GONE);
+        }
     }
 
     @Override
