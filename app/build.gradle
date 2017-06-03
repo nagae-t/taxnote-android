@@ -63,8 +63,8 @@ android {
 
         zenyProduct {
             applicationId "com.nonapp.zeny"
-            versionCode 2
-            versionName "1.0"
+            versionCode 4
+            versionName "1.0.3"
 
             buildConfigField "String", "SERVICE_API_URI", "\"https://zenyapp.com/api\""
         }
