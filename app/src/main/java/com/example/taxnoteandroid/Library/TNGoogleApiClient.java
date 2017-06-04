@@ -3,6 +3,7 @@ package com.example.taxnoteandroid.Library;
 import android.content.Context;
 import android.util.Log;
 
+import com.example.taxnoteandroid.Library.zeny.ZNUtils;
 import com.example.taxnoteandroid.R;
 import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
 import com.google.api.client.http.HttpTransport;
@@ -37,8 +38,14 @@ public class TNGoogleApiClient {
             JsonFactory jsonFactory = JacksonFactory.getDefaultInstance();
             HttpTransport httpTransport = new NetHttpTransport.Builder().build();
             try {
-                InputStream inputStream = mContext.getResources()
-                        .openRawResource(R.raw.taxnote_google_api_client);
+                InputStream inputStream;
+                if ( ZNUtils.isZeny() ) {
+                    inputStream = mContext.getResources()
+                            .openRawResource(R.raw.zeny_google_api_client);
+                } else {
+                    inputStream = mContext.getResources()
+                            .openRawResource(R.raw.taxnote_google_api_client);
+                }
 
                 GoogleCredential credential = GoogleCredential.fromStream(
                         inputStream, httpTransport, jsonFactory);
@@ -46,7 +53,7 @@ public class TNGoogleApiClient {
 
                 mPublisher = new AndroidPublisher.Builder(
                         httpTransport, jsonFactory, credential)
-                        .setApplicationName("taxnote")
+                        .setApplicationName(mContext.getString(R.string.app_name))
                         .build();
             } catch (Exception e) {
                 Log.e("ERROR", "TNGoogleApiClient init : " + e.getLocalizedMessage());
