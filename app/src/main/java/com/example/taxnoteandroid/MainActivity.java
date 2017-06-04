@@ -202,7 +202,7 @@ public class MainActivity extends DefaultCommonActivity {
 
     private void checkInAppBilling() {
         tnGoogleApi = new TNGoogleApiClient(this);
-        mBillingHelper = new IabHelper(this, UpgradeManger.GOOGLE_PLAY_LICENSE_KEY);
+        mBillingHelper = new IabHelper(this, UpgradeManger.getGooglePlayLicenseKey());
         try {
             mBillingHelper.startSetup(new IabHelper.OnIabSetupFinishedListener() {
 

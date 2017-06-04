@@ -115,7 +115,7 @@ public class UpgradeActivity extends DefaultCommonActivity {
 
     private void setupBilling() {
 
-        mBillingHelper = new IabHelper(this, UpgradeManger.GOOGLE_PLAY_LICENSE_KEY);
+        mBillingHelper = new IabHelper(this, UpgradeManger.getGooglePlayLicenseKey());
 //        mBillingHelper.enableDebugLogging(true); // Remove before release
         try {
             mBillingHelper.startSetup(new IabHelper.OnIabSetupFinishedListener() {
