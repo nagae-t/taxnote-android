@@ -7,6 +7,7 @@ import android.support.v4.app.ShareCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
+import com.example.taxnoteandroid.Library.zeny.ZNUtils;
 import com.example.taxnoteandroid.R;
 import com.example.taxnoteandroid.TaxnoteApp;
 import com.example.taxnoteandroid.dataManager.AccountDataManager;
@@ -77,7 +78,13 @@ public class FileUtil  {
                 +"_HHmmss",
                 Locale.getDefault());
         String dateString = simpleDateFormat.format(cal.getTime());
+
         String bkFilename = "taxnote_android_" + dateString + ".json";
+
+        if (ZNUtils.isZeny()) {
+            bkFilename = "zeny_android_" + dateString + ".json";
+        }
+
         File file = new File(Environment.
                 getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), bkFilename);
         FileWriter filewriter;
