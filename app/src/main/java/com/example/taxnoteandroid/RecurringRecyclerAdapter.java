@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.taxnoteandroid.Library.ValueConverter;
-import com.example.taxnoteandroid.dataManager.SharedPreferencesManager;
+import com.example.taxnoteandroid.Library.zeny.ZNUtils;
 import com.example.taxnoteandroid.databinding.RowHistoryCellBinding;
 import com.example.taxnoteandroid.databinding.RowHistorySectionHeaderBinding;
 import com.example.taxnoteandroid.model.Recurring;
@@ -106,15 +106,15 @@ public class RecurringRecyclerAdapter extends  RecyclerView.Adapter<BindingHolde
 
                 // Name
                 String nameText;
-                if (recurring.isExpense) {
-                    nameText = recurring.reason.name + " / " + recurring.account.name;
+                if (!ZNUtils.isZeny()) {
+                    String reasonName = ValueConverter.parseCategoryName(mContext, recurring.reason.name);
+                    String accName = ValueConverter.parseCategoryName(mContext, recurring.account.name);
+                    nameText = (recurring.isExpense) ? reasonName + " / " + accName
+                            : accName + " / " + reasonName;
                 } else {
-                    nameText = recurring.account.name + " / " + recurring.reason.name;
+                    nameText = recurring.reason.name;
                 }
 
-                if (!SharedPreferencesManager.isTapHereHistoryEditDone(mContext)) {
-                    nameText += " " + mContext.getString(R.string.tap_here);
-                }
                 cellBinding.name.setText(nameText);
 
                 // Memo
