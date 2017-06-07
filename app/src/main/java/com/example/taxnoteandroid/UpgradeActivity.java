@@ -429,7 +429,7 @@ public class UpgradeActivity extends DefaultCommonActivity {
                 .setNeutralButton(R.string.delete_account, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        showConfirmDeleteAccount();
+                        showConfirmDeleteAccount(email);
                     }
                 })
                 .setNegativeButton(android.R.string.cancel, null)
@@ -566,7 +566,7 @@ public class UpgradeActivity extends DefaultCommonActivity {
                         }
                         break;
                     case 2: // アカウントの削除
-                        showConfirmDeleteAccount();
+                        showConfirmDeleteAccount(null);
                         break;
                 }
             }
@@ -627,8 +627,8 @@ public class UpgradeActivity extends DefaultCommonActivity {
         });
     }
 
-    private void showConfirmDeleteAccount() {
-        if (!mApiUser.isLoggingIn()) return;
+    private void showConfirmDeleteAccount(String email) {
+        if (email == null && !mApiUser.isLoggingIn()) return;
 
         if (!TNApi.isNetworkConnected(this)) {
             DialogManager.showOKOnlyAlert(UpgradeActivity.this,
@@ -636,7 +636,8 @@ public class UpgradeActivity extends DefaultCommonActivity {
             return;
         }
 
-        String email = mApiUser.getEmail();
+        if (email == null)
+            email = mApiUser.getEmail();
         String deleteAccMsg = email + "\n" + getString(R.string.delete_account_desc);
         AlertDialog.Builder builder = new AlertDialog.Builder(this)
                 .setTitle(R.string.delete_account)
