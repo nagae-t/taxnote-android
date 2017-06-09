@@ -309,11 +309,11 @@ public class InputRecurringEditActivity extends DefaultCommonActivity {
         String savedMessage = dateString + " "
                 + mRecurring.reason.name + " " + priceString;
         DialogManager.showToast(this, savedMessage);
-        BroadcastUtil.sendReloadRecurringList(this);
 
         // api save recurring
         mApiModel.saveRecurring(mRecurring.uuid, null);
 
+        BroadcastUtil.sendReloadRecurringList(this);
         finish();
     }
 

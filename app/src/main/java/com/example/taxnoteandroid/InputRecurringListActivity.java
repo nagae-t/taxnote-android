@@ -163,6 +163,9 @@ public class InputRecurringListActivity extends DefaultCommonActivity {
                 binding.empty.setVisibility(View.VISIBLE);
                 binding.refreshLayout.setVisibility(View.GONE);
                 return;
+            } else {
+                binding.empty.setVisibility(View.GONE);
+                binding.refreshLayout.setVisibility(View.VISIBLE);
             }
 
             mRecyclerAdapter.setItems(result);
