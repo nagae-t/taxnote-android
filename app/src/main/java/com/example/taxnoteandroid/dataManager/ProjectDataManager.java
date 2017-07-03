@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.example.taxnoteandroid.Library.taxnote.TNApiModel;
 import com.example.taxnoteandroid.Library.taxnote.TNApiUser;
+import com.example.taxnoteandroid.R;
 import com.example.taxnoteandroid.TaxnoteApp;
 import com.example.taxnoteandroid.model.OrmaDatabase;
 import com.example.taxnoteandroid.model.Project;
@@ -194,5 +195,22 @@ public class ProjectDataManager {
 
     public int delete(String uuid) {
         return ormaDatabase.deleteFromProject().uuidEq(uuid).execute();
+    }
+
+
+    // App Theme for sub project
+    public static int getThemeStyle(int sharedPrefStyle) {
+        switch (sharedPrefStyle) {
+            case 0:
+            case 3:
+                return R.style.AppTheme;
+            case 1:
+            case 4:
+                return R.style.AppThemeSecond;
+            case 2:
+            case 5:
+                return R.style.AppThemeThird;
+        }
+        return 0;
     }
 }

@@ -144,6 +144,7 @@ public class SettingsTabFragment extends Fragment {
     //--------------------------------------------------------------//
 
     private void setMultipleProject() {
+        final int MAX_PROJECT_COUNT = 6;
         mApiUser = new TNApiUser(mContext);
         mApiModel = new TNApiModel(mContext);
 
@@ -160,13 +161,13 @@ public class SettingsTabFragment extends Fragment {
 
                 int projectAllSize = mProjectDataManager.allSize();
                 // 無料版はmaster含めてProject3つまで
-                if (i == 0 && projectAllSize < 3) {
+                if (i == 0 && projectAllSize < MAX_PROJECT_COUNT) {
                     if (mApiUser.isCloudActive()) {
                         showProjectEditorDialog(ProjectEditorDialogFragment.TYPE_ADD_NEW);
                     } else {
                         showCloudConfirmAddNewProject();
                     }
-                } else if (i == 0 && projectAllSize >= 3) {
+                } else if (i == 0 && projectAllSize >= MAX_PROJECT_COUNT) {
                     // 帳簿数上限に達していて「追加」ボタンをしたら何をだすかここに追加
                     DialogManager.showToast(mContext, mContext.getString(R.string.max_add_project_message));
                 } else if (i == 1) {
@@ -303,9 +304,23 @@ public class SettingsTabFragment extends Fragment {
         projectBtn.setText(project.name);
         projectBtn.setTag(project.uuid);
 
-        int radioBtnColorRes = (project.order == 1) ? R.color.second_primary : R.color.third_primary;
-            CompoundButtonCompat.setButtonTintList(projectBtn,
-                    ColorStateList.valueOf(ContextCompat.getColor(mContext, radioBtnColorRes)));
+        int radioBtnColorRes = 0;
+        int projectOrder = Integer.valueOf(String.valueOf(project.order));
+        switch (projectOrder) {
+            case 1:
+            case 4:
+                radioBtnColorRes = R.color.second_primary;
+                break;
+            case 2:
+            case 5:
+                radioBtnColorRes = R.color.third_primary;
+                break;
+            case 3:
+                radioBtnColorRes = R.color.primary;
+                break;
+        }
+        CompoundButtonCompat.setButtonTintList(projectBtn,
+                ColorStateList.valueOf(ContextCompat.getColor(mContext, radioBtnColorRes)));
 
         // delete btn
         ImageButton deleteBtn = (ImageButton)viewRow.findViewById(R.id.delete_btn);
