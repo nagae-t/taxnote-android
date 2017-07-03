@@ -9,6 +9,7 @@ import android.support.multidex.MultiDex;
 import com.crashlytics.android.Crashlytics;
 import com.example.taxnoteandroid.Library.taxnote.TNApiModel;
 import com.example.taxnoteandroid.Library.zeny.ZNUtils;
+import com.example.taxnoteandroid.dataManager.ProjectDataManager;
 import com.example.taxnoteandroid.dataManager.SharedPreferencesManager;
 import com.example.taxnoteandroid.model.OrmaDatabase;
 import com.github.gfx.android.orma.AccessThreadConstraint;
@@ -36,6 +37,7 @@ public class TaxnoteApp extends Application {
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);
         int themeStyle = SharedPreferencesManager.getAppThemeStyle(this);
+        /*
         switch (themeStyle) {
             case 0:
                 base.setTheme(R.style.AppTheme);
@@ -46,7 +48,8 @@ public class TaxnoteApp extends Application {
             case 2:
                 base.setTheme(R.style.AppThemeThird);
                 break;
-        }
+        }*/
+        base.setTheme(ProjectDataManager.getThemeStyle(themeStyle));
         MultiDex.install(this);
     }
 
