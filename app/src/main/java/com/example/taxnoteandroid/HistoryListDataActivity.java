@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -55,6 +56,7 @@ public class HistoryListDataActivity extends DefaultCommonActivity {
     private static final String KEY_REASON_NAME = "reason_name";
     private static final String KEY_IS_BALANCE = "is_balance";
     private static final String KEY_IS_EXPENSE = "is_expense";
+    private static final String KEY_MEMO = "memo";
 
     public static final String BROADCAST_DATA_RELOAD
             = "broadcast_history_list_reload";
@@ -98,6 +100,7 @@ public class HistoryListDataActivity extends DefaultCommonActivity {
         intent.putExtra(KEY_TARGET_CALENDAR, targetCalendar);
         intent.putExtra(KEY_PERIOD_TYPE, periodType);
         intent.putExtra(KEY_REASON_NAME, reasonName);
+//        intent.putExtra(KEY_MEMO, memo);
         intent.putExtra(KEY_IS_EXPENSE, isExpense);
         context.startActivity(intent);
     }
@@ -277,11 +280,13 @@ public class HistoryListDataActivity extends DefaultCommonActivity {
             List<Entry> entryData = new ArrayList<>();
             Map<String, List<Entry>> map2 = new LinkedHashMap<>();
 
+            Map<String, Entry> memoMap = new LinkedHashMap<>();
+
             // 入力日ごとにグルーピング
             for (Entry entry : entries) {
 
                 // Format date to string
-                SimpleDateFormat simpleDateFormat = new SimpleDateFormat(getResources().getString(R.string.date_string_format_to_year_month_day_weekday));
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat(getResources().getString(R.string.date_string_format_to_year_month_day_weekday), Locale.getDefault());
                 String dateString = simpleDateFormat.format(entry.date);
 
                 if (!map2.containsKey(dateString)) {
@@ -293,7 +298,31 @@ public class HistoryListDataActivity extends DefaultCommonActivity {
                     entryList.add(entry);
                     map2.put(dateString, entryList);
                 }
+
+                // 備考ごとのデータ
+                String _memo = entry.memo;
+                if (memoMap.containsKey(_memo)) {
+                    Entry _memoEntry = memoMap.get(_memo);
+                    _memoEntry.price += entry.price;
+                } else {
+                    Entry _memoEntry = new Entry();
+                    _memoEntry.viewType = CommonEntryRecyclerAdapter.VIEW_ITEM_REPORT_CELL;
+                    _memoEntry.reasonName = _memo;
+                    _memoEntry.price += entry.price;
+                    memoMap.put(_memo, _memoEntry);
+                }
+
             }
+
+            // 備考順番ソート
+            List<Map.Entry<String, Entry>> memoSortList = EntryLimitManager.sortMemoLinkedHashMap(memoMap);
+            for (Map.Entry<String, Entry> entry : memoSortList) {
+                Entry memoEntry = entry.getValue();
+                Log.v("TEST", memoEntry.reasonName +" : " +memoEntry.price);
+//                resultEntries.add(entry.getValue());
+            }
+            // 備考データが２つ以上の場合
+            if ()
 
             // RecyclerViewに渡すためにMapをListに変換する
             for (Map.Entry<String, List<Entry>> e : map2.entrySet()) {

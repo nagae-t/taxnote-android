@@ -171,4 +171,26 @@ public class EntryLimitManager {
         return dataList;
     }
 
+    public static List<Map.Entry<String, Entry>> sortMemoLinkedHashMap(Map<String, Entry> sourceMap) {
+        List<Map.Entry<String, Entry>> dataList =
+                new ArrayList<>(sourceMap.entrySet());
+        Collections.sort(dataList, new Comparator<Map.Entry<String, Entry>>() {
+
+            @Override
+            public int compare(Map.Entry<String, Entry> entry1,
+                               Map.Entry<String, Entry> entry2) {
+                long entry1sum = entry1.getValue().price;
+                long entry2sum = entry2.getValue().price;
+                if (entry1sum < entry2sum) {
+                    return 1;
+                } else if (entry1sum == entry2sum) {
+                    return 0;
+                } else {
+                    return -1;
+                }
+            }
+        });
+        return dataList;
+    }
+
 }
