@@ -284,10 +284,12 @@ public class ReportContentFragment extends Fragment {
             mRecyclerAdapter.setOnItemClickListener(new CommonEntryRecyclerAdapter.OnItemClickListener() {
                 @Override
                 public void onItemClick(View view, int position, Entry entry) {
+                    if (entry.price == 0) return;
                     String reasonName = null;
                     if (entry.viewType == CommonEntryRecyclerAdapter.VIEW_ITEM_REPORT_CELL)
                         reasonName = entry.reasonName;
-                    HistoryListDataActivity.start(mContext, mTargetCalendar, reasonName, entry.isExpense);
+                    HistoryListDataActivity.start(mContext,
+                            mTargetCalendar, reasonName, null, entry.isExpense, true);
                 }
             });
             binding.reportList.setAdapter(mRecyclerAdapter);

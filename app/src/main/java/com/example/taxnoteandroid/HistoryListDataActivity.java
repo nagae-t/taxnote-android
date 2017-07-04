@@ -11,7 +11,6 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -46,8 +45,11 @@ public class HistoryListDataActivity extends DefaultCommonActivity {
     private int mPeriodType;
     private boolean mIsExpense;
     private boolean mIsBalance;
+    private Calendar mTargetCalendar;
     private long[] mStartEndDate;
     private String mReasonName = null;
+    private String mMemoValue = null;
+    private boolean mIsViewTotal = false;
 
     private TNApiModel mApiModel;
 
@@ -57,6 +59,7 @@ public class HistoryListDataActivity extends DefaultCommonActivity {
     private static final String KEY_IS_BALANCE = "is_balance";
     private static final String KEY_IS_EXPENSE = "is_expense";
     private static final String KEY_MEMO = "memo";
+    private static final String KEY_IS_VIEW_TOTAL = "is_view_total";
 
     public static final String BROADCAST_DATA_RELOAD
             = "broadcast_history_list_reload";
@@ -89,19 +92,27 @@ public class HistoryListDataActivity extends DefaultCommonActivity {
      * @param reasonName
      * @param isExpense
      */
-    public static void start(Context context, Calendar targetCalendar, String reasonName, boolean isExpense) {
-        start(context, 0, targetCalendar, reasonName, isExpense);
+    public static void start(Context context, Calendar targetCalendar,
+                             String reasonName, String memo, boolean isExpense) {
+        start(context, 0, targetCalendar, reasonName, memo, isExpense, false);
+    }
+
+    public static void start(Context context, Calendar targetCalendar,
+                             String reasonName, String memo,
+                             boolean isExpense, boolean isViewTotal) {
+        start(context, 0, targetCalendar, reasonName, memo, isExpense, isViewTotal);
     }
 
     public static void start(Context context, int periodType, Calendar targetCalendar,
-                             String reasonName, boolean isExpense) {
+                             String reasonName, String memo, boolean isExpense, boolean isViewTotal) {
         Intent intent = new Intent(context, HistoryListDataActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.putExtra(KEY_TARGET_CALENDAR, targetCalendar);
         intent.putExtra(KEY_PERIOD_TYPE, periodType);
         intent.putExtra(KEY_REASON_NAME, reasonName);
-//        intent.putExtra(KEY_MEMO, memo);
+        intent.putExtra(KEY_MEMO, memo);
         intent.putExtra(KEY_IS_EXPENSE, isExpense);
+        intent.putExtra(KEY_IS_VIEW_TOTAL, isViewTotal);
         context.startActivity(intent);
     }
 
@@ -123,12 +134,14 @@ public class HistoryListDataActivity extends DefaultCommonActivity {
         mEntryManager = new EntryDataManager(this);
 
         Intent receiptIntent = getIntent();
-        Calendar targetCalendar  = (Calendar) receiptIntent.getSerializableExtra(KEY_TARGET_CALENDAR);
+        mTargetCalendar  = (Calendar) receiptIntent.getSerializableExtra(KEY_TARGET_CALENDAR);
         mReasonName = receiptIntent.getStringExtra(KEY_REASON_NAME);
         mIsBalance = receiptIntent.getBooleanExtra(KEY_IS_BALANCE, false);
         mIsExpense = receiptIntent.getBooleanExtra(KEY_IS_EXPENSE, false);
+        mMemoValue = receiptIntent.getStringExtra(KEY_MEMO);
+        mIsViewTotal = receiptIntent.getBooleanExtra(KEY_IS_VIEW_TOTAL, false);
 
-        String pageTitle = getCalendarStringFromPeriodType(targetCalendar);
+        String pageTitle = getCalendarStringFromPeriodType(mTargetCalendar);
         String pageSubTitle = mReasonName;
         if (mIsBalance) {
             pageSubTitle = getString(R.string.History);
@@ -142,7 +155,7 @@ public class HistoryListDataActivity extends DefaultCommonActivity {
         actionBar.setSubtitle(pageSubTitle);
         actionBar.setDisplayHomeAsUpEnabled(true);
 
-        mStartEndDate = EntryLimitManager.getStartAndEndDate(this, mPeriodType, targetCalendar);
+        mStartEndDate = EntryLimitManager.getStartAndEndDate(this, mPeriodType, mTargetCalendar);
 
         binding.refreshLayout.setEnabled(false);
         loadEntryData(mStartEndDate, mIsBalance, mIsExpense);
@@ -257,7 +270,14 @@ public class HistoryListDataActivity extends DefaultCommonActivity {
             if (isBalance) {
                 entries = mEntryManager.findAll(startEndDate, false);
             } else {
-                List<Entry> _entries = mEntryManager.findAll(startEndDate, isExpense, false);
+                List<Entry> _entries = (mMemoValue == null)
+                        ? mEntryManager.findAll(startEndDate, isExpense, false)
+                        : mEntryManager.findAll(startEndDate, mMemoValue, isExpense, false);
+                if (mMemoValue == null && mReasonName != null) {
+                    // mEntryManager.findAll(startEndDate, isExpense, false)
+                } else if (mMemoValue != null && mReasonName != null) {
+
+                }
                 entries = new ArrayList<>();
 
                 // Filter data by reasonName
@@ -285,6 +305,7 @@ public class HistoryListDataActivity extends DefaultCommonActivity {
             // 備考金額の合計
             Entry memoSum = new Entry();
             memoSum.viewType = CommonEntryRecyclerAdapter.VIEW_ITEM_REPORT_TOTAL;
+            memoSum.isExpense = mIsExpense;
 
             // 入力日ごとにグルーピング
             for (Entry entry : entries) {
@@ -310,6 +331,7 @@ public class HistoryListDataActivity extends DefaultCommonActivity {
                     _memoEntry.price += entry.price;
                 } else {
                     Entry _memoEntry = new Entry();
+                    _memoEntry.isExpense = mIsExpense;
                     _memoEntry.viewType = CommonEntryRecyclerAdapter.VIEW_ITEM_REPORT_CELL;
                     _memoEntry.reasonName = _memo;
                     _memoEntry.price += entry.price;
@@ -320,7 +342,7 @@ public class HistoryListDataActivity extends DefaultCommonActivity {
             }
             int memoMapSize = memoMap.size();
             // 備考データが２つ以上の場合
-            if (memoMapSize > 1) {
+            if (mIsViewTotal && memoMapSize > 1 && mReasonName != null && mMemoValue == null) {
                 entryData.add(memoSum);
 
                 Entry memoSection = new Entry();
@@ -332,9 +354,7 @@ public class HistoryListDataActivity extends DefaultCommonActivity {
                 List<Map.Entry<String, Entry>> memoSortList = EntryLimitManager.sortMemoLinkedHashMap(memoMap);
                 for (Map.Entry<String, Entry> entry : memoSortList) {
                     Entry memoEntry = entry.getValue();
-                    Log.v("TEST", memoEntry.reasonName +" : " +memoEntry.price);
                     entryData.add(memoEntry);
-//                resultEntries.add(entry.getValue());
                 }
                 return entryData;
 
@@ -373,19 +393,33 @@ public class HistoryListDataActivity extends DefaultCommonActivity {
 
         @Override
         protected void onPostExecute(List<Entry> result) {
+
             if (result.size() == 0) {
                 binding.entries.setVisibility(View.GONE);
                 binding.empty.setVisibility(View.VISIBLE);
+                return;
             } else {
                 binding.entries.setVisibility(View.VISIBLE);
                 binding.empty.setVisibility(View.GONE);
             }
 
+            Entry topEntry = result.get(0);
+            final boolean isMemoData = (topEntry.viewType == CommonEntryRecyclerAdapter.VIEW_ITEM_REPORT_TOTAL);
+
             mEntryAdapter = new CommonEntryRecyclerAdapter(getApplicationContext(), result);
             mEntryAdapter.setOnItemClickListener(new CommonEntryRecyclerAdapter.OnItemClickListener() {
                 @Override
                 public void onItemClick(View view, int position, Entry entry) {
-                    EntryEditActivity.start(getApplicationContext(), entry);
+
+                    if (entry.price == 0) return;
+                    if (isMemoData) {
+                        String memoValue = (position == 0) ? null : entry.reasonName;
+                        start(view.getContext(),
+                                mTargetCalendar, mReasonName, memoValue,
+                                entry.isExpense, (memoValue != null));
+                    } else {
+                        EntryEditActivity.start(getApplicationContext(), entry);
+                    }
                 }
             });
             binding.entries.setAdapter(mEntryAdapter);
