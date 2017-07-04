@@ -22,6 +22,8 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static com.example.taxnoteandroid.R.id.memo;
+
 public class EntryDataManager {
 
     // レポート期間タイプ別の定義
@@ -167,6 +169,41 @@ public class EntryDataManager {
                 where(Entry_Schema.INSTANCE.deleted.getQualifiedName() + " = 0")
                 .projectEq(project)
                 .where(Entry_Schema.INSTANCE.isExpense.getQualifiedName() + " = " + expense);
+
+        String schemeData = Entry_Schema.INSTANCE.date.getQualifiedName();
+        if (startAndEndDate != null) {
+
+            // Get entries filtered within startDate and endDate
+            long startDate  = startAndEndDate[0];
+            long endDate    = startAndEndDate[1];
+
+            selector = selector
+                    .where(schemeData + " > " + startDate)
+                    .where(schemeData + " < " + endDate);
+        }
+        entries = selector
+                .orderBy(schemeData + " " + orderSpec)
+                .orderBy(Entry_Schema.INSTANCE.updated.getQualifiedName() + " " + orderSpec)
+                .toList();
+
+        return entries;
+    }
+
+    // 備考で探す
+    public List<Entry> findAll(long[] startAndEndDate, String memo, boolean isExpense, Boolean asc) {
+        ProjectDataManager projectDataManager   = new ProjectDataManager(mContext);
+        Project project                         = projectDataManager.findCurrent();
+
+        List<Entry> entries;
+        String orderSpec = (asc) ? OrderSpec.ASC : OrderSpec.DESC;
+
+        int expense = (isExpense) ? 1 : 0;
+        Entry_Selector selector = ormaDatabase.selectFromEntry().
+                where(Entry_Schema.INSTANCE.deleted.getQualifiedName() + " = 0")
+                .projectEq(project)
+                .where(Entry_Schema.INSTANCE.isExpense.getQualifiedName() + " = " + expense)
+                .where(Entry_Schema.INSTANCE.memo.getQualifiedName()
+                        + "='"+memo+"'");
 
         String schemeData = Entry_Schema.INSTANCE.date.getQualifiedName();
         if (startAndEndDate != null) {

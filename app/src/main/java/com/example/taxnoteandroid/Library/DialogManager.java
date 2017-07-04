@@ -665,7 +665,7 @@ public class DialogManager {
                         int _periodType = (isPeriodYear) ? EntryDataManager.PERIOD_TYPE_MONTH
                                 : EntryDataManager.PERIOD_TYPE_DAY;
                         HistoryListDataActivity.start(activity, _periodType,
-                                targetCalendar, reasonName, isExpense);
+                                targetCalendar, reasonName, null, isExpense, false);
                     }
                 })
                 .show();
