@@ -273,11 +273,6 @@ public class HistoryListDataActivity extends DefaultCommonActivity {
                 List<Entry> _entries = (mMemoValue == null)
                         ? mEntryManager.findAll(startEndDate, isExpense, false)
                         : mEntryManager.findAll(startEndDate, mMemoValue, isExpense, false);
-                if (mMemoValue == null && mReasonName != null) {
-                    // mEntryManager.findAll(startEndDate, isExpense, false)
-                } else if (mMemoValue != null && mReasonName != null) {
-
-                }
                 entries = new ArrayList<>();
 
                 // Filter data by reasonName
@@ -359,7 +354,6 @@ public class HistoryListDataActivity extends DefaultCommonActivity {
                 return entryData;
 
             }
-
 
             // RecyclerViewに渡すためにMapをListに変換する
             for (Map.Entry<String, List<Entry>> e : map2.entrySet()) {
