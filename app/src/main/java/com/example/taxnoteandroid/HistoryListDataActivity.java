@@ -280,7 +280,11 @@ public class HistoryListDataActivity extends DefaultCommonActivity {
             List<Entry> entryData = new ArrayList<>();
             Map<String, List<Entry>> map2 = new LinkedHashMap<>();
 
+
             Map<String, Entry> memoMap = new LinkedHashMap<>();
+            // 備考金額の合計
+            Entry memoSum = new Entry();
+            memoSum.viewType = CommonEntryRecyclerAdapter.VIEW_ITEM_REPORT_TOTAL;
 
             // 入力日ごとにグルーピング
             for (Entry entry : entries) {
@@ -311,18 +315,31 @@ public class HistoryListDataActivity extends DefaultCommonActivity {
                     _memoEntry.price += entry.price;
                     memoMap.put(_memo, _memoEntry);
                 }
+                memoSum.price += entry.price;
 
             }
-
-            // 備考順番ソート
-            List<Map.Entry<String, Entry>> memoSortList = EntryLimitManager.sortMemoLinkedHashMap(memoMap);
-            for (Map.Entry<String, Entry> entry : memoSortList) {
-                Entry memoEntry = entry.getValue();
-                Log.v("TEST", memoEntry.reasonName +" : " +memoEntry.price);
-//                resultEntries.add(entry.getValue());
-            }
+            int memoMapSize = memoMap.size();
             // 備考データが２つ以上の場合
-            if ()
+            if (memoMapSize > 1) {
+                entryData.add(memoSum);
+
+                Entry memoSection = new Entry();
+                memoSection.viewType = CommonEntryRecyclerAdapter.VIEW_ITEM_HEADER;
+                memoSection.titleName = getString(R.string.Details);
+                entryData.add(memoSection);
+
+                // 備考順番ソート
+                List<Map.Entry<String, Entry>> memoSortList = EntryLimitManager.sortMemoLinkedHashMap(memoMap);
+                for (Map.Entry<String, Entry> entry : memoSortList) {
+                    Entry memoEntry = entry.getValue();
+                    Log.v("TEST", memoEntry.reasonName +" : " +memoEntry.price);
+                    entryData.add(memoEntry);
+//                resultEntries.add(entry.getValue());
+                }
+                return entryData;
+
+            }
+
 
             // RecyclerViewに渡すためにMapをListに変換する
             for (Map.Entry<String, List<Entry>> e : map2.entrySet()) {
