@@ -2,7 +2,6 @@ package com.example.taxnoteandroid.dataManager;
 
 import android.content.Context;
 import android.content.Intent;
-import android.support.v4.content.IntentCompat;
 import android.support.v7.app.AppCompatActivity;
 
 import com.example.taxnoteandroid.Library.BroadcastUtil;
@@ -210,8 +209,8 @@ public class DefaultDataInstaller {
     public static void restartApp(AppCompatActivity activity) {
         BroadcastUtil.sendRestartApp(activity);
         Intent mainIntent = new Intent(getApplicationContext(), MainActivity.class);
-        Intent intentCompat = IntentCompat.makeRestartActivityTask(mainIntent.getComponent());
-        activity.startActivity(intentCompat);
-        activity.finish();
+        mainIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        activity.startActivity(mainIntent);
+        Runtime.getRuntime().exit(0);
     }
 }
