@@ -462,15 +462,19 @@ public class UpgradeActivity extends DefaultCommonActivity {
             int viewId = view.getId();
             switch (viewId) {
                 case R.id.cloud_login_layout:
-                    if (TNApi.isNetworkConnected(getApplicationContext())) {
-                        LoginCloudActivity.startForResult(UpgradeActivity.this,
-                                REQUEST_CODE_CLOUD_LOGIN,
-                                LoginCloudActivity.VIEW_TYPE_LOGIN);
-                    } else {
-                        DialogManager.showOKOnlyAlert(UpgradeActivity.this,
-                                null, getString(R.string.network_not_connection));
-                    }
+                    LoginCloudActivity.startForResult(UpgradeActivity.this,
+                            REQUEST_CODE_CLOUD_REGISTER,
+                            LoginCloudActivity.VIEW_TYPE_REGISTER);
                     break;
+//                    if (TNApi.isNetworkConnected(getApplicationContext())) {
+//                        LoginCloudActivity.startForResult(UpgradeActivity.this,
+//                                REQUEST_CODE_CLOUD_LOGIN,
+//                                LoginCloudActivity.VIEW_TYPE_LOGIN);
+//                    } else {
+//                        DialogManager.showOKOnlyAlert(UpgradeActivity.this,
+//                                null, getString(R.string.network_not_connection));
+//                    }
+//                    break;
                 case R.id.cloud_purchase_layout:
                     checkCloudPurchaseAction();
                     break;

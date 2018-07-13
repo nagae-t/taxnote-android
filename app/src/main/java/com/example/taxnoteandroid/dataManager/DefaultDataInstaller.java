@@ -211,6 +211,6 @@ public class DefaultDataInstaller {
         Intent mainIntent = new Intent(getApplicationContext(), MainActivity.class);
         mainIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         activity.startActivity(mainIntent);
-        Runtime.getRuntime().exit(0);
+        activity.finishAffinity();
     }
 }
