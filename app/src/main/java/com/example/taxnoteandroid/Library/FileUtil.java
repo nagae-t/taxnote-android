@@ -155,6 +155,7 @@ public class FileUtil  {
             ProjectDataManager projectDataManager = new ProjectDataManager(context);
             for (JsonElement projectJson : jsonList) {
                 Project newProject = gson.fromJson(projectJson, Project.class);
+                newProject.needSave = true;
                 long newProjectId = projectDataManager.save(newProject);
                 newProject.id = newProjectId;
 
@@ -167,6 +168,7 @@ public class FileUtil  {
                 AccountDataManager accountDataManager = new AccountDataManager(context);
                 for (JsonElement jsItem : jsonList) {
                     Account newData = gson.fromJson(jsItem, Account.class);
+                    newData.needSave = true;
                     if (newData.project.uuid.equals(newProject.uuid)) {
                         newData.project = newProject;
                         accountDataManager.save(newData);
@@ -178,6 +180,7 @@ public class FileUtil  {
                 ReasonDataManager reasonDataManager = new ReasonDataManager(context);
                 for (JsonElement jsItem : jsonList) {
                     Reason newData = gson.fromJson(jsItem, Reason.class);
+                    newData.needSave = true;
                     if (newData.project.uuid.equals(newProject.uuid)) {
                         newData.project = newProject;
                         reasonDataManager.save(newData);
@@ -189,6 +192,7 @@ public class FileUtil  {
                 EntryDataManager entryDataManager = new EntryDataManager(context);
                 for (JsonElement jsItem : jsonList) {
                     Entry newData = gson.fromJson(jsItem, Entry.class);
+                    newData.needSave = true;
                     if (newData.project.uuid.equals(newProject.uuid)) {
                         newData.project = newProject;
                         newData.account = accountDataManager.findByUuid(newData.account.uuid);
@@ -202,6 +206,7 @@ public class FileUtil  {
                 SummaryDataManager summDataManager = new SummaryDataManager(context);
                 for (JsonElement jsItem : jsonList) {
                     Summary newData = gson.fromJson(jsItem, Summary.class);
+                    newData.needSave = true;
                     if (newData.project.uuid.equals(newProject.uuid)) {
                         newData.project = newProject;
                         newData.reason = reasonDataManager.findByUuid(newData.reason.uuid);
@@ -214,6 +219,7 @@ public class FileUtil  {
                 RecurringDataManager recDataManager = new RecurringDataManager(context);
                 for (JsonElement jsItem : jsonList) {
                     Recurring newData = gson.fromJson(jsItem, Recurring.class);
+                    newData.needSave = true;
                     if (newData.project.uuid.equals(newProject.uuid)) {
                         newData.project = newProject;
                         recDataManager.save(newData);
