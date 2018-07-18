@@ -3,6 +3,7 @@ package com.example.taxnoteandroid.dataManager;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 
 import com.example.taxnoteandroid.Library.BroadcastUtil;
 import com.example.taxnoteandroid.Library.zeny.ZNUtils;
@@ -107,6 +108,8 @@ public class DefaultDataInstaller {
      * @param targetProject
      */
     public static void switchProject(Context context, Project targetProject) {
+        Log.v("TEST", "switchProject :" + targetProject.name
+                + " | " + targetProject.uuid);
         // Save shared preferences
         SharedPreferencesManager.saveUuidForCurrentProject(context, targetProject.uuid);
     }

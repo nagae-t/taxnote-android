@@ -105,7 +105,7 @@ public class MainActivity extends DefaultCommonActivity {
     private final BroadcastReceiver mRestartAppReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            finish();
+            finishAffinity();
             System.exit(0);
         }
     };

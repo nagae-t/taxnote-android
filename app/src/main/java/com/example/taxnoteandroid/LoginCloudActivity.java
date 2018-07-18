@@ -472,7 +472,7 @@ public class LoginCloudActivity extends DefaultCommonActivity {
 
         @Override
         protected void onPostExecute(Boolean result) {
-            // set theme style to default
+
             final TNApiModel apiModel = new TNApiModel(getApplicationContext());
             apiModel.setIsSyncing(true);
             apiModel.saveAllDataAfterRegister(new AsyncOkHttpClient.Callback() {
