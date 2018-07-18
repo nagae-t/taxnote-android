@@ -7,13 +7,18 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.ShareCompat;
+import android.util.Log;
 import android.view.View;
 
+import com.example.taxnoteandroid.Library.AsyncOkHttpClient;
 import com.example.taxnoteandroid.Library.DialogManager;
 import com.example.taxnoteandroid.Library.FileUtil;
+import com.example.taxnoteandroid.Library.taxnote.TNApiModel;
 import com.example.taxnoteandroid.dataManager.DefaultDataInstaller;
 import com.example.taxnoteandroid.dataManager.SharedPreferencesManager;
 import com.example.taxnoteandroid.databinding.ActivityImportFilterBinding;
+
+import okhttp3.Response;
 
 /**
  * Created by b0ne on 2017/03/08.
@@ -98,8 +103,40 @@ public class ImportFilterActivity extends DefaultCommonActivity {
             // set theme style to default
             SharedPreferencesManager.saveAppThemeStyle(getApplicationContext(), 0);
 
-            binding.loadingLayout.setVisibility(View.GONE);
-            binding.backupFinishedLayout.setVisibility(View.VISIBLE);
+            final TNApiModel apiModel = new TNApiModel(getApplicationContext());
+            if (!apiModel.isLoggingIn() || apiModel.isSyncing()) {
+                binding.loadingLayout.setVisibility(View.GONE);
+                binding.backupFinishedLayout.setVisibility(View.VISIBLE);
+                return;
+            }
+
+            // ログインしていればデータを同期するように
+            apiModel.setIsSyncing(true);
+            apiModel.saveAllDataAfterRegister(new AsyncOkHttpClient.Callback() {
+                @Override
+                public void onFailure(Response response, Throwable throwable) {
+                    Log.e("Error", "DataImportTask syncData onFailure");
+                    apiModel.setIsSyncing(false);
+
+                    String errorMsg = "";
+                    if (response != null) {
+                        errorMsg = response.message();
+                    } else if (throwable != null) {
+                        errorMsg = throwable.getLocalizedMessage();
+                    }
+                    DialogManager.showOKOnlyAlert(ImportFilterActivity.this,
+                            "Error", errorMsg);
+                }
+
+                @Override
+                public void onSuccess(Response response, String content) {
+                    apiModel.setIsSyncing(false);
+
+                    binding.loadingLayout.setVisibility(View.GONE);
+                    binding.backupFinishedLayout.setVisibility(View.VISIBLE);
+                }
+            });
+
         }
     }
 

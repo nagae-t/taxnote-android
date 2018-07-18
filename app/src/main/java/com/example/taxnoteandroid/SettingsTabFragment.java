@@ -191,6 +191,8 @@ public class SettingsTabFragment extends Fragment {
                 ColorStateList.valueOf(ContextCompat.getColor(mContext, R.color.primary)));
         for (Project project : mAllProjects) {
             if (project.isMaster && !project.name.equals("master")) {
+                Log.v("TEST", "project main :" + project.name
+                        + " | " + project.uuid);
                 binding.mainProjectRadio.setText(project.name);
                 break;
             }
@@ -204,6 +206,8 @@ public class SettingsTabFragment extends Fragment {
         List<Project> projects = mProjectDataManager.findAll(false);
         for (int i=0; i<projects.size(); i++) {
             Project _pj = projects.get(i);
+            Log.v("TEST", "project sub :" + _pj.name
+                    + " | " + _pj.uuid);
             _pj.order = i+1;
             addSubProjectView(_pj);
         }
@@ -367,6 +371,7 @@ public class SettingsTabFragment extends Fragment {
                 checkCurrentProjectToRadio();
                 return;
             }
+            Log.v("TEST", "projectRadioOnClick 0 ");
 
             if (viewId == mainRadio.getId()) { // master project radio
                 if (mCurrentProject.isMaster) return;
@@ -377,6 +382,7 @@ public class SettingsTabFragment extends Fragment {
             }
             mainRadio.setChecked(false);
 
+            Log.v("TEST", "projectRadioOnClick 1 ");
             LinearLayout subProjectView = binding.subProjectRadioLayout;
             String tagUuid = null;
             for (int i=0; i<subProjectView.getChildCount(); i++) {
@@ -393,6 +399,7 @@ public class SettingsTabFragment extends Fragment {
                     }
                 }
             }
+            Log.v("TEST", "projectRadioOnClick 2 tagUUID: " + tagUuid);
             if (tagUuid != null)
                 switchUseProject(false, tagUuid);
         }
@@ -431,7 +438,7 @@ public class SettingsTabFragment extends Fragment {
     private void switchUseProject(boolean isMaster, String uuid) {
         DefaultDataInstaller.switchProject(mContext, getProjectEditing(isMaster, uuid));
         // restart
-        DefaultDataInstaller.restartApp((AppCompatActivity) getActivity());
+//        DefaultDataInstaller.restartApp((AppCompatActivity) getActivity());
     }
 
     private void unCheckAllSubProjectRadio() {
@@ -448,6 +455,8 @@ public class SettingsTabFragment extends Fragment {
 
     private void checkCurrentProjectToRadio() {
         mCurrentProject = mProjectDataManager.findCurrent();
+        Log.v("TEST", "checkCurrentProjectToRadio : "+mCurrentProject.name
+                + " | " + mCurrentProject.uuid);
         if (mCurrentProject.isMaster) {
             unCheckAllSubProjectRadio();
             return;
@@ -460,8 +469,10 @@ public class SettingsTabFragment extends Fragment {
 
         for (int i=0; i<subProjectView.getChildCount(); i++) {
             View subView = subProjectView.getChildAt(i);
-            AppCompatRadioButton radioBtn = (AppCompatRadioButton)subView.findViewById(R.id.project_radio_btn);
+            AppCompatRadioButton radioBtn = subView.findViewById(R.id.project_radio_btn);
+            Log.v("TEST", " loop radioBtn.tag  "+ radioBtn.getTag().toString());
             if (radioBtn != null && radioBtn.getTag().toString().equals(mCurrentProject.uuid)) {
+                Log.v("TEST", " loop radioBtn.tag setChecked  "+ radioBtn.getTag().toString());
                 radioBtn.setChecked(true);
             }
 
