@@ -23,7 +23,6 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
-import android.widget.RadioButton;
 import android.widget.TextView;
 
 import com.example.taxnoteandroid.Library.AsyncOkHttpClient;
@@ -191,8 +190,6 @@ public class SettingsTabFragment extends Fragment {
                 ColorStateList.valueOf(ContextCompat.getColor(mContext, R.color.primary)));
         for (Project project : mAllProjects) {
             if (project.isMaster && !project.name.equals("master")) {
-                Log.v("TEST", "project main :" + project.name
-                        + " | " + project.uuid);
                 binding.mainProjectRadio.setText(project.name);
                 break;
             }
@@ -206,8 +203,6 @@ public class SettingsTabFragment extends Fragment {
         List<Project> projects = mProjectDataManager.findAll(false);
         for (int i=0; i<projects.size(); i++) {
             Project _pj = projects.get(i);
-            Log.v("TEST", "project sub :" + _pj.name
-                    + " | " + _pj.uuid);
             _pj.order = i+1;
             addSubProjectView(_pj);
         }
@@ -303,7 +298,7 @@ public class SettingsTabFragment extends Fragment {
         final View viewRow = mInflater.inflate(R.layout.project_multi_row, binding.subProjectRadioLayout, false);
 
         // radio btn
-        AppCompatRadioButton projectBtn = (AppCompatRadioButton)viewRow.findViewById(R.id.project_radio_btn);
+        AppCompatRadioButton projectBtn = viewRow.findViewById(R.id.project_radio_btn);
         projectBtn.setOnClickListener(projectRadioOnClick);
         projectBtn.setText(project.name);
         projectBtn.setTag(project.uuid);
@@ -350,7 +345,7 @@ public class SettingsTabFragment extends Fragment {
         LinearLayout subProjectView = binding.subProjectRadioLayout;
         for (int i=0; i<subProjectView.getChildCount(); i++) {
             View subView = subProjectView.getChildAt(i);
-            AppCompatRadioButton radioBtn = (AppCompatRadioButton)subView.findViewWithTag(mEditingProject.uuid);
+            AppCompatRadioButton radioBtn = subView.findViewWithTag(mEditingProject.uuid);
             if (radioBtn != null ) {
                 radioBtn.setText(newName);
             }
@@ -364,14 +359,13 @@ public class SettingsTabFragment extends Fragment {
         @Override
         public void onClick(View view) {
             int viewId = view.getId();
-            RadioButton mainRadio = binding.mainProjectRadio;
+            AppCompatRadioButton mainRadio = binding.mainProjectRadio;
             if (isProjectEditing) { // edit mode
                 setProjectEditing(view);
                 showProjectEditorDialog(ProjectEditorDialogFragment.TYPE_EDIT_NAME);
                 checkCurrentProjectToRadio();
                 return;
             }
-            Log.v("TEST", "projectRadioOnClick 0 ");
 
             if (viewId == mainRadio.getId()) { // master project radio
                 if (mCurrentProject.isMaster) return;
@@ -382,12 +376,11 @@ public class SettingsTabFragment extends Fragment {
             }
             mainRadio.setChecked(false);
 
-            Log.v("TEST", "projectRadioOnClick 1 ");
             LinearLayout subProjectView = binding.subProjectRadioLayout;
             String tagUuid = null;
             for (int i=0; i<subProjectView.getChildCount(); i++) {
                 View subView = subProjectView.getChildAt(i);
-                AppCompatRadioButton radioBtn = (AppCompatRadioButton) subView.findViewById(R.id.project_radio_btn);
+                AppCompatRadioButton radioBtn =  subView.findViewById(R.id.project_radio_btn);
                 String radioTagUuid = radioBtn.getTag().toString();
                 if (!mCurrentProject.uuid.equals(radioTagUuid)) {
                     if (radioTagUuid.equals(view.getTag())) {
@@ -399,7 +392,6 @@ public class SettingsTabFragment extends Fragment {
                     }
                 }
             }
-            Log.v("TEST", "projectRadioOnClick 2 tagUUID: " + tagUuid);
             if (tagUuid != null)
                 switchUseProject(false, tagUuid);
         }
@@ -415,7 +407,7 @@ public class SettingsTabFragment extends Fragment {
         String tagUuid = null;
         for (int i=0; i<subProjectView.getChildCount(); i++) {
             View subView = subProjectView.getChildAt(i);
-            AppCompatRadioButton radioBtn = (AppCompatRadioButton) subView.findViewById(R.id.project_radio_btn);
+            AppCompatRadioButton radioBtn = subView.findViewById(R.id.project_radio_btn);
             if (radioBtn != null && radioBtn.getTag() == selectedView.getTag()) {
                 tagUuid = radioBtn.getTag().toString();
                 break;
@@ -438,16 +430,17 @@ public class SettingsTabFragment extends Fragment {
     private void switchUseProject(boolean isMaster, String uuid) {
         DefaultDataInstaller.switchProject(mContext, getProjectEditing(isMaster, uuid));
         // restart
-//        DefaultDataInstaller.restartApp((AppCompatActivity) getActivity());
+        DefaultDataInstaller.restartApp((AppCompatActivity) getActivity());
     }
 
     private void unCheckAllSubProjectRadio() {
         LinearLayout subProjectView = binding.subProjectRadioLayout;
         for (int i=0; i<subProjectView.getChildCount(); i++) {
             View subView = subProjectView.getChildAt(i);
-            AppCompatRadioButton radioBtn = (AppCompatRadioButton)subView.findViewById(R.id.project_radio_btn);
+            AppCompatRadioButton radioBtn = subView.findViewById(R.id.project_radio_btn);
             if (radioBtn != null) {
                 radioBtn.setChecked(false);
+                radioBtn.jumpDrawablesToCurrentState();
             }
 
         }
@@ -455,8 +448,6 @@ public class SettingsTabFragment extends Fragment {
 
     private void checkCurrentProjectToRadio() {
         mCurrentProject = mProjectDataManager.findCurrent();
-        Log.v("TEST", "checkCurrentProjectToRadio : "+mCurrentProject.name
-                + " | " + mCurrentProject.uuid);
         if (mCurrentProject.isMaster) {
             unCheckAllSubProjectRadio();
             return;
@@ -465,15 +456,17 @@ public class SettingsTabFragment extends Fragment {
         LinearLayout subProjectView = binding.subProjectRadioLayout;
 
         binding.mainProjectRadio.setChecked(false);
+        // https://stackoverflow.com/questions/45926301/radio-button-is-only-partially-checked
+        // RadioとCheckboxにbugがあるため、jumpDrawablesToCurrentStateで解決
+        binding.mainProjectRadio.jumpDrawablesToCurrentState();
         unCheckAllSubProjectRadio();
 
         for (int i=0; i<subProjectView.getChildCount(); i++) {
             View subView = subProjectView.getChildAt(i);
             AppCompatRadioButton radioBtn = subView.findViewById(R.id.project_radio_btn);
-            Log.v("TEST", " loop radioBtn.tag  "+ radioBtn.getTag().toString());
             if (radioBtn != null && radioBtn.getTag().toString().equals(mCurrentProject.uuid)) {
-                Log.v("TEST", " loop radioBtn.tag setChecked  "+ radioBtn.getTag().toString());
                 radioBtn.setChecked(true);
+                radioBtn.jumpDrawablesToCurrentState();
             }
 
         }
@@ -486,7 +479,7 @@ public class SettingsTabFragment extends Fragment {
      * @return
      */
     private View.OnClickListener getSubProjectRemoveOnClick(final String projectName, final View parentRowView) {
-        final RadioButton radioBtn = (RadioButton)parentRowView.findViewById(R.id.project_radio_btn);
+        final AppCompatRadioButton radioBtn = parentRowView.findViewById(R.id.project_radio_btn);
         final String selectedUuid = radioBtn.getTag().toString();
 
         return new View.OnClickListener() {

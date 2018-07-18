@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
-import com.example.taxnoteandroid.Library.BroadcastUtil;
 import com.example.taxnoteandroid.Library.zeny.ZNUtils;
 import com.example.taxnoteandroid.MainActivity;
 import com.example.taxnoteandroid.R;
@@ -210,7 +209,6 @@ public class DefaultDataInstaller {
     }
 
     public static void restartApp(AppCompatActivity activity) {
-        BroadcastUtil.sendRestartApp(activity);
         Intent mainIntent = new Intent(getApplicationContext(), MainActivity.class);
         mainIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         activity.startActivity(mainIntent);
