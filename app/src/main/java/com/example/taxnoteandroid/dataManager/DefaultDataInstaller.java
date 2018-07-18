@@ -107,8 +107,6 @@ public class DefaultDataInstaller {
      * @param targetProject
      */
     public static void switchProject(Context context, Project targetProject) {
-        Log.v("TEST", "switchProject :" + targetProject.name
-                + " | " + targetProject.uuid);
         // Save shared preferences
         SharedPreferencesManager.saveUuidForCurrentProject(context, targetProject.uuid);
     }
