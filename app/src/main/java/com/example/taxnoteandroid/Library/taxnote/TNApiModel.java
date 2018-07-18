@@ -349,14 +349,12 @@ public class TNApiModel extends TNApi {
 
         // Cloud Purchase Info
         String subsExpires = TNApiUser.getCloudExpiryString(context);
-        // debug
-        subsExpires = "2018-12-01 12:00:00 Etc/GMT";
         String subsId = TNApiUser.getCloudOrderId(context);
-        if (subsId == null) subsId = "subsId_nanika";
+        if (subsId == null) subsId = "";
         String subsType = (isZeny) ? UpgradeManger.SKU_ZENY_PREMIUM_ID
             : UpgradeManger.SKU_TAXNOTE_CLOUD_ID;
         String subsReceipt = TNApiUser.getCloudPurchaseToken(context);
-        if (subsReceipt == null) subsReceipt = "nanika";
+        if (subsReceipt == null) subsReceipt = "";
 
         FormBody.Builder formBuilder = new FormBody.Builder()
                 .add("project[uuid]", project.uuid)

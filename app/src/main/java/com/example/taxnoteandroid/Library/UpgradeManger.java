@@ -32,14 +32,12 @@ public class UpgradeManger {
     }
 
     public static boolean taxnoteCloudIsActive(Context context) {
-        //debug
-        return true;
-//        if (ZNUtils.isZeny()) return zenyPremiumIsActive(context);
-//
-//        long expireTime = SharedPreferencesManager.getTaxnoteCloudExpiryTime(context);
-//        long now = System.currentTimeMillis();
-//
-//        return expireTime > now;
+        if (ZNUtils.isZeny()) return zenyPremiumIsActive(context);
+
+        long expireTime = SharedPreferencesManager.getTaxnoteCloudExpiryTime(context);
+        long now = System.currentTimeMillis();
+
+        return expireTime > now;
     }
 
     public static boolean zenyPremiumIsActive(Context context) {
