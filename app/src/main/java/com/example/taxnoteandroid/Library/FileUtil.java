@@ -7,6 +7,7 @@ import android.support.v4.app.ShareCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
+import com.example.taxnoteandroid.Library.taxnote.TNApiModel;
 import com.example.taxnoteandroid.Library.zeny.ZNUtils;
 import com.example.taxnoteandroid.R;
 import com.example.taxnoteandroid.TaxnoteApp;
@@ -38,6 +39,7 @@ import java.io.InputStream;
 import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Locale;
 
 /**
@@ -141,8 +143,16 @@ public class FileUtil  {
             // DBテーブルの初期化
             OrmaDatabase _db = TaxnoteApp.getOrmaDatabase();
             try {
-                _db.deleteAll();
 
+                // クラウド連携している場合、帳簿削除の同期処理するように
+                ProjectDataManager projectDataManager = new ProjectDataManager(context);
+                List<Project> projectList = projectDataManager.findAll();
+                for (Project project : projectList) {
+                    projectDataManager.updateSetDeleted(project.uuid, new TNApiModel(context));
+                }
+                Thread.sleep(400);
+
+                _db.deleteAll();
                 Thread.sleep(500);
 
             } catch (Exception e) {
