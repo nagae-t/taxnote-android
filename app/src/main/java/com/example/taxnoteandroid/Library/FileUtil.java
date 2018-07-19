@@ -4,9 +4,12 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Environment;
 import android.support.v4.app.ShareCompat;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
+import com.example.taxnoteandroid.BuildConfig;
+import com.example.taxnoteandroid.Library.taxnote.TNApiModel;
 import com.example.taxnoteandroid.Library.zeny.ZNUtils;
 import com.example.taxnoteandroid.R;
 import com.example.taxnoteandroid.TaxnoteApp;
@@ -38,6 +41,7 @@ import java.io.InputStream;
 import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Locale;
 
 /**
@@ -97,7 +101,9 @@ public class FileUtil  {
             pw.write(dataJsonString);
             pw.close();
 
-            streamUri = Uri.fromFile(file);
+            streamUri = FileProvider.getUriForFile(context,
+                    BuildConfig.APPLICATION_ID + ".provider",
+                    file);
         } catch (IOException e) {
             Log.e("ERROR", "data export : " + e.getMessage());
             e.printStackTrace();
@@ -141,8 +147,16 @@ public class FileUtil  {
             // DBテーブルの初期化
             OrmaDatabase _db = TaxnoteApp.getOrmaDatabase();
             try {
-                _db.deleteAll();
 
+                // クラウド連携している場合、帳簿削除の同期処理するように
+                ProjectDataManager projectDataManager = new ProjectDataManager(context);
+                List<Project> projectList = projectDataManager.findAll();
+                for (Project project : projectList) {
+                    projectDataManager.updateSetDeleted(project.uuid, new TNApiModel(context));
+                }
+                Thread.sleep(400);
+
+                _db.deleteAll();
                 Thread.sleep(500);
 
             } catch (Exception e) {
@@ -155,6 +169,7 @@ public class FileUtil  {
             ProjectDataManager projectDataManager = new ProjectDataManager(context);
             for (JsonElement projectJson : jsonList) {
                 Project newProject = gson.fromJson(projectJson, Project.class);
+                newProject.needSave = true;
                 long newProjectId = projectDataManager.save(newProject);
                 newProject.id = newProjectId;
 
@@ -167,6 +182,7 @@ public class FileUtil  {
                 AccountDataManager accountDataManager = new AccountDataManager(context);
                 for (JsonElement jsItem : jsonList) {
                     Account newData = gson.fromJson(jsItem, Account.class);
+                    newData.needSave = true;
                     if (newData.project.uuid.equals(newProject.uuid)) {
                         newData.project = newProject;
                         accountDataManager.save(newData);
@@ -178,6 +194,7 @@ public class FileUtil  {
                 ReasonDataManager reasonDataManager = new ReasonDataManager(context);
                 for (JsonElement jsItem : jsonList) {
                     Reason newData = gson.fromJson(jsItem, Reason.class);
+                    newData.needSave = true;
                     if (newData.project.uuid.equals(newProject.uuid)) {
                         newData.project = newProject;
                         reasonDataManager.save(newData);
@@ -189,6 +206,7 @@ public class FileUtil  {
                 EntryDataManager entryDataManager = new EntryDataManager(context);
                 for (JsonElement jsItem : jsonList) {
                     Entry newData = gson.fromJson(jsItem, Entry.class);
+                    newData.needSave = true;
                     if (newData.project.uuid.equals(newProject.uuid)) {
                         newData.project = newProject;
                         newData.account = accountDataManager.findByUuid(newData.account.uuid);
@@ -202,6 +220,7 @@ public class FileUtil  {
                 SummaryDataManager summDataManager = new SummaryDataManager(context);
                 for (JsonElement jsItem : jsonList) {
                     Summary newData = gson.fromJson(jsItem, Summary.class);
+                    newData.needSave = true;
                     if (newData.project.uuid.equals(newProject.uuid)) {
                         newData.project = newProject;
                         newData.reason = reasonDataManager.findByUuid(newData.reason.uuid);
@@ -214,6 +233,7 @@ public class FileUtil  {
                 RecurringDataManager recDataManager = new RecurringDataManager(context);
                 for (JsonElement jsItem : jsonList) {
                     Recurring newData = gson.fromJson(jsItem, Recurring.class);
+                    newData.needSave = true;
                     if (newData.project.uuid.equals(newProject.uuid)) {
                         newData.project = newProject;
                         recDataManager.save(newData);

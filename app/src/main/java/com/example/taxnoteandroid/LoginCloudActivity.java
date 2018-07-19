@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
@@ -19,8 +20,22 @@ import com.example.taxnoteandroid.Library.DialogManager;
 import com.example.taxnoteandroid.Library.KeyboardUtil;
 import com.example.taxnoteandroid.Library.taxnote.TNApiModel;
 import com.example.taxnoteandroid.Library.taxnote.TNApiUser;
+import com.example.taxnoteandroid.dataManager.AccountDataManager;
+import com.example.taxnoteandroid.dataManager.EntryDataManager;
+import com.example.taxnoteandroid.dataManager.ProjectDataManager;
+import com.example.taxnoteandroid.dataManager.ReasonDataManager;
+import com.example.taxnoteandroid.dataManager.RecurringDataManager;
+import com.example.taxnoteandroid.dataManager.SummaryDataManager;
 import com.example.taxnoteandroid.databinding.ActivityLoginCloudBinding;
+import com.example.taxnoteandroid.model.Account;
+import com.example.taxnoteandroid.model.Entry;
 import com.example.taxnoteandroid.model.OrmaDatabase;
+import com.example.taxnoteandroid.model.Project;
+import com.example.taxnoteandroid.model.Reason;
+import com.example.taxnoteandroid.model.Recurring;
+import com.example.taxnoteandroid.model.Summary;
+
+import java.util.List;
 
 import okhttp3.Response;
 
@@ -32,6 +47,7 @@ public class LoginCloudActivity extends DefaultCommonActivity {
 
     private ActivityLoginCloudBinding binding;
     private int mViewType;
+    private ProgressDialog mLoadingDialog;
 
     private static final String KEY_VIEW_TYPE = "view_type";
     private static final String KEY_EMAIL = "email";
@@ -257,15 +273,15 @@ public class LoginCloudActivity extends DefaultCommonActivity {
 
     private void sendRegister(String email, String passwd) {
         // Progress dialog
-        final ProgressDialog dialog = getLoadingDialog();
-        dialog.show();
+        mLoadingDialog = getLoadingDialog();
+        mLoadingDialog.show();
 
         final TNApiUser apiUser = new TNApiUser(this, email, passwd);
         apiUser.setPasswordConfirm(passwd);
         apiUser.register(new AsyncOkHttpClient.Callback() {
             @Override
             public void onFailure(Response response, Throwable throwable) {
-                dialog.dismiss();
+                mLoadingDialog.dismiss();
 
                 String errorMsg = "";
                 if (response != null) {
@@ -281,34 +297,8 @@ public class LoginCloudActivity extends DefaultCommonActivity {
             @Override
             public void onSuccess(Response response, String content) {
 
-                dialog.setMessage(getString(R.string.register_success_wait_uploading));
-
-                final TNApiModel apiModel = new TNApiModel(getApplicationContext());
-                apiModel.setIsSyncing(true);
-                apiModel.saveAllDataAfterRegister(new AsyncOkHttpClient.Callback() {
-                    @Override
-                    public void onFailure(Response response, Throwable throwable) {
-                        apiModel.setIsSyncing(false);
-                        dialog.dismiss();
-                        String errorMsg = "";
-                        if (response != null) {
-                            errorMsg = response.message();
-                        } else if (throwable != null) {
-                            errorMsg = throwable.getLocalizedMessage();
-                        }
-                        DialogManager.showOKOnlyAlert(LoginCloudActivity.this,
-                                "Error", errorMsg);
-                    }
-
-                    @Override
-                    public void onSuccess(Response response, String content) {
-                        apiModel.setIsSyncing(false);
-                        dialog.dismiss();
-                        setResult(RESULT_OK);
-                        finish();
-                    }
-                });
-
+                mLoadingDialog.setMessage(getString(R.string.register_success_wait_uploading));
+                new SetNeedSaveDataTask().execute();
             }
         });
     }
@@ -419,5 +409,97 @@ public class LoginCloudActivity extends DefaultCommonActivity {
         dialog.setCancelable(false);
         dialog.setCanceledOnTouchOutside(false);
         return dialog;
+    }
+
+    // アカウント作成後のデータ処理
+    // iOSでは setNeedSaveForOldCoreDataModel の処理
+    private class SetNeedSaveDataTask extends AsyncTask<String, Integer, Boolean> {
+
+        @Override
+        protected Boolean doInBackground(String... params) {
+            Context context = getApplicationContext();
+            ProjectDataManager projectDataManager = new ProjectDataManager(context);
+            List<Project> projectList = projectDataManager.findAll();
+            for (Project project : projectList) {
+                project.needSave = true;
+                project.needSync = false;
+                projectDataManager.update(project);
+            }
+
+            ReasonDataManager reasonDataManager = new ReasonDataManager(context);
+            List<Reason> reasonList = reasonDataManager.findAll();
+            for (Reason reason : reasonList) {
+                reason.needSave = true;
+                reason.needSync = false;
+                reasonDataManager.update(reason);
+            }
+
+            AccountDataManager accountDataManager = new AccountDataManager(context);
+            List<Account> accList = accountDataManager.findAll();
+            for (Account account : accList) {
+                account.needSave = true;
+                account.needSync = false;
+                accountDataManager.update(account);
+            }
+
+            SummaryDataManager summaryDataManager = new SummaryDataManager(context);
+            List<Summary> sumList = summaryDataManager.findAll();
+            for (Summary summ : sumList) {
+                summ.needSave = true;
+                summ.needSync = false;
+                summaryDataManager.update(summ);
+            }
+
+            RecurringDataManager recurringDataManager = new RecurringDataManager(context);
+            List<Recurring> recList = recurringDataManager.findAll();
+            for (Recurring rec : recList) {
+                rec.needSave = true;
+                rec.needSync = false;
+                recurringDataManager.update(rec);
+            }
+
+            EntryDataManager entryDataManager = new EntryDataManager(context);
+            List<Entry> entryList = entryDataManager.findAll();
+            for (Entry entry : entryList) {
+                entry.needSave = true;
+                entry.needSync = false;
+                entryDataManager.update(entry);
+            }
+
+
+            return true;
+        }
+
+        @Override
+        protected void onPostExecute(Boolean result) {
+
+            final TNApiModel apiModel = new TNApiModel(getApplicationContext());
+            apiModel.setIsSyncing(true);
+            apiModel.saveAllDataAfterRegister(new AsyncOkHttpClient.Callback() {
+                @Override
+                public void onFailure(Response response, Throwable throwable) {
+                    apiModel.setIsSyncing(false);
+                    mLoadingDialog.dismiss();
+                    String errorMsg = "";
+                    if (response != null) {
+                        errorMsg = response.message();
+                    } else if (throwable != null) {
+                        errorMsg = throwable.getLocalizedMessage();
+                    }
+                    DialogManager.showOKOnlyAlert(LoginCloudActivity.this,
+                            "Error", errorMsg);
+                }
+
+                @Override
+                public void onSuccess(Response response, String content) {
+                    apiModel.setIsSyncing(false);
+                    mLoadingDialog.dismiss();
+                    setResult(RESULT_OK);
+                    finish();
+                }
+            });
+
+        }
+
     }
 }

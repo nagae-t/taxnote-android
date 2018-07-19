@@ -1,5 +1,6 @@
 package com.example.taxnoteandroid;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -10,6 +11,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.ShareCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.PermissionChecker;
 import android.support.v4.widget.CompoundButtonCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -23,9 +25,9 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
-import android.widget.RadioButton;
 import android.widget.TextView;
 
+import com.example.taxnoteandroid.Library.AppPermission;
 import com.example.taxnoteandroid.Library.AsyncOkHttpClient;
 import com.example.taxnoteandroid.Library.BroadcastUtil;
 import com.example.taxnoteandroid.Library.DialogManager;
@@ -299,7 +301,7 @@ public class SettingsTabFragment extends Fragment {
         final View viewRow = mInflater.inflate(R.layout.project_multi_row, binding.subProjectRadioLayout, false);
 
         // radio btn
-        AppCompatRadioButton projectBtn = (AppCompatRadioButton)viewRow.findViewById(R.id.project_radio_btn);
+        AppCompatRadioButton projectBtn = viewRow.findViewById(R.id.project_radio_btn);
         projectBtn.setOnClickListener(projectRadioOnClick);
         projectBtn.setText(project.name);
         projectBtn.setTag(project.uuid);
@@ -346,7 +348,7 @@ public class SettingsTabFragment extends Fragment {
         LinearLayout subProjectView = binding.subProjectRadioLayout;
         for (int i=0; i<subProjectView.getChildCount(); i++) {
             View subView = subProjectView.getChildAt(i);
-            AppCompatRadioButton radioBtn = (AppCompatRadioButton)subView.findViewWithTag(mEditingProject.uuid);
+            AppCompatRadioButton radioBtn = subView.findViewWithTag(mEditingProject.uuid);
             if (radioBtn != null ) {
                 radioBtn.setText(newName);
             }
@@ -360,7 +362,7 @@ public class SettingsTabFragment extends Fragment {
         @Override
         public void onClick(View view) {
             int viewId = view.getId();
-            RadioButton mainRadio = binding.mainProjectRadio;
+            AppCompatRadioButton mainRadio = binding.mainProjectRadio;
             if (isProjectEditing) { // edit mode
                 setProjectEditing(view);
                 showProjectEditorDialog(ProjectEditorDialogFragment.TYPE_EDIT_NAME);
@@ -381,7 +383,7 @@ public class SettingsTabFragment extends Fragment {
             String tagUuid = null;
             for (int i=0; i<subProjectView.getChildCount(); i++) {
                 View subView = subProjectView.getChildAt(i);
-                AppCompatRadioButton radioBtn = (AppCompatRadioButton) subView.findViewById(R.id.project_radio_btn);
+                AppCompatRadioButton radioBtn =  subView.findViewById(R.id.project_radio_btn);
                 String radioTagUuid = radioBtn.getTag().toString();
                 if (!mCurrentProject.uuid.equals(radioTagUuid)) {
                     if (radioTagUuid.equals(view.getTag())) {
@@ -408,7 +410,7 @@ public class SettingsTabFragment extends Fragment {
         String tagUuid = null;
         for (int i=0; i<subProjectView.getChildCount(); i++) {
             View subView = subProjectView.getChildAt(i);
-            AppCompatRadioButton radioBtn = (AppCompatRadioButton) subView.findViewById(R.id.project_radio_btn);
+            AppCompatRadioButton radioBtn = subView.findViewById(R.id.project_radio_btn);
             if (radioBtn != null && radioBtn.getTag() == selectedView.getTag()) {
                 tagUuid = radioBtn.getTag().toString();
                 break;
@@ -438,9 +440,10 @@ public class SettingsTabFragment extends Fragment {
         LinearLayout subProjectView = binding.subProjectRadioLayout;
         for (int i=0; i<subProjectView.getChildCount(); i++) {
             View subView = subProjectView.getChildAt(i);
-            AppCompatRadioButton radioBtn = (AppCompatRadioButton)subView.findViewById(R.id.project_radio_btn);
+            AppCompatRadioButton radioBtn = subView.findViewById(R.id.project_radio_btn);
             if (radioBtn != null) {
                 radioBtn.setChecked(false);
+                radioBtn.jumpDrawablesToCurrentState();
             }
 
         }
@@ -456,13 +459,17 @@ public class SettingsTabFragment extends Fragment {
         LinearLayout subProjectView = binding.subProjectRadioLayout;
 
         binding.mainProjectRadio.setChecked(false);
+        // https://stackoverflow.com/questions/45926301/radio-button-is-only-partially-checked
+        // RadioとCheckboxにbugがあるため、jumpDrawablesToCurrentStateで解決
+        binding.mainProjectRadio.jumpDrawablesToCurrentState();
         unCheckAllSubProjectRadio();
 
         for (int i=0; i<subProjectView.getChildCount(); i++) {
             View subView = subProjectView.getChildAt(i);
-            AppCompatRadioButton radioBtn = (AppCompatRadioButton)subView.findViewById(R.id.project_radio_btn);
+            AppCompatRadioButton radioBtn = subView.findViewById(R.id.project_radio_btn);
             if (radioBtn != null && radioBtn.getTag().toString().equals(mCurrentProject.uuid)) {
                 radioBtn.setChecked(true);
+                radioBtn.jumpDrawablesToCurrentState();
             }
 
         }
@@ -475,7 +482,7 @@ public class SettingsTabFragment extends Fragment {
      * @return
      */
     private View.OnClickListener getSubProjectRemoveOnClick(final String projectName, final View parentRowView) {
-        final RadioButton radioBtn = (RadioButton)parentRowView.findViewById(R.id.project_radio_btn);
+        final AppCompatRadioButton radioBtn = parentRowView.findViewById(R.id.project_radio_btn);
         final String selectedUuid = radioBtn.getTag().toString();
 
         return new View.OnClickListener() {
@@ -588,12 +595,13 @@ public class SettingsTabFragment extends Fragment {
         binding.dataBackup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showDataBackupDialog();
+                // ファイル書き込み権限があるかどうか調べる
+                checkPermissionForBackup();
             }
         });
     }
 
-    private void showDataBackupDialog() {
+    public void showDataBackupDialog() {
 
         new AlertDialog.Builder(getActivity())
                 .setTitle(getResources().getString(R.string.data_backup))
@@ -629,6 +637,25 @@ public class SettingsTabFragment extends Fragment {
                     }
                 })
                 .show();
+    }
+
+    private void checkPermissionForBackup() {
+        String permissionWriteStorage = Manifest.permission.WRITE_EXTERNAL_STORAGE;
+        String permissionReadStorage = Manifest.permission.READ_EXTERNAL_STORAGE;
+        switch (PermissionChecker.checkSelfPermission(mContext, permissionWriteStorage)) {
+            case PermissionChecker.PERMISSION_GRANTED:
+                showDataBackupDialog();
+                break;
+            case PermissionChecker.PERMISSION_DENIED:
+                AppPermission.requestPermissions(getActivity(),
+                        new String[]{permissionWriteStorage, permissionReadStorage});
+                break;
+            case PermissionChecker.PERMISSION_DENIED_APP_OP:
+                DialogManager.showToast(mContext, mContext.getString(R.string.device_permission_denied_msg));
+                break;
+            default:
+                break;
+        }
     }
 
 
