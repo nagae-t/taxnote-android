@@ -1,5 +1,6 @@
 package com.example.taxnoteandroid;
 
+import android.Manifest;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -11,9 +12,11 @@ import android.support.annotation.NonNull;
 import android.support.design.internal.BottomNavigationItemView;
 import android.support.design.internal.BottomNavigationMenuView;
 import android.support.design.widget.BottomNavigationView;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.content.PermissionChecker;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -47,7 +50,8 @@ import java.lang.reflect.Field;
 import static com.example.taxnoteandroid.R.string.report;
 import static com.example.taxnoteandroid.TaxnoteConsts.MIXPANEL_TOKEN;
 
-public class MainActivity extends DefaultCommonActivity {
+public class MainActivity extends DefaultCommonActivity
+        implements ActivityCompat.OnRequestPermissionsResultCallback {
 
     private ActivityMainBinding binding;
     private TabPagerAdapter mTabPagerAdapter;
@@ -519,6 +523,30 @@ public class MainActivity extends DefaultCommonActivity {
             return reportFragment.getStartEndDate();
         }
         return new long[2];
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        Log.v("TEST", "onRequestPermissionsResult 0");
+
+        boolean isGrantedWriteStorage = false;
+        for (int i=0; i<permissions.length; i++) {
+            if (permissions[i].equals(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                    && grantResults[i] == PermissionChecker.PERMISSION_GRANTED) {
+                isGrantedWriteStorage = true;
+            }
+        }
+
+        if (mTabPagerAdapter == null) return;
+        SettingsTabFragment settingsFragment =
+                (SettingsTabFragment) mTabPagerAdapter.instantiateItem(binding.pager, 4);
+        if (settingsFragment != null && isGrantedWriteStorage) {
+            settingsFragment.showDataBackupDialog();
+        }
+        if (!isGrantedWriteStorage) {
+            DialogManager.showToast(this, getString(R.string.device_permission_denied_msg));
+        }
     }
 
     class TabPagerAdapter extends FragmentPagerAdapter {
