@@ -640,14 +640,15 @@ public class SettingsTabFragment extends Fragment {
     }
 
     private void checkPermissionForBackup() {
-        Log.v("TEST", "checkPermissionForBackup 0");
         String permissionWriteStorage = Manifest.permission.WRITE_EXTERNAL_STORAGE;
+        String permissionReadStorage = Manifest.permission.READ_EXTERNAL_STORAGE;
         switch (PermissionChecker.checkSelfPermission(mContext, permissionWriteStorage)) {
             case PermissionChecker.PERMISSION_GRANTED:
                 showDataBackupDialog();
                 break;
             case PermissionChecker.PERMISSION_DENIED:
-                AppPermission.requestPermission(getActivity(), permissionWriteStorage);
+                AppPermission.requestPermissions(getActivity(),
+                        new String[]{permissionWriteStorage, permissionReadStorage});
                 break;
             case PermissionChecker.PERMISSION_DENIED_APP_OP:
                 DialogManager.showToast(mContext, mContext.getString(R.string.device_permission_denied_msg));
