@@ -1,5 +1,6 @@
 package com.example.taxnoteandroid;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -10,6 +11,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.ShareCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.PermissionChecker;
 import android.support.v4.widget.CompoundButtonCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -25,6 +27,7 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.example.taxnoteandroid.Library.AppPermission;
 import com.example.taxnoteandroid.Library.AsyncOkHttpClient;
 import com.example.taxnoteandroid.Library.BroadcastUtil;
 import com.example.taxnoteandroid.Library.DialogManager;
@@ -592,12 +595,13 @@ public class SettingsTabFragment extends Fragment {
         binding.dataBackup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showDataBackupDialog();
+                // ファイル書き込み権限があるかどうか調べる
+                checkPermissionForBackup();
             }
         });
     }
 
-    private void showDataBackupDialog() {
+    public void showDataBackupDialog() {
 
         new AlertDialog.Builder(getActivity())
                 .setTitle(getResources().getString(R.string.data_backup))
@@ -633,6 +637,24 @@ public class SettingsTabFragment extends Fragment {
                     }
                 })
                 .show();
+    }
+
+    private void checkPermissionForBackup() {
+        Log.v("TEST", "checkPermissionForBackup 0");
+        String permissionWriteStorage = Manifest.permission.WRITE_EXTERNAL_STORAGE;
+        switch (PermissionChecker.checkSelfPermission(mContext, permissionWriteStorage)) {
+            case PermissionChecker.PERMISSION_GRANTED:
+                showDataBackupDialog();
+                break;
+            case PermissionChecker.PERMISSION_DENIED:
+                AppPermission.requestPermission(getActivity(), permissionWriteStorage);
+                break;
+            case PermissionChecker.PERMISSION_DENIED_APP_OP:
+                DialogManager.showToast(mContext, mContext.getString(R.string.device_permission_denied_msg));
+                break;
+            default:
+                break;
+        }
     }
 
 
