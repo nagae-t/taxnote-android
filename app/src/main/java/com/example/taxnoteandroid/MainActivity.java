@@ -528,7 +528,6 @@ public class MainActivity extends DefaultCommonActivity
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        Log.v("TEST", "onRequestPermissionsResult 0");
 
         boolean isGrantedWriteStorage = false;
         for (int i=0; i<permissions.length; i++) {
