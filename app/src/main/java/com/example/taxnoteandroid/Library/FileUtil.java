@@ -4,9 +4,11 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Environment;
 import android.support.v4.app.ShareCompat;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
+import com.example.taxnoteandroid.BuildConfig;
 import com.example.taxnoteandroid.Library.taxnote.TNApiModel;
 import com.example.taxnoteandroid.Library.zeny.ZNUtils;
 import com.example.taxnoteandroid.R;
@@ -99,7 +101,9 @@ public class FileUtil  {
             pw.write(dataJsonString);
             pw.close();
 
-            streamUri = Uri.fromFile(file);
+            streamUri = FileProvider.getUriForFile(context,
+                    BuildConfig.APPLICATION_ID + ".provider",
+                    file);
         } catch (IOException e) {
             Log.e("ERROR", "data export : " + e.getMessage());
             e.printStackTrace();
