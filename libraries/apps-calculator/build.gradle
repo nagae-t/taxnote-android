@@ -26,8 +26,8 @@ android {
     }
 
     lintOptions {
-        checkReleaseBuilds false
         abortOnError false
+        ignoreWarnings true //false
     }
 
     sourceSets {
