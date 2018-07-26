@@ -302,6 +302,9 @@ public class MainActivity extends DefaultCommonActivity
                 break;
 
             // 損益表のメニューオプションが選択されたとき
+            case R.id.divide_by_all:
+//                reportSwitchPeriod(EntryDataManager.PERIOD_TYPE_ALL);
+                break;
             case R.id.divide_by_year:
                 reportSwitchPeriod(EntryDataManager.PERIOD_TYPE_YEAR);
                 break;
