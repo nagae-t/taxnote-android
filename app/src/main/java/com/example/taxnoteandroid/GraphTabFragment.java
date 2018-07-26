@@ -107,6 +107,8 @@ public class GraphTabFragment extends Fragment  {
 
     public void switchDataView(int periodType, boolean isExpense) {
         mClosingDateIndex = SharedPreferencesManager.getMonthlyClosingDateIndex(mContext);
+        if (periodType == EntryDataManager.PERIOD_TYPE_ALL) mCurrentPagerPosition = 0;
+
         ReportGrouping reportGrouping = new ReportGrouping(periodType);
         SharedPreferencesManager.saveProfitLossReportPeriodType(mContext, periodType);
         SharedPreferencesManager.saveGraphReportIsExpenseType(mContext, isExpense);
@@ -116,7 +118,7 @@ public class GraphTabFragment extends Fragment  {
         mPagerAdapter = new GraphContentFragmentPagerAdapter(
                 getChildFragmentManager(), reportGrouping, calendars, isExpense);
         binding.pager.setAdapter(mPagerAdapter);
-        if (calendars.size() == 0) return;
+        if (periodType != EntryDataManager.PERIOD_TYPE_ALL && calendars.size() == 0) return;
 
         if (mCurrentPagerPosition < 0) {
             int lastIndex = mPagerAdapter.getCount() - 1;
@@ -139,6 +141,7 @@ public class GraphTabFragment extends Fragment  {
         private final List<Calendar> calendars;
         private final ReportGrouping reportGrouping;
         private final boolean isExpense;
+        private final int periodType;
 
         public GraphContentFragmentPagerAdapter(FragmentManager fm,
                                                 ReportGrouping reportGrouping,
@@ -148,10 +151,14 @@ public class GraphTabFragment extends Fragment  {
             this.reportGrouping = reportGrouping;
             this.calendars = calendars;
             this.isExpense = isExpense;
+            this.periodType = SharedPreferencesManager.getProfitLossReportPeriodType(mContext);
         }
 
         @Override
         public Fragment getItem(int position) {
+            if (calendars.size() == 0 && periodType == EntryDataManager.PERIOD_TYPE_ALL) {
+                return GraphContentFragment.newInstance(null, isExpense);
+            }
             Calendar targetCalender = calendars.get(position);
             return GraphContentFragment.newInstance(targetCalender, isExpense);
         }
@@ -159,11 +166,17 @@ public class GraphTabFragment extends Fragment  {
         @Override
         public int getCount() {
             if (calendars == null) return 0;
+            if (calendars.size() == 0 && periodType == EntryDataManager.PERIOD_TYPE_ALL) {
+                return 1;
+            }
             return calendars.size();
         }
 
         @Override
         public CharSequence getPageTitle(int position) {
+            if(periodType == EntryDataManager.PERIOD_TYPE_ALL) {
+                return getString(R.string.divide_by_all);
+            }
             return reportGrouping.getTabTitle(mContext, mClosingDateIndex, calendars.get(position));
         }
 
