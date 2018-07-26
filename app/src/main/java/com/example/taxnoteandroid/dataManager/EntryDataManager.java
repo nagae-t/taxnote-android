@@ -30,6 +30,7 @@ public class EntryDataManager {
     public static final int PERIOD_TYPE_YEAR = 1;
     public static final int PERIOD_TYPE_MONTH = 2;
     public static final int PERIOD_TYPE_DAY = 3;
+    public static final int PERIOD_TYPE_ALL = 4;
 
     private OrmaDatabase ormaDatabase;
     private Context mContext;
