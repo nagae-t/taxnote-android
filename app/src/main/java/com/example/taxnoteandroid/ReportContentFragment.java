@@ -110,8 +110,10 @@ public class ReportContentFragment extends Fragment {
     }
 
     public long[] getStartEndDate() {
-        long[] startEndDate = EntryLimitManager.getStartAndEndDate(mContext, mPeriodType, mTargetCalendar);
-        return startEndDate;
+        // 期間：すべての場合
+        if (mTargetCalendar == null) return new long[]{};
+
+        return EntryLimitManager.getStartAndEndDate(mContext, mPeriodType, mTargetCalendar);
     }
 
     @Override
@@ -152,10 +154,13 @@ public class ReportContentFragment extends Fragment {
                     + mContext.getString(R.string.balance_carry_forward_view);
         binding.balanceTv.setText(balanceText);
 
-        new ReportDataTask().execute(new long[]{});
+        if (mTargetCalendar == null) {
+            new ReportDataTask().execute(new long[]{});
+            return;
+        }
 
-//        long[] startEndDate = EntryLimitManager.getStartAndEndDate(mContext, mPeriodType, mTargetCalendar);
-//        new ReportDataTask().execute(startEndDate);
+        long[] startEndDate = EntryLimitManager.getStartAndEndDate(mContext, mPeriodType, mTargetCalendar);
+        new ReportDataTask().execute(startEndDate);
     }
 
     private void setTopBalanceValue(long price) {
@@ -177,8 +182,9 @@ public class ReportContentFragment extends Fragment {
         protected List<Entry> doInBackground(long[]... longs) {
             long[] startEndDate = longs[0];
             List<Entry> resultEntries = new ArrayList<>();
-//            List<Entry> entries = mEntryManager.findAll(startEndDate, false);
-            List<Entry> entries = mEntryManager.findAll(null, false);
+            List<Entry> entries = (startEndDate.length == 0)
+                    ? mEntryManager.findAll(null, false)
+                    : mEntryManager.findAll(startEndDate, false);
 
             Entry incomeSection = new Entry();
             incomeSection.viewType = CommonEntryRecyclerAdapter.VIEW_ITEM_HEADER;
@@ -207,7 +213,7 @@ public class ReportContentFragment extends Fragment {
                 }
             }
             Entry topBalance = new Entry();
-            if (isShowBalanceCarryForward) {
+            if (startEndDate.length != 0 && isShowBalanceCarryForward) {
                 topBalance.price = mEntryManager.findSumBalance(startEndDate[1]);
             } else {
                 topBalance.price = balancePrice;
