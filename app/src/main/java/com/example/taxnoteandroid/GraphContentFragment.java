@@ -25,6 +25,7 @@ import com.example.taxnoteandroid.databinding.FragmentGraphContentBinding;
 import com.example.taxnoteandroid.model.Entry;
 import com.github.mikephil.charting.charts.PieChart;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.LinkedHashMap;
@@ -43,6 +44,8 @@ public class GraphContentFragment extends Fragment {
     private FragmentGraphContentBinding binding;
     private GraphHistoryRecyclerAdapter mRecyclerAdapter;
     private EntryDataManager mEntryManager;
+    private Calendar mTargetCalendar = null;
+    private Boolean isExpense;
     private int mPeriodType;
 
     private TNApiModel mApiModel;
@@ -77,6 +80,10 @@ public class GraphContentFragment extends Fragment {
 
         mPeriodType = SharedPreferencesManager.getProfitLossReportPeriodType(mContext);
         mEntryManager = new EntryDataManager(mContext);
+        isExpense = getArguments().getBoolean(KEY_IS_EXPENSE, true);
+        Serializable calSerial = getArguments().getSerializable(KEY_TARGET_CALENDAR);
+        if (calSerial != null)
+            mTargetCalendar = (Calendar)calSerial;
 
         binding.refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -134,10 +141,12 @@ public class GraphContentFragment extends Fragment {
     }
 
     private void loadGraphData() {
-        Calendar targetCalendar  = (Calendar) getArguments().getSerializable(KEY_TARGET_CALENDAR);
-        boolean isExpense = getArguments().getBoolean(KEY_IS_EXPENSE, true);
+        if (mTargetCalendar == null) {
+            new EntryDataTask(isExpense).execute(new long[]{});
+            return;
+        }
 
-        long[] startEndDate = EntryLimitManager.getStartAndEndDate(mContext, mPeriodType, targetCalendar);
+        long[] startEndDate = EntryLimitManager.getStartAndEndDate(mContext, mPeriodType, mTargetCalendar);
         new EntryDataTask(isExpense).execute(startEndDate);
     }
 
@@ -152,7 +161,9 @@ public class GraphContentFragment extends Fragment {
         protected List<Entry> doInBackground(long[]... longs) {
             long[] startEndDate = longs[0];
             List<Entry> entryData = new ArrayList<>();
-            List<Entry> entries = mEntryManager.findAll(startEndDate, isExpense, false);
+            List<Entry> entries = (startEndDate.length == 0)
+                    ? mEntryManager.findAll(null, isExpense, false)
+                    : mEntryManager.findAll(startEndDate, isExpense, false);
 
             Entry entrySum = new Entry();
             entrySum.viewType = GraphHistoryRecyclerAdapter.VIEW_ITEM_CELL;
@@ -207,10 +218,8 @@ public class GraphContentFragment extends Fragment {
             mRecyclerAdapter.setOnItemClickListener(new GraphHistoryRecyclerAdapter.OnItemClickListener() {
                 @Override
                 public void onItemClick(View view, int position, Entry item) {
-                    boolean isExpense = getArguments().getBoolean(KEY_IS_EXPENSE, true);
-                    Calendar targetCalendar  = (Calendar) getArguments().getSerializable(KEY_TARGET_CALENDAR);
                     if (item.reason == null) {
-                        BarGraphActivity.start(mContext, isExpense, targetCalendar, mPeriodType);
+                        BarGraphActivity.start(mContext, isExpense, mTargetCalendar, mPeriodType);
                     } else {
                         if (!mApiModel.isCloudActive()) {
                             // not_cloud_bar_graph
@@ -227,7 +236,7 @@ public class GraphContentFragment extends Fragment {
                                     .show();
                             return;
                         }
-                        BarGraphActivity.startForReason(mContext, item.reason.uuid, targetCalendar, mPeriodType);
+                        BarGraphActivity.startForReason(mContext, item.reason.uuid, mTargetCalendar, mPeriodType);
                     }
                 }
             });

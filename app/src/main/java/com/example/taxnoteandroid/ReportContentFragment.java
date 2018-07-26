@@ -79,7 +79,7 @@ public class ReportContentFragment extends Fragment {
         mPeriodType = SharedPreferencesManager.getProfitLossReportPeriodType(mContext);
         Serializable calSerial = getArguments().getSerializable(KEY_TARGET_CALENDAR);
         if (calSerial != null)
-            mTargetCalendar  = (Calendar)calSerial;
+            mTargetCalendar = (Calendar)calSerial;
 
         binding.topBalance.setOnClickListener(new View.OnClickListener() {
             @Override
