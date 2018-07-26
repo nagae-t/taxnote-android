@@ -5,6 +5,7 @@ import android.content.Context;
 import com.example.taxnoteandroid.Library.EntryLimitManager;
 import com.example.taxnoteandroid.Library.taxnote.TNApiModel;
 import com.example.taxnoteandroid.Library.taxnote.TNApiUser;
+import com.example.taxnoteandroid.R;
 import com.example.taxnoteandroid.TaxnoteApp;
 import com.example.taxnoteandroid.model.Account;
 import com.example.taxnoteandroid.model.Entry;
@@ -21,8 +22,6 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import static com.example.taxnoteandroid.R.id.memo;
 
 public class EntryDataManager {
 
@@ -470,6 +469,8 @@ public class EntryDataManager {
                             calendar.get(Calendar.MONTH),
                             calendar.get(Calendar.DATE), 0, 0, 0);
                     break;
+                case PERIOD_TYPE_ALL:
+                    break;
             }
             calendar.set(Calendar.MILLISECOND, 0);
 
@@ -477,6 +478,10 @@ public class EntryDataManager {
         }
 
         public String getTabTitle(Context context, int closingDateIndex, Calendar c) {
+            if (_periodType == PERIOD_TYPE_ALL) {
+                return context.getString(R.string.divide_by_all);
+            }
+
             int startMonthIndex = SharedPreferencesManager.getStartMonthOfYearIndex(context);
             int cYear = c.get(Calendar.YEAR);
             int cMonth = c.get(Calendar.MONTH);
