@@ -145,7 +145,8 @@ public class ReportFragment extends Fragment {
         @Override
         public Fragment getItem(int position) {
             Calendar targetCalender = calendars.get(position);
-            return ReportContentFragment.newInstance(targetCalender);
+            //return ReportContentFragment.newInstance(targetCalender);
+            return ReportContentFragment.newInstance(null);
         }
 
         @Override
