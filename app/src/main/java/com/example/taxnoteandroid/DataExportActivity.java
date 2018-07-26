@@ -5,6 +5,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
@@ -32,7 +34,8 @@ import static com.example.taxnoteandroid.TaxnoteConsts.EXPORT_RANGE_TYPE_LAST_MO
 import static com.example.taxnoteandroid.TaxnoteConsts.EXPORT_RANGE_TYPE_THIS_MONTH;
 
 
-public class DataExportActivity extends DefaultCommonActivity {
+public class DataExportActivity extends DefaultCommonActivity
+        implements ActivityCompat.OnRequestPermissionsResultCallback {
 
     private ActivityDataExportBinding binding;
 
@@ -298,6 +301,11 @@ public class DataExportActivity extends DefaultCommonActivity {
                 Support.showFAQSection(DataExportActivity.this,"36");
             }
         });
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
 }
