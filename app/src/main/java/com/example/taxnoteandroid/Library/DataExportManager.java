@@ -7,7 +7,9 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Environment;
 import android.support.v4.app.ShareCompat;
+import android.support.v4.content.FileProvider;
 
+import com.example.taxnoteandroid.BuildConfig;
 import com.example.taxnoteandroid.CommonEntryRecyclerAdapter;
 import com.example.taxnoteandroid.Library.zeny.ZNUtils;
 import com.example.taxnoteandroid.R;
@@ -545,7 +547,9 @@ public class DataExportManager implements TaxnoteConsts {
         }
 
         // ShareCompat
-        Uri streamUri = Uri.fromFile(file);
+        Uri streamUri = FileProvider.getUriForFile(context,
+                BuildConfig.APPLICATION_ID + ".provider",
+                file);
 
         ShareCompat.IntentBuilder builder = ShareCompat.IntentBuilder.from(mActivity);
         if (mode.compareTo(EXPORT_FORMAT_TYPE_YAYOI) == 0) {

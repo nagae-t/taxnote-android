@@ -32,7 +32,7 @@ project.ext {
     buildToolsVersion = '27.0.3'
 
     supportPackageVersion = '27.1.1'
-    playServicesVersion = '11.4.2'
+    playServicesVersion = '15.0.1'
 }
 
 task clean(type: Delete) {
