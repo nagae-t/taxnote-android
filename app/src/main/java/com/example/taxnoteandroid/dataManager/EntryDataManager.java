@@ -469,8 +469,6 @@ public class EntryDataManager {
                             calendar.get(Calendar.MONTH),
                             calendar.get(Calendar.DATE), 0, 0, 0);
                     break;
-                case PERIOD_TYPE_ALL:
-                    break;
             }
             calendar.set(Calendar.MILLISECOND, 0);
 
@@ -478,10 +476,6 @@ public class EntryDataManager {
         }
 
         public String getTabTitle(Context context, int closingDateIndex, Calendar c) {
-            if (_periodType == PERIOD_TYPE_ALL) {
-                return context.getString(R.string.divide_by_all);
-            }
-
             int startMonthIndex = SharedPreferencesManager.getStartMonthOfYearIndex(context);
             int cYear = c.get(Calendar.YEAR);
             int cMonth = c.get(Calendar.MONTH);
@@ -546,6 +540,8 @@ public class EntryDataManager {
 
         public List<Calendar> getReportCalendars(int closingDateIndex, List<Entry> entries) {
             List<Calendar> calendars = new ArrayList<>();
+            if (_periodType == PERIOD_TYPE_ALL) return calendars;
+
             for (Entry entry : entries) {
                 Calendar calendar = getGroupingCalendar(entry);
                 if (!calendars.contains(calendar)) {
