@@ -1,11 +1,15 @@
 package com.example.taxnoteandroid;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.PermissionChecker;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
@@ -14,6 +18,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.RadioGroup;
 
+import com.example.taxnoteandroid.Library.AppPermission;
 import com.example.taxnoteandroid.Library.DataExportManager;
 import com.example.taxnoteandroid.Library.DialogManager;
 import com.example.taxnoteandroid.dataManager.SharedPreferencesManager;
@@ -32,7 +37,8 @@ import static com.example.taxnoteandroid.TaxnoteConsts.EXPORT_RANGE_TYPE_LAST_MO
 import static com.example.taxnoteandroid.TaxnoteConsts.EXPORT_RANGE_TYPE_THIS_MONTH;
 
 
-public class DataExportActivity extends DefaultCommonActivity {
+public class DataExportActivity extends DefaultCommonActivity
+        implements ActivityCompat.OnRequestPermissionsResultCallback {
 
     private ActivityDataExportBinding binding;
 
@@ -91,11 +97,9 @@ public class DataExportActivity extends DefaultCommonActivity {
             @Override
             public void onClick(View view) {
 
-                // 2017/01/20 E.Nozaki
-                String format = SharedPreferencesManager.getCurrentExportFormat(DataExportActivity.this);
-                String characterCode = SharedPreferencesManager.getCurrentCharacterCode(DataExportActivity.this);
-                DataExportManager manager = new DataExportManager(DataExportActivity.this, format, characterCode);
-                manager.export(); // Generate CSV file and send it by email.
+                // ファイル書き込み権限があるかどうか調べる
+                checkPermissionForExport();
+
             }
         });
 
@@ -298,6 +302,54 @@ public class DataExportActivity extends DefaultCommonActivity {
                 Support.showFAQSection(DataExportActivity.this,"36");
             }
         });
+    }
+
+
+    private void exeExportData() {
+        // 2017/01/20 E.Nozaki
+        String format = SharedPreferencesManager.getCurrentExportFormat(DataExportActivity.this);
+        String characterCode = SharedPreferencesManager.getCurrentCharacterCode(DataExportActivity.this);
+        DataExportManager manager = new DataExportManager(DataExportActivity.this, format, characterCode);
+        manager.export(); // Generate CSV file and send it by email.
+    }
+
+    // check permission
+    private void checkPermissionForExport() {
+        String permissionWriteStorage = Manifest.permission.WRITE_EXTERNAL_STORAGE;
+        String permissionReadStorage = Manifest.permission.READ_EXTERNAL_STORAGE;
+        switch (PermissionChecker.checkSelfPermission(this, permissionWriteStorage)) {
+            case PermissionChecker.PERMISSION_GRANTED:
+                exeExportData();
+                break;
+            case PermissionChecker.PERMISSION_DENIED:
+                AppPermission.requestPermissions(this,
+                        new String[]{permissionWriteStorage, permissionReadStorage});
+                break;
+            case PermissionChecker.PERMISSION_DENIED_APP_OP:
+                DialogManager.showToast(this, getString(R.string.device_permission_denied_msg));
+                break;
+            default:
+                break;
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        boolean isGrantedWriteStorage = false;
+        for (int i=0; i<permissions.length; i++) {
+            if (permissions[i].equals(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                    && grantResults[i] == PermissionChecker.PERMISSION_GRANTED) {
+                isGrantedWriteStorage = true;
+            }
+        }
+
+        if (isGrantedWriteStorage) {
+            exeExportData();
+        } else {
+            DialogManager.showToast(this, getString(R.string.device_permission_denied_msg));
+        }
     }
 
 }
