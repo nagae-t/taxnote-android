@@ -54,6 +54,17 @@ public class SearchEntryActivity extends DefaultCommonActivity {
         context.startActivity(intent);
     }
 
+    public static void start(Context context, long[] startEndDate) {
+        Intent intent = new Intent(context, SearchEntryActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.putExtra(KEY_IS_COMMON, true);
+        if (startEndDate.length == 2) {
+            intent.putExtra(KEY_START_TIME, startEndDate[0]);
+            intent.putExtra(KEY_END_TIME, startEndDate[1]);
+        }
+        context.startActivity(intent);
+    }
+
     public static void start(Context context, String reasonName) {
         Intent intent = new Intent(context, SearchEntryActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -78,6 +89,20 @@ public class SearchEntryActivity extends DefaultCommonActivity {
         intent.putExtra(KEY_END_TIME, endTime);
         intent.putExtra(KEY_REASON_NAME, reasonName);
         intent.putExtra(KEY_IS_COMMON, true);
+        context.startActivity(intent);
+    }
+
+    public static void startWithIsExpense(Context context, long[] startEndDate,
+                                          String reasonName, boolean isExpense) {
+        Intent intent = new Intent(context, SearchEntryActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.putExtra(KEY_IS_EXPENSE, isExpense);
+        intent.putExtra(KEY_REASON_NAME, reasonName);
+        intent.putExtra(KEY_IS_COMMON, false);
+        if (startEndDate.length == 2) {
+            intent.putExtra(KEY_START_TIME, startEndDate[0]);
+            intent.putExtra(KEY_END_TIME, startEndDate[1]);
+        }
         context.startActivity(intent);
     }
 
