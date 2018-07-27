@@ -162,6 +162,10 @@ public class UpgradeActivity extends DefaultCommonActivity {
             if (purchasePlus2 != null)
                 new CheckBillingAsyncTask(false).execute(purchasePlus2);
 
+            Purchase purchasePlus3 = inventory.getPurchase(UpgradeManger.SKU_TAXNOTE_PLUS_ID3);
+            if (purchasePlus3 != null)
+                new CheckBillingAsyncTask(false).execute(purchasePlus3);
+
             Purchase purchaseCloud = inventory.getPurchase(UpgradeManger.SKU_TAXNOTE_CLOUD_ID);
             if (purchaseCloud != null)
                 new CheckBillingAsyncTask(false).execute(purchaseCloud);
@@ -300,7 +304,7 @@ public class UpgradeActivity extends DefaultCommonActivity {
         if (mBillingHelper.subscriptionsSupported()) {
             try {
                 mBillingHelper.launchSubscriptionPurchaseFlow(UpgradeActivity.this,
-                        UpgradeManger.SKU_TAXNOTE_PLUS_ID2,
+                        UpgradeManger.SKU_TAXNOTE_PLUS_ID3,
                         REQUEST_CODE_PURCHASE_PREMIUM,
                         mPurchaseFinishedListener);
             } catch (IabHelper.IabAsyncInProgressException e) {
@@ -723,6 +727,7 @@ public class UpgradeActivity extends DefaultCommonActivity {
                 case UpgradeManger.SKU_TAXNOTE_PLUS_ID:
                 case UpgradeManger.SKU_TAXNOTE_PLUS_ID1:
                 case UpgradeManger.SKU_TAXNOTE_PLUS_ID2:
+                case UpgradeManger.SKU_TAXNOTE_PLUS_ID3:
                     SharedPreferencesManager.saveTaxnotePlusExpiryTime(
                             context, result.getExpiryTimeMillis());
 

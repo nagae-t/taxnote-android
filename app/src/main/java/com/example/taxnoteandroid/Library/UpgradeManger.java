@@ -16,6 +16,7 @@ public class UpgradeManger {
     public static final String SKU_TAXNOTE_PLUS_ID = "taxnote.plus.sub";
     public static final String SKU_TAXNOTE_PLUS_ID1 = "taxnote.plus.sub1";
     public static final String SKU_TAXNOTE_PLUS_ID2 = "taxnote.plus.sub2";
+    public static final String SKU_TAXNOTE_PLUS_ID3 = "taxnote.plus.sub3";
     public static final String SKU_TAXNOTE_CLOUD_ID = "taxnote.cloud.sub";
     public static final String SKU_ZENY_PREMIUM_ID = "zeny.premium.sub";
 
