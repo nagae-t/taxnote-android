@@ -349,7 +349,7 @@
 
     <string name="login">ログイン</string>
     <string name="cloud_register">アカウント作成</string>
-    <string name="taxnote_cloud_first_free">Taxnoteクラウド（初回無料）</string>
+    <string name="taxnote_cloud_first_free">Taxnoteクラウド（初回一週間無料）</string>
     <string name="taxnote_cloud_login_desc">Taxnoteクラウド専用アカウントでログインできます。（アカウントはTaxnoteクラウドを購読した後に作成できます。）</string>
     <string name="taxnote_cloud_register_desc">現在Taxnoteクラウドを購読中ですが、自動共有（自動バックアップ)を有効にするには専用アカウントでログインする必要があります。\n（GooglePlayストアIDとは別のTaxnote専用アカウントです。）</string>
     <string name="email_address">メールアドレス</string>
@@ -400,20 +400,20 @@
     <string name="cloud_purchase_status">Taxnoteクラウド</string>
     <string name="cloud_purchase_status_on">[有効] 管理する</string>
     <string name="cloud_purchase_status_off">[期間終了] 購読する</string>
-    <string name="taxnote_cloud_desc">さらに便利に使いたい方向けのオプションサービスです。\n以下の機能が有効になります。\n1. ３つの帳簿使用\n2. 複数のiOS・Android端末でデータを自動共有\n3. 指定日の繰り返し入力\n4. 時系列チャートの表示\n\n複数人で別々の端末から同時にデータを管理したり、個人と会社など別々の帳簿を作成することもできます。また、家賃など毎月の固定支出などを指定した日に自動入力させることができます。</string>
-    <string name="add_project_without_cloud">複数帳簿の利用はTaxnoteクラウドへの加入が必要ですが、10件の入力制限付きでお試しが可能です。</string>
+    <string name="taxnote_cloud_desc">初めての方は一週間無料でお試しできます。\n1. 複数の帳簿使用\n2. 複数の端末でデータを自動共有（自動バックアップ）\n3. 指定日の予約入力\n4. 時系列チャートの表示\n\n解約はPlaystoreから簡単にできます。初回購入時は一週間のお試し期間内に解約すればお金はかかりません。</string>
+    <string name="add_project_without_cloud">複数帳簿の利用はTaxnoteクラウドへの加入が必要ですが、10件の入力制限付きでくりお試しが可能です。</string>
     <string name="not_cloud_input_limit_message">本帳簿以外での入力は、Taxnoteクラウドへの加入が必要です。（お試し入力は10件まで）</string>
     <string name="bar_graph_cloud_required_message">時系列チャートの表示はTaxnoteクラウドの購読が必要です。(支出・収入の時系列チャートは無料でお試し可能)</string>
 
     <string name="network_not_connection">インターネットへの接続が確認できません。</string>
 
-    <string name="input_recurring_title">指定日に繰り返し入力</string>
+    <string name="input_recurring_title">指定日の予約入力</string>
     <string name="add_input">追加</string>
     <string name="Save">保存</string>
     <string name="Timezone">タイムゾーン</string>
     <string name="reason_item">勘定科目</string>
-    <string name="recurring_cloud_required_message">繰り返し入力はクラウド上で実行するので、Taxnoteクラウドへの加入が必要です。</string>
-    <string name="input_recurring_empty">右上の追加ボタンから繰り返し入力を追加できます。</string>
+    <string name="recurring_cloud_required_message">予約入力はクラウド上で実行するので、Taxnoteクラウドへの加入が必要です。</string>
+    <string name="input_recurring_empty">右上の追加ボタンから予約入力を追加できます。</string>
     <string name="circle_graph_data_empty">入力タブからデータを入力してください。\n（グラフをタップすると支出と収入を切り替えられます）</string>
 
     <string-array name="day_of_month_list">
