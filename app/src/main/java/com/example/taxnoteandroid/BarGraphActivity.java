@@ -37,6 +37,7 @@ import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.utils.MPPointF;
 
+import java.io.Serializable;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -113,7 +114,8 @@ public class BarGraphActivity extends DefaultCommonActivity implements OnChartVa
         mEntryDm = new EntryDataManager(this);
         mReasonDm = new ReasonDataManager(this);
 
-        mTargetCalendar = (Calendar) getIntent().getSerializableExtra(KEY_TARGET_CALENDAR);
+        Serializable calSerial = getIntent().getSerializableExtra(KEY_TARGET_CALENDAR);
+        if (calSerial != null) mTargetCalendar = (Calendar)calSerial;
         mIsExpense = getIntent().getBooleanExtra(KEY_IS_EXPENSE, true);
         mPeriodType = getIntent().getIntExtra(KEY_PERIOD_TYPE, 2);
         if (mPeriodType > EntryDataManager.PERIOD_TYPE_MONTH)
@@ -128,13 +130,20 @@ public class BarGraphActivity extends DefaultCommonActivity implements OnChartVa
     }
 
     private void setTitleName() {
+        String isExpenseString = (mIsExpense) ? getString(R.string.Expense)
+                : getString(R.string.Income);
+
+        if (mPeriodType == EntryDataManager.PERIOD_TYPE_ALL) {
+            String titleName = getString(R.string.divide_by_all) + " " + isExpenseString;
+            setTitle(titleName);
+            return;
+        }
+
         String titleDateFormat = (mPeriodType == EntryDataManager.PERIOD_TYPE_MONTH)
                 ? getString(R.string.date_string_format_to_year_month)
                 : getString(R.string.date_string_format_to_year);
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
                 titleDateFormat, Locale.getDefault());
-        String isExpenseString = (mIsExpense) ? getString(R.string.Expense)
-                : getString(R.string.Income);
         String titleDateString = simpleDateFormat.format(mTargetCalendar.getTime());
         String titleName = titleDateString + " " + isExpenseString;
 
