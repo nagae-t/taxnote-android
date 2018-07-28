@@ -95,6 +95,10 @@ public class GraphTabFragment extends Fragment  {
         switchDataView(periodType, isExpense);
     }
 
+    public void pagerOnSelected(int position) {
+        binding.pager.setCurrentItem(position);
+    }
+
     public void switchDataView(boolean isExpense) {
         int periodType = SharedPreferencesManager.getProfitLossReportPeriodType(mContext);
         switchDataView(periodType, isExpense);

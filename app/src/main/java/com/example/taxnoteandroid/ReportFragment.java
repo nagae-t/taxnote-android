@@ -151,6 +151,10 @@ public class ReportFragment extends Fragment {
         }
     }
 
+    public void pagerOnSelected(int position) {
+        binding.pager.setCurrentItem(position);
+    }
+
     public class ReportContentFragmentPagerAdapter extends FragmentStatePagerAdapter {
 
         private final ReportGrouping reportGrouping;

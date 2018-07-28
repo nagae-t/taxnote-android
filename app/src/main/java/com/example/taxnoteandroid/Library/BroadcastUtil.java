@@ -15,6 +15,9 @@ import com.example.taxnoteandroid.MainActivity;
 public class BroadcastUtil {
     public static final String KEY_IS_LOGGING_IN = "is_logging_in";
 
+    public static final String KEY_DATA_PERIOD_SCROLLED_POSITION = "data_period_position";
+    public static final String KEY_DATA_PERIOD_SCROLLED_TARGET = "data_period_target";
+
     public static void sendRestartApp(Activity activity) {
         activity.sendBroadcast(
                 new Intent(MainActivity.BROADCAST_RESTART_APP));
@@ -42,5 +45,12 @@ public class BroadcastUtil {
 
     public static void sendAdviewToggle(Activity activity) {
         activity.sendBroadcast(new Intent(MainActivity.BROADCAST_ADVIEW_TOGGLE));
+    }
+
+    public static void sendOnDataPeriodScrolled(Activity activity, int target, int position) {
+        Intent intent = new Intent(MainActivity.BROADCAST_ADVIEW_TOGGLE);
+        intent.putExtra(KEY_DATA_PERIOD_SCROLLED_TARGET, target);
+        intent.putExtra(KEY_DATA_PERIOD_SCROLLED_POSITION, position);
+        activity.sendBroadcast(intent);
     }
 }
