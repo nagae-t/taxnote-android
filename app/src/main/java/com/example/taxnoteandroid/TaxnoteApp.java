@@ -1,11 +1,12 @@
 package com.example.taxnoteandroid;
 
 import android.app.Activity;
-import android.app.Application;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.multidex.MultiDex;
+import android.support.multidex.MultiDexApplication;
 
+import com.android.calculator2.Calculator;
 import com.crashlytics.android.Crashlytics;
 import com.example.taxnoteandroid.Library.taxnote.TNApiModel;
 import com.example.taxnoteandroid.Library.zeny.ZNUtils;
@@ -25,9 +26,17 @@ import io.fabric.sdk.android.Fabric;
  * Created by Eiichi on 2017/01/17.
  */
 
-public class TaxnoteApp extends Application {
+public class TaxnoteApp extends MultiDexApplication {
+    private static TaxnoteApp singleton;
     private static OrmaDatabase ormaDatabase = null;
     private AppStatus mAppStatus = AppStatus.FOREGROUND;
+
+    // アプリ内共通の変数
+    public Calculator SELECTED_TARGET_CAL = null;
+
+    public static TaxnoteApp getInstance() {
+        return singleton;
+    }
 
     public static OrmaDatabase getOrmaDatabase() {
         return ormaDatabase;
@@ -44,6 +53,7 @@ public class TaxnoteApp extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        singleton = this;
 
         // Fabric
         Fabric.with(this, new Crashlytics());

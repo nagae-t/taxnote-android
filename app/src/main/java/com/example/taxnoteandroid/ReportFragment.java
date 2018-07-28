@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,8 +18,10 @@ import com.example.taxnoteandroid.dataManager.SharedPreferencesManager;
 import com.example.taxnoteandroid.databinding.FragmentReportBinding;
 import com.example.taxnoteandroid.model.Entry;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 
 public class ReportFragment extends Fragment {
 
@@ -66,6 +69,7 @@ public class ReportFragment extends Fragment {
 
             @Override
             public void onPageSelected(int position) {
+                Log.v("TEST", "ReportFragment onPageSelected : " + position);
                 mCurrentPagerPosition = position;
             }
 
@@ -100,6 +104,7 @@ public class ReportFragment extends Fragment {
      * @param periodType
      */
     public void switchReportPeriod(int periodType) {
+        Log.v("TEST", "switchReportPeriod 0 ");
         mClosingDateIndex = SharedPreferencesManager.getMonthlyClosingDateIndex(mContext);
 
         if (periodType == EntryDataManager.PERIOD_TYPE_ALL) mCurrentPagerPosition = 0;
@@ -111,22 +116,37 @@ public class ReportFragment extends Fragment {
 
         List<Entry> entries = mEntryDataManager.findAll(null, true);
         List<Calendar> calendars = reportGrouping.getReportCalendars(mClosingDateIndex, entries);
+        // debug
+        String calStr = "";
+        for (Calendar c : calendars) {
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
+                    "yyyy/M/d", Locale.getDefault());
+            calStr += simpleDateFormat.format(c.getTime()) + ", ";
+        }
+        Log.v("TEST", "calList : " + calStr);
+
         mPagerAdapter = new ReportContentFragmentPagerAdapter(getChildFragmentManager(), reportGrouping, calendars);
         binding.pager.setAdapter(mPagerAdapter);
         if (periodType != EntryDataManager.PERIOD_TYPE_ALL && calendars.size() == 0) return;
 
+
+        Log.v("TEST", "mCurrentPagerPosition : " + mCurrentPagerPosition);
         if (mCurrentPagerPosition < 0) {
+            Log.v("TEST", "switchReportPeriod A1 ");
             int lastIndex = mPagerAdapter.getCount() - 1;
             // 最後のページにデータがあるかどうか
             long[] startEndDate = EntryLimitManager.getStartAndEndDate(mContext,
                     periodType, calendars.get(lastIndex));
             int countData = mEntryDataManager.count(startEndDate);
             if (countData == 0) {
+                Log.v("TEST", "switchReportPeriod A2 ");
                 binding.pager.setCurrentItem(lastIndex - 1);
             } else {
+                Log.v("TEST", "switchReportPeriod A3 ");
                 binding.pager.setCurrentItem(lastIndex);
             }
         } else {
+            Log.v("TEST", "switchReportPeriod B ");
             binding.pager.setCurrentItem(mCurrentPagerPosition);
         }
     }
