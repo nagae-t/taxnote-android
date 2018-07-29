@@ -158,8 +158,26 @@ public class BarGraphActivity extends DefaultCommonActivity implements OnChartVa
 
     private void loadDataToView() {
         setTitleName();
-//        binding.chart1.setVisibility(View.GONE);
-        long[] startEndDate = EntryLimitManager.getStartAndEndDate(this, mPeriodType, mTargetCalendar);
+
+        long[] startEndDate;
+        if (mPeriodType == EntryDataManager.PERIOD_TYPE_ALL) {
+            Calendar selectedCal = TaxnoteApp.getInstance().SELECTED_TARGET_CAL;
+            if (selectedCal == null) selectedCal = Calendar.getInstance();
+            int firstYear = selectedCal.get(Calendar.YEAR) - 4;
+            Calendar _startCal = Calendar.getInstance();
+            _startCal.clear();
+            _startCal.set(Calendar.MILLISECOND, 0);
+            _startCal.set(firstYear+1, 0, 1, 0, 0, 0);
+            long timeStart = _startCal.getTimeInMillis();
+            Calendar _endCal = Calendar.getInstance();
+            _endCal.clear();
+            _endCal.set(Calendar.MILLISECOND, 0);
+            _endCal.set(firstYear+8, 0, 1, 0, 0, 0);
+            long timeEnd = _endCal.getTimeInMillis();
+            startEndDate = new long[]{timeStart, timeEnd};
+        } else {
+            startEndDate = EntryLimitManager.getStartAndEndDate(this, mPeriodType, mTargetCalendar);
+        }
         new EntryDataTask().execute(startEndDate);
     }
 
@@ -190,6 +208,12 @@ public class BarGraphActivity extends DefaultCommonActivity implements OnChartVa
             case R.id.action_is_expense:
                 mIsExpense = !mIsExpense;
                 invalidateOptionsMenu();
+                loadDataToView();
+                break;
+            case R.id.divide_by_all:
+                if (mPeriodType == EntryDataManager.PERIOD_TYPE_ALL)
+                    return super.onOptionsItemSelected(item);
+                mPeriodType = EntryDataManager.PERIOD_TYPE_ALL;
                 loadDataToView();
                 break;
             case R.id.divide_by_year:
@@ -288,7 +312,18 @@ public class BarGraphActivity extends DefaultCommonActivity implements OnChartVa
             // 差分の日数を計算
             final long DAY_MILLISECONDS = 1000 * 60 * 60 * 24;
             long diff =  endCal.getTimeInMillis() - startCal.getTimeInMillis();
-            int xNum = (isPeriodYear) ? 12 : (int)(diff / DAY_MILLISECONDS);
+//            int xNum = (isPeriodYear) ? 12 : (int)(diff / DAY_MILLISECONDS);
+            int xNum;
+            switch (mPeriodType) {
+                case EntryDataManager.PERIOD_TYPE_ALL:
+                    xNum = 8;
+                    break;
+                case EntryDataManager.PERIOD_TYPE_YEAR:
+                    xNum = 12;
+                    break;
+                default:
+                    xNum = (int)(diff / DAY_MILLISECONDS);
+            }
 
             ArrayList<BarEntry> barEntries = new ArrayList<>();
             mCalendars = new ArrayList<>();
@@ -317,11 +352,19 @@ public class BarGraphActivity extends DefaultCommonActivity implements OnChartVa
                         calendar.get(Calendar.MONTH),
                         calendar.get(Calendar.DATE), 0, 0, 0);
                 calendar.set(Calendar.MILLISECOND, 0);
-                String periodStr = (isPeriodYear)
-                        ? calendar.get(Calendar.YEAR) + "_" + calendar.get(Calendar.MONTH)
-                        : calendar.get(Calendar.YEAR) + "_"
-                            + calendar.get(Calendar.MONTH) + "_"
-                            + calendar.get(Calendar.DATE);
+                String periodStr;
+                switch (mPeriodType) {
+                    case EntryDataManager.PERIOD_TYPE_ALL:
+                        periodStr = calendar.get(Calendar.YEAR)+"";
+                        break;
+                    case EntryDataManager.PERIOD_TYPE_YEAR:
+                        periodStr = calendar.get(Calendar.YEAR) + "_" + calendar.get(Calendar.MONTH);
+                        break;
+                    default:
+                        periodStr = calendar.get(Calendar.YEAR) + "_"
+                                + calendar.get(Calendar.MONTH) + "_"
+                                + calendar.get(Calendar.DATE);
+                }
 
                 if (entryMap.containsKey(periodStr)) {
                     Long _price = entryMap.get(periodStr)+entry.price;
@@ -337,18 +380,36 @@ public class BarGraphActivity extends DefaultCommonActivity implements OnChartVa
                 _cal.set(_cal.get(Calendar.YEAR), _cal.get(Calendar.MONTH),
                         _cal.get(Calendar.DATE), 0, 0, 0);
                 if (i > 0) {
-                    if (isPeriodYear) {
-                        _cal.add(Calendar.MONTH, i);
-                    } else {
-                        _cal.add(Calendar.DAY_OF_MONTH, i);
+//                    if (isPeriodYear) {
+//                        _cal.add(Calendar.MONTH, i);
+//                    } else {
+//                        _cal.add(Calendar.DAY_OF_MONTH, i);
+//                    }
+                    switch (mPeriodType) {
+                        case EntryDataManager.PERIOD_TYPE_ALL:
+                            _cal.add(Calendar.YEAR, i);
+                            break;
+                        case EntryDataManager.PERIOD_TYPE_YEAR:
+                            _cal.add(Calendar.MONTH, i);
+                            break;
+                        default:
+                            _cal.add(Calendar.DAY_OF_MONTH, i);
                     }
                 }
 
-                String periodStr = (isPeriodYear)
-                        ? _cal.get(Calendar.YEAR) + "_" + _cal.get(Calendar.MONTH)
-                        : _cal.get(Calendar.YEAR) + "_"
-                        + _cal.get(Calendar.MONTH) + "_"
-                        + _cal.get(Calendar.DATE);
+                String periodStr;
+                switch (mPeriodType) {
+                    case EntryDataManager.PERIOD_TYPE_ALL:
+                        periodStr = _cal.get(Calendar.YEAR)+"";
+                        break;
+                    case EntryDataManager.PERIOD_TYPE_YEAR:
+                        periodStr = _cal.get(Calendar.YEAR) + "_" + _cal.get(Calendar.MONTH);
+                        break;
+                    default:
+                        periodStr = _cal.get(Calendar.YEAR) + "_"
+                                + _cal.get(Calendar.MONTH) + "_"
+                                + _cal.get(Calendar.DATE);
+                }
                 Long _price = entryMap.get(periodStr);
                 long price = (_price == null) ? 0 : _price;
 
