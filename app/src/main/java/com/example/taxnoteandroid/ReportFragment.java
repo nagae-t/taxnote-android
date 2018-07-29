@@ -6,7 +6,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -70,7 +69,6 @@ public class ReportFragment extends Fragment {
 
             @Override
             public void onPageSelected(int position) {
-                Log.v("TEST", "ReportFragment onPageSelected : " + position);
                 mCurrentPagerPosition = position;
                 BroadcastUtil.sendOnDataPeriodScrolled(getActivity(), 0, position);
                 if (mPagerAdapter != null) {
@@ -110,7 +108,6 @@ public class ReportFragment extends Fragment {
      * @param periodType
      */
     public void switchReportPeriod(int periodType) {
-        Log.v("TEST", "switchReportPeriod 0 ");
         mClosingDateIndex = SharedPreferencesManager.getMonthlyClosingDateIndex(mContext);
 
         if (periodType == EntryDataManager.PERIOD_TYPE_ALL) mCurrentPagerPosition = 0;
@@ -129,30 +126,24 @@ public class ReportFragment extends Fragment {
                     "yyyy/M/d", Locale.getDefault());
             calStr += simpleDateFormat.format(c.getTime()) + ", ";
         }
-        Log.v("TEST", "calList : " + calStr);
 
         mPagerAdapter = new ReportContentFragmentPagerAdapter(getChildFragmentManager(), reportGrouping, calendars);
         binding.pager.setAdapter(mPagerAdapter);
         if (periodType != EntryDataManager.PERIOD_TYPE_ALL && calendars.size() == 0) return;
 
 
-        Log.v("TEST", "mCurrentPagerPosition : " + mCurrentPagerPosition);
         if (mCurrentPagerPosition < 0) {
-            Log.v("TEST", "switchReportPeriod A1 ");
             int lastIndex = mPagerAdapter.getCount() - 1;
             // 最後のページにデータがあるかどうか
             long[] startEndDate = EntryLimitManager.getStartAndEndDate(mContext,
                     periodType, calendars.get(lastIndex));
             int countData = mEntryDataManager.count(startEndDate);
             if (countData == 0) {
-                Log.v("TEST", "switchReportPeriod A2 ");
                 binding.pager.setCurrentItem(lastIndex - 1);
             } else {
-                Log.v("TEST", "switchReportPeriod A3 ");
                 binding.pager.setCurrentItem(lastIndex);
             }
         } else {
-            Log.v("TEST", "switchReportPeriod B ");
             binding.pager.setCurrentItem(mCurrentPagerPosition);
         }
     }
