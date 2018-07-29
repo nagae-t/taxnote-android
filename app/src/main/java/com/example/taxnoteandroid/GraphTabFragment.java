@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.taxnoteandroid.Library.BroadcastUtil;
 import com.example.taxnoteandroid.Library.EntryLimitManager;
 import com.example.taxnoteandroid.dataManager.EntryDataManager;
 import com.example.taxnoteandroid.dataManager.EntryDataManager.ReportGrouping;
@@ -68,6 +69,11 @@ public class GraphTabFragment extends Fragment  {
             @Override
             public void onPageSelected(int position) {
                 mCurrentPagerPosition = position;
+                BroadcastUtil.sendOnDataPeriodScrolled(getActivity(), 1, position);
+                if (mPagerAdapter != null) {
+                    List<Calendar> calendars = mPagerAdapter.getCalendars();
+                    TaxnoteApp.getInstance().SELECTED_TARGET_CAL = calendars.get(position);
+                }
             }
 
             @Override
@@ -186,6 +192,10 @@ public class GraphTabFragment extends Fragment  {
         @Override
         public int getItemPosition(Object object){
             return POSITION_NONE;
+        }
+
+        public List<Calendar> getCalendars() {
+            return this.calendars;
         }
     }
 
