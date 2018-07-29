@@ -26,10 +26,10 @@ import java.util.regex.Pattern;
 public class EntryDataManager {
 
     // レポート期間タイプ別の定義
-    public static final int PERIOD_TYPE_YEAR = 1;
-    public static final int PERIOD_TYPE_MONTH = 2;
-    public static final int PERIOD_TYPE_DAY = 3;
-    public static final int PERIOD_TYPE_ALL = 4;
+    public static final int PERIOD_TYPE_ALL = 1;
+    public static final int PERIOD_TYPE_YEAR = 2;
+    public static final int PERIOD_TYPE_MONTH = 3;
+    public static final int PERIOD_TYPE_DAY = 4;
 
     private OrmaDatabase ormaDatabase;
     private Context mContext;
