@@ -48,7 +48,7 @@ public class BroadcastUtil {
     }
 
     public static void sendOnDataPeriodScrolled(Activity activity, int target, int position) {
-        Intent intent = new Intent(MainActivity.BROADCAST_ADVIEW_TOGGLE);
+        Intent intent = new Intent(MainActivity.BROADCASE_DATA_PERIOD_SCROLLED);
         intent.putExtra(KEY_DATA_PERIOD_SCROLLED_TARGET, target);
         intent.putExtra(KEY_DATA_PERIOD_SCROLLED_POSITION, position);
         activity.sendBroadcast(intent);

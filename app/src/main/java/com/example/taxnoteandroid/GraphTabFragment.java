@@ -95,7 +95,7 @@ public class GraphTabFragment extends Fragment  {
         switchDataView(periodType, isExpense);
     }
 
-    public void pagerOnSelected(int position) {
+    public void pagerOnSelected(final int position) {
         binding.pager.setCurrentItem(position);
     }
 
@@ -131,13 +131,12 @@ public class GraphTabFragment extends Fragment  {
                     periodType, calendars.get(lastIndex));
             int countData = mEntryDataManager.count(startEndDate);
             if (countData == 0) {
-                binding.pager.setCurrentItem(lastIndex - 1);
+                mCurrentPagerPosition = lastIndex - 1;
             } else {
-                binding.pager.setCurrentItem(lastIndex);
+                mCurrentPagerPosition = lastIndex;
             }
-        } else {
-            binding.pager.setCurrentItem(mCurrentPagerPosition);
         }
+        binding.pager.setCurrentItem(mCurrentPagerPosition);
     }
 
     private class GraphContentFragmentPagerAdapter extends FragmentStatePagerAdapter {

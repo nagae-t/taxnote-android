@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.multidex.MultiDex;
 import android.support.multidex.MultiDexApplication;
 
-import com.android.calculator2.Calculator;
 import com.crashlytics.android.Crashlytics;
 import com.example.taxnoteandroid.Library.taxnote.TNApiModel;
 import com.example.taxnoteandroid.Library.zeny.ZNUtils;
@@ -20,6 +19,8 @@ import com.helpshift.InstallConfig;
 import com.helpshift.exceptions.InstallException;
 import com.helpshift.support.Support;
 
+import java.util.Calendar;
+
 import io.fabric.sdk.android.Fabric;
 
 /**
@@ -32,7 +33,7 @@ public class TaxnoteApp extends MultiDexApplication {
     private AppStatus mAppStatus = AppStatus.FOREGROUND;
 
     // アプリ内共通の変数
-    public Calculator SELECTED_TARGET_CAL = null;
+    public Calendar SELECTED_TARGET_CAL = null;
 
     public static TaxnoteApp getInstance() {
         return singleton;
