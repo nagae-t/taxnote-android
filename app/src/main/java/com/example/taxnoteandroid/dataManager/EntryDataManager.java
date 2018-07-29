@@ -540,7 +540,23 @@ public class EntryDataManager {
 
         public List<Calendar> getReportCalendars(int closingDateIndex, List<Entry> entries) {
             List<Calendar> calendars = new ArrayList<>();
-            if (_periodType == PERIOD_TYPE_ALL) return calendars;
+
+            // 棒グラフのすべての期間では、
+            // 選択していた年の4年前の年から8年先の8年間
+            if (_periodType == PERIOD_TYPE_ALL) {
+                Calendar selectedCal = TaxnoteApp.getInstance().SELECTED_TARGET_CAL;
+                if (selectedCal == null) selectedCal = Calendar.getInstance();
+                int firstYear = selectedCal.get(Calendar.YEAR) - 4;
+                for (int i=1; i<=8; i++) {
+                    Calendar _cal = Calendar.getInstance();
+                    _cal.clear();
+                    _cal.set(firstYear+i, 0, 1, 0, 0, 0);
+                    _cal.set(Calendar.MILLISECOND, 0);
+                    calendars.add(_cal);
+                }
+                return calendars;
+            }
+
 
             for (Entry entry : entries) {
                 Calendar calendar = getGroupingCalendar(entry);

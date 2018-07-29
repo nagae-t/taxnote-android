@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -126,6 +127,7 @@ public class ReportFragment extends Fragment {
                     "yyyy/M/d", Locale.getDefault());
             calStr += simpleDateFormat.format(c.getTime()) + ", ";
         }
+        Log.v("TEST", "calList : " + calStr);
 
         mPagerAdapter = new ReportContentFragmentPagerAdapter(getChildFragmentManager(), reportGrouping, calendars);
         binding.pager.setAdapter(mPagerAdapter);
@@ -139,13 +141,13 @@ public class ReportFragment extends Fragment {
                     periodType, calendars.get(lastIndex));
             int countData = mEntryDataManager.count(startEndDate);
             if (countData == 0) {
-                binding.pager.setCurrentItem(lastIndex - 1);
+                mCurrentPagerPosition = lastIndex - 1;
             } else {
-                binding.pager.setCurrentItem(lastIndex);
+                mCurrentPagerPosition = lastIndex;
             }
-        } else {
-            binding.pager.setCurrentItem(mCurrentPagerPosition);
         }
+        binding.pager.setCurrentItem(mCurrentPagerPosition);
+        TaxnoteApp.getInstance().SELECTED_TARGET_CAL = calendars.get(mCurrentPagerPosition);
     }
 
     public void pagerOnSelected(int position) {
@@ -169,7 +171,7 @@ public class ReportFragment extends Fragment {
 
         @Override
         public Fragment getItem(int position) {
-            if (calendars.size() == 0 && periodType == EntryDataManager.PERIOD_TYPE_ALL) {
+            if (periodType == EntryDataManager.PERIOD_TYPE_ALL) {
                 return ReportContentFragment.newInstance(null);
             }
             Calendar targetCalender = calendars.get(position);
@@ -179,7 +181,7 @@ public class ReportFragment extends Fragment {
         @Override
         public int getCount() {
             if (calendars == null) return 0;
-            if (calendars.size() == 0 && periodType == EntryDataManager.PERIOD_TYPE_ALL) {
+            if (periodType == EntryDataManager.PERIOD_TYPE_ALL) {
                 return 1;
             }
             return calendars.size();

@@ -165,7 +165,7 @@ public class GraphTabFragment extends Fragment  {
 
         @Override
         public Fragment getItem(int position) {
-            if (calendars.size() == 0 && periodType == EntryDataManager.PERIOD_TYPE_ALL) {
+            if (periodType == EntryDataManager.PERIOD_TYPE_ALL) {
                 return GraphContentFragment.newInstance(null, isExpense);
             }
             Calendar targetCalender = calendars.get(position);
@@ -175,7 +175,7 @@ public class GraphTabFragment extends Fragment  {
         @Override
         public int getCount() {
             if (calendars == null) return 0;
-            if (calendars.size() == 0 && periodType == EntryDataManager.PERIOD_TYPE_ALL) {
+            if (periodType == EntryDataManager.PERIOD_TYPE_ALL) {
                 return 1;
             }
             return calendars.size();
