@@ -37,7 +37,6 @@ public class SharedPreferencesManager {
     private static final String GRAPH_REPORT_IS_EXPENSE_KEY     = "GRAPH_REPORT_IS_EXPENSE_KEY";
     private static final String BUSINESS_MODEL_MESSAGE_KEY      = "BUSINESS_MODEL_MESSAGE_KEY";
     private static final String CHARTS_TAP_SUGGEST_KEY          = "CHARTS_TAP_SUGGEST_KEY";
-    private static final String SELECTED_TARGET_TIME            = "SELECTED_TARGET_TIME";
 
     private static final String BALANCE_CARRY_FORWARD_KEY       = "BALANCE_CARRY_FORWARD_KEY";
     private static final String MONTHLY_CLOSING_DATE_INDEX_KEY  = "MONTHLY_CLOSING_DATE_INDEX_KEY";
@@ -238,16 +237,6 @@ public class SharedPreferencesManager {
 
     public static boolean getGraphReportIsExpenseType(Context context) {
         return getSharedPreferences(context).getBoolean(GRAPH_REPORT_IS_EXPENSE_KEY, true);
-    }
-
-    //--------------------------------------------------------------//
-    //    -- Profit And Loss, Graph Report view Calendar  --
-    //--------------------------------------------------------------//
-    public static void saveSelectedTargetTime(Context context, long val) {
-
-    }
-    public static long getSelectedTargetTime(Context context) {
-        return 0L;
     }
 
     //--------------------------------------------------------------//

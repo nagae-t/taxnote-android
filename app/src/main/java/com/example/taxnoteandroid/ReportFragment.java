@@ -6,7 +6,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,10 +18,8 @@ import com.example.taxnoteandroid.dataManager.SharedPreferencesManager;
 import com.example.taxnoteandroid.databinding.FragmentReportBinding;
 import com.example.taxnoteandroid.model.Entry;
 
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
-import java.util.Locale;
 
 public class ReportFragment extends Fragment {
 
@@ -128,15 +125,6 @@ public class ReportFragment extends Fragment {
         if (periodType == EntryDataManager.PERIOD_TYPE_ALL) {
             TaxnoteApp.getInstance().ALL_PERIOD_CALS = calendars;
         }
-
-        // debug
-        String calStr = "";
-        for (Calendar c : calendars) {
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
-                    "yyyy/M/d", Locale.getDefault());
-            calStr += simpleDateFormat.format(c.getTime()) + ", ";
-        }
-        Log.v("TEST", "calList : " + calStr);
 
         mPagerAdapter = new ReportContentFragmentPagerAdapter(getChildFragmentManager(), reportGrouping, calendars);
         binding.pager.setAdapter(mPagerAdapter);

@@ -43,7 +43,7 @@ public class DayAxisValueFormatter implements IAxisValueFormatter {
         if (mPeriodType == EntryDataManager.PERIOD_TYPE_ALL) {
             List<Calendar> allPeriodCals = TaxnoteApp.getInstance().ALL_PERIOD_CALS;
             Calendar cal = allPeriodCals.get(xVal);
-            String yearStr = Integer.toString(cal.get(Calendar.YEAR)).substring(0, 2);
+            String yearStr = Integer.toString(cal.get(Calendar.YEAR)).substring(2);
             yearStr += (isJaLang) ? "年" : "";
             return yearStr;
         }
