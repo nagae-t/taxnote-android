@@ -161,19 +161,9 @@ public class BarGraphActivity extends DefaultCommonActivity implements OnChartVa
 
         long[] startEndDate;
         if (mPeriodType == EntryDataManager.PERIOD_TYPE_ALL) {
-            Calendar selectedCal = TaxnoteApp.getInstance().SELECTED_TARGET_CAL;
-            if (selectedCal == null) selectedCal = Calendar.getInstance();
-            int firstYear = selectedCal.get(Calendar.YEAR) - 4;
-            Calendar _startCal = Calendar.getInstance();
-            _startCal.clear();
-            _startCal.set(Calendar.MILLISECOND, 0);
-            _startCal.set(firstYear+1, 0, 1, 0, 0, 0);
-            long timeStart = _startCal.getTimeInMillis();
-            Calendar _endCal = Calendar.getInstance();
-            _endCal.clear();
-            _endCal.set(Calendar.MILLISECOND, 0);
-            _endCal.set(firstYear+8, 0, 1, 0, 0, 0);
-            long timeEnd = _endCal.getTimeInMillis();
+            List<Calendar> allPeriodCals = TaxnoteApp.getInstance().ALL_PERIOD_CALS;
+            long timeStart = allPeriodCals.get(0).getTimeInMillis();
+            long timeEnd = allPeriodCals.get(allPeriodCals.size()-1).getTimeInMillis();
             startEndDate = new long[]{timeStart, timeEnd};
         } else {
             startEndDate = EntryLimitManager.getStartAndEndDate(this, mPeriodType, mTargetCalendar);
@@ -293,9 +283,7 @@ public class BarGraphActivity extends DefaultCommonActivity implements OnChartVa
         @Override
         protected ArrayList<BarEntry> doInBackground(long[]... longs) {
             long[] startEndDate = longs[0];
-            boolean isPeriodYear = (mPeriodType == EntryDataManager.PERIOD_TYPE_YEAR);
 
-            // debug
             Calendar startCal = Calendar.getInstance();
             startCal.clear();
             startCal.setTimeInMillis(startEndDate[0]);
@@ -304,15 +292,18 @@ public class BarGraphActivity extends DefaultCommonActivity implements OnChartVa
             endCal.clear();
             endCal.setTimeInMillis(startEndDate[1]);
             endCal.set(Calendar.MILLISECOND, 0);
+
+            // debug
 //            SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
 //                    getString(R.string.date_string_format_to_year_month_day),
 //                    Locale.getDefault());
 //            String startCalStr = simpleDateFormat.format(startCal.getTime());
 //            String endCalStr = simpleDateFormat.format(endCal.getTime());
+
             // 差分の日数を計算
             final long DAY_MILLISECONDS = 1000 * 60 * 60 * 24;
             long diff =  endCal.getTimeInMillis() - startCal.getTimeInMillis();
-//            int xNum = (isPeriodYear) ? 12 : (int)(diff / DAY_MILLISECONDS);
+
             int xNum;
             switch (mPeriodType) {
                 case EntryDataManager.PERIOD_TYPE_ALL:
@@ -329,7 +320,9 @@ public class BarGraphActivity extends DefaultCommonActivity implements OnChartVa
             mCalendars = new ArrayList<>();
             List<Entry> entries;
             if (mReason == null) {
-                entries = mEntryDm.findAll(startEndDate, mIsExpense, true);
+                entries = (mPeriodType == EntryDataManager.PERIOD_TYPE_ALL)
+                        ? mEntryDm.findAll(null, mIsExpense, true)
+                        : mEntryDm.findAll(startEndDate, mIsExpense, true);
             } else {
                 List<Entry> _entries = mEntryDm.findAll(startEndDate, mIsExpense, false);
                 entries = new ArrayList<>();
@@ -380,11 +373,6 @@ public class BarGraphActivity extends DefaultCommonActivity implements OnChartVa
                 _cal.set(_cal.get(Calendar.YEAR), _cal.get(Calendar.MONTH),
                         _cal.get(Calendar.DATE), 0, 0, 0);
                 if (i > 0) {
-//                    if (isPeriodYear) {
-//                        _cal.add(Calendar.MONTH, i);
-//                    } else {
-//                        _cal.add(Calendar.DAY_OF_MONTH, i);
-//                    }
                     switch (mPeriodType) {
                         case EntryDataManager.PERIOD_TYPE_ALL:
                             _cal.add(Calendar.YEAR, i);
@@ -410,6 +398,7 @@ public class BarGraphActivity extends DefaultCommonActivity implements OnChartVa
                                 + _cal.get(Calendar.MONTH) + "_"
                                 + _cal.get(Calendar.DATE);
                 }
+
                 Long _price = entryMap.get(periodStr);
                 long price = (_price == null) ? 0 : _price;
 
