@@ -184,6 +184,7 @@
 
     <string name="rounded_decimal_numbers">Rounded</string>
     <string name="profit_loss_sort">Change Date</string>
+    <string name="divide_by_all">All Dates</string>
     <string name="divide_by_year">Yearly</string>
     <string name="divide_by_month">Monthly</string>
     <string name="divide_by_day">Daily</string>
