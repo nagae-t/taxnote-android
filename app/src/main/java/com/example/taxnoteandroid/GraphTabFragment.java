@@ -117,7 +117,14 @@ public class GraphTabFragment extends Fragment  {
 
     public void switchDataView(int periodType, boolean isExpense) {
         mClosingDateIndex = SharedPreferencesManager.getMonthlyClosingDateIndex(mContext);
-        if (periodType == EntryDataManager.PERIOD_TYPE_ALL) mCurrentPagerPosition = 0;
+
+//        if (periodType == EntryDataManager.PERIOD_TYPE_ALL) mCurrentPagerPosition = 0;
+        int oldPeriodType = SharedPreferencesManager.getProfitLossReportPeriodType(mContext);
+        if (periodType == EntryDataManager.PERIOD_TYPE_ALL) {
+            mCurrentPagerPosition = 0;
+        } else if (oldPeriodType == EntryDataManager.PERIOD_TYPE_ALL) {
+            mCurrentPagerPosition = -1;
+        }
 
         ReportGrouping reportGrouping = new ReportGrouping(periodType);
         SharedPreferencesManager.saveProfitLossReportPeriodType(mContext, periodType);

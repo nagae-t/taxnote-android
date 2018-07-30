@@ -111,7 +111,12 @@ public class ReportFragment extends Fragment {
     public void switchReportPeriod(int periodType) {
         mClosingDateIndex = SharedPreferencesManager.getMonthlyClosingDateIndex(mContext);
 
-        if (periodType == EntryDataManager.PERIOD_TYPE_ALL) mCurrentPagerPosition = 0;
+        int oldPeriodType = SharedPreferencesManager.getProfitLossReportPeriodType(mContext);
+        if (periodType == EntryDataManager.PERIOD_TYPE_ALL) {
+            mCurrentPagerPosition = 0;
+        } else if (oldPeriodType == EntryDataManager.PERIOD_TYPE_ALL) {
+            mCurrentPagerPosition = -1;
+        }
 
         // ボタン押したあとReportGroupingの実装を切り替える
         ReportGrouping reportGrouping = new ReportGrouping(periodType);
@@ -120,6 +125,10 @@ public class ReportFragment extends Fragment {
 
         List<Entry> entries = mEntryDataManager.findAll(null, true);
         List<Calendar> calendars = reportGrouping.getReportCalendars(mClosingDateIndex, entries);
+        if (periodType == EntryDataManager.PERIOD_TYPE_ALL) {
+            TaxnoteApp.getInstance().ALL_PERIOD_CALS = calendars;
+        }
+
         // debug
         String calStr = "";
         for (Calendar c : calendars) {
@@ -147,7 +156,6 @@ public class ReportFragment extends Fragment {
             }
         }
         binding.pager.setCurrentItem(mCurrentPagerPosition);
-        TaxnoteApp.getInstance().SELECTED_TARGET_CAL = calendars.get(mCurrentPagerPosition);
     }
 
     public void pagerOnSelected(int position) {

@@ -20,6 +20,7 @@ import com.helpshift.exceptions.InstallException;
 import com.helpshift.support.Support;
 
 import java.util.Calendar;
+import java.util.List;
 
 import io.fabric.sdk.android.Fabric;
 
@@ -34,6 +35,7 @@ public class TaxnoteApp extends MultiDexApplication {
 
     // アプリ内共通の変数
     public Calendar SELECTED_TARGET_CAL = null;
+    public List<Calendar> ALL_PERIOD_CALS = null;
 
     public static TaxnoteApp getInstance() {
         return singleton;
