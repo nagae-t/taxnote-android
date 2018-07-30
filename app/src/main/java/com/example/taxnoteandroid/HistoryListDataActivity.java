@@ -25,6 +25,7 @@ import com.example.taxnoteandroid.dataManager.SharedPreferencesManager;
 import com.example.taxnoteandroid.databinding.ActivityEntryCommonBinding;
 import com.example.taxnoteandroid.model.Entry;
 
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -134,14 +135,17 @@ public class HistoryListDataActivity extends DefaultCommonActivity {
         mEntryManager = new EntryDataManager(this);
 
         Intent receiptIntent = getIntent();
-        mTargetCalendar  = (Calendar) receiptIntent.getSerializableExtra(KEY_TARGET_CALENDAR);
+        Serializable calSerial = receiptIntent.getSerializableExtra(KEY_TARGET_CALENDAR);
+        if (calSerial != null) mTargetCalendar = (Calendar)calSerial;
         mReasonName = receiptIntent.getStringExtra(KEY_REASON_NAME);
         mIsBalance = receiptIntent.getBooleanExtra(KEY_IS_BALANCE, false);
         mIsExpense = receiptIntent.getBooleanExtra(KEY_IS_EXPENSE, false);
         mMemoValue = receiptIntent.getStringExtra(KEY_MEMO);
         mIsViewTotal = receiptIntent.getBooleanExtra(KEY_IS_VIEW_TOTAL, false);
 
-        String pageTitle = getCalendarStringFromPeriodType(mTargetCalendar);
+        String pageTitle = (mTargetCalendar == null)
+                ? getString(R.string.divide_by_all)
+                : getCalendarStringFromPeriodType(mTargetCalendar);
         String pageSubTitle = mReasonName;
         if (mIsBalance) {
             pageSubTitle = getString(R.string.History);
@@ -155,7 +159,11 @@ public class HistoryListDataActivity extends DefaultCommonActivity {
         actionBar.setSubtitle(pageSubTitle);
         actionBar.setDisplayHomeAsUpEnabled(true);
 
-        mStartEndDate = EntryLimitManager.getStartAndEndDate(this, mPeriodType, mTargetCalendar);
+        if (mTargetCalendar == null) {
+            mStartEndDate = new long[]{};
+        } else {
+            mStartEndDate = EntryLimitManager.getStartAndEndDate(this, mPeriodType, mTargetCalendar);
+        }
 
         binding.refreshLayout.setEnabled(false);
         loadEntryData(mStartEndDate, mIsBalance, mIsExpense);
@@ -197,10 +205,10 @@ public class HistoryListDataActivity extends DefaultCommonActivity {
                 return true;
             case R.id.action_search:
                 if (mIsBalance) {
-                    SearchEntryActivity.start(this, mStartEndDate[0], mStartEndDate[1]);
+                    SearchEntryActivity.start(this, mStartEndDate);
                 } else {
                     SearchEntryActivity.startWithIsExpense(
-                            this, mStartEndDate[0], mStartEndDate[1], mReasonName, mIsExpense);
+                            this, mStartEndDate, mReasonName, mIsExpense);
                 }
                 break;
             case R.id.action_delete:
@@ -263,6 +271,8 @@ public class HistoryListDataActivity extends DefaultCommonActivity {
         @Override
         protected List<Entry> doInBackground(long[]... longs) {
             long[] startEndDate = longs[0];
+            if (mPeriodType == EntryDataManager.PERIOD_TYPE_ALL
+                    && startEndDate.length == 0) startEndDate = null;
             Context context = getApplicationContext();
 
             List<Entry> entries;

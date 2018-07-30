@@ -25,6 +25,7 @@ import com.example.taxnoteandroid.dataManager.SharedPreferencesManager;
 import com.example.taxnoteandroid.databinding.FragmentReportContentBinding;
 import com.example.taxnoteandroid.model.Entry;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.LinkedHashMap;
@@ -43,7 +44,7 @@ public class ReportContentFragment extends Fragment {
 
     private CommonEntryRecyclerAdapter mRecyclerAdapter;
     private EntryDataManager mEntryManager;
-    private Calendar mTargetCalendar;
+    private Calendar mTargetCalendar = null;
     private int mPeriodType;
 
     private TNApiModel mApiModel;
@@ -76,7 +77,9 @@ public class ReportContentFragment extends Fragment {
 
         mEntryManager = new EntryDataManager(mContext);
         mPeriodType = SharedPreferencesManager.getProfitLossReportPeriodType(mContext);
-        mTargetCalendar  = (Calendar) getArguments().getSerializable(KEY_TARGET_CALENDAR);
+        Serializable calSerial = getArguments().getSerializable(KEY_TARGET_CALENDAR);
+        if (calSerial != null)
+            mTargetCalendar = (Calendar)calSerial;
 
         binding.topBalance.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -107,8 +110,10 @@ public class ReportContentFragment extends Fragment {
     }
 
     public long[] getStartEndDate() {
-        long[] startEndDate = EntryLimitManager.getStartAndEndDate(mContext, mPeriodType, mTargetCalendar);
-        return startEndDate;
+        // 期間：すべての場合
+        if (mTargetCalendar == null) return new long[]{};
+
+        return EntryLimitManager.getStartAndEndDate(mContext, mPeriodType, mTargetCalendar);
     }
 
     @Override
@@ -149,6 +154,11 @@ public class ReportContentFragment extends Fragment {
                     + mContext.getString(R.string.balance_carry_forward_view);
         binding.balanceTv.setText(balanceText);
 
+        if (mTargetCalendar == null) {
+            new ReportDataTask().execute(new long[]{});
+            return;
+        }
+
         long[] startEndDate = EntryLimitManager.getStartAndEndDate(mContext, mPeriodType, mTargetCalendar);
         new ReportDataTask().execute(startEndDate);
     }
@@ -172,7 +182,9 @@ public class ReportContentFragment extends Fragment {
         protected List<Entry> doInBackground(long[]... longs) {
             long[] startEndDate = longs[0];
             List<Entry> resultEntries = new ArrayList<>();
-            List<Entry> entries = mEntryManager.findAll(startEndDate, false);
+            List<Entry> entries = (startEndDate.length == 0)
+                    ? mEntryManager.findAll(null, false)
+                    : mEntryManager.findAll(startEndDate, false);
 
             Entry incomeSection = new Entry();
             incomeSection.viewType = CommonEntryRecyclerAdapter.VIEW_ITEM_HEADER;
@@ -201,7 +213,7 @@ public class ReportContentFragment extends Fragment {
                 }
             }
             Entry topBalance = new Entry();
-            if (isShowBalanceCarryForward) {
+            if (startEndDate.length != 0 && isShowBalanceCarryForward) {
                 topBalance.price = mEntryManager.findSumBalance(startEndDate[1]);
             } else {
                 topBalance.price = balancePrice;

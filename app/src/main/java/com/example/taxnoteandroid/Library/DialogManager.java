@@ -639,15 +639,27 @@ public class DialogManager {
     //    -- Bar Graph --
     //--------------------------------------------------------------//
 
-    public static void showBarInfoDialog(final Activity activity, int periodType,
+    public static void showBarInfoDialog(final Activity activity, final int periodType,
                                          final Calendar targetCalendar, Reason reason,
                                          final boolean isExpense, long price) {
 
-        final boolean isPeriodYear = (periodType == EntryDataManager.PERIOD_TYPE_YEAR);
 
-        String dateFormatString = (isPeriodYear)
-                ? activity.getString(R.string.date_string_format_to_year_month)
-                : activity.getString(R.string.date_string_format_to_year_month_day);
+        String dateFormatString;
+        final int historyPeriodType;
+        switch (periodType) {
+            case EntryDataManager.PERIOD_TYPE_ALL:
+                dateFormatString = activity.getString(R.string.date_string_format_to_year);
+                historyPeriodType = EntryDataManager.PERIOD_TYPE_YEAR;
+                break;
+            case EntryDataManager.PERIOD_TYPE_YEAR:
+                dateFormatString = activity.getString(R.string.date_string_format_to_year_month);
+                historyPeriodType = EntryDataManager.PERIOD_TYPE_MONTH;
+                break;
+            default:
+                dateFormatString = activity.getString(R.string.date_string_format_to_year_month_day);
+                historyPeriodType = EntryDataManager.PERIOD_TYPE_DAY;
+        }
+
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
                 dateFormatString, Locale.getDefault());
         String calStr = simpleDateFormat.format(targetCalendar.getTime());
@@ -662,9 +674,9 @@ public class DialogManager {
                 .setPositiveButton(R.string.History, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        int _periodType = (isPeriodYear) ? EntryDataManager.PERIOD_TYPE_MONTH
-                                : EntryDataManager.PERIOD_TYPE_DAY;
-                        HistoryListDataActivity.start(activity, _periodType,
+//                        int _periodType = (isPeriodYear) ? EntryDataManager.PERIOD_TYPE_MONTH
+//                                : EntryDataManager.PERIOD_TYPE_DAY;
+                        HistoryListDataActivity.start(activity, historyPeriodType,
                                 targetCalendar, reasonName, null, isExpense, false);
                     }
                 })

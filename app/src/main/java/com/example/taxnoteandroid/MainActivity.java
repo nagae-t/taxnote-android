@@ -71,6 +71,8 @@ public class MainActivity extends DefaultCommonActivity
             = "broadcast_main_restart_app";
     public static final String BROADCAST_SWITCH_GRAPH_EXPENSE
             = "broadcast_main_switch_graph_expense";
+    public static final String BROADCASE_DATA_PERIOD_SCROLLED
+            = "broadcast_main_data_period_scrolled";
 
     public static final String BROADCAST_ADVIEW_TOGGLE
             = "broadcast_main_adview_toggle";
@@ -100,6 +102,17 @@ public class MainActivity extends DefaultCommonActivity
             boolean oldVal = SharedPreferencesManager.getGraphReportIsExpenseType(getApplicationContext());
             mGraphMenuIsExpense = !oldVal;
             reportSwitchView(mGraphMenuIsExpense);
+        }
+    };
+
+    private final BroadcastReceiver mDataPeriodScrolledReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            int position = intent.getIntExtra(
+                    BroadcastUtil.KEY_DATA_PERIOD_SCROLLED_POSITION, 0);
+            int target = intent.getIntExtra(
+                    BroadcastUtil.KEY_DATA_PERIOD_SCROLLED_TARGET,0);
+            reportOnPageScrolled(target, position);
         }
     };
 
@@ -176,6 +189,7 @@ public class MainActivity extends DefaultCommonActivity
         registerReceiver(mRestartAppReceiver, new IntentFilter(BROADCAST_RESTART_APP));
         registerReceiver(mSwitchGraphExpenseReceiver, new IntentFilter(BROADCAST_SWITCH_GRAPH_EXPENSE));
         registerReceiver(mAdviewToggleReceiver, new IntentFilter(BROADCAST_ADVIEW_TOGGLE));
+        registerReceiver(mDataPeriodScrolledReceiver, new IntentFilter(BROADCASE_DATA_PERIOD_SCROLLED));
 
         DefaultDataInstaller.installDefaultUserAndCategories(this);
 
@@ -306,6 +320,9 @@ public class MainActivity extends DefaultCommonActivity
                 break;
 
             // 損益表のメニューオプションが選択されたとき
+            case R.id.divide_by_all:
+                reportSwitchPeriod(EntryDataManager.PERIOD_TYPE_ALL);
+                break;
             case R.id.divide_by_year:
                 reportSwitchPeriod(EntryDataManager.PERIOD_TYPE_YEAR);
                 break;
@@ -479,6 +496,19 @@ public class MainActivity extends DefaultCommonActivity
             graphFragment.switchDataView(isExpense);
             mGraphMenuIsExpense = SharedPreferencesManager.getGraphReportIsExpenseType(this);
             invalidateOptionsMenu();
+        }
+    }
+
+    private void reportOnPageScrolled(int target, int position) {
+        CustomViewPager pager = binding.pager;
+        ReportFragment reportFragment =
+                (ReportFragment) mTabPagerAdapter.instantiateItem(pager, 2);
+        GraphTabFragment graphFragment =
+                (GraphTabFragment) mTabPagerAdapter.instantiateItem(pager, 3);
+        if (target == 0) { // send to Graph Report
+            graphFragment.pagerOnSelected(position);
+        } else { // send to normal report
+            reportFragment.pagerOnSelected(position);
         }
     }
 
@@ -667,6 +697,7 @@ public class MainActivity extends DefaultCommonActivity
         unregisterReceiver(mRestartAppReceiver);
         unregisterReceiver(mSwitchGraphExpenseReceiver);
         unregisterReceiver(mAdviewToggleReceiver);
+        unregisterReceiver(mDataPeriodScrolledReceiver);
         super.onDestroy();
 
 

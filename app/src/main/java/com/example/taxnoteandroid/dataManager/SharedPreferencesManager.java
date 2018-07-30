@@ -239,7 +239,6 @@ public class SharedPreferencesManager {
         return getSharedPreferences(context).getBoolean(GRAPH_REPORT_IS_EXPENSE_KEY, true);
     }
 
-
     //--------------------------------------------------------------//
     //    -- Upgrade --
     //--------------------------------------------------------------//

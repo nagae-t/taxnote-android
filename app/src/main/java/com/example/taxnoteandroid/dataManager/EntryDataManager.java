@@ -5,6 +5,7 @@ import android.content.Context;
 import com.example.taxnoteandroid.Library.EntryLimitManager;
 import com.example.taxnoteandroid.Library.taxnote.TNApiModel;
 import com.example.taxnoteandroid.Library.taxnote.TNApiUser;
+import com.example.taxnoteandroid.R;
 import com.example.taxnoteandroid.TaxnoteApp;
 import com.example.taxnoteandroid.model.Account;
 import com.example.taxnoteandroid.model.Entry;
@@ -22,14 +23,13 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static com.example.taxnoteandroid.R.id.memo;
-
 public class EntryDataManager {
 
     // レポート期間タイプ別の定義
-    public static final int PERIOD_TYPE_YEAR = 1;
-    public static final int PERIOD_TYPE_MONTH = 2;
-    public static final int PERIOD_TYPE_DAY = 3;
+    public static final int PERIOD_TYPE_ALL = 1;
+    public static final int PERIOD_TYPE_YEAR = 2;
+    public static final int PERIOD_TYPE_MONTH = 3;
+    public static final int PERIOD_TYPE_DAY = 4;
 
     private OrmaDatabase ormaDatabase;
     private Context mContext;
@@ -540,6 +540,24 @@ public class EntryDataManager {
 
         public List<Calendar> getReportCalendars(int closingDateIndex, List<Entry> entries) {
             List<Calendar> calendars = new ArrayList<>();
+
+            // 棒グラフのすべての期間では、
+            // 選択していた年の4年前の年から8年先の8年間
+            if (_periodType == PERIOD_TYPE_ALL) {
+                Calendar selectedCal = TaxnoteApp.getInstance().SELECTED_TARGET_CAL;
+                if (selectedCal == null) selectedCal = Calendar.getInstance();
+                int firstYear = selectedCal.get(Calendar.YEAR) - 4;
+                for (int i=1; i<=8; i++) {
+                    Calendar _cal = Calendar.getInstance();
+                    _cal.clear();
+                    _cal.set(firstYear+i, 0, 1, 0, 0, 0);
+                    _cal.set(Calendar.MILLISECOND, 0);
+                    calendars.add(_cal);
+                }
+                return calendars;
+            }
+
+
             for (Entry entry : entries) {
                 Calendar calendar = getGroupingCalendar(entry);
                 if (!calendars.contains(calendar)) {

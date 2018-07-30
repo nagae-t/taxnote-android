@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.taxnoteandroid.Library.BroadcastUtil;
 import com.example.taxnoteandroid.Library.EntryLimitManager;
 import com.example.taxnoteandroid.dataManager.EntryDataManager;
 import com.example.taxnoteandroid.dataManager.EntryDataManager.ReportGrouping;
@@ -68,6 +69,11 @@ public class GraphTabFragment extends Fragment  {
             @Override
             public void onPageSelected(int position) {
                 mCurrentPagerPosition = position;
+                BroadcastUtil.sendOnDataPeriodScrolled(getActivity(), 1, position);
+                if (mPagerAdapter != null) {
+                    List<Calendar> calendars = mPagerAdapter.getCalendars();
+                    TaxnoteApp.getInstance().SELECTED_TARGET_CAL = calendars.get(position);
+                }
             }
 
             @Override
@@ -95,6 +101,10 @@ public class GraphTabFragment extends Fragment  {
         switchDataView(periodType, isExpense);
     }
 
+    public void pagerOnSelected(final int position) {
+        binding.pager.setCurrentItem(position);
+    }
+
     public void switchDataView(boolean isExpense) {
         int periodType = SharedPreferencesManager.getProfitLossReportPeriodType(mContext);
         switchDataView(periodType, isExpense);
@@ -107,6 +117,15 @@ public class GraphTabFragment extends Fragment  {
 
     public void switchDataView(int periodType, boolean isExpense) {
         mClosingDateIndex = SharedPreferencesManager.getMonthlyClosingDateIndex(mContext);
+
+//        if (periodType == EntryDataManager.PERIOD_TYPE_ALL) mCurrentPagerPosition = 0;
+        int oldPeriodType = SharedPreferencesManager.getProfitLossReportPeriodType(mContext);
+        if (periodType == EntryDataManager.PERIOD_TYPE_ALL) {
+            mCurrentPagerPosition = 0;
+        } else if (oldPeriodType == EntryDataManager.PERIOD_TYPE_ALL) {
+            mCurrentPagerPosition = -1;
+        }
+
         ReportGrouping reportGrouping = new ReportGrouping(periodType);
         SharedPreferencesManager.saveProfitLossReportPeriodType(mContext, periodType);
         SharedPreferencesManager.saveGraphReportIsExpenseType(mContext, isExpense);
@@ -116,7 +135,7 @@ public class GraphTabFragment extends Fragment  {
         mPagerAdapter = new GraphContentFragmentPagerAdapter(
                 getChildFragmentManager(), reportGrouping, calendars, isExpense);
         binding.pager.setAdapter(mPagerAdapter);
-        if (calendars.size() == 0) return;
+        if (periodType != EntryDataManager.PERIOD_TYPE_ALL && calendars.size() == 0) return;
 
         if (mCurrentPagerPosition < 0) {
             int lastIndex = mPagerAdapter.getCount() - 1;
@@ -125,13 +144,12 @@ public class GraphTabFragment extends Fragment  {
                     periodType, calendars.get(lastIndex));
             int countData = mEntryDataManager.count(startEndDate);
             if (countData == 0) {
-                binding.pager.setCurrentItem(lastIndex - 1);
+                mCurrentPagerPosition = lastIndex - 1;
             } else {
-                binding.pager.setCurrentItem(lastIndex);
+                mCurrentPagerPosition = lastIndex;
             }
-        } else {
-            binding.pager.setCurrentItem(mCurrentPagerPosition);
         }
+        binding.pager.setCurrentItem(mCurrentPagerPosition);
     }
 
     private class GraphContentFragmentPagerAdapter extends FragmentStatePagerAdapter {
@@ -139,6 +157,7 @@ public class GraphTabFragment extends Fragment  {
         private final List<Calendar> calendars;
         private final ReportGrouping reportGrouping;
         private final boolean isExpense;
+        private final int periodType;
 
         public GraphContentFragmentPagerAdapter(FragmentManager fm,
                                                 ReportGrouping reportGrouping,
@@ -148,10 +167,14 @@ public class GraphTabFragment extends Fragment  {
             this.reportGrouping = reportGrouping;
             this.calendars = calendars;
             this.isExpense = isExpense;
+            this.periodType = SharedPreferencesManager.getProfitLossReportPeriodType(mContext);
         }
 
         @Override
         public Fragment getItem(int position) {
+            if (periodType == EntryDataManager.PERIOD_TYPE_ALL) {
+                return GraphContentFragment.newInstance(null, isExpense);
+            }
             Calendar targetCalender = calendars.get(position);
             return GraphContentFragment.newInstance(targetCalender, isExpense);
         }
@@ -159,17 +182,27 @@ public class GraphTabFragment extends Fragment  {
         @Override
         public int getCount() {
             if (calendars == null) return 0;
+            if (periodType == EntryDataManager.PERIOD_TYPE_ALL) {
+                return 1;
+            }
             return calendars.size();
         }
 
         @Override
         public CharSequence getPageTitle(int position) {
+            if(periodType == EntryDataManager.PERIOD_TYPE_ALL) {
+                return getString(R.string.divide_by_all);
+            }
             return reportGrouping.getTabTitle(mContext, mClosingDateIndex, calendars.get(position));
         }
 
         @Override
         public int getItemPosition(Object object){
             return POSITION_NONE;
+        }
+
+        public List<Calendar> getCalendars() {
+            return this.calendars;
         }
     }
 

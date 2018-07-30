@@ -3,11 +3,14 @@ package com.example.taxnoteandroid.Library;
 import android.content.Context;
 
 import com.example.taxnoteandroid.R;
+import com.example.taxnoteandroid.TaxnoteApp;
 import com.example.taxnoteandroid.dataManager.EntryDataManager;
 import com.github.mikephil.charting.charts.BarLineChartBase;
 import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 
+import java.util.Calendar;
+import java.util.List;
 import java.util.Locale;
 
 /**
@@ -35,8 +38,16 @@ public class DayAxisValueFormatter implements IAxisValueFormatter {
     @Override
     public String getFormattedValue(float value, AxisBase axis) {
 
-//        int days = (int) value;
+        boolean isJaLang = Locale.getDefault().getLanguage().equals("ja");
         int xVal = (int) value;
+        if (mPeriodType == EntryDataManager.PERIOD_TYPE_ALL) {
+            List<Calendar> allPeriodCals = TaxnoteApp.getInstance().ALL_PERIOD_CALS;
+            Calendar cal = allPeriodCals.get(xVal);
+            String yearStr = Integer.toString(cal.get(Calendar.YEAR)).substring(2);
+            yearStr += (isJaLang) ? "年" : "";
+            return yearStr;
+        }
+
         if (mPeriodType == EntryDataManager.PERIOD_TYPE_YEAR && xVal < 12) {
             String[] months = mContext.getResources().getStringArray(R.array.month_list);
             return months[xVal];
@@ -70,7 +81,7 @@ public class DayAxisValueFormatter implements IAxisValueFormatter {
         }
 
         // 日本語の場合
-        if (Locale.getDefault().getLanguage().equals("ja")) {
+        if (isJaLang) {
             appendix = "日";
         }
         return xVal == 0 ? "" : xVal + appendix;

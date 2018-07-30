@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.taxnoteandroid.Library.BroadcastUtil;
 import com.example.taxnoteandroid.Library.EntryLimitManager;
 import com.example.taxnoteandroid.dataManager.EntryDataManager;
 import com.example.taxnoteandroid.dataManager.EntryDataManager.ReportGrouping;
@@ -67,6 +68,11 @@ public class ReportFragment extends Fragment {
             @Override
             public void onPageSelected(int position) {
                 mCurrentPagerPosition = position;
+                BroadcastUtil.sendOnDataPeriodScrolled(getActivity(), 0, position);
+                if (mPagerAdapter != null) {
+                    List<Calendar> calendars = mPagerAdapter.getCalendars();
+                    TaxnoteApp.getInstance().SELECTED_TARGET_CAL = calendars.get(position);
+                }
             }
 
             @Override
@@ -102,6 +108,13 @@ public class ReportFragment extends Fragment {
     public void switchReportPeriod(int periodType) {
         mClosingDateIndex = SharedPreferencesManager.getMonthlyClosingDateIndex(mContext);
 
+        int oldPeriodType = SharedPreferencesManager.getProfitLossReportPeriodType(mContext);
+        if (periodType == EntryDataManager.PERIOD_TYPE_ALL) {
+            mCurrentPagerPosition = 0;
+        } else if (oldPeriodType == EntryDataManager.PERIOD_TYPE_ALL) {
+            mCurrentPagerPosition = -1;
+        }
+
         // ボタン押したあとReportGroupingの実装を切り替える
         ReportGrouping reportGrouping = new ReportGrouping(periodType);
         // 期間タイプをデフォルト値として保存
@@ -109,9 +122,14 @@ public class ReportFragment extends Fragment {
 
         List<Entry> entries = mEntryDataManager.findAll(null, true);
         List<Calendar> calendars = reportGrouping.getReportCalendars(mClosingDateIndex, entries);
+        if (periodType == EntryDataManager.PERIOD_TYPE_ALL) {
+            TaxnoteApp.getInstance().ALL_PERIOD_CALS = calendars;
+        }
+
         mPagerAdapter = new ReportContentFragmentPagerAdapter(getChildFragmentManager(), reportGrouping, calendars);
         binding.pager.setAdapter(mPagerAdapter);
-        if (calendars.size() == 0) return;
+        if (periodType != EntryDataManager.PERIOD_TYPE_ALL && calendars.size() == 0) return;
+
 
         if (mCurrentPagerPosition < 0) {
             int lastIndex = mPagerAdapter.getCount() - 1;
@@ -120,19 +138,23 @@ public class ReportFragment extends Fragment {
                     periodType, calendars.get(lastIndex));
             int countData = mEntryDataManager.count(startEndDate);
             if (countData == 0) {
-                binding.pager.setCurrentItem(lastIndex - 1);
+                mCurrentPagerPosition = lastIndex - 1;
             } else {
-                binding.pager.setCurrentItem(lastIndex);
+                mCurrentPagerPosition = lastIndex;
             }
-        } else {
-            binding.pager.setCurrentItem(mCurrentPagerPosition);
         }
+        binding.pager.setCurrentItem(mCurrentPagerPosition);
+    }
+
+    public void pagerOnSelected(int position) {
+        binding.pager.setCurrentItem(position);
     }
 
     public class ReportContentFragmentPagerAdapter extends FragmentStatePagerAdapter {
 
         private final ReportGrouping reportGrouping;
         private final List<Calendar> calendars;
+        private final int periodType;
 
         public ReportContentFragmentPagerAdapter(FragmentManager fm,
                                                  ReportGrouping reportGrouping,
@@ -140,10 +162,14 @@ public class ReportFragment extends Fragment {
             super(fm);
             this.reportGrouping = reportGrouping;
             this.calendars = calendars;
+            this.periodType = SharedPreferencesManager.getProfitLossReportPeriodType(mContext);
         }
 
         @Override
         public Fragment getItem(int position) {
+            if (periodType == EntryDataManager.PERIOD_TYPE_ALL) {
+                return ReportContentFragment.newInstance(null);
+            }
             Calendar targetCalender = calendars.get(position);
             return ReportContentFragment.newInstance(targetCalender);
         }
@@ -151,17 +177,27 @@ public class ReportFragment extends Fragment {
         @Override
         public int getCount() {
             if (calendars == null) return 0;
+            if (periodType == EntryDataManager.PERIOD_TYPE_ALL) {
+                return 1;
+            }
             return calendars.size();
         }
 
         @Override
         public CharSequence getPageTitle(int position) {
+            if(periodType == EntryDataManager.PERIOD_TYPE_ALL) {
+               return getString(R.string.divide_by_all);
+            }
             return reportGrouping.getTabTitle(mContext, mClosingDateIndex, calendars.get(position));
         }
 
         @Override
         public int getItemPosition(Object object){
             return POSITION_NONE;
+        }
+
+        public List<Calendar> getCalendars() {
+            return this.calendars;
         }
 
     }
