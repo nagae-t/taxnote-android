@@ -346,7 +346,8 @@ public class UpgradeActivity extends DefaultCommonActivity {
             mixpanel.track("Taxnote Cloud Upgraded");
         }
 
-        if (!isFinishing()) return;
+        if (isFinishing()) return;
+
         // Taxnoteアカウント作成するようダイアログを表示
         new AlertDialog.Builder(this)
                 .setTitle(R.string.cloud_sign_up_title)
