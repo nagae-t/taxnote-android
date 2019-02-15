@@ -24,8 +24,8 @@ android {
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
 
-        versionCode 95
-        versionName "1.4.4"
+        versionCode 96
+        versionName "1.4.5"
 
         lintOptions {
             abortOnError false
