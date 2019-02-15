@@ -288,7 +288,7 @@ public class UpgradeActivity extends DefaultCommonActivity {
                 if (ZNUtils.isZeny()) {
                     Support.showSingleFAQ(UpgradeActivity.this, "117");
                 } else {
-                    Support.showSingleFAQ(UpgradeActivity.this, "108");
+                    Support.showFAQSection(UpgradeActivity.this,"60");
                 }
             }
         });

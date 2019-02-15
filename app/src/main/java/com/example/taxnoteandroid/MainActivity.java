@@ -304,7 +304,7 @@ public class MainActivity extends DefaultCommonActivity
 
             case R.id.help_in_settings_tab:
                 if (!ZNUtils.isZeny()) {
-                    Support.showFAQSection(this,"22");
+                    Support.showFAQs(this);
                 } else {
                     Support.showFAQSection(this,"27");
                 }

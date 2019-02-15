@@ -322,7 +322,7 @@ public class DialogManager {
             @Override
             public void onPositiveBtnClick(DialogInterface dialogInterface, int i, String tag) {
                 if (ZNUtils.isZeny()) {
-                    Support.showFAQSection((Activity) context, "27");
+                    Support.showFAQs((Activity) context);
                 } else {
                     Support.showFAQSection((Activity) context, "22");
                 }

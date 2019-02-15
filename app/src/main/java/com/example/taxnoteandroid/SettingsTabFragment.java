@@ -680,7 +680,7 @@ public class SettingsTabFragment extends Fragment {
                      @Override
                      public void onClick(View view) {
                          if (!ZNUtils.isZeny()) {
-                             Support.showFAQSection(getActivity(),"22");
+                             Support.showFAQs(getActivity());
                          } else {
                              Support.showFAQSection(getActivity(),"27");
                          }
