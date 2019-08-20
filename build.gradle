@@ -33,6 +33,8 @@ project.ext {
 
     supportPackageVersion = '27.1.1'
     playServicesVersion = '15.0.1'
+//    playServicesVersion = '17.2.1'
+    //playServicesVersion = '18.1.1'
 }
 
 task clean(type: Delete) {
@@ -40,5 +42,5 @@ task clean(type: Delete) {
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '4.3'
+    gradleVersion = '5.4.1'
 }
