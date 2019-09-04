@@ -16,16 +16,16 @@ repositories {
 
 
 android {
-    compileSdkVersion rootProject.ext.compileSdkVersion
-    buildToolsVersion rootProject.ext.buildToolsVersion
+    compileSdkVersion 28
+    buildToolsVersion '27.0.3'
 
     defaultConfig {
         applicationId "com.nonapp.taxnote"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
 
-        versionCode 96
-        versionName "1.4.5"
+        versionCode 99
+        versionName "1.4.6"
 
         lintOptions {
             abortOnError false
