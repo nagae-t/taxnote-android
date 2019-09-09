@@ -710,7 +710,7 @@ public class DialogManager {
         if (layoutId != 0)
             dialogFragment.setContentViewId(layoutId);
 
-        // 閉じるボタン以外はダイアログ消せない
+        // 閉じるボタン以外はダイアログ消せない 
         dialogFragment.setCloseToFinish(true);
         dialogFragment.setPositiveBtnText(context.getString(android.R.string.ok));
         dialogFragment.setDialogListener(new TNSimpleDialogFragment.TNSimpleDialogListener() {
