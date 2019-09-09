@@ -734,10 +734,14 @@ public class DataExportManager implements TaxnoteConsts {
         @Override
         public String getValue() {
 
+            String valString =  Long.toString(currentEntry.price);
+            if (context != null)
+                valString = "\""+ValueConverter.formatPrice(context, currentEntry.price)+"\"";
+
             if (ZNUtils.isZeny()) {
-                return Long.toString(currentEntry.isExpense ? currentEntry.price : 0);
+                return currentEntry.isExpense ? valString : "0";
             } else {
-                return Long.toString(currentEntry.price);
+                return valString;
             }
         }
     }
@@ -754,10 +758,14 @@ public class DataExportManager implements TaxnoteConsts {
         @Override
         public String getValue() {
 
+            String valString =  Long.toString(currentEntry.price);
+            if (context != null)
+                valString = "\""+ValueConverter.formatPrice(context, currentEntry.price)+"\"";
+
             if (ZNUtils.isZeny()) {
-                return Long.toString(currentEntry.isExpense ? 0 : currentEntry.price);
+                return currentEntry.isExpense ?  "0" : valString;
             } else {
-                return Long.toString(currentEntry.price);
+                return valString;
             }
         }
     }
