@@ -525,7 +525,8 @@ public class EntryDataManager {
             // for year title
             String yearTitle = Integer.toString(cYear);
             if (startMonthIndex > 0) {
-                endMonth -= 1;
+                if (closingDateIndex == lastDayOfMonthIndex)
+                    endMonth -= 1;
                 yearTitle = startYear + "/" + startMonth
                         + " ~ " + endYear + "/" + endMonth;
             }
