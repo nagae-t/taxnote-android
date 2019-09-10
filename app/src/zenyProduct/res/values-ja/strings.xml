@@ -106,8 +106,8 @@
 
     <string name="cloud_purchase_status">Zenyプレミアム</string>
     <string name="taxnote_cloud_desc">さらに便利に使いたい方向けのオプションサービスです。\n以下の機能が有効になります。\n1. 広告を削除\n2. ３つのアカウント使用\n3. 複数のiOS・Android端末でデータを自動共有\n4. 指定日の繰り返し入力\n5. 時系列チャートの表示\n\n複数人で別々の端末から同時にデータを管理したり、個人と会社など別々のアカウントを作成することもできます。また、家賃など毎月の固定支出などを指定した日に自動入力させることができます。</string>
-    <string name="add_project_without_cloud">複数アカウントの利用はZenyプレミアムへの加入が必要ですが、10件の入力制限付きでお試しすることができます。</string>
-    <string name="not_cloud_input_limit_message">本アカウント以外での入力は、Zenyプレミアムへの加入が必要です。（お試し入力は10件まで）</string>
+    <string name="add_project_without_cloud">複数アカウントの利用はZenyプレミアムへの加入が必要です。</string>
+    <string name="not_cloud_input_limit_message">本アカウント以外での入力は、Zenyプレミアムへの加入が必要です。</string>
     <string name="bar_graph_cloud_required_message">時系列チャートの表示はZenyプレミアムの購読が必要です。(支出・収入の時系列チャートは無料でお試し可能)</string>
     <string name="reason_item">カテゴリ</string>
     <string name="recurring_cloud_required_message">繰り返し入力はサーバ上で実行するので、Zenyプレミアムへの加入が必要です。</string>

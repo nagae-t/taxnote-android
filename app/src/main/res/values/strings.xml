@@ -407,8 +407,8 @@
     <string name="cloud_purchase_status_on">[Active] Manage</string>
     <string name="cloud_purchase_status_off">[Expired] Subscribe</string>
     <string name="taxnote_cloud_desc">Monthly subscription with following features.\n1. Multiple Accounts\n2. Cloud Sync with different devices(auto-backup)\n3. Recurring Entries\n4. Bar Charts</string>
-    <string name="add_project_without_cloud">You need to subscribe to Taxnote Cloud to use multiple accounts, but you can also try it with 10 entries limit for free.</string>
-    <string name="not_cloud_input_limit_message">Please upgrade to Taxnote Cloud to make an entry with additional books. (You can enter up to 10 with free trial)</string>
+    <string name="add_project_without_cloud">You need to subscribe to Taxnote Cloud to use multiple accounts.</string>
+    <string name="not_cloud_input_limit_message">Please upgrade to Taxnote Cloud to make an entry with additional books.</string>
     <string name="bar_graph_cloud_required_message">Please upgrade to Taxnote Cloud to use the bar charts. (You can try Income and Expense bar charts for free)</string>
 
     <string name="network_not_connection">No network connections.</string>

@@ -407,8 +407,8 @@
     <string name="cloud_purchase_status_on">[有効] 管理する</string>
     <string name="cloud_purchase_status_off">[期間終了] 購読する</string>
     <string name="taxnote_cloud_desc">以下の機能が使えます。\n1. 複数の帳簿使用\n2. 複数の端末でデータを自動共有（自動バックアップ）\n3. 指定日の予約入力\n4. 時系列チャートの表示\n\n初回購入時は一週間の無料お試し期間があります。Taxnoteプラスとは別々に購入する必要があります。</string>
-    <string name="add_project_without_cloud">複数帳簿の利用はTaxnoteクラウドへの加入が必要ですが、10件の入力制限付きでくりお試しが可能です。</string>
-    <string name="not_cloud_input_limit_message">本帳簿以外での入力は、Taxnoteクラウドへの加入が必要です。（お試し入力は10件まで）</string>
+    <string name="add_project_without_cloud">複数帳簿の利用はTaxnoteクラウドへの加入が必要です。</string>
+    <string name="not_cloud_input_limit_message">本帳簿以外での入力は、Taxnoteクラウドへの加入が必要です。</string>
     <string name="bar_graph_cloud_required_message">時系列チャートの表示はTaxnoteクラウドの購読が必要です。(支出・収入の時系列チャートは無料でお試し可能)</string>
 
     <string name="network_not_connection">インターネットへの接続が確認できません。</string>

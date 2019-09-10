@@ -162,7 +162,7 @@ public class SettingsTabFragment extends Fragment {
             public void onClick(DialogInterface dialogInterface, int i) {
 
                 int projectAllSize = mProjectDataManager.allSize();
-                // 無料版はmaster含めてProject3つまで
+
                 if (i == 0 && projectAllSize < MAX_PROJECT_COUNT) {
                     if (mApiUser.isCloudActive()) {
                         showProjectEditorDialog(ProjectEditorDialogFragment.TYPE_ADD_NEW);
@@ -219,17 +219,14 @@ public class SettingsTabFragment extends Fragment {
                 .setTitle(R.string.taxnote_cloud_first_free)
                 .setMessage(R.string.add_project_without_cloud)
                 .setNegativeButton(android.R.string.cancel, null)
-                .setNeutralButton(R.string.benefits_of_upgrade, new DialogInterface.OnClickListener() {
+                .setPositiveButton(R.string.benefits_of_upgrade, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         UpgradeActivity.start(getContext());
                     }
-                }).setPositiveButton(R.string.add_new_project, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        showProjectEditorDialog(ProjectEditorDialogFragment.TYPE_ADD_NEW);
-                    }
                 });
+
+
         builder.create().show();
     }
 
