@@ -96,6 +96,8 @@
 
     <string name="taxnote_plus_show_price">$29.99 / year</string>
     <string name="taxnote_cloud_show_price">$4.99 / month</string>
+    <string name="taxnote_plus_show_price_tail"> / year</string>
+    <string name="taxnote_cloud_show_price_tail"> / month</string>
 
 
     //--------------------------------------------------------------//

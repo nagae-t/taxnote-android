@@ -163,12 +163,22 @@ public class UpgradeActivity extends DefaultCommonActivity {
                 new CheckBillingAsyncTask(false).execute(purchasePlus2);
 
             Purchase purchasePlus3 = inventory.getPurchase(UpgradeManger.SKU_TAXNOTE_PLUS_ID3);
-            if (purchasePlus3 != null)
+            if (purchasePlus3 != null) {
                 new CheckBillingAsyncTask(false).execute(purchasePlus3);
+            } else { // 価格表記するように
+                String plusPriceString = inventory.getSkuDetails(UpgradeManger.SKU_TAXNOTE_PLUS_ID).getPrice();
+                plusPriceString += getApplicationContext().getString(R.string.taxnote_plus_show_price_tail);
+                binding.upgraded.setText(plusPriceString);
+            }
 
             Purchase purchaseCloud = inventory.getPurchase(UpgradeManger.SKU_TAXNOTE_CLOUD_ID);
-            if (purchaseCloud != null)
+            if (purchaseCloud != null) {
                 new CheckBillingAsyncTask(false).execute(purchaseCloud);
+            } else { // 価格表記するように
+                String cloudPriceString = inventory.getSkuDetails(UpgradeManger.SKU_TAXNOTE_CLOUD_ID).getPrice();
+                cloudPriceString += getApplicationContext().getString(R.string.taxnote_cloud_show_price_tail);
+                binding.cloudRightTv.setText(cloudPriceString);
+            }
 
             if (ZNUtils.isZeny()) {
                 Purchase purchaseZeny = inventory.getPurchase(UpgradeManger.SKU_ZENY_PREMIUM_ID);
@@ -176,6 +186,7 @@ public class UpgradeActivity extends DefaultCommonActivity {
                     new CheckBillingAsyncTask(false).execute(purchaseZeny);
                 }
             }
+
         }
     };
 

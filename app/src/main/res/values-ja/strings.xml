@@ -95,6 +95,8 @@
 
     <string name="taxnote_plus_show_price">¥3,500 / 年間</string>
     <string name="taxnote_cloud_show_price">¥600 / 月間</string>
+    <string name="taxnote_plus_show_price_tail"> / 年間</string>
+    <string name="taxnote_cloud_show_price_tail"> / 月間</string>
 
 
     //--------------------------------------------------------------//
