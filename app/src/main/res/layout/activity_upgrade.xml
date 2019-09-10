@@ -39,7 +39,7 @@
                 android:id="@+id/upgraded"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/taxnote_plus_show_price"/>
+                />
         </LinearLayout>
 
 
@@ -80,7 +80,7 @@
                 android:textColor="?attr/colorPrimary"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/taxnote_cloud_show_price" />
+                />
         </LinearLayout>
         <android.support.v4.widget.Space
             android:layout_width="match_parent"
