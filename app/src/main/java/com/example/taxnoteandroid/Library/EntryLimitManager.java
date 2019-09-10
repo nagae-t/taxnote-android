@@ -23,8 +23,8 @@ import java.util.TimeZone;
 
 public class EntryLimitManager {
 
-    private static final long limitNumberOfEntryPerMonth    = 15;
-    private static final long limitEntryAddSubProject = 10;
+    private static final long limitNumberOfEntryPerMonth = 15;
+    private static final long limitEntryAddSubProject = 1;
 
 
     public static boolean limitNewEntryForFreeUsersWithDate(Context context, long date) {
