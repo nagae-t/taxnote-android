@@ -39,6 +39,9 @@ import com.helpshift.support.Support;
 import com.kobakei.ratethisapp.RateThisApp;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import okhttp3.Response;
 
 import static com.example.taxnoteandroid.TaxnoteConsts.MIXPANEL_TOKEN;
@@ -129,7 +132,11 @@ public class UpgradeActivity extends DefaultCommonActivity {
                     }
 
                     try {
-                        mBillingHelper.queryInventoryAsync(mGotInventoryListener);
+                        List<String> moreSubSkus = new ArrayList<>();
+                        moreSubSkus.add(UpgradeManger.SKU_TAXNOTE_PLUS_ID3);
+                        moreSubSkus.add(UpgradeManger.SKU_TAXNOTE_CLOUD_ID);
+
+                        mBillingHelper.queryInventoryAsync(true, null, moreSubSkus, mGotInventoryListener);
                     } catch (IabHelper.IabAsyncInProgressException e) {
                         Log.e("ERROR", "mBillingHelper.startSetup catch e: " + e.getMessage());
                         e.printStackTrace();
@@ -167,7 +174,7 @@ public class UpgradeActivity extends DefaultCommonActivity {
             if (purchasePlus3 != null) {
                 new CheckBillingAsyncTask(false).execute(purchasePlus3);
             } else { // 価格表記するように
-                SkuDetails plusSkuDetail = inventory.getSkuDetails(UpgradeManger.SKU_TAXNOTE_PLUS_ID);
+                SkuDetails plusSkuDetail = inventory.getSkuDetails(UpgradeManger.SKU_TAXNOTE_PLUS_ID3);
                 if (plusSkuDetail != null) {
                     Log.d("DEBUG", "plusSkuDetail is not null");
                     String plusPriceString = plusSkuDetail.getPrice();
