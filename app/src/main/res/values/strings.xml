@@ -94,6 +94,9 @@
     <string name="share_taxnote_message">I like this accounting app. https://play.google.com/store/apps/details?id=com.nonume.taxnote</string>
     <string name="decimal_button">Decimal</string>
 
+    <string name="taxnote_plus_show_price">$29.99 / year</string>
+    <string name="taxnote_cloud_show_price">$4.99 / month</string>
+
 
     //--------------------------------------------------------------//
     // -- Data Export --
