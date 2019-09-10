@@ -176,15 +176,11 @@ public class UpgradeActivity extends DefaultCommonActivity {
             } else { // 価格表記するように
                 SkuDetails plusSkuDetail = inventory.getSkuDetails(UpgradeManger.SKU_TAXNOTE_PLUS_ID3);
                 if (plusSkuDetail != null) {
-                    Log.d("DEBUG", "plusSkuDetail is not null");
                     String plusPriceString = plusSkuDetail.getPrice();
                     if (plusPriceString != null) {
-                        Log.d("DEBUG", "plusPriceString is not null: " + plusPriceString);
-                        plusPriceString += getApplicationContext().getString(R.string.taxnote_plus_show_price_tail);
+                        plusPriceString += " "+getApplicationContext().getString(R.string.taxnote_plus_show_price_tail);
                         binding.upgraded.setText(plusPriceString);
                     }
-                } else {
-                    Log.d("DEBUG", "plusSkuDetail is null");
                 }
             }
 
@@ -194,15 +190,11 @@ public class UpgradeActivity extends DefaultCommonActivity {
             } else { // 価格表記するように
                 SkuDetails cloudSkuDetail = inventory.getSkuDetails(UpgradeManger.SKU_TAXNOTE_CLOUD_ID);
                 if (cloudSkuDetail != null) {
-                    Log.d("DEBUG", "cloudSkuDetail is not null");
                     String cloudPriceString = cloudSkuDetail.getPrice();
                     if (cloudPriceString != null) {
-                        Log.d("DEBUG", "cloudPriceString is not null: " + cloudPriceString);
-                        cloudPriceString += getApplicationContext().getString(R.string.taxnote_cloud_show_price_tail);
+                        cloudPriceString += " "+getApplicationContext().getString(R.string.taxnote_cloud_show_price_tail);
                         binding.cloudRightTv.setText(cloudPriceString);
                     }
-                } else {
-                    Log.d("DEBUG", "cloudSkuDetail is null");
                 }
             }
 
