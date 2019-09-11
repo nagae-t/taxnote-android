@@ -93,6 +93,11 @@
     <string name="share_taxnote_message">この会計アプリ便利。https://play.google.com/store/apps/details?id=com.nonume.taxnote</string>
     <string name="decimal_button">小数点表示（ドル・ユーロなどに）</string>
 
+    <string name="taxnote_plus_show_price">¥3,500 / 年間</string>
+    <string name="taxnote_cloud_show_price">¥600 / 月間</string>
+    <string name="taxnote_plus_show_price_tail"> / 年間</string>
+    <string name="taxnote_cloud_show_price_tail"> / 月間</string>
+
 
     //--------------------------------------------------------------//
     // -- Data Export --

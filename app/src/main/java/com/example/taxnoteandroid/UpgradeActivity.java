@@ -25,6 +25,7 @@ import com.example.taxnoteandroid.Library.billing.IabHelper;
 import com.example.taxnoteandroid.Library.billing.IabResult;
 import com.example.taxnoteandroid.Library.billing.Inventory;
 import com.example.taxnoteandroid.Library.billing.Purchase;
+import com.example.taxnoteandroid.Library.billing.SkuDetails;
 import com.example.taxnoteandroid.Library.taxnote.TNApi;
 import com.example.taxnoteandroid.Library.taxnote.TNApiModel;
 import com.example.taxnoteandroid.Library.taxnote.TNApiUser;
@@ -37,6 +38,9 @@ import com.google.gson.JsonParser;
 import com.helpshift.support.Support;
 import com.kobakei.ratethisapp.RateThisApp;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import okhttp3.Response;
 
@@ -128,7 +132,11 @@ public class UpgradeActivity extends DefaultCommonActivity {
                     }
 
                     try {
-                        mBillingHelper.queryInventoryAsync(mGotInventoryListener);
+                        List<String> moreSubSkus = new ArrayList<>();
+                        moreSubSkus.add(UpgradeManger.SKU_TAXNOTE_PLUS_ID3);
+                        moreSubSkus.add(UpgradeManger.SKU_TAXNOTE_CLOUD_ID);
+
+                        mBillingHelper.queryInventoryAsync(true, null, moreSubSkus, mGotInventoryListener);
                     } catch (IabHelper.IabAsyncInProgressException e) {
                         Log.e("ERROR", "mBillingHelper.startSetup catch e: " + e.getMessage());
                         e.printStackTrace();
@@ -163,12 +171,32 @@ public class UpgradeActivity extends DefaultCommonActivity {
                 new CheckBillingAsyncTask(false).execute(purchasePlus2);
 
             Purchase purchasePlus3 = inventory.getPurchase(UpgradeManger.SKU_TAXNOTE_PLUS_ID3);
-            if (purchasePlus3 != null)
+            if (purchasePlus3 != null) {
                 new CheckBillingAsyncTask(false).execute(purchasePlus3);
+            } else { // 価格表記するように
+                SkuDetails plusSkuDetail = inventory.getSkuDetails(UpgradeManger.SKU_TAXNOTE_PLUS_ID3);
+                if (plusSkuDetail != null) {
+                    String plusPriceString = plusSkuDetail.getPrice();
+                    if (plusPriceString != null) {
+                        plusPriceString += " "+getApplicationContext().getString(R.string.taxnote_plus_show_price_tail);
+                        binding.upgraded.setText(plusPriceString);
+                    }
+                }
+            }
 
             Purchase purchaseCloud = inventory.getPurchase(UpgradeManger.SKU_TAXNOTE_CLOUD_ID);
-            if (purchaseCloud != null)
+            if (purchaseCloud != null) {
                 new CheckBillingAsyncTask(false).execute(purchaseCloud);
+            } else { // 価格表記するように
+                SkuDetails cloudSkuDetail = inventory.getSkuDetails(UpgradeManger.SKU_TAXNOTE_CLOUD_ID);
+                if (cloudSkuDetail != null) {
+                    String cloudPriceString = cloudSkuDetail.getPrice();
+                    if (cloudPriceString != null) {
+                        cloudPriceString += " "+getApplicationContext().getString(R.string.taxnote_cloud_show_price_tail);
+                        binding.cloudRightTv.setText(cloudPriceString);
+                    }
+                }
+            }
 
             if (ZNUtils.isZeny()) {
                 Purchase purchaseZeny = inventory.getPurchase(UpgradeManger.SKU_ZENY_PREMIUM_ID);
@@ -176,6 +204,7 @@ public class UpgradeActivity extends DefaultCommonActivity {
                     new CheckBillingAsyncTask(false).execute(purchaseZeny);
                 }
             }
+
         }
     };
 
