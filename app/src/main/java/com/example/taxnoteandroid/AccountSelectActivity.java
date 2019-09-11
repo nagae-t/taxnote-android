@@ -49,6 +49,8 @@ public class AccountSelectActivity extends DefaultCommonActivity {
     private MyRecyclerViewAdapter adapter; // 2017/01/30 E.Nozaki
     private List<Account> accountList = null; // 2017/01/30 E.Nozaki
 
+    private Account mCurrentAccount;
+
     private TNApiModel mApiModel;
 
     public static Intent createIntent(Context context, boolean isExpense) {
@@ -90,6 +92,8 @@ public class AccountSelectActivity extends DefaultCommonActivity {
 
         Intent intent = getIntent();
         isExpense = intent.getBooleanExtra(EXTRA_ISEXPENSE, false);
+
+        mCurrentAccount = accountDataManager.findCurrentSelectedAccount(isExpense);
     }
 
     //--------------------------------------------------------------//
@@ -441,6 +445,10 @@ public class AccountSelectActivity extends DefaultCommonActivity {
                     binding.menuRight.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
+                            MenuItem delMenu = popup.getMenu().findItem(R.id.delete);
+                            if (account.id == mCurrentAccount.id) {
+                                delMenu.setVisible(false);
+                            }
                             popup.show();
                         }
                     });
