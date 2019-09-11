@@ -398,7 +398,7 @@
     <string name="send">送信</string>
 
     <string name="plus_not_bought_title">Taxnoteプラスについて</string>
-    <string name="plus_not_bought_message">「Taxnoteプラス」を購入せずに「Taxnoteクラウド」の購読は可能ですが、月15件の入力制限がそのまま存在するのでご注意ください。</string>
+    <string name="plus_not_bought_message">「Taxnoteクラウド」はTaxnoteがさらに便利になるオプションサービスなので、まずは入力制限がなくなる「Taxnoteプラス」を購入してください。\n\nプラスとクラウドはそれぞれ別々に購入する必要があります。\n\n他の端末でTaxnoteクラウドのアカウントを作成済みの場合、ログインボタンをご利用ください。</string>
     <string name="cloud_sign_up_title">クラウド専用アカウントを作成してください</string>
     <string name="cloud_sign_up_message">現在、Taxnoteクラウドを購読中ですが、専用アカウントを作成することでデータの自動共有（自動バックアップ）が使えます。</string>
     <string name="cloud_account_exists_message">このアカウントがすでにリンクされています。このアカウントでログインするか、アカウントを削除してから新規作成してください。</string>
