@@ -318,6 +318,14 @@ public class EntryDataManager {
         return ormaDatabase.selectFromEntry().and().accountEq(account).valueOrNull();
     }
 
+    public int countByAccount(Account account) {
+        return ormaDatabase.selectFromEntry()
+                .where(Entry_Schema.INSTANCE.deleted.getQualifiedName() + " = 0")
+                .and()
+                .accountEq(account)
+                .count();
+    }
+
     public long findSumBalance(long endDate) {
         ProjectDataManager projectDataManager   = new ProjectDataManager(mContext);
         Project project                         = projectDataManager.findCurrent();

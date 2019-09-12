@@ -229,12 +229,16 @@ public class AccountSelectActivity extends DefaultCommonActivity {
         Entry entry = entryDataManager.hasAccountInEntryData(account);
 
         if (entry != null) {
+            int countEntry = entryDataManager.countByAccount(account);
 
+            String delBtnStr = getString(R.string.del_data_has_seleted_cate, countEntry);
             // Show error message
+            String aletMsg = getString(R.string.cant_del_cate_error, account.name, countEntry);
             new AlertDialog.Builder(AccountSelectActivity.this)
-                    .setTitle(getResources().getString(R.string.Error))
-                    .setMessage(getResources().getString(R.string.using_this_account_in_entry_already))
-                    .setPositiveButton("OK", null)
+                    .setTitle(R.string.confirm_entry_del_for_reason_title)
+                    .setMessage(aletMsg)
+                    .setPositiveButton(delBtnStr, null)
+                    .setNegativeButton(R.string.cancel, null)
                     .show();
             return;
         }
@@ -456,10 +460,6 @@ public class AccountSelectActivity extends DefaultCommonActivity {
                     binding.menuRight.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-//                            MenuItem delMenu = popup.getMenu().findItem(R.id.delete);
-//                            if (account.id == mCurrentAccount.id) {
-//                                delMenu.setVisible(false);
-//                            }
                             popup.show();
                         }
                     });

@@ -40,6 +40,9 @@
     <string name="using_this_account_in_entry_already">You have records using this category, please delete them from the History.</string>
 
     <string name="cant_del_active_account">You can't delete the account you are using now, please select other account and try again.</string>
+    <string name="confirm_entry_del_for_reason_title">Delete Entries</string>
+    <string name="cant_del_cate_error">You have [%2$d] entries using [%1$s].  Please delete these entries before you delete the account.\n\nIf you use multiple books with Taxnote Cloud, the below button only deletes entries in the book you are using now.</string>
+    <string name="del_data_has_seleted_cate">Delete %1$d Entries</string>
 
     //--------------------------------------------------------------//
     // -- Entry Tab --
