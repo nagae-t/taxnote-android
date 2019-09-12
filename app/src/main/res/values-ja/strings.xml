@@ -36,6 +36,7 @@
     <string name="history_data_empty">入力タブからデータを入力してください。</string>
     <string name="using_this_account_in_entry_already">指定した科目を使用した記録があります。まず、仕訳帳から該当する記録を削除してください。</string>
 
+    <string name="cant_del_active_account">現在選択中の科目は削除できません。他の科目を選択してから削除してください。</string>
 
     //--------------------------------------------------------------//
     // -- Entry Tab --

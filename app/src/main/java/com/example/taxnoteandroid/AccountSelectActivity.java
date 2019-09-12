@@ -213,6 +213,17 @@ public class AccountSelectActivity extends DefaultCommonActivity {
 
     private void deleteAccount(final Account account) {
 
+        // stop deleting if the selected account is the current used account
+        if (account.id == mCurrentAccount.id) {
+            // Show error message
+            new AlertDialog.Builder(AccountSelectActivity.this)
+                    .setTitle(getResources().getString(R.string.Error))
+                    .setMessage(getResources().getString(R.string.cant_del_active_account))
+                    .setPositiveButton("OK", null)
+                    .show();
+            return;
+        }
+
         // Check if Entry data has this account already
         EntryDataManager entryDataManager = new EntryDataManager(AccountSelectActivity.this);
         Entry entry = entryDataManager.hasAccountInEntryData(account);
@@ -445,10 +456,10 @@ public class AccountSelectActivity extends DefaultCommonActivity {
                     binding.menuRight.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            MenuItem delMenu = popup.getMenu().findItem(R.id.delete);
-                            if (account.id == mCurrentAccount.id) {
-                                delMenu.setVisible(false);
-                            }
+//                            MenuItem delMenu = popup.getMenu().findItem(R.id.delete);
+//                            if (account.id == mCurrentAccount.id) {
+//                                delMenu.setVisible(false);
+//                            }
                             popup.show();
                         }
                     });
