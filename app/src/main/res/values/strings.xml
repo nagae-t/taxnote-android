@@ -44,6 +44,8 @@
     <string name="cant_del_cate_error">You have [%2$d] entries using [%1$s].  Please delete these entries before you delete the account.\n\nIf you use multiple books with Taxnote Cloud, the below button only deletes entries in the book you are using now.</string>
     <string name="del_data_has_seleted_cate">Delete %1$d Entries</string>
 
+    <string name="confirm_to_del_all_data_has_reason">Are you sure to delete %2$d entries using [%1$s] from your history?</string>
+
     //--------------------------------------------------------------//
     // -- Entry Tab --
     //--------------------------------------------------------------//

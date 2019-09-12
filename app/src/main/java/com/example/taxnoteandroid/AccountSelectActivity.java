@@ -225,43 +225,59 @@ public class AccountSelectActivity extends DefaultCommonActivity {
         }
 
         // Check if Entry data has this account already
-        EntryDataManager entryDataManager = new EntryDataManager(AccountSelectActivity.this);
+        final EntryDataManager entryDataManager = new EntryDataManager(AccountSelectActivity.this);
         Entry entry = entryDataManager.hasAccountInEntryData(account);
 
         if (entry != null) {
             int countEntry = entryDataManager.countByAccount(account);
 
-            String delBtnStr = getString(R.string.del_data_has_seleted_cate, countEntry);
-            // Show error message
-            String aletMsg = getString(R.string.cant_del_cate_error, account.name, countEntry);
-            new AlertDialog.Builder(AccountSelectActivity.this)
-                    .setTitle(R.string.confirm_entry_del_for_reason_title)
-                    .setMessage(aletMsg)
-                    .setPositiveButton(delBtnStr, null)
-                    .setNegativeButton(R.string.cancel, null)
-                    .show();
+            DialogManager.confirmEntryDeleteForReson(this, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+
+                            entryDataManager.deleteByAccount(account);
+                            accountDataManager.updateSetDeleted(account.uuid, mApiModel);
+
+                            adapter.onAccountDataManagerChanged();
+                            String message = account.name + getResources().getString(R.string.delete_done_after_title);
+                            DialogManager.showToast(AccountSelectActivity.this, message);
+
+                            dialogInterface.dismiss();
+                        }
+                    },
+                    countEntry, null, account);
+
+//            String delBtnStr = getString(R.string.del_data_has_seleted_cate, countEntry);
+//            // Show error message
+//            String aletMsg = getString(R.string.cant_del_cate_error, account.name, countEntry);
+//            new AlertDialog.Builder(AccountSelectActivity.this)
+//                    .setTitle(R.string.confirm_entry_del_for_reason_title)
+//                    .setMessage(aletMsg)
+//                    .setPositiveButton(delBtnStr, null)
+//                    .setNegativeButton(R.string.cancel, null)
+//                    .show();
             return;
         }
 
         // Confirm dialog
-        new AlertDialog.Builder(AccountSelectActivity.this)
-                .setTitle(account.name)
-                .setMessage(getResources().getString(R.string.delete_confirm_message))
-                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-
-                        accountDataManager.updateSetDeleted(account.uuid, mApiModel);
-
-                        adapter.onAccountDataManagerChanged();
-                        String message = account.name + getResources().getString(R.string.delete_done_after_title);
-                        DialogManager.showToast(AccountSelectActivity.this, message);
-
-                        dialogInterface.dismiss();
-                    }
-                })
-                .setNegativeButton(getResources().getString(R.string.cancel), null)
-                .show();
+//        new AlertDialog.Builder(AccountSelectActivity.this)
+//                .setTitle(account.name)
+//                .setMessage(getResources().getString(R.string.delete_confirm_message))
+//                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialogInterface, int i) {
+//
+//                        accountDataManager.updateSetDeleted(account.uuid, mApiModel);
+//
+//                        adapter.onAccountDataManagerChanged();
+//                        String message = account.name + getResources().getString(R.string.delete_done_after_title);
+//                        DialogManager.showToast(AccountSelectActivity.this, message);
+//
+//                        dialogInterface.dismiss();
+//                    }
+//                })
+//                .setNegativeButton(getResources().getString(R.string.cancel), null)
+//                .show();
     }
 
     //--------------------------------------------------------------//

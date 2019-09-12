@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Gravity;
 import android.widget.Toast;
 
@@ -18,6 +19,7 @@ import com.example.taxnoteandroid.TNSimpleDialogFragment;
 import com.example.taxnoteandroid.UpgradeActivity;
 import com.example.taxnoteandroid.dataManager.EntryDataManager;
 import com.example.taxnoteandroid.dataManager.SharedPreferencesManager;
+import com.example.taxnoteandroid.model.Account;
 import com.example.taxnoteandroid.model.Entry;
 import com.example.taxnoteandroid.model.Reason;
 import com.github.javiersantos.appupdater.AppUpdater;
@@ -737,5 +739,38 @@ public class DialogManager {
         });
 
         dialogFragment.show(fragmentManager, null);
+    }
+
+    public static void confirmEntryDeleteForReson(final AppCompatActivity activity,
+            final DialogInterface.OnClickListener onDeleteListener,
+            final int countNum, Reason reason, Account account) {
+        if (reason == null && account == null) {
+            return;
+        }
+
+        final String delBtnStr = activity.getString(R.string.del_data_has_seleted_cate, countNum);
+        // Show error message
+        final String accOrReasName = (account != null) ? account.name : reason.name;
+        String alertMsg = activity.getString(R.string.cant_del_cate_error, accOrReasName, countNum);
+        new AlertDialog.Builder(activity)
+                .setTitle(R.string.confirm_entry_del_for_reason_title)
+                .setMessage(alertMsg)
+                .setPositiveButton(delBtnStr, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        String delConfirmMsg = activity.getString(R.string.confirm_to_del_all_data_has_reason, accOrReasName, countNum);
+                        // Confirm delete dialog
+                        new AlertDialog.Builder(activity)
+//                                .setTitle()
+                                .setMessage(delConfirmMsg)
+                                .setPositiveButton(delBtnStr, onDeleteListener)
+                                .setNegativeButton(R.string.cancel, null)
+                                .show();
+                    }
+                })
+                .setNegativeButton(R.string.cancel, null)
+                .show();
+
     }
 }

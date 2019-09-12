@@ -33,10 +33,12 @@ public class EntryDataManager {
 
     private OrmaDatabase ormaDatabase;
     private Context mContext;
+    private ProjectDataManager mProjectManager;
 
     public EntryDataManager(Context context) {
         ormaDatabase = TaxnoteApp.getOrmaDatabase();
         mContext = context;
+        mProjectManager = new ProjectDataManager(mContext);
     }
 
 
@@ -311,15 +313,20 @@ public class EntryDataManager {
     }
 
     public Entry hasReasonInEntryData(Reason reason) {
-        return ormaDatabase.selectFromEntry().and().reasonEq(reason).valueOrNull();
+        return ormaDatabase.selectFromEntry()
+                .projectEq(mProjectManager.findCurrent())
+                .and().reasonEq(reason).valueOrNull();
     }
 
     public Entry hasAccountInEntryData(Account account) {
-        return ormaDatabase.selectFromEntry().and().accountEq(account).valueOrNull();
+        return ormaDatabase.selectFromEntry()
+                .projectEq(mProjectManager.findCurrent())
+                .and().accountEq(account).valueOrNull();
     }
 
     public int countByAccount(Account account) {
         return ormaDatabase.selectFromEntry()
+                .projectEq(mProjectManager.findCurrent())
                 .where(Entry_Schema.INSTANCE.deleted.getQualifiedName() + " = 0")
                 .and()
                 .accountEq(account)
@@ -436,6 +443,20 @@ public class EntryDataManager {
     //--------------------------------------------------------------//
     //    -- Delete --
     //--------------------------------------------------------------//
+
+    public void deleteByAccount(Account account, TNApiModel apiModel) {
+        boolean isLoggingIn = TNApiUser.isLoggingIn(mContext);
+
+        if (isLoggingIn) {
+
+        } else {
+            ormaDatabase.deleteFromEntry()
+                    .projectEq(mProjectManager.findCurrent())
+                    .accountEq(account.id)
+                    .execute();
+        }
+    }
+
 
     public int delete(long id) {
         return ormaDatabase.deleteFromEntry().idEq(id).execute();
