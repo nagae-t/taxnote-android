@@ -235,7 +235,7 @@ public class AccountSelectActivity extends DefaultCommonActivity {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
 
-                            entryDataManager.deleteByAccount(account);
+                            entryDataManager.deleteByAccount(account, mApiModel);
                             accountDataManager.updateSetDeleted(account.uuid, mApiModel);
 
                             adapter.onAccountDataManagerChanged();
@@ -247,37 +247,9 @@ public class AccountSelectActivity extends DefaultCommonActivity {
                     },
                     countEntry, null, account);
 
-//            String delBtnStr = getString(R.string.del_data_has_seleted_cate, countEntry);
-//            // Show error message
-//            String aletMsg = getString(R.string.cant_del_cate_error, account.name, countEntry);
-//            new AlertDialog.Builder(AccountSelectActivity.this)
-//                    .setTitle(R.string.confirm_entry_del_for_reason_title)
-//                    .setMessage(aletMsg)
-//                    .setPositiveButton(delBtnStr, null)
-//                    .setNegativeButton(R.string.cancel, null)
-//                    .show();
             return;
         }
 
-        // Confirm dialog
-//        new AlertDialog.Builder(AccountSelectActivity.this)
-//                .setTitle(account.name)
-//                .setMessage(getResources().getString(R.string.delete_confirm_message))
-//                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-//                    @Override
-//                    public void onClick(DialogInterface dialogInterface, int i) {
-//
-//                        accountDataManager.updateSetDeleted(account.uuid, mApiModel);
-//
-//                        adapter.onAccountDataManagerChanged();
-//                        String message = account.name + getResources().getString(R.string.delete_done_after_title);
-//                        DialogManager.showToast(AccountSelectActivity.this, message);
-//
-//                        dialogInterface.dismiss();
-//                    }
-//                })
-//                .setNegativeButton(getResources().getString(R.string.cancel), null)
-//                .show();
     }
 
     //--------------------------------------------------------------//

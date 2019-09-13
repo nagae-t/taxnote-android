@@ -448,6 +448,16 @@ public class EntryDataManager {
         boolean isLoggingIn = TNApiUser.isLoggingIn(mContext);
 
         if (isLoggingIn) {
+            List<Entry> targetList =  ormaDatabase.selectFromEntry()
+                    .projectEq(mProjectManager.findCurrent())
+                    .where(Entry_Schema.INSTANCE.deleted.getQualifiedName() + " = 0")
+                    .and().accountEq(account).toList();
+            for (Entry _entry : targetList) {
+                ormaDatabase.updateEntry().idEq(_entry.id)
+                        .deleted(true).execute();
+            }
+
+            apiModel.saveAllNeedSaveSyncDeletedData(null);
 
         } else {
             ormaDatabase.deleteFromEntry()
