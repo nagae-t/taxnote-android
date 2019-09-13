@@ -19,6 +19,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 
+import com.example.taxnoteandroid.Library.BroadcastUtil;
 import com.example.taxnoteandroid.Library.DialogManager;
 import com.example.taxnoteandroid.Library.KeyboardUtil;
 import com.example.taxnoteandroid.Library.taxnote.TNApiModel;
@@ -238,8 +239,10 @@ public class AccountSelectActivity extends DefaultCommonActivity {
                             entryDataManager.deleteByAccount(account, mApiModel);
                             accountDataManager.updateSetDeleted(account.uuid, mApiModel);
 
+                            BroadcastUtil.sendReloadReport(AccountSelectActivity.this);
+
                             adapter.onAccountDataManagerChanged();
-                            String message = account.name + getResources().getString(R.string.delete_done_after_title);
+                            String message = getString(R.string.bulk_del_complete, account.name);
                             DialogManager.showToast(AccountSelectActivity.this, message);
 
                             dialogInterface.dismiss();
