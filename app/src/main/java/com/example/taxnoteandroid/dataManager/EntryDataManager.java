@@ -333,6 +333,15 @@ public class EntryDataManager {
                 .count();
     }
 
+    public int countByReason(Reason reason) {
+        return ormaDatabase.selectFromEntry()
+                .projectEq(mProjectManager.findCurrent())
+                .where(Entry_Schema.INSTANCE.deleted.getQualifiedName() + " = 0")
+                .and()
+                .reasonEq(reason)
+                .count();
+    }
+
     public long findSumBalance(long endDate) {
         ProjectDataManager projectDataManager   = new ProjectDataManager(mContext);
         Project project                         = projectDataManager.findCurrent();
@@ -463,6 +472,29 @@ public class EntryDataManager {
             ormaDatabase.deleteFromEntry()
                     .projectEq(mProjectManager.findCurrent())
                     .accountEq(account.id)
+                    .execute();
+        }
+    }
+
+    public void deleteByReason(Reason reason, TNApiModel apiModel) {
+        boolean isLoggingIn = TNApiUser.isLoggingIn(mContext);
+
+        if (isLoggingIn) {
+            List<Entry> targetList =  ormaDatabase.selectFromEntry()
+                    .projectEq(mProjectManager.findCurrent())
+                    .where(Entry_Schema.INSTANCE.deleted.getQualifiedName() + " = 0")
+                    .and().reasonEq(reason).toList();
+            for (Entry _entry : targetList) {
+                ormaDatabase.updateEntry().idEq(_entry.id)
+                        .deleted(true).execute();
+            }
+
+            apiModel.saveAllNeedSaveSyncDeletedData(null);
+
+        } else {
+            ormaDatabase.deleteFromEntry()
+                    .projectEq(mProjectManager.findCurrent())
+                    .reasonEq(reason.id)
                     .execute();
         }
     }

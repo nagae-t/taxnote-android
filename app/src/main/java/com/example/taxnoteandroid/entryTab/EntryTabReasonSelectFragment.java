@@ -9,6 +9,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
@@ -27,6 +28,7 @@ import com.example.taxnoteandroid.AccountSelectActivity;
 import com.example.taxnoteandroid.DatePickerDialogFragment;
 import com.example.taxnoteandroid.DividerDecoration;
 import com.example.taxnoteandroid.Library.AsyncOkHttpClient;
+import com.example.taxnoteandroid.Library.BroadcastUtil;
 import com.example.taxnoteandroid.Library.DialogManager;
 import com.example.taxnoteandroid.Library.KeyboardUtil;
 import com.example.taxnoteandroid.Library.taxnote.TNApi;
@@ -374,39 +376,52 @@ public class EntryTabReasonSelectFragment extends Fragment {
     private void deleteReason(final Reason reason) {
 
         // Check if Entry data has this reason already
-        EntryDataManager entryDataManager = new EntryDataManager(getContext());
+        final EntryDataManager entryDataManager = new EntryDataManager(getContext());
         Entry entry = entryDataManager.hasReasonInEntryData(reason);
 
         if (entry != null) {
+            int countReason = entryDataManager.countByReason(reason);
 
-            // Show error message
-            new AlertDialog.Builder(getContext())
-                    .setTitle(getResources().getString(R.string.Error))
-                    .setMessage(getResources().getString(R.string.using_this_account_in_entry_already))
-                    .setPositiveButton("OK", null)
-                    .show();
+            DialogManager.confirmEntryDeleteForReson((AppCompatActivity) getActivity(), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+
+                            entryDataManager.deleteByReason(reason, mApiModel);
+                            reasonDataManager.updateSetDeleted(reason.uuid, mApiModel);
+
+                            BroadcastUtil.sendReloadReport(getActivity());
+
+                            adapter.onReasonDataManagerChanged();
+                            String message = getString(R.string.bulk_del_complete, reason.name);
+                            DialogManager.showToast(getActivity(), message);
+
+                            dialogInterface.dismiss();
+                        }
+                    },
+                    countReason, reason, null);
+
             return;
         }
 
         // Confirm dialog
-        new AlertDialog.Builder(getContext())
-                .setTitle(reason.name)
-                .setMessage(getResources().getString(R.string.delete_confirm_message))
-                .setPositiveButton(getResources().getString(R.string.Delete), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-
-                        dialogInterface.dismiss();
-                        reasonDataManager.updateSetDeleted(reason.uuid, mApiModel);
-
-                        adapter.onReasonDataManagerChanged();
-
-                        String message = reason.name + getResources().getString(R.string.delete_done_after_title);
-                        DialogManager.showToast(getActivity(), message);
-                    }
-                })
-                .setNegativeButton(getResources().getString(R.string.cancel), null)
-                .show();
+//        new AlertDialog.Builder(getContext())
+//                .setTitle(reason.name)
+//                .setMessage(getResources().getString(R.string.delete_confirm_message))
+//                .setPositiveButton(getResources().getString(R.string.Delete), new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialogInterface, int i) {
+//
+//                        dialogInterface.dismiss();
+//                        reasonDataManager.updateSetDeleted(reason.uuid, mApiModel);
+//
+//                        adapter.onReasonDataManagerChanged();
+//
+//                        String message = reason.name + getResources().getString(R.string.delete_done_after_title);
+//                        DialogManager.showToast(getActivity(), message);
+//                    }
+//                })
+//                .setNegativeButton(getResources().getString(R.string.cancel), null)
+//                .show();
     }
 
     //--------------------------------------------------------------//
