@@ -403,25 +403,6 @@ public class EntryTabReasonSelectFragment extends Fragment {
             return;
         }
 
-        // Confirm dialog
-//        new AlertDialog.Builder(getContext())
-//                .setTitle(reason.name)
-//                .setMessage(getResources().getString(R.string.delete_confirm_message))
-//                .setPositiveButton(getResources().getString(R.string.Delete), new DialogInterface.OnClickListener() {
-//                    @Override
-//                    public void onClick(DialogInterface dialogInterface, int i) {
-//
-//                        dialogInterface.dismiss();
-//                        reasonDataManager.updateSetDeleted(reason.uuid, mApiModel);
-//
-//                        adapter.onReasonDataManagerChanged();
-//
-//                        String message = reason.name + getResources().getString(R.string.delete_done_after_title);
-//                        DialogManager.showToast(getActivity(), message);
-//                    }
-//                })
-//                .setNegativeButton(getResources().getString(R.string.cancel), null)
-//                .show();
     }
 
     //--------------------------------------------------------------//
