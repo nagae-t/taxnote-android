@@ -253,6 +253,26 @@ public class AccountSelectActivity extends DefaultCommonActivity {
             return;
         }
 
+        // Confirm dialog
+        new AlertDialog.Builder(AccountSelectActivity.this)
+                .setTitle(account.name)
+                .setMessage(getResources().getString(R.string.delete_confirm_message))
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                        accountDataManager.updateSetDeleted(account.uuid, mApiModel);
+
+                        adapter.onAccountDataManagerChanged();
+                        String message = account.name + getResources().getString(R.string.delete_done_after_title);
+                        DialogManager.showToast(AccountSelectActivity.this, message);
+
+                        dialogInterface.dismiss();
+                    }
+                })
+                .setNegativeButton(getResources().getString(R.string.cancel), null)
+                .show();
+
     }
 
     //--------------------------------------------------------------//
