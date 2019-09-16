@@ -71,8 +71,8 @@
     <string name="cloud_purchase_status">Zeny Premium</string>
     <string name="taxnote_cloud_desc">Monthly subscription with following features.\n1. No Ads\n2. Multiple Accounts\n3. Cloud Sync with different devices(auto-backup)\n4. Recurring Entries\n5. Bar Charts</string>
 
-    <string name="add_project_without_cloud">You need to subscribe to Zeny Premium to use multiple accounts.</string>
-    <string name="not_cloud_input_limit_message">Please upgrade to Zeny Premium to make an entry with additional accounts.</string>
+    <string name="add_project_without_cloud">You need to subscribe to Zeny Premium to use multiple accounts, but you can also try it with 10 entries limit for free.</string>
+    <string name="not_cloud_input_limit_message">Please upgrade to Zeny Premium to make an entry with additional accounts. (You can enter up to 10 with free trial)</string>
     <string name="bar_graph_cloud_required_message">Please upgrade to Zeny Premium to use the bar charts. (You can try Income and Expense bar charts for free)</string>
     <string name="recurring_cloud_required_message">You need to subscribe to Zeny Premium to use Recurring Entries as it works in the cloud server.</string>
     <string name="re_login_title">Please login to Zeny Premium</string>
