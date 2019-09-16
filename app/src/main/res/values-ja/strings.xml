@@ -404,11 +404,12 @@
     <string name="updating_data">データを更新中です...</string>
     <string name="send">送信</string>
 
-    <string name="plus_not_bought_title">Taxnoteプラスについて</string>
-    <string name="plus_not_bought_message">「Taxnoteプラス」を購入せずに「Taxnoteクラウド」の購読は可能ですが、月15件の入力制限がそのまま存在するのでご注意ください。</string>
+    <string name="plus_not_bought_title">ご確認ください</string>
+    <string name="plus_not_bought_message">「Taxnoteプラス」を購読せずに「Taxnoteクラウド」を購読すると、月15件の入力制限が解除されないのでご注意ください。\n\n通常はTaxnoteプラスを購読した後、必要に応じてTaxnoteクラウドを購読するのが一般的です。\n\nどちらの機能も使いたい場合、プラスとクラウドの両方を購読する必要があります。</string>
     <string name="cloud_sign_up_title">クラウド専用アカウントを作成してください</string>
     <string name="cloud_sign_up_message">現在、Taxnoteクラウドを購読中ですが、専用アカウントを作成することでデータの自動共有（自動バックアップ）が使えます。</string>
     <string name="cloud_account_exists_message">このアカウントがすでにリンクされています。このアカウントでログインするか、アカウントを削除してから新規作成してください。</string>
+    <string name="buy_taxnote_cloud_with_taxnote_plus_limit">月15件の制限付きで購読</string>
 
     <string name="cloud_purchase_status">Taxnoteクラウド</string>
     <string name="cloud_purchase_status_on">[有効] 管理する</string>

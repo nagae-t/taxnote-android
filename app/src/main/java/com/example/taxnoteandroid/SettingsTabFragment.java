@@ -162,7 +162,7 @@ public class SettingsTabFragment extends Fragment {
             public void onClick(DialogInterface dialogInterface, int i) {
 
                 int projectAllSize = mProjectDataManager.allSize();
-                // 無料版はmaster含めてProject3つまで
+
                 if (i == 0 && projectAllSize < MAX_PROJECT_COUNT) {
                     if (mApiUser.isCloudActive()) {
                         showProjectEditorDialog(ProjectEditorDialogFragment.TYPE_ADD_NEW);

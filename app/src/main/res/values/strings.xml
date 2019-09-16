@@ -404,11 +404,12 @@
     <string name="updating_data">Updating...</string>
     <string name="send">Send</string>
 
-    <string name="plus_not_bought_title">About Taxnote Plus</string>
-    <string name="plus_not_bought_message">You can subscribe to Taxnote Cloud without purchasing Taxnote Plus, but please note that 15 entries/month limit still remains.</string>
+    <string name="plus_not_bought_title">Please Read</string>
+    <string name="plus_not_bought_message">You can subscribe to Taxnote Cloud without purchasing Taxnote Plus, but the 15 entries/month limit still remains.\n\nPlease note that you need to subscribe to Taxnote Plus and Taxnote Cloud individually.</string>
     <string name="cloud_sign_up_title">Please Create a Taxnote Cloud account</string>
     <string name="cloud_sign_up_message">Your Taxnote Cloud is active now, but please create an account to use cloud sync (auto backup).</string>
     <string name="cloud_account_exists_message">Your account is already registered with your purchase history.  Please login with this account or delete it to create a new account.</string>
+    <string name="buy_taxnote_cloud_with_taxnote_plus_limit">Subscribe with 15 Entries Limit</string>
 
     <string name="cloud_purchase_status">Taxnote Cloud</string>
     <string name="cloud_purchase_status_on">[Active] Manage</string>

@@ -551,7 +551,7 @@ public class UpgradeActivity extends DefaultCommonActivity {
                     .setTitle(R.string.plus_not_bought_title)
                     .setMessage(R.string.plus_not_bought_message)
                     .setNegativeButton(android.R.string.cancel, null)
-                    .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                    .setPositiveButton(R.string.buy_taxnote_cloud_with_taxnote_plus_limit, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
 
