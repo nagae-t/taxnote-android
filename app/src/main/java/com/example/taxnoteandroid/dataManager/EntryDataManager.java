@@ -33,10 +33,12 @@ public class EntryDataManager {
 
     private OrmaDatabase ormaDatabase;
     private Context mContext;
+    private ProjectDataManager mProjectManager;
 
     public EntryDataManager(Context context) {
         ormaDatabase = TaxnoteApp.getOrmaDatabase();
         mContext = context;
+        mProjectManager = new ProjectDataManager(mContext);
     }
 
 
@@ -311,11 +313,33 @@ public class EntryDataManager {
     }
 
     public Entry hasReasonInEntryData(Reason reason) {
-        return ormaDatabase.selectFromEntry().and().reasonEq(reason).valueOrNull();
+        return ormaDatabase.selectFromEntry()
+                .projectEq(mProjectManager.findCurrent())
+                .and().reasonEq(reason).valueOrNull();
     }
 
     public Entry hasAccountInEntryData(Account account) {
-        return ormaDatabase.selectFromEntry().and().accountEq(account).valueOrNull();
+        return ormaDatabase.selectFromEntry()
+                .projectEq(mProjectManager.findCurrent())
+                .and().accountEq(account).valueOrNull();
+    }
+
+    public int countByAccount(Account account) {
+        return ormaDatabase.selectFromEntry()
+                .projectEq(mProjectManager.findCurrent())
+                .where(Entry_Schema.INSTANCE.deleted.getQualifiedName() + " = 0")
+                .and()
+                .accountEq(account)
+                .count();
+    }
+
+    public int countByReason(Reason reason) {
+        return ormaDatabase.selectFromEntry()
+                .projectEq(mProjectManager.findCurrent())
+                .where(Entry_Schema.INSTANCE.deleted.getQualifiedName() + " = 0")
+                .and()
+                .reasonEq(reason)
+                .count();
     }
 
     public long findSumBalance(long endDate) {
@@ -428,6 +452,53 @@ public class EntryDataManager {
     //--------------------------------------------------------------//
     //    -- Delete --
     //--------------------------------------------------------------//
+
+    public void deleteByAccount(Account account, TNApiModel apiModel) {
+        boolean isLoggingIn = TNApiUser.isLoggingIn(mContext);
+
+        if (isLoggingIn) {
+            List<Entry> targetList =  ormaDatabase.selectFromEntry()
+                    .projectEq(mProjectManager.findCurrent())
+                    .where(Entry_Schema.INSTANCE.deleted.getQualifiedName() + " = 0")
+                    .and().accountEq(account).toList();
+            for (Entry _entry : targetList) {
+                ormaDatabase.updateEntry().idEq(_entry.id)
+                        .deleted(true).execute();
+            }
+
+            apiModel.saveAllNeedSaveSyncDeletedData(null);
+
+        } else {
+            ormaDatabase.deleteFromEntry()
+                    .projectEq(mProjectManager.findCurrent())
+                    .accountEq(account.id)
+                    .execute();
+        }
+    }
+
+    public void deleteByReason(Reason reason, TNApiModel apiModel) {
+        boolean isLoggingIn = TNApiUser.isLoggingIn(mContext);
+
+        if (isLoggingIn) {
+            List<Entry> targetList =  ormaDatabase.selectFromEntry()
+                    .projectEq(mProjectManager.findCurrent())
+                    .where(Entry_Schema.INSTANCE.deleted.getQualifiedName() + " = 0")
+                    .and().reasonEq(reason).toList();
+            for (Entry _entry : targetList) {
+                ormaDatabase.updateEntry().idEq(_entry.id)
+                        .deleted(true).execute();
+            }
+
+            apiModel.saveAllNeedSaveSyncDeletedData(null);
+
+        } else {
+            ormaDatabase.deleteFromEntry()
+                    .projectEq(mProjectManager.findCurrent())
+                    .reasonEq(reason.id)
+                    .execute();
+        }
+    }
+
 
     public int delete(long id) {
         return ormaDatabase.deleteFromEntry().idEq(id).execute();

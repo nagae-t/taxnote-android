@@ -36,6 +36,13 @@
     <string name="history_data_empty">入力タブからデータを入力してください。</string>
     <string name="using_this_account_in_entry_already">指定した科目を使用した記録があります。まず、仕訳帳から該当する記録を削除してください。</string>
 
+    <string name="cant_del_active_account">現在選択中の科目は削除できません。他の科目を選択してから削除してください。</string>
+    <string name="confirm_entry_del_for_reason_title">入力データの削除</string>
+    <string name="cant_del_cate_error">「%1$s」を使用した入力データが仕訳帳と指定日予約を含めて%2$d件あります。科目を削除する前に、この科目を利用した入力データを全て削除する必要があります。\n\n複数帳簿を利用している場合、現在選択している帳簿以外のデータは削除しません。</string>
+    <string name="del_data_has_seleted_cate">%1$d件のデータを削除</string>
+
+    <string name="confirm_to_del_all_data_has_reason">「%1$s」を使用した%2$d件の入力データを削除していいですか？</string>
+    <string name="bulk_del_complete">「%1$s」を使用したデータを削除し、科目を削除しました。</string>
 
     //--------------------------------------------------------------//
     // -- Entry Tab --

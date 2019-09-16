@@ -19,6 +19,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 
+import com.example.taxnoteandroid.Library.BroadcastUtil;
 import com.example.taxnoteandroid.Library.DialogManager;
 import com.example.taxnoteandroid.Library.KeyboardUtil;
 import com.example.taxnoteandroid.Library.taxnote.TNApiModel;
@@ -48,6 +49,8 @@ public class AccountSelectActivity extends DefaultCommonActivity {
     private AccountDataManager accountDataManager = new AccountDataManager(this); // 2017/01/30 E.Nozaki
     private MyRecyclerViewAdapter adapter; // 2017/01/30 E.Nozaki
     private List<Account> accountList = null; // 2017/01/30 E.Nozaki
+
+    private Account mCurrentAccount;
 
     private TNApiModel mApiModel;
 
@@ -90,6 +93,8 @@ public class AccountSelectActivity extends DefaultCommonActivity {
 
         Intent intent = getIntent();
         isExpense = intent.getBooleanExtra(EXTRA_ISEXPENSE, false);
+
+        mCurrentAccount = accountDataManager.findCurrentSelectedAccount(isExpense);
     }
 
     //--------------------------------------------------------------//
@@ -209,18 +214,42 @@ public class AccountSelectActivity extends DefaultCommonActivity {
 
     private void deleteAccount(final Account account) {
 
-        // Check if Entry data has this account already
-        EntryDataManager entryDataManager = new EntryDataManager(AccountSelectActivity.this);
-        Entry entry = entryDataManager.hasAccountInEntryData(account);
-
-        if (entry != null) {
-
+        // stop deleting if the selected account is the current used account
+        if (account.id == mCurrentAccount.id) {
             // Show error message
             new AlertDialog.Builder(AccountSelectActivity.this)
                     .setTitle(getResources().getString(R.string.Error))
-                    .setMessage(getResources().getString(R.string.using_this_account_in_entry_already))
+                    .setMessage(getResources().getString(R.string.cant_del_active_account))
                     .setPositiveButton("OK", null)
                     .show();
+            return;
+        }
+
+        // Check if Entry data has this account already
+        final EntryDataManager entryDataManager = new EntryDataManager(AccountSelectActivity.this);
+        Entry entry = entryDataManager.hasAccountInEntryData(account);
+
+        if (entry != null) {
+            int countEntry = entryDataManager.countByAccount(account);
+
+            DialogManager.confirmEntryDeleteForReson(this, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+
+                            entryDataManager.deleteByAccount(account, mApiModel);
+                            accountDataManager.updateSetDeleted(account.uuid, mApiModel);
+
+                            BroadcastUtil.sendReloadReport(AccountSelectActivity.this);
+
+                            adapter.onAccountDataManagerChanged();
+                            String message = getString(R.string.bulk_del_complete, account.name);
+                            DialogManager.showToast(AccountSelectActivity.this, message);
+
+                            dialogInterface.dismiss();
+                        }
+                    },
+                    countEntry, null, account);
+
             return;
         }
 
@@ -243,6 +272,7 @@ public class AccountSelectActivity extends DefaultCommonActivity {
                 })
                 .setNegativeButton(getResources().getString(R.string.cancel), null)
                 .show();
+
     }
 
     //--------------------------------------------------------------//
