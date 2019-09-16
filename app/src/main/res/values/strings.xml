@@ -405,7 +405,7 @@
     <string name="send">Send</string>
 
     <string name="plus_not_bought_title">About Taxnote Plus</string>
-    <string name="plus_not_bought_message">Please buy Taxnote Plus first to unlock 15/month limit before you buy Taxnote Cloud which is an optional service.  These are different upgrade plans and you need to buy them separately.</string>
+    <string name="plus_not_bought_message">You can subscribe to Taxnote Cloud without purchasing Taxnote Plus, but please note that 15 entries/month limit still remains.</string>
     <string name="cloud_sign_up_title">Please Create a Taxnote Cloud account</string>
     <string name="cloud_sign_up_message">Your Taxnote Cloud is active now, but please create an account to use cloud sync (auto backup).</string>
     <string name="cloud_account_exists_message">Your account is already registered with your purchase history.  Please login with this account or delete it to create a new account.</string>

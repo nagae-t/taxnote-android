@@ -550,7 +550,20 @@ public class UpgradeActivity extends DefaultCommonActivity {
             AlertDialog.Builder builder = new AlertDialog.Builder(this)
                     .setTitle(R.string.plus_not_bought_title)
                     .setMessage(R.string.plus_not_bought_message)
-                    .setPositiveButton(android.R.string.ok, null);
+                    .setNegativeButton(android.R.string.cancel, null)
+                    .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+
+                            try {
+                                mBillingHelper.launchSubscriptionPurchaseFlow(UpgradeActivity.this,
+                                        UpgradeManger.SKU_TAXNOTE_CLOUD_ID,
+                                        REQUEST_CODE_PURCHASE_PREMIUM, mPurchaseFinishedListener);
+                            } catch (IabHelper.IabAsyncInProgressException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    });
             builder.create().show();
         } else {
             String skuId = (ZNUtils.isZeny()) ? UpgradeManger.SKU_ZENY_PREMIUM_ID
