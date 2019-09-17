@@ -152,6 +152,7 @@ public class GraphContentFragment extends Fragment {
 
     private class EntryDataTask extends AsyncTask<long[], Integer, List<Entry>> {
         private boolean isExpense;
+        private long mEndDate = 0;
 
         public EntryDataTask(boolean isExpense) {
             this.isExpense = isExpense;
@@ -164,6 +165,9 @@ public class GraphContentFragment extends Fragment {
             List<Entry> entries = (startEndDate.length == 0)
                     ? mEntryManager.findAll(null, isExpense, false)
                     : mEntryManager.findAll(startEndDate, isExpense, false);
+            if (startEndDate.length > 0) {
+                mEndDate = startEndDate[1];
+            }
 
             Entry entrySum = new Entry();
             entrySum.viewType = GraphHistoryRecyclerAdapter.VIEW_ITEM_CELL;
@@ -206,6 +210,14 @@ public class GraphContentFragment extends Fragment {
         @Override
         protected void onPostExecute(List<Entry> result) {
             if (result == null || result.size() == 0) return;
+
+            long carriedBalance = mEntryManager.getCarriedBalance(mEndDate);
+            Log.d("DEBUG","Carried Balance: "+carriedBalance);
+            Entry cbEntry = new Entry();
+            cbEntry.viewType = GraphHistoryRecyclerAdapter.VIEW_ITEM_CELL;
+            cbEntry.titleName = getString(R.string.carried_balance);
+
+            //result.add(0, null);
 
             mRecyclerAdapter = new GraphHistoryRecyclerAdapter(mContext, result);
             mRecyclerAdapter.setOnGraphClickListener(new GraphHistoryRecyclerAdapter.OnGraphClickListener() {

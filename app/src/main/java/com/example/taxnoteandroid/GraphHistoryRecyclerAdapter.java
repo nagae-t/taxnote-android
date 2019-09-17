@@ -41,6 +41,7 @@ public class GraphHistoryRecyclerAdapter extends RecyclerView.Adapter<BindingHol
 
     public static final int VIEW_ITEM_GRAPH = 1;
     public static final int VIEW_ITEM_CELL = 2;
+    public static final int VIEW_CARRIED_BAL_CELL = 10;
 
     public OnItemClickListener mOnItemClickListener;
     public OnLongItemClickListener mOnItemLongClickListener;
@@ -181,6 +182,9 @@ public class GraphHistoryRecyclerAdapter extends RecyclerView.Adapter<BindingHol
                     }
                 });
 
+                break;
+            case VIEW_CARRIED_BAL_CELL:
+                RowSimpleCellBinding cbCell = (RowSimpleCellBinding) holder.binding;
                 break;
             case VIEW_ITEM_CELL:
                 RowSimpleCellBinding cellBinding = (RowSimpleCellBinding) holder.binding;

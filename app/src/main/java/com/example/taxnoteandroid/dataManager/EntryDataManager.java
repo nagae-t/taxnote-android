@@ -160,21 +160,9 @@ public class EntryDataManager {
      * 繰越残高の取得
      *
      * @param endDate いつまでか（year, month...）
-     * @param periodType 指定期間タイプ
      * @return
      */
-    public long getCarriedBalance(long endDate, int periodType) {
-
-        switch (periodType) {
-            case PERIOD_TYPE_YEAR:
-                break;
-            case PERIOD_TYPE_MONTH:
-                break;
-            case PERIOD_TYPE_DAY:
-                break;
-            default: // PERIOD_TYPE_ALL
-                break;
-        }
+    public long getCarriedBalance(long endDate) {
 
         Project project = mProjectManager.findCurrent();
         List<Entry> entries;
