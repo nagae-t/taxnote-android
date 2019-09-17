@@ -212,12 +212,11 @@ public class GraphContentFragment extends Fragment {
             if (result == null || result.size() == 0) return;
 
             long carriedBalance = mEntryManager.getCarriedBalance(mEndDate);
-            Log.d("DEBUG","Carried Balance: "+carriedBalance);
             Entry cbEntry = new Entry();
-            cbEntry.viewType = GraphHistoryRecyclerAdapter.VIEW_ITEM_CELL;
+            cbEntry.viewType = GraphHistoryRecyclerAdapter.VIEW_CARRIED_BAL_CELL;
             cbEntry.titleName = getString(R.string.carried_balance);
-
-            //result.add(0, null);
+            cbEntry.price = carriedBalance;
+            result.add(0, cbEntry);
 
             mRecyclerAdapter = new GraphHistoryRecyclerAdapter(mContext, result);
             mRecyclerAdapter.setOnGraphClickListener(new GraphHistoryRecyclerAdapter.OnGraphClickListener() {
@@ -230,7 +229,9 @@ public class GraphContentFragment extends Fragment {
             mRecyclerAdapter.setOnItemClickListener(new GraphHistoryRecyclerAdapter.OnItemClickListener() {
                 @Override
                 public void onItemClick(View view, int position, Entry item) {
-                    if (item.reason == null) {
+                    if (item.viewType == GraphHistoryRecyclerAdapter.VIEW_CARRIED_BAL_CELL) {
+
+                    } else if (item.reason == null) {
                         BarGraphActivity.start(mContext, isExpense, mTargetCalendar, mPeriodType);
                     } else {
                         if (!mApiModel.isCloudActive()) {
