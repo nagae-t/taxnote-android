@@ -100,9 +100,7 @@ public class EntryDataManager {
     }
 
     public List<Entry> findAll(long[] startAndEndDate, Boolean asc) {
-
-        ProjectDataManager projectDataManager   = new ProjectDataManager(mContext);
-        Project project                         = projectDataManager.findCurrent();
+        Project project = mProjectManager.findCurrent();
 
         List<Entry> entries;
         String orderSpec = (asc) ? OrderSpec.ASC : OrderSpec.DESC;
@@ -135,8 +133,7 @@ public class EntryDataManager {
     }
 
     public int count(long[] startEndDate) {
-        ProjectDataManager projectDataManager   = new ProjectDataManager(mContext);
-        Project project                         = projectDataManager.findCurrent();
+        Project project = mProjectManager.findCurrent();
         long startDate  = startEndDate[0];
         long endDate    = startEndDate[1];
         int countData = ormaDatabase.selectFromEntry().
@@ -149,8 +146,7 @@ public class EntryDataManager {
     }
 
     public int countAll() {
-        ProjectDataManager projectDataManager   = new ProjectDataManager(mContext);
-        Project project                         = projectDataManager.findCurrent();
+        Project project = mProjectManager.findCurrent();
         int countData = ormaDatabase.selectFromEntry().
                 where(Entry_Schema.INSTANCE.deleted.getQualifiedName() + " = 0")
                 .projectEq(project)
@@ -158,10 +154,21 @@ public class EntryDataManager {
         return countData;
     }
 
+
+
+    /**
+     * 繰越残高の取得
+     *
+     * @param endDate
+     * @return
+     */
+    public long getCarriedBalance(long endDate) {
+        return 0;
+    }
+
     // 収入・支出別
     public List<Entry> findAll(long[] startAndEndDate, boolean isExpense, Boolean asc) {
-        ProjectDataManager projectDataManager   = new ProjectDataManager(mContext);
-        Project project                         = projectDataManager.findCurrent();
+        Project project                         = mProjectManager.findCurrent();
 
         List<Entry> entries;
         String orderSpec = (asc) ? OrderSpec.ASC : OrderSpec.DESC;
@@ -193,8 +200,7 @@ public class EntryDataManager {
 
     // 備考で探す
     public List<Entry> findAll(long[] startAndEndDate, String memo, boolean isExpense, Boolean asc) {
-        ProjectDataManager projectDataManager   = new ProjectDataManager(mContext);
-        Project project                         = projectDataManager.findCurrent();
+        Project project = mProjectManager.findCurrent();
 
         List<Entry> entries;
         String orderSpec = (asc) ? OrderSpec.ASC : OrderSpec.DESC;
@@ -228,8 +234,7 @@ public class EntryDataManager {
 
     //@@ 未完成、まだデバッグ中
     public List<Entry> findAll(String word) {
-        ProjectDataManager projectDataManager   = new ProjectDataManager(mContext);
-        Project project                         = projectDataManager.findCurrent();
+        Project project = mProjectManager.findCurrent();
         List<Entry> entries = new ArrayList<>();
         String orderSpec = OrderSpec.DESC;
 
@@ -343,8 +348,7 @@ public class EntryDataManager {
     }
 
     public long findSumBalance(long endDate) {
-        ProjectDataManager projectDataManager   = new ProjectDataManager(mContext);
-        Project project                         = projectDataManager.findCurrent();
+        Project project = mProjectManager.findCurrent();
 
         String schemeDelete = Entry_Schema.INSTANCE.deleted.getQualifiedName();
         String schemeIsExpense = Entry_Schema.INSTANCE.isExpense.getQualifiedName();
