@@ -159,16 +159,57 @@ public class EntryDataManager {
     /**
      * 繰越残高の取得
      *
-     * @param endDate
+     * @param endDate いつまでか（year, month...）
+     * @param periodType 指定期間タイプ
      * @return
      */
-    public long getCarriedBalance(long endDate) {
-        return 0;
+    public long getCarriedBalance(long endDate, int periodType) {
+
+        switch (periodType) {
+            case PERIOD_TYPE_YEAR:
+                break;
+            case PERIOD_TYPE_MONTH:
+                break;
+            case PERIOD_TYPE_DAY:
+                break;
+            default: // PERIOD_TYPE_ALL
+                break;
+        }
+
+        Project project = mProjectManager.findCurrent();
+        List<Entry> entries;
+        String orderSpec = OrderSpec.ASC;
+
+        Entry_Selector entrySelector = ormaDatabase.selectFromEntry()
+                .where(Entry_Schema.INSTANCE.deleted.getQualifiedName() + " = 0")
+                .projectEq(project);
+
+        // TODO: 全帳簿の合計を表示するかどうか
+        // 損益表の設定値から反映する
+
+        if (endDate != 0) {
+            entrySelector = entrySelector
+                    .where(Entry_Schema.INSTANCE.date.getQualifiedName() + " < " + endDate);
+        }
+        entries = entrySelector
+                .orderBy(Entry_Schema.INSTANCE.date.getQualifiedName() + " " + orderSpec)
+                .toList();
+
+        long result = 0;
+        for (Entry _entry : entries) {
+            if (_entry.isExpense) {
+                result -= _entry.price;
+            } else {
+                result += _entry.price;
+            }
+        }
+
+        return result;
     }
 
     // 収入・支出別
     public List<Entry> findAll(long[] startAndEndDate, boolean isExpense, Boolean asc) {
-        Project project                         = mProjectManager.findCurrent();
+        Project project = mProjectManager.findCurrent();
 
         List<Entry> entries;
         String orderSpec = (asc) ? OrderSpec.ASC : OrderSpec.DESC;

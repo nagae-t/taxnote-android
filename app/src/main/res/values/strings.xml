@@ -83,6 +83,11 @@
     <string name="list_view_add_reason">New Category</string>
     <string name="list_view_rename">Rename</string>
 
+    //--------------------------------------------------------------//
+    // -- Graph Tab --
+    //--------------------------------------------------------------//
+    <string name="carried_balance">Carried Balance</string>
+
 
     //--------------------------------------------------------------//
     // -- Settings --
