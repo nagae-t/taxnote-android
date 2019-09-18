@@ -195,8 +195,8 @@ public class GraphHistoryRecyclerAdapter extends RecyclerView.Adapter<BindingHol
                 cbCell.getRoot().setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-//                        if (mOnItemClickListener != null)
-//                            mOnItemClickListener.onItemClick(view, position, entry);
+                        if (mOnItemClickListener != null)
+                            mOnItemClickListener.onItemClick(view, position, entry);
                     }
                 });
                 break;

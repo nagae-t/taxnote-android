@@ -10,6 +10,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -61,6 +62,7 @@ public class BarGraphActivity extends DefaultCommonActivity implements OnChartVa
     private ReasonDataManager mReasonDm;
     private Reason mReason = null;
     private boolean mIsExpense;
+    private boolean mIsCarriedBal;
     private int mPeriodType;
     private Calendar mTargetCalendar;
     private List<Calendar> mCalendars;
@@ -71,6 +73,7 @@ public class BarGraphActivity extends DefaultCommonActivity implements OnChartVa
     private static final String KEY_TARGET_CALENDAR = "target_calendar";
     private static final String KEY_PERIOD_TYPE = "period_type";
     private static final String KEY_REASON_UUID = "reason_uuid";
+    private static final String KEY_IS_CARRIED_BAL = "is_carried_balance";
 
     public static final String BROADCAST_RELOAD_DATA
             = "broadcast_bar_graph_reload_data";
@@ -105,6 +108,7 @@ public class BarGraphActivity extends DefaultCommonActivity implements OnChartVa
                                               int periodType) {
         Intent intent = new Intent(context, BarGraphActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.putExtra(KEY_IS_CARRIED_BAL, true);
         intent.putExtra(KEY_TARGET_CALENDAR, targetCalendar);
         intent.putExtra(KEY_PERIOD_TYPE, periodType);
         context.startActivity(intent);
@@ -126,6 +130,7 @@ public class BarGraphActivity extends DefaultCommonActivity implements OnChartVa
         Serializable calSerial = getIntent().getSerializableExtra(KEY_TARGET_CALENDAR);
         if (calSerial != null) mTargetCalendar = (Calendar)calSerial;
         mIsExpense = getIntent().getBooleanExtra(KEY_IS_EXPENSE, true);
+        mIsCarriedBal = getIntent().getBooleanExtra(KEY_IS_CARRIED_BAL, false);
         mPeriodType = getIntent().getIntExtra(KEY_PERIOD_TYPE, 2);
         if (mPeriodType > EntryDataManager.PERIOD_TYPE_MONTH)
             mPeriodType = EntryDataManager.PERIOD_TYPE_MONTH;
@@ -161,7 +166,11 @@ public class BarGraphActivity extends DefaultCommonActivity implements OnChartVa
             mReason = mReasonDm.findByUuid(reasonUuid);
             mIsExpense = mReason.isExpense;
             titleName = titleDateString + " " + mReason.name;
+        } else if (mIsCarriedBal) {
+            titleName = titleDateString + " " + getString(R.string.carried_balance);
         }
+
+
         setTitle(titleName);
     }
 
@@ -192,7 +201,7 @@ public class BarGraphActivity extends DefaultCommonActivity implements OnChartVa
         int titleRes = (mIsExpense) ? R.string.Income : R.string.Expense;
         expenseMenu.setTitle(titleRes);
 
-        if (mReason != null)
+        if (mReason != null || mIsCarriedBal)
             expenseMenu.setVisible(false);
 
         return super.onPrepareOptionsMenu(menu);
@@ -325,14 +334,19 @@ public class BarGraphActivity extends DefaultCommonActivity implements OnChartVa
                     xNum = (int)(diff / DAY_MILLISECONDS);
             }
 
+            // 棒グラフに表示する対象データを取得する
             ArrayList<BarEntry> barEntries = new ArrayList<>();
             mCalendars = new ArrayList<>();
             List<Entry> entries;
-            if (mReason == null) {
+            if (mReason == null) { // 科目別のグラフ
                 entries = (mPeriodType == EntryDataManager.PERIOD_TYPE_ALL)
                         ? mEntryDm.findAll(null, mIsExpense, true)
                         : mEntryDm.findAll(startEndDate, mIsExpense, true);
-            } else {
+            } else if (mIsCarriedBal) { // 繰越残高
+                entries = (mPeriodType == EntryDataManager.PERIOD_TYPE_ALL)
+                        ? mEntryDm.findAll(null, true)
+                        : mEntryDm.findAll(startEndDate, true);
+            } else { // 収入・支出別
                 List<Entry> _entries = mEntryDm.findAll(startEndDate, mIsExpense, false);
                 entries = new ArrayList<>();
 
@@ -344,6 +358,10 @@ public class BarGraphActivity extends DefaultCommonActivity implements OnChartVa
                 }
             }
 
+            long startCarriedBalPrice = mEntryDm.getCarriedBalance(startEndDate[0]);
+            long barCarriedPrice = startCarriedBalPrice;
+
+            // 選択中の期間によって表示棒グラフを処理
             Map<String, Long> entryMap = new LinkedHashMap<>();
             for (Entry entry : entries) {
                 Calendar calendar = Calendar.getInstance();
@@ -368,14 +386,29 @@ public class BarGraphActivity extends DefaultCommonActivity implements OnChartVa
                                 + calendar.get(Calendar.DATE);
                 }
 
-                if (entryMap.containsKey(periodStr)) {
-                    Long _price = entryMap.get(periodStr)+entry.price;
-                    entryMap.put(periodStr, _price);
-                } else {
-                    entryMap.put(periodStr, entry.price);
+                Long _price = entry.price;
+                if (mIsCarriedBal) { // 繰越残高の場合はその計算を行う
+                    barCarriedPrice = entry.isExpense
+                            ? (barCarriedPrice - entry.price)
+                            : (barCarriedPrice + entry.price);
+                    _price = barCarriedPrice;
                 }
+                if (entryMap.containsKey(periodStr)) {
+                    Long _savedPrice = entryMap.get(periodStr);
+                    if (mIsCarriedBal) {
+                        barCarriedPrice = entry.isExpense
+                                ? (_savedPrice - entry.price)
+                                : (_savedPrice + entry.price);
+                        _price = barCarriedPrice;
+                    } else {
+                        _price = _savedPrice + entry.price;
+                    }
+                }
+                Log.d("DEBUG", "bar graph price: "+_price);
+                entryMap.put(periodStr, _price);
             }
 
+            Long lastCarriedBalPrice = startCarriedBalPrice;
             for (int i = 0; i < xNum; i++) {
                 Calendar _cal = (Calendar) startCal.clone();
 
@@ -409,7 +442,14 @@ public class BarGraphActivity extends DefaultCommonActivity implements OnChartVa
                 }
 
                 Long _price = entryMap.get(periodStr);
-                long price = (_price == null) ? 0 : _price;
+                long price;
+                if (mIsCarriedBal) { // 繰越残高の場合
+                    price = (_price == null) ? lastCarriedBalPrice : _price;
+                    lastCarriedBalPrice = price;
+                } else {
+                    price = (_price == null) ? 0 : _price;
+                }
+                Log.d("DEBUG", "cal bar: "+periodStr+" | "+price);
 
                 BarEntry barEntry = new BarEntry(i, (float)price);
                 barEntries.add(barEntry);

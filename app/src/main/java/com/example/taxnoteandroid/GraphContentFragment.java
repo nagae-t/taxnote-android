@@ -231,7 +231,7 @@ public class GraphContentFragment extends Fragment {
                 public void onItemClick(View view, int position, Entry item) {
                     if (item.viewType == GraphHistoryRecyclerAdapter.VIEW_CARRIED_BAL_CELL) {
                         // TODO: 表示グラフを確認して次へ遷移していいか
-//                        BarGraphActivity.startForCarriedBalance(mContext, mTargetCalendar, mPeriodType);
+                        BarGraphActivity.startForCarriedBalance(mContext, mTargetCalendar, mPeriodType);
                     } else if (item.reason == null) {
                         BarGraphActivity.start(mContext, isExpense, mTargetCalendar, mPeriodType);
                     } else {
