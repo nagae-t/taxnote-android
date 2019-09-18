@@ -255,8 +255,11 @@ public class MainActivity extends DefaultCommonActivity
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         MenuItem helpMenu = menu.findItem(R.id.help_in_settings_tab);
-        MenuItem exportMenu = menu.findItem(R.id.data_export);
+
         MenuItem searchMenu = menu.findItem(R.id.action_search);
+        MenuItem exportMenu = menu.findItem(R.id.data_export);
+        MenuItem delMenu = menu.findItem(R.id.data_delete);
+
         MenuItem periodDivMenu = menu.findItem(R.id.action_period_div);
         MenuItem profitLossSettingsMenu = menu.findItem(R.id.action_profit_loss_settings);
         MenuItem profitLossExportMenu = menu.findItem(R.id.action_profit_loss_export);
@@ -275,8 +278,9 @@ public class MainActivity extends DefaultCommonActivity
             case 0: // 入力
                 break;
             case 1: // 仕訳帳
-                exportMenu.setVisible(true);
                 searchMenu.setVisible(true);
+                exportMenu.setVisible(true);
+                delMenu.setVisible(true);
                 break;
             case 2: // 損益表
                 periodDivMenu.setVisible(true);
@@ -317,6 +321,9 @@ public class MainActivity extends DefaultCommonActivity
 
             case R.id.action_search:
                 SearchEntryActivity.start(this);
+                break;
+
+            case R.id.data_delete:
                 break;
 
             // 損益表のメニューオプションが選択されたとき
