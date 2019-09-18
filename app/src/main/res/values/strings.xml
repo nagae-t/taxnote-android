@@ -47,6 +47,8 @@
     <string name="confirm_to_del_all_data_has_reason">Are you sure to delete %2$d entries using [%1$s] from your history?</string>
     <string name="bulk_del_complete">Entries using [%1$s] have been deleted and the category has been deleted.</string>
 
+    <string name="no_surplus_bar_graph">Carried Balance Bar Chart doesn\'t show negative balance data, only shows positive balance.</string>
+
     //--------------------------------------------------------------//
     // -- Entry Tab --
     //--------------------------------------------------------------//

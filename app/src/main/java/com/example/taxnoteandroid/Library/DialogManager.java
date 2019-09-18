@@ -643,6 +643,7 @@ public class DialogManager {
 
     public static void showBarInfoDialog(final Activity activity, final int periodType,
                                          final Calendar targetCalendar, Reason reason,
+                                         final boolean isCarriedBal,
                                          final boolean isExpense, long price) {
 
 
@@ -665,9 +666,16 @@ public class DialogManager {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
                 dateFormatString, Locale.getDefault());
         String calStr = simpleDateFormat.format(targetCalendar.getTime());
-        String isExpenseString = (isExpense) ? activity.getString(R.string.Expense)
-                : activity.getString(R.string.Income);
-        String message = calStr + " " + isExpenseString
+        String nextMsg;
+        if (reason != null) {
+            nextMsg = reason.name;
+        } else if (isCarriedBal) {
+            nextMsg = activity.getString(R.string.carried_balance);
+        } else {
+            nextMsg = (isExpense) ? activity.getString(R.string.Expense)
+                    : activity.getString(R.string.Income);
+        }
+        String message = calStr + " " + nextMsg
                 + "\n" + ValueConverter.formatPrice(activity, price);
         final String reasonName = (reason == null) ? null : reason.name;
 

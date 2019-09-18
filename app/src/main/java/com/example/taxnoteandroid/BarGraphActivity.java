@@ -10,7 +10,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -264,7 +263,7 @@ public class BarGraphActivity extends DefaultCommonActivity implements OnChartVa
     private void showBarInfoDialog(int x, long price) {
         Calendar _cal = mCalendars.get(x);
         DialogManager.showBarInfoDialog(this,
-                mPeriodType, _cal, mReason, mIsExpense, price);
+                mPeriodType, _cal, mReason, mIsCarriedBal, mIsExpense, price);
     }
 
     private class MyAxisValueFormatter implements IAxisValueFormatter {
@@ -298,6 +297,7 @@ public class BarGraphActivity extends DefaultCommonActivity implements OnChartVa
 
     private class EntryDataTask extends AsyncTask<long[], Integer, ArrayList<BarEntry>> {
 
+        private boolean isCarriedBalNoVal = true;
         @Override
         protected ArrayList<BarEntry> doInBackground(long[]... longs) {
             long[] startEndDate = longs[0];
@@ -448,6 +448,9 @@ public class BarGraphActivity extends DefaultCommonActivity implements OnChartVa
                 } else {
                     price = (_price == null) ? 0 : _price;
                 }
+                if (price > 0) {
+                    isCarriedBalNoVal = false;
+                }
 
                 BarEntry barEntry = new BarEntry(i, (float)price);
                 barEntries.add(barEntry);
@@ -517,6 +520,13 @@ public class BarGraphActivity extends DefaultCommonActivity implements OnChartVa
 //            mChart.setVisibility(View.VISIBLE);
 
             mChart.animateY(700, Easing.EasingOption.EaseInOutQuad);
+
+            // 繰越残高の棒グラフがなければメッセージだす
+            if (isCarriedBalNoVal) {
+                String noSurp = getString(R.string.no_surplus_bar_graph);
+                DialogManager.showCustomAlertDialog(getApplicationContext(),
+                        getSupportFragmentManager(), null, noSurp);
+            }
         }
     }
 }
