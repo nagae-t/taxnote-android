@@ -320,7 +320,7 @@ public class BarGraphActivity extends DefaultCommonActivity implements OnChartVa
 
             // 差分の日数を計算
             final long DAY_MILLISECONDS = 1000 * 60 * 60 * 24;
-            long diff =  endCal.getTimeInMillis() - startCal.getTimeInMillis();
+            long diff = endCal.getTimeInMillis() - startCal.getTimeInMillis();
 
             int xNum;
             switch (mPeriodType) {
@@ -331,22 +331,22 @@ public class BarGraphActivity extends DefaultCommonActivity implements OnChartVa
                     xNum = 12;
                     break;
                 default:
-                    xNum = (int)(diff / DAY_MILLISECONDS);
+                    xNum = (int) (diff / DAY_MILLISECONDS);
             }
 
             // 棒グラフに表示する対象データを取得する
             ArrayList<BarEntry> barEntries = new ArrayList<>();
             mCalendars = new ArrayList<>();
             List<Entry> entries;
-            if (mReason == null) { // 科目別のグラフ
-                entries = (mPeriodType == EntryDataManager.PERIOD_TYPE_ALL)
-                        ? mEntryDm.findAll(null, mIsExpense, true)
-                        : mEntryDm.findAll(startEndDate, mIsExpense, true);
-            } else if (mIsCarriedBal) { // 繰越残高
+            if (mIsCarriedBal) { // 繰越残高
                 entries = (mPeriodType == EntryDataManager.PERIOD_TYPE_ALL)
                         ? mEntryDm.findAll(null, true)
                         : mEntryDm.findAll(startEndDate, true);
-            } else { // 収入・支出別
+            } else if (mReason == null) { // 収入・支出別
+                entries = (mPeriodType == EntryDataManager.PERIOD_TYPE_ALL)
+                        ? mEntryDm.findAll(null, mIsExpense, true)
+                        : mEntryDm.findAll(startEndDate, mIsExpense, true);
+            } else { // 科目別のグラフ
                 List<Entry> _entries = mEntryDm.findAll(startEndDate, mIsExpense, false);
                 entries = new ArrayList<>();
 
@@ -404,7 +404,6 @@ public class BarGraphActivity extends DefaultCommonActivity implements OnChartVa
                         _price = _savedPrice + entry.price;
                     }
                 }
-                Log.d("DEBUG", "bar graph price: "+_price);
                 entryMap.put(periodStr, _price);
             }
 
@@ -449,7 +448,6 @@ public class BarGraphActivity extends DefaultCommonActivity implements OnChartVa
                 } else {
                     price = (_price == null) ? 0 : _price;
                 }
-                Log.d("DEBUG", "cal bar: "+periodStr+" | "+price);
 
                 BarEntry barEntry = new BarEntry(i, (float)price);
                 barEntries.add(barEntry);
