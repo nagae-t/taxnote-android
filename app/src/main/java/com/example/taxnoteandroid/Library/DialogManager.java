@@ -684,10 +684,12 @@ public class DialogManager {
                 .setPositiveButton(R.string.History, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-//                        int _periodType = (isPeriodYear) ? EntryDataManager.PERIOD_TYPE_MONTH
-//                                : EntryDataManager.PERIOD_TYPE_DAY;
-                        HistoryListDataActivity.start(activity, historyPeriodType,
-                                targetCalendar, reasonName, null, isExpense, false);
+                        if (isCarriedBal) {
+                            HistoryListDataActivity.startForBalance(activity, targetCalendar, historyPeriodType);
+                        } else {
+                            HistoryListDataActivity.start(activity, historyPeriodType,
+                                    targetCalendar, reasonName, null, isExpense, false);
+                        }
                     }
                 })
                 .show();
