@@ -82,21 +82,30 @@ public class BarGraphActivity extends DefaultCommonActivity implements OnChartVa
         }
     };
 
-    public static void start(Context context, boolean isExpense, Calendar targetCalender, int periodType) {
+    public static void start(Context context, boolean isExpense, Calendar targetCalendar, int periodType) {
         Intent intent = new Intent(context, BarGraphActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.putExtra(KEY_IS_EXPENSE, isExpense);
-        intent.putExtra(KEY_TARGET_CALENDAR, targetCalender);
+        intent.putExtra(KEY_TARGET_CALENDAR, targetCalendar);
         intent.putExtra(KEY_PERIOD_TYPE, periodType);
         context.startActivity(intent);
     }
 
     public static void startForReason(Context context, String reasonUuid,
-                                      Calendar targetCalender, int periodType) {
+                                      Calendar targetCalendar, int periodType) {
         Intent intent = new Intent(context, BarGraphActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.putExtra(KEY_REASON_UUID, reasonUuid);
-        intent.putExtra(KEY_TARGET_CALENDAR, targetCalender);
+        intent.putExtra(KEY_TARGET_CALENDAR, targetCalendar);
+        intent.putExtra(KEY_PERIOD_TYPE, periodType);
+        context.startActivity(intent);
+    }
+
+    public static void startForCarriedBalance(Context context, Calendar targetCalendar,
+                                              int periodType) {
+        Intent intent = new Intent(context, BarGraphActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.putExtra(KEY_TARGET_CALENDAR, targetCalendar);
         intent.putExtra(KEY_PERIOD_TYPE, periodType);
         context.startActivity(intent);
     }

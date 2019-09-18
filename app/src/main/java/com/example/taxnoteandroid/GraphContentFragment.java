@@ -214,7 +214,7 @@ public class GraphContentFragment extends Fragment {
             long carriedBalance = mEntryManager.getCarriedBalance(mEndDate);
             Entry cbEntry = new Entry();
             cbEntry.viewType = GraphHistoryRecyclerAdapter.VIEW_CARRIED_BAL_CELL;
-            cbEntry.titleName = getString(R.string.carried_balance);
+            cbEntry.titleName = mContext.getString(R.string.carried_balance);
             cbEntry.price = carriedBalance;
             result.add(0, cbEntry);
 
@@ -230,7 +230,8 @@ public class GraphContentFragment extends Fragment {
                 @Override
                 public void onItemClick(View view, int position, Entry item) {
                     if (item.viewType == GraphHistoryRecyclerAdapter.VIEW_CARRIED_BAL_CELL) {
-
+                        // TODO: 表示グラフを確認して次へ遷移していいか
+//                        BarGraphActivity.startForCarriedBalance(mContext, mTargetCalendar, mPeriodType);
                     } else if (item.reason == null) {
                         BarGraphActivity.start(mContext, isExpense, mTargetCalendar, mPeriodType);
                     } else {
