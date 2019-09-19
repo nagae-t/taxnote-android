@@ -10,7 +10,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -127,8 +126,12 @@ public class BarGraphActivity extends DefaultCommonActivity implements OnChartVa
         mEntryDm = new EntryDataManager(this);
         mReasonDm = new ReasonDataManager(this);
 
+        mTargetCalendar = Calendar.getInstance();
         Serializable calSerial = getIntent().getSerializableExtra(KEY_TARGET_CALENDAR);
-        if (calSerial != null) mTargetCalendar = (Calendar)calSerial;
+        if (calSerial != null) {
+            mTargetCalendar = (Calendar) calSerial;
+            TaxnoteApp.getInstance().SELECTED_TARGET_CAL = mTargetCalendar;
+        }
         mIsExpense = getIntent().getBooleanExtra(KEY_IS_EXPENSE, true);
         mIsCarriedBal = getIntent().getBooleanExtra(KEY_IS_CARRIED_BAL, false);
         mPeriodType = getIntent().getIntExtra(KEY_PERIOD_TYPE, 2);
@@ -180,8 +183,18 @@ public class BarGraphActivity extends DefaultCommonActivity implements OnChartVa
         long[] startEndDate;
         if (mPeriodType == EntryDataManager.PERIOD_TYPE_ALL) {
             List<Calendar> allPeriodCals = TaxnoteApp.getInstance().ALL_PERIOD_CALS;
-            long timeStart = allPeriodCals.get(0).getTimeInMillis();
-            long timeEnd = allPeriodCals.get(allPeriodCals.size()-1).getTimeInMillis();
+            long timeStart;
+            long timeEnd;
+            if (allPeriodCals != null) {
+                timeStart = allPeriodCals.get(0).getTimeInMillis();
+                timeEnd = allPeriodCals.get(allPeriodCals.size()-1).getTimeInMillis();
+            } else {
+                EntryDataManager.ReportGrouping reportGrouping = new EntryDataManager.ReportGrouping(mPeriodType);
+                List<Calendar> calendars = reportGrouping.getReportCalendars(0, null);
+                TaxnoteApp.getInstance().ALL_PERIOD_CALS = calendars;
+                timeStart = calendars.get(0).getTimeInMillis();
+                timeEnd = calendars.get(calendars.size()-1).getTimeInMillis();
+            }
             startEndDate = new long[]{timeStart, timeEnd};
         } else {
             startEndDate = EntryLimitManager.getStartAndEndDate(this, mPeriodType, mTargetCalendar);
@@ -331,7 +344,6 @@ public class BarGraphActivity extends DefaultCommonActivity implements OnChartVa
                     calendar.get(Calendar.DATE), 0, 0, 0);
             calendar.set(Calendar.MILLISECOND, 0);
             return calendar.getTimeInMillis();
-//            return getPeriodKey(calendar);
         }
 
         @Override
@@ -347,7 +359,6 @@ public class BarGraphActivity extends DefaultCommonActivity implements OnChartVa
             endCal.setTimeInMillis(startEndDate[1]);
             endCal.set(Calendar.MILLISECOND, 0);
 
-//            String newestDateStr = getNewestDateStr();
             long newestDate = getNewestDate();
 
             // debug
@@ -433,11 +444,8 @@ public class BarGraphActivity extends DefaultCommonActivity implements OnChartVa
                     }
                 }
                 entryMap.put(periodStr, _price);
-                Log.d("DEBUG","entry "+periodStr+" | "+_price);
             }
-//            Log.d("DEBUG","NewestDateStr: "+newestDateStr);
 
-            // すべての期間で棒グラフの未来に入力データが内
 
             Long lastCarriedBalPrice = startCarriedBalPrice;
             String barPeriodKey;
@@ -469,12 +477,9 @@ public class BarGraphActivity extends DefaultCommonActivity implements OnChartVa
                     price = (_price == null) ? lastCarriedBalPrice : _price;
                     lastCarriedBalPrice = price;
 
-                    // 未来棒グラフの工夫
+                    // 仕訳帳のない未来棒グラフは表示しないように
                     if (calMillis > newestDate && _price == null) {
-                        Log.d("DEBUG","A: "+barPeriodKey);
                         price = 0;
-                    } else {
-                        Log.d("DEBUG","B: "+barPeriodKey);
                     }
                 } else {
                     price = (_price == null) ? 0 : _price;
