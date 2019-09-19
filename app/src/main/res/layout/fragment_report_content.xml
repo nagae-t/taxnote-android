@@ -7,10 +7,38 @@
         android:orientation="vertical"
         tools:context="com.example.taxnoteandroid.ReportContentFragment">
 
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:orientation="vertical"
             android:background="@drawable/selector_background_colors">
+            <LinearLayout
+                android:id="@+id/top_carried_balance"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="16dp"
+                android:clickable="true"
+                android:background="?android:attr/selectableItemBackground">
+
+                <TextView
+                    android:id="@+id/carried_balance_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@style/font_style_standard"
+                    android:text="@string/carried_balance" />
+
+                <TextView
+                    android:id="@+id/carried_bal_price"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="end"
+                    style="@style/font_style_standard" />
+            </LinearLayout>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:background="@color/divider"/>
             <LinearLayout
                 android:id="@+id/top_balance"
                 android:layout_width="match_parent"
@@ -34,7 +62,7 @@
                     android:gravity="end"
                     style="@style/font_style_standard" />
             </LinearLayout>
-        </RelativeLayout>
+        </LinearLayout>
 
         <android.support.v4.widget.SwipeRefreshLayout
             android:id="@+id/refresh_layout"

@@ -81,6 +81,12 @@ public class ReportContentFragment extends Fragment {
         if (calSerial != null)
             mTargetCalendar = (Calendar)calSerial;
 
+        binding.topCarriedBalance.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                HistoryListDataActivity.startForBalance(mContext, mTargetCalendar);
+            }
+        });
         binding.topBalance.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -148,11 +154,11 @@ public class ReportContentFragment extends Fragment {
 
     private void loadReportData() {
         isShowBalanceCarryForward = SharedPreferencesManager.getBalanceCarryForward(mContext);
-        String balanceText = mContext.getString(R.string.Balance);
-        if (isShowBalanceCarryForward)
-            balanceText = mContext.getString(R.string.Balance)
-                    + mContext.getString(R.string.balance_carry_forward_view);
-        binding.balanceTv.setText(balanceText);
+        if (isShowBalanceCarryForward) {
+            binding.topCarriedBalance.setVisibility(View.GONE);
+        } else {
+            binding.topCarriedBalance.setVisibility(View.VISIBLE);
+        }
 
         if (mTargetCalendar == null) {
             new ReportDataTask().execute(new long[]{});
@@ -178,6 +184,7 @@ public class ReportContentFragment extends Fragment {
 
     private class ReportDataTask extends AsyncTask<long[], Integer, List<Entry>> {
 
+        private long mEndDate = 0;
         @Override
         protected List<Entry> doInBackground(long[]... longs) {
             long[] startEndDate = longs[0];
@@ -185,6 +192,7 @@ public class ReportContentFragment extends Fragment {
             List<Entry> entries = (startEndDate.length == 0)
                     ? mEntryManager.findAll(null, false)
                     : mEntryManager.findAll(startEndDate, false);
+            if (startEndDate.length != 0) mEndDate = startEndDate[1];
 
             Entry incomeSection = new Entry();
             incomeSection.viewType = CommonEntryRecyclerAdapter.VIEW_ITEM_HEADER;
@@ -212,12 +220,14 @@ public class ReportContentFragment extends Fragment {
                     balancePrice += entry.price;
                 }
             }
+
             Entry topBalance = new Entry();
-            if (startEndDate.length != 0 && isShowBalanceCarryForward) {
-                topBalance.price = mEntryManager.findSumBalance(startEndDate[1]);
-            } else {
-                topBalance.price = balancePrice;
-            }
+            topBalance.price = balancePrice;
+
+//            Entry topCarriedBalance = new Entry();
+//            if (startEndDate.length != 0 && isShowBalanceCarryForward) {
+//                topBalance.price = mEntryManager.findSumBalance(startEndDate[1]);
+//            }
             // このデータはAdapterで表示しないのでのちに削除
             resultEntries.add(topBalance);
 
@@ -288,9 +298,25 @@ public class ReportContentFragment extends Fragment {
         protected void onPostExecute(List<Entry> result) {
             if (result == null || result.size() == 0) return;
 
+            // 繰越残高
+            if (isShowBalanceCarryForward) {
+                long carriedBalPrice = mEntryManager.getCarriedBalance(mEndDate);
+                TypedValue incomePriceTv = new TypedValue();
+                mContext.getTheme().resolveAttribute(R.attr.colorPrimary, incomePriceTv, true);
+                String cbPriceString = ValueConverter.formatPrice(mContext, carriedBalPrice);
+                int priceColor = (carriedBalPrice < 0)
+                        ? ContextCompat.getColor(mContext, R.color.expense)
+                        : ContextCompat.getColor(mContext, incomePriceTv.resourceId);
+                cbPriceString = (carriedBalPrice > 0) ? "+"+cbPriceString : cbPriceString;
+                binding.carriedBalPrice.setText(cbPriceString);
+                binding.carriedBalPrice.setTextColor(priceColor);
+            }
+
+            // 残高
             Entry topBalance = result.get(0);
             setTopBalanceValue(topBalance.price);
             result.remove(0);
+
 
             mRecyclerAdapter = new CommonEntryRecyclerAdapter(mContext, result);
             mRecyclerAdapter.setOnItemClickListener(new CommonEntryRecyclerAdapter.OnItemClickListener() {
@@ -306,5 +332,6 @@ public class ReportContentFragment extends Fragment {
             });
             binding.reportList.setAdapter(mRecyclerAdapter);
         }
+
     }
 }
