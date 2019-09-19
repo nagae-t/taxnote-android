@@ -134,6 +134,15 @@ public class EntryDataManager {
         return entries;
     }
 
+    // 最新（未来）の仕訳帳を取得
+    public Entry getNewestDate() {
+        Entry result = ormaDatabase.selectFromEntry().projectEq(mCurrentProject)
+                .where(Entry_Schema.INSTANCE.deleted.getQualifiedName() + " = 0")
+                .orderBy(Entry_Schema.INSTANCE.date.getQualifiedName() + " " + OrderSpec.DESC)
+                .valueOrNull();
+        return result;
+    }
+
     public int count(long[] startEndDate) {
         long startDate  = startEndDate[0];
         long endDate    = startEndDate[1];

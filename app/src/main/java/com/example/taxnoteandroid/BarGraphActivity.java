@@ -10,6 +10,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -298,6 +299,41 @@ public class BarGraphActivity extends DefaultCommonActivity implements OnChartVa
     private class EntryDataTask extends AsyncTask<long[], Integer, ArrayList<BarEntry>> {
 
         private boolean isCarriedBalNoVal = true;
+
+        // 日付キーの作成
+        private String getPeriodKey(Calendar cal) {
+            String periodStr;
+
+            switch (mPeriodType) {
+                case EntryDataManager.PERIOD_TYPE_ALL:
+                    periodStr = cal.get(Calendar.YEAR)+"";
+                    break;
+                case EntryDataManager.PERIOD_TYPE_YEAR:
+                    periodStr = cal.get(Calendar.YEAR) + "_" + cal.get(Calendar.MONTH);
+                    break;
+                default:
+                    periodStr = cal.get(Calendar.YEAR) + "_"
+                            + cal.get(Calendar.MONTH) + "_"
+                            + cal.get(Calendar.DATE);
+            }
+            return periodStr;
+        }
+
+        // 最新仕訳帳データ
+        private long getNewestDate() {
+            Entry entry = mEntryDm.getNewestDate();
+            Calendar calendar = Calendar.getInstance();
+            calendar.clear();
+            calendar.setTimeInMillis(entry.date);
+
+            calendar.set(calendar.get(Calendar.YEAR),
+                    calendar.get(Calendar.MONTH),
+                    calendar.get(Calendar.DATE), 0, 0, 0);
+            calendar.set(Calendar.MILLISECOND, 0);
+            return calendar.getTimeInMillis();
+//            return getPeriodKey(calendar);
+        }
+
         @Override
         protected ArrayList<BarEntry> doInBackground(long[]... longs) {
             long[] startEndDate = longs[0];
@@ -310,6 +346,9 @@ public class BarGraphActivity extends DefaultCommonActivity implements OnChartVa
             endCal.clear();
             endCal.setTimeInMillis(startEndDate[1]);
             endCal.set(Calendar.MILLISECOND, 0);
+
+//            String newestDateStr = getNewestDateStr();
+            long newestDate = getNewestDate();
 
             // debug
 //            SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
@@ -363,6 +402,7 @@ public class BarGraphActivity extends DefaultCommonActivity implements OnChartVa
 
             // 選択中の期間によって表示棒グラフを処理
             Map<String, Long> entryMap = new LinkedHashMap<>();
+            String periodStr;
             for (Entry entry : entries) {
                 Calendar calendar = Calendar.getInstance();
                 calendar.clear();
@@ -372,19 +412,7 @@ public class BarGraphActivity extends DefaultCommonActivity implements OnChartVa
                         calendar.get(Calendar.MONTH),
                         calendar.get(Calendar.DATE), 0, 0, 0);
                 calendar.set(Calendar.MILLISECOND, 0);
-                String periodStr;
-                switch (mPeriodType) {
-                    case EntryDataManager.PERIOD_TYPE_ALL:
-                        periodStr = calendar.get(Calendar.YEAR)+"";
-                        break;
-                    case EntryDataManager.PERIOD_TYPE_YEAR:
-                        periodStr = calendar.get(Calendar.YEAR) + "_" + calendar.get(Calendar.MONTH);
-                        break;
-                    default:
-                        periodStr = calendar.get(Calendar.YEAR) + "_"
-                                + calendar.get(Calendar.MONTH) + "_"
-                                + calendar.get(Calendar.DATE);
-                }
+                periodStr = getPeriodKey(calendar);
 
                 Long _price = entry.price;
                 if (mIsCarriedBal) { // 繰越残高の場合はその計算を行う
@@ -405,13 +433,19 @@ public class BarGraphActivity extends DefaultCommonActivity implements OnChartVa
                     }
                 }
                 entryMap.put(periodStr, _price);
+                Log.d("DEBUG","entry "+periodStr+" | "+_price);
             }
+//            Log.d("DEBUG","NewestDateStr: "+newestDateStr);
+
+            // すべての期間で棒グラフの未来に入力データが内
 
             Long lastCarriedBalPrice = startCarriedBalPrice;
+            String barPeriodKey;
             for (int i = 0; i < xNum; i++) {
                 Calendar _cal = (Calendar) startCal.clone();
 
-                _cal.set(_cal.get(Calendar.YEAR), _cal.get(Calendar.MONTH),
+                _cal.set(_cal.get(Calendar.YEAR),
+                        _cal.get(Calendar.MONTH),
                         _cal.get(Calendar.DATE), 0, 0, 0);
                 if (i > 0) {
                     switch (mPeriodType) {
@@ -425,26 +459,23 @@ public class BarGraphActivity extends DefaultCommonActivity implements OnChartVa
                             _cal.add(Calendar.DAY_OF_MONTH, i);
                     }
                 }
+                long calMillis = _cal.getTimeInMillis();
 
-                String periodStr;
-                switch (mPeriodType) {
-                    case EntryDataManager.PERIOD_TYPE_ALL:
-                        periodStr = _cal.get(Calendar.YEAR)+"";
-                        break;
-                    case EntryDataManager.PERIOD_TYPE_YEAR:
-                        periodStr = _cal.get(Calendar.YEAR) + "_" + _cal.get(Calendar.MONTH);
-                        break;
-                    default:
-                        periodStr = _cal.get(Calendar.YEAR) + "_"
-                                + _cal.get(Calendar.MONTH) + "_"
-                                + _cal.get(Calendar.DATE);
-                }
+                barPeriodKey = getPeriodKey(_cal);
 
-                Long _price = entryMap.get(periodStr);
+                Long _price = entryMap.get(barPeriodKey);
                 long price;
                 if (mIsCarriedBal) { // 繰越残高の場合
                     price = (_price == null) ? lastCarriedBalPrice : _price;
                     lastCarriedBalPrice = price;
+
+                    // 未来棒グラフの工夫
+                    if (calMillis > newestDate && _price == null) {
+                        Log.d("DEBUG","A: "+barPeriodKey);
+                        price = 0;
+                    } else {
+                        Log.d("DEBUG","B: "+barPeriodKey);
+                    }
                 } else {
                     price = (_price == null) ? 0 : _price;
                 }
@@ -459,6 +490,7 @@ public class BarGraphActivity extends DefaultCommonActivity implements OnChartVa
 
             return barEntries;
         }
+
 
         @Override
         protected void onPostExecute(ArrayList<BarEntry> result) {
@@ -522,7 +554,7 @@ public class BarGraphActivity extends DefaultCommonActivity implements OnChartVa
             mChart.animateY(700, Easing.EasingOption.EaseInOutQuad);
 
             // 繰越残高の棒グラフがなければメッセージだす
-            if (isCarriedBalNoVal) {
+            if (mIsCarriedBal && isCarriedBalNoVal) {
                 String noSurp = getString(R.string.no_surplus_bar_graph);
                 DialogManager.showCustomAlertDialog(getApplicationContext(),
                         getSupportFragmentManager(), null, noSurp);
