@@ -132,6 +132,10 @@ public class GraphTabFragment extends Fragment  {
 
         List<Entry> entries = mEntryDataManager.findAll(null, true);
         List<Calendar> calendars = reportGrouping.getReportCalendars(mClosingDateIndex, entries);
+        if (periodType == EntryDataManager.PERIOD_TYPE_ALL) {
+            TaxnoteApp.getInstance().ALL_PERIOD_CALS = calendars;
+        }
+
         mPagerAdapter = new GraphContentFragmentPagerAdapter(
                 getChildFragmentManager(), reportGrouping, calendars, isExpense);
         binding.pager.setAdapter(mPagerAdapter);

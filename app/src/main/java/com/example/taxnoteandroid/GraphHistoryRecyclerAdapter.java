@@ -41,6 +41,7 @@ public class GraphHistoryRecyclerAdapter extends RecyclerView.Adapter<BindingHol
 
     public static final int VIEW_ITEM_GRAPH = 1;
     public static final int VIEW_ITEM_CELL = 2;
+    public static final int VIEW_CARRIED_BAL_CELL = 10;
 
     public OnItemClickListener mOnItemClickListener;
     public OnLongItemClickListener mOnItemLongClickListener;
@@ -113,6 +114,7 @@ public class GraphHistoryRecyclerAdapter extends RecyclerView.Adapter<BindingHol
             case VIEW_ITEM_GRAPH:
                 return new BindingHolder(parent.getContext(), parent, R.layout.pie_graph_row);
             case VIEW_ITEM_CELL:
+            case VIEW_CARRIED_BAL_CELL:
                 return new BindingHolder(parent.getContext(), parent, R.layout.row_simple_cell);
         }
         return null;
@@ -181,6 +183,22 @@ public class GraphHistoryRecyclerAdapter extends RecyclerView.Adapter<BindingHol
                     }
                 });
 
+                break;
+            case VIEW_CARRIED_BAL_CELL:
+                RowSimpleCellBinding cbCell = (RowSimpleCellBinding) holder.binding;
+                String cbPrice = ValueConverter.formatPrice(mContext, entry.price);
+                int cbColor = (entry.price < 0) ? ContextCompat.getColor(mContext, R.color.expense)
+                        : ContextCompat.getColor(mContext, mIncomePriceTv.resourceId);
+                cbCell.price.setTextColor(cbColor);
+                cbCell.price.setText(cbPrice);
+                cbCell.labelName.setText(entry.titleName);
+                cbCell.getRoot().setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        if (mOnItemClickListener != null)
+                            mOnItemClickListener.onItemClick(view, position, entry);
+                    }
+                });
                 break;
             case VIEW_ITEM_CELL:
                 RowSimpleCellBinding cellBinding = (RowSimpleCellBinding) holder.binding;

@@ -44,6 +44,8 @@
     <string name="confirm_to_del_all_data_has_reason">「%1$s」を使用した%2$d件の入力データを削除していいですか？</string>
     <string name="bulk_del_complete">「%1$s」を使用したデータを削除し、科目を削除しました。</string>
 
+    <string name="no_surplus_bar_graph">繰越残高の棒グラフでは、黒字データのみが表示されます。残高がマイナスになっている期間は表示されません。</string>
+
     //--------------------------------------------------------------//
     // -- Entry Tab --
     //--------------------------------------------------------------//
@@ -80,6 +82,10 @@
     <string name="list_view_add_reason">科目を追加</string>
     <string name="list_view_rename">科目名を変更</string>
 
+    //--------------------------------------------------------------//
+    // -- Graph Tab --
+    //--------------------------------------------------------------//
+    <string name="carried_balance">繰越残高</string>
 
     //--------------------------------------------------------------//
     // -- Settings --
@@ -104,7 +110,6 @@
     <string name="taxnote_cloud_show_price">¥600 / 月間</string>
     <string name="taxnote_plus_show_price_tail"> / 年間</string>
     <string name="taxnote_cloud_show_price_tail"> / 月間</string>
-
 
     //--------------------------------------------------------------//
     // -- Data Export --
@@ -247,7 +252,7 @@
 
     <string name="Balance">残高</string>
     <string name="profit_loss_settings">損益表の設定</string>
-    <string name="balance_carry_forward">残高を繰り越す</string>
+    <string name="balance_carry_forward">繰越残高を表示</string>
     <string name="balance_carry_forward_desc">損益表の残高が、以前の残高を繰り越した数値になります。</string>
     <string name="monthly_closing_date">毎月の締め日</string>
     <string name="monthly_closing_date_desc">1日から14日までを選択した時は、選択した日までが前月分の損益表に表示されます。15日以降を選択した時は、選択した日より後が次月分の損益表に表示されます。例えば、25日を選択した場合、先月26日〜今月25日までが今月分の損益表に表示されます。</string>
