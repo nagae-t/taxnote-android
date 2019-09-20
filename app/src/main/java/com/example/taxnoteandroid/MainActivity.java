@@ -262,10 +262,7 @@ public class MainActivity extends DefaultCommonActivity
         MenuItem searchMenu = menu.findItem(R.id.action_search);
         MenuItem exportMenu = menu.findItem(R.id.data_export);
         MenuItem delMenu = menu.findItem(R.id.data_delete);
-        String projectName = mProjectManager.findCurrent().name;
-        if (projectName.equals("master")) {
-            projectName = getString(R.string.master_project_name);
-        }
+        String projectName = mProjectManager.getCurrentName();
         String exportTitle = getString(R.string.export_current_something, projectName);
         String delTitle = getString(R.string.delete_current_something, projectName);
         exportMenu.setTitle(exportTitle);
@@ -326,8 +323,9 @@ public class MainActivity extends DefaultCommonActivity
                 break;
 
             case R.id.data_export:
-                Intent intent = new Intent(this, DataExportActivity.class);
-                startActivity(intent);
+                DataExportActivity.start(this,
+                        mProjectManager.getCurrentName(), null,
+                        EntryDataManager.PERIOD_TYPE_ALL);
                 break;
 
             case R.id.action_search:
