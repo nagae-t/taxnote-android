@@ -141,6 +141,8 @@
     <string name="data_export_mail_message_mfcloud">MFクラウド会計・確定申告にインポートできます。このデータをパソコンのデスクトップなどにダウンロードし、MFクラウドへインポートしてください。\n\n説明動画や詳しい解説はこちら。\nhttps://goo.gl/xt7aK2</string>
     <string name="data_export_mail_message_freee">クラウド会計ソフトfreeeにインポートできます。このデータをパソコンのデスクトップなどにダウンロードし、freeeへインポートしてください。\n\n説明動画や詳しい解説はこちら。\nhttps://goo.gl/PFDe8U</string>
 
+    <string name="export_current_something">%1$sの出力</string>
+    <string name="delete_current_something">%1$sのデータを削除</string>
 
     //--------------------------------------------------------------//
     // -- Help Message --
