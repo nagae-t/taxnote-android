@@ -155,9 +155,9 @@ public class ReportContentFragment extends Fragment {
     private void loadReportData() {
         isShowBalanceCarryForward = SharedPreferencesManager.getBalanceCarryForward(mContext);
         if (isShowBalanceCarryForward) {
-            binding.topCarriedBalance.setVisibility(View.GONE);
-        } else {
             binding.topCarriedBalance.setVisibility(View.VISIBLE);
+        } else {
+            binding.topCarriedBalance.setVisibility(View.GONE);
         }
 
         if (mTargetCalendar == null) {
