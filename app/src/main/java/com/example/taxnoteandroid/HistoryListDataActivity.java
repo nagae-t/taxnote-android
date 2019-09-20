@@ -51,6 +51,7 @@ public class HistoryListDataActivity extends DefaultCommonActivity {
     private String mReasonName = null;
     private String mMemoValue = null;
     private boolean mIsViewTotal = false;
+    private String mPageTitleAndSub;
 
     private TNApiModel mApiModel;
 
@@ -169,6 +170,7 @@ public class HistoryListDataActivity extends DefaultCommonActivity {
             pageSubTitle = getString(R.string.History);
         }
 
+        mPageTitleAndSub = pageTitle+" "+pageSubTitle;
         ActionBar actionBar = getSupportActionBar();
         actionBar.setTitle(pageTitle);
         actionBar.setSubtitle(pageSubTitle);
@@ -213,6 +215,18 @@ public class HistoryListDataActivity extends DefaultCommonActivity {
     }
 
     @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        MenuItem exportMenu = menu.findItem(R.id.action_export);
+        MenuItem delMenu = menu.findItem(R.id.action_delete);
+        String exportTitle = getString(R.string.export_current_something, mPageTitleAndSub);
+        String delTitle = getString(R.string.delete_current_something, mPageTitleAndSub);
+        exportMenu.setTitle(exportTitle);
+        delMenu.setTitle(delTitle);
+
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
@@ -225,6 +239,8 @@ public class HistoryListDataActivity extends DefaultCommonActivity {
                     SearchEntryActivity.startWithIsExpense(
                             this, mStartEndDate, mReasonName, mIsExpense);
                 }
+                break;
+            case R.id.action_export:
                 break;
             case R.id.action_delete:
                 showAllDeleteDialog();
