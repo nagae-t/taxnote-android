@@ -25,14 +25,6 @@
             android:paddingStart="16dp"
             android:textColor="@color/secondary_text"
             android:text="@string/balance_carry_forward" />
-        <TextView
-            style="@style/font_style_footer"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingTop="8dp"
-            android:paddingEnd="16dp"
-            android:paddingStart="16dp"
-            android:text="@string/balance_carry_forward_desc"/>
 
         <LinearLayout
             android:id="@+id/monthly_closing_date_row"

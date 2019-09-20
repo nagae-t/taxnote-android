@@ -87,6 +87,21 @@ public class HistoryListDataActivity extends DefaultCommonActivity {
     }
 
     /**
+     *
+     * @param context
+     * @param targetCalendar
+     * @param periodType
+     */
+    public static void startForBalance(Context context, Calendar targetCalendar, int periodType) {
+        Intent intent = new Intent(context, HistoryListDataActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.putExtra(KEY_TARGET_CALENDAR, targetCalendar);
+        intent.putExtra(KEY_IS_BALANCE, true);
+        intent.putExtra(KEY_PERIOD_TYPE, periodType);
+        context.startActivity(intent);
+    }
+
+    /**
      * 収入または支出のコンテンツ
      * @param context
      * @param targetCalendar
@@ -147,11 +162,11 @@ public class HistoryListDataActivity extends DefaultCommonActivity {
                 ? getString(R.string.divide_by_all)
                 : getCalendarStringFromPeriodType(mTargetCalendar);
         String pageSubTitle = mReasonName;
-        if (mIsBalance) {
-            pageSubTitle = getString(R.string.History);
-        }
         if (mReasonName == null) {
             pageSubTitle = (mIsExpense) ? getString(R.string.Expense) : getString(R.string.Income);
+        }
+        if (mIsBalance) {
+            pageSubTitle = getString(R.string.History);
         }
 
         ActionBar actionBar = getSupportActionBar();

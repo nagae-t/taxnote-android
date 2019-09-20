@@ -34,11 +34,13 @@ public class EntryDataManager {
     private OrmaDatabase ormaDatabase;
     private Context mContext;
     private ProjectDataManager mProjectManager;
+    private Project mCurrentProject;
 
     public EntryDataManager(Context context) {
         ormaDatabase = TaxnoteApp.getOrmaDatabase();
         mContext = context;
         mProjectManager = new ProjectDataManager(mContext);
+        mCurrentProject = mProjectManager.findCurrent();
     }
 
 
@@ -69,7 +71,7 @@ public class EntryDataManager {
 
     public List<Entry> findAllNeedSave(boolean isNeedSave) {
         int needSave = (isNeedSave) ? 1 : 0;
-        List<Entry> entries = ormaDatabase.selectFromEntry()
+        List<Entry> entries = ormaDatabase.selectFromEntry().projectEq(mCurrentProject)
                 .where(Entry_Schema.INSTANCE.deleted.getQualifiedName() + " = 0")
                 .and()
                 .where(Entry_Schema.INSTANCE.needSave.getQualifiedName() + " = " + needSave)
@@ -79,7 +81,7 @@ public class EntryDataManager {
 
     public List<Entry> findAllNeedSync(boolean isNeedSync) {
         int needSync = (isNeedSync) ? 1 : 0;
-        List<Entry> entries = ormaDatabase.selectFromEntry()
+        List<Entry> entries = ormaDatabase.selectFromEntry().projectEq(mCurrentProject)
                 .where(Entry_Schema.INSTANCE.deleted.getQualifiedName() + " = 0")
                 .and()
                 .where(Entry_Schema.INSTANCE.needSync.getQualifiedName() + " = " + needSync)
@@ -90,19 +92,17 @@ public class EntryDataManager {
     public List<Entry> findAllDeleted(boolean isDeleted) {
         int deleted = (isDeleted) ? 1 : 0;
         List<Entry> entries = ormaDatabase.selectFromEntry()
+                .projectEq(mCurrentProject)
                 .where(Entry_Schema.INSTANCE.deleted.getQualifiedName() + " = " + deleted)
                 .toList();
         return entries;
     }
 
     public List<Entry> findAll() {
-        return ormaDatabase.selectFromEntry().toList();
+        return ormaDatabase.selectFromEntry().projectEq(mCurrentProject).toList();
     }
 
     public List<Entry> findAll(long[] startAndEndDate, Boolean asc) {
-
-        ProjectDataManager projectDataManager   = new ProjectDataManager(mContext);
-        Project project                         = projectDataManager.findCurrent();
 
         List<Entry> entries;
         String orderSpec = (asc) ? OrderSpec.ASC : OrderSpec.DESC;
@@ -115,7 +115,7 @@ public class EntryDataManager {
 
             entries = ormaDatabase.selectFromEntry().
                     where(Entry_Schema.INSTANCE.deleted.getQualifiedName() + " = 0")
-                    .projectEq(project)
+                    .projectEq(mCurrentProject)
                     .where(Entry_Schema.INSTANCE.date.getQualifiedName() + " > " + startDate)
                     .where(Entry_Schema.INSTANCE.date.getQualifiedName() + " < " + endDate)
                     .orderBy(Entry_Schema.INSTANCE.date.getQualifiedName() + " " + orderSpec)
@@ -125,7 +125,7 @@ public class EntryDataManager {
 
             entries = ormaDatabase.selectFromEntry().
                     where(Entry_Schema.INSTANCE.deleted.getQualifiedName() + " = 0")
-                    .projectEq(project)
+                    .projectEq(mCurrentProject)
                     .orderBy(Entry_Schema.INSTANCE.date.getQualifiedName() + " " + orderSpec)
                     .orderBy(Entry_Schema.INSTANCE.updated.getQualifiedName() + " " + orderSpec)
                     .toList();
@@ -134,14 +134,21 @@ public class EntryDataManager {
         return entries;
     }
 
+    // 最新（未来）の仕訳帳を取得
+    public Entry getNewestDate() {
+        Entry result = ormaDatabase.selectFromEntry().projectEq(mCurrentProject)
+                .where(Entry_Schema.INSTANCE.deleted.getQualifiedName() + " = 0")
+                .orderBy(Entry_Schema.INSTANCE.date.getQualifiedName() + " " + OrderSpec.DESC)
+                .valueOrNull();
+        return result;
+    }
+
     public int count(long[] startEndDate) {
-        ProjectDataManager projectDataManager   = new ProjectDataManager(mContext);
-        Project project                         = projectDataManager.findCurrent();
         long startDate  = startEndDate[0];
         long endDate    = startEndDate[1];
         int countData = ormaDatabase.selectFromEntry().
                 where(Entry_Schema.INSTANCE.deleted.getQualifiedName() + " = 0")
-                .projectEq(project)
+                .projectEq(mCurrentProject)
                 .where(Entry_Schema.INSTANCE.date.getQualifiedName() + " > " + startDate)
                 .where(Entry_Schema.INSTANCE.date.getQualifiedName() + " < " + endDate)
                 .count();
@@ -149,19 +156,55 @@ public class EntryDataManager {
     }
 
     public int countAll() {
-        ProjectDataManager projectDataManager   = new ProjectDataManager(mContext);
-        Project project                         = projectDataManager.findCurrent();
         int countData = ormaDatabase.selectFromEntry().
                 where(Entry_Schema.INSTANCE.deleted.getQualifiedName() + " = 0")
-                .projectEq(project)
+                .projectEq(mCurrentProject)
                 .count();
         return countData;
     }
 
+
+
+    /**
+     * 繰越残高の取得
+     *
+     * @param endDate いつまでか（year, month...）
+     * @return
+     */
+    public long getCarriedBalance(long endDate) {
+
+        List<Entry> entries;
+        String orderSpec = OrderSpec.ASC;
+
+        Entry_Selector entrySelector = ormaDatabase.selectFromEntry()
+                .where(Entry_Schema.INSTANCE.deleted.getQualifiedName() + " = 0")
+                .projectEq(mCurrentProject);
+
+        // TODO: 全帳簿の合計を表示するかどうか
+        // 損益表の設定値から反映する
+
+        if (endDate != 0) {
+            entrySelector = entrySelector
+                    .where(Entry_Schema.INSTANCE.date.getQualifiedName() + " < " + endDate);
+        }
+        entries = entrySelector
+                .orderBy(Entry_Schema.INSTANCE.date.getQualifiedName() + " " + orderSpec)
+                .toList();
+
+        long result = 0;
+        for (Entry _entry : entries) {
+            if (_entry.isExpense) {
+                result -= _entry.price;
+            } else {
+                result += _entry.price;
+            }
+        }
+
+        return result;
+    }
+
     // 収入・支出別
     public List<Entry> findAll(long[] startAndEndDate, boolean isExpense, Boolean asc) {
-        ProjectDataManager projectDataManager   = new ProjectDataManager(mContext);
-        Project project                         = projectDataManager.findCurrent();
 
         List<Entry> entries;
         String orderSpec = (asc) ? OrderSpec.ASC : OrderSpec.DESC;
@@ -169,7 +212,7 @@ public class EntryDataManager {
         int expense = (isExpense) ? 1 : 0;
         Entry_Selector selector = ormaDatabase.selectFromEntry().
                 where(Entry_Schema.INSTANCE.deleted.getQualifiedName() + " = 0")
-                .projectEq(project)
+                .projectEq(mCurrentProject)
                 .where(Entry_Schema.INSTANCE.isExpense.getQualifiedName() + " = " + expense);
 
         String schemeData = Entry_Schema.INSTANCE.date.getQualifiedName();
@@ -193,8 +236,6 @@ public class EntryDataManager {
 
     // 備考で探す
     public List<Entry> findAll(long[] startAndEndDate, String memo, boolean isExpense, Boolean asc) {
-        ProjectDataManager projectDataManager   = new ProjectDataManager(mContext);
-        Project project                         = projectDataManager.findCurrent();
 
         List<Entry> entries;
         String orderSpec = (asc) ? OrderSpec.ASC : OrderSpec.DESC;
@@ -202,7 +243,7 @@ public class EntryDataManager {
         int expense = (isExpense) ? 1 : 0;
         Entry_Selector selector = ormaDatabase.selectFromEntry().
                 where(Entry_Schema.INSTANCE.deleted.getQualifiedName() + " = 0")
-                .projectEq(project)
+                .projectEq(mCurrentProject)
                 .where(Entry_Schema.INSTANCE.isExpense.getQualifiedName() + " = " + expense)
                 .where(Entry_Schema.INSTANCE.memo.getQualifiedName()
                         + "='"+memo+"'");
@@ -228,14 +269,12 @@ public class EntryDataManager {
 
     //@@ 未完成、まだデバッグ中
     public List<Entry> findAll(String word) {
-        ProjectDataManager projectDataManager   = new ProjectDataManager(mContext);
-        Project project                         = projectDataManager.findCurrent();
         List<Entry> entries = new ArrayList<>();
         String orderSpec = OrderSpec.DESC;
 
         // https://github.com/gfx/Android-Orma/search?utf8=%E2%9C%93&q=like
         ormaDatabase.selectFromEntry()
-                .projectEq(project)
+                .projectEq(mCurrentProject)
                 .where(Entry_Schema.INSTANCE.deleted.getQualifiedName() + " = 0")
                 .where(Entry_Schema.INSTANCE.reason.name + " LIKE ?", "%" + word + "%")
 //                .where(Entry_Schema.INSTANCE.reason.getEscapedName()
@@ -314,19 +353,19 @@ public class EntryDataManager {
 
     public Entry hasReasonInEntryData(Reason reason) {
         return ormaDatabase.selectFromEntry()
-                .projectEq(mProjectManager.findCurrent())
+                .projectEq(mCurrentProject)
                 .and().reasonEq(reason).valueOrNull();
     }
 
     public Entry hasAccountInEntryData(Account account) {
         return ormaDatabase.selectFromEntry()
-                .projectEq(mProjectManager.findCurrent())
+                .projectEq(mCurrentProject)
                 .and().accountEq(account).valueOrNull();
     }
 
     public int countByAccount(Account account) {
         return ormaDatabase.selectFromEntry()
-                .projectEq(mProjectManager.findCurrent())
+                .projectEq(mCurrentProject)
                 .where(Entry_Schema.INSTANCE.deleted.getQualifiedName() + " = 0")
                 .and()
                 .accountEq(account)
@@ -335,7 +374,7 @@ public class EntryDataManager {
 
     public int countByReason(Reason reason) {
         return ormaDatabase.selectFromEntry()
-                .projectEq(mProjectManager.findCurrent())
+                .projectEq(mCurrentProject)
                 .where(Entry_Schema.INSTANCE.deleted.getQualifiedName() + " = 0")
                 .and()
                 .reasonEq(reason)
@@ -343,8 +382,6 @@ public class EntryDataManager {
     }
 
     public long findSumBalance(long endDate) {
-        ProjectDataManager projectDataManager   = new ProjectDataManager(mContext);
-        Project project                         = projectDataManager.findCurrent();
 
         String schemeDelete = Entry_Schema.INSTANCE.deleted.getQualifiedName();
         String schemeIsExpense = Entry_Schema.INSTANCE.isExpense.getQualifiedName();
@@ -352,7 +389,7 @@ public class EntryDataManager {
 
         Entry_Selector selector = ormaDatabase.selectFromEntry()
                 .where(schemeDelete + " = 0")
-                .projectEq(project)
+                .projectEq(mCurrentProject)
                 .where(schemeDate + " < " + endDate);
 
         Long sumIncome = selector.clone().where(schemeIsExpense + " = 0").sumByPrice();
@@ -458,7 +495,7 @@ public class EntryDataManager {
 
         if (isLoggingIn) {
             List<Entry> targetList =  ormaDatabase.selectFromEntry()
-                    .projectEq(mProjectManager.findCurrent())
+                    .projectEq(mCurrentProject)
                     .where(Entry_Schema.INSTANCE.deleted.getQualifiedName() + " = 0")
                     .and().accountEq(account).toList();
             for (Entry _entry : targetList) {
@@ -470,7 +507,7 @@ public class EntryDataManager {
 
         } else {
             ormaDatabase.deleteFromEntry()
-                    .projectEq(mProjectManager.findCurrent())
+                    .projectEq(mCurrentProject)
                     .accountEq(account.id)
                     .execute();
         }
@@ -481,7 +518,7 @@ public class EntryDataManager {
 
         if (isLoggingIn) {
             List<Entry> targetList =  ormaDatabase.selectFromEntry()
-                    .projectEq(mProjectManager.findCurrent())
+                    .projectEq(mCurrentProject)
                     .where(Entry_Schema.INSTANCE.deleted.getQualifiedName() + " = 0")
                     .and().reasonEq(reason).toList();
             for (Entry _entry : targetList) {
@@ -493,7 +530,7 @@ public class EntryDataManager {
 
         } else {
             ormaDatabase.deleteFromEntry()
-                    .projectEq(mProjectManager.findCurrent())
+                    .projectEq(mCurrentProject)
                     .reasonEq(reason.id)
                     .execute();
         }

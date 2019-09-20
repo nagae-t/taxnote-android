@@ -208,7 +208,7 @@ public class SharedPreferencesManager {
     }
 
     public static boolean getBalanceCarryForward(Context context) {
-        return getSharedPreferences(context).getBoolean(BALANCE_CARRY_FORWARD_KEY, false);
+        return getSharedPreferences(context).getBoolean(BALANCE_CARRY_FORWARD_KEY, true);
     }
 
     public static void saveMonthlyClosingDateIndex(Context context, int index) {
