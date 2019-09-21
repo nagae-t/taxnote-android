@@ -92,6 +92,17 @@ public class DataExportActivity extends DefaultCommonActivity
         context.startActivity(intent);
     }
 
+    public static void startForBalance(Context context, String targetName,
+                                       Calendar targetCalendar, int periodType) {
+        Intent intent = new Intent(context, DataExportActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.putExtra(KEY_TARGET_NAME, targetName);
+        intent.putExtra(KEY_TARGET_CALENDAR, targetCalendar);
+        intent.putExtra(KEY_IS_BALANCE, true);
+        intent.putExtra(KEY_PERIOD_TYPE, periodType);
+        context.startActivity(intent);
+    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -110,6 +121,7 @@ public class DataExportActivity extends DefaultCommonActivity
         mReasonName = receiptIntent.getStringExtra(KEY_REASON_NAME);
         mMemoValue = receiptIntent.getStringExtra(KEY_MEMO);
         mIsExpense = receiptIntent.getBooleanExtra(KEY_IS_EXPENSE, false);
+        mIsBalance = receiptIntent.getBooleanExtra(KEY_IS_BALANCE, false);
 
         ActionBar actionBar = getSupportActionBar();
         actionBar.setSubtitle(mTargetName);
@@ -381,6 +393,7 @@ public class DataExportActivity extends DefaultCommonActivity
         if (mTargetCalendar != null) {
             manager.setPeriod(mStartEndDate);
             manager.setFromList(true);
+            manager.setExpense(mIsExpense);
         }
         if (mReasonName != null) {
             manager.setReasonName(mReasonName);
@@ -388,6 +401,7 @@ public class DataExportActivity extends DefaultCommonActivity
         if (mMemoValue != null) {
             manager.setMemo(mMemoValue);
         }
+        if (mIsBalance) manager.setBalance(true);
 
         manager.export(); // Generate CSV file and send it by email.
     }

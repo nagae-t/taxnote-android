@@ -231,9 +231,14 @@ public class HistoryListDataActivity extends DefaultCommonActivity {
                 }
                 break;
             case R.id.action_export:
-                DataExportActivity.start(this,
-                        mPageTitleAndSub, mTargetCalendar,
-                        EntryDataManager.PERIOD_TYPE_ALL);
+                if (mIsBalance) {
+                    DataExportActivity.startForBalance(this,
+                            mPageTitleAndSub, mTargetCalendar, mPeriodType);
+                } else {
+                    DataExportActivity.start(this,
+                            mPageTitleAndSub, mTargetCalendar,
+                            mReasonName, mMemoValue, mIsExpense, mPeriodType);
+                }
                 break;
             case R.id.action_delete:
                 showAllDeleteDialog();
