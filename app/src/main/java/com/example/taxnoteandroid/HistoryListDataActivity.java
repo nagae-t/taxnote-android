@@ -20,6 +20,7 @@ import com.example.taxnoteandroid.Library.DialogManager;
 import com.example.taxnoteandroid.Library.EntryLimitManager;
 import com.example.taxnoteandroid.Library.ValueConverter;
 import com.example.taxnoteandroid.Library.taxnote.TNApiModel;
+import com.example.taxnoteandroid.Library.taxnote.TNUtils;
 import com.example.taxnoteandroid.dataManager.EntryDataManager;
 import com.example.taxnoteandroid.dataManager.SharedPreferencesManager;
 import com.example.taxnoteandroid.databinding.ActivityEntryCommonBinding;
@@ -161,7 +162,7 @@ public class HistoryListDataActivity extends DefaultCommonActivity {
 
         String pageTitle = (mTargetCalendar == null)
                 ? getString(R.string.divide_by_all)
-                : getCalendarStringFromPeriodType(mTargetCalendar);
+                : TNUtils.getCalendarStringFromPeriodType(this, mTargetCalendar, mPeriodType);
         String pageSubTitle = mReasonName;
         if (mReasonName == null) {
             pageSubTitle = (mIsExpense) ? getString(R.string.Expense) : getString(R.string.Income);
@@ -189,17 +190,6 @@ public class HistoryListDataActivity extends DefaultCommonActivity {
     @Override
     protected void onResume() {
         super.onResume();
-    }
-
-    private String getCalendarStringFromPeriodType(Calendar c) {
-        final boolean isPeriodMonth = (mPeriodType == EntryDataManager.PERIOD_TYPE_MONTH);
-        String dateFormatString = (isPeriodMonth)
-                ? getString(R.string.date_string_format_to_year_month)
-                : getString(R.string.date_string_format_to_year_month_day);
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
-                dateFormatString, Locale.getDefault());
-        String calStr = simpleDateFormat.format(c.getTime());
-        return calStr;
     }
 
     private void loadEntryData(long[] startAndEndDate, boolean isBalance, boolean isExpense) {
