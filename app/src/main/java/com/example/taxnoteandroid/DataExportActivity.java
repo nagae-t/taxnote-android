@@ -53,12 +53,15 @@ public class DataExportActivity extends DefaultCommonActivity
 
     private String mReasonName = null;
     private String mMemoValue = null;
+    private boolean mIsBalance;
+    private boolean mIsExpense;
 
     private static final String KEY_TARGET_CALENDAR = "target_calendar";
     private static final String KEY_PERIOD_TYPE = "period_type";
     private static final String KEY_TARGET_NAME = "target_name";
     private static final String KEY_REASON_NAME = "reason_name";
     private static final String KEY_MEMO = "memo";
+    private static final String KEY_IS_BALANCE = "is_balance";
     private static final String KEY_IS_EXPENSE = "is_expense";
 
     private static final String TAG_EXPORT_SUBJECT_DIALOG_FRAGMENT = "export_subject_dialog_fragment";
@@ -89,12 +92,6 @@ public class DataExportActivity extends DefaultCommonActivity
         context.startActivity(intent);
     }
 
-    public static void start(Context context) {
-        Intent intent = new Intent(context, DataExportActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-
-        context.startActivity(intent);
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -110,6 +107,9 @@ public class DataExportActivity extends DefaultCommonActivity
             mTargetCalendar = (Calendar)calSerial;
             mStartEndDate = EntryLimitManager.getStartAndEndDate(this, mPeriodType, mTargetCalendar);
         }
+        mReasonName = receiptIntent.getStringExtra(KEY_REASON_NAME);
+        mMemoValue = receiptIntent.getStringExtra(KEY_MEMO);
+        mIsExpense = receiptIntent.getBooleanExtra(KEY_IS_EXPENSE, false);
 
         ActionBar actionBar = getSupportActionBar();
         actionBar.setSubtitle(mTargetName);
@@ -229,6 +229,10 @@ public class DataExportActivity extends DefaultCommonActivity
     //--------------------------------------------------------------//
 
     private void setExportRangeView() {
+        if (mTargetCalendar != null) {
+            binding.dataExportRangeButton.setVisibility(View.GONE);
+            return;
+        }
 
         String exportRange = SharedPreferencesManager.getExportRangeType(DataExportActivity.this);
 
@@ -373,6 +377,18 @@ public class DataExportActivity extends DefaultCommonActivity
         String format = SharedPreferencesManager.getCurrentExportFormat(DataExportActivity.this);
         String characterCode = SharedPreferencesManager.getCurrentCharacterCode(DataExportActivity.this);
         DataExportManager manager = new DataExportManager(DataExportActivity.this, format, characterCode);
+        manager.setPeriod(mStartEndDate);
+        if (mTargetCalendar != null) {
+            manager.setPeriod(mStartEndDate);
+            manager.setFromList(true);
+        }
+        if (mReasonName != null) {
+            manager.setReasonName(mReasonName);
+        }
+        if (mMemoValue != null) {
+            manager.setMemo(mMemoValue);
+        }
+
         manager.export(); // Generate CSV file and send it by email.
     }
 

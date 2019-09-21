@@ -65,6 +65,11 @@ public class DataExportManager implements TaxnoteConsts {
     private long[] startEndDate;
     private List<Entry> reportData;
     private boolean isSubjectEnable = false;
+    private boolean isFromList = false;
+
+    private String mReasonName;
+    private String mMemo;
+    private boolean mIsExpense;
 
     public DataExportManager(Activity activity) {
         this.mActivity = activity;
@@ -90,6 +95,26 @@ public class DataExportManager implements TaxnoteConsts {
         this.reportData = data;
         this.setMode(EXPORT_PROFIT_LOSS_FORMAT_TYPE_CSV);
         this.setCharacterCode(charCode);
+    }
+
+    public void setFromList(boolean val) {
+        this.isFromList = val;
+    }
+
+    public void setPeriod(long[] _startEndDate) {
+        this.startEndDate = _startEndDate;
+    }
+
+    public void setReasonName(String name) {
+        this.mReasonName = name;
+    }
+
+    public void setMemo(String memo) {
+        this.mMemo = memo;
+    }
+
+    public void setExpense(boolean val) {
+        this.mIsExpense = val;
     }
 
     private static long[] getThisMonthStartAndEndDate() {
@@ -592,8 +617,27 @@ public class DataExportManager implements TaxnoteConsts {
         long[] startEnd;
         EntryDataManager entryDataManager = new EntryDataManager(context);
 
-        String exportRangeType = SharedPreferencesManager.getExportRangeType(context);
+        // 損益表か他の絞り込みで仕訳帳一覧から遷移して出力へ来た場合
+        if (isFromList) {
+            entries = new ArrayList<>();
+            List<Entry> _entries = (mMemo == null)
+                    ? entryDataManager.findAll(startEndDate, mIsExpense, true)
+                    : entryDataManager.findAll(startEndDate, mMemo, mIsExpense, true);
+            if (mReasonName != null ) {
+                for (Entry _entry : _entries) {
+                    if (_entry.reason.name.equals(mReasonName)) {
+                        entries.add(_entry);
+                    }
+                }
+            } else {
+                entries.addAll(_entries);
+            }
 
+            // TODO: データ一覧からソートする必要がある?
+            return entries;
+        }
+
+        String exportRangeType = SharedPreferencesManager.getExportRangeType(context);
         switch (exportRangeType) {
 
             case EXPORT_RANGE_TYPE_ALL:

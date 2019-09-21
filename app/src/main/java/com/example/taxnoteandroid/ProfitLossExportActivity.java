@@ -60,14 +60,6 @@ public class ProfitLossExportActivity extends DefaultCommonActivity {
         mStartEndDate = getIntent().getLongArrayExtra(KEY_TARGET_START_END_DATE);
         mPeriodType = SharedPreferencesManager.getProfitLossReportPeriodType(this);
 
-        // debug
-//        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
-//                getString(R.string.date_string_format_to_year_month_day),
-//                Locale.getDefault());
-//        String startCalStr = simpleDateFormat.format(mStartEndDate[0]);
-//        String endCalStr = simpleDateFormat.format(mStartEndDate[1]);
-//        Log.d("DEBUG", "startCal: "+startCalStr+" | endCal: "+endCalStr);
-
         Calendar calendar = Calendar.getInstance();
         calendar.clear();
         calendar.setTimeInMillis(mStartEndDate[0]);
