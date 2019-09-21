@@ -1,10 +1,12 @@
 package com.example.taxnoteandroid;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -17,6 +19,7 @@ import com.example.taxnoteandroid.Library.ValueConverter;
 import com.example.taxnoteandroid.Library.taxnote.TNApi;
 import com.example.taxnoteandroid.Library.taxnote.TNApiModel;
 import com.example.taxnoteandroid.dataManager.EntryDataManager;
+import com.example.taxnoteandroid.dataManager.ProjectDataManager;
 import com.example.taxnoteandroid.dataManager.SharedPreferencesManager;
 import com.example.taxnoteandroid.databinding.FragmentHistoryTabBinding;
 import com.example.taxnoteandroid.model.Entry;
@@ -39,6 +42,8 @@ public class HistoryTabFragment extends Fragment {
     private CommonEntryRecyclerAdapter mEntryAdapter;
     private Context mContext;
     private TNApiModel mApiModel;
+
+    private ProjectDataManager mProjectManager;
 
     public HistoryTabFragment() {
         // Required empty public constructor
@@ -65,6 +70,8 @@ public class HistoryTabFragment extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mContext = getActivity().getApplicationContext();
+
+        mProjectManager = new ProjectDataManager(mContext);
 
         mApiModel = new TNApiModel(mContext);
         if (!mApiModel.isCloudActive() || !mApiModel.isLoggingIn()) binding.refreshLayout.setEnabled(false);
@@ -138,6 +145,37 @@ public class HistoryTabFragment extends Fragment {
         });
     }
 
+    public void showAllDeleteDialog() {
+        String projectName = mProjectManager.getCurrentName();
+        String deleteBtnTitle = getString(R.string.delete_current_something, projectName);
+        // Confirm dialog
+        new AlertDialog.Builder(getActivity())
+                .setTitle(null)
+                .setMessage(getString(R.string.delete_this_screen_data_confirm_message))
+                .setPositiveButton(deleteBtnTitle, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+
+//                        List<Entry> dataList = mEntryAdapter.getItems();
+//                        for (Entry entry : dataList) {
+//                            if (entry.dateString == null) {
+//                                mEntryManager.updateSetDeleted(entry.uuid, mApiModel);
+//                            }
+//                        }
+//                        mEntryAdapter.clearAll();
+//                        mEntryAdapter.notifyDataSetChanged();
+//
+//                        mApiModel.saveAllNeedSaveSyncDeletedData(null);
+//
+//                        DialogManager.showToast(mContext, mContext.getString(R.string.delete_done));
+//                        BroadcastUtil.sendReloadReport(getActivity());
+
+                        dialogInterface.dismiss();
+                    }
+                })
+                .setNegativeButton(getString(R.string.cancel), null)
+                .show();
+    }
 
     //--------------------------------------------------------------//
     //    -- History View --

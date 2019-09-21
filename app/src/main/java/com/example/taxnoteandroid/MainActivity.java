@@ -275,6 +275,7 @@ public class MainActivity extends DefaultCommonActivity
 
         helpMenu.setVisible(false);
         exportMenu.setVisible(false);
+        delMenu.setVisible(false);
         searchMenu.setVisible(false);
         periodDivMenu.setVisible(false);
         profitLossSettingsMenu.setVisible(false);
@@ -333,6 +334,10 @@ public class MainActivity extends DefaultCommonActivity
                 break;
 
             case R.id.data_delete:
+                HistoryTabFragment historyTabFragment = (HistoryTabFragment) mTabPagerAdapter
+                        .instantiateItem(binding.pager, 1);
+                if (historyTabFragment != null)
+                    historyTabFragment.showAllDeleteDialog();
                 break;
 
             // 損益表のメニューオプションが選択されたとき

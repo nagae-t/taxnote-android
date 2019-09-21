@@ -250,11 +250,12 @@ public class HistoryListDataActivity extends DefaultCommonActivity {
     private void showAllDeleteDialog() {
         final Context context = getApplicationContext();
 
+        String deleteBtnTitle = getString(R.string.delete_current_something, mPageTitleAndSub);
         // Confirm dialog
         new AlertDialog.Builder(this)
                 .setTitle(null)
                 .setMessage(getString(R.string.delete_this_screen_data_confirm_message))
-                .setPositiveButton(getString(R.string.Delete), new DialogInterface.OnClickListener() {
+                .setPositiveButton(deleteBtnTitle, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
 
@@ -266,8 +267,6 @@ public class HistoryListDataActivity extends DefaultCommonActivity {
                         }
                         mEntryAdapter.clearAll();
                         mEntryAdapter.notifyDataSetChanged();
-
-                        BroadcastUtil.sendReloadReport(HistoryListDataActivity.this);
 
                         mApiModel.saveAllNeedSaveSyncDeletedData(null);
 
