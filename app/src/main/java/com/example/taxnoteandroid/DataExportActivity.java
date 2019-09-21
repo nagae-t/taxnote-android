@@ -51,9 +51,15 @@ public class DataExportActivity extends DefaultCommonActivity
     private long[] mStartEndDate;
     private int mPeriodType;
 
+    private String mReasonName = null;
+    private String mMemoValue = null;
+
     private static final String KEY_TARGET_CALENDAR = "target_calendar";
     private static final String KEY_PERIOD_TYPE = "period_type";
     private static final String KEY_TARGET_NAME = "target_name";
+    private static final String KEY_REASON_NAME = "reason_name";
+    private static final String KEY_MEMO = "memo";
+    private static final String KEY_IS_EXPENSE = "is_expense";
 
     private static final String TAG_EXPORT_SUBJECT_DIALOG_FRAGMENT = "export_subject_dialog_fragment";
 
@@ -64,6 +70,28 @@ public class DataExportActivity extends DefaultCommonActivity
         intent.putExtra(KEY_TARGET_NAME, targetName);
         intent.putExtra(KEY_TARGET_CALENDAR, targetCalendar);
         intent.putExtra(KEY_PERIOD_TYPE, periodType);
+
+        context.startActivity(intent);
+    }
+
+    public static void start(Context context, String targetName, Calendar targetCalendar,
+                             String reasonName, String memo,
+                             boolean isExpense, int periodType) {
+        Intent intent = new Intent(context, DataExportActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.putExtra(KEY_TARGET_NAME, targetName);
+        intent.putExtra(KEY_TARGET_CALENDAR, targetCalendar);
+        intent.putExtra(KEY_REASON_NAME, reasonName);
+        intent.putExtra(KEY_MEMO, memo);
+        intent.putExtra(KEY_IS_EXPENSE, isExpense);
+        intent.putExtra(KEY_PERIOD_TYPE, periodType);
+
+        context.startActivity(intent);
+    }
+
+    public static void start(Context context) {
+        Intent intent = new Intent(context, DataExportActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
         context.startActivity(intent);
     }
@@ -340,8 +368,8 @@ public class DataExportActivity extends DefaultCommonActivity
     }
 
 
+    // 出力実行
     private void exeExportData() {
-        // 2017/01/20 E.Nozaki
         String format = SharedPreferencesManager.getCurrentExportFormat(DataExportActivity.this);
         String characterCode = SharedPreferencesManager.getCurrentCharacterCode(DataExportActivity.this);
         DataExportManager manager = new DataExportManager(DataExportActivity.this, format, characterCode);
