@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.taxnoteandroid.Library.AsyncOkHttpClient;
+import com.example.taxnoteandroid.Library.BroadcastUtil;
 import com.example.taxnoteandroid.Library.DialogManager;
 import com.example.taxnoteandroid.Library.ValueConverter;
 import com.example.taxnoteandroid.Library.taxnote.TNApi;
@@ -44,6 +45,7 @@ public class HistoryTabFragment extends Fragment {
     private TNApiModel mApiModel;
 
     private ProjectDataManager mProjectManager;
+    private EntryDataManager mEntryManager;
 
     public HistoryTabFragment() {
         // Required empty public constructor
@@ -72,6 +74,7 @@ public class HistoryTabFragment extends Fragment {
         mContext = getActivity().getApplicationContext();
 
         mProjectManager = new ProjectDataManager(mContext);
+        mEntryManager = new EntryDataManager(mContext);
 
         mApiModel = new TNApiModel(mContext);
         if (!mApiModel.isCloudActive() || !mApiModel.isLoggingIn()) binding.refreshLayout.setEnabled(false);
@@ -156,19 +159,17 @@ public class HistoryTabFragment extends Fragment {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
 
-//                        List<Entry> dataList = mEntryAdapter.getItems();
-//                        for (Entry entry : dataList) {
-//                            if (entry.dateString == null) {
-//                                mEntryManager.updateSetDeleted(entry.uuid, mApiModel);
-//                            }
-//                        }
-//                        mEntryAdapter.clearAll();
-//                        mEntryAdapter.notifyDataSetChanged();
-//
-//                        mApiModel.saveAllNeedSaveSyncDeletedData(null);
-//
-//                        DialogManager.showToast(mContext, mContext.getString(R.string.delete_done));
-//                        BroadcastUtil.sendReloadReport(getActivity());
+                        List<Entry> dataList = mEntryManager.findAll(null, false);
+                        for (Entry entry : dataList) {
+                            mEntryManager.updateSetDeleted(entry.uuid, mApiModel);
+                        }
+                        mEntryAdapter.clearAll();
+                        mEntryAdapter.notifyDataSetChanged();
+
+                        mApiModel.saveAllNeedSaveSyncDeletedData(null);
+
+                        DialogManager.showToast(mContext, mContext.getString(R.string.delete_done));
+                        BroadcastUtil.sendReloadReport(getActivity());
 
                         dialogInterface.dismiss();
                     }
@@ -197,8 +198,7 @@ public class HistoryTabFragment extends Fragment {
         protected List<Entry> doInBackground(Integer... integers) {
             List<Entry> entryData = new ArrayList<>();
 
-            EntryDataManager entryDataManager   = new EntryDataManager(getContext());
-            List<Entry> entries                 = entryDataManager.findAll(null, false);
+            List<Entry> entries                 = mEntryManager.findAll(null, false);
 
             if (entries == null || entries.isEmpty() || entries.size() == 0) {
                 return entryData;
