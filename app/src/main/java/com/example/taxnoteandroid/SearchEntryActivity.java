@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.SearchView;
@@ -192,13 +191,20 @@ public class SearchEntryActivity extends DefaultCommonActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_search_entry, menu);
         MenuItem searchItem = menu.findItem(R.id.action_search);
-        mSearchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+        mSearchView = (SearchView)searchItem.getActionView();
+        ActionBar.LayoutParams params = new ActionBar.LayoutParams(
+                ActionBar.LayoutParams.MATCH_PARENT,
+                ActionBar.LayoutParams.MATCH_PARENT);
+        mSearchView.setLayoutParams(params);
+
         mSearchView.setIconifiedByDefault(true);
         mSearchView.setSubmitButtonEnabled(false);
         mSearchView.setOnQueryTextListener(onQueryText);
         mSearchView.setFocusable(true);
         mSearchView.setIconified(false);
         mSearchView.requestFocusFromTouch();
+
+        searchItem.expandActionView();
 
         return super.onCreateOptionsMenu(menu);
     }
@@ -210,6 +216,10 @@ public class SearchEntryActivity extends DefaultCommonActivity {
                 finish();
                 return true;
             case R.id.action_search:
+                break;
+            case R.id.action_export:
+                break;
+            case R.id.action_delete:
                 break;
         }
         return super.onOptionsItemSelected(item);
