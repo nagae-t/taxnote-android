@@ -1,11 +1,13 @@
 package com.example.taxnoteandroid;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.SearchView;
 import android.view.Menu;
@@ -13,7 +15,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
+import com.example.taxnoteandroid.Library.BroadcastUtil;
 import com.example.taxnoteandroid.Library.DialogManager;
+import com.example.taxnoteandroid.Library.taxnote.TNApiModel;
 import com.example.taxnoteandroid.dataManager.EntryDataManager;
 import com.example.taxnoteandroid.databinding.ActivityEntryCommonBinding;
 import com.example.taxnoteandroid.model.Entry;
@@ -38,6 +42,8 @@ public class SearchEntryActivity extends DefaultCommonActivity {
     private long mStartTime = 0;
     private long mEndTime = 0;
     private String mReasonName;
+
+    private TNApiModel mApiModel;
 
     private static final String KEY_IS_COMMON = "is_common";
     private static final String KEY_REASON_NAME = "reason_name";
@@ -127,6 +133,7 @@ public class SearchEntryActivity extends DefaultCommonActivity {
 
         mEntryManager = new EntryDataManager(this);
         mEntryAdapter = new CommonEntryRecyclerAdapter(this);
+        mApiModel = new TNApiModel(this);
 
         Intent intent = getIntent();
         mIsCommon = intent.getBooleanExtra(KEY_IS_COMMON, false);
@@ -220,6 +227,7 @@ public class SearchEntryActivity extends DefaultCommonActivity {
             case R.id.action_export:
                 break;
             case R.id.action_delete:
+//                showAllDeleteDialog();
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -229,6 +237,41 @@ public class SearchEntryActivity extends DefaultCommonActivity {
         if (view == null) return;
         InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    }
+
+    private void showAllDeleteDialog() {
+        final Context context = getApplicationContext();
+        String searchTitle = getString(R.string.search)+":"+mSearchWord;
+
+        String deleteBtnTitle = getString(R.string.delete_current_something, searchTitle);
+        // Confirm dialog
+        new AlertDialog.Builder(this)
+                .setTitle(null)
+                .setMessage(getString(R.string.delete_this_screen_data_confirm_message))
+                .setPositiveButton(deleteBtnTitle, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                        List<Entry> dataList = mEntryAdapter.getItems();
+                        for (Entry entry : dataList) {
+                            if (entry.dateString == null) {
+                                mEntryManager.updateSetDeleted(entry.uuid, mApiModel);
+                            }
+                        }
+                        mEntryAdapter.clearAll();
+                        mEntryAdapter.notifyDataSetChanged();
+
+                        mApiModel.saveAllNeedSaveSyncDeletedData(null);
+
+                        DialogManager.showToast(context, context.getString(R.string.delete_done));
+                        BroadcastUtil.sendReloadReport(SearchEntryActivity.this);
+                        finish();
+
+                        dialogInterface.dismiss();
+                    }
+                })
+                .setNegativeButton(getString(R.string.cancel), null)
+                .show();
     }
 
     /**
