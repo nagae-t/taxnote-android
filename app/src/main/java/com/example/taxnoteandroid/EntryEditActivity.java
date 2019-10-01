@@ -38,6 +38,7 @@ public class EntryEditActivity extends DefaultCommonActivity {
     private EntryDataManager entryDataManager;
 
     private boolean mIsCopy;
+    private boolean mIsCopySaved = false;
     private static final int REQUEST_CODE_COPY = 1;
 
     private static final String KEY_IS_COPY = "is_copy";
@@ -138,6 +139,24 @@ public class EntryEditActivity extends DefaultCommonActivity {
         setMemoView();
         setPriceView();
         setDeleteView();
+
+        // コピー用画面ならUIを調整
+        if (mIsCopy) {
+            binding.delete.setVisibility(View.GONE);
+            binding.enterEntry.setVisibility(View.VISIBLE);
+            binding.enterEntry.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    DialogManager.showToast(EntryEditActivity.this, "test");
+                }
+            });
+            binding.date.setBackground(getDrawable(R.drawable.selector_bg_copy_colors));
+            binding.account.setBackground(getDrawable(R.drawable.selector_bg_copy_colors));
+            binding.reason.setBackground(getDrawable(R.drawable.selector_bg_copy_colors));
+            binding.memo.setBackground(getDrawable(R.drawable.selector_bg_copy_colors));
+            binding.reason.setBackground(getDrawable(R.drawable.selector_bg_copy_colors));
+            binding.price.setBackground(getDrawable(R.drawable.selector_bg_copy_colors));
+        }
     }
 
     private void loadData() {

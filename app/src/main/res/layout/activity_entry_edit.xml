@@ -103,5 +103,16 @@
             android:textColor="@color/expense"
             android:background="@null"
             android:text="@string/Delete" />
+
+        <Button
+            android:id="@+id/enter_entry"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:visibility="gone"
+            android:textSize = "@dimen/font_size_standard"
+            android:textColor="@color/primary"
+            android:background="@drawable/selector_background_colors"
+            android:text="@string/enter_entry" />
     </LinearLayout>
 </layout>
