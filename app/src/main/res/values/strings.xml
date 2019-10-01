@@ -339,6 +339,8 @@
         <item>Last Day of Month</item>
     </string-array>
 
+    <string name="switch_to_copy">Switch to Copy</string>
+
     <string name="profit_loss_export">Export Overview</string>
     <string name="send_export">Export Data</string>
     <string name="character_code_desc">Change the Character Code if you have character issues.</string>
