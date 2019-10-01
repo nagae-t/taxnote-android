@@ -112,7 +112,7 @@
             android:visibility="gone"
             android:textSize = "@dimen/font_size_standard"
             android:textColor="@color/primary"
-            android:background="@drawable/selector_background_colors"
+            android:background="@drawable/selector_bg_copy_colors"
             android:text="@string/enter_entry" />
     </LinearLayout>
 </layout>
