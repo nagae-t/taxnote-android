@@ -65,6 +65,12 @@ public class DataExportManager implements TaxnoteConsts {
     private long[] startEndDate;
     private List<Entry> reportData;
     private boolean isSubjectEnable = false;
+    private boolean isFromList = false;
+
+    private String mReasonName;
+    private String mMemo;
+    private boolean mIsExpense;
+    private boolean mIsBalance;
 
     public DataExportManager(Activity activity) {
         this.mActivity = activity;
@@ -90,6 +96,30 @@ public class DataExportManager implements TaxnoteConsts {
         this.reportData = data;
         this.setMode(EXPORT_PROFIT_LOSS_FORMAT_TYPE_CSV);
         this.setCharacterCode(charCode);
+    }
+
+    public void setFromList(boolean val) {
+        this.isFromList = val;
+    }
+
+    public void setPeriod(long[] _startEndDate) {
+        this.startEndDate = _startEndDate;
+    }
+
+    public void setReasonName(String name) {
+        this.mReasonName = name;
+    }
+
+    public void setMemo(String memo) {
+        this.mMemo = memo;
+    }
+
+    public void setExpense(boolean val) {
+        this.mIsExpense = val;
+    }
+
+    public void setBalance(boolean val) {
+        this.mIsBalance = val;
     }
 
     private static long[] getThisMonthStartAndEndDate() {
@@ -587,13 +617,42 @@ public class DataExportManager implements TaxnoteConsts {
     }
 
     private List<Entry> getSelectedRangeEntries() {
+        // debug
+//        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
+//                mActivity.getString(R.string.date_string_format_to_year_month_day),
+//                Locale.getDefault());
+//        String startCalStr = simpleDateFormat.format(startEndDate[0]);
+//        String endCalStr = simpleDateFormat.format(startEndDate[1]);
+//        Log.d("DEBUG",startCalStr+"~"+endCalStr+" | reason:"+mReasonName+" | memo:"+mMemo+" | isExpense:"+mIsExpense);
 
         List<Entry> entries;
         long[] startEnd;
         EntryDataManager entryDataManager = new EntryDataManager(context);
 
-        String exportRangeType = SharedPreferencesManager.getExportRangeType(context);
+        // 損益表か他の絞り込みで仕訳帳一覧から遷移して出力へ来た場合
+        if (isFromList) {
+            entries = new ArrayList<>();
+            if (mIsBalance) {
+                entries = entryDataManager.findAll(startEndDate, true);
+            } else {
+                List<Entry> _entries = (mMemo == null)
+                        ? entryDataManager.findAll(startEndDate, mIsExpense, true)
+                        : entryDataManager.findAll(startEndDate, mMemo, mIsExpense, true);
+                if (mReasonName != null) {
+                    for (Entry _entry : _entries) {
+                        if (_entry.reason.name.equals(mReasonName)) {
+                            entries.add(_entry);
+                        }
+                    }
+                } else {
+                    entries.addAll(_entries);
+                }
+            }
 
+            return entries;
+        }
+
+        String exportRangeType = SharedPreferencesManager.getExportRangeType(context);
         switch (exportRangeType) {
 
             case EXPORT_RANGE_TYPE_ALL:

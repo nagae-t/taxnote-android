@@ -20,6 +20,7 @@ import com.example.taxnoteandroid.Library.DialogManager;
 import com.example.taxnoteandroid.Library.EntryLimitManager;
 import com.example.taxnoteandroid.Library.ValueConverter;
 import com.example.taxnoteandroid.Library.taxnote.TNApiModel;
+import com.example.taxnoteandroid.Library.taxnote.TNUtils;
 import com.example.taxnoteandroid.dataManager.EntryDataManager;
 import com.example.taxnoteandroid.dataManager.SharedPreferencesManager;
 import com.example.taxnoteandroid.databinding.ActivityEntryCommonBinding;
@@ -51,6 +52,7 @@ public class HistoryListDataActivity extends DefaultCommonActivity {
     private String mReasonName = null;
     private String mMemoValue = null;
     private boolean mIsViewTotal = false;
+    private String mPageTitleAndSub;
 
     private TNApiModel mApiModel;
 
@@ -160,7 +162,7 @@ public class HistoryListDataActivity extends DefaultCommonActivity {
 
         String pageTitle = (mTargetCalendar == null)
                 ? getString(R.string.divide_by_all)
-                : getCalendarStringFromPeriodType(mTargetCalendar);
+                : TNUtils.getCalendarStringFromPeriodType(this, mTargetCalendar, mPeriodType);
         String pageSubTitle = mReasonName;
         if (mReasonName == null) {
             pageSubTitle = (mIsExpense) ? getString(R.string.Expense) : getString(R.string.Income);
@@ -169,6 +171,7 @@ public class HistoryListDataActivity extends DefaultCommonActivity {
             pageSubTitle = getString(R.string.History);
         }
 
+        mPageTitleAndSub = pageTitle+" "+pageSubTitle;
         ActionBar actionBar = getSupportActionBar();
         actionBar.setTitle(pageTitle);
         actionBar.setSubtitle(pageSubTitle);
@@ -189,17 +192,6 @@ public class HistoryListDataActivity extends DefaultCommonActivity {
         super.onResume();
     }
 
-    private String getCalendarStringFromPeriodType(Calendar c) {
-        final boolean isPeriodMonth = (mPeriodType == EntryDataManager.PERIOD_TYPE_MONTH);
-        String dateFormatString = (isPeriodMonth)
-                ? getString(R.string.date_string_format_to_year_month)
-                : getString(R.string.date_string_format_to_year_month_day);
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
-                dateFormatString, Locale.getDefault());
-        String calStr = simpleDateFormat.format(c.getTime());
-        return calStr;
-    }
-
     private void loadEntryData(long[] startAndEndDate, boolean isBalance, boolean isExpense) {
         // Load by multi task.
         new HistoryDataTask(isBalance, isExpense)
@@ -210,6 +202,18 @@ public class HistoryListDataActivity extends DefaultCommonActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_history_list_data, menu);
         return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        MenuItem exportMenu = menu.findItem(R.id.action_export);
+        MenuItem delMenu = menu.findItem(R.id.action_delete);
+        String exportTitle = getString(R.string.export_current_something, mPageTitleAndSub);
+        String delTitle = getString(R.string.delete_current_something, mPageTitleAndSub);
+        exportMenu.setTitle(exportTitle);
+        delMenu.setTitle(delTitle);
+
+        return super.onPrepareOptionsMenu(menu);
     }
 
     @Override
@@ -226,6 +230,16 @@ public class HistoryListDataActivity extends DefaultCommonActivity {
                             this, mStartEndDate, mReasonName, mIsExpense);
                 }
                 break;
+            case R.id.action_export:
+                if (mIsBalance) {
+                    DataExportActivity.startForBalance(this,
+                            mPageTitleAndSub, mTargetCalendar, mPeriodType);
+                } else {
+                    DataExportActivity.start(this,
+                            mPageTitleAndSub, mTargetCalendar,
+                            mReasonName, mMemoValue, mIsExpense, mPeriodType);
+                }
+                break;
             case R.id.action_delete:
                 showAllDeleteDialog();
                 break;
@@ -236,11 +250,12 @@ public class HistoryListDataActivity extends DefaultCommonActivity {
     private void showAllDeleteDialog() {
         final Context context = getApplicationContext();
 
+        String deleteBtnTitle = getString(R.string.delete_current_something, mPageTitleAndSub);
         // Confirm dialog
         new AlertDialog.Builder(this)
                 .setTitle(null)
                 .setMessage(getString(R.string.delete_this_screen_data_confirm_message))
-                .setPositiveButton(getString(R.string.Delete), new DialogInterface.OnClickListener() {
+                .setPositiveButton(deleteBtnTitle, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
 
@@ -252,8 +267,6 @@ public class HistoryListDataActivity extends DefaultCommonActivity {
                         }
                         mEntryAdapter.clearAll();
                         mEntryAdapter.notifyDataSetChanged();
-
-                        BroadcastUtil.sendReloadReport(HistoryListDataActivity.this);
 
                         mApiModel.saveAllNeedSaveSyncDeletedData(null);
 

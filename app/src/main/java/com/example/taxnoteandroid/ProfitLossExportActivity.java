@@ -14,6 +14,7 @@ import android.view.View;
 import com.example.taxnoteandroid.Library.DataExportManager;
 import com.example.taxnoteandroid.Library.DialogManager;
 import com.example.taxnoteandroid.Library.EntryLimitManager;
+import com.example.taxnoteandroid.Library.taxnote.TNUtils;
 import com.example.taxnoteandroid.Library.zeny.ZNUtils;
 import com.example.taxnoteandroid.dataManager.EntryDataManager;
 import com.example.taxnoteandroid.dataManager.SharedPreferencesManager;
@@ -39,6 +40,7 @@ public class ProfitLossExportActivity extends DefaultCommonActivity {
     private ActivityProfitLossExportBinding binding;
     private String mDefaultCharCode;
     private long[] mStartEndDate;
+    private int mPeriodType;
 
     private static final String KEY_TARGET_START_END_DATE = "target_start_end_date";
 
@@ -56,8 +58,17 @@ public class ProfitLossExportActivity extends DefaultCommonActivity {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_profit_loss_export);
         mDefaultCharCode = SharedPreferencesManager.getCurrentCharacterCode(this);
         mStartEndDate = getIntent().getLongArrayExtra(KEY_TARGET_START_END_DATE);
+        mPeriodType = SharedPreferencesManager.getProfitLossReportPeriodType(this);
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.clear();
+        calendar.setTimeInMillis(mStartEndDate[0]);
+        String subTitle = (mPeriodType == EntryDataManager.PERIOD_TYPE_ALL)
+                ? getString(R.string.divide_by_all)
+                : TNUtils.getCalendarStringFromPeriodType(this, calendar, mPeriodType);
 
         ActionBar actionBar = getSupportActionBar();
+        actionBar.setSubtitle(subTitle);
         actionBar.setDisplayHomeAsUpEnabled(true);
 
         // 文字コード

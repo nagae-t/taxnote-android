@@ -1,6 +1,10 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
-
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbarStyle="insideOverlay"
+        android:fadingEdge="none">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -56,36 +60,6 @@
         <android.support.v4.widget.Space
             android:layout_width="match_parent"
             android:layout_height="1dp" />
-        <LinearLayout
-            android:id="@+id/data_export_range_button"
-            android:background="@drawable/selector_background_colors"
-            style="@style/font_style_standard"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:minHeight="48dp"
-            android:paddingEnd="16dp"
-            android:paddingStart="16dp">
-
-            <TextView
-                style="@style/font_style_standard"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/data_export_range" />
-
-            <TextView
-                style="@style/font_style_standard"
-                android:id="@+id/data_export_range_button_right"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/divider"
-                android:text="@string/data_export_all_range" />
-        </LinearLayout>
-
-        <android.support.v4.widget.Space
-            android:layout_width="match_parent"
-            android:layout_height="1dp" />
 
         <LinearLayout
             android:background="@drawable/selector_background_colors"
@@ -112,6 +86,36 @@
                 android:layout_height="wrap_content"
                 android:textColor="@color/divider"
                 tools:text="UTF8" />
+        </LinearLayout>
+        <android.support.v4.widget.Space
+            android:layout_width="match_parent"
+            android:layout_height="1dp" />
+
+        <LinearLayout
+            android:id="@+id/data_export_range_button"
+            android:background="@drawable/selector_background_colors"
+            style="@style/font_style_standard"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:minHeight="48dp"
+            android:paddingEnd="16dp"
+            android:paddingStart="16dp">
+
+            <TextView
+                style="@style/font_style_standard"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/data_export_range" />
+
+            <TextView
+                style="@style/font_style_standard"
+                android:id="@+id/data_export_range_button_right"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/divider"
+                android:text="@string/data_export_all_range" />
         </LinearLayout>
 
         <!--Select Range-->
@@ -195,4 +199,5 @@
             android:text="@string/frequently_asked_questions" />
 
     </LinearLayout>
+    </ScrollView>
 </layout>

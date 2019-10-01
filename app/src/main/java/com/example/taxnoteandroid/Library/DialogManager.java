@@ -18,6 +18,7 @@ import com.example.taxnoteandroid.R;
 import com.example.taxnoteandroid.TNSimpleDialogFragment;
 import com.example.taxnoteandroid.UpgradeActivity;
 import com.example.taxnoteandroid.dataManager.EntryDataManager;
+import com.example.taxnoteandroid.dataManager.ProjectDataManager;
 import com.example.taxnoteandroid.dataManager.SharedPreferencesManager;
 import com.example.taxnoteandroid.model.Account;
 import com.example.taxnoteandroid.model.Entry;
@@ -380,8 +381,9 @@ public class DialogManager {
             @Override
             public void onPositiveBtnClick(DialogInterface dialogInterface, int i, String tag) {
 
-                Intent intent = new Intent(context, DataExportActivity.class);
-                context.startActivity(intent);
+                DataExportActivity.start(context,
+                        ProjectDataManager.getCurrentName(context), null,
+                        EntryDataManager.PERIOD_TYPE_ALL);
                 dialogInterface.dismiss();
             }
 
