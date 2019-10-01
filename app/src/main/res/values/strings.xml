@@ -340,6 +340,8 @@
     </string-array>
 
     <string name="switch_to_copy">Switch to Copy</string>
+    <string name="copy_expense">Copy Expense</string>
+    <string name="copy_income">Copy Income</string>
 
     <string name="profit_loss_export">Export Overview</string>
     <string name="send_export">Export Data</string>

@@ -338,6 +338,8 @@
     </string-array>
 
     <string name="switch_to_copy">コピーに切替</string>
+    <string name="copy_expense">支出のコピー</string>
+    <string name="copy_income">収入のコピー</string>
 
     <string name="profit_loss_export">損益表の出力</string>
     <string name="send_export">データを送信</string>

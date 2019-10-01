@@ -37,9 +37,19 @@ public class EntryEditActivity extends DefaultCommonActivity {
     private TNApiModel mApiModel;
     private EntryDataManager entryDataManager;
 
+    private boolean mIsCopy;
+    private static final int REQUEST_CODE_COPY = 1;
+
+    private static final String KEY_IS_COPY = "is_copy";
+
     public static void start(Context context, Entry entry) {
+        start(context, entry, false);
+    }
+
+    public static void start(Context context, Entry entry, boolean isCopy) {
         Intent intent = new Intent(context, EntryEditActivity.class);
         intent.putExtra(Entry.class.getName(), Parcels.wrap(entry));
+        intent.putExtra(KEY_IS_COPY, isCopy);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(intent);
     }
@@ -59,6 +69,10 @@ public class EntryEditActivity extends DefaultCommonActivity {
 
         int titleRes = (entry.isExpense) ? R.string.edit_entry_expense
                 : R.string.edit_entry_income;
+        if (mIsCopy) {
+            titleRes = (entry.isExpense) ? R.string.copy_expense
+                    : R.string.copy_income;
+        }
         setTitle(titleRes);
     }
 
@@ -71,6 +85,9 @@ public class EntryEditActivity extends DefaultCommonActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_entry_edit, menu);
+        if (mIsCopy)
+            menu.getItem(0).setVisible(false);
+
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -81,6 +98,7 @@ public class EntryEditActivity extends DefaultCommonActivity {
                 finish();
                 return true;
             case R.id.action_copy:
+                start(this, entry, true);
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -103,6 +121,8 @@ public class EntryEditActivity extends DefaultCommonActivity {
         Intent intent = getIntent();
         entry = Parcels.unwrap(intent.getParcelableExtra(Entry.class.getName()));
         entryUuid = entry.uuid;
+
+        mIsCopy = intent.getBooleanExtra(KEY_IS_COPY, false);
     }
 
 
@@ -349,5 +369,19 @@ public class EntryEditActivity extends DefaultCommonActivity {
                 })
                 .setNegativeButton(getResources().getString(R.string.cancel), null)
                 .show();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            // コピー完了後
+            case(REQUEST_CODE_COPY):
+                if(resultCode == RESULT_OK){
+                    finish();
+                }
+                break;
+            default:
+                break;
+        }
     }
 }
