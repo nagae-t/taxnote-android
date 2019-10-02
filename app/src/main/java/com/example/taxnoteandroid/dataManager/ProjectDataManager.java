@@ -22,7 +22,6 @@ public class ProjectDataManager {
     public ProjectDataManager(Context context) {
         this.mContext = context;
         this.ormaDatabase = TaxnoteApp.getOrmaDatabase();
-        ormaDatabase.selectFromProject().count();
     }
 
     public int allSize() {
@@ -53,6 +52,19 @@ public class ProjectDataManager {
         String currentProjectUuid   = SharedPreferencesManager.getUuidForCurrentProject(mContext);
         Project project             = findByUuid(currentProjectUuid);
         return project;
+    }
+
+    public String getCurrentName() {
+        String pName = findCurrent().name;
+        if (pName.equals("master")) {
+            pName = mContext.getString(R.string.master_project_name);
+        }
+        return pName;
+    }
+
+    public static String getCurrentName(Context context) {
+        ProjectDataManager pjm = new ProjectDataManager(context);
+        return pjm.getCurrentName();
     }
 
     public Project findByUuid(String uuid) {

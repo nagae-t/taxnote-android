@@ -224,10 +224,6 @@ public class ReportContentFragment extends Fragment {
             Entry topBalance = new Entry();
             topBalance.price = balancePrice;
 
-//            Entry topCarriedBalance = new Entry();
-//            if (startEndDate.length != 0 && isShowBalanceCarryForward) {
-//                topBalance.price = mEntryManager.findSumBalance(startEndDate[1]);
-//            }
             // このデータはAdapterで表示しないのでのちに削除
             resultEntries.add(topBalance);
 

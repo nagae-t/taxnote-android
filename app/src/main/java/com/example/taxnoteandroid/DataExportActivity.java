@@ -21,9 +21,13 @@ import android.widget.RadioGroup;
 import com.example.taxnoteandroid.Library.AppPermission;
 import com.example.taxnoteandroid.Library.DataExportManager;
 import com.example.taxnoteandroid.Library.DialogManager;
+import com.example.taxnoteandroid.Library.EntryLimitManager;
 import com.example.taxnoteandroid.dataManager.SharedPreferencesManager;
 import com.example.taxnoteandroid.databinding.ActivityDataExportBinding;
 import com.helpshift.support.Support;
+
+import java.io.Serializable;
+import java.util.Calendar;
 
 import static com.example.taxnoteandroid.TaxnoteConsts.EXPORT_CHARACTER_CODE_SHIFTJIS;
 import static com.example.taxnoteandroid.TaxnoteConsts.EXPORT_CHARACTER_CODE_UTF8;
@@ -42,14 +46,85 @@ public class DataExportActivity extends DefaultCommonActivity
 
     private ActivityDataExportBinding binding;
 
+    private String mTargetName;
+    private Calendar mTargetCalendar;
+    private long[] mStartEndDate;
+    private int mPeriodType;
+
+    private String mReasonName = null;
+    private String mMemoValue = null;
+    private boolean mIsBalance;
+    private boolean mIsExpense;
+
+    private static final String KEY_TARGET_CALENDAR = "target_calendar";
+    private static final String KEY_PERIOD_TYPE = "period_type";
+    private static final String KEY_TARGET_NAME = "target_name";
+    private static final String KEY_REASON_NAME = "reason_name";
+    private static final String KEY_MEMO = "memo";
+    private static final String KEY_IS_BALANCE = "is_balance";
+    private static final String KEY_IS_EXPENSE = "is_expense";
+
     private static final String TAG_EXPORT_SUBJECT_DIALOG_FRAGMENT = "export_subject_dialog_fragment";
+
+    public static void start(Context context, String targetName,
+                             Calendar targetCalendar, int periodType) {
+        Intent intent = new Intent(context, DataExportActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.putExtra(KEY_TARGET_NAME, targetName);
+        intent.putExtra(KEY_TARGET_CALENDAR, targetCalendar);
+        intent.putExtra(KEY_PERIOD_TYPE, periodType);
+
+        context.startActivity(intent);
+    }
+
+    public static void start(Context context, String targetName, Calendar targetCalendar,
+                             String reasonName, String memo,
+                             boolean isExpense, int periodType) {
+        Intent intent = new Intent(context, DataExportActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.putExtra(KEY_TARGET_NAME, targetName);
+        intent.putExtra(KEY_TARGET_CALENDAR, targetCalendar);
+        intent.putExtra(KEY_REASON_NAME, reasonName);
+        intent.putExtra(KEY_MEMO, memo);
+        intent.putExtra(KEY_IS_EXPENSE, isExpense);
+        intent.putExtra(KEY_PERIOD_TYPE, periodType);
+
+        context.startActivity(intent);
+    }
+
+    public static void startForBalance(Context context, String targetName,
+                                       Calendar targetCalendar, int periodType) {
+        Intent intent = new Intent(context, DataExportActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.putExtra(KEY_TARGET_NAME, targetName);
+        intent.putExtra(KEY_TARGET_CALENDAR, targetCalendar);
+        intent.putExtra(KEY_IS_BALANCE, true);
+        intent.putExtra(KEY_PERIOD_TYPE, periodType);
+        context.startActivity(intent);
+    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_data_export);
 
+        Intent receiptIntent = getIntent();
+        mTargetName = receiptIntent.getStringExtra(KEY_TARGET_NAME);
+        mPeriodType = receiptIntent.getIntExtra(KEY_PERIOD_TYPE, 0);
+        Serializable calSerial = receiptIntent.getSerializableExtra(KEY_TARGET_CALENDAR);
+        mStartEndDate = new long[]{};
+        if (calSerial != null) {
+            mTargetCalendar = (Calendar)calSerial;
+            mStartEndDate = EntryLimitManager.getStartAndEndDate(this, mPeriodType, mTargetCalendar);
+        }
+        mReasonName = receiptIntent.getStringExtra(KEY_REASON_NAME);
+        mMemoValue = receiptIntent.getStringExtra(KEY_MEMO);
+        mIsExpense = receiptIntent.getBooleanExtra(KEY_IS_EXPENSE, false);
+        mIsBalance = receiptIntent.getBooleanExtra(KEY_IS_BALANCE, false);
+
         ActionBar actionBar = getSupportActionBar();
+        actionBar.setSubtitle(mTargetName);
         actionBar.setDisplayHomeAsUpEnabled(true);
 
         setViews();
@@ -166,6 +241,10 @@ public class DataExportActivity extends DefaultCommonActivity
     //--------------------------------------------------------------//
 
     private void setExportRangeView() {
+        if (mTargetCalendar != null) {
+            binding.dataExportRangeButton.setVisibility(View.GONE);
+            return;
+        }
 
         String exportRange = SharedPreferencesManager.getExportRangeType(DataExportActivity.this);
 
@@ -305,11 +384,25 @@ public class DataExportActivity extends DefaultCommonActivity
     }
 
 
+    // 出力実行
     private void exeExportData() {
-        // 2017/01/20 E.Nozaki
         String format = SharedPreferencesManager.getCurrentExportFormat(DataExportActivity.this);
         String characterCode = SharedPreferencesManager.getCurrentCharacterCode(DataExportActivity.this);
         DataExportManager manager = new DataExportManager(DataExportActivity.this, format, characterCode);
+        manager.setPeriod(mStartEndDate);
+        if (mTargetCalendar != null) {
+            manager.setPeriod(mStartEndDate);
+            manager.setFromList(true);
+            manager.setExpense(mIsExpense);
+        }
+        if (mReasonName != null) {
+            manager.setReasonName(mReasonName);
+        }
+        if (mMemoValue != null) {
+            manager.setMemo(mMemoValue);
+        }
+        if (mIsBalance) manager.setBalance(true);
+
         manager.export(); // Generate CSV file and send it by email.
     }
 

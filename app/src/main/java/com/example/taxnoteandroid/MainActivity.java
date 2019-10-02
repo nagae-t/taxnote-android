@@ -36,6 +36,7 @@ import com.example.taxnoteandroid.Library.taxnote.TNApiUser;
 import com.example.taxnoteandroid.Library.zeny.ZNUtils;
 import com.example.taxnoteandroid.dataManager.DefaultDataInstaller;
 import com.example.taxnoteandroid.dataManager.EntryDataManager;
+import com.example.taxnoteandroid.dataManager.ProjectDataManager;
 import com.example.taxnoteandroid.dataManager.SharedPreferencesManager;
 import com.example.taxnoteandroid.databinding.ActivityMainBinding;
 import com.example.taxnoteandroid.entryTab.EntryTabFragment;
@@ -57,6 +58,7 @@ public class MainActivity extends DefaultCommonActivity
     private TabPagerAdapter mTabPagerAdapter;
     private int mBottomNaviSelected = 0;
     private boolean mGraphMenuIsExpense = true;
+    private ProjectDataManager mProjectManager;
 
     private IabHelper mBillingHelper;
     private TNGoogleApiClient tnGoogleApi;
@@ -195,6 +197,7 @@ public class MainActivity extends DefaultCommonActivity
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
         mGraphMenuIsExpense = SharedPreferencesManager.getGraphReportIsExpenseType(this);
+        mProjectManager = new ProjectDataManager(this);
         setBottomNavigation();
 
         TNAppNotification.cancel(this, TNAppNotification.DAILY_ALERT_INPUT_FORGET_ID);
@@ -255,8 +258,16 @@ public class MainActivity extends DefaultCommonActivity
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         MenuItem helpMenu = menu.findItem(R.id.help_in_settings_tab);
-        MenuItem exportMenu = menu.findItem(R.id.data_export);
+
         MenuItem searchMenu = menu.findItem(R.id.action_search);
+        MenuItem exportMenu = menu.findItem(R.id.data_export);
+        MenuItem delMenu = menu.findItem(R.id.data_delete);
+        String projectName = mProjectManager.getCurrentName();
+        String exportTitle = getString(R.string.export_current_something, projectName);
+        String delTitle = getString(R.string.delete_current_something, projectName);
+        exportMenu.setTitle(exportTitle);
+        delMenu.setTitle(delTitle);
+
         MenuItem periodDivMenu = menu.findItem(R.id.action_period_div);
         MenuItem profitLossSettingsMenu = menu.findItem(R.id.action_profit_loss_settings);
         MenuItem profitLossExportMenu = menu.findItem(R.id.action_profit_loss_export);
@@ -264,6 +275,7 @@ public class MainActivity extends DefaultCommonActivity
 
         helpMenu.setVisible(false);
         exportMenu.setVisible(false);
+        delMenu.setVisible(false);
         searchMenu.setVisible(false);
         periodDivMenu.setVisible(false);
         profitLossSettingsMenu.setVisible(false);
@@ -275,8 +287,9 @@ public class MainActivity extends DefaultCommonActivity
             case 0: // 入力
                 break;
             case 1: // 仕訳帳
-                exportMenu.setVisible(true);
                 searchMenu.setVisible(true);
+                exportMenu.setVisible(true);
+                delMenu.setVisible(true);
                 break;
             case 2: // 損益表
                 periodDivMenu.setVisible(true);
@@ -311,12 +324,20 @@ public class MainActivity extends DefaultCommonActivity
                 break;
 
             case R.id.data_export:
-                Intent intent = new Intent(this, DataExportActivity.class);
-                startActivity(intent);
+                DataExportActivity.start(this,
+                        mProjectManager.getCurrentName(), null,
+                        EntryDataManager.PERIOD_TYPE_ALL);
                 break;
 
             case R.id.action_search:
                 SearchEntryActivity.start(this);
+                break;
+
+            case R.id.data_delete:
+                HistoryTabFragment historyTabFragment = (HistoryTabFragment) mTabPagerAdapter
+                        .instantiateItem(binding.pager, 1);
+                if (historyTabFragment != null)
+                    historyTabFragment.showAllDeleteDialog();
                 break;
 
             // 損益表のメニューオプションが選択されたとき
