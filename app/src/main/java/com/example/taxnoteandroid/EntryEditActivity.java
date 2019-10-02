@@ -12,7 +12,6 @@ import android.text.TextUtils;
 import android.text.format.DateUtils;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
@@ -94,14 +93,14 @@ public class EntryEditActivity extends DefaultCommonActivity {
         loadData();
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_entry_edit, menu);
-        if (mIsCopy)
-            menu.getItem(0).setVisible(false);
-
-        return super.onCreateOptionsMenu(menu);
-    }
+//    @Override
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//        getMenuInflater().inflate(R.menu.menu_entry_edit, menu);
+//        if (mIsCopy)
+//            menu.getItem(0).setVisible(false);
+//
+//        return super.onCreateOptionsMenu(menu);
+//    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -109,12 +108,12 @@ public class EntryEditActivity extends DefaultCommonActivity {
             case android.R.id.home:
                 onCopyFinish();
                 return true;
-            case R.id.action_copy:
-                Intent intent = new Intent(this, EntryEditActivity.class);
-                intent.putExtra(Entry.class.getName(), Parcels.wrap(entry));
-                intent.putExtra(KEY_IS_COPY, true);
-                startActivityForResult(intent, REQUEST_CODE_COPY);
-                break;
+//            case R.id.action_copy:
+//                Intent intent = new Intent(this, EntryEditActivity.class);
+//                intent.putExtra(Entry.class.getName(), Parcels.wrap(entry));
+//                intent.putExtra(KEY_IS_COPY, true);
+//                startActivityForResult(intent, REQUEST_CODE_COPY);
+//                break;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -435,6 +434,16 @@ public class EntryEditActivity extends DefaultCommonActivity {
             @Override
             public void onClick(View view) {
                 showDeleteDialog();
+            }
+        });
+
+        binding.copy.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(EntryEditActivity.this, EntryEditActivity.class);
+                intent.putExtra(Entry.class.getName(), Parcels.wrap(entry));
+                intent.putExtra(KEY_IS_COPY, true);
+                startActivityForResult(intent, REQUEST_CODE_COPY);
             }
         });
     }

@@ -341,7 +341,7 @@
         <item>Last Day of Month</item>
     </string-array>
 
-    <string name="switch_to_copy">Switch to Copy</string>
+    <string name="switch_to_copy">Copy</string>
     <string name="copy_expense">Copy Expense</string>
     <string name="copy_income">Copy Income</string>
     <string name="enter_entry">Register</string>

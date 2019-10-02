@@ -94,15 +94,32 @@
             android:layout_height="wrap_content"
             android:layout_weight="1" />
 
-        <Button
-            android:id="@+id/delete"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:orientation="horizontal"
             android:layout_weight="1"
-            android:textSize = "@dimen/font_size_standard"
-            android:textColor="@color/expense"
-            android:background="@null"
-            android:text="@string/Delete" />
+            android:divider="?android:attr/dividerHorizontal"
+            android:showDividers="beginning">
+            <Button
+                android:id="@+id/delete"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:textSize = "@dimen/font_size_standard"
+                android:textColor="@color/expense"
+                android:background="@null"
+                android:text="@string/Delete" />
+            <Button
+                android:id="@+id/copy"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:textSize = "@dimen/font_size_standard"
+                android:textColor="@color/primary"
+                android:background="@null"
+                android:text="@string/switch_to_copy" />
+        </LinearLayout>
 
         <Button
             android:id="@+id/enter_entry"

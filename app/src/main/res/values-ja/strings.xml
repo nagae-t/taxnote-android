@@ -339,7 +339,7 @@
         <item>月末</item>
     </string-array>
 
-    <string name="switch_to_copy">コピーに切替</string>
+    <string name="switch_to_copy">コピー</string>
     <string name="copy_expense">支出のコピー</string>
     <string name="copy_income">収入のコピー</string>
     <string name="enter_entry">仕訳帳に記録</string>
