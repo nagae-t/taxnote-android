@@ -155,7 +155,7 @@ public class EntryEditActivity extends DefaultCommonActivity {
 
         // コピー用画面ならUIを調整
         if (mIsCopy) {
-            binding.delete.setVisibility(View.GONE);
+            binding.bottomCtrlLayout.setVisibility(View.GONE);
             binding.enterEntry.setVisibility(View.VISIBLE);
             binding.enterEntry.setOnClickListener(new View.OnClickListener() {
                 @Override
