@@ -48,6 +48,15 @@ public class ProfitLossSettingsActivity extends DefaultCommonActivity {
             }
         });
 
+        boolean fixOrderVal = SharedPreferencesManager.getFixedCateOrder(this);
+        binding.fixedCateOrder.setChecked(fixOrderVal);
+        binding.fixedCateOrder.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+                SharedPreferencesManager.saveFixedCateOrder(getApplicationContext(), isChecked);
+            }
+        });
+
         // Monthly closing date
         final String[] dateList = getResources().getStringArray(R.array.close_date_list);
         int dateIndex = SharedPreferencesManager.getMonthlyClosingDateIndex(this);

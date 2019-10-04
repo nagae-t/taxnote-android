@@ -113,6 +113,8 @@
     <string name="taxnote_cloud_show_price">$4.99 / month</string>
     <string name="taxnote_plus_show_price_tail"> / year</string>
     <string name="taxnote_cloud_show_price_tail"> / month</string>
+    <string name="fixed_cate_order">Fix Category Order</string>
+    <string name="fixed_cate_order_message">This option makes the ordering the same as your category order in the Input.</string>
 
     //--------------------------------------------------------------//
     // -- Data Export --

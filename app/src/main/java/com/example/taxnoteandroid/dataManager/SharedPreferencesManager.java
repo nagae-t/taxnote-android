@@ -39,6 +39,7 @@ public class SharedPreferencesManager {
     private static final String CHARTS_TAP_SUGGEST_KEY          = "CHARTS_TAP_SUGGEST_KEY";
 
     private static final String BALANCE_CARRY_FORWARD_KEY       = "BALANCE_CARRY_FORWARD_KEY";
+    private static final String FIXED_CATE_ORDER_KEY            = "FIXED_CATE_ORDER_KEY";
     private static final String MONTHLY_CLOSING_DATE_INDEX_KEY  = "MONTHLY_CLOSING_DATE_INDEX_KEY";
     private static final String START_MONTH_OF_YEAR_INDEX_KEY   = "START_MONTH_OF_YEAR_INDEX_KEY";
     private static final String PROFIT_KEY   = "START_MONTH_OF_YEAR_INDEX_KEY";
@@ -209,6 +210,14 @@ public class SharedPreferencesManager {
 
     public static boolean getBalanceCarryForward(Context context) {
         return getSharedPreferences(context).getBoolean(BALANCE_CARRY_FORWARD_KEY, true);
+    }
+
+    public static void saveFixedCateOrder(Context context, boolean val) {
+        getSharedPreferences(context).edit().putBoolean(FIXED_CATE_ORDER_KEY, val).apply();
+    }
+
+    public static boolean getFixedCateOrder(Context context) {
+        return getSharedPreferences(context).getBoolean(FIXED_CATE_ORDER_KEY, false);
     }
 
     public static void saveMonthlyClosingDateIndex(Context context, int index) {
