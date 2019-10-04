@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.CompoundButton;
 
 import com.example.taxnoteandroid.Library.BroadcastUtil;
+import com.example.taxnoteandroid.Library.DialogManager;
 import com.example.taxnoteandroid.dataManager.SharedPreferencesManager;
 import com.example.taxnoteandroid.databinding.ActivityProfitLossSettingsBinding;
 
@@ -45,6 +46,22 @@ public class ProfitLossSettingsActivity extends DefaultCommonActivity {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
                 SharedPreferencesManager.saveBalanceCarryForward(getApplicationContext(), isChecked);
+            }
+        });
+
+        boolean fixOrderVal = SharedPreferencesManager.getFixedCateOrder(this);
+        binding.fixedCateOrder.setChecked(fixOrderVal);
+        binding.fixedCateOrder.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+                SharedPreferencesManager.saveFixedCateOrder(getApplicationContext(), isChecked);
+                if (isChecked) {
+                    String title = getApplicationContext().getString(R.string.fixed_cate_order);
+                    String message = getApplicationContext().getString(R.string.fixed_cate_order_message);
+                    DialogManager.showCustomAlertDialog(ProfitLossSettingsActivity.this,
+                            getSupportFragmentManager(),
+                            title, message);
+                }
             }
         });
 

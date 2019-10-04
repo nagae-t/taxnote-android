@@ -154,6 +154,8 @@ public class ProfitLossExportActivity extends DefaultCommonActivity {
             List<Entry> resultEntries = new ArrayList<>();
             List<Entry> entries = entryManager.findAll(startEndDate, false);
 
+            boolean isFixedOrder = SharedPreferencesManager.getFixedCateOrder(ProfitLossExportActivity.this);
+
             Entry incomeSection = new Entry();
             incomeSection.viewType = CommonEntryRecyclerAdapter.VIEW_ITEM_HEADER;
             incomeSection.reasonName = context.getString(R.string.Income);
@@ -240,8 +242,8 @@ public class ProfitLossExportActivity extends DefaultCommonActivity {
             }
 
             // 順番ソート
-            List<Map.Entry<Long, Entry>> incomeSortList = EntryLimitManager.sortLinkedHashMap(incomeMap);
-            List<Map.Entry<Long, Entry>> expenseSortList = EntryLimitManager.sortLinkedHashMap(expenseMap);
+            List<Map.Entry<Long, Entry>> incomeSortList = EntryLimitManager.sortLinkedHashMap(incomeMap, isFixedOrder);
+            List<Map.Entry<Long, Entry>> expenseSortList = EntryLimitManager.sortLinkedHashMap(expenseMap, isFixedOrder);
 
             resultEntries.add(new Entry());
             // 表示データはここから

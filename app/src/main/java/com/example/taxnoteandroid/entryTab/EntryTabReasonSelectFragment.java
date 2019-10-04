@@ -453,10 +453,6 @@ public class EntryTabReasonSelectFragment extends Fragment {
             int position_from = viewHolder.getAdapterPosition();
             int position_to = target.getAdapterPosition();
 
-            Log.d(getClass().getSimpleName(), "---------------------------------");
-            Log.d(getClass().getSimpleName(), "position_from = " + position_from);
-            Log.d(getClass().getSimpleName(), "position_to = " + position_to);
-
             int size = reasonList.size();
 
             if (position_from < 0 || size <= position_from ||
@@ -482,7 +478,9 @@ public class EntryTabReasonSelectFragment extends Fragment {
 
         @Override
         public void onSelectedChanged(RecyclerView.ViewHolder holder, int action) {
-
+            if (action == ItemTouchHelper.ACTION_STATE_IDLE) {
+                BroadcastUtil.sendReloadReport(getActivity());
+            }
             super.onSelectedChanged(holder, action);
 
             try {
@@ -579,7 +577,6 @@ public class EntryTabReasonSelectFragment extends Fragment {
         }
 
         public void onReasonDataManagerChanged() {
-            Log.d(this.getClass().getSimpleName() + ":438", "onReasonDataManagerChanged() が呼ばれた。");
             reasonList = reasonDataManager.findAllWithIsExpense(isExpense);
             this.notifyDataSetChanged();
         }

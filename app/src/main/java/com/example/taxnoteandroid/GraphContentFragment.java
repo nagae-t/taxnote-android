@@ -196,7 +196,7 @@ public class GraphContentFragment extends Fragment {
                     entryMap.put(id, _entry1);
                 }
             }
-            List<Map.Entry<Long, Entry>> entrySortList = EntryLimitManager.sortLinkedHashMap(entryMap);
+            List<Map.Entry<Long, Entry>> entrySortList = EntryLimitManager.sortLinkedHashMap(entryMap, false);
 
             entryData.add(entrySum);
             for (Map.Entry<Long, Entry> entry : entrySortList) {
