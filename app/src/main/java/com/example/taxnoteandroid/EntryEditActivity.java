@@ -8,7 +8,9 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
+import android.text.TextUtils;
 import android.text.format.DateUtils;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -16,17 +18,25 @@ import android.widget.EditText;
 
 import com.example.taxnoteandroid.Library.BroadcastUtil;
 import com.example.taxnoteandroid.Library.DialogManager;
+import com.example.taxnoteandroid.Library.EntryLimitManager;
 import com.example.taxnoteandroid.Library.KeyboardUtil;
+import com.example.taxnoteandroid.Library.UpgradeManger;
 import com.example.taxnoteandroid.Library.ValueConverter;
 import com.example.taxnoteandroid.Library.taxnote.TNApiModel;
 import com.example.taxnoteandroid.dataManager.EntryDataManager;
+import com.example.taxnoteandroid.dataManager.SharedPreferencesManager;
 import com.example.taxnoteandroid.databinding.ActivityEntryEditBinding;
 import com.example.taxnoteandroid.model.Entry;
+import com.mixpanel.android.mpmetrics.MixpanelAPI;
 
 import org.parceler.Parcels;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Locale;
+import java.util.UUID;
+
+import static com.example.taxnoteandroid.TaxnoteConsts.MIXPANEL_TOKEN;
 
 public class EntryEditActivity extends DefaultCommonActivity {
 
@@ -36,9 +46,21 @@ public class EntryEditActivity extends DefaultCommonActivity {
     private TNApiModel mApiModel;
     private EntryDataManager entryDataManager;
 
+    private boolean mIsCopy;
+    private boolean mIsCopySaved = false;
+    private static final int REQUEST_CODE_COPY = 111;
+
+    private static final String KEY_IS_COPY_SAVED = "is_copy_saved";
+    private static final String KEY_IS_COPY = "is_copy";
+
     public static void start(Context context, Entry entry) {
+        start(context, entry, false);
+    }
+
+    public static void start(Context context, Entry entry, boolean isCopy) {
         Intent intent = new Intent(context, EntryEditActivity.class);
         intent.putExtra(Entry.class.getName(), Parcels.wrap(entry));
+        intent.putExtra(KEY_IS_COPY, isCopy);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(intent);
     }
@@ -58,6 +80,10 @@ public class EntryEditActivity extends DefaultCommonActivity {
 
         int titleRes = (entry.isExpense) ? R.string.edit_entry_expense
                 : R.string.edit_entry_income;
+        if (mIsCopy) {
+            titleRes = (entry.isExpense) ? R.string.copy_expense
+                    : R.string.copy_income;
+        }
         setTitle(titleRes);
     }
 
@@ -67,12 +93,27 @@ public class EntryEditActivity extends DefaultCommonActivity {
         loadData();
     }
 
+//    @Override
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//        getMenuInflater().inflate(R.menu.menu_entry_edit, menu);
+//        if (mIsCopy)
+//            menu.getItem(0).setVisible(false);
+//
+//        return super.onCreateOptionsMenu(menu);
+//    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                finish();
+                onCopyFinish();
                 return true;
+//            case R.id.action_copy:
+//                Intent intent = new Intent(this, EntryEditActivity.class);
+//                intent.putExtra(Entry.class.getName(), Parcels.wrap(entry));
+//                intent.putExtra(KEY_IS_COPY, true);
+//                startActivityForResult(intent, REQUEST_CODE_COPY);
+//                break;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -94,6 +135,8 @@ public class EntryEditActivity extends DefaultCommonActivity {
         Intent intent = getIntent();
         entry = Parcels.unwrap(intent.getParcelableExtra(Entry.class.getName()));
         entryUuid = entry.uuid;
+
+        mIsCopy = intent.getBooleanExtra(KEY_IS_COPY, false);
     }
 
 
@@ -109,6 +152,85 @@ public class EntryEditActivity extends DefaultCommonActivity {
         setMemoView();
         setPriceView();
         setDeleteView();
+
+        // コピー用画面ならUIを調整
+        if (mIsCopy) {
+            binding.bottomCtrlLayout.setVisibility(View.GONE);
+            binding.enterEntry.setVisibility(View.VISIBLE);
+            binding.enterEntry.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    copyEntry();
+                }
+            });
+            binding.date.setBackground(getDrawable(R.drawable.selector_bg_copy_colors));
+            binding.account.setBackground(getDrawable(R.drawable.selector_bg_copy_colors));
+            binding.reason.setBackground(getDrawable(R.drawable.selector_bg_copy_colors));
+            binding.memo.setBackground(getDrawable(R.drawable.selector_bg_copy_colors));
+            binding.reason.setBackground(getDrawable(R.drawable.selector_bg_copy_colors));
+            binding.price.setBackground(getDrawable(R.drawable.selector_bg_copy_colors));
+        }
+    }
+
+    private void copyEntry() {
+        // DialogManager.showToast(EntryEditActivity.this, "test");
+
+        boolean limitNewEntry = EntryLimitManager.limitNewEntryForFreeUsersWithDate(this, entry.date);
+
+        // Entry limit for free users check
+        if (limitNewEntry) {
+            showUpgradeSuggest();
+            return;
+        }
+
+        // Taxnoteクラウド購入なしで追加された帳簿の入力制限あり
+        boolean limitNewEntrySubProject = EntryLimitManager.limitNewEntryAddSubProject(this);
+        if ( !UpgradeManger.taxnoteCloudIsActive(this) && limitNewEntrySubProject) {
+            showUpgradeCloudInputLimit();
+            return;
+        }
+
+        String text = binding.price.getText().toString().replace(",", "");
+        // Empty check
+        if (TextUtils.isEmpty(text)) {
+            DialogManager.showOKOnlyAlert(this, getResources().getString(R.string.Error), getResources().getString(R.string.please_enter_price));
+            return;
+        }
+
+        Entry copyEntry = entry;
+        copyEntry.id = 0;
+        copyEntry.uuid = UUID.randomUUID().toString();
+        long newId = entryDataManager.save(copyEntry);
+
+        // Success
+        if (EntryDataManager.isSaveSuccess(newId)) {
+            mIsCopySaved = true;
+
+            countAndTrackEntry();
+
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
+                    getResources().getString(R.string.date_string_format_to_month_day),
+                    Locale.getDefault());
+            String dateString = simpleDateFormat.format(entry.date);
+            DialogManager.showInputDataToast(this, dateString, entry);
+
+            mApiModel.saveEntry(entry.uuid, null);
+
+
+        } else {
+            DialogManager.showOKOnlyAlert(this, getResources().getString(R.string.Error), null);
+        }
+    }
+
+    private void onCopyFinish() {
+        if (mIsCopySaved) {
+            BroadcastUtil.sendReloadReport(EntryEditActivity.this);
+        }
+
+        Intent intent = new Intent();
+        intent.putExtra(KEY_IS_COPY_SAVED, mIsCopySaved);
+        setResult(RESULT_OK, intent);
+        finish();
     }
 
     private void loadData() {
@@ -314,6 +436,16 @@ public class EntryEditActivity extends DefaultCommonActivity {
                 showDeleteDialog();
             }
         });
+
+        binding.copy.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(EntryEditActivity.this, EntryEditActivity.class);
+                intent.putExtra(Entry.class.getName(), Parcels.wrap(entry));
+                intent.putExtra(KEY_IS_COPY, true);
+                startActivityForResult(intent, REQUEST_CODE_COPY);
+            }
+        });
     }
 
     private void showDeleteDialog() {
@@ -332,7 +464,6 @@ public class EntryEditActivity extends DefaultCommonActivity {
 
                         entryDataManager.updateSetDeleted(entry.uuid, mApiModel);
 
-
                         DialogManager.showToast(EntryEditActivity.this, getResources().getString(R.string.delete_done));
                         finish();
 
@@ -340,5 +471,86 @@ public class EntryEditActivity extends DefaultCommonActivity {
                 })
                 .setNegativeButton(getResources().getString(R.string.cancel), null)
                 .show();
+    }
+
+    // ---------
+    // for copy method
+    // ---------
+    private void showUpgradeSuggest() {
+        MixpanelAPI mixpanel = MixpanelAPI.getInstance(this, MIXPANEL_TOKEN);
+        mixpanel.track("Entry Limit Reached");
+
+        // Confirm dialog
+        new AlertDialog.Builder(this)
+                .setTitle(getResources().getString(R.string.upgrade))
+                .setMessage(getResources().getString(R.string.upgrade_to_plus_unlock_the_limit))
+                .setPositiveButton(getResources().getString(R.string.benefits_of_upgrade), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                        // Show upgrade activity
+                        Intent intent = new Intent(EntryEditActivity.this, UpgradeActivity.class);
+                        startActivity(intent);
+
+                        dialogInterface.dismiss();
+                    }
+                })
+                .setNegativeButton(getResources().getString(R.string.cancel), null)
+                .show();
+    }
+    private void showUpgradeCloudInputLimit() {
+        new AlertDialog.Builder(this)
+                .setTitle(R.string.taxnote_cloud_first_free)
+                .setMessage(R.string.not_cloud_input_limit_message)
+                .setPositiveButton(getResources().getString(R.string.benefits_of_upgrade), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                        // Show upgrade activity
+                        UpgradeActivity.start(EntryEditActivity.this);
+                    }
+                })
+                .setNegativeButton(R.string.cancel, null)
+                .show();
+    }
+
+    private void countAndTrackEntry() {
+        long entryCount = SharedPreferencesManager.getTrackEntryCount(this);
+        entryCount++;
+        SharedPreferencesManager.saveTrackEntryCount(this, entryCount);
+
+        if (entryCount == 1 || entryCount % 10 == 0) {
+            MixpanelAPI mixpanel = MixpanelAPI.getInstance(this, MIXPANEL_TOKEN);
+            mixpanel.track("New Entry");
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        boolean isCopySaved = false;
+        if (data != null) {
+            isCopySaved = data.getBooleanExtra(KEY_IS_COPY_SAVED, false);
+        }
+
+        // コピー用画面を閉じたあと
+        // 一度コピーしたらもとの編集画面も閉じる
+        if (requestCode == REQUEST_CODE_COPY) {
+            if(resultCode == RESULT_OK){
+                if (isCopySaved) {
+                    finish();
+                }
+            }
+        }
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        // バックキー
+        if (keyCode == KeyEvent.KEYCODE_BACK && mIsCopySaved) {
+            onCopyFinish();
+            return false;
+        }
+        return super.onKeyDown(keyCode, event);
+
     }
 }

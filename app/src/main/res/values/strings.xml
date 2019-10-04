@@ -341,6 +341,11 @@
         <item>Last Day of Month</item>
     </string-array>
 
+    <string name="switch_to_copy">Copy</string>
+    <string name="copy_expense">Copy Expense</string>
+    <string name="copy_income">Copy Income</string>
+    <string name="enter_entry">Register</string>
+
     <string name="profit_loss_export">Export Overview</string>
     <string name="send_export">Export Data</string>
     <string name="character_code_desc">Change the Character Code if you have character issues.</string>
