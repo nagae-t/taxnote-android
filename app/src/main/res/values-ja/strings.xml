@@ -111,7 +111,7 @@
     <string name="taxnote_plus_show_price_tail"> / 年間</string>
     <string name="taxnote_cloud_show_price_tail"> / 月間</string>
     <string name="fixed_cate_order">科目の並びを固定</string>
-    <string name="fixed_cate_order_message">損益表の科目並び順を、入力タブの科目の並び順を同じにします。</string>
+    <string name="fixed_cate_order_message">損益表の科目並び順を、入力タブの科目の並び順と同じにします。</string>
 
     //--------------------------------------------------------------//
     // -- Data Export --
