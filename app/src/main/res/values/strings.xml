@@ -114,6 +114,9 @@
     <string name="taxnote_plus_show_price_tail"> / year</string>
     <string name="taxnote_cloud_show_price_tail"> / month</string>
 
+    <string name="combine_all_accounts">Combine All Accounts</string>
+    <string name="combine_all_accounts_message">Show data with all combined data of accounts you created in the settings.\nIf you don\'t have multiple accounts with Taxnote Cloud, this option doesn\'t change anything.</string>
+
     //--------------------------------------------------------------//
     // -- Data Export --
     //--------------------------------------------------------------//

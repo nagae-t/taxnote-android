@@ -111,6 +111,9 @@
     <string name="taxnote_plus_show_price_tail"> / 年間</string>
     <string name="taxnote_cloud_show_price_tail"> / 月間</string>
 
+    <string name="combine_all_accounts">全帳簿の合計を表示</string>
+    <string name="combine_all_accounts_message">作成した帳簿全てを合計した数字を表示します。\nTaxnoteクラウドのオプションである複数帳簿を利用している時のみ変化があります。</string>
+
     //--------------------------------------------------------------//
     // -- Data Export --
     //--------------------------------------------------------------//
