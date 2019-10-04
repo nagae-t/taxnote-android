@@ -194,6 +194,8 @@ public class ReportContentFragment extends Fragment {
                     : mEntryManager.findAll(startEndDate, false);
             if (startEndDate.length != 0) mEndDate = startEndDate[1];
 
+            boolean isFixedOrder = SharedPreferencesManager.getFixedCateOrder(mContext);
+
             Entry incomeSection = new Entry();
             incomeSection.viewType = CommonEntryRecyclerAdapter.VIEW_ITEM_HEADER;
             incomeSection.titleName = mContext.getString(R.string.Income);
@@ -250,6 +252,7 @@ public class ReportContentFragment extends Fragment {
                     Entry _entry1 = new Entry();
                     _entry1.viewType = CommonEntryRecyclerAdapter.VIEW_ITEM_REPORT_CELL;
                     _entry1.reasonName = entry.reason.name;
+                    _entry1.reasonOrder = entry.reason.order;
                     _entry1.price += entry.price;
                     incomeMap.put(id, _entry1);
                 }
@@ -264,6 +267,7 @@ public class ReportContentFragment extends Fragment {
                     Entry _entry1 = new Entry();
                     _entry1.viewType = CommonEntryRecyclerAdapter.VIEW_ITEM_REPORT_CELL;
                     _entry1.reasonName = entry.reason.name;
+                    _entry1.reasonOrder = entry.reason.order;
                     _entry1.price += entry.price;
                     _entry1.isExpense = true;
                     expenseMap.put(id, _entry1);
@@ -271,8 +275,8 @@ public class ReportContentFragment extends Fragment {
             }
 
             // 順番ソート
-            List<Map.Entry<Long, Entry>> incomeSortList = EntryLimitManager.sortLinkedHashMap(incomeMap);
-            List<Map.Entry<Long, Entry>> expenseSortList = EntryLimitManager.sortLinkedHashMap(expenseMap);
+            List<Map.Entry<Long, Entry>> incomeSortList = EntryLimitManager.sortLinkedHashMap(incomeMap, isFixedOrder);
+            List<Map.Entry<Long, Entry>> expenseSortList = EntryLimitManager.sortLinkedHashMap(expenseMap, isFixedOrder);
 
             // 表示データはここから
             resultEntries.add(incomeSection);

@@ -149,7 +149,8 @@ public class EntryLimitManager {
         return result;
     }
 
-    public static List<Map.Entry<Long, Entry>> sortLinkedHashMap(Map<Long, Entry> sourceMap) {
+    // priceによるソート
+    public static List<Map.Entry<Long, Entry>> sortLinkedHashMap(Map<Long, Entry> sourceMap, final boolean byReason) {
         List<Map.Entry<Long, Entry>> dataList =
                 new ArrayList<>(sourceMap.entrySet());
         Collections.sort(dataList, new Comparator<Map.Entry<Long, Entry>>() {
@@ -157,11 +158,16 @@ public class EntryLimitManager {
             @Override
             public int compare(Map.Entry<Long, Entry> entry1,
                                Map.Entry<Long, Entry> entry2) {
-                long entry1sum = entry1.getValue().price;
-                long entry2sum = entry2.getValue().price;
-                if (entry1sum < entry2sum) {
+                long entry1Order = entry1.getValue().price;
+                long entry2Order = entry2.getValue().price;
+                if (byReason) {
+                    entry1Order = entry2.getValue().reasonOrder;
+                    entry2Order = entry1.getValue().reasonOrder;
+                }
+
+                if (entry1Order < entry2Order) {
                     return 1;
-                } else if (entry1sum == entry2sum) {
+                } else if (entry1Order == entry2Order) {
                     return 0;
                 } else {
                     return -1;
