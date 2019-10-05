@@ -113,6 +113,8 @@
     <string name="taxnote_cloud_show_price">$4.99 / month</string>
     <string name="taxnote_plus_show_price_tail"> / year</string>
     <string name="taxnote_cloud_show_price_tail"> / month</string>
+    <string name="fixed_cate_order">Fix Category Order</string>
+    <string name="fixed_cate_order_message">This option makes the ordering the same as your category order in the Input.</string>
 
     <string name="combine_all_accounts">Combine All Accounts</string>
     <string name="combine_all_accounts_message">Show data with all combined data of accounts you created in the settings.\nIf you don\'t have multiple accounts with Taxnote Cloud, this option doesn\'t change anything.</string>
@@ -343,6 +345,11 @@
         <item>28</item>
         <item>Last Day of Month</item>
     </string-array>
+
+    <string name="switch_to_copy">Copy</string>
+    <string name="copy_expense">Copy Expense</string>
+    <string name="copy_income">Copy Income</string>
+    <string name="enter_entry">Register</string>
 
     <string name="profit_loss_export">Export Overview</string>
     <string name="send_export">Export Data</string>

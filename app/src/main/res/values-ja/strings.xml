@@ -110,6 +110,8 @@
     <string name="taxnote_cloud_show_price">¥600 / 月間</string>
     <string name="taxnote_plus_show_price_tail"> / 年間</string>
     <string name="taxnote_cloud_show_price_tail"> / 月間</string>
+    <string name="fixed_cate_order">科目の並びを固定</string>
+    <string name="fixed_cate_order_message">損益表の科目並び順を、入力タブの科目の並び順と同じにします。</string>
 
     <string name="combine_all_accounts">全帳簿の合計を表示</string>
     <string name="combine_all_accounts_message">作成した帳簿全てを合計した数字を表示します。\nTaxnoteクラウドのオプションである複数帳簿を利用している時のみ変化があります。</string>
@@ -341,6 +343,11 @@
         <item>28日</item>
         <item>月末</item>
     </string-array>
+
+    <string name="switch_to_copy">コピー</string>
+    <string name="copy_expense">支出のコピー</string>
+    <string name="copy_income">収入のコピー</string>
+    <string name="enter_entry">仕訳帳に記録</string>
 
     <string name="profit_loss_export">損益表の出力</string>
     <string name="send_export">データを送信</string>

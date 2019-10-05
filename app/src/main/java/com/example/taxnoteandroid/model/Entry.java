@@ -60,6 +60,7 @@ public class Entry {
     public String dateString;
     public String sumString;
     public String reasonName;
+    public long reasonOrder;
     public String titleName;
 
     @Override
