@@ -785,4 +785,12 @@ public class DialogManager {
                 .show();
 
     }
+
+    // 科目の名前を編集して結合するときに
+    // 表示させる確認ダイアログ
+    public static void confirmCategoryComb(Context context, FragmentManager fragmentManager,
+                                      String oldName, String newName) {
+
+    }
+
 }

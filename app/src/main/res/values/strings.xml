@@ -71,6 +71,7 @@
     <string name="confirm_subj_comb_message">[%2$s] already exists.  Do you want to combine to this category?  %3$d entries using [%1$s] also will be updated to entries with [%2$s].  (Summaries in Entries will not change.)</string>
     <string name="confirm_subj_comb_message_again">Are you sure to combine to this category? %3$d entries using [%1$s] also will be updated to entries with [%2$s].</string>
     <string name="rename_subj_comb_btn">Combine Categories</string>
+    <string name="category_name">Category Name</string>
 
 
     //--------------------------------------------------------------//

@@ -320,13 +320,13 @@ public class EntryTabReasonSelectFragment extends Fragment {
     private void showRenameReasonDialog(final Reason reason, final int position) {
 
         final Context context = getContext();
-        final View textInputView = LayoutInflater.from(context).inflate(R.layout.dialog_text_input, null);
-        final EditText editText = (EditText) textInputView.findViewById(R.id.edit);
+        final View textInputView = LayoutInflater.from(context).inflate(R.layout.dialog_edit_cate_input, null);
+        final EditText editText = textInputView.findViewById(R.id.edit);
         editText.setText(reason.name);
 
         new AlertDialog.Builder(context)
                 .setView(textInputView)
-                .setTitle(getResources().getString(R.string.list_view_rename))
+                .setTitle(R.string.rename_subject)
                 .setPositiveButton(getResources().getString(R.string.done), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
@@ -360,7 +360,7 @@ public class EntryTabReasonSelectFragment extends Fragment {
                 .setNegativeButton(getResources().getString(R.string.cancel), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        EditText editText = (EditText) textInputView.findViewById(R.id.edit);
+                        EditText editText = textInputView.findViewById(R.id.edit);
                         KeyboardUtil.hideKeyboard(getActivity(), editText); // 2017/01/24 E.Nozaki Hide software keyboard.
                     }
                 })
@@ -723,7 +723,8 @@ public class EntryTabReasonSelectFragment extends Fragment {
                     break;
 
                 case R.id.rename:
-                    renameReason(reason, position);
+//                    renameReason(reason, position);
+                    showRenameReasonDialog(reason, position);
                     break;
 
                 case R.id.delete:
