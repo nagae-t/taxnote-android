@@ -9,6 +9,9 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.taxnoteandroid.DataExportActivity;
@@ -788,9 +791,71 @@ public class DialogManager {
 
     // 科目の名前を編集して結合するときに
     // 表示させる確認ダイアログ
-    public static void confirmCategoryComb(Context context, FragmentManager fragmentManager,
-                                      String oldName, String newName) {
+    public static void showRenameCateDialog(final Activity activity,
+                                            final Reason reason,
+                                            final Account account,
+                                            DialogInterface.OnClickListener positiveAction) {
+//    public static void confirmCategoryComb(final Activity activity, FragmentManager fragmentManager,
+//                                           String oldName, String newName, int countTarget) {
+        final Context context = activity.getApplicationContext();
+        final View dialogView = LayoutInflater.from(context)
+                .inflate(R.layout.dialog_edit_cate_input, null);
+        final EditText editText = dialogView.findViewById(R.id.edit);
+        final String oldName = (reason != null) ? reason.name : account.name;
+        editText.setText(oldName);
 
+        AlertDialog.Builder dialog1Builder = new AlertDialog.Builder(context)
+                .setView(dialogView)
+                .setTitle(R.string.rename_subject)
+//                .setPositiveButton(activity.getString(R.string.done), positiveAction)
+                .setPositiveButton(activity.getString(R.string.done), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        KeyboardUtil.hideKeyboard(activity, editText);
+
+                        String inputName = editText.getText().toString();
+                        if (reason != null) {
+                            // Check if Entry data has this reason already
+                            EntryDataManager entryManager = new EntryDataManager(context);
+                            Entry entry = entryManager.hasReasonInEntryData(reason);
+                            if (entry != null) {
+                                confirmCategoryComb(activity, oldName, inputName, 0);
+                            } else {
+
+                            }
+                        }
+                    }
+                })
+                .setNegativeButton(activity.getString(R.string.cancel), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        EditText editText = dialogView.findViewById(R.id.edit);
+                        KeyboardUtil.hideKeyboard(activity, editText);
+                    }
+                });
+        dialog1Builder.show();
+
+
+        KeyboardUtil.showKeyboard(activity, dialogView);
+    }
+
+    private static void confirmCategoryComb(final Activity activity,
+                                            String oldName, String newName,
+                                            int countTarget) {
+
+        String dialog2Title = activity.getString(R.string.confirm_subj_comb_title, oldName, newName);
+        String dialog2Msg = activity.getString(R.string.confirm_subj_comb_message, oldName, newName, countTarget);
+        AlertDialog.Builder dialog2Builder = new AlertDialog.Builder(activity.getApplicationContext())
+                .setTitle(dialog2Title)
+                .setMessage(dialog2Msg)
+                .setPositiveButton(activity.getString(R.string.done), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                    }
+                })
+                .setNegativeButton(activity.getString(R.string.cancel), null);
+        dialog2Builder.show();
     }
 
 }

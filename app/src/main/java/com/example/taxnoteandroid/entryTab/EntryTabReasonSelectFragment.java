@@ -69,6 +69,7 @@ public class EntryTabReasonSelectFragment extends Fragment {
     private MyRecyclerViewAdapter adapter;
     private FragmentEntryTabReasonSelectBinding binding;
     private ReasonDataManager reasonDataManager;
+    private EntryDataManager entryManager;
     private List<Reason> reasonList;
 
     private Context mContext;
@@ -120,7 +121,8 @@ public class EntryTabReasonSelectFragment extends Fragment {
         mApiModel = new TNApiModel(mContext);
         if (!mApiModel.isLoggingIn()) binding.refreshLayout.setEnabled(false);
 
-        reasonDataManager = new ReasonDataManager(getActivity().getApplicationContext());
+        entryManager = new EntryDataManager(mContext);
+        reasonDataManager = new ReasonDataManager(mContext);
         setDateView();
         setAccountView();
         setReasonList(getView());
@@ -317,7 +319,19 @@ public class EntryTabReasonSelectFragment extends Fragment {
         }
     }
 
+
     private void showRenameReasonDialog(final Reason reason, final int position) {
+//        DialogManager.showRenameCateDialog(getActivity(), reason.name, new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialog, int which) {
+//            }
+//        });
+    }
+    /*
+    private void showRenameReasonDialog(final Reason reason, final int position) {
+
+//        DialogManager.confirmCategoryComb(getActivity(), getFragmentManager(),
+//                reason.name, null, 0);
 
         final Context context = getContext();
         final View textInputView = LayoutInflater.from(context).inflate(R.layout.dialog_edit_cate_input, null);
@@ -366,8 +380,8 @@ public class EntryTabReasonSelectFragment extends Fragment {
                 })
                 .show();
 
-        KeyboardUtil.showKeyboard(getActivity(), textInputView); // 2017/01/17 E.Nozaki Show software keyboard.
     }
+    */
 
     //--------------------------------------------------------------//
     //    -- Delete --
