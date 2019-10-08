@@ -162,7 +162,9 @@ public class AccountSelectActivity extends DefaultCommonActivity {
     }
 
     private void showRenameAccountDialog(final Account account, final int position) {
+        DialogManager.showRenameCateDialog(this,null, account);
 
+        /*
         final Context context = AccountSelectActivity.this;
         final View textInputView = LayoutInflater.from(context).inflate(R.layout.dialog_text_input, null);
 
@@ -205,6 +207,7 @@ public class AccountSelectActivity extends DefaultCommonActivity {
                 .show();
 
         KeyboardUtil.showKeyboard(AccountSelectActivity.this, textInputView); // 2017/01/30 E.Nozaki Show software keyboard.
+        */
     }
 
 
@@ -587,7 +590,8 @@ public class AccountSelectActivity extends DefaultCommonActivity {
                     break;
 
                 case R.id.rename:
-                    renameAccount(account, position);
+//                    renameAccount(account, position);
+                    showRenameAccountDialog(account, position);
                     break;
 
                 case R.id.delete:

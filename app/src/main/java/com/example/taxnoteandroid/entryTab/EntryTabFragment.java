@@ -83,6 +83,14 @@ public class EntryTabFragment extends Fragment {
         if (fragment2 != null) fragment2.afterLogin();
     }
 
+    public void reloadData() {
+        EntryTabReasonSelectFragment fragment1 = (EntryTabReasonSelectFragment)mPagerAdapter.instantiateItem(mPager, 0);
+        fragment1.reloadData();
+
+        EntryTabReasonSelectFragment fragment2 = (EntryTabReasonSelectFragment)mPagerAdapter.instantiateItem(mPager, 1);
+        fragment2.reloadData();
+    }
+
     private class TabPagerAdapter extends FragmentPagerAdapter {
 
         public TabPagerAdapter(FragmentManager fm) {

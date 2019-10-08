@@ -16,12 +16,15 @@ import android.widget.Toast;
 
 import com.example.taxnoteandroid.DataExportActivity;
 import com.example.taxnoteandroid.HistoryListDataActivity;
+import com.example.taxnoteandroid.Library.taxnote.TNApiModel;
 import com.example.taxnoteandroid.Library.zeny.ZNUtils;
 import com.example.taxnoteandroid.R;
 import com.example.taxnoteandroid.TNSimpleDialogFragment;
 import com.example.taxnoteandroid.UpgradeActivity;
+import com.example.taxnoteandroid.dataManager.AccountDataManager;
 import com.example.taxnoteandroid.dataManager.EntryDataManager;
 import com.example.taxnoteandroid.dataManager.ProjectDataManager;
+import com.example.taxnoteandroid.dataManager.ReasonDataManager;
 import com.example.taxnoteandroid.dataManager.SharedPreferencesManager;
 import com.example.taxnoteandroid.model.Account;
 import com.example.taxnoteandroid.model.Entry;
@@ -793,18 +796,19 @@ public class DialogManager {
     // 表示させる確認ダイアログ
     public static void showRenameCateDialog(final Activity activity,
                                             final Reason reason,
-                                            final Account account,
-                                            DialogInterface.OnClickListener positiveAction) {
+                                            final Account account) {
 //    public static void confirmCategoryComb(final Activity activity, FragmentManager fragmentManager,
 //                                           String oldName, String newName, int countTarget) {
         final Context context = activity.getApplicationContext();
+        final TNApiModel apiModel  = new TNApiModel(context);
+        final EntryDataManager entryManager = new EntryDataManager(context);
         final View dialogView = LayoutInflater.from(context)
                 .inflate(R.layout.dialog_edit_cate_input, null);
         final EditText editText = dialogView.findViewById(R.id.edit);
         final String oldName = (reason != null) ? reason.name : account.name;
         editText.setText(oldName);
 
-        AlertDialog.Builder dialog1Builder = new AlertDialog.Builder(context)
+        AlertDialog.Builder dialog1Builder = new AlertDialog.Builder(activity)
                 .setView(dialogView)
                 .setTitle(R.string.rename_subject)
 //                .setPositiveButton(activity.getString(R.string.done), positiveAction)
@@ -814,16 +818,39 @@ public class DialogManager {
                         KeyboardUtil.hideKeyboard(activity, editText);
 
                         String inputName = editText.getText().toString();
+
                         if (reason != null) {
+                            ReasonDataManager reasonManager = new ReasonDataManager(context);
+                            reasonManager.
                             // Check if Entry data has this reason already
-                            EntryDataManager entryManager = new EntryDataManager(context);
                             Entry entry = entryManager.hasReasonInEntryData(reason);
                             if (entry != null) {
-                                confirmCategoryComb(activity, oldName, inputName, 0);
+                                int countTarget = entryManager.countByReason(reason);
+                                confirmCategoryComb(activity, oldName, inputName, countTarget);
+                                return;
                             } else {
+                                reasonManager.updateName(reason.id, inputName);
 
+                                apiModel.updateReason(reason.uuid, null);
                             }
                         }
+                        if (account != null) {
+                            // Check if Entry data has this account already
+                            Entry entry = entryManager.hasAccountInEntryData(account);
+                            if (entry != null) {
+                                int countTarget = entryManager.countByAccount(account);
+                                confirmCategoryComb(activity, oldName, inputName, countTarget);
+                                return;
+                            } else {
+                                AccountDataManager accManager = new AccountDataManager(context);
+                                accManager.updateName(account.id, inputName);
+
+                                apiModel.updateAccount(account.uuid, null);
+                            }
+                        }
+
+                        showToast(activity, inputName);
+                        BroadcastUtil.sendReloadReport(activity);
                     }
                 })
                 .setNegativeButton(activity.getString(R.string.cancel), new DialogInterface.OnClickListener() {

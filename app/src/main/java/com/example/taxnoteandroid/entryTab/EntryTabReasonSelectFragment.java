@@ -288,6 +288,11 @@ public class EntryTabReasonSelectFragment extends Fragment {
         binding.accountTextView.setText(account.name);
     }
 
+    public void reloadData() {
+        if (adapter != null) {
+            adapter.onReasonDataManagerChanged();
+        }
+    }
 
     //--------------------------------------------------------------//
     //    -- Rename --
@@ -326,6 +331,8 @@ public class EntryTabReasonSelectFragment extends Fragment {
 //            public void onClick(DialogInterface dialog, int which) {
 //            }
 //        });
+//        MainActivity activity = (MainActivity)getParentFragment().getActivity();
+        DialogManager.showRenameCateDialog(getParentFragment().getActivity(), reason, null);
     }
     /*
     private void showRenameReasonDialog(final Reason reason, final int position) {
