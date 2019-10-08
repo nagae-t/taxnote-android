@@ -14,7 +14,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -52,8 +51,8 @@ public class AccountSelectActivity extends DefaultCommonActivity {
     public static final String BROADCAST_SELECT_RELOAD
             = "broadcast_account_select_reload";
 
-    private EntryDataManager entryManager = new EntryDataManager(this);
-    private AccountDataManager accountDataManager = new AccountDataManager(this); // 2017/01/30 E.Nozaki
+    private EntryDataManager entryManager;
+    private AccountDataManager accountDataManager;
     private MyRecyclerViewAdapter adapter; // 2017/01/30 E.Nozaki
     private List<Account> accountList = null; // 2017/01/30 E.Nozaki
 
@@ -86,6 +85,8 @@ public class AccountSelectActivity extends DefaultCommonActivity {
         registerReceiver(mReloadReceiver, new IntentFilter(BROADCAST_SELECT_RELOAD));
 
         mApiModel = new TNApiModel(this);
+        accountDataManager = new AccountDataManager(this);
+        entryManager = new EntryDataManager(this);
 
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
@@ -107,7 +108,7 @@ public class AccountSelectActivity extends DefaultCommonActivity {
 
     public void reloadData() {
         if (adapter != null) {
-            adapter.notifyDataSetChanged();
+            adapter.onAccountDataManagerChanged();
         }
     }
 
@@ -203,17 +204,16 @@ public class AccountSelectActivity extends DefaultCommonActivity {
         }
 
         // Check if Entry data has this account already
-        final EntryDataManager entryDataManager = new EntryDataManager(AccountSelectActivity.this);
-        Entry entry = entryDataManager.hasAccountInEntryData(account);
+        Entry entry = entryManager.hasAccountInEntryData(account);
 
         if (entry != null) {
-            int countEntry = entryDataManager.countByAccount(account);
+            int countEntry = entryManager.countByAccount(account);
 
             DialogManager.confirmEntryDeleteForReson(this, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
 
-                            entryDataManager.deleteByAccount(account, mApiModel);
+                            entryManager.deleteByAccount(account, mApiModel);
                             accountDataManager.updateSetDeleted(account.uuid, mApiModel);
 
                             BroadcastUtil.sendReloadReport(AccountSelectActivity.this);
@@ -315,7 +315,6 @@ public class AccountSelectActivity extends DefaultCommonActivity {
         }
 
         public void onAccountDataManagerChanged() {
-            Log.d(this.getClass().getSimpleName() + ":435", "onAccountDataManagerChanged() が呼ばれた。");
             accountList = accountDataManager.findAllWithIsExpense(isExpense);
             this.notifyDataSetChanged();
         }
@@ -348,10 +347,6 @@ public class AccountSelectActivity extends DefaultCommonActivity {
 
             int position_from = viewHolder.getAdapterPosition();
             int position_to = target.getAdapterPosition();
-
-            Log.d(getClass().getSimpleName(), "---------------------------------");
-            Log.d(getClass().getSimpleName(), "position_from = " + position_from);
-            Log.d(getClass().getSimpleName(), "position_to = " + position_to);
 
             int size = accountList.size();
 
