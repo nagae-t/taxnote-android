@@ -821,10 +821,9 @@ public class DialogManager {
 
                         if (reason != null) {
                             ReasonDataManager reasonManager = new ReasonDataManager(context);
-                            reasonManager.
+                            Reason _reason = reasonManager.findByName(inputName);
                             // Check if Entry data has this reason already
-                            Entry entry = entryManager.hasReasonInEntryData(reason);
-                            if (entry != null) {
+                            if (_reason != null) {
                                 int countTarget = entryManager.countByReason(reason);
                                 confirmCategoryComb(activity, oldName, inputName, countTarget);
                                 return;
@@ -872,7 +871,7 @@ public class DialogManager {
 
         String dialog2Title = activity.getString(R.string.confirm_subj_comb_title, oldName, newName);
         String dialog2Msg = activity.getString(R.string.confirm_subj_comb_message, oldName, newName, countTarget);
-        AlertDialog.Builder dialog2Builder = new AlertDialog.Builder(activity.getApplicationContext())
+        AlertDialog.Builder dialog2Builder = new AlertDialog.Builder(activity)
                 .setTitle(dialog2Title)
                 .setMessage(dialog2Msg)
                 .setPositiveButton(activity.getString(R.string.done), new DialogInterface.OnClickListener() {

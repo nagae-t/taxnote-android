@@ -18,10 +18,12 @@ public class ReasonDataManager {
 
     private OrmaDatabase ormaDatabase;
     private Context mContext;
+    private Project mCurrentProject;
 
     public ReasonDataManager(Context context) {
         this.mContext = context;
         ormaDatabase = TaxnoteApp.getOrmaDatabase();
+        mCurrentProject = new ProjectDataManager(context).findCurrent();
     }
 
 
@@ -53,7 +55,9 @@ public class ReasonDataManager {
     //--------------------------------------------------------------//
 
     public List<Reason> findAll() {
-        List<Reason> dataList = ormaDatabase.selectFromReason().toList();
+        List<Reason> dataList = ormaDatabase.selectFromReason()
+                .projectEq(mCurrentProject)
+                .toList();
 
         return dataList;
     }
@@ -62,17 +66,19 @@ public class ReasonDataManager {
         return ormaDatabase.selectFromReason().uuidEq(uuid).valueOrNull();
     }
 
+    public Reason findByName(String name) {
+        return ormaDatabase.selectFromReason().projectEq(mCurrentProject)
+                .where(Reason_Schema.INSTANCE.name.getQualifiedName() + " = ?", name)
+                .valueOrNull();
+    }
+
     public List<Reason> findAllWithIsExpense(Boolean isExpense) {
 
-        // Get the current project
-        ProjectDataManager projectDataManager   = new ProjectDataManager(mContext);
-        Project project                         = projectDataManager.findCurrent();
-
         List reasons = ormaDatabase.selectFromReason()
+                .projectEq(mCurrentProject)
                 .where(Reason_Schema.INSTANCE.deleted.getQualifiedName() + " = 0  AND "
                         + Reason_Schema.INSTANCE.isExpense.getQualifiedName() + " = ?", isExpense)
                 .and()
-                .projectEq(project)
                 .orderBy(Reason_Schema.INSTANCE.order.getQualifiedName())
                 .toList();
         return reasons;
@@ -81,6 +87,7 @@ public class ReasonDataManager {
     public List<Reason> findAllNeedSave(boolean isNeedSave) {
         int needSave = (isNeedSave) ? 1 : 0;
         List<Reason> reasons = ormaDatabase.selectFromReason()
+                .projectEq(mCurrentProject)
                 .where(Reason_Schema.INSTANCE.deleted.getQualifiedName() + " = 0")
                 .and()
                 .where(Reason_Schema.INSTANCE.needSave.getQualifiedName() + " = " + needSave)
@@ -91,6 +98,7 @@ public class ReasonDataManager {
     public List<Reason> findAllNeedSync(boolean isNeedSync) {
         int needSync = (isNeedSync) ? 1 : 0;
         List<Reason> reasons = ormaDatabase.selectFromReason()
+                .projectEq(mCurrentProject)
                 .where(Reason_Schema.INSTANCE.deleted.getQualifiedName() + " = 0")
                 .and()
                 .where(Reason_Schema.INSTANCE.needSync.getQualifiedName() + " = " + needSync)
@@ -101,6 +109,7 @@ public class ReasonDataManager {
     public List<Reason> findAllDeleted(boolean isDeleted) {
         int deleted = (isDeleted) ? 1 : 0;
         List<Reason> reasons = ormaDatabase.selectFromReason()
+                .projectEq(mCurrentProject)
                 .where(Reason_Schema.INSTANCE.deleted.getQualifiedName() + " = " + deleted)
                 .toList();
         return reasons;

@@ -10,6 +10,7 @@ import com.example.taxnoteandroid.model.Account_Schema;
 import com.example.taxnoteandroid.model.Account_Updater;
 import com.example.taxnoteandroid.model.OrmaDatabase;
 import com.example.taxnoteandroid.model.Project;
+import com.example.taxnoteandroid.model.Reason_Schema;
 
 import java.util.List;
 
@@ -17,10 +18,12 @@ public class AccountDataManager {
 
     private OrmaDatabase ormaDatabase;
     private Context mContext;
+    private Project mCurrentProject;
 
     public AccountDataManager(Context context) {
         this.mContext = context;
         ormaDatabase = TaxnoteApp.getOrmaDatabase();
+        mCurrentProject = new ProjectDataManager(context).findCurrent();
     }
 
 
@@ -42,7 +45,9 @@ public class AccountDataManager {
     //--------------------------------------------------------------//
 
     public List<Account> findAll() {
-        List<Account> dataList = ormaDatabase.selectFromAccount().toList();
+        List<Account> dataList = ormaDatabase.selectFromAccount()
+                .projectEq(mCurrentProject)
+                .toList();
 
         return dataList;
     }
@@ -51,17 +56,19 @@ public class AccountDataManager {
         return ormaDatabase.selectFromAccount().uuidEq(uuid).valueOrNull();
     }
 
+    public Account findByName(String name) {
+        return ormaDatabase.selectFromAccount().projectEq(mCurrentProject)
+                .where(Account_Schema.INSTANCE.name.getQualifiedName() + " = ?", name)
+                .valueOrNull();
+    }
+
     public List<Account> findAllWithIsExpense(boolean isExpense) {
 
-        // Get the current project
-        ProjectDataManager projectDataManager = new ProjectDataManager(mContext);
-        Project project = projectDataManager.findCurrent();
-
         List accounts = ormaDatabase.selectFromAccount()
+                .projectEq(mCurrentProject)
                 .where(Account_Schema.INSTANCE.deleted.getQualifiedName() + " = 0 AND "
                         + Account_Schema.INSTANCE.isExpense.getQualifiedName() + " = ?", isExpense)
                 .and()
-                .projectEq(project)
                 .orderBy(Account_Schema.INSTANCE.order.getQualifiedName())
                 .toList();
 
@@ -72,15 +79,11 @@ public class AccountDataManager {
 
         Account account;
 
-        // Get the current project
-        ProjectDataManager projectDataManager = new ProjectDataManager(mContext);
-        Project project = projectDataManager.findCurrent();
-
         // Get the current selected account
         if (isExpense) {
-            account = findByUuid(project.accountUuidForExpense);
+            account = findByUuid(mCurrentProject.accountUuidForExpense);
         } else {
-            account = findByUuid(project.accountUuidForIncome);
+            account = findByUuid(mCurrentProject.accountUuidForIncome);
         }
 
         if (account != null) {
@@ -99,6 +102,7 @@ public class AccountDataManager {
     public List<Account> findAllNeedSave(boolean isNeedSave) {
         int needSave = (isNeedSave) ? 1 : 0;
         List<Account> accounts = ormaDatabase.selectFromAccount()
+                .projectEq(mCurrentProject)
                 .where(Account_Schema.INSTANCE.deleted.getQualifiedName() + " = 0")
                 .and()
                 .where(Account_Schema.INSTANCE.needSave.getQualifiedName() + " = " + needSave)
@@ -109,6 +113,7 @@ public class AccountDataManager {
     public List<Account> findAllNeedSync(boolean isNeedSync) {
         int needSync = (isNeedSync) ? 1 : 0;
         List<Account> accounts = ormaDatabase.selectFromAccount()
+                .projectEq(mCurrentProject)
                 .where(Account_Schema.INSTANCE.deleted.getQualifiedName() + " = 0")
                 .and()
                 .where(Account_Schema.INSTANCE.needSync.getQualifiedName() + " = " + needSync)
@@ -119,6 +124,7 @@ public class AccountDataManager {
     public List<Account> findAllDeleted(boolean isDeleted) {
         int deleted = (isDeleted) ? 1 : 0;
         List<Account> accounts = ormaDatabase.selectFromAccount()
+                .projectEq(mCurrentProject)
                 .where(Account_Schema.INSTANCE.deleted.getQualifiedName() + " = " + deleted)
                 .toList();
         return accounts;
