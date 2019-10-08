@@ -52,6 +52,7 @@ public class AccountSelectActivity extends DefaultCommonActivity {
     public static final String BROADCAST_SELECT_RELOAD
             = "broadcast_account_select_reload";
 
+    private EntryDataManager entryManager = new EntryDataManager(this);
     private AccountDataManager accountDataManager = new AccountDataManager(this); // 2017/01/30 E.Nozaki
     private MyRecyclerViewAdapter adapter; // 2017/01/30 E.Nozaki
     private List<Account> accountList = null; // 2017/01/30 E.Nozaki
@@ -63,7 +64,7 @@ public class AccountSelectActivity extends DefaultCommonActivity {
     private final BroadcastReceiver mReloadReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-//            reportReload();
+            reloadData();
         }
     };
 
@@ -102,6 +103,12 @@ public class AccountSelectActivity extends DefaultCommonActivity {
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public void reloadData() {
+        if (adapter != null) {
+            adapter.notifyDataSetChanged();
+        }
     }
 
     private void setIntentData() {
@@ -150,91 +157,31 @@ public class AccountSelectActivity extends DefaultCommonActivity {
     //    -- Rename --
     //--------------------------------------------------------------//
 
-    private void renameAccount(final Account account, final int position) {
-
-        // Check if Entry data has this account already
-        EntryDataManager entryDataManager = new EntryDataManager(AccountSelectActivity.this);
-        Entry entry = entryDataManager.hasAccountInEntryData(account);
-
-        if (entry != null) {
-
-            // Show the rename reason help message
-            new AlertDialog.Builder(this)
-                    .setTitle(account.name)
-                    .setMessage(getResources().getString(R.string.help_rename_category_message))
-                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-
-                            showRenameAccountDialog(account, position);
-                            dialogInterface.dismiss();
-                        }
-                    })
-                    .show();
-        } else {
-            showRenameAccountDialog(account, position);
-        }
-    }
-
     private void showRenameAccountDialog(final Account account, final int position) {
         DialogManager.showRenameCateDialog(this, null, account,
             new DialogManager.CategoryCombineListener() {
                 @Override
                 public void onCombine(Reason fromReason, Reason toReason, int countTarget) {
-
                 }
 
                 @Override
                 public void onCombine(Account fromAccount, Account toAccount, int countTarget) {
+                    if (countTarget > 0) {
+                        entryManager.updateCombine(fromAccount, toAccount);
+                    }
+                    accountDataManager.delete(fromAccount.id);
+                    reloadData();
+                    BroadcastUtil.sendReloadReport(AccountSelectActivity.this);
+
+                    String title = getString(R.string.done);
+                    String msg = getString(R.string.combined_categories);
+                    DialogManager.showCustomAlertDialog(AccountSelectActivity.this,
+                            getSupportFragmentManager(), title, msg);
 
                 }
 
             });
 
-        /*
-        final Context context = AccountSelectActivity.this;
-        final View textInputView = LayoutInflater.from(context).inflate(R.layout.dialog_text_input, null);
-
-        final EditText editText = (EditText) textInputView.findViewById(R.id.edit);
-        editText.setText(account.name);
-
-        new AlertDialog.Builder(context)
-                .setView(textInputView)
-                .setTitle(getResources().getString(R.string.list_view_rename))
-                .setPositiveButton(getResources().getString(R.string.done), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-
-                        String newName = editText.getText().toString();
-
-                        KeyboardUtil.hideKeyboard(AccountSelectActivity.this, editText); // 2017/01/30 E.Nozaki Hide software keyboard.
-
-                        accountDataManager.updateName(account.id, newName);
-
-                        Account oldAccount = adapter.getItem(position); // 2017/01/30 E.Nozaki accountListAdapter.getItem(position);
-                        if (oldAccount != null) {
-                            oldAccount.name = newName;
-                            adapter.onAccountDataManagerChanged(); // 2017/01/30 E.Nozaki accountListAdapter.notifyDataSetChanged();
-
-                            DialogManager.showToast(AccountSelectActivity.this, newName);
-                        }
-
-                        mApiModel.updateAccount(account.uuid, null);
-
-                        dialogInterface.dismiss();
-                    }
-                })
-                .setNegativeButton(getResources().getString(R.string.cancel), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        EditText editText = (EditText) textInputView.findViewById(R.id.edit);
-                        KeyboardUtil.hideKeyboard(AccountSelectActivity.this, editText); // 2017/01/30 E.Nozaki Hide software keyboard.
-                    }
-                })
-                .show();
-
-        KeyboardUtil.showKeyboard(AccountSelectActivity.this, textInputView); // 2017/01/30 E.Nozaki Show software keyboard.
-        */
     }
 
 
@@ -617,7 +564,6 @@ public class AccountSelectActivity extends DefaultCommonActivity {
                     break;
 
                 case R.id.rename:
-//                    renameAccount(account, position);
                     showRenameAccountDialog(account, position);
                     break;
 

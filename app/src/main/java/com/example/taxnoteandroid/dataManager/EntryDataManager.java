@@ -450,6 +450,14 @@ public class EntryDataManager {
                 .execute();
     }
 
+    public void updateCombine(Account fromAccount, Account toAccount) {
+        ormaDatabase.updateEntry().project(mCurrentProject)
+                .accountEq(fromAccount)
+                .account(toAccount)
+                .needSync(true)
+                .execute();
+    }
+
     public int updateNeedSave(long id, boolean needSave) {
         return ormaDatabase.updateEntry().idEq(id).needSave(needSave).execute();
     }

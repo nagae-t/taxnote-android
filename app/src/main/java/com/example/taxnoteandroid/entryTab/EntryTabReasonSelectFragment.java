@@ -298,33 +298,6 @@ public class EntryTabReasonSelectFragment extends Fragment {
     //    -- Rename --
     //--------------------------------------------------------------//
 
-    private void renameReason(final Reason reason, final int position) {
-
-        // Check if Entry data has this reason already
-        EntryDataManager entryDataManager = new EntryDataManager(getContext());
-        Entry entry = entryDataManager.hasReasonInEntryData(reason);
-
-        if (entry != null) {
-
-            // Show the rename reason help message
-            new AlertDialog.Builder(getContext())
-                    .setTitle(reason.name)
-                    .setMessage(getResources().getString(R.string.help_rename_category_message))
-                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-
-                            showRenameReasonDialog(reason, position);
-                            dialogInterface.dismiss();
-                        }
-                    })
-                    .show();
-        } else {
-            showRenameReasonDialog(reason, position);
-        }
-    }
-
-
     private void showRenameReasonDialog(final Reason reason, final int position) {
         DialogManager.showRenameCateDialog(getParentFragment().getActivity(), reason, null,
             new DialogManager.CategoryCombineListener() {
@@ -334,75 +307,21 @@ public class EntryTabReasonSelectFragment extends Fragment {
                         entryManager.updateCombine(fromReason, toReason);
                     }
                     reasonDataManager.delete(fromReason.id);
+                    BroadcastUtil.sendReloadReport(getActivity());
 
                     String title = mContext.getString(R.string.done);
                     String msg = mContext.getString(R.string.combined_categories);
                     DialogManager.showCustomAlertDialog(mContext,
                             getFragmentManager(), title, msg);
+
                 }
 
                 @Override
                 public void onCombine(Account fromAccount, Account toAccount, int countTarget) {
-
                 }
 
             });
     }
-    /*
-    private void showRenameReasonDialog(final Reason reason, final int position) {
-
-//        DialogManager.confirmCategoryComb(getActivity(), getFragmentManager(),
-//                reason.name, null, 0);
-
-        final Context context = getContext();
-        final View textInputView = LayoutInflater.from(context).inflate(R.layout.dialog_edit_cate_input, null);
-        final EditText editText = textInputView.findViewById(R.id.edit);
-        editText.setText(reason.name);
-
-        new AlertDialog.Builder(context)
-                .setView(textInputView)
-                .setTitle(R.string.rename_subject)
-                .setPositiveButton(getResources().getString(R.string.done), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-
-                        try {
-                            String reasonName = editText.getText().toString();
-
-                            KeyboardUtil.hideKeyboard(getActivity(), editText); // 2017/01/24 E.Nozaki Hide software keyboard.
-
-                            ReasonDataManager reasonDataManager = new ReasonDataManager(getContext());
-                            reasonDataManager.updateName(reason.id, reasonName);
-
-                            Reason oldReason = adapter.getItem(position);
-
-                            if (oldReason != null) {
-
-                                oldReason.name = reasonName;
-                                reasonDataManager.updateName(reason.id, reasonName);
-                                adapter.onReasonDataManagerChanged();
-
-                                DialogManager.showToast(getActivity(), reasonName);
-                            }
-
-                            mApiModel.updateReason(reason.uuid, null);
-
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }
-                })
-                .setNegativeButton(getResources().getString(R.string.cancel), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        EditText editText = textInputView.findViewById(R.id.edit);
-                        KeyboardUtil.hideKeyboard(getActivity(), editText); // 2017/01/24 E.Nozaki Hide software keyboard.
-                    }
-                })
-                .show();
-
-    }
-    */
 
     //--------------------------------------------------------------//
     //    -- Delete --
@@ -758,7 +677,6 @@ public class EntryTabReasonSelectFragment extends Fragment {
                     break;
 
                 case R.id.rename:
-//                    renameReason(reason, position);
                     showRenameReasonDialog(reason, position);
                     break;
 
