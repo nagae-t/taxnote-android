@@ -868,15 +868,20 @@ public class DialogManager {
 
     // 科目名を変更したあと、同じ科目名の結合を確認するためのダイアログ
     private static void confirmCategoryComb(final Activity activity, final CategoryCombineListener listener,
-                                            final boolean isAccount, int countTarget,
+                                            final boolean isAccount, final int countTarget,
                                             final Reason fromReason, final Reason toReason,
                                             final Account fromAccount, final Account toAccount) {
         String oldName = (isAccount) ? fromAccount.name : fromReason.name;
         String newName = (isAccount) ? toAccount.name : toReason.name;
 
         String dialog1Title = activity.getString(R.string.confirm_subj_comb_title, oldName, newName);
+        String simpleMsg = activity.getString(R.string.confirm_comb_message, newName);
         String dialog1Msg = activity.getString(R.string.confirm_subj_comb_message, oldName, newName, countTarget);
         String dialog2Msg = activity.getString(R.string.confirm_subj_comb_message_again, oldName, newName, countTarget);
+
+        if (countTarget == 0) {
+            dialog1Msg = simpleMsg;
+        }
 
         final AlertDialog.Builder dialog2Builder = new AlertDialog.Builder(activity)
                 .setTitle(dialog1Title)
@@ -885,9 +890,9 @@ public class DialogManager {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         if (isAccount) {
-                            listener.onCombine(fromAccount, toAccount);
+                            listener.onCombine(fromAccount, toAccount, countTarget);
                         } else {
-                            listener.onCombine(fromReason, toReason);
+                            listener.onCombine(fromReason, toReason, countTarget);
                         }
                     }
                 })
@@ -899,7 +904,15 @@ public class DialogManager {
                 .setPositiveButton(R.string.done, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        dialog2Builder.show();
+                        if (countTarget > 0) {
+                            dialog2Builder.show();
+                        } else {
+                            if (isAccount) {
+                                listener.onCombine(fromAccount, toAccount, countTarget);
+                            } else {
+                                listener.onCombine(fromReason, toReason, countTarget);
+                            }
+                        }
                     }
                 })
                 .setNegativeButton(activity.getString(R.string.cancel), null);
@@ -909,8 +922,8 @@ public class DialogManager {
     }
 
     public interface CategoryCombineListener {
-        void onCombine(Reason fromReason, Reason toReason);
-        void onCombine(Account fromAccount, Account toAccount);
+        void onCombine(Reason fromReason, Reason toReason, int countTarget);
+        void onCombine(Account fromAccount, Account toAccount, int countTarget);
     }
 
 }

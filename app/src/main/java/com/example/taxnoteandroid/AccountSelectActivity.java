@@ -34,6 +34,7 @@ import com.example.taxnoteandroid.databinding.RowAccountCellBinding;
 import com.example.taxnoteandroid.model.Account;
 import com.example.taxnoteandroid.model.Entry;
 import com.example.taxnoteandroid.model.Project;
+import com.example.taxnoteandroid.model.Reason;
 
 import java.util.Collections;
 import java.util.List;
@@ -176,7 +177,19 @@ public class AccountSelectActivity extends DefaultCommonActivity {
     }
 
     private void showRenameAccountDialog(final Account account, final int position) {
-        DialogManager.showRenameCateDialog(this,null, account);
+        DialogManager.showRenameCateDialog(this, null, account,
+            new DialogManager.CategoryCombineListener() {
+                @Override
+                public void onCombine(Reason fromReason, Reason toReason, int countTarget) {
+
+                }
+
+                @Override
+                public void onCombine(Account fromAccount, Account toAccount, int countTarget) {
+
+                }
+
+            });
 
         /*
         final Context context = AccountSelectActivity.this;

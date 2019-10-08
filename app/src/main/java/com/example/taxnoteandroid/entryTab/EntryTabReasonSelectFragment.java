@@ -329,14 +329,23 @@ public class EntryTabReasonSelectFragment extends Fragment {
         DialogManager.showRenameCateDialog(getParentFragment().getActivity(), reason, null,
             new DialogManager.CategoryCombineListener() {
                 @Override
-                public void onCombine(Reason fromReason, Reason toReason) {
+                public void onCombine(Reason fromReason, Reason toReason, int countTarget) {
+                    if (countTarget > 0) {
+                        entryManager.updateCombine(fromReason, toReason);
+                    }
+                    reasonDataManager.delete(fromReason.id);
 
+                    String title = mContext.getString(R.string.done);
+                    String msg = mContext.getString(R.string.combined_categories);
+                    DialogManager.showCustomAlertDialog(mContext,
+                            getFragmentManager(), title, msg);
                 }
 
                 @Override
-                public void onCombine(Account fromAccount, Account toAccount) {
+                public void onCombine(Account fromAccount, Account toAccount, int countTarget) {
 
                 }
+
             });
     }
     /*

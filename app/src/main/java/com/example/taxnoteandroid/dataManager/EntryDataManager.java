@@ -442,6 +442,14 @@ public class EntryDataManager {
                 .execute();
     }
 
+    public void updateCombine(Reason fromReason, Reason toReason) {
+        ormaDatabase.updateEntry().project(mCurrentProject)
+                .reasonEq(fromReason)
+                .reason(toReason)
+                .needSync(true)
+                .execute();
+    }
+
     public int updateNeedSave(long id, boolean needSave) {
         return ormaDatabase.updateEntry().idEq(id).needSave(needSave).execute();
     }
