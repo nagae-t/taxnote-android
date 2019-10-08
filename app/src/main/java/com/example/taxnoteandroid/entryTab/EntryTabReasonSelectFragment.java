@@ -326,13 +326,18 @@ public class EntryTabReasonSelectFragment extends Fragment {
 
 
     private void showRenameReasonDialog(final Reason reason, final int position) {
-//        DialogManager.showRenameCateDialog(getActivity(), reason.name, new DialogInterface.OnClickListener() {
-//            @Override
-//            public void onClick(DialogInterface dialog, int which) {
-//            }
-//        });
-//        MainActivity activity = (MainActivity)getParentFragment().getActivity();
-        DialogManager.showRenameCateDialog(getParentFragment().getActivity(), reason, null);
+        DialogManager.showRenameCateDialog(getParentFragment().getActivity(), reason, null,
+            new DialogManager.CategoryCombineListener() {
+                @Override
+                public void onCombine(Reason fromReason, Reason toReason) {
+
+                }
+
+                @Override
+                public void onCombine(Account fromAccount, Account toAccount) {
+
+                }
+            });
     }
     /*
     private void showRenameReasonDialog(final Reason reason, final int position) {

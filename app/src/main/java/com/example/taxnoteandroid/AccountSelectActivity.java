@@ -1,8 +1,10 @@
 package com.example.taxnoteandroid;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.databinding.DataBindingUtil;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -46,6 +48,9 @@ public class AccountSelectActivity extends DefaultCommonActivity {
 
     public boolean isExpense;
 
+    public static final String BROADCAST_SELECT_RELOAD
+            = "broadcast_account_select_reload";
+
     private AccountDataManager accountDataManager = new AccountDataManager(this); // 2017/01/30 E.Nozaki
     private MyRecyclerViewAdapter adapter; // 2017/01/30 E.Nozaki
     private List<Account> accountList = null; // 2017/01/30 E.Nozaki
@@ -53,6 +58,13 @@ public class AccountSelectActivity extends DefaultCommonActivity {
     private Account mCurrentAccount;
 
     private TNApiModel mApiModel;
+
+    private final BroadcastReceiver mReloadReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+//            reportReload();
+        }
+    };
 
     public static Intent createIntent(Context context, boolean isExpense) {
         Intent i = new Intent(context, AccountSelectActivity.class);
@@ -68,6 +80,8 @@ public class AccountSelectActivity extends DefaultCommonActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_account_select);
+
+        registerReceiver(mReloadReceiver, new IntentFilter(BROADCAST_SELECT_RELOAD));
 
         mApiModel = new TNApiModel(this);
 
@@ -619,5 +633,11 @@ public class AccountSelectActivity extends DefaultCommonActivity {
                     }
                 })
                 .show();
+    }
+
+    @Override
+    protected void onDestroy() {
+        unregisterReceiver(mReloadReceiver);
+        super.onDestroy();
     }
 }

@@ -796,9 +796,8 @@ public class DialogManager {
     // 表示させる確認ダイアログ
     public static void showRenameCateDialog(final Activity activity,
                                             final Reason reason,
-                                            final Account account) {
-//    public static void confirmCategoryComb(final Activity activity, FragmentManager fragmentManager,
-//                                           String oldName, String newName, int countTarget) {
+                                            final Account account,
+                                            final CategoryCombineListener listener) {
         final Context context = activity.getApplicationContext();
         final TNApiModel apiModel  = new TNApiModel(context);
         final EntryDataManager entryManager = new EntryDataManager(context);
@@ -808,11 +807,10 @@ public class DialogManager {
         final String oldName = (reason != null) ? reason.name : account.name;
         editText.setText(oldName);
 
-        AlertDialog.Builder dialog1Builder = new AlertDialog.Builder(activity)
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(activity)
                 .setView(dialogView)
                 .setTitle(R.string.rename_subject)
-//                .setPositiveButton(activity.getString(R.string.done), positiveAction)
-                .setPositiveButton(activity.getString(R.string.done), new DialogInterface.OnClickListener() {
+                .setPositiveButton(R.string.done, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         KeyboardUtil.hideKeyboard(activity, editText);
@@ -825,26 +823,29 @@ public class DialogManager {
                             // Check if Entry data has this reason already
                             if (_reason != null) {
                                 int countTarget = entryManager.countByReason(reason);
-                                confirmCategoryComb(activity, oldName, inputName, countTarget);
+                                confirmCategoryComb(activity, listener,
+                                        false, countTarget,
+                                        reason, _reason, null, null);
                                 return;
                             } else {
                                 reasonManager.updateName(reason.id, inputName);
-
                                 apiModel.updateReason(reason.uuid, null);
                             }
                         }
                         if (account != null) {
+                            AccountDataManager accManager = new AccountDataManager(context);
+                            Account _account = accManager.findByName(inputName);
                             // Check if Entry data has this account already
-                            Entry entry = entryManager.hasAccountInEntryData(account);
-                            if (entry != null) {
+                            if (_account != null) {
                                 int countTarget = entryManager.countByAccount(account);
-                                confirmCategoryComb(activity, oldName, inputName, countTarget);
+                                confirmCategoryComb(activity, listener,
+                                        true, countTarget,
+                                        null, null, account, _account);
                                 return;
                             } else {
-                                AccountDataManager accManager = new AccountDataManager(context);
                                 accManager.updateName(account.id, inputName);
-
                                 apiModel.updateAccount(account.uuid, null);
+                                BroadcastUtil.sendReloadAccountSelect(activity);
                             }
                         }
 
@@ -852,36 +853,64 @@ public class DialogManager {
                         BroadcastUtil.sendReloadReport(activity);
                     }
                 })
-                .setNegativeButton(activity.getString(R.string.cancel), new DialogInterface.OnClickListener() {
+                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         EditText editText = dialogView.findViewById(R.id.edit);
                         KeyboardUtil.hideKeyboard(activity, editText);
                     }
                 });
-        dialog1Builder.show();
+        dialogBuilder.show();
 
 
         KeyboardUtil.showKeyboard(activity, dialogView);
     }
 
-    private static void confirmCategoryComb(final Activity activity,
-                                            String oldName, String newName,
-                                            int countTarget) {
+    // 科目名を変更したあと、同じ科目名の結合を確認するためのダイアログ
+    private static void confirmCategoryComb(final Activity activity, final CategoryCombineListener listener,
+                                            final boolean isAccount, int countTarget,
+                                            final Reason fromReason, final Reason toReason,
+                                            final Account fromAccount, final Account toAccount) {
+        String oldName = (isAccount) ? fromAccount.name : fromReason.name;
+        String newName = (isAccount) ? toAccount.name : toReason.name;
 
-        String dialog2Title = activity.getString(R.string.confirm_subj_comb_title, oldName, newName);
-        String dialog2Msg = activity.getString(R.string.confirm_subj_comb_message, oldName, newName, countTarget);
-        AlertDialog.Builder dialog2Builder = new AlertDialog.Builder(activity)
-                .setTitle(dialog2Title)
+        String dialog1Title = activity.getString(R.string.confirm_subj_comb_title, oldName, newName);
+        String dialog1Msg = activity.getString(R.string.confirm_subj_comb_message, oldName, newName, countTarget);
+        String dialog2Msg = activity.getString(R.string.confirm_subj_comb_message_again, oldName, newName, countTarget);
+
+        final AlertDialog.Builder dialog2Builder = new AlertDialog.Builder(activity)
+                .setTitle(dialog1Title)
                 .setMessage(dialog2Msg)
-                .setPositiveButton(activity.getString(R.string.done), new DialogInterface.OnClickListener() {
+                .setPositiveButton(R.string.rename_subj_comb_btn, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
+                        if (isAccount) {
+                            listener.onCombine(fromAccount, toAccount);
+                        } else {
+                            listener.onCombine(fromReason, toReason);
+                        }
+                    }
+                })
+                .setNegativeButton(R.string.cancel, null);
 
+        final AlertDialog.Builder dialog1Builder = new AlertDialog.Builder(activity)
+                .setTitle(dialog1Title)
+                .setMessage(dialog1Msg)
+                .setPositiveButton(R.string.done, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialog2Builder.show();
                     }
                 })
                 .setNegativeButton(activity.getString(R.string.cancel), null);
-        dialog2Builder.show();
+
+        dialog1Builder.show();
+
+    }
+
+    public interface CategoryCombineListener {
+        void onCombine(Reason fromReason, Reason toReason);
+        void onCombine(Account fromAccount, Account toAccount);
     }
 
 }
