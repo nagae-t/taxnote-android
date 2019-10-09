@@ -538,6 +538,10 @@ public class MainActivity extends DefaultCommonActivity
 
         CustomViewPager pager = binding.pager;
 
+        EntryTabFragment entryTabFragment =
+                (EntryTabFragment) mTabPagerAdapter.instantiateItem(pager, 0);
+        entryTabFragment.reloadData();
+
         HistoryTabFragment historyFragment =
                 (HistoryTabFragment) mTabPagerAdapter.instantiateItem(pager, 1);
         if (historyFragment != null)

@@ -9,16 +9,22 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.taxnoteandroid.DataExportActivity;
 import com.example.taxnoteandroid.HistoryListDataActivity;
+import com.example.taxnoteandroid.Library.taxnote.TNApiModel;
 import com.example.taxnoteandroid.Library.zeny.ZNUtils;
 import com.example.taxnoteandroid.R;
 import com.example.taxnoteandroid.TNSimpleDialogFragment;
 import com.example.taxnoteandroid.UpgradeActivity;
+import com.example.taxnoteandroid.dataManager.AccountDataManager;
 import com.example.taxnoteandroid.dataManager.EntryDataManager;
 import com.example.taxnoteandroid.dataManager.ProjectDataManager;
+import com.example.taxnoteandroid.dataManager.ReasonDataManager;
 import com.example.taxnoteandroid.dataManager.SharedPreferencesManager;
 import com.example.taxnoteandroid.model.Account;
 import com.example.taxnoteandroid.model.Entry;
@@ -785,4 +791,139 @@ public class DialogManager {
                 .show();
 
     }
+
+    // 科目の名前を編集して結合するときに
+    // 表示させる確認ダイアログ
+    public static void showRenameCateDialog(final Activity activity,
+                                            final Reason reason,
+                                            final Account account,
+                                            final CategoryCombineListener listener) {
+        final Context context = activity.getApplicationContext();
+        final TNApiModel apiModel  = new TNApiModel(context);
+        final EntryDataManager entryManager = new EntryDataManager(context);
+        final View dialogView = LayoutInflater.from(context)
+                .inflate(R.layout.dialog_edit_cate_input, null);
+        final EditText editText = dialogView.findViewById(R.id.edit);
+        final String oldName = (reason != null) ? reason.name : account.name;
+        editText.setText(oldName);
+
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(activity)
+                .setView(dialogView)
+                .setTitle(R.string.rename_subject)
+                .setPositiveButton(R.string.done, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        KeyboardUtil.hideKeyboard(activity, editText);
+
+                        String inputName = editText.getText().toString();
+
+                        if (reason != null) {
+                            ReasonDataManager reasonManager = new ReasonDataManager(context);
+                            Reason _reason = reasonManager.findByName(inputName);
+                            // Check if Entry data has this reason already
+                            if (_reason != null) {
+                                int countTarget = entryManager.countByReason(reason);
+                                confirmCategoryComb(activity, listener,
+                                        false, countTarget,
+                                        reason, _reason, null, null);
+                                return;
+                            } else {
+                                reasonManager.updateName(reason.id, inputName);
+                                apiModel.updateReason(reason.uuid, null);
+                            }
+                        }
+                        if (account != null) {
+                            AccountDataManager accManager = new AccountDataManager(context);
+                            Account _account = accManager.findByName(inputName);
+                            // Check if Entry data has this account already
+                            if (_account != null) {
+                                int countTarget = entryManager.countByAccount(account);
+                                confirmCategoryComb(activity, listener,
+                                        true, countTarget,
+                                        null, null, account, _account);
+                                return;
+                            } else {
+                                accManager.updateName(account.id, inputName);
+                                apiModel.updateAccount(account.uuid, null);
+                                BroadcastUtil.sendReloadAccountSelect(activity);
+                            }
+                        }
+
+                        showToast(activity, inputName);
+                        BroadcastUtil.sendReloadReport(activity);
+                    }
+                })
+                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        EditText editText = dialogView.findViewById(R.id.edit);
+                        KeyboardUtil.hideKeyboard(activity, editText);
+                    }
+                });
+        dialogBuilder.show();
+
+
+        KeyboardUtil.showKeyboard(activity, dialogView);
+    }
+
+    // 科目名を変更したあと、同じ科目名の結合を確認するためのダイアログ
+    private static void confirmCategoryComb(final Activity activity, final CategoryCombineListener listener,
+                                            final boolean isAccount, final int countTarget,
+                                            final Reason fromReason, final Reason toReason,
+                                            final Account fromAccount, final Account toAccount) {
+        String oldName = (isAccount) ? fromAccount.name : fromReason.name;
+        String newName = (isAccount) ? toAccount.name : toReason.name;
+
+        String dialog1Title = activity.getString(R.string.confirm_subj_comb_title, oldName, newName);
+        String simpleMsg = activity.getString(R.string.confirm_comb_message, newName);
+        String dialog1Msg = activity.getString(R.string.confirm_subj_comb_message, oldName, newName, countTarget);
+        String dialog2Msg = activity.getString(R.string.confirm_subj_comb_message_again, oldName, newName, countTarget);
+
+        if (countTarget == 0) {
+            dialog1Msg = simpleMsg;
+        }
+
+        final AlertDialog.Builder dialog2Builder = new AlertDialog.Builder(activity)
+                .setTitle(dialog1Title)
+                .setMessage(dialog2Msg)
+                .setPositiveButton(R.string.rename_subj_comb_btn, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        if (isAccount) {
+                            listener.onCombine(fromAccount, toAccount, countTarget);
+                        } else {
+                            listener.onCombine(fromReason, toReason, countTarget);
+                        }
+                    }
+                })
+                .setNegativeButton(R.string.cancel, null);
+
+        final AlertDialog.Builder dialog1Builder = new AlertDialog.Builder(activity)
+                .setTitle(dialog1Title)
+                .setMessage(dialog1Msg)
+                .setPositiveButton(R.string.done, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        if (countTarget > 0) {
+                            dialog2Builder.show();
+                        } else {
+                            if (isAccount) {
+                                listener.onCombine(fromAccount, toAccount, countTarget);
+                            } else {
+                                listener.onCombine(fromReason, toReason, countTarget);
+                            }
+                        }
+                    }
+                })
+                .setNegativeButton(activity.getString(R.string.cancel), null);
+
+        dialog1Builder.show();
+
+    }
+
+    public interface CategoryCombineListener {
+        void onCombine(Reason fromReason, Reason toReason, int countTarget);
+        void onCombine(Account fromAccount, Account toAccount, int countTarget);
+    }
+
 }

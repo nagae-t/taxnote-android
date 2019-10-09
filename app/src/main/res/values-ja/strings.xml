@@ -62,6 +62,15 @@
     <string name="pin_button_on_message">連続入力オン - 日付と科目を固定して連続入力</string>
     <string name="pin_button_off_message">連続入力オフ</string>
 
+    <string name="rename_subject">科目名の変更・結合</string>
+    <string name="rename_subject_message">すでにこの科目を使ってデータを入力している場合は、入力したデータの科目名も自動的に変更されます。\nすでに存在する科目名を入力して、科目を結合することもできます。</string>
+    <string name="confirm_comb_message">「%1$s」がすでに存在します。こちらの科目に結合しますか？</string>
+    <string name="confirm_subj_comb_title">科目の結合\n「%1$s」=>「%2$s」</string>
+    <string name="confirm_subj_comb_message">「%2$s」がすでに存在します。こちらの科目に結合しますか？\n「%1$s」を使用した入力データ%3$d件も「%2$s」に更新されます。\n（入力データの備考はそのまま残ります。）</string>
+    <string name="confirm_subj_comb_message_again">「%1$s」を使用した入力データ%3$d件が「%2$s」に更新されます。\n科目を結合しますか？</string>
+    <string name="rename_subj_comb_btn">科目を結合する</string>
+    <string name="category_name">科目名</string>
+    <string name="combined_categories">科目を結合しました。</string>
 
     //--------------------------------------------------------------//
     // -- Date --
