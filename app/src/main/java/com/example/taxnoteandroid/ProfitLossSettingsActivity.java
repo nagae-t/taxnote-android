@@ -62,8 +62,8 @@ public class ProfitLossSettingsActivity extends DefaultCommonActivity {
                     DialogManager.showCustomAlertDialog(ProfitLossSettingsActivity.this,
                             getSupportFragmentManager(),
                             title, message);
-                    BroadcastUtil.sendReloadReport(ProfitLossSettingsActivity.this);
                 }
+                BroadcastUtil.sendReloadReport(ProfitLossSettingsActivity.this);
             }
         });
 
@@ -79,8 +79,8 @@ public class ProfitLossSettingsActivity extends DefaultCommonActivity {
                     DialogManager.showCustomAlertDialog(ProfitLossSettingsActivity.this,
                             getSupportFragmentManager(),
                             title, message);
-                    BroadcastUtil.sendReloadReport(ProfitLossSettingsActivity.this);
                 }
+                BroadcastUtil.sendReloadReport(ProfitLossSettingsActivity.this);
             }
         });
 
