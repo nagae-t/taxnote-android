@@ -1,8 +1,10 @@
 package com.example.taxnoteandroid;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.databinding.DataBindingUtil;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -12,7 +14,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -32,6 +33,7 @@ import com.example.taxnoteandroid.databinding.RowAccountCellBinding;
 import com.example.taxnoteandroid.model.Account;
 import com.example.taxnoteandroid.model.Entry;
 import com.example.taxnoteandroid.model.Project;
+import com.example.taxnoteandroid.model.Reason;
 
 import java.util.Collections;
 import java.util.List;
@@ -46,13 +48,24 @@ public class AccountSelectActivity extends DefaultCommonActivity {
 
     public boolean isExpense;
 
-    private AccountDataManager accountDataManager = new AccountDataManager(this); // 2017/01/30 E.Nozaki
+    public static final String BROADCAST_SELECT_RELOAD
+            = "broadcast_account_select_reload";
+
+    private EntryDataManager entryManager;
+    private AccountDataManager accountDataManager;
     private MyRecyclerViewAdapter adapter; // 2017/01/30 E.Nozaki
     private List<Account> accountList = null; // 2017/01/30 E.Nozaki
 
     private Account mCurrentAccount;
 
     private TNApiModel mApiModel;
+
+    private final BroadcastReceiver mReloadReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            reloadData();
+        }
+    };
 
     public static Intent createIntent(Context context, boolean isExpense) {
         Intent i = new Intent(context, AccountSelectActivity.class);
@@ -69,7 +82,11 @@ public class AccountSelectActivity extends DefaultCommonActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_account_select);
 
+        registerReceiver(mReloadReceiver, new IntentFilter(BROADCAST_SELECT_RELOAD));
+
         mApiModel = new TNApiModel(this);
+        accountDataManager = new AccountDataManager(this);
+        entryManager = new EntryDataManager(this);
 
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
@@ -87,6 +104,12 @@ public class AccountSelectActivity extends DefaultCommonActivity {
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public void reloadData() {
+        if (adapter != null) {
+            adapter.onAccountDataManagerChanged();
+        }
     }
 
     private void setIntentData() {
@@ -135,76 +158,31 @@ public class AccountSelectActivity extends DefaultCommonActivity {
     //    -- Rename --
     //--------------------------------------------------------------//
 
-    private void renameAccount(final Account account, final int position) {
-
-        // Check if Entry data has this account already
-        EntryDataManager entryDataManager = new EntryDataManager(AccountSelectActivity.this);
-        Entry entry = entryDataManager.hasAccountInEntryData(account);
-
-        if (entry != null) {
-
-            // Show the rename reason help message
-            new AlertDialog.Builder(this)
-                    .setTitle(account.name)
-                    .setMessage(getResources().getString(R.string.help_rename_category_message))
-                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-
-                            showRenameAccountDialog(account, position);
-                            dialogInterface.dismiss();
-                        }
-                    })
-                    .show();
-        } else {
-            showRenameAccountDialog(account, position);
-        }
-    }
-
     private void showRenameAccountDialog(final Account account, final int position) {
+        DialogManager.showRenameCateDialog(this, null, account,
+            new DialogManager.CategoryCombineListener() {
+                @Override
+                public void onCombine(Reason fromReason, Reason toReason, int countTarget) {
+                }
 
-        final Context context = AccountSelectActivity.this;
-        final View textInputView = LayoutInflater.from(context).inflate(R.layout.dialog_text_input, null);
-
-        final EditText editText = (EditText) textInputView.findViewById(R.id.edit);
-        editText.setText(account.name);
-
-        new AlertDialog.Builder(context)
-                .setView(textInputView)
-                .setTitle(getResources().getString(R.string.list_view_rename))
-                .setPositiveButton(getResources().getString(R.string.done), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-
-                        String newName = editText.getText().toString();
-
-                        KeyboardUtil.hideKeyboard(AccountSelectActivity.this, editText); // 2017/01/30 E.Nozaki Hide software keyboard.
-
-                        accountDataManager.updateName(account.id, newName);
-
-                        Account oldAccount = adapter.getItem(position); // 2017/01/30 E.Nozaki accountListAdapter.getItem(position);
-                        if (oldAccount != null) {
-                            oldAccount.name = newName;
-                            adapter.onAccountDataManagerChanged(); // 2017/01/30 E.Nozaki accountListAdapter.notifyDataSetChanged();
-
-                            DialogManager.showToast(AccountSelectActivity.this, newName);
-                        }
-
-                        mApiModel.updateAccount(account.uuid, null);
-
-                        dialogInterface.dismiss();
+                @Override
+                public void onCombine(Account fromAccount, Account toAccount, int countTarget) {
+                    if (countTarget > 0) {
+                        entryManager.updateCombine(fromAccount, toAccount);
                     }
-                })
-                .setNegativeButton(getResources().getString(R.string.cancel), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        EditText editText = (EditText) textInputView.findViewById(R.id.edit);
-                        KeyboardUtil.hideKeyboard(AccountSelectActivity.this, editText); // 2017/01/30 E.Nozaki Hide software keyboard.
-                    }
-                })
-                .show();
+                    accountDataManager.delete(fromAccount.id);
+                    reloadData();
+                    BroadcastUtil.sendReloadReport(AccountSelectActivity.this);
 
-        KeyboardUtil.showKeyboard(AccountSelectActivity.this, textInputView); // 2017/01/30 E.Nozaki Show software keyboard.
+                    String title = getString(R.string.done);
+                    String msg = getString(R.string.combined_categories);
+                    DialogManager.showCustomAlertDialog(AccountSelectActivity.this,
+                            getSupportFragmentManager(), title, msg);
+
+                }
+
+            });
+
     }
 
 
@@ -226,17 +204,16 @@ public class AccountSelectActivity extends DefaultCommonActivity {
         }
 
         // Check if Entry data has this account already
-        final EntryDataManager entryDataManager = new EntryDataManager(AccountSelectActivity.this);
-        Entry entry = entryDataManager.hasAccountInEntryData(account);
+        Entry entry = entryManager.hasAccountInEntryData(account);
 
         if (entry != null) {
-            int countEntry = entryDataManager.countByAccount(account);
+            int countEntry = entryManager.countByAccount(account);
 
             DialogManager.confirmEntryDeleteForReson(this, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
 
-                            entryDataManager.deleteByAccount(account, mApiModel);
+                            entryManager.deleteByAccount(account, mApiModel);
                             accountDataManager.updateSetDeleted(account.uuid, mApiModel);
 
                             BroadcastUtil.sendReloadReport(AccountSelectActivity.this);
@@ -338,7 +315,6 @@ public class AccountSelectActivity extends DefaultCommonActivity {
         }
 
         public void onAccountDataManagerChanged() {
-            Log.d(this.getClass().getSimpleName() + ":435", "onAccountDataManagerChanged() が呼ばれた。");
             accountList = accountDataManager.findAllWithIsExpense(isExpense);
             this.notifyDataSetChanged();
         }
@@ -371,10 +347,6 @@ public class AccountSelectActivity extends DefaultCommonActivity {
 
             int position_from = viewHolder.getAdapterPosition();
             int position_to = target.getAdapterPosition();
-
-            Log.d(getClass().getSimpleName(), "---------------------------------");
-            Log.d(getClass().getSimpleName(), "position_from = " + position_from);
-            Log.d(getClass().getSimpleName(), "position_to = " + position_to);
 
             int size = accountList.size();
 
@@ -587,7 +559,7 @@ public class AccountSelectActivity extends DefaultCommonActivity {
                     break;
 
                 case R.id.rename:
-                    renameAccount(account, position);
+                    showRenameAccountDialog(account, position);
                     break;
 
                 case R.id.delete:
@@ -615,5 +587,11 @@ public class AccountSelectActivity extends DefaultCommonActivity {
                     }
                 })
                 .show();
+    }
+
+    @Override
+    protected void onDestroy() {
+        unregisterReceiver(mReloadReceiver);
+        super.onDestroy();
     }
 }

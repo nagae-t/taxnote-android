@@ -3,6 +3,7 @@ package com.example.taxnoteandroid.Library;
 import android.app.Activity;
 import android.content.Intent;
 
+import com.example.taxnoteandroid.AccountSelectActivity;
 import com.example.taxnoteandroid.BarGraphActivity;
 import com.example.taxnoteandroid.HistoryListDataActivity;
 import com.example.taxnoteandroid.InputRecurringListActivity;
@@ -52,5 +53,9 @@ public class BroadcastUtil {
         intent.putExtra(KEY_DATA_PERIOD_SCROLLED_TARGET, target);
         intent.putExtra(KEY_DATA_PERIOD_SCROLLED_POSITION, position);
         activity.sendBroadcast(intent);
+    }
+
+    public static void sendReloadAccountSelect(Activity activity) {
+        activity.sendBroadcast(new Intent(AccountSelectActivity.BROADCAST_SELECT_RELOAD));
     }
 }
