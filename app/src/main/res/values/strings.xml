@@ -266,7 +266,7 @@
     <string name="update_check_do_not_show_again">Don\'t show again</string>
 
     <string name="reorder_category">Reorder</string>
-    <string name="rename_category">Rename</string>
+    <string name="rename_category">Rename・Combine</string>
     <string name="delete_category">Delete</string>
 
     <string name="Balance">Balance</string>

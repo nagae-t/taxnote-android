@@ -27,7 +27,7 @@
     //--------------------------------------------------------------//
 
     <string name="list_view_add_reason">カテゴリを追加</string>
-    <string name="list_view_rename">カテゴリ名を変更</string>
+    <string name="list_view_rename">カテゴリ名の変更・結合</string>
 
 
     //--------------------------------------------------------------//
@@ -84,7 +84,7 @@
     <!--//@@ここをアップデートごとに変更-->
     <string name="release_note_url">http://taxnote.hatenablog.com/entry/2017/05/12/084155</string>
 
-    <string name="rename_category">カテゴリ名変更</string>
+    <string name="rename_category">カテゴリ名変更・結合</string>
     <string name="profit_loss_settings">レポートの設定</string>
     <string name="balance_carry_forward_desc">レポートの残高が、以前の残高を繰り越した数値になります。</string>
     <string name="monthly_closing_date_desc">1日から14日までを選択した時は、選択した日までが前月分のレポートに表示されます。15日以降を選択した時は、選択した日より後が次月分のレポートに表示されます。例えば、25日を選択した場合、先月26日〜今月25日までが今月分のレポートに表示されます。</string>

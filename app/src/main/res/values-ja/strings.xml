@@ -63,7 +63,7 @@
     <string name="pin_button_off_message">連続入力オフ</string>
 
     <string name="rename_subject">科目名の変更・結合</string>
-    <string name="rename_subject_message">すでにこの科目を使ってデータを入力している場合は、入力したデータの科目名も自動的に変更されます。\nすでに存在する科目名を入力して、科目を結合することもできます。</string>
+    <string name="rename_subject_message">すでにこの科目を使ってデータを入力している場合は、入力したデータの科目名も自動的に変更されます。\n\nすでに存在する科目名を入力して、科目を結合することもできます。</string>
     <string name="confirm_comb_message">「%1$s」がすでに存在します。こちらの科目に結合しますか？</string>
     <string name="confirm_subj_comb_title">科目の結合\n「%1$s」=>「%2$s」</string>
     <string name="confirm_subj_comb_message">「%2$s」がすでに存在します。こちらの科目に結合しますか？\n「%1$s」を使用した入力データ%3$d件も「%2$s」に更新されます。\n（入力データの備考はそのまま残ります。）</string>
@@ -263,7 +263,7 @@
     <string name="update_check_do_not_show_again">アップデートしない</string>
 
     <string name="reorder_category">並び替え</string>
-    <string name="rename_category">科目名変更</string>
+    <string name="rename_category">科目名の変更・結合</string>
     <string name="delete_category">削除</string>
 
     <string name="Balance">残高</string>
