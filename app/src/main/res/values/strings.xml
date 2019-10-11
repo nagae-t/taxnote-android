@@ -126,6 +126,9 @@
     <string name="fixed_cate_order">Fix Category Order</string>
     <string name="fixed_cate_order_message">This option makes the ordering the same as your category order in the Input.</string>
 
+    <string name="combine_all_accounts">Combine All Accounts</string>
+    <string name="combine_all_accounts_message">Show data with all combined data of accounts you created in the settings.\nIf you don\'t have multiple accounts with Taxnote Cloud, this option doesn\'t change anything.</string>
+
     //--------------------------------------------------------------//
     // -- Data Export --
     //--------------------------------------------------------------//

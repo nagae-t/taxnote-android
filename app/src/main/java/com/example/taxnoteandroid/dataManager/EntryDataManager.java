@@ -36,6 +36,8 @@ public class EntryDataManager {
     private ProjectDataManager mProjectManager;
     private Project mCurrentProject;
 
+    private boolean mIsCompAllProject;
+
     public EntryDataManager(Context context) {
         ormaDatabase = TaxnoteApp.getOrmaDatabase();
         mContext = context;
@@ -107,15 +109,18 @@ public class EntryDataManager {
         List<Entry> entries;
         String orderSpec = (asc) ? OrderSpec.ASC : OrderSpec.DESC;
 
+        Entry_Selector selector = (mIsCompAllProject)
+                ? ormaDatabase.selectFromEntry()
+                : ormaDatabase.selectFromEntry().projectEq(mCurrentProject);
+
         if (startAndEndDate != null) {
 
             // Get entries filtered within startDate and endDate
             long startDate  = startAndEndDate[0];
             long endDate    = startAndEndDate[1];
 
-            entries = ormaDatabase.selectFromEntry().
+            entries = selector .
                     where(Entry_Schema.INSTANCE.deleted.getQualifiedName() + " = 0")
-                    .projectEq(mCurrentProject)
                     .where(Entry_Schema.INSTANCE.date.getQualifiedName() + " > " + startDate)
                     .where(Entry_Schema.INSTANCE.date.getQualifiedName() + " < " + endDate)
                     .orderBy(Entry_Schema.INSTANCE.date.getQualifiedName() + " " + orderSpec)
@@ -123,9 +128,8 @@ public class EntryDataManager {
                     .toList();
         } else {
 
-            entries = ormaDatabase.selectFromEntry().
+            entries = selector .
                     where(Entry_Schema.INSTANCE.deleted.getQualifiedName() + " = 0")
-                    .projectEq(mCurrentProject)
                     .orderBy(Entry_Schema.INSTANCE.date.getQualifiedName() + " " + orderSpec)
                     .orderBy(Entry_Schema.INSTANCE.updated.getQualifiedName() + " " + orderSpec)
                     .toList();
@@ -176,9 +180,12 @@ public class EntryDataManager {
         List<Entry> entries;
         String orderSpec = OrderSpec.ASC;
 
-        Entry_Selector entrySelector = ormaDatabase.selectFromEntry()
-                .where(Entry_Schema.INSTANCE.deleted.getQualifiedName() + " = 0")
-                .projectEq(mCurrentProject);
+        Entry_Selector selector = (mIsCompAllProject)
+                ? ormaDatabase.selectFromEntry()
+                : ormaDatabase.selectFromEntry().projectEq(mCurrentProject);
+
+        Entry_Selector entrySelector = selector
+                .where(Entry_Schema.INSTANCE.deleted.getQualifiedName() + " = 0");
 
         // TODO: 全帳簿の合計を表示するかどうか
         // 損益表の設定値から反映する
@@ -563,6 +570,11 @@ public class EntryDataManager {
             return 0;
         }
         return delete(entry.id);
+    }
+
+    // 全帳簿の合計かどうか設定する
+    public void setCompAllProject(boolean val) {
+        this.mIsCompAllProject = val;
     }
 
 

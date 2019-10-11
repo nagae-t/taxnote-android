@@ -75,7 +75,10 @@ public class ReportContentFragment extends Fragment {
         mApiModel = new TNApiModel(mContext);
         if (!mApiModel.isCloudActive() || !mApiModel.isLoggingIn()) binding.refreshLayout.setEnabled(false);
 
+        boolean isCompAll = SharedPreferencesManager.getCombAllAccounts(mContext);
         mEntryManager = new EntryDataManager(mContext);
+        mEntryManager.setCompAllProject(isCompAll);
+
         mPeriodType = SharedPreferencesManager.getProfitLossReportPeriodType(mContext);
         Serializable calSerial = getArguments().getSerializable(KEY_TARGET_CALENDAR);
         if (calSerial != null)

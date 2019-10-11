@@ -49,6 +49,24 @@ public class ProfitLossSettingsActivity extends DefaultCommonActivity {
             }
         });
 
+        boolean combAll = SharedPreferencesManager.getCombAllAccounts(this);
+        binding.combAllAcc.setChecked(combAll);
+        binding.combAllAcc.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+                SharedPreferencesManager.saveCombAllAccounts(getApplicationContext(), isChecked);
+
+                if (isChecked) {
+                    String title = getApplicationContext().getString(R.string.combine_all_accounts);
+                    String message = getApplicationContext().getString(R.string.combine_all_accounts_message);
+                    DialogManager.showCustomAlertDialog(ProfitLossSettingsActivity.this,
+                            getSupportFragmentManager(),
+                            title, message);
+                }
+                BroadcastUtil.sendReloadReport(ProfitLossSettingsActivity.this);
+            }
+        });
+
         boolean fixOrderVal = SharedPreferencesManager.getFixedCateOrder(this);
         binding.fixedCateOrder.setChecked(fixOrderVal);
         binding.fixedCateOrder.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -62,6 +80,7 @@ public class ProfitLossSettingsActivity extends DefaultCommonActivity {
                             getSupportFragmentManager(),
                             title, message);
                 }
+                BroadcastUtil.sendReloadReport(ProfitLossSettingsActivity.this);
             }
         });
 

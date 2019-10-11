@@ -122,6 +122,9 @@
     <string name="fixed_cate_order">科目の並びを固定</string>
     <string name="fixed_cate_order_message">損益表の科目並び順を、入力タブの科目の並び順と同じにします。</string>
 
+    <string name="combine_all_accounts">全帳簿の合計を表示</string>
+    <string name="combine_all_accounts_message">作成した帳簿全てを合計した数字を表示します。\nTaxnoteクラウドのオプションである複数帳簿を利用している時のみ変化があります。</string>
+
     //--------------------------------------------------------------//
     // -- Data Export --
     //--------------------------------------------------------------//
