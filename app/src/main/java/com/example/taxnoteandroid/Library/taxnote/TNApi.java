@@ -38,6 +38,16 @@ public class TNApi {
     protected static final String URL_PATH_SIGN_OUT = "/auth/sign_out";
     protected static final String URL_PATH_PASSWORD_RESET = "/auth/password";
 
+    private static final String PATH_BULK_CREATE = "/bulk_create";
+    private static final String PATH_BULK_UPDATE = "/bulk_update";
+    private static final String PATH_BULK_DESTROY = "/bulk_destroy";
+
+    protected static final String URL_PATH_ENTRY_BULK_SAVE = URL_PATH_ENTRY + PATH_BULK_CREATE;
+    protected static final String URL_PATH_REASON_BULK_SAVE = URL_PATH_REASON+ PATH_BULK_CREATE;
+    protected static final String URL_PATH_ACCOUNT_BULK_SAVE = URL_PATH_ACCOUNT + PATH_BULK_CREATE;
+    protected static final String URL_PATH_SUMARY_BULK_SAVE = URL_PATH_SUMMARY + PATH_BULK_CREATE;
+    protected static final String URL_PATH_RECURRING_BULK_SAVE = URL_PATH_RECURRING + PATH_BULK_CREATE;
+
     private static final String KEY_USER_UID = "TAXNOTE_USER_UID";
     private static final String KEY_USER_ACCESS_TOKEN = "TAXNOTE_USER_ACCESS_TOKEN";
     private static final String KEY_USER_CLIENT = "TAXNOTE_USER_CLIENT";
