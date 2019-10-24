@@ -59,6 +59,7 @@ android {
         taxnoteProduct {
             dimension "mode"
             buildConfigField "String", "SERVICE_API_URI", "\"https://taxnoteapi.com/api\""
+            buildConfigField "boolean", "IS_DEBUG_CLOUD", "false"
         }
 
         taxnoteDevelop {
@@ -66,6 +67,7 @@ android {
             applicationIdSuffix ".debug"
 
             buildConfigField "String", "SERVICE_API_URI", "\"https://taxnote-staging.herokuapp.com/api\""
+            buildConfigField "boolean", "IS_DEBUG_CLOUD", "true"
         }
 
         zenyProduct {

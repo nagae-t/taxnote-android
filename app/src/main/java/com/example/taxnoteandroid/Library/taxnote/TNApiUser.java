@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 
+import com.example.taxnoteandroid.BuildConfig;
 import com.example.taxnoteandroid.Library.AsyncOkHttpClient;
 import com.example.taxnoteandroid.Library.BroadcastUtil;
 import com.example.taxnoteandroid.Library.zeny.ZNUtils;
@@ -99,14 +100,23 @@ public class TNApiUser extends TNApi {
     }
 
     public static String getCloudOrderId(Context context) {
+        if (BuildConfig.IS_DEBUG_CLOUD) {
+            return "test-clound-order-Id";
+        }
         return SharedPreferencesManager.getUserApiLoginValue(context, KEY_CLOUD_ORDER_ID);
     }
 
     static String getCloudPurchaseToken(Context context) {
+        if (BuildConfig.IS_DEBUG_CLOUD) {
+            return "test-clound-pur-token";
+        }
         return SharedPreferencesManager.getUserApiLoginValue(context, KEY_CLOUD_PURCHASE_TOKEN);
     }
 
     static String getCloudExpiryString(Context context) {
+        if (BuildConfig.IS_DEBUG_CLOUD) {
+            return "2020-12-01 12:12:00";
+        }
         long cloudExpiry = (ZNUtils.isZeny()) ? SharedPreferencesManager.getZenyPremiumExpiryTime(context)
                 : SharedPreferencesManager.getTaxnoteCloudExpiryTime(context);
         if (cloudExpiry == 0) return "";

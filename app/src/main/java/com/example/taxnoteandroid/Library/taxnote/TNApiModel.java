@@ -907,6 +907,7 @@ public class TNApiModel extends TNApi {
             @Override
             public void onFailure(Response response, Throwable throwable) {
                 setIsSyncing(false);
+                callback.onFailure(response, throwable);
             }
 
             @Override

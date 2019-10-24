@@ -523,6 +523,16 @@ public class UpgradeActivity extends DefaultCommonActivity {
     };
 
     private void checkCloudPurchaseAction() {
+        if (BuildConfig.IS_DEBUG_CLOUD) {
+            if (mApiUser.isLoggingIn()) {
+                showMemberDialogItems();
+            } else {
+                LoginCloudActivity.startForResult(UpgradeActivity.this,
+                        REQUEST_CODE_CLOUD_REGISTER,
+                        LoginCloudActivity.VIEW_TYPE_REGISTER);
+            }
+            return;
+        }
 
         if (!mApiUser.isLoggingIn() && !mApiModel.isCloudActive()) {
             upgradeToTaxnoteCloud();

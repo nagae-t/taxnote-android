@@ -191,6 +191,10 @@ public class TNApi {
     }
 
     public boolean isCloudActive() {
+        if (BuildConfig.IS_DEBUG_CLOUD) {
+            return true;
+        }
+
         if (ZNUtils.isZeny()) return UpgradeManger.zenyPremiumIsActive(context);
 
         return UpgradeManger.taxnoteCloudIsActive(context);
