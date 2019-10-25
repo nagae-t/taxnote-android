@@ -45,7 +45,7 @@ public class TNApi {
     protected static final String URL_PATH_ENTRY_BULK_SAVE = URL_PATH_ENTRY + PATH_BULK_CREATE;
     protected static final String URL_PATH_REASON_BULK_SAVE = URL_PATH_REASON+ PATH_BULK_CREATE;
     protected static final String URL_PATH_ACCOUNT_BULK_SAVE = URL_PATH_ACCOUNT + PATH_BULK_CREATE;
-    protected static final String URL_PATH_SUMARY_BULK_SAVE = URL_PATH_SUMMARY + PATH_BULK_CREATE;
+    protected static final String URL_PATH_SUMMARY_BULK_SAVE = URL_PATH_SUMMARY + PATH_BULK_CREATE;
     protected static final String URL_PATH_RECURRING_BULK_SAVE = URL_PATH_RECURRING + PATH_BULK_CREATE;
 
     private static final String KEY_USER_UID = "TAXNOTE_USER_UID";

@@ -32,7 +32,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
-import java.io.IOException;
 import java.util.List;
 
 import okhttp3.FormBody;
@@ -456,8 +455,7 @@ public class TNApiModel extends TNApi {
 
         FormBody.Builder formBuilder = new FormBody.Builder();
 
-        for (int i=0; i<reasonList.size(); i++) {
-            Reason reason = reasonList.get(i);
+        for (Reason reason : reasonList) {
             String indexKey = "reasons[]";
             String details = (reason.details != null) ? reason.details : "";
             formBuilder = formBuilder
@@ -475,17 +473,10 @@ public class TNApiModel extends TNApi {
         setRespCallback(new AsyncOkHttpClient.ResponseCallback() {
             @Override
             public void onFailure(Response response, Throwable throwable) {
-                Log.e(LTAG, "saveReason(List<Reason>) onFailure");
+                Log.e(LTAG, "saveReason(List) onFailure");
                 if (response != null) {
-                    String bodyStr = null;
-                    try {
-                        bodyStr = response.body().string();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    Log.e(LTAG, "saveReason(List<Reason>) onFailure response.code: " + response.code()
-                            + ", message: " + response.message()
-                            + ", body: " + bodyStr);
+                    Log.e(LTAG, "saveReason(List) onFailure response.code: " + response.code()
+                            + ", message: " + response.message());
                 }
                 if (callback != null)
                     callback.onFailure(response, throwable);
@@ -552,6 +543,57 @@ public class TNApiModel extends TNApi {
         requestApi();
     }
 
+    public void saveAccount(final List<Account> accList, final AsyncOkHttpClient.ResponseCallback callback) {
+        if (!isLoggingIn() || !isCloudActive() || !TNApi.isNetworkConnected(context)) {
+            if (callback != null)
+                callback.onSuccess(null, null);
+            return;
+        }
+
+        FormBody.Builder formBuilder = new FormBody.Builder();
+        for (Account account : accList) {
+            String indexKey = "accounts[]";
+            formBuilder = formBuilder
+                    .add(indexKey+"[uuid]", account.uuid)
+                    .add(indexKey+"[name]", account.name)
+                    .add(indexKey+"[order]", String.valueOf(account.order))
+                    .add(indexKey+"[is_expense]", String.valueOf(account.isExpense))
+                    .add(indexKey+"[project_uuid]", account.project.uuid);
+        }
+
+        setHttpMethod(HTTP_METHOD_POST);
+        setRequestPath(URL_PATH_ACCOUNT_BULK_SAVE);
+        setFormBody(formBuilder.build());
+        setRespCallback(new AsyncOkHttpClient.ResponseCallback() {
+            @Override
+            public void onFailure(Response response, Throwable throwable) {
+                Log.e(LTAG, "saveAccount(List) onFailure");
+                if (response != null) {
+                    Log.e(LTAG, "saveAccount(List) onFailure response.code: " + response.code()
+                            + ", message: " + response.message());
+                }
+                if (callback != null)
+                    callback.onFailure(response, throwable);
+            }
+
+            @Override
+            public void onUpdate(long bytesRead, long contentLength, boolean done) {
+                if (callback != null)
+                    callback.onUpdate(bytesRead, contentLength, done);
+            }
+
+            @Override
+            public void onSuccess(Response response, String content) {
+                for (Account account : accList) {
+                    mAccountDataManager.updateNeedSave(account.id, false);
+                }
+                if (callback != null)
+                    callback.onSuccess(response, content);
+            }
+        });
+        requestBulkApi();
+    }
+
     public void saveSummary(String uuid, final AsyncOkHttpClient.Callback callback) {
         if (!isLoggingIn() || !isCloudActive() || !TNApi.isNetworkConnected(context)) {
             if (callback != null)
@@ -593,6 +635,57 @@ public class TNApiModel extends TNApi {
             }
         });
         requestApi();
+    }
+
+    public void saveSummary(final List<Summary> sumList, final AsyncOkHttpClient.ResponseCallback callback) {
+        if (!isLoggingIn() || !isCloudActive() || !TNApi.isNetworkConnected(context)) {
+            if (callback != null)
+                callback.onSuccess(null, null);
+            return;
+        }
+
+        FormBody.Builder formBuilder = new FormBody.Builder();
+        for (Summary summary : sumList) {
+            String indexKey = "summaries[]";
+            formBuilder = formBuilder
+                    .add(indexKey+"[uuid]", summary.uuid)
+                    .add(indexKey+"[name]", summary.name)
+                    .add(indexKey+"[order]", String.valueOf(summary.order))
+                    .add(indexKey+"[reason_uuid]", summary.reason.uuid)
+                    .add(indexKey+"[project_uuid]", summary.project.uuid);
+        }
+
+        setHttpMethod(HTTP_METHOD_POST);
+        setRequestPath(URL_PATH_SUMMARY_BULK_SAVE);
+        setFormBody(formBuilder.build());
+        setRespCallback(new AsyncOkHttpClient.ResponseCallback() {
+            @Override
+            public void onFailure(Response response, Throwable throwable) {
+                Log.e(LTAG, "saveSummary(uuid) onFailure");
+                if (response != null) {
+                    Log.e(LTAG, "saveSummary(uuid) onFailure response.code: " + response.code()
+                            + ", message: " + response.message());
+                }
+                if (callback != null)
+                    callback.onFailure(response, throwable);
+            }
+
+            @Override
+            public void onUpdate(long bytesRead, long contentLength, boolean done) {
+                if (callback != null)
+                    callback.onUpdate(bytesRead, contentLength, done);
+            }
+
+            @Override
+            public void onSuccess(Response response, String content) {
+                for (Summary summary : sumList) {
+                    mSummaryDataManager.updateNeedSave(summary.id, false);
+                }
+                if (callback != null)
+                    callback.onSuccess(response, content);
+            }
+        });
+        requestBulkApi();
     }
 
     public void saveRecurring(String uuid, final AsyncOkHttpClient.Callback callback) {
@@ -645,6 +738,63 @@ public class TNApiModel extends TNApi {
         requestApi();
     }
 
+    public void saveRecurring(final List<Recurring> recList, final AsyncOkHttpClient.ResponseCallback callback) {
+        if (!isLoggingIn() || !isCloudActive() || !TNApi.isNetworkConnected(context)) {
+            if (callback != null)
+                callback.onSuccess(null, null);
+            return;
+        }
+
+        FormBody.Builder formBuilder = new FormBody.Builder();
+        for (Recurring rec : recList) {
+            String indexKey = "recurrings[]";
+            String memo = (rec.memo != null) ? rec.memo : "";
+            formBuilder = formBuilder
+                    .add(indexKey+"[uuid]", rec.uuid)
+                    .add(indexKey+"[date]", String.valueOf(rec.dateIndex))
+                    .add(indexKey+"[timezone]", String.valueOf(rec.dateIndex))
+                    .add(indexKey+"[memo]", memo)
+                    .add(indexKey+"[price]", String.valueOf(rec.price))
+                    .add(indexKey+"[is_expense]", String.valueOf(rec.isExpense))
+                    .add(indexKey+"[order]", String.valueOf(rec.order))
+                    .add(indexKey+"[reason_uuid]", rec.reason.uuid)
+                    .add(indexKey+"[account_uuid]", rec.account.uuid)
+                    .add(indexKey+"[project_uuid]", rec.project.uuid);
+        }
+
+        setHttpMethod(HTTP_METHOD_POST);
+        setRequestPath(URL_PATH_RECURRING_BULK_SAVE);
+        setFormBody(formBuilder.build());
+        setRespCallback(new AsyncOkHttpClient.ResponseCallback() {
+            @Override
+            public void onFailure(Response response, Throwable throwable) {
+                Log.e(LTAG, "saveRecurring(uuid) onFailure");
+                if (response != null) {
+                    Log.e(LTAG, "saveRecurring(uuid) onFailure response.code: " + response.code()
+                            + ", message: " + response.message());
+                }
+                if (callback != null)
+                    callback.onFailure(response, throwable);
+            }
+
+            @Override
+            public void onUpdate(long bytesRead, long contentLength, boolean done) {
+                if (callback != null)
+                    callback.onUpdate(bytesRead, contentLength, done);
+            }
+
+            @Override
+            public void onSuccess(Response response, String content) {
+                for (Recurring rec : recList) {
+                    mRecurringDataManager.updateNeedSave(rec.id, false);
+                }
+                if (callback != null)
+                    callback.onSuccess(response, content);
+            }
+        });
+        requestBulkApi();
+    }
+
     public void saveEntry(String uuid, final AsyncOkHttpClient.Callback callback) {
         if (!isLoggingIn() || !isCloudActive() || !TNApi.isNetworkConnected(context)) {
             if (callback != null)
@@ -692,6 +842,62 @@ public class TNApiModel extends TNApi {
             }
         });
         requestApi();
+    }
+
+    public void saveEntry(final List<Entry> entries, final AsyncOkHttpClient.ResponseCallback callback) {
+        if (!isLoggingIn() || !isCloudActive() || !TNApi.isNetworkConnected(context)) {
+            if (callback != null)
+                callback.onSuccess(null, null);
+            return;
+        }
+
+        FormBody.Builder formBuilder = new FormBody.Builder();
+        for (Entry entry : entries) {
+            String indexKey = "recurrings[]";
+            String memo = (entry.memo != null) ? entry.memo : "";
+            formBuilder = formBuilder
+                    .add(indexKey+"[uuid]", entry.uuid)
+                    .add(indexKey+"[date]", ValueConverter.long2dateString(entry.date))
+                    .add(indexKey+"[memo]", memo)
+                    .add(indexKey+"[price]", String.valueOf(entry.price))
+                    .add(indexKey+"[is_expense]", String.valueOf(entry.isExpense))
+                    .add(indexKey+"[updated_mobile]", ValueConverter.long2dateString(entry.updated))
+                    .add(indexKey+"[reason_uuid]", entry.reason.uuid)
+                    .add(indexKey+"[account_uuid]", entry.account.uuid)
+                    .add(indexKey+"[project_uuid]", entry.project.uuid);
+        }
+
+        setHttpMethod(HTTP_METHOD_POST);
+        setRequestPath(URL_PATH_ENTRY_BULK_SAVE);
+        setFormBody(formBuilder.build());
+        setRespCallback(new AsyncOkHttpClient.ResponseCallback() {
+            @Override
+            public void onFailure(Response response, Throwable throwable) {
+                Log.e(LTAG, "saveEntry(uuid) onFailure");
+                if (response != null) {
+                    Log.e(LTAG, "saveEntry(uuid) onFailure response.code: " + response.code()
+                            + ", message: " + response.message());
+                }
+                if (callback != null)
+                    callback.onFailure(response, throwable);
+            }
+
+            @Override
+            public void onUpdate(long bytesRead, long contentLength, boolean done) {
+                if (callback != null)
+                    callback.onUpdate(bytesRead, contentLength, done);
+            }
+
+            @Override
+            public void onSuccess(Response response, String content) {
+                for (Entry entry : entries) {
+                    mEntryDataManager.updateNeedSave(entry.id, false);
+                }
+                if (callback != null)
+                    callback.onSuccess(response, content);
+            }
+        });
+        requestBulkApi();
     }
 
     private void saveAllNeedSaveProjects(final AsyncOkHttpClient.Callback callback) {
@@ -807,6 +1013,41 @@ public class TNApiModel extends TNApi {
                 }
             });
         }
+//        new Handler().postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                saveAllNeedSaveEntries(callback);
+//            }
+//        }, 1000);
+    }
+
+    private void saveAllNeedSaveAccounts(final AsyncOkHttpClient.ResponseCallback callback) {
+        List<Account> accounts = mAccountDataManager.findAllNeedSave(true);
+        final int accountSize = accounts.size();
+        if (accountSize == 0) {
+            callback.onSuccess(null, null);
+        }
+
+        saveAccount(accounts, new AsyncOkHttpClient.ResponseCallback() {
+            @Override
+            public void onFailure(Response response, Throwable throwable) {
+                if (callback != null)
+                    callback.onFailure(response, throwable);
+            }
+
+            @Override
+            public void onUpdate(long bytesRead, long contentLength, boolean done) {
+                if (callback != null)
+                    callback.onUpdate(bytesRead, contentLength, done);
+
+            }
+
+            @Override
+            public void onSuccess(Response response, String content) {
+                if (callback != null)
+                    callback.onSuccess(response, content);
+            }
+        });
     }
 
     private void saveAllNeedSaveSummaries(final AsyncOkHttpClient.Callback callback) {
@@ -834,6 +1075,35 @@ public class TNApiModel extends TNApi {
         }
     }
 
+    private void saveAllNeedSaveSummaries(final AsyncOkHttpClient.ResponseCallback callback) {
+        List<Summary> summaries = mSummaryDataManager.findAllNeedSave(true);
+        final int summarySize = summaries.size();
+        if (summarySize == 0) {
+            callback.onSuccess(null, null);
+        }
+
+        saveSummary(summaries, new AsyncOkHttpClient.ResponseCallback() {
+            @Override
+            public void onFailure(Response response, Throwable throwable) {
+                if (callback != null)
+                    callback.onFailure(response, throwable);
+            }
+
+            @Override
+            public void onUpdate(long bytesRead, long contentLength, boolean done) {
+                if (callback != null)
+                    callback.onUpdate(bytesRead, contentLength, done);
+
+            }
+
+            @Override
+            public void onSuccess(Response response, String content) {
+                if (callback != null)
+                    callback.onSuccess(response, content);
+            }
+        });
+    }
+
     private void saveAllNeedSaveRecurrings(final AsyncOkHttpClient.Callback callback) {
         List<Recurring> recurrings = mRecurringDataManager.findAllNeedSave(true);
         final int recurringSize = recurrings.size();
@@ -857,6 +1127,35 @@ public class TNApiModel extends TNApi {
                 }
             });
         }
+    }
+
+    private void saveAllNeedSaveRecurrings(final AsyncOkHttpClient.ResponseCallback callback) {
+        List<Recurring> recurrings = mRecurringDataManager.findAllNeedSave(true);
+        final int recurringSize = recurrings.size();
+        if (recurringSize == 0) {
+            callback.onSuccess(null, null);
+        }
+
+        saveRecurring(recurrings, new AsyncOkHttpClient.ResponseCallback() {
+            @Override
+            public void onFailure(Response response, Throwable throwable) {
+                if (callback != null)
+                    callback.onFailure(response, throwable);
+            }
+
+            @Override
+            public void onUpdate(long bytesRead, long contentLength, boolean done) {
+                if (callback != null)
+                    callback.onUpdate(bytesRead, contentLength, done);
+
+            }
+
+            @Override
+            public void onSuccess(Response response, String content) {
+                if (callback != null)
+                    callback.onSuccess(response, content);
+            }
+        });
     }
 
     private void saveAllNeedSaveEntries(final AsyncOkHttpClient.Callback callback) {
@@ -912,6 +1211,35 @@ public class TNApiModel extends TNApi {
                       }
                   }, 20);
         }
+    }
+
+    private void saveAllNeedSaveEntries(final AsyncOkHttpClient.ResponseCallback callback) {
+        int limitSendCount = 100;
+        List<Entry> entries = mEntryDataManager.findAllNeedSave(true);
+        if (entries.size() == 0) {
+            callback.onSuccess(null, null);
+        }
+
+        saveEntry(entries, new AsyncOkHttpClient.ResponseCallback() {
+            @Override
+            public void onFailure(Response response, Throwable throwable) {
+                if (callback != null)
+                    callback.onFailure(response, throwable);
+            }
+
+            @Override
+            public void onUpdate(long bytesRead, long contentLength, boolean done) {
+                if (callback != null)
+                    callback.onUpdate(bytesRead, contentLength, done);
+
+            }
+
+            @Override
+            public void onSuccess(Response response, String content) {
+                if (callback != null)
+                    callback.onSuccess(response, content);
+            }
+        });
     }
 
     private void saveAllNeedSaveData(final AsyncOkHttpClient.Callback callback) {
