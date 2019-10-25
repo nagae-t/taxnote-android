@@ -63,6 +63,7 @@ public class TNApi {
     private String requestUrl;
     private FormBody formBody;
     private AsyncOkHttpClient.Callback callback;
+    private AsyncOkHttpClient.ResponseCallback respCallback;
     private String httpMethod;
 
     private String loginUid;
@@ -128,6 +129,10 @@ public class TNApi {
         callback = cb;
     }
 
+    public void setRespCallback(AsyncOkHttpClient.ResponseCallback cb) {
+        respCallback = cb;
+    }
+
     private Headers getHeaders() {
         Map<String, String> headerMap = new LinkedHashMap<>();
         if (requestUrlPath.startsWith(URL_PATH_SUBSCRIPTION)) {
@@ -165,6 +170,31 @@ public class TNApi {
         Headers headers = getHeaders();
         AsyncOkHttpClient.execute(headers,
                 method, requestUrl, formBody, callback);
+    }
+
+    protected void requestBulkApi() {
+        String method = httpMethod;
+        if (httpMethod == null) method = HTTP_METHOD_GET;
+
+        // GETの場合、URLクエリーを創る
+        if (httpMethod.equals(HTTP_METHOD_GET) && formBody != null) {
+            HttpUrl.Builder urlBuilder = new HttpUrl.Builder()
+                    .scheme("https")
+                    .host("taxnote") // dummy
+                    .addPathSegment("api"); // dummy
+            int formSize = formBody.size();
+            if (formSize > 0) {
+                for (int i = 0; i < formBody.size(); i++) {
+                    urlBuilder.addQueryParameter(formBody.name(i), formBody.value(i));
+                }
+                requestUrl += "?" + urlBuilder.build().query();
+            }
+            formBody = null;
+        }
+
+        Headers headers = getHeaders();
+        AsyncOkHttpClient.execute(headers,
+                method, requestUrl, formBody, respCallback);
     }
 
     public void setIsSyncing(boolean value) {
