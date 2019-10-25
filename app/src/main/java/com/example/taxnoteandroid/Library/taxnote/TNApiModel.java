@@ -32,6 +32,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
+import java.io.IOException;
 import java.util.List;
 
 import okhttp3.FormBody;
@@ -446,6 +447,68 @@ public class TNApiModel extends TNApi {
         requestApi();
     }
 
+    public void saveReason(final List<Reason> reasonList, final AsyncOkHttpClient.ResponseCallback callback) {
+        if (!isLoggingIn() || !isCloudActive() || !TNApi.isNetworkConnected(context)) {
+            if (callback != null)
+                callback.onSuccess(null, null);
+            return;
+        }
+
+        FormBody.Builder formBuilder = new FormBody.Builder();
+
+        for (int i=0; i<reasonList.size(); i++) {
+            Reason reason = reasonList.get(i);
+            String indexKey = "reasons[]";
+            String details = (reason.details != null) ? reason.details : "";
+            formBuilder = formBuilder
+                    .add(indexKey+"[uuid]", reason.uuid)
+                    .add(indexKey+"[name]", reason.name)
+                    .add(indexKey+"[details]", details)
+                    .add(indexKey+"[order]", String.valueOf(reason.order))
+                    .add(indexKey+"[is_expense]", String.valueOf(reason.isExpense))
+                    .add(indexKey+"[project_uuid]", reason.project.uuid);
+        }
+
+        setHttpMethod(HTTP_METHOD_POST);
+        setRequestPath(URL_PATH_REASON_BULK_SAVE);
+        setFormBody(formBuilder.build());
+        setRespCallback(new AsyncOkHttpClient.ResponseCallback() {
+            @Override
+            public void onFailure(Response response, Throwable throwable) {
+                Log.e(LTAG, "saveReason(List<Reason>) onFailure");
+                if (response != null) {
+                    String bodyStr = null;
+                    try {
+                        bodyStr = response.body().string();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    Log.e(LTAG, "saveReason(List<Reason>) onFailure response.code: " + response.code()
+                            + ", message: " + response.message()
+                            + ", body: " + bodyStr);
+                }
+                if (callback != null)
+                    callback.onFailure(response, throwable);
+            }
+
+            @Override
+            public void onUpdate(long bytesRead, long contentLength, boolean done) {
+                if (callback != null)
+                    callback.onUpdate(bytesRead, contentLength, done);
+            }
+
+            @Override
+            public void onSuccess(Response response, String content) {
+                for (Reason reason : reasonList) {
+                    mReasonDataManager.updateNeedSave(reason.id, false);
+                }
+                if (callback != null)
+                    callback.onSuccess(response, content);
+            }
+        });
+        requestBulkApi();
+    }
+
     public void saveAccount(String uuid, final AsyncOkHttpClient.Callback callback) {
         if (!isLoggingIn() || !isCloudActive() || !TNApi.isNetworkConnected(context)) {
             if (callback != null)
@@ -687,6 +750,35 @@ public class TNApiModel extends TNApi {
         }
     }
 
+    private void saveAllNeedSaveReasons(final AsyncOkHttpClient.ResponseCallback callback) {
+        List<Reason> reasons = mReasonDataManager.findAllNeedSave(true);
+        final int reasonSize = reasons.size();
+        if (reasonSize == 0) {
+            callback.onSuccess(null, null);
+        }
+
+        saveReason(reasons, new AsyncOkHttpClient.ResponseCallback() {
+            @Override
+            public void onFailure(Response response, Throwable throwable) {
+                if (callback != null)
+                    callback.onFailure(response, throwable);
+            }
+
+            @Override
+            public void onUpdate(long bytesRead, long contentLength, boolean done) {
+                if (callback != null)
+                    callback.onUpdate(bytesRead, contentLength, done);
+
+            }
+
+            @Override
+            public void onSuccess(Response response, String content) {
+                if (callback != null)
+                    callback.onSuccess(response, content);
+            }
+        });
+    }
+
     private void saveAllNeedSaveAccounts(final AsyncOkHttpClient.Callback callback) {
         if (ZNUtils.isZeny()) {
             callback.onSuccess(null, null);
@@ -887,8 +979,99 @@ public class TNApiModel extends TNApi {
         });
     }
 
+    private void saveAllNeedSaveData(final AsyncOkHttpClient.Callback callback, final AsyncOkHttpClient.ResponseCallback respCallback) {
+
+        saveAllNeedSaveProjects(new AsyncOkHttpClient.Callback() {
+            @Override
+            public void onFailure(Response response, Throwable throwable) {
+                Log.e(LTAG, "saveAllNeedSaveData onFailure --- Projects");
+                callback.onFailure(response, throwable);
+            }
+
+            @Override
+            public void onSuccess(Response response, String content) {
+
+                saveAllNeedSaveReasons(new AsyncOkHttpClient.ResponseCallback() {
+                    @Override
+                    public void onFailure(Response response, Throwable throwable) {
+                        Log.e(LTAG, "new saveAllNeedSaveData onFailure --- Reasons");
+                        respCallback.onFailure(response, throwable);
+                    }
+
+                    @Override
+                    public void onUpdate(long bytesRead, long contentLength, boolean done) {
+                        Log.v("TEST", "new saveAllNeedSaveReasons onUpdate bytesRead:"+bytesRead
+                                +"\tcontentLength:"+contentLength
+                                +"\tdone:"+done);
+                        respCallback.onUpdate(bytesRead, contentLength, done);
+                    }
+
+//                    @Override
+//                    public void onSuccess(Response response, String content) {
+//
+//                    }
+//                });
+
+//                saveAllNeedSaveReasons(new AsyncOkHttpClient.Callback() {
+//                    @Override
+//                    public void onFailure(Response response, Throwable throwable) {
+//                        Log.e(LTAG, "saveAllNeedSaveData onFailure --- Reasons");
+//                        callback.onFailure(response, throwable);
+//                    }
+
+                    @Override
+                    public void onSuccess(Response response, String content) {
+
+                        saveAllNeedSaveAccounts(new AsyncOkHttpClient.Callback() {
+                            @Override
+                            public void onFailure(Response response, Throwable throwable) {
+                                Log.e(LTAG, "saveAllNeedSaveData onFailure --- Accounts");
+                                callback.onFailure(response, throwable);
+                            }
+
+                            @Override
+                            public void onSuccess(Response response, String content) {
+
+                                saveAllNeedSaveSummaries(new AsyncOkHttpClient.Callback() {
+                                    @Override
+                                    public void onFailure(Response response, Throwable throwable) {
+                                        Log.e(LTAG, "saveAllNeedSaveData onFailure --- Summaries");
+                                        callback.onFailure(response, throwable);
+                                    }
+
+                                    @Override
+                                    public void onSuccess(Response response, String content) {
+
+                                        saveAllNeedSaveRecurrings(new AsyncOkHttpClient.Callback() {
+                                            @Override
+                                            public void onFailure(Response response, Throwable throwable) {
+                                                Log.e(LTAG, "saveAllNeedSaveData onFailure --- Recurrings");
+                                                callback.onFailure(response, throwable);
+                                            }
+
+                                            @Override
+                                            public void onSuccess(Response response, String content) {
+
+                                                saveAllNeedSaveEntries(callback);
+                                            }
+                                        });
+                                    }
+                                });
+                            }
+                        });
+                    }
+                });
+            }
+        });
+    }
+
     public void saveAllDataAfterRegister(AsyncOkHttpClient.Callback callback) {
         saveAllNeedSaveData(callback);
+    }
+
+    // debug
+    public void saveAllDataAfterRegister(AsyncOkHttpClient.Callback callback, AsyncOkHttpClient.ResponseCallback respCallback) {
+        saveAllNeedSaveData(callback, respCallback);
     }
 
     public void saveAllNeedSaveSyncDeletedData(final AsyncOkHttpClient.Callback callback) {

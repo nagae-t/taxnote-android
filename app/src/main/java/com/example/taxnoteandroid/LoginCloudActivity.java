@@ -497,7 +497,34 @@ public class LoginCloudActivity extends DefaultCommonActivity {
                     setResult(RESULT_OK);
                     finish();
                 }
+            }, new AsyncOkHttpClient.ResponseCallback() {
+                @Override
+                public void onFailure(Response response, Throwable throwable) {
+                    apiModel.setIsSyncing(false);
+                    mLoadingDialog.dismiss();
+                    String errorMsg = "";
+                    if (response != null) {
+                        errorMsg = response.message();
+                    } else if (throwable != null) {
+                        errorMsg = throwable.getLocalizedMessage();
+                    }
+                    DialogManager.showOKOnlyAlert(LoginCloudActivity.this,
+                            "Error", errorMsg);
+                }
+
+                @Override
+                public void onUpdate(long bytesRead, long contentLength, boolean done) {
+                    Log.v("TEST", "onUpdate bytesRead:"+bytesRead
+                            +"\tcontentLength:"+contentLength
+                            +"\tdone:"+done);
+                }
+
+                @Override
+                public void onSuccess(Response response, String content) {
+                    mLoadingDialog.dismiss();
+                }
             });
+
 
         }
 

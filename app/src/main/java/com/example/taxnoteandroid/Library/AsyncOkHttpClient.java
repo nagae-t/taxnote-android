@@ -199,11 +199,17 @@ public class AsyncOkHttpClient {
             final Handler mainHandler = new Handler(Looper.getMainLooper());
 
             @Override
-            public void onFailure(Call call, final IOException e) {
+            public void onFailure(final Call call, final IOException e) {
                 mainHandler.post(new Runnable() {
                     @Override
                     public void run() {
-                        callback.onFailure(null, e);
+                        Response resp = null;
+                        try {
+                            resp = call.execute();
+                        } catch (IOException e1) {
+                            e1.printStackTrace();
+                        }
+                        callback.onFailure(resp, e);
                     }
                 });
             }
