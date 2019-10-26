@@ -475,29 +475,7 @@ public class LoginCloudActivity extends DefaultCommonActivity {
 
             final TNApiModel apiModel = new TNApiModel(getApplicationContext());
             apiModel.setIsSyncing(true);
-            apiModel.saveAllDataAfterRegister(new AsyncOkHttpClient.Callback() {
-                @Override
-                public void onFailure(Response response, Throwable throwable) {
-                    apiModel.setIsSyncing(false);
-                    mLoadingDialog.dismiss();
-                    String errorMsg = "";
-                    if (response != null) {
-                        errorMsg = response.message();
-                    } else if (throwable != null) {
-                        errorMsg = throwable.getLocalizedMessage();
-                    }
-                    DialogManager.showOKOnlyAlert(LoginCloudActivity.this,
-                            "Error", errorMsg);
-                }
-
-                @Override
-                public void onSuccess(Response response, String content) {
-                    apiModel.setIsSyncing(false);
-                    mLoadingDialog.dismiss();
-                    setResult(RESULT_OK);
-                    finish();
-                }
-            }, new AsyncOkHttpClient.ResponseCallback() {
+            apiModel.saveAllDataAfterRegister(new AsyncOkHttpClient.ResponseCallback() {
                 @Override
                 public void onFailure(Response response, Throwable throwable) {
                     apiModel.setIsSyncing(false);
@@ -521,7 +499,10 @@ public class LoginCloudActivity extends DefaultCommonActivity {
 
                 @Override
                 public void onSuccess(Response response, String content) {
+                    apiModel.setIsSyncing(false);
                     mLoadingDialog.dismiss();
+                    setResult(RESULT_OK);
+                    finish();
                 }
             });
 

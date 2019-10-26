@@ -112,7 +112,7 @@ public class ImportFilterActivity extends DefaultCommonActivity {
 
             // ログインしていればデータを同期するように
             apiModel.setIsSyncing(true);
-            apiModel.saveAllDataAfterRegister(new AsyncOkHttpClient.Callback() {
+            apiModel.saveAllDataAfterRegister(new AsyncOkHttpClient.ResponseCallback() {
                 @Override
                 public void onFailure(Response response, Throwable throwable) {
                     Log.e("Error", "DataImportTask syncData onFailure");
@@ -126,6 +126,10 @@ public class ImportFilterActivity extends DefaultCommonActivity {
                     }
                     DialogManager.showOKOnlyAlert(ImportFilterActivity.this,
                             "Error", errorMsg);
+                }
+
+                @Override
+                public void onUpdate(long bytesRead, long contentLength, boolean done) {
                 }
 
                 @Override
