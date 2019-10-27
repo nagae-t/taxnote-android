@@ -56,6 +56,7 @@ public class TNApiModel extends TNApi {
     private static final String KEY_SYNC_UPDATED_SUMMARY = "KEY_SYNC_UPDATED_SUMMARY";
     private static final String KEY_SYNC_UPDATED_RECURRING = "KEY_SYNC_UPDATED_RECURRING";
 
+    private Context mContext;
     private JsonParser jsParser;
     private int mCount = 0;
     private boolean mEntrySaveAllAgain = false;
@@ -76,6 +77,7 @@ public class TNApiModel extends TNApi {
 
     public TNApiModel(Context context) {
         super(context);
+        this.mContext = context;
         this.jsParser = new JsonParser();
         this.mProjectDataManager = new ProjectDataManager(context);
         this.mReasonDataManager = new ReasonDataManager(context);
@@ -962,6 +964,9 @@ public class TNApiModel extends TNApi {
 
         mCount = 0;
         for (Project project : projects) {
+            String msg = mContext.getString(R.string.saving_project) +" "+ (mCount+1);
+            setSaveAllNeedProgressDialog(1, msg);
+
             saveProject(project.uuid, new AsyncOkHttpClient.Callback() {
                 @Override
                 public void onFailure(Response response, Throwable throwable) {
@@ -971,7 +976,6 @@ public class TNApiModel extends TNApi {
                 @Override
                 public void onSuccess(Response response, String content) {
                     mCount++;
-                    setSaveAllNeedProgressDialog(1, null);
 
                     if (mCount >= projectSize)
                         callback.onSuccess(response, content);
@@ -1022,7 +1026,8 @@ public class TNApiModel extends TNApi {
 
             final List<Reason> sendData = reasons.subList(i, Math.min(i+loopSize, reasonSize));
             Log.v("TEST", "send saveReason size : "+sendData.size());
-            setSaveAllNeedProgressDialog(sendData.size(), null);
+            String msg = mContext.getString(R.string.saving_reason) +" "+(i+sendData.size());
+            setSaveAllNeedProgressDialog(sendData.size(), msg);
 
             new Handler().postDelayed(new Runnable() {
                 @Override
@@ -1101,7 +1106,8 @@ public class TNApiModel extends TNApi {
 
             final List<Account> sendData = accounts.subList(i, Math.min(i+loopSize, accountSize));
             Log.v("TEST", "send saveAccount size : "+sendData.size());
-            setSaveAllNeedProgressDialog(sendData.size(), null);
+            String msg = mContext.getString(R.string.saving_account) +" "+(i+sendData.size());
+            setSaveAllNeedProgressDialog(sendData.size(), msg);
 
             new Handler().postDelayed(new Runnable() {
                 @Override
@@ -1173,7 +1179,8 @@ public class TNApiModel extends TNApi {
 
             final List<Summary> sendData = summaries.subList(i, Math.min(i+loopSize, summarySize));
             Log.v("TEST", "send saveSummary size : "+sendData.size());
-            setSaveAllNeedProgressDialog(sendData.size(), null);
+            String msg = mContext.getString(R.string.saving_summary) +" "+(i+sendData.size());
+            setSaveAllNeedProgressDialog(sendData.size(), msg);
 
             new Handler().postDelayed(new Runnable() {
                 @Override
@@ -1245,7 +1252,8 @@ public class TNApiModel extends TNApi {
 
             final List<Recurring> sendData = recurrings.subList(i, Math.min(i+loopSize, recurringSize));
             Log.v("TEST", "send saveRecurring size : "+sendData.size());
-            setSaveAllNeedProgressDialog(sendData.size(), null);
+            String msg = mContext.getString(R.string.saving_recurring) +" "+(i+sendData.size());
+            setSaveAllNeedProgressDialog(sendData.size(), msg);
 
             new Handler().postDelayed(new Runnable() {
                 @Override
@@ -1348,7 +1356,8 @@ public class TNApiModel extends TNApi {
 
             final List<Entry> sendData = entries.subList(i, Math.min(i+loopSize, allSize));
             Log.v("TEST", "send saveEntry size : "+sendData.size());
-            setSaveAllNeedProgressDialog(sendData.size(), null);
+            String msg = mContext.getString(R.string.saving_entry) +" "+(i+sendData.size());
+            setSaveAllNeedProgressDialog(sendData.size(), msg);
 
             new Handler().postDelayed(new Runnable() {
                 @Override

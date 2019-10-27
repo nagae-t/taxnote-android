@@ -129,6 +129,13 @@
     <string name="combine_all_accounts">Combine All Accounts</string>
     <string name="combine_all_accounts_message">Show data with all combined data of accounts you created in the settings.\nIf you don\'t have multiple accounts with Taxnote Cloud, this option doesn\'t change anything.</string>
 
+    <string name="saving_project">Saving Book</string>
+    <string name="saving_reason">Saving Category</string>
+    <string name="saving_account">Saving Account</string>
+    <string name="saving_summary">Saving Summary</string>
+    <string name="saving_recurring">Saving Recurring</string>
+    <string name="saving_entry">Saving Entry</string>
+
     //--------------------------------------------------------------//
     // -- Data Export --
     //--------------------------------------------------------------//
@@ -161,6 +168,7 @@
 
     <string name="export_current_something">Export %1$s</string>
     <string name="delete_current_something">Delete %1$s</string>
+
 
     //--------------------------------------------------------------//
     // -- Help Message --
