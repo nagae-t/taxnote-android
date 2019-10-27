@@ -274,15 +274,18 @@ public class LoginCloudActivity extends DefaultCommonActivity {
 
     private void sendRegister(String email, String passwd) {
         // Progress dialog
+        mLoadingDialog = getLoadingDialog();
+        mLoadingDialog.show();
         mDialogReg = getDialogAfterRegister();
-        mDialogReg.show(getSupportFragmentManager(), null);
+//        mDialogReg.show(getSupportFragmentManager(), null);
 
         final TNApiUser apiUser = new TNApiUser(this, email, passwd);
         apiUser.setPasswordConfirm(passwd);
         apiUser.register(new AsyncOkHttpClient.Callback() {
             @Override
             public void onFailure(Response response, Throwable throwable) {
-                mDialogReg.dismissAllowingStateLoss();
+                mLoadingDialog.dismiss();
+//                mDialogReg.dismissAllowingStateLoss();
 
                 String errorMsg = "";
                 if (response != null) {
@@ -297,8 +300,9 @@ public class LoginCloudActivity extends DefaultCommonActivity {
 
             @Override
             public void onSuccess(Response response, String content) {
-
+                mLoadingDialog.dismiss();
 //                mLoadingDialog.setMessage(getString(R.string.register_success_wait_uploading));
+                mDialogReg.show(getSupportFragmentManager(), null);
                 new SetNeedSaveDataTask().execute();
             }
         });

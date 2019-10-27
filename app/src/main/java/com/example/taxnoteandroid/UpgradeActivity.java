@@ -224,7 +224,7 @@ public class UpgradeActivity extends DefaultCommonActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (!mBillingHelper.handleActivityResult(requestCode, resultCode, data)) {
+        if (!mBillingHelper.handleActivityResult(requestCode, resultCode, data) || BuildConfig.IS_DEBUG_CLOUD) {
             super.onActivityResult(requestCode, resultCode, data);
         }
 

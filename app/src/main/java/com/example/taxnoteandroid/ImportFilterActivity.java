@@ -139,7 +139,7 @@ public class ImportFilterActivity extends DefaultCommonActivity {
                     binding.loadingLayout.setVisibility(View.GONE);
                     binding.backupFinishedLayout.setVisibility(View.VISIBLE);
                 }
-            });
+            }, null);
 
         }
     }

@@ -102,7 +102,6 @@ public class AccountDataManager {
     public List<Account> findAllNeedSave(boolean isNeedSave) {
         int needSave = (isNeedSave) ? 1 : 0;
         List<Account> accounts = ormaDatabase.selectFromAccount()
-                .projectEq(mCurrentProject)
                 .where(Account_Schema.INSTANCE.deleted.getQualifiedName() + " = 0")
                 .and()
                 .where(Account_Schema.INSTANCE.needSave.getQualifiedName() + " = " + needSave)
@@ -113,7 +112,6 @@ public class AccountDataManager {
     public List<Account> findAllNeedSync(boolean isNeedSync) {
         int needSync = (isNeedSync) ? 1 : 0;
         List<Account> accounts = ormaDatabase.selectFromAccount()
-                .projectEq(mCurrentProject)
                 .where(Account_Schema.INSTANCE.deleted.getQualifiedName() + " = 0")
                 .and()
                 .where(Account_Schema.INSTANCE.needSync.getQualifiedName() + " = " + needSync)
@@ -124,10 +122,18 @@ public class AccountDataManager {
     public List<Account> findAllDeleted(boolean isDeleted) {
         int deleted = (isDeleted) ? 1 : 0;
         List<Account> accounts = ormaDatabase.selectFromAccount()
-                .projectEq(mCurrentProject)
                 .where(Account_Schema.INSTANCE.deleted.getQualifiedName() + " = " + deleted)
                 .toList();
         return accounts;
+    }
+
+    public int countNeedSave(boolean isNeedSave) {
+        int needSave = (isNeedSave) ? 1 : 0;
+        return ormaDatabase.selectFromAccount()
+                .where(Account_Schema.INSTANCE.deleted.getQualifiedName() + " = 0")
+                .and()
+                .where(Account_Schema.INSTANCE.needSave.getQualifiedName() + " = " + needSave)
+                .count();
     }
 
 

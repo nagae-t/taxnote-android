@@ -5,6 +5,9 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.util.Log;
+import android.view.View;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.example.taxnoteandroid.Library.AsyncOkHttpClient;
 import com.example.taxnoteandroid.Library.BroadcastUtil;
@@ -65,6 +68,8 @@ public class TNApiModel extends TNApi {
     private EntryDataManager mEntryDataManager;
 
     private TNSimpleDialogFragment mLoadingDialog;
+    private double mLoadProgressMax;
+    private int mSaveAllNeedLoadedCount;
 
     private static final double LIMIT_BULK_SEND = 50;
     private static final double LIMIT_ENTRY_BULK_SEND = 300;
@@ -966,6 +971,8 @@ public class TNApiModel extends TNApi {
                 @Override
                 public void onSuccess(Response response, String content) {
                     mCount++;
+                    setSaveAllNeedProgressDialog(1, null);
+
                     if (mCount >= projectSize)
                         callback.onSuccess(response, content);
                 }
@@ -1007,15 +1014,20 @@ public class TNApiModel extends TNApi {
         }
 
         final int loopMax = getBulkLoopMax(reasonSize);
+        int loopSize = (int)LIMIT_BULK_SEND;
         Log.v("TEST", "reasonSize:"+reasonSize+" | loopMax:"+loopMax);
 
-        for (int i=0; i<loopMax; i++) {
+        for (int i=0; i<reasonSize; i+=loopSize) {
             final int loopIndex = i;
+
+            final List<Reason> sendData = reasons.subList(i, Math.min(i+loopSize, reasonSize));
+            Log.v("TEST", "send saveReason size : "+sendData.size());
+            setSaveAllNeedProgressDialog(sendData.size(), null);
+
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    Log.v("TEST", "send saveReason index : "+loopIndex);
-                    saveReason(reasons, new AsyncOkHttpClient.ResponseCallback() {
+                    saveReason(sendData, new AsyncOkHttpClient.ResponseCallback() {
                         @Override
                         public void onFailure(Response response, Throwable throwable) {
                             if (callback != null)
@@ -1031,6 +1043,7 @@ public class TNApiModel extends TNApi {
 
                         @Override
                         public void onSuccess(Response response, String content) {
+
                             if ((loopIndex+1) == loopMax)
                                 callback.onSuccess(response, content);
                         }
@@ -1080,15 +1093,20 @@ public class TNApiModel extends TNApi {
         }
 
         final int loopMax = getBulkLoopMax(accountSize);
+        int loopSize = (int)LIMIT_BULK_SEND;
         Log.v("TEST", "accountSize:"+accountSize+" | loopMax:"+loopMax);
 
-        for (int i=0; i<loopMax; i++) {
+        for (int i=0; i<accountSize; i += loopSize) {
             final int loopIndex = i;
+
+            final List<Account> sendData = accounts.subList(i, Math.min(i+loopSize, accountSize));
+            Log.v("TEST", "send saveAccount size : "+sendData.size());
+            setSaveAllNeedProgressDialog(sendData.size(), null);
+
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    Log.v("TEST", "send saveAccount index : "+loopIndex);
-                    saveAccount(accounts, new AsyncOkHttpClient.ResponseCallback() {
+                    saveAccount(sendData, new AsyncOkHttpClient.ResponseCallback() {
                         @Override
                         public void onFailure(Response response, Throwable throwable) {
                             if (callback != null)
@@ -1147,15 +1165,20 @@ public class TNApiModel extends TNApi {
         }
 
         final int loopMax = getBulkLoopMax(summarySize);
+        int loopSize = (int)LIMIT_BULK_SEND;
         Log.v("TEST", "summarySize:"+summarySize+" | loopMax:"+loopMax);
 
-        for (int i=0; i<loopMax; i++) {
+        for (int i=0; i<summarySize; i += loopSize) {
             final int loopIndex = i;
+
+            final List<Summary> sendData = summaries.subList(i, Math.min(i+loopSize, summarySize));
+            Log.v("TEST", "send saveSummary size : "+sendData.size());
+            setSaveAllNeedProgressDialog(sendData.size(), null);
+
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    Log.v("TEST", "send saveSummary index : "+loopIndex);
-                    saveSummary(summaries, new AsyncOkHttpClient.ResponseCallback() {
+                    saveSummary(sendData, new AsyncOkHttpClient.ResponseCallback() {
                         @Override
                         public void onFailure(Response response, Throwable throwable) {
                             if (callback != null)
@@ -1214,15 +1237,20 @@ public class TNApiModel extends TNApi {
         }
 
         final int loopMax = getBulkLoopMax(recurringSize);
+        int loopSize = (int)LIMIT_BULK_SEND;
         Log.v("TEST", "recurringSize:"+recurringSize+" | loopMax:"+loopMax);
 
-        for (int i=0; i<loopMax; i++) {
+        for (int i=0; i<recurringSize; i+=loopSize) {
             final int loopIndex = i;
+
+            final List<Recurring> sendData = recurrings.subList(i, Math.min(i+loopSize, recurringSize));
+            Log.v("TEST", "send saveRecurring size : "+sendData.size());
+            setSaveAllNeedProgressDialog(sendData.size(), null);
+
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    Log.v("TEST", "send saveRecurring index : "+loopIndex);
-                    saveRecurring(recurrings, new AsyncOkHttpClient.ResponseCallback() {
+                    saveRecurring(sendData, new AsyncOkHttpClient.ResponseCallback() {
                         @Override
                         public void onFailure(Response response, Throwable throwable) {
                             if (callback != null)
@@ -1312,15 +1340,20 @@ public class TNApiModel extends TNApi {
 
         double loopMaxDouble = Math.ceil(allSize/LIMIT_ENTRY_BULK_SEND);
         final int loopMax = (int)loopMaxDouble;
+        int loopSize = (int)LIMIT_ENTRY_BULK_SEND;
         Log.v("TEST", "entries.size():"+entries.size()+" | loopMax:"+loopMax);
 
         for (int i=0; i<loopMax; i++) {
             final int loopIndex = i;
+
+            final List<Entry> sendData = entries.subList(i, Math.min(i+loopSize, allSize));
+            Log.v("TEST", "send saveEntry size : "+sendData.size());
+            setSaveAllNeedProgressDialog(sendData.size(), null);
+
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    Log.v("TEST", "send saveEntry index : "+loopIndex);
-                    saveEntry(entries, new AsyncOkHttpClient.ResponseCallback() {
+                    saveEntry(sendData, new AsyncOkHttpClient.ResponseCallback() {
                         @Override
                         public void onFailure(Response response, Throwable throwable) {
                             if (callback != null)
@@ -1412,6 +1445,13 @@ public class TNApiModel extends TNApi {
     }
 
     private void saveAllNeedSaveData(final AsyncOkHttpClient.ResponseCallback callback) {
+        mSaveAllNeedLoadedCount = 0;
+        mLoadProgressMax = mProjectDataManager.countNeedSave(true)
+                + mReasonDataManager.countNeedSave(true)
+                + mAccountDataManager.countNeedSave(true)
+                + mSummaryDataManager.countNeedSave(true)
+                + mRecurringDataManager.countNeedSave(true)
+                + mEntryDataManager.countNeedSave(true);
 
         saveAllNeedSaveProjects(new AsyncOkHttpClient.ResponseCallback() {
             @Override
@@ -1509,11 +1549,6 @@ public class TNApiModel extends TNApi {
                                          TNSimpleDialogFragment loadingDialog) {
         mLoadingDialog = loadingDialog;
         saveAllNeedSaveData(callback);
-    }
-
-    private void setLoadingDialog(String msg) {
-        if (mLoadingDialog == null) return;
-        mLoadingDialog.setMessage(msg);
     }
 
     public void saveAllNeedSaveSyncDeletedData(final AsyncOkHttpClient.Callback callback) {
@@ -2959,4 +2994,20 @@ public class TNApiModel extends TNApi {
         });
     }
 
+    private void setSaveAllNeedProgressDialog(int loadedCount, String msg) {
+        if (mLoadingDialog == null) return;
+
+        mSaveAllNeedLoadedCount += loadedCount;
+        int progress = (int)Math.floor((mSaveAllNeedLoadedCount / mLoadProgressMax) * 100);
+        Log.v("TEST", "setSaveAllNeedProgressDialog all: "+mLoadProgressMax+" loaded: "+mSaveAllNeedLoadedCount);
+
+        View view = mLoadingDialog.getDialogView();
+        ProgressBar bar = view.findViewById(R.id.progress_bar);
+        bar.setProgress(progress);
+        TextView tv = view.findViewById(R.id.message);
+
+        if (msg != null) tv.setText(msg);
+
+        mLoadingDialog.setDialogView(view);
+    }
 }
