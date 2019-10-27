@@ -48,6 +48,7 @@ public class LoginCloudActivity extends DefaultCommonActivity {
     private ActivityLoginCloudBinding binding;
     private int mViewType;
     private ProgressDialog mLoadingDialog;
+    private TNSimpleDialogFragment mDialogReg;
 
     private static final String KEY_VIEW_TYPE = "view_type";
     private static final String KEY_EMAIL = "email";
@@ -273,15 +274,15 @@ public class LoginCloudActivity extends DefaultCommonActivity {
 
     private void sendRegister(String email, String passwd) {
         // Progress dialog
-        mLoadingDialog = getLoadingDialog();
-        mLoadingDialog.show();
+        mDialogReg = getDialogAfterRegister();
+        mDialogReg.show(getSupportFragmentManager(), null);
 
         final TNApiUser apiUser = new TNApiUser(this, email, passwd);
         apiUser.setPasswordConfirm(passwd);
         apiUser.register(new AsyncOkHttpClient.Callback() {
             @Override
             public void onFailure(Response response, Throwable throwable) {
-                mLoadingDialog.dismiss();
+                mDialogReg.dismissAllowingStateLoss();
 
                 String errorMsg = "";
                 if (response != null) {
@@ -297,7 +298,7 @@ public class LoginCloudActivity extends DefaultCommonActivity {
             @Override
             public void onSuccess(Response response, String content) {
 
-                mLoadingDialog.setMessage(getString(R.string.register_success_wait_uploading));
+//                mLoadingDialog.setMessage(getString(R.string.register_success_wait_uploading));
                 new SetNeedSaveDataTask().execute();
             }
         });
@@ -411,6 +412,16 @@ public class LoginCloudActivity extends DefaultCommonActivity {
         return dialog;
     }
 
+    private TNSimpleDialogFragment getDialogAfterRegister() {
+        final TNSimpleDialogFragment dialogFragment = TNSimpleDialogFragment.newInstance();
+
+        dialogFragment.setContentViewId(R.layout.dialog_progress_bar_loading);
+        dialogFragment.setCloseToFinish(true);
+        dialogFragment.setCancelable(false);
+
+        return dialogFragment;
+    }
+
     // アカウント作成後のデータ処理
     // iOSでは setNeedSaveForOldCoreDataModel の処理
     private class SetNeedSaveDataTask extends AsyncTask<String, Integer, Boolean> {
@@ -479,7 +490,7 @@ public class LoginCloudActivity extends DefaultCommonActivity {
                 @Override
                 public void onFailure(Response response, Throwable throwable) {
                     apiModel.setIsSyncing(false);
-                    mLoadingDialog.dismiss();
+                    mDialogReg.dismissAllowingStateLoss();
                     String errorMsg = "";
                     if (response != null) {
                         errorMsg = response.message();
@@ -500,11 +511,11 @@ public class LoginCloudActivity extends DefaultCommonActivity {
                 @Override
                 public void onSuccess(Response response, String content) {
                     apiModel.setIsSyncing(false);
-                    mLoadingDialog.dismiss();
+                    mDialogReg.dismissAllowingStateLoss();
                     setResult(RESULT_OK);
                     finish();
                 }
-            });
+            }, mDialogReg);
 
 
         }

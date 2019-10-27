@@ -936,4 +936,22 @@ public class DialogManager {
         void onCombine(Account fromAccount, Account toAccount, int countTarget);
     }
 
+    // debug
+//    private ProgressDialog getLoadingDialog(){
+//        final ProgressDialog dialog = new ProgressDialog(this);
+//        dialog.setMessage(getString(R.string.loading));
+//        dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+//        dialog.setCancelable(false);
+//        dialog.setCanceledOnTouchOutside(false);
+//        return dialog;
+//    }
+
+    public static TNSimpleDialogFragment getDialogAfterRegister(final Context context, final FragmentManager fragmentManager) {
+//        private static void showFirstLaunchMessage2(final Context context, final FragmentManager fragmentManager) {
+//
+//            // Custom Alert
+        final TNSimpleDialogFragment dialogFragment = TNSimpleDialogFragment.newInstance();
+
+        return dialogFragment;
+    }
 }

@@ -13,6 +13,7 @@ import com.example.taxnoteandroid.Library.UpgradeManger;
 import com.example.taxnoteandroid.Library.ValueConverter;
 import com.example.taxnoteandroid.Library.zeny.ZNUtils;
 import com.example.taxnoteandroid.R;
+import com.example.taxnoteandroid.TNSimpleDialogFragment;
 import com.example.taxnoteandroid.dataManager.AccountDataManager;
 import com.example.taxnoteandroid.dataManager.DefaultDataInstaller;
 import com.example.taxnoteandroid.dataManager.EntryDataManager;
@@ -62,6 +63,8 @@ public class TNApiModel extends TNApi {
     private SummaryDataManager mSummaryDataManager;
     private RecurringDataManager mRecurringDataManager;
     private EntryDataManager mEntryDataManager;
+
+    private TNSimpleDialogFragment mLoadingDialog;
 
     private static final double LIMIT_BULK_SEND = 50;
     private static final double LIMIT_ENTRY_BULK_SEND = 300;
@@ -1498,13 +1501,19 @@ public class TNApiModel extends TNApi {
         });
     }
 
-    public void saveAllDataAfterRegister(AsyncOkHttpClient.Callback callback) {
+//    public void saveAllDataAfterRegister(AsyncOkHttpClient.Callback callback) {
+//        saveAllNeedSaveData(callback);
+//    }
+
+    public void saveAllDataAfterRegister(AsyncOkHttpClient.ResponseCallback callback,
+                                         TNSimpleDialogFragment loadingDialog) {
+        mLoadingDialog = loadingDialog;
         saveAllNeedSaveData(callback);
     }
 
-    // debug
-    public void saveAllDataAfterRegister(AsyncOkHttpClient.ResponseCallback callback) {
-        saveAllNeedSaveData(callback);
+    private void setLoadingDialog(String msg) {
+        if (mLoadingDialog == null) return;
+        mLoadingDialog.setMessage(msg);
     }
 
     public void saveAllNeedSaveSyncDeletedData(final AsyncOkHttpClient.Callback callback) {
@@ -1519,11 +1528,15 @@ public class TNApiModel extends TNApi {
 
         setIsSyncing(true);
 
-        saveAllNeedSaveData(new AsyncOkHttpClient.Callback() {
+        saveAllNeedSaveData(new AsyncOkHttpClient.ResponseCallback() {
             @Override
             public void onFailure(Response response, Throwable throwable) {
                 setIsSyncing(false);
                 callback.onFailure(response, throwable);
+            }
+
+            @Override
+            public void onUpdate(long bytesRead, long contentLength, boolean done) {
             }
 
             @Override
