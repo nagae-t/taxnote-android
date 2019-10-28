@@ -543,25 +543,26 @@ public class UpgradeActivity extends DefaultCommonActivity {
     }
 
     private void upgradeToTaxnoteCloud() {
-        if (!mBillingHelper.subscriptionsSupported()) return;
+        if (!BuildConfig.DEBUG) {
+            if (!mBillingHelper.subscriptionsSupported()) return;
+        }
 
         // Taxnoteプラス購入済みか確認してダイアログを表示する
         if (!ZNUtils.isZeny() && !UpgradeManger.taxnotePlusIsActive(this)) {
             AlertDialog.Builder builder = new AlertDialog.Builder(this)
-                    .setTitle(R.string.plus_not_bought_title)
-                    .setMessage(R.string.plus_not_bought_message)
+                    .setTitle(R.string.caution)
+                    .setMessage(R.string.confirm_cloud_without_plus_msg)
                     .setNegativeButton(android.R.string.cancel, null)
+                    .setNeutralButton(R.string.view_help, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            Support.showSingleFAQ(UpgradeActivity.this, "177");
+                        }
+                    })
                     .setPositiveButton(R.string.buy_taxnote_cloud_with_taxnote_plus_limit, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
-
-                            try {
-                                mBillingHelper.launchSubscriptionPurchaseFlow(UpgradeActivity.this,
-                                        UpgradeManger.SKU_TAXNOTE_CLOUD_ID,
-                                        REQUEST_CODE_PURCHASE_PREMIUM, mPurchaseFinishedListener);
-                            } catch (IabHelper.IabAsyncInProgressException e) {
-                                e.printStackTrace();
-                            }
+                            confirmUpgradeToTaxnoteCloundWithOutPlus();
                         }
                     });
             builder.create().show();
@@ -576,6 +577,32 @@ public class UpgradeActivity extends DefaultCommonActivity {
             }
         }
 
+    }
+
+    private void confirmUpgradeToTaxnoteCloundWithOutPlus() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this)
+                .setTitle(R.string.plus_not_bought_title)
+                .setMessage(R.string.confirm_cloud_without_plus_msg_again)
+                .setNegativeButton(android.R.string.cancel, null)
+                .setNeutralButton(R.string.view_help, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Support.showSingleFAQ(UpgradeActivity.this, "177");
+                    }
+                })
+                .setPositiveButton(R.string.buy_taxnote_cloud_with_taxnote_plus_limit, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        try {
+                            mBillingHelper.launchSubscriptionPurchaseFlow(UpgradeActivity.this,
+                                    UpgradeManger.SKU_TAXNOTE_CLOUD_ID,
+                                    REQUEST_CODE_PURCHASE_PREMIUM, mPurchaseFinishedListener);
+                        } catch (IabHelper.IabAsyncInProgressException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+        builder.create().show();
     }
 
     private void showMemberDialogItems() {
