@@ -82,14 +82,7 @@ public class ChangePasswordActivity extends DefaultCommonActivity {
         }
         binding.passwdConfirmInputLayout.setErrorEnabled(false);
 
-        // Progress dialog
-//        final ProgressDialog dialog = new ProgressDialog(this);
-//        dialog.setMessage(getString(R.string.loading));
-//        dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-//        dialog.setCancelable(false);
-//        dialog.setCanceledOnTouchOutside(false);
-//        dialog.show();
-        final TNSimpleDialogFragment dialog = DialogManager.getLoading();
+        final TNSimpleDialogFragment dialog = DialogManager.getLoading(this);
         dialog.show(getSupportFragmentManager(), null);
 
 

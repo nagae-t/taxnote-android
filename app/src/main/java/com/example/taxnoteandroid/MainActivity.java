@@ -206,10 +206,6 @@ public class MainActivity extends DefaultCommonActivity
 
         // Zeny Ads
         toggleAdview();
-
-        // debug
-        TNSimpleDialogFragment dialog = DialogManager.getLoading();
-        dialog.show(getSupportFragmentManager(), null);
     }
 
     // Zeny Ads

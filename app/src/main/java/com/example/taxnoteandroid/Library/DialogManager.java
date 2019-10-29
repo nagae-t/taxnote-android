@@ -927,14 +927,19 @@ public class DialogManager {
         void onCombine(Account fromAccount, Account toAccount, int countTarget);
     }
 
-    public static TNSimpleDialogFragment getLoading() {
-        return getLoading(null, null);
+    public static TNSimpleDialogFragment getLoading(AppCompatActivity activity) {
+        return getLoading(activity,null, null);
     }
 
-    public static TNSimpleDialogFragment getLoading(String title, String message) {
+    public static TNSimpleDialogFragment getLoading(AppCompatActivity activity, String message) {
+        return getLoading(activity,null, message);
+    }
+
+    public static TNSimpleDialogFragment getLoading(AppCompatActivity activity, String title, String message) {
         final TNSimpleDialogFragment dialogFragment = TNSimpleDialogFragment.newInstance();
 
-        dialogFragment.setContentViewId(R.layout.dialog_loading);
+        View dialogView = activity.getLayoutInflater().inflate(R.layout.dialog_loading, null);
+        dialogFragment.setDialogView(dialogView);
         dialogFragment.setCloseToFinish(true);
         dialogFragment.setCancelable(false);
         if (title != null) dialogFragment.setTitle(title);

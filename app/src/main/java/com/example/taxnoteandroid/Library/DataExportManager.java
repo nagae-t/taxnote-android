@@ -1,18 +1,18 @@
 package com.example.taxnoteandroid.Library;
 
-import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Environment;
 import android.support.v4.app.ShareCompat;
 import android.support.v4.content.FileProvider;
+import android.support.v7.app.AppCompatActivity;
 
 import com.example.taxnoteandroid.BuildConfig;
 import com.example.taxnoteandroid.CommonEntryRecyclerAdapter;
 import com.example.taxnoteandroid.Library.zeny.ZNUtils;
 import com.example.taxnoteandroid.R;
+import com.example.taxnoteandroid.TNSimpleDialogFragment;
 import com.example.taxnoteandroid.TaxnoteConsts;
 import com.example.taxnoteandroid.dataManager.AccountDataManager;
 import com.example.taxnoteandroid.dataManager.EntryDataManager;
@@ -52,7 +52,7 @@ public class DataExportManager implements TaxnoteConsts {
     private static String CHARACTER_CODE_UTF_8 = "UTF-8";
     private static String CHARACTER_CODE_SHIFT_JIS = "Shift_JIS";
 
-    private Activity mActivity;
+    private AppCompatActivity mActivity;
     private Context context = null;
     private String mode = null;
     private int columnSize = -1; // CSV column size.
@@ -72,14 +72,14 @@ public class DataExportManager implements TaxnoteConsts {
     private boolean mIsExpense;
     private boolean mIsBalance;
 
-    public DataExportManager(Activity activity) {
+    public DataExportManager(AppCompatActivity activity) {
         this.mActivity = activity;
         this.context = activity.getApplicationContext();
         this.isSubjectEnable = SharedPreferencesManager.getExportSujectEnable(context);
     }
 
 
-    public DataExportManager(Activity activity, String mode, String character_code) {
+    public DataExportManager(AppCompatActivity activity, String mode, String character_code) {
         this.mActivity = activity;
         this.context = activity.getApplicationContext();
         this.isSubjectEnable = SharedPreferencesManager.getExportSujectEnable(context);
@@ -89,7 +89,7 @@ public class DataExportManager implements TaxnoteConsts {
     }
 
     // 損益表の出力用
-    public DataExportManager(Activity activity, String charCode, long[] startEndDate, List<Entry> data) {
+    public DataExportManager(AppCompatActivity activity, String charCode, long[] startEndDate, List<Entry> data) {
         this.mActivity = activity;
         this.context = activity.getApplicationContext();
         this.startEndDate = startEndDate;
@@ -325,12 +325,8 @@ public class DataExportManager implements TaxnoteConsts {
 
     public void export() {
 
-        // Progress dialog
-        final ProgressDialog dialog = new ProgressDialog(mActivity);
-        dialog.setMessage(context.getString(R.string.data_export));
-        dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        dialog.setCancelable(false);
-        dialog.show();
+        final TNSimpleDialogFragment dialog = DialogManager.getLoading(mActivity, context.getString(R.string.data_export));
+        dialog.show(mActivity.getSupportFragmentManager(), null);
 
         AsyncTask<Object, Object, File> task = new AsyncTask<Object, Object, File>() {
 
@@ -342,7 +338,7 @@ public class DataExportManager implements TaxnoteConsts {
             @Override
             protected void onPostExecute(File file) {
                 super.onPostExecute(file);
-                dialog.cancel();
+                dialog.dismissAllowingStateLoss();
 
                 if (file != null) {
                     shareFileContent(file);
