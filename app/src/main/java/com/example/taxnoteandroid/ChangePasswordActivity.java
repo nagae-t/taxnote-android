@@ -1,7 +1,6 @@
 package com.example.taxnoteandroid;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
@@ -84,12 +83,15 @@ public class ChangePasswordActivity extends DefaultCommonActivity {
         binding.passwdConfirmInputLayout.setErrorEnabled(false);
 
         // Progress dialog
-        final ProgressDialog dialog = new ProgressDialog(this);
-        dialog.setMessage(getString(R.string.loading));
-        dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        dialog.setCancelable(false);
-        dialog.setCanceledOnTouchOutside(false);
-        dialog.show();
+//        final ProgressDialog dialog = new ProgressDialog(this);
+//        dialog.setMessage(getString(R.string.loading));
+//        dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+//        dialog.setCancelable(false);
+//        dialog.setCanceledOnTouchOutside(false);
+//        dialog.show();
+        final TNSimpleDialogFragment dialog = DialogManager.getLoading();
+        dialog.show(getSupportFragmentManager(), null);
+
 
         final TNApiUser apiUser = new TNApiUser(this);
         apiUser.updatePassword(passwd, new AsyncOkHttpClient.Callback() {

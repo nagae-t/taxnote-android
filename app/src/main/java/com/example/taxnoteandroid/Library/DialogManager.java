@@ -12,6 +12,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.taxnoteandroid.DataExportActivity;
@@ -924,6 +925,27 @@ public class DialogManager {
     public interface CategoryCombineListener {
         void onCombine(Reason fromReason, Reason toReason, int countTarget);
         void onCombine(Account fromAccount, Account toAccount, int countTarget);
+    }
+
+    public static TNSimpleDialogFragment getLoading() {
+        return getLoading(null, null);
+    }
+
+    public static TNSimpleDialogFragment getLoading(String title, String message) {
+        final TNSimpleDialogFragment dialogFragment = TNSimpleDialogFragment.newInstance();
+
+        dialogFragment.setContentViewId(R.layout.dialog_loading);
+        dialogFragment.setCloseToFinish(true);
+        dialogFragment.setCancelable(false);
+        if (title != null) dialogFragment.setTitle(title);
+        if (message != null) {
+            View view = dialogFragment.getDialogView();
+            TextView tv = view.findViewById(R.id.message);
+            tv.setText(message);
+            dialogFragment.setDialogView(view);
+        }
+
+        return dialogFragment;
     }
 
 }
