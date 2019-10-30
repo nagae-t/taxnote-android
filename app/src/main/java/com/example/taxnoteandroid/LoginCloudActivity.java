@@ -1,7 +1,6 @@
 package com.example.taxnoteandroid;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -47,7 +46,7 @@ public class LoginCloudActivity extends DefaultCommonActivity {
 
     private ActivityLoginCloudBinding binding;
     private int mViewType;
-    private ProgressDialog mLoadingDialog;
+    private TNSimpleDialogFragment mLoadingDialog;
 
     private static final String KEY_VIEW_TYPE = "view_type";
     private static final String KEY_EMAIL = "email";
@@ -189,9 +188,9 @@ public class LoginCloudActivity extends DefaultCommonActivity {
 
     private void sendLogin(String email, String passwd) {
         // Progress dialog
-        final ProgressDialog dialog = getLoadingDialog();
-        if (!dialog.isShowing())
-            dialog.show();
+        final TNSimpleDialogFragment dialog = DialogManager.getLoading(this);
+        if (!dialog.isVisible())
+            dialog.show(getSupportFragmentManager(), null);
 
         final TNApiUser apiUser = new TNApiUser(this, email, passwd);
         apiUser.signIn(new AsyncOkHttpClient.Callback() {
@@ -273,8 +272,8 @@ public class LoginCloudActivity extends DefaultCommonActivity {
 
     private void sendRegister(String email, String passwd) {
         // Progress dialog
-        mLoadingDialog = getLoadingDialog();
-        mLoadingDialog.show();
+        mLoadingDialog = DialogManager.getLoading(this);
+        mLoadingDialog.show(getSupportFragmentManager(), null);
 
         final TNApiUser apiUser = new TNApiUser(this, email, passwd);
         apiUser.setPasswordConfirm(passwd);
@@ -360,8 +359,8 @@ public class LoginCloudActivity extends DefaultCommonActivity {
     }
 
     private void sendForgotPasswd(String email) {
-        final ProgressDialog loadingDialog = getLoadingDialog();
-        loadingDialog.show();
+        final TNSimpleDialogFragment loadingDialog = DialogManager.getLoading(this);
+        loadingDialog.show(getSupportFragmentManager(), null);
 
         final TNApiUser apiUser = new TNApiUser(this);
         apiUser.setEmail(email);
@@ -402,14 +401,6 @@ public class LoginCloudActivity extends DefaultCommonActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private ProgressDialog getLoadingDialog(){
-        final ProgressDialog dialog = new ProgressDialog(this);
-        dialog.setMessage(getString(R.string.loading));
-        dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        dialog.setCancelable(false);
-        dialog.setCanceledOnTouchOutside(false);
-        return dialog;
-    }
 
     // アカウント作成後のデータ処理
     // iOSでは setNeedSaveForOldCoreDataModel の処理

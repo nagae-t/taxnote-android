@@ -1,6 +1,5 @@
 package com.example.taxnoteandroid;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -59,7 +58,7 @@ public class UpgradeActivity extends DefaultCommonActivity {
     private TNApiModel mApiModel;
     private TNGoogleApiClient tnGoogleApi;
 
-    private ProgressDialog mLoadingProgress;
+    private TNSimpleDialogFragment mLoadingProgress;
 
     public static void start(Context context) {
         Intent intent = new Intent(context, UpgradeActivity.class);
@@ -76,10 +75,7 @@ public class UpgradeActivity extends DefaultCommonActivity {
         mApiModel = new TNApiModel(this);
         tnGoogleApi = new TNGoogleApiClient(this);
 
-        mLoadingProgress = new ProgressDialog(this);
-        mLoadingProgress.setMessage(getString(R.string.loading));
-        mLoadingProgress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        mLoadingProgress.setCancelable(false);
+        mLoadingProgress = DialogManager.getLoading(this);
 
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
@@ -216,7 +212,7 @@ public class UpgradeActivity extends DefaultCommonActivity {
             if (purchase == null) return;
 
             // check billing
-            mLoadingProgress.show();
+            mLoadingProgress.show(getSupportFragmentManager(), null);
             new CheckBillingAsyncTask(true).execute(purchase);
 
         }
@@ -396,7 +392,7 @@ public class UpgradeActivity extends DefaultCommonActivity {
         String transactionId = TNApiUser.getCloudOrderId(this);
         if (transactionId == null || isFinishing()) return;
 
-        mLoadingProgress.show();
+        mLoadingProgress.show(getSupportFragmentManager(), null);
         mApiUser.checkUniqueOfSubscription(transactionId, new AsyncOkHttpClient.Callback() {
             @Override
             public void onFailure(Response response, Throwable throwable) {
@@ -640,8 +636,7 @@ public class UpgradeActivity extends DefaultCommonActivity {
      * 同期を完了させてからログアウトする
      */
     private void sendSignOut() {
-        // Progress dialog
-        mLoadingProgress.show();
+        mLoadingProgress.show(getSupportFragmentManager(), null);
 
         if (!TNApi.isNetworkConnected(this)) {
             mApiUser.clearAccountData(mApiModel);
@@ -721,7 +716,7 @@ public class UpgradeActivity extends DefaultCommonActivity {
         }
 
         // Progress dialog
-        mLoadingProgress.show();
+        mLoadingProgress.show(getSupportFragmentManager(), null);
 
         mApiUser.deleteSubscriptionAccount(mApiModel, new AsyncOkHttpClient.Callback() {
             @Override
@@ -774,7 +769,7 @@ public class UpgradeActivity extends DefaultCommonActivity {
 
         @Override
         protected void onPostExecute(SubscriptionPurchase result) {
-            if (mLoadingProgress.isShowing()) mLoadingProgress.dismiss();
+            if (mLoadingProgress.isVisible()) mLoadingProgress.dismiss();
             if (result == null || subscriptionId == null) return;
             if (isFinishing()) return;
 
