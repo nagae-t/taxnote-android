@@ -2711,6 +2711,57 @@ public class TNApiModel extends TNApi {
         requestApi();
     }
 
+    public void deleteEntry(List<Entry> entries, final AsyncOkHttpClient.ResponseCallback callback) {
+        if (!isLoggingIn() || !isCloudActive() || !TNApi.isNetworkConnected(context)) {
+            if (callback != null)
+                callback.onSuccess(null, null);
+            return;
+        }
+
+        setHttpMethod(HTTP_METHOD_DELETE);
+        setRequestPath(URL_PATH_ENTRY_BULK_DELETE);
+
+        setFormBody(null);
+        setRespCallback(new AsyncOkHttpClient.ResponseCallback() {
+            @Override
+            public void onFailure(Response response, Throwable throwable) {
+
+            }
+
+            @Override
+            public void onUpdate(long bytesRead, long contentLength, boolean done) {
+                if (callback != null)
+                    callback.onUpdate(bytesRead, contentLength, done);
+            }
+
+            @Override
+            public void onSuccess(Response response, String content) {
+
+            }
+        });
+//        setCallback(new AsyncOkHttpClient.Callback() {
+//            @Override
+//            public void onFailure(Response response, Throwable throwable) {
+//                Log.e(LTAG, "deleteEntry(uuid) onFailure");
+//                if (response != null) {
+//                    Log.e(LTAG, "deleteEntry(uuid) onFailure response.code: " + response.code()
+//                            + ", message: " + response.message());
+//                }
+//                if (callback != null)
+//                    callback.onFailure(response, throwable);
+//            }
+//
+//            @Override
+//            public void onSuccess(Response response, String content) {
+//                mEntryDataManager.delete(uuid);
+//                if (callback != null)
+//                    callback.onSuccess(response, content);
+//            }
+//        });
+
+        requestBulkApi();
+    }
+
     private void deleteAllProjects(final AsyncOkHttpClient.Callback callback) {
         List<Project> projects = mProjectDataManager.findAllDeleted(true);
         final int projectSize = projects.size();
@@ -2864,6 +2915,32 @@ public class TNApiModel extends TNApi {
                 }
             });
         }
+    }
+
+    private void deleteAllEntries(final AsyncOkHttpClient.ResponseCallback callback) {
+        List<Entry> entries = mEntryDataManager.findAllDeleted(true);
+        final int entrySize = entries.size();
+        if (entrySize == 0) {
+            callback.onSuccess(null, null);
+            return;
+        }
+
+//        mCount = 0;
+//        for (Entry entry : entries) {
+//            deleteEntry(entry.uuid, new AsyncOkHttpClient.Callback() {
+//                @Override
+//                public void onFailure(Response response, Throwable throwable) {
+//                    callback.onFailure(response, throwable);
+//                }
+//
+//                @Override
+//                public void onSuccess(Response response, String content) {
+//                    mCount++;
+//                    if (mCount >= entrySize)
+//                        callback.onSuccess(response, content);
+//                }
+//            });
+//        }
     }
 
     public void updateAllDeletedData(final AsyncOkHttpClient.Callback callback) {
