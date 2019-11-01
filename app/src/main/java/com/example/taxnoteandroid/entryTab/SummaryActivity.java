@@ -56,7 +56,7 @@ public class SummaryActivity extends DefaultCommonActivity {
 
     private TNApiModel mApiModel;
 
-    private SummaryDataManager summaryDataManager = new SummaryDataManager(this);  // 2017/01/30 E.Nozaki
+    private SummaryDataManager summaryDataManager;
     private MyRecyclerViewAdapter adapter; // 2017/01/30 E.Nozaki
     private List<Summary> summaryList = null; // 2017/01/30 E.Nozaki
 
@@ -77,6 +77,7 @@ public class SummaryActivity extends DefaultCommonActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_summary);
 
+        summaryDataManager = new SummaryDataManager(this);
         mApiModel = new TNApiModel(this);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);

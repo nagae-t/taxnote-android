@@ -1351,7 +1351,7 @@ public class TNApiModel extends TNApi {
         int loopSize = (int)LIMIT_ENTRY_BULK_SEND;
         Log.v("TEST", "entries.size():"+entries.size()+" | loopMax:"+loopMax);
 
-        for (int i=0; i<loopMax; i++) {
+        for (int i=0; i<loopMax; i += loopSize) {
             final int loopIndex = i;
 
             final List<Entry> sendData = entries.subList(i, Math.min(i+loopSize, allSize));
@@ -2711,55 +2711,44 @@ public class TNApiModel extends TNApi {
         requestApi();
     }
 
-    public void deleteEntry(List<Entry> entries, final AsyncOkHttpClient.ResponseCallback callback) {
+    public void deleteEntry(final List<Entry> entries, final AsyncOkHttpClient.Callback callback) {
         if (!isLoggingIn() || !isCloudActive() || !TNApi.isNetworkConnected(context)) {
             if (callback != null)
                 callback.onSuccess(null, null);
             return;
         }
 
+        FormBody.Builder formBuilder = new FormBody.Builder();
+        for (Entry entry : entries) {
+            formBuilder.add("entry_ids[]",entry.uuid);
+        }
+
         setHttpMethod(HTTP_METHOD_DELETE);
         setRequestPath(URL_PATH_ENTRY_BULK_DELETE);
-
-        setFormBody(null);
-        setRespCallback(new AsyncOkHttpClient.ResponseCallback() {
+        setFormBody(formBuilder.build());
+        setCallback(new AsyncOkHttpClient.Callback() {
             @Override
             public void onFailure(Response response, Throwable throwable) {
-
-            }
-
-            @Override
-            public void onUpdate(long bytesRead, long contentLength, boolean done) {
+                Log.e(LTAG, "deleteEntry(List) onFailure");
+                if (response != null) {
+                    Log.e(LTAG, "deleteEntry(List) onFailure response.code: " + response.code()
+                            + ", message: " + response.message());
+                }
                 if (callback != null)
-                    callback.onUpdate(bytesRead, contentLength, done);
+                    callback.onFailure(response, throwable);
             }
 
             @Override
             public void onSuccess(Response response, String content) {
-
+                for (Entry entry : entries) {
+                    mEntryDataManager.delete(entry.uuid);
+                }
+                if (callback != null)
+                    callback.onSuccess(response, content);
             }
         });
-//        setCallback(new AsyncOkHttpClient.Callback() {
-//            @Override
-//            public void onFailure(Response response, Throwable throwable) {
-//                Log.e(LTAG, "deleteEntry(uuid) onFailure");
-//                if (response != null) {
-//                    Log.e(LTAG, "deleteEntry(uuid) onFailure response.code: " + response.code()
-//                            + ", message: " + response.message());
-//                }
-//                if (callback != null)
-//                    callback.onFailure(response, throwable);
-//            }
-//
-//            @Override
-//            public void onSuccess(Response response, String content) {
-//                mEntryDataManager.delete(uuid);
-//                if (callback != null)
-//                    callback.onSuccess(response, content);
-//            }
-//        });
 
-        requestBulkApi();
+        requestApi();
     }
 
     private void deleteAllProjects(final AsyncOkHttpClient.Callback callback) {
@@ -2892,39 +2881,13 @@ public class TNApiModel extends TNApi {
         }
     }
 
-    private void deleteAllEntries(final AsyncOkHttpClient.Callback callback) {
-        List<Entry> entries = mEntryDataManager.findAllDeleted(true);
-        final int entrySize = entries.size();
-        if (entrySize == 0) {
-            callback.onSuccess(null, null);
-        }
-
-        mCount = 0;
-        for (Entry entry : entries) {
-            deleteEntry(entry.uuid, new AsyncOkHttpClient.Callback() {
-                @Override
-                public void onFailure(Response response, Throwable throwable) {
-                    callback.onFailure(response, throwable);
-                }
-
-                @Override
-                public void onSuccess(Response response, String content) {
-                    mCount++;
-                    if (mCount >= entrySize)
-                        callback.onSuccess(response, content);
-                }
-            });
-        }
-    }
-
-    private void deleteAllEntries(final AsyncOkHttpClient.ResponseCallback callback) {
-        List<Entry> entries = mEntryDataManager.findAllDeleted(true);
-        final int entrySize = entries.size();
-        if (entrySize == 0) {
-            callback.onSuccess(null, null);
-            return;
-        }
-
+//    private void deleteAllEntries(final AsyncOkHttpClient.Callback callback) {
+//        List<Entry> entries = mEntryDataManager.findAllDeleted(true);
+//        final int entrySize = entries.size();
+//        if (entrySize == 0) {
+//            callback.onSuccess(null, null);
+//        }
+//
 //        mCount = 0;
 //        for (Entry entry : entries) {
 //            deleteEntry(entry.uuid, new AsyncOkHttpClient.Callback() {
@@ -2941,6 +2904,49 @@ public class TNApiModel extends TNApi {
 //                }
 //            });
 //        }
+//    }
+
+    private void deleteAllEntries(final AsyncOkHttpClient.Callback callback) {
+        final List<Entry> entries = mEntryDataManager.findAllDeleted(true);
+        int allSize = entries.size();
+        if (allSize == 0) {
+            callback.onSuccess(null, null);
+            return;
+        }
+
+        double loopMaxDouble = Math.ceil(allSize/LIMIT_ENTRY_BULK_SEND);
+        final int loopMax = (int)loopMaxDouble;
+        int loopSize = (int)LIMIT_ENTRY_BULK_SEND;
+        Log.v("TEST", "deleteAll entries.size():"+entries.size()+" | loopMax:"+loopMax);
+
+        for (int i=0; i<loopMax; i += loopSize) {
+            final int loopIndex = i;
+
+            final List<Entry> sendData = entries.subList(i, Math.min(i+loopSize, allSize));
+            Log.v("TEST", "send deleteEntry size : "+sendData.size());
+//            String msg = mContext.getString(R.string.saving_entry) +" "+(i+sendData.size());
+//            setSaveAllNeedProgressDialog(sendData.size(), msg);
+
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    deleteEntry(sendData, new AsyncOkHttpClient.Callback() {
+                        @Override
+                        public void onFailure(Response response, Throwable throwable) {
+                            if (callback != null)
+                                callback.onFailure(response, throwable);
+                        }
+
+                        @Override
+                        public void onSuccess(Response response, String content) {
+                            if ((loopIndex+1) == loopMax)
+                                callback.onSuccess(response, content);
+                        }
+                    });
+                }
+            }, 500);
+        }
+
     }
 
     public void updateAllDeletedData(final AsyncOkHttpClient.Callback callback) {
