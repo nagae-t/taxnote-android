@@ -161,7 +161,7 @@ public class HistoryTabFragment extends Fragment {
 
                         List<Entry> dataList = mEntryManager.findAll(null, false);
                         for (Entry entry : dataList) {
-                            mEntryManager.updateSetDeleted(entry.uuid, mApiModel);
+                            mEntryManager.updateSetDeleted(entry.uuid);
                         }
                         mEntryAdapter.clearAll();
                         mEntryAdapter.notifyDataSetChanged();

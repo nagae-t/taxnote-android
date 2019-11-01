@@ -20,6 +20,7 @@ import com.example.taxnoteandroid.Library.DialogManager;
 import com.example.taxnoteandroid.Library.EntryLimitManager;
 import com.example.taxnoteandroid.Library.ValueConverter;
 import com.example.taxnoteandroid.Library.taxnote.TNApiModel;
+import com.example.taxnoteandroid.Library.taxnote.TNApiUser;
 import com.example.taxnoteandroid.Library.taxnote.TNUtils;
 import com.example.taxnoteandroid.dataManager.EntryDataManager;
 import com.example.taxnoteandroid.dataManager.SharedPreferencesManager;
@@ -262,9 +263,13 @@ public class HistoryListDataActivity extends DefaultCommonActivity {
                         List<Entry> dataList = mEntryAdapter.getItems();
                         for (Entry entry : dataList) {
                             if (entry.dateString == null) {
-                                mEntryManager.updateSetDeleted(entry.uuid, mApiModel);
+                                mEntryManager.updateSetDeleted(entry.uuid);
                             }
                         }
+                        if (TNApiUser.isLoggingIn(context)) {
+                            mApiModel.saveAllNeedSaveSyncDeletedData(null);
+                        }
+
                         mEntryAdapter.clearAll();
                         mEntryAdapter.notifyDataSetChanged();
 

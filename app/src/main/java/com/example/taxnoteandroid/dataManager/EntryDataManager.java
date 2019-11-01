@@ -5,7 +5,6 @@ import android.content.Context;
 import com.example.taxnoteandroid.Library.EntryLimitManager;
 import com.example.taxnoteandroid.Library.taxnote.TNApiModel;
 import com.example.taxnoteandroid.Library.taxnote.TNApiUser;
-import com.example.taxnoteandroid.R;
 import com.example.taxnoteandroid.TaxnoteApp;
 import com.example.taxnoteandroid.model.Account;
 import com.example.taxnoteandroid.model.Entry;
@@ -499,6 +498,10 @@ public class EntryDataManager {
                 .execute();
     }
 
+    public void updateSetDeleted(String uuid) {
+        updateSetDeleted(uuid, null);
+    }
+
     public void updateSetDeleted(String uuid, TNApiModel apiModel) {
         boolean isLoggingIn = TNApiUser.isLoggingIn(mContext);
         Entry entry = findByUuid(uuid);
@@ -510,7 +513,9 @@ public class EntryDataManager {
                     .execute();
 
             // send api
-            apiModel.deleteEntry(uuid, null);
+            if (apiModel != null) {
+                apiModel.deleteEntry(uuid, null);
+            }
         } else {
             delete(entry.id);
         }

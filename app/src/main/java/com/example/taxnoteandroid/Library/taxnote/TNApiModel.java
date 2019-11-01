@@ -2719,8 +2719,10 @@ public class TNApiModel extends TNApi {
         }
 
         FormBody.Builder formBuilder = new FormBody.Builder();
+        int index = 0;
         for (Entry entry : entries) {
             formBuilder.add("entry_ids[]",entry.uuid);
+            index++;
         }
 
         setHttpMethod(HTTP_METHOD_DELETE);
