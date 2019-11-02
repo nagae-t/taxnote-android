@@ -2277,6 +2277,60 @@ public class TNApiModel extends TNApi {
         requestApi();
     }
 
+    public void updateEntry(final List<Entry> entries, final AsyncOkHttpClient.Callback callback) {
+        if (!isLoggingIn() || !isCloudActive() || !TNApi.isNetworkConnected(context)) {
+            if (callback != null)
+                callback.onSuccess(null, null);
+            return;
+        }
+
+//        Entry entry = mEntryDataManager.findByUuid(uuid);
+
+        FormBody.Builder formBuilder = new FormBody.Builder();
+        for (Entry entry : entries) {
+            String indexKey = "entries[]";
+            String memo = (entry.memo != null) ? entry.memo : "";
+            formBuilder
+                    .add(indexKey+ "[uuid]", entry.uuid)
+                    .add(indexKey+ "[date]", ValueConverter.long2dateString(entry.date))
+                    .add(indexKey+ "[memo]", memo)
+                    .add(indexKey+ "[price]", String.valueOf(entry.price))
+                    .add(indexKey+ "[is_expense]", String.valueOf(entry.isExpense))
+                    .add(indexKey+ "[updated_mobile]", ValueConverter.long2dateString(entry.updated))
+                    .add(indexKey+ "[reason_uuid]", entry.reason.uuid)
+                    .add(indexKey+ "[account_uuid]", entry.account.uuid)
+                    .add(indexKey+ "[project_uuid]", entry.project.uuid);
+        }
+
+        setHttpMethod(HTTP_METHOD_PUT);
+        setRequestPath(URL_PATH_ENTRY_BULK_UPDATE);
+
+        setFormBody(formBuilder.build());
+        setCallback(new AsyncOkHttpClient.Callback() {
+            @Override
+            public void onFailure(Response response, Throwable throwable) {
+                Log.e(LTAG, "updateEntry(List) onFailure");
+                if (response != null) {
+                    Log.e(LTAG, "updateEntry(List) onFailure response.code: " + response.code()
+                            + ", message: " + response.message());
+                }
+                if (callback != null)
+                    callback.onFailure(response, throwable);
+            }
+
+            @Override
+            public void onSuccess(Response response, String content) {
+                for(Entry entry : entries) {
+                    mEntryDataManager.updateNeedSync(entry.id, false);
+                }
+                if (callback != null)
+                    callback.onSuccess(response, content);
+            }
+        });
+
+        requestApi();
+    }
+
     private void updateAllNeedSyncProjects(final AsyncOkHttpClient.Callback callback) {
         List<Project> projects = mProjectDataManager.findAllNeedSync(true);
         final int projectSize = projects.size();
@@ -2412,26 +2466,41 @@ public class TNApiModel extends TNApi {
 
     private void updateAllNeedSyncEntries(final AsyncOkHttpClient.Callback callback) {
         List<Entry> entries = mEntryDataManager.findAllNeedSync(true);
-        final int entrySize = entries.size();
-        if (entrySize == 0) {
+        int allSize = entries.size();
+        if (allSize == 0) {
             callback.onSuccess(null, null);
+            return;
         }
 
-        mCount = 0;
-        for (Entry entry : entries) {
-            updateEntry(entry.uuid, new AsyncOkHttpClient.Callback() {
-                @Override
-                public void onFailure(Response response, Throwable throwable) {
-                    callback.onFailure(response, throwable);
-                }
+        double loopMaxDouble = Math.ceil(allSize/LIMIT_ENTRY_BULK_SEND);
+        final int loopMax = (int)loopMaxDouble;
+        int loopSize = (int)LIMIT_ENTRY_BULK_SEND;
+        Log.v("TEST", "updateAll entries.size():"+entries.size()+" | loopMax:"+loopMax);
 
+        for (int i=0; i<loopMax; i += loopSize) {
+            final int loopIndex = i;
+
+            final List<Entry> sendData = entries.subList(i, Math.min(i+loopSize, allSize));
+            Log.v("TEST", "send updateEntry size : "+sendData.size());
+
+            new Handler().postDelayed(new Runnable() {
                 @Override
-                public void onSuccess(Response response, String content) {
-                    mCount++;
-                    if (mCount >= entrySize)
-                        callback.onSuccess(response, content);
+                public void run() {
+                    updateEntry(sendData, new AsyncOkHttpClient.Callback() {
+                        @Override
+                        public void onFailure(Response response, Throwable throwable) {
+                            if (callback != null)
+                                callback.onFailure(response, throwable);
+                        }
+
+                        @Override
+                        public void onSuccess(Response response, String content) {
+                            if ((loopIndex+1) == loopMax)
+                                callback.onSuccess(response, content);
+                        }
+                    });
                 }
-            });
+            }, 500);
         }
     }
 
@@ -2719,10 +2788,8 @@ public class TNApiModel extends TNApi {
         }
 
         FormBody.Builder formBuilder = new FormBody.Builder();
-        int index = 0;
         for (Entry entry : entries) {
             formBuilder.add("entry_ids[]",entry.uuid);
-            index++;
         }
 
         setHttpMethod(HTTP_METHOD_DELETE);
@@ -2882,31 +2949,6 @@ public class TNApiModel extends TNApi {
             });
         }
     }
-
-//    private void deleteAllEntries(final AsyncOkHttpClient.Callback callback) {
-//        List<Entry> entries = mEntryDataManager.findAllDeleted(true);
-//        final int entrySize = entries.size();
-//        if (entrySize == 0) {
-//            callback.onSuccess(null, null);
-//        }
-//
-//        mCount = 0;
-//        for (Entry entry : entries) {
-//            deleteEntry(entry.uuid, new AsyncOkHttpClient.Callback() {
-//                @Override
-//                public void onFailure(Response response, Throwable throwable) {
-//                    callback.onFailure(response, throwable);
-//                }
-//
-//                @Override
-//                public void onSuccess(Response response, String content) {
-//                    mCount++;
-//                    if (mCount >= entrySize)
-//                        callback.onSuccess(response, content);
-//                }
-//            });
-//        }
-//    }
 
     private void deleteAllEntries(final AsyncOkHttpClient.Callback callback) {
         final List<Entry> entries = mEntryDataManager.findAllDeleted(true);
