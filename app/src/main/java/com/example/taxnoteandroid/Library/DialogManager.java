@@ -13,6 +13,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.taxnoteandroid.DataExportActivity;
@@ -936,22 +937,30 @@ public class DialogManager {
         void onCombine(Account fromAccount, Account toAccount, int countTarget);
     }
 
-    // debug
-//    private ProgressDialog getLoadingDialog(){
-//        final ProgressDialog dialog = new ProgressDialog(this);
-//        dialog.setMessage(getString(R.string.loading));
-//        dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-//        dialog.setCancelable(false);
-//        dialog.setCanceledOnTouchOutside(false);
-//        return dialog;
-//    }
+    public static TNSimpleDialogFragment getLoading(AppCompatActivity activity) {
+        return getLoading(activity,null, null);
+    }
 
-    public static TNSimpleDialogFragment getDialogAfterRegister(final Context context, final FragmentManager fragmentManager) {
-//        private static void showFirstLaunchMessage2(final Context context, final FragmentManager fragmentManager) {
-//
-//            // Custom Alert
+    public static TNSimpleDialogFragment getLoading(AppCompatActivity activity, String message) {
+        return getLoading(activity,null, message);
+    }
+
+    public static TNSimpleDialogFragment getLoading(AppCompatActivity activity, String title, String message) {
         final TNSimpleDialogFragment dialogFragment = TNSimpleDialogFragment.newInstance();
+
+        View dialogView = activity.getLayoutInflater().inflate(R.layout.dialog_loading, null);
+        dialogFragment.setDialogView(dialogView);
+        dialogFragment.setCloseToFinish(true);
+        dialogFragment.setCancelable(false);
+        if (title != null) dialogFragment.setTitle(title);
+        if (message != null) {
+            View view = dialogFragment.getDialogView();
+            TextView tv = view.findViewById(R.id.message);
+            tv.setText(message);
+            dialogFragment.setDialogView(view);
+        }
 
         return dialogFragment;
     }
+
 }

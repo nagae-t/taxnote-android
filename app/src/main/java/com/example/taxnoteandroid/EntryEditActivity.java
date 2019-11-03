@@ -27,6 +27,7 @@ import com.example.taxnoteandroid.dataManager.EntryDataManager;
 import com.example.taxnoteandroid.dataManager.SharedPreferencesManager;
 import com.example.taxnoteandroid.databinding.ActivityEntryEditBinding;
 import com.example.taxnoteandroid.model.Entry;
+import com.helpshift.support.Support;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
 
 import org.parceler.Parcels;
@@ -502,7 +503,13 @@ public class EntryEditActivity extends DefaultCommonActivity {
         new AlertDialog.Builder(this)
                 .setTitle(R.string.taxnote_cloud_first_free)
                 .setMessage(R.string.not_cloud_input_limit_message)
-                .setPositiveButton(getResources().getString(R.string.benefits_of_upgrade), new DialogInterface.OnClickListener() {
+                .setNeutralButton(R.string.view_help, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Support.showSingleFAQ(EntryEditActivity.this, "177");
+                    }
+                })
+                .setPositiveButton(R.string.benefits_of_upgrade, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
 

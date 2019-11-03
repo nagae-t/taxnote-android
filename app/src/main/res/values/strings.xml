@@ -136,6 +136,10 @@
     <string name="saving_recurring">Saving Recurring</string>
     <string name="saving_entry">Saving Entry</string>
 
+    <string name="caution">Caution!</string>
+    <string name="confirm_cloud_without_plus_msg">You can subscribe to Taxnote Cloud without purchasing Taxnote Plus, but the 15 entries/month limit still remains.\n\nPlease note that you need to subscribe to Taxnote Plus and Taxnote Cloud individually.</string>
+    <string name="confirm_cloud_without_plus_msg_again">Are you sure to subscribe to Taxnote Cloud with 15 entries/month limit?\n\nYou can subscribe to Taxnote Cloud without purchasing Taxnote Plus, but the 15 entries/month limit still remains.\n\nPlease note that you need to subscribe to Taxnote Plus and Taxnote Cloud individually.</string>
+
     //--------------------------------------------------------------//
     // -- Data Export --
     //--------------------------------------------------------------//
@@ -197,6 +201,7 @@
     <string name="data_export_suggest_title">Data Export</string>
     <string name="data_export_suggest_message">You can export your data into csv file to open it with Excel or other spreadsheets.</string>
     <string name="data_export_suggest_button">Data Export</string>
+    <string name="view_help">View Help</string>
 
 
     //--------------------------------------------------------------//
@@ -452,8 +457,8 @@
     <string name="cloud_purchase_status_on">[Active] Manage</string>
     <string name="cloud_purchase_status_off">[Expired] Subscribe</string>
     <string name="taxnote_cloud_desc">Monthly subscription with following features.\n1. Multiple Accounts\n2. Cloud Sync with different devices(auto-backup)\n3. Recurring Entries\n4. Bar Charts</string>
-    <string name="add_project_without_cloud">You need to subscribe to Taxnote Cloud to use multiple accounts, but you can also try it with 10 entries limit for free.</string>
-    <string name="not_cloud_input_limit_message">Please upgrade to Taxnote Cloud to make an entry with additional books. (You can enter up to 10 with free trial)</string>
+    <string name="add_project_without_cloud">You need to subscribe to Taxnote Cloud to use multiple books.  You can also try it with 10 entries limit.</string>
+    <string name="not_cloud_input_limit_message">You have reached the 10 entries limit for Taxnote Cloud Trial.  Change to the first book in the settings or please subscribe to Taxnote Cloud to use additional books.</string>
     <string name="bar_graph_cloud_required_message">Please upgrade to Taxnote Cloud to use the bar charts. (You can try Income and Expense bar charts for free)</string>
 
     <string name="network_not_connection">No network connections.</string>

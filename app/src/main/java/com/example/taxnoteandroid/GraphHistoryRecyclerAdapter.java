@@ -34,7 +34,6 @@ public class GraphHistoryRecyclerAdapter extends RecyclerView.Adapter<BindingHol
         implements View.OnClickListener, View.OnLongClickListener {
 
     private Context mContext;
-    private RecyclerView mRecyclerView;
     private List<Entry> mDataList;
     private PieChart mChart;
     private TypedValue mIncomePriceTv = new TypedValue();
@@ -42,6 +41,8 @@ public class GraphHistoryRecyclerAdapter extends RecyclerView.Adapter<BindingHol
     public static final int VIEW_ITEM_GRAPH = 1;
     public static final int VIEW_ITEM_CELL = 2;
     public static final int VIEW_CARRIED_BAL_CELL = 10;
+
+    private static final int NOT_GRAPH_DATA_NUM = 3;
 
     public OnItemClickListener mOnItemClickListener;
     public OnLongItemClickListener mOnItemLongClickListener;
@@ -85,13 +86,13 @@ public class GraphHistoryRecyclerAdapter extends RecyclerView.Adapter<BindingHol
     @Override
     public void onAttachedToRecyclerView(RecyclerView recyclerView) {
         super.onAttachedToRecyclerView(recyclerView);
-        mRecyclerView = recyclerView;
+//        mRecyclerView = recyclerView;
     }
 
     @Override
     public void onDetachedFromRecyclerView(RecyclerView recyclerView) {
         super.onDetachedFromRecyclerView(recyclerView);
-        mRecyclerView = null;
+//        mRecyclerView = null;
     }
 
     public void setItems(List<Entry> entries) {
@@ -166,7 +167,7 @@ public class GraphHistoryRecyclerAdapter extends RecyclerView.Adapter<BindingHol
                 mChart.setEntryLabelColor(Color.WHITE);
                 mChart.setEntryLabelTextSize(12f);
 
-                if (mDataList.size() == 2) {
+                if (mDataList.size() == NOT_GRAPH_DATA_NUM) {
                     graphBinding.chart1.setVisibility(View.GONE);
                     graphBinding.empty.setVisibility(View.VISIBLE);
                 } else {
@@ -221,7 +222,7 @@ public class GraphHistoryRecyclerAdapter extends RecyclerView.Adapter<BindingHol
 
     private void setGraphData() {
         ArrayList<PieEntry> pieEntries = new ArrayList<>();
-        if (mDataList.size() < 3) return;
+        if (mDataList.size() < NOT_GRAPH_DATA_NUM) return;
 
         int[] colorList = new int[mDataList.size()-2];
         int color1 = R.color.pie_chart_color1;

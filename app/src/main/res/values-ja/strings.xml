@@ -132,6 +132,11 @@
     <string name="saving_recurring">指定日予約の保存</string>
     <string name="saving_entry">入力の保存</string>
 
+    <string name="caution">ご注意！</string>
+    <string name="confirm_cloud_without_plus_msg">「Taxnoteプラス」を購読せずに「Taxnoteクラウド」を購読すると、月15件の入力制限が解除されないのでご注意ください。\n\nどちらの機能も使いたい場合、プラスとクラウドの両方を購読する必要があります。</string>
+    <string name="confirm_cloud_without_plus_msg_again">月15件の入力制限付きでTaxnoteクラウドを購読しますか？\n\n「Taxnoteプラス」を購読せずに「Taxnoteクラウド」を購読すると、月15件の入力制限が解除されないのでご注意ください。</string>
+
+
     //--------------------------------------------------------------//
     // -- Data Export --
     //--------------------------------------------------------------//
@@ -192,6 +197,7 @@
     <string name="data_export_suggest_title">データの出力</string>
     <string name="data_export_suggest_message">右上のボタンから、入力したデータをエクセル、弥生会計、freee、MFクラウドなどに出力できます。</string>
     <string name="data_export_suggest_button">データの出力画面を表示</string>
+    <string name="view_help">ヘルプを見る</string>
 
 
     //--------------------------------------------------------------//
