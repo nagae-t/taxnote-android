@@ -49,6 +49,8 @@
 
     <string name="no_surplus_bar_graph">Carried Balance Bar Chart doesn\'t show negative balance data, only shows positive balance.</string>
 
+    <string name="email_already_use">The email address is already in use.</string>
+
     //--------------------------------------------------------------//
     // -- Entry Tab --
     //--------------------------------------------------------------//

@@ -290,6 +290,9 @@ public class LoginCloudActivity extends DefaultCommonActivity {
                 } else if (throwable != null) {
                     errorMsg = throwable.getLocalizedMessage();
                 }
+                if (response.code() == 403) {
+                    errorMsg = getString(R.string.email_already_use);
+                }
                 DialogManager.showOKOnlyAlert(LoginCloudActivity.this,
                         getString(R.string.register_error),
                         errorMsg);
