@@ -12,6 +12,7 @@ import com.example.taxnoteandroid.Library.BroadcastUtil;
 import com.example.taxnoteandroid.Library.zeny.ZNUtils;
 import com.example.taxnoteandroid.R;
 import com.example.taxnoteandroid.UpgradeActivity;
+import com.example.taxnoteandroid.dataManager.ProjectDataManager;
 import com.example.taxnoteandroid.dataManager.SharedPreferencesManager;
 
 import java.text.SimpleDateFormat;
@@ -101,14 +102,18 @@ public class TNApiUser extends TNApi {
 
     public static String getCloudOrderId(Context context) {
         if (BuildConfig.IS_DEBUG_CLOUD) {
-            return "test-clound-order-Id";
+            ProjectDataManager projectMg = new ProjectDataManager(context);
+            String projectUuid = projectMg.findAll().get(0).uuid;
+            return "debug-"+projectUuid;
         }
         return SharedPreferencesManager.getUserApiLoginValue(context, KEY_CLOUD_ORDER_ID);
     }
 
     static String getCloudPurchaseToken(Context context) {
         if (BuildConfig.IS_DEBUG_CLOUD) {
-            return "test-clound-pur-token";
+            ProjectDataManager projectMg = new ProjectDataManager(context);
+            String projectUuid = projectMg.findAll().get(0).uuid;
+            return "debug-token-"+projectUuid;
         }
         return SharedPreferencesManager.getUserApiLoginValue(context, KEY_CLOUD_PURCHASE_TOKEN);
     }
