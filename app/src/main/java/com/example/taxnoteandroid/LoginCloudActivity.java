@@ -228,8 +228,10 @@ public class LoginCloudActivity extends DefaultCommonActivity {
 
             @Override
             public void onSuccess(Response response, String content) {
-
-                dialog.setMessage(getString(R.string.login_success_wait_fetching));
+                dialog.dismissAllowingStateLoss();
+                
+                final TNSimpleDialogFragment afterLoginDialog = getDialogAfterRegister();
+                afterLoginDialog.show(getSupportFragmentManager(), null);
 
                 final TNApiModel apiModel = new TNApiModel(getApplicationContext());
                 //@@  ログイン成功後の処理
@@ -251,7 +253,7 @@ public class LoginCloudActivity extends DefaultCommonActivity {
                     @Override
                     public void onFailure(Response response, Throwable throwable) {
                         apiModel.setIsSyncing(false);
-                        dialog.dismiss();
+                        afterLoginDialog.dismissAllowingStateLoss();
                         Log.e("ERROR", "getAllDataAfterLogin onFailure ");
                         if (response != null)
                             Log.e("ERROR", "response.code: " + response.code()
@@ -267,7 +269,7 @@ public class LoginCloudActivity extends DefaultCommonActivity {
                         setResult(RESULT_OK);
                         finish();
                     }
-                });
+                }, afterLoginDialog);
             }
         });
     }

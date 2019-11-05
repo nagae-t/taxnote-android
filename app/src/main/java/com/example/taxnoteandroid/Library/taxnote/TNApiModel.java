@@ -282,7 +282,7 @@ public class TNApiModel extends TNApi {
 
             @Override
             public void onSuccess(Response response, String content) {
-
+                setDialogContentAfterLogin(4);
 
                 getReasons(new AsyncOkHttpClient.Callback() {
                     @Override
@@ -293,6 +293,7 @@ public class TNApiModel extends TNApi {
 
                     @Override
                     public void onSuccess(Response response, String content) {
+                        setDialogContentAfterLogin(8);
 
                         getAccounts(new AsyncOkHttpClient.Callback() {
                             @Override
@@ -303,6 +304,7 @@ public class TNApiModel extends TNApi {
 
                             @Override
                             public void onSuccess(Response response, String content) {
+                                setDialogContentAfterLogin(12);
 
                                 getSummaries(new AsyncOkHttpClient.Callback() {
                                     @Override
@@ -313,6 +315,7 @@ public class TNApiModel extends TNApi {
 
                                     @Override
                                     public void onSuccess(Response response, String content) {
+                                        setDialogContentAfterLogin(16);
 
                                         getRecurrings(new AsyncOkHttpClient.Callback() {
                                             @Override
@@ -323,6 +326,7 @@ public class TNApiModel extends TNApi {
 
                                             @Override
                                             public void onSuccess(Response response, String content) {
+                                                setDialogContentAfterLogin(20);
 
                                                 getEntries(new AsyncOkHttpClient.Callback() {
                                                     @Override
@@ -350,6 +354,11 @@ public class TNApiModel extends TNApi {
     }
 
     public void getAllDataAfterLogin(final AsyncOkHttpClient.Callback callback) {
+        getAllDataAfterLogin(callback, null);
+    }
+
+    public void getAllDataAfterLogin(final AsyncOkHttpClient.Callback callback, TNSimpleDialogFragment loadingDialog) {
+        mLoadingDialog = loadingDialog;
         resetAllUpdatedKeys();
         getAllData(callback);
     }
@@ -1868,6 +1877,8 @@ public class TNApiModel extends TNApi {
 
     private void updateDbEntries(JsonArray array) {
 
+        float allSize = (float) array.size();
+        float indexCount = 0;
         for (JsonElement jsElement : array) {
             JsonObject obj = jsElement.getAsJsonObject();
 
@@ -1911,6 +1922,9 @@ public class TNApiModel extends TNApi {
                 }
             }
 
+            indexCount++;
+            float viewPercent = ((indexCount/allSize)*80f) + 20f;
+            setDialogContentAfterLogin((int)viewPercent);
 
         }
 
@@ -3144,6 +3158,17 @@ public class TNApiModel extends TNApi {
 
         if (msg != null) tv.setText(msg);
 
+        mLoadingDialog.setDialogView(view);
+    }
+
+    private void setDialogContentAfterLogin(int percent) {
+        if (mLoadingDialog == null) return;
+
+        View view = mLoadingDialog.getDialogView();
+        ProgressBar bar = view.findViewById(R.id.progress_bar);
+        bar.setProgress(percent);
+        TextView tv = view.findViewById(R.id.message);
+        tv.setText(percent+"%");
         mLoadingDialog.setDialogView(view);
     }
 }
