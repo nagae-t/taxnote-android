@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
@@ -1879,6 +1880,7 @@ public class TNApiModel extends TNApi {
 
         float allSize = (float) array.size();
         float indexCount = 0;
+        Handler uiHandler = new Handler(Looper.getMainLooper());
         for (JsonElement jsElement : array) {
             JsonObject obj = jsElement.getAsJsonObject();
 
@@ -1923,8 +1925,13 @@ public class TNApiModel extends TNApi {
             }
 
             indexCount++;
-            float viewPercent = ((indexCount/allSize)*80f) + 20f;
-            setDialogContentAfterLogin((int)viewPercent);
+            final float viewPercent = ((indexCount/allSize)*80f) + 20f;
+            uiHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    setDialogContentAfterLogin((int)viewPercent);
+                }
+            });
 
         }
 
