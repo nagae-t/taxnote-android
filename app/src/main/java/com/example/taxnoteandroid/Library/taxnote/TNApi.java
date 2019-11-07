@@ -168,18 +168,6 @@ public class TNApi {
             Log.v("TEST", "requestApi GET url : " + requestUrl);
             formBody = null;
         }
-        if (httpMethod.equals(HTTP_METHOD_DELETE) && formBody != null) {
-            HttpUrl.Builder urlBuilder = HttpUrl.parse(requestUrl).newBuilder();
-            int formSize = formBody.size();
-            if (formSize > 0) {
-                for (int i = 0; i < formBody.size(); i++) {
-                    urlBuilder.addQueryParameter(formBody.name(i), formBody.value(i));
-                }
-            }
-            requestUrl = urlBuilder.build().toString();
-            Log.v("TEST", "requestApi DELETE url : " + requestUrl);
-            formBody = null;
-        }
 
         Headers headers = getHeaders();
         AsyncOkHttpClient.execute(headers,
@@ -192,17 +180,6 @@ public class TNApi {
 
         // GETの場合、URLクエリーを創る
         if (httpMethod.equals(HTTP_METHOD_GET) && formBody != null) {
-            HttpUrl.Builder urlBuilder = HttpUrl.parse(requestUrl).newBuilder();
-            int formSize = formBody.size();
-            if (formSize > 0) {
-                for (int i = 0; i < formBody.size(); i++) {
-                    urlBuilder.addQueryParameter(formBody.name(i), formBody.value(i));
-                }
-            }
-            requestUrl = urlBuilder.build().toString();
-            formBody = null;
-        }
-        if (httpMethod.equals(HTTP_METHOD_DELETE) && formBody != null) {
             HttpUrl.Builder urlBuilder = HttpUrl.parse(requestUrl).newBuilder();
             int formSize = formBody.size();
             if (formSize > 0) {
