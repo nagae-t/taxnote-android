@@ -503,6 +503,8 @@ public class EntryDataManager {
     }
 
     public void updateSetDeleted(String uuid, TNApiModel apiModel) {
+        if (uuid == null) return;
+
         boolean isLoggingIn = TNApiUser.isLoggingIn(mContext);
         Entry entry = findByUuid(uuid);
         if (entry == null) return;

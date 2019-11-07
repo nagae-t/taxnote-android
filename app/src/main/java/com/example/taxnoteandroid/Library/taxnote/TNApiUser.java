@@ -307,6 +307,8 @@ public class TNApiUser extends TNApi {
     }
 
     public void handleAccountError(Activity activity, TNApiModel apiModel) {
+        if (BuildConfig.IS_DEBUG_CLOUD) return;
+
         clearAccountData(apiModel);
         BroadcastUtil.sendAfterLogin(activity, false);
 

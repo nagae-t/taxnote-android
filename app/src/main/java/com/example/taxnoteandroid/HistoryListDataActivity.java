@@ -56,6 +56,7 @@ public class HistoryListDataActivity extends DefaultCommonActivity {
     private String mPageTitleAndSub;
 
     private TNApiModel mApiModel;
+    private List<Entry> mResultEntries;
 
     private static final String KEY_TARGET_CALENDAR = "target_calendar";
     private static final String KEY_PERIOD_TYPE = "period_type";
@@ -260,26 +261,20 @@ public class HistoryListDataActivity extends DefaultCommonActivity {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
 
-                        List<Entry> dataList = mEntryAdapter.getItems();
-                        for (Entry entry : dataList) {
-                            if (entry.dateString == null) {
+                        for (Entry entry : mResultEntries) {
+                            if (entry.uuid != null) {
                                 mEntryManager.updateSetDeleted(entry.uuid);
                             }
                         }
+
                         if (TNApiUser.isLoggingIn(context)) {
                             mApiModel.saveAllNeedSaveSyncDeletedData(null);
                         }
-
-                        mEntryAdapter.clearAll();
-                        mEntryAdapter.notifyDataSetChanged();
-
-                        mApiModel.saveAllNeedSaveSyncDeletedData(null);
 
                         DialogManager.showToast(context, context.getString(R.string.delete_done));
                         BroadcastUtil.sendReloadReport(HistoryListDataActivity.this);
                         finish();
 
-                        dialogInterface.dismiss();
                     }
                 })
                 .setNegativeButton(getString(R.string.cancel), null)
@@ -334,6 +329,7 @@ public class HistoryListDataActivity extends DefaultCommonActivity {
             if (entries == null || entries.isEmpty()) {
                 return entries;
             }
+            mResultEntries = entries;
 
             List<Entry> entryData = new ArrayList<>();
             Map<String, List<Entry>> map2 = new LinkedHashMap<>();
@@ -373,6 +369,7 @@ public class HistoryListDataActivity extends DefaultCommonActivity {
                     _memoEntry.viewType = CommonEntryRecyclerAdapter.VIEW_ITEM_REPORT_CELL;
                     _memoEntry.reasonName = _memo;
                     _memoEntry.price += entry.price;
+                    _memoEntry.uuid = entry.uuid;
                     memoMap.put(_memo, _memoEntry);
                 }
                 memoSum.price += entry.price;
