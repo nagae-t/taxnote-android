@@ -1021,14 +1021,14 @@ public class TNApiModel extends TNApi {
 
     private void saveAllNeedSaveReasons(final AsyncOkHttpClient.ResponseCallback callback) {
         final List<Reason> reasons = mReasonDataManager.findAllNeedSave(true);
-        int reasonSize = reasons.size();
+        final int reasonSize = reasons.size();
         if (reasonSize == 0) {
             callback.onSuccess(null, null);
             return;
         }
 
         final int loopMax = getBulkLoopMax(reasonSize);
-        int loopSize = (int)LIMIT_BULK_SEND;
+        final int loopSize = (int)LIMIT_BULK_SEND;
         Log.v("TEST", "reasonSize:"+reasonSize+" | loopMax:"+loopMax);
 
         for (int i=0; i<reasonSize; i+=loopSize) {
@@ -1059,7 +1059,8 @@ public class TNApiModel extends TNApi {
                         @Override
                         public void onSuccess(Response response, String content) {
 
-                            if ((loopIndex+1) == loopMax)
+//                            if ((loopIndex+1) == loopMax)
+                            if ((loopIndex+loopSize) >= reasonSize)
                                 callback.onSuccess(response, content);
                         }
                     });
@@ -1101,14 +1102,14 @@ public class TNApiModel extends TNApi {
 
     private void saveAllNeedSaveAccounts(final AsyncOkHttpClient.ResponseCallback callback) {
         final List<Account> accounts = mAccountDataManager.findAllNeedSave(true);
-        int accountSize = accounts.size();
+        final int accountSize = accounts.size();
         if (accountSize == 0) {
             callback.onSuccess(null, null);
             return;
         }
 
         final int loopMax = getBulkLoopMax(accountSize);
-        int loopSize = (int)LIMIT_BULK_SEND;
+        final int loopSize = (int)LIMIT_BULK_SEND;
         Log.v("TEST", "accountSize:"+accountSize+" | loopMax:"+loopMax);
 
         for (int i=0; i<accountSize; i += loopSize) {
@@ -1138,7 +1139,8 @@ public class TNApiModel extends TNApi {
 
                         @Override
                         public void onSuccess(Response response, String content) {
-                            if ((loopIndex+1) == loopMax)
+//                            if ((loopIndex+1) == loopMax)
+                            if ((loopIndex+loopSize) >= accountSize)
                                 callback.onSuccess(response, content);
                         }
                     });
@@ -1174,14 +1176,14 @@ public class TNApiModel extends TNApi {
 
     private void saveAllNeedSaveSummaries(final AsyncOkHttpClient.ResponseCallback callback) {
         final List<Summary> summaries = mSummaryDataManager.findAllNeedSave(true);
-        int summarySize = summaries.size();
+        final int summarySize = summaries.size();
         if (summarySize == 0) {
             callback.onSuccess(null, null);
             return;
         }
 
         final int loopMax = getBulkLoopMax(summarySize);
-        int loopSize = (int)LIMIT_BULK_SEND;
+        final int loopSize = (int)LIMIT_BULK_SEND;
         Log.v("TEST", "summarySize:"+summarySize+" | loopMax:"+loopMax);
 
         for (int i=0; i<summarySize; i += loopSize) {
@@ -1211,7 +1213,8 @@ public class TNApiModel extends TNApi {
 
                         @Override
                         public void onSuccess(Response response, String content) {
-                            if ((loopIndex+1) == loopMax)
+//                            if ((loopIndex+1) == loopMax)
+                            if ((loopIndex+loopSize) >= summarySize)
                                 callback.onSuccess(response, content);
                         }
                     });
@@ -1247,14 +1250,14 @@ public class TNApiModel extends TNApi {
 
     private void saveAllNeedSaveRecurrings(final AsyncOkHttpClient.ResponseCallback callback) {
         final List<Recurring> recurrings = mRecurringDataManager.findAllNeedSave(true);
-        int recurringSize = recurrings.size();
+        final int recurringSize = recurrings.size();
         if (recurringSize == 0) {
             callback.onSuccess(null, null);
             return;
         }
 
         final int loopMax = getBulkLoopMax(recurringSize);
-        int loopSize = (int)LIMIT_BULK_SEND;
+        final int loopSize = (int)LIMIT_BULK_SEND;
         Log.v("TEST", "recurringSize:"+recurringSize+" | loopMax:"+loopMax);
 
         for (int i=0; i<recurringSize; i+=loopSize) {
@@ -1284,7 +1287,8 @@ public class TNApiModel extends TNApi {
 
                         @Override
                         public void onSuccess(Response response, String content) {
-                            if ((loopIndex+1) == loopMax)
+//                            if ((loopIndex+1) == loopMax)
+                            if ((loopIndex+loopSize) >= recurringSize)
                                 callback.onSuccess(response, content);
                         }
                     });
@@ -1350,7 +1354,7 @@ public class TNApiModel extends TNApi {
 
     private void saveAllNeedSaveEntries(final AsyncOkHttpClient.ResponseCallback callback) {
         final List<Entry> entries = mEntryDataManager.findAllNeedSave(true);
-        int allSize = entries.size();
+        final int allSize = entries.size();
         if (allSize == 0) {
             callback.onSuccess(null, null);
             return;
@@ -1358,14 +1362,16 @@ public class TNApiModel extends TNApi {
 
         double loopMaxDouble = Math.ceil(allSize/LIMIT_ENTRY_BULK_SEND);
         final int loopMax = (int)loopMaxDouble;
-        int loopSize = (int)LIMIT_ENTRY_BULK_SEND;
+        final int loopSize = (int)LIMIT_ENTRY_BULK_SEND;
         Log.v("TEST", "entries.size():"+entries.size()+" | loopMax:"+loopMax);
 
         for (int i=0; i<allSize; i += loopSize) {
             final int loopIndex = i;
 
-            final List<Entry> sendData = entries.subList(i, Math.min(i+loopSize, allSize));
-            Log.v("TEST", "send saveEntry size : "+sendData.size());
+            int sublistEnd = Math.min(i+loopSize, allSize);
+            final List<Entry> sendData = entries.subList(i, sublistEnd);
+            Log.v("TEST", "send saveEntry size : "+sendData.size()
+                    +" data index: "+i+"~"+sublistEnd);
             String msg = mContext.getString(R.string.saving_entry) +" "+(i+sendData.size());
             setSaveAllNeedProgressDialog(sendData.size(), msg);
 
@@ -1388,7 +1394,8 @@ public class TNApiModel extends TNApi {
 
                         @Override
                         public void onSuccess(Response response, String content) {
-                            if ((loopIndex+1) == loopMax)
+//                            if ((loopIndex+1) == loopMax)
+                            if ((loopIndex+loopSize) >= allSize)
                                 callback.onSuccess(response, content);
                         }
                     });
@@ -2487,7 +2494,7 @@ public class TNApiModel extends TNApi {
 
     private void updateAllNeedSyncEntries(final AsyncOkHttpClient.Callback callback) {
         List<Entry> entries = mEntryDataManager.findAllNeedSync(true);
-        int allSize = entries.size();
+        final int allSize = entries.size();
         if (allSize == 0) {
             callback.onSuccess(null, null);
             return;
@@ -2495,14 +2502,17 @@ public class TNApiModel extends TNApi {
 
         double loopMaxDouble = Math.ceil(allSize/LIMIT_ENTRY_BULK_SEND);
         final int loopMax = (int)loopMaxDouble;
-        int loopSize = (int)LIMIT_ENTRY_BULK_SEND;
+        final int loopSize = (int)LIMIT_ENTRY_BULK_SEND;
         Log.v("TEST", "updateAll entries.size():"+entries.size()+" | loopMax:"+loopMax);
 
         for (int i=0; i<allSize; i += loopSize) {
             final int loopIndex = i;
 
-            final List<Entry> sendData = entries.subList(i, Math.min(i+loopSize, allSize));
+            int sublistEnd = Math.min(i+loopSize, allSize);
+            final List<Entry> sendData = entries.subList(i, sublistEnd);
             Log.v("TEST", "send updateEntry size : "+sendData.size());
+            Log.v("TEST", "send updateEntry size : "+sendData.size()
+                    +" data index: "+i+"~"+sublistEnd);
 
             new Handler().postDelayed(new Runnable() {
                 @Override
@@ -2516,7 +2526,8 @@ public class TNApiModel extends TNApi {
 
                         @Override
                         public void onSuccess(Response response, String content) {
-                            if ((loopIndex+1) == loopMax)
+//                            if ((loopIndex+1) == loopMax)
+                            if ((loopIndex+loopSize) >= allSize)
                                 callback.onSuccess(response, content);
                         }
                     });
@@ -2973,7 +2984,7 @@ public class TNApiModel extends TNApi {
 
     private void deleteAllEntries(final AsyncOkHttpClient.Callback callback) {
         final List<Entry> entries = mEntryDataManager.findAllDeleted(true);
-        int allSize = entries.size();
+        final int allSize = entries.size();
         if (allSize == 0) {
             callback.onSuccess(null, null);
             return;
@@ -2981,14 +2992,16 @@ public class TNApiModel extends TNApi {
 
         double loopMaxDouble = Math.ceil(allSize/LIMIT_ENTRY_BULK_SEND);
         final int loopMax = (int)loopMaxDouble;
-        int loopSize = (int)LIMIT_ENTRY_BULK_SEND;
-        Log.v("TEST", "deleteAll entries.size():"+entries.size()+" | loopMax:"+loopMax);
+        final int loopSize = (int)LIMIT_ENTRY_BULK_SEND;
+        Log.v("TEST", "deleteAll entries.size():"+allSize+" | loopMax:"+loopMax);
 
         for (int i=0; i<allSize; i += loopSize) {
             final int loopIndex = i;
 
-            final List<Entry> sendData = entries.subList(i, Math.min(i+loopSize, allSize));
-            Log.v("TEST", "send deleteEntry size : "+sendData.size());
+            int sublistEnd = Math.min(i+loopSize, allSize);
+            final List<Entry> sendData = entries.subList(i, sublistEnd);
+            Log.v("TEST", "send deleteEntry size : "+sendData.size()
+                    +" data index: "+i+"~"+sublistEnd);
 
             new Handler().postDelayed(new Runnable() {
                 @Override
@@ -3002,7 +3015,8 @@ public class TNApiModel extends TNApi {
 
                         @Override
                         public void onSuccess(Response response, String content) {
-                            if ((loopIndex+1) == loopMax)
+//                            if ((loopIndex+1) == loopMax)
+                            if ((loopIndex+loopSize) >= allSize)
                                 callback.onSuccess(response, content);
                         }
                     });

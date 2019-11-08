@@ -500,9 +500,6 @@ public class LoginCloudActivity extends DefaultCommonActivity {
 
                 @Override
                 public void onUpdate(long bytesRead, long contentLength, boolean done) {
-                    Log.v("TEST", "onUpdate bytesRead:"+bytesRead
-                            +"\tcontentLength:"+contentLength
-                            +"\tdone:"+done);
                 }
 
                 @Override

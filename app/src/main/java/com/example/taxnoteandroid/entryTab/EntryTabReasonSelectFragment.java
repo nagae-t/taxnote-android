@@ -285,7 +285,8 @@ public class EntryTabReasonSelectFragment extends Fragment {
 
         AccountDataManager accountDataManager = new AccountDataManager(getContext());
         account = accountDataManager.findCurrentSelectedAccount(isExpense);
-        binding.accountTextView.setText(account.name);
+        if (account != null && account.name != null)
+            binding.accountTextView.setText(account.name);
     }
 
     public void reloadData() {
