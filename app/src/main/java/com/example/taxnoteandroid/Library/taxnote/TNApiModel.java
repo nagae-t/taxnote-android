@@ -1361,7 +1361,7 @@ public class TNApiModel extends TNApi {
         int loopSize = (int)LIMIT_ENTRY_BULK_SEND;
         Log.v("TEST", "entries.size():"+entries.size()+" | loopMax:"+loopMax);
 
-        for (int i=0; i<loopMax; i += loopSize) {
+        for (int i=0; i<allSize; i += loopSize) {
             final int loopIndex = i;
 
             final List<Entry> sendData = entries.subList(i, Math.min(i+loopSize, allSize));
@@ -2498,7 +2498,7 @@ public class TNApiModel extends TNApi {
         int loopSize = (int)LIMIT_ENTRY_BULK_SEND;
         Log.v("TEST", "updateAll entries.size():"+entries.size()+" | loopMax:"+loopMax);
 
-        for (int i=0; i<loopMax; i += loopSize) {
+        for (int i=0; i<allSize; i += loopSize) {
             final int loopIndex = i;
 
             final List<Entry> sendData = entries.subList(i, Math.min(i+loopSize, allSize));
@@ -2984,13 +2984,11 @@ public class TNApiModel extends TNApi {
         int loopSize = (int)LIMIT_ENTRY_BULK_SEND;
         Log.v("TEST", "deleteAll entries.size():"+entries.size()+" | loopMax:"+loopMax);
 
-        for (int i=0; i<loopMax; i += loopSize) {
+        for (int i=0; i<allSize; i += loopSize) {
             final int loopIndex = i;
 
             final List<Entry> sendData = entries.subList(i, Math.min(i+loopSize, allSize));
             Log.v("TEST", "send deleteEntry size : "+sendData.size());
-//            String msg = mContext.getString(R.string.saving_entry) +" "+(i+sendData.size());
-//            setSaveAllNeedProgressDialog(sendData.size(), msg);
 
             new Handler().postDelayed(new Runnable() {
                 @Override
