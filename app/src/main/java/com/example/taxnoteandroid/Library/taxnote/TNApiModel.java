@@ -2502,7 +2502,7 @@ public class TNApiModel extends TNApi {
 
         double loopMaxDouble = Math.ceil(allSize/LIMIT_ENTRY_BULK_SEND);
         final int loopMax = (int)loopMaxDouble;
-        final int loopSize = (int)LIMIT_ENTRY_BULK_SEND;
+        final int loopSize = 100;
         Log.v("TEST", "updateAll entries.size():"+entries.size()+" | loopMax:"+loopMax);
 
         for (int i=0; i<allSize; i += loopSize) {
@@ -2510,7 +2510,6 @@ public class TNApiModel extends TNApi {
 
             int sublistEnd = Math.min(i+loopSize, allSize);
             final List<Entry> sendData = entries.subList(i, sublistEnd);
-            Log.v("TEST", "send updateEntry size : "+sendData.size());
             Log.v("TEST", "send updateEntry size : "+sendData.size()
                     +" data index: "+i+"~"+sublistEnd);
 
@@ -2532,7 +2531,7 @@ public class TNApiModel extends TNApi {
                         }
                     });
                 }
-            }, 500);
+            }, 5000);
         }
     }
 
