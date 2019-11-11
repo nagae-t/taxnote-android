@@ -183,6 +183,8 @@ public class HistoryTabFragment extends Fragment {
     //--------------------------------------------------------------//
 
     public void loadHistoryData() {
+        mProjectManager = new ProjectDataManager(mContext);
+        mEntryManager = new EntryDataManager(mContext);
         if (mEntryAdapter != null) {
             mEntryAdapter.clearAllToNotifyData();
         }

@@ -96,6 +96,7 @@ public class GraphTabFragment extends Fragment  {
     }
 
     public void reloadData() {
+        mEntryDataManager = new EntryDataManager(mContext);
         int periodType = SharedPreferencesManager.getProfitLossReportPeriodType(mContext);
         boolean isExpense = SharedPreferencesManager.getGraphReportIsExpenseType(mContext);
         switchDataView(periodType, isExpense);

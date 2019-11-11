@@ -20,10 +20,12 @@ import com.example.taxnoteandroid.Library.KeyboardUtil;
 import com.example.taxnoteandroid.Library.taxnote.TNApiModel;
 import com.example.taxnoteandroid.Library.taxnote.TNApiUser;
 import com.example.taxnoteandroid.dataManager.AccountDataManager;
+import com.example.taxnoteandroid.dataManager.DefaultDataInstaller;
 import com.example.taxnoteandroid.dataManager.EntryDataManager;
 import com.example.taxnoteandroid.dataManager.ProjectDataManager;
 import com.example.taxnoteandroid.dataManager.ReasonDataManager;
 import com.example.taxnoteandroid.dataManager.RecurringDataManager;
+import com.example.taxnoteandroid.dataManager.SharedPreferencesManager;
 import com.example.taxnoteandroid.dataManager.SummaryDataManager;
 import com.example.taxnoteandroid.databinding.ActivityLoginCloudBinding;
 import com.example.taxnoteandroid.model.Account;
@@ -265,6 +267,11 @@ public class LoginCloudActivity extends DefaultCommonActivity {
                     @Override
                     public void onSuccess(Response response, String content) {
                         apiModel.setIsSyncing(false);
+
+                        Context context = getApplicationContext();
+                        SharedPreferencesManager.saveAppThemeStyle(context, 0);
+                        ProjectDataManager projectManager = new ProjectDataManager(context);
+                        DefaultDataInstaller.switchProject(context, projectManager.findAll(true).get(0));
 
                         setResult(RESULT_OK);
                         finish();

@@ -234,6 +234,7 @@ public class UpgradeActivity extends DefaultCommonActivity {
                 binding.cloudPurchaseLayout.setVisibility(View.VISIBLE);
                 binding.purchaseInfoLayout.setVisibility(View.VISIBLE);
 
+                BroadcastUtil.sendAfterLogin(UpgradeActivity.this, true);
                 if (requestCode == REQUEST_CODE_CLOUD_LOGIN) {
                     DialogManager.showOKOnlyAlert(this,
                             R.string.thx_for_waiting,
@@ -246,7 +247,6 @@ public class UpgradeActivity extends DefaultCommonActivity {
                             R.string.thx_for_waiting,
                             R.string.upload_all_after_register_done);
                 }
-                BroadcastUtil.sendAfterLogin(UpgradeActivity.this, true);
             } else {
                 DialogManager.showOKOnlyAlert(this, null, getString(R.string.change_password_done));
             }
