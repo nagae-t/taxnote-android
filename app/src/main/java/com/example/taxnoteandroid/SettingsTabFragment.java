@@ -98,6 +98,7 @@ public class SettingsTabFragment extends Fragment {
     }
 
     public void afterLogin() {
+        mProjectDataManager = new ProjectDataManager(mContext);
         setMultipleProject();
     }
 

@@ -337,7 +337,7 @@ public class MainActivity extends DefaultCommonActivity
                 HistoryTabFragment historyTabFragment = (HistoryTabFragment) mTabPagerAdapter
                         .instantiateItem(binding.pager, 1);
                 if (historyTabFragment != null)
-                    historyTabFragment.showAllDeleteDialog();
+                    historyTabFragment.showAllDeleteConfirmDialog();
                 break;
 
             // 損益表のメニューオプションが選択されたとき

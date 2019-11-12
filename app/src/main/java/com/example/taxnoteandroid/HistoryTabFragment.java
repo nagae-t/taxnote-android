@@ -4,9 +4,12 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -148,7 +151,7 @@ public class HistoryTabFragment extends Fragment {
         });
     }
 
-    public void showAllDeleteDialog() {
+    public void showAllDeleteConfirmDialog() {
         String projectName = mProjectManager.getCurrentName();
         String deleteBtnTitle = getString(R.string.delete_current_something, projectName);
         // Confirm dialog
@@ -159,23 +162,44 @@ public class HistoryTabFragment extends Fragment {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
 
-                        List<Entry> dataList = mEntryManager.findAll(null, false);
-                        for (Entry entry : dataList) {
-                            mEntryManager.updateSetDeleted(entry.uuid);
-                        }
-                        mEntryAdapter.clearAll();
-                        mEntryAdapter.notifyDataSetChanged();
+                        deleteAllEntry();
 
-                        mApiModel.saveAllNeedSaveSyncDeletedData(null);
-
-                        DialogManager.showToast(mContext, mContext.getString(R.string.delete_done));
-                        BroadcastUtil.sendReloadReport(getActivity());
-
-                        dialogInterface.dismiss();
                     }
                 })
                 .setNegativeButton(getString(R.string.cancel), null)
                 .show();
+    }
+
+    private void deleteAllEntry() {
+        final TNSimpleDialogFragment loading = DialogManager.getLoading((AppCompatActivity) getActivity());
+        loading.show(getFragmentManager(), null);
+        final Handler uiHandler = new Handler(Looper.getMainLooper());
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+
+                List<Entry> dataList = mEntryManager.findAll(null, false);
+                for (Entry entry : dataList) {
+                    mEntryManager.updateSetDeleted(entry.uuid);
+                }
+
+
+                // delete finished
+                uiHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        loading.dismissAllowingStateLoss();
+                        mApiModel.saveAllNeedSaveSyncDeletedData(null);
+
+                        mEntryAdapter.clearAll();
+                        mEntryAdapter.notifyDataSetChanged();
+                        DialogManager.showToast(mContext, mContext.getString(R.string.delete_done));
+                        BroadcastUtil.sendReloadReport(getActivity());
+
+                    }
+                });
+            }
+        }).start();
     }
 
     //--------------------------------------------------------------//
