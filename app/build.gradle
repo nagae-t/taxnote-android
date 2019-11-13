@@ -131,7 +131,7 @@ dependencies {
     implementation "com.mixpanel.android:mixpanel-android:5.0.2"
 
     // Android-RateThisApp
-    implementation 'io.github.kobakei:ratethisapp:1.1.1'
+    implementation 'io.github.kobakei:ratethisapp:1.2.0'
 
     // Helpshift
     implementation 'com.helpshift:android-helpshift-aar:4.8.1'
