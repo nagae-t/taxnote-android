@@ -170,7 +170,7 @@ public class AccountSelectActivity extends DefaultCommonActivity {
                     if (countTarget > 0) {
                         entryManager.updateCombine(fromAccount, toAccount);
                     }
-                    accountDataManager.delete(fromAccount.id);
+                    accountDataManager.updateSetDeleted(fromAccount.uuid);
                     reloadData();
                     BroadcastUtil.sendReloadReport(AccountSelectActivity.this);
 

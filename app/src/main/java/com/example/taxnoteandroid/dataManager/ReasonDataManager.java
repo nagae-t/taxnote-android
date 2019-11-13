@@ -163,6 +163,10 @@ public class ReasonDataManager {
                 .execute();
     }
 
+    public void updateSetDeleted(String uuid) {
+        updateSetDeleted(uuid, null);
+    }
+
     public void updateSetDeleted(String uuid, TNApiModel apiModel) {
         boolean isLoggingIn = TNApiUser.isLoggingIn(mContext);
         Reason reason = findByUuid(uuid);
@@ -174,7 +178,9 @@ public class ReasonDataManager {
                     .execute();
 
             // send api
-            apiModel.deleteReason(uuid, null);
+            if (apiModel != null)
+                apiModel.deleteReason(uuid, null);
+
         } else {
             delete(reason.id);
         }

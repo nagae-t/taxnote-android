@@ -177,6 +177,10 @@ public class AccountDataManager {
                 .execute();
     }
 
+    public void updateSetDeleted(String uuid) {
+        updateSetDeleted(uuid, null);
+    }
+
     public void updateSetDeleted(String uuid, TNApiModel apiModel) {
         boolean isLoggingIn = TNApiUser.isLoggingIn(mContext);
         Account account = findByUuid(uuid);
@@ -188,7 +192,8 @@ public class AccountDataManager {
                     .execute();
 
             // send api
-            apiModel.deleteAccount(uuid, null);
+            if (apiModel != null)
+                apiModel.deleteAccount(uuid, null);
         } else {
             delete(account.id);
         }
