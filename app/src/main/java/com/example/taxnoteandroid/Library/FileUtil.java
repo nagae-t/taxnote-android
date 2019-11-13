@@ -224,7 +224,8 @@ public class FileUtil  {
                     if (newData.project.uuid.equals(newProject.uuid)) {
                         newData.project = newProject;
                         newData.reason = reasonDataManager.findByUuid(newData.reason.uuid);
-                        summDataManager.save(newData);
+                        if (newData.reason != null)
+                            summDataManager.save(newData);
                     }
                 }
 
@@ -236,7 +237,11 @@ public class FileUtil  {
                     newData.needSave = true;
                     if (newData.project.uuid.equals(newProject.uuid)) {
                         newData.project = newProject;
-                        recDataManager.save(newData);
+                        newData.account = accountDataManager.findByUuid(newData.account.uuid);
+                        newData.reason = reasonDataManager.findByUuid(newData.reason.uuid);
+
+                        if (newData.account != null && newData.reason != null)
+                            recDataManager.save(newData);
                     }
                 }
             }
