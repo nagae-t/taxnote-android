@@ -45,9 +45,7 @@ public class AccountDataManager {
     //--------------------------------------------------------------//
 
     public List<Account> findAll() {
-        List<Account> dataList = ormaDatabase.selectFromAccount()
-                .projectEq(mCurrentProject)
-                .toList();
+        List<Account> dataList = ormaDatabase.selectFromAccount().toList();
 
         return dataList;
     }

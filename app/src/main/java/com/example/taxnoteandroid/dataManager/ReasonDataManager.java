@@ -55,9 +55,7 @@ public class ReasonDataManager {
     //--------------------------------------------------------------//
 
     public List<Reason> findAll() {
-        List<Reason> dataList = ormaDatabase.selectFromReason()
-                .projectEq(mCurrentProject)
-                .toList();
+        List<Reason> dataList = ormaDatabase.selectFromReason().toList();
 
         return dataList;
     }

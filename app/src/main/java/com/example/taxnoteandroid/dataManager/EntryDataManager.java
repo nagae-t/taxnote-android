@@ -99,7 +99,7 @@ public class EntryDataManager {
     }
 
     public List<Entry> findAll() {
-        return ormaDatabase.selectFromEntry().projectEq(mCurrentProject).toList();
+        return ormaDatabase.selectFromEntry().toList();
     }
 
     public List<Entry> findAll(long[] startAndEndDate, Boolean asc) {
