@@ -211,7 +211,8 @@ public class FileUtil  {
                         newData.project = newProject;
                         newData.account = accountDataManager.findByUuid(newData.account.uuid);
                         newData.reason = reasonDataManager.findByUuid(newData.reason.uuid);
-                        entryDataManager.save(newData);
+                        if (newData.account != null && newData.reason != null)
+                            entryDataManager.save(newData);
                     }
                 }
 
