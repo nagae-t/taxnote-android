@@ -93,6 +93,14 @@ public class RecurringDataManager {
         return recurrings;
     }
 
+    public int countNeedSave(boolean isNeedSave) {
+        int needSave = (isNeedSave) ? 1 : 0;
+        return ormaDatabase.selectFromRecurring()
+                .where(Recurring_Schema.INSTANCE.deleted.getQualifiedName() + " = 0")
+                .and()
+                .where(Recurring_Schema.INSTANCE.needSave.getQualifiedName() + " = " + needSave)
+                .count();
+    }
 
     //--------------------------------------------------------------//
     //    -- Update --

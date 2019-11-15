@@ -6,11 +6,13 @@ import android.content.DialogInterface;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 
+import com.example.taxnoteandroid.BuildConfig;
 import com.example.taxnoteandroid.Library.AsyncOkHttpClient;
 import com.example.taxnoteandroid.Library.BroadcastUtil;
 import com.example.taxnoteandroid.Library.zeny.ZNUtils;
 import com.example.taxnoteandroid.R;
 import com.example.taxnoteandroid.UpgradeActivity;
+import com.example.taxnoteandroid.dataManager.ProjectDataManager;
 import com.example.taxnoteandroid.dataManager.SharedPreferencesManager;
 
 import java.text.SimpleDateFormat;
@@ -99,14 +101,27 @@ public class TNApiUser extends TNApi {
     }
 
     public static String getCloudOrderId(Context context) {
+        if (BuildConfig.IS_DEBUG_CLOUD) {
+            ProjectDataManager projectMg = new ProjectDataManager(context);
+            String projectUuid = projectMg.findAll().get(0).uuid;
+            return "debug-"+projectUuid;
+        }
         return SharedPreferencesManager.getUserApiLoginValue(context, KEY_CLOUD_ORDER_ID);
     }
 
     static String getCloudPurchaseToken(Context context) {
+        if (BuildConfig.IS_DEBUG_CLOUD) {
+            ProjectDataManager projectMg = new ProjectDataManager(context);
+            String projectUuid = projectMg.findAll().get(0).uuid;
+            return "debug-token-"+projectUuid;
+        }
         return SharedPreferencesManager.getUserApiLoginValue(context, KEY_CLOUD_PURCHASE_TOKEN);
     }
 
     static String getCloudExpiryString(Context context) {
+        if (BuildConfig.IS_DEBUG_CLOUD) {
+            return "2020-12-01 12:12:00";
+        }
         long cloudExpiry = (ZNUtils.isZeny()) ? SharedPreferencesManager.getZenyPremiumExpiryTime(context)
                 : SharedPreferencesManager.getTaxnoteCloudExpiryTime(context);
         if (cloudExpiry == 0) return "";
@@ -292,6 +307,8 @@ public class TNApiUser extends TNApi {
     }
 
     public void handleAccountError(Activity activity, TNApiModel apiModel) {
+        if (BuildConfig.IS_DEBUG_CLOUD) return;
+
         clearAccountData(apiModel);
         BroadcastUtil.sendAfterLogin(activity, false);
 

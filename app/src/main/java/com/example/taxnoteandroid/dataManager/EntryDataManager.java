@@ -5,7 +5,6 @@ import android.content.Context;
 import com.example.taxnoteandroid.Library.EntryLimitManager;
 import com.example.taxnoteandroid.Library.taxnote.TNApiModel;
 import com.example.taxnoteandroid.Library.taxnote.TNApiUser;
-import com.example.taxnoteandroid.R;
 import com.example.taxnoteandroid.TaxnoteApp;
 import com.example.taxnoteandroid.model.Account;
 import com.example.taxnoteandroid.model.Entry;
@@ -73,7 +72,7 @@ public class EntryDataManager {
 
     public List<Entry> findAllNeedSave(boolean isNeedSave) {
         int needSave = (isNeedSave) ? 1 : 0;
-        List<Entry> entries = ormaDatabase.selectFromEntry().projectEq(mCurrentProject)
+        List<Entry> entries = ormaDatabase.selectFromEntry()
                 .where(Entry_Schema.INSTANCE.deleted.getQualifiedName() + " = 0")
                 .and()
                 .where(Entry_Schema.INSTANCE.needSave.getQualifiedName() + " = " + needSave)
@@ -83,7 +82,7 @@ public class EntryDataManager {
 
     public List<Entry> findAllNeedSync(boolean isNeedSync) {
         int needSync = (isNeedSync) ? 1 : 0;
-        List<Entry> entries = ormaDatabase.selectFromEntry().projectEq(mCurrentProject)
+        List<Entry> entries = ormaDatabase.selectFromEntry()
                 .where(Entry_Schema.INSTANCE.deleted.getQualifiedName() + " = 0")
                 .and()
                 .where(Entry_Schema.INSTANCE.needSync.getQualifiedName() + " = " + needSync)
@@ -94,14 +93,13 @@ public class EntryDataManager {
     public List<Entry> findAllDeleted(boolean isDeleted) {
         int deleted = (isDeleted) ? 1 : 0;
         List<Entry> entries = ormaDatabase.selectFromEntry()
-                .projectEq(mCurrentProject)
                 .where(Entry_Schema.INSTANCE.deleted.getQualifiedName() + " = " + deleted)
                 .toList();
         return entries;
     }
 
     public List<Entry> findAll() {
-        return ormaDatabase.selectFromEntry().projectEq(mCurrentProject).toList();
+        return ormaDatabase.selectFromEntry().toList();
     }
 
     public List<Entry> findAll(long[] startAndEndDate, Boolean asc) {
@@ -165,6 +163,15 @@ public class EntryDataManager {
                 .projectEq(mCurrentProject)
                 .count();
         return countData;
+    }
+
+    public int countNeedSave(boolean isNeedSave) {
+        int needSave = (isNeedSave) ? 1 : 0;
+        return ormaDatabase.selectFromEntry()
+                .where(Entry_Schema.INSTANCE.deleted.getQualifiedName() + " = 0")
+                .and()
+                .where(Entry_Schema.INSTANCE.needSave.getQualifiedName() + " = " + needSave)
+                .count();
     }
 
 
@@ -491,7 +498,13 @@ public class EntryDataManager {
                 .execute();
     }
 
+    public void updateSetDeleted(String uuid) {
+        updateSetDeleted(uuid, null);
+    }
+
     public void updateSetDeleted(String uuid, TNApiModel apiModel) {
+        if (uuid == null) return;
+
         boolean isLoggingIn = TNApiUser.isLoggingIn(mContext);
         Entry entry = findByUuid(uuid);
         if (entry == null) return;
@@ -502,7 +515,9 @@ public class EntryDataManager {
                     .execute();
 
             // send api
-            apiModel.deleteEntry(uuid, null);
+            if (apiModel != null) {
+                apiModel.deleteEntry(uuid, null);
+            }
         } else {
             delete(entry.id);
         }

@@ -125,7 +125,7 @@ public class EntryTabReasonSelectFragment extends Fragment {
         reasonDataManager = new ReasonDataManager(mContext);
         setDateView();
         setAccountView();
-        setReasonList(getView());
+        setReasonList();
 
         binding.refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -165,7 +165,7 @@ public class EntryTabReasonSelectFragment extends Fragment {
             @Override
             public void onSuccess(Response response, String content) {
                 binding.refreshLayout.setRefreshing(false);
-                setReasonList(getView());
+                setReasonList();
                 loadCurrentAccount();
             }
         });
@@ -208,7 +208,7 @@ public class EntryTabReasonSelectFragment extends Fragment {
     //    -- Reason List --
     //--------------------------------------------------------------//
 
-    private void setReasonList(View view) {
+    private void setReasonList() {
 
         // Adapter
         adapter = new MyRecyclerViewAdapter();
@@ -285,10 +285,13 @@ public class EntryTabReasonSelectFragment extends Fragment {
 
         AccountDataManager accountDataManager = new AccountDataManager(getContext());
         account = accountDataManager.findCurrentSelectedAccount(isExpense);
-        binding.accountTextView.setText(account.name);
+        if (account != null && account.name != null)
+            binding.accountTextView.setText(account.name);
     }
 
     public void reloadData() {
+        entryManager = new EntryDataManager(mContext);
+        reasonDataManager = new ReasonDataManager(mContext);
         if (adapter != null) {
             adapter.onReasonDataManagerChanged();
         }
@@ -306,7 +309,8 @@ public class EntryTabReasonSelectFragment extends Fragment {
                     if (countTarget > 0) {
                         entryManager.updateCombine(fromReason, toReason);
                     }
-                    reasonDataManager.delete(fromReason.id);
+                    reasonDataManager.updateSetDeleted(fromReason.uuid);
+
                     BroadcastUtil.sendReloadReport(getActivity());
 
                     String title = mContext.getString(R.string.done);

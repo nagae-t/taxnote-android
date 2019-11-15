@@ -20,10 +20,12 @@ import com.example.taxnoteandroid.Library.KeyboardUtil;
 import com.example.taxnoteandroid.Library.taxnote.TNApiModel;
 import com.example.taxnoteandroid.Library.taxnote.TNApiUser;
 import com.example.taxnoteandroid.dataManager.AccountDataManager;
+import com.example.taxnoteandroid.dataManager.DefaultDataInstaller;
 import com.example.taxnoteandroid.dataManager.EntryDataManager;
 import com.example.taxnoteandroid.dataManager.ProjectDataManager;
 import com.example.taxnoteandroid.dataManager.ReasonDataManager;
 import com.example.taxnoteandroid.dataManager.RecurringDataManager;
+import com.example.taxnoteandroid.dataManager.SharedPreferencesManager;
 import com.example.taxnoteandroid.dataManager.SummaryDataManager;
 import com.example.taxnoteandroid.databinding.ActivityLoginCloudBinding;
 import com.example.taxnoteandroid.model.Account;
@@ -46,6 +48,8 @@ public class LoginCloudActivity extends DefaultCommonActivity {
 
     private ActivityLoginCloudBinding binding;
     private int mViewType;
+
+    private TNSimpleDialogFragment mDialogReg;
     private TNSimpleDialogFragment mLoadingDialog;
 
     private static final String KEY_VIEW_TYPE = "view_type";
@@ -226,8 +230,10 @@ public class LoginCloudActivity extends DefaultCommonActivity {
 
             @Override
             public void onSuccess(Response response, String content) {
-
-                dialog.setMessage(getString(R.string.login_success_wait_fetching));
+                dialog.dismissAllowingStateLoss();
+                
+                final TNSimpleDialogFragment afterLoginDialog = getDialogAfterRegister();
+                afterLoginDialog.show(getSupportFragmentManager(), null);
 
                 final TNApiModel apiModel = new TNApiModel(getApplicationContext());
                 //@@  ログイン成功後の処理
@@ -249,7 +255,7 @@ public class LoginCloudActivity extends DefaultCommonActivity {
                     @Override
                     public void onFailure(Response response, Throwable throwable) {
                         apiModel.setIsSyncing(false);
-                        dialog.dismiss();
+                        afterLoginDialog.dismissAllowingStateLoss();
                         Log.e("ERROR", "getAllDataAfterLogin onFailure ");
                         if (response != null)
                             Log.e("ERROR", "response.code: " + response.code()
@@ -262,16 +268,21 @@ public class LoginCloudActivity extends DefaultCommonActivity {
                     public void onSuccess(Response response, String content) {
                         apiModel.setIsSyncing(false);
 
+                        Context context = getApplicationContext();
+                        SharedPreferencesManager.saveAppThemeStyle(context, 0);
+                        ProjectDataManager projectManager = new ProjectDataManager(context);
+                        DefaultDataInstaller.switchProject(context, projectManager.findAll(true).get(0));
+
                         setResult(RESULT_OK);
                         finish();
                     }
-                });
+                }, afterLoginDialog);
             }
         });
     }
 
     private void sendRegister(String email, String passwd) {
-        // Progress dialog
+        mDialogReg = getDialogAfterRegister();
         mLoadingDialog = DialogManager.getLoading(this);
         mLoadingDialog.show(getSupportFragmentManager(), null);
 
@@ -288,6 +299,9 @@ public class LoginCloudActivity extends DefaultCommonActivity {
                 } else if (throwable != null) {
                     errorMsg = throwable.getLocalizedMessage();
                 }
+                if (response.code() == 403) {
+                    errorMsg = getString(R.string.email_already_use);
+                }
                 DialogManager.showOKOnlyAlert(LoginCloudActivity.this,
                         getString(R.string.register_error),
                         errorMsg);
@@ -295,8 +309,8 @@ public class LoginCloudActivity extends DefaultCommonActivity {
 
             @Override
             public void onSuccess(Response response, String content) {
-
-                mLoadingDialog.setMessage(getString(R.string.register_success_wait_uploading));
+                mLoadingDialog.dismiss();
+                mDialogReg.show(getSupportFragmentManager(), null);
                 new SetNeedSaveDataTask().execute();
             }
         });
@@ -402,6 +416,16 @@ public class LoginCloudActivity extends DefaultCommonActivity {
     }
 
 
+    private TNSimpleDialogFragment getDialogAfterRegister() {
+        final TNSimpleDialogFragment dialogFragment = TNSimpleDialogFragment.newInstance();
+
+        dialogFragment.setContentViewId(R.layout.dialog_progress_bar_loading);
+        dialogFragment.setCloseToFinish(true);
+        dialogFragment.setCancelable(false);
+
+        return dialogFragment;
+    }
+
     // アカウント作成後のデータ処理
     // iOSでは setNeedSaveForOldCoreDataModel の処理
     private class SetNeedSaveDataTask extends AsyncTask<String, Integer, Boolean> {
@@ -466,11 +490,11 @@ public class LoginCloudActivity extends DefaultCommonActivity {
 
             final TNApiModel apiModel = new TNApiModel(getApplicationContext());
             apiModel.setIsSyncing(true);
-            apiModel.saveAllDataAfterRegister(new AsyncOkHttpClient.Callback() {
+            apiModel.saveAllDataAfterRegister(new AsyncOkHttpClient.ResponseCallback() {
                 @Override
                 public void onFailure(Response response, Throwable throwable) {
                     apiModel.setIsSyncing(false);
-                    mLoadingDialog.dismiss();
+                    mDialogReg.dismissAllowingStateLoss();
                     String errorMsg = "";
                     if (response != null) {
                         errorMsg = response.message();
@@ -482,13 +506,18 @@ public class LoginCloudActivity extends DefaultCommonActivity {
                 }
 
                 @Override
+                public void onUpdate(long bytesRead, long contentLength, boolean done) {
+                }
+
+                @Override
                 public void onSuccess(Response response, String content) {
                     apiModel.setIsSyncing(false);
-                    mLoadingDialog.dismiss();
+                    mDialogReg.dismissAllowingStateLoss();
                     setResult(RESULT_OK);
                     finish();
                 }
-            });
+            }, mDialogReg);
+
 
         }
 

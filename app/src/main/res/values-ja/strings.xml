@@ -46,6 +46,8 @@
 
     <string name="no_surplus_bar_graph">繰越残高の棒グラフでは、黒字データのみが表示されます。残高がマイナスになっている期間は表示されません。</string>
 
+    <string name="email_already_use">メールアドレスがすでに使用されています。</string>
+
     //--------------------------------------------------------------//
     // -- Entry Tab --
     //--------------------------------------------------------------//
@@ -125,6 +127,12 @@
     <string name="combine_all_accounts">全帳簿の合計を表示</string>
     <string name="combine_all_accounts_message">作成した帳簿全てを合計した数字を表示します。\nTaxnoteクラウドのオプションである複数帳簿を利用している時のみ変化があります。</string>
 
+    <string name="saving_project">帳簿名の保存</string>
+    <string name="saving_reason">科目の保存</string>
+    <string name="saving_account">支払い方法の保存</string>
+    <string name="saving_summary">備考の保存</string>
+    <string name="saving_recurring">指定日予約の保存</string>
+    <string name="saving_entry">入力の保存</string>
 
     <string name="caution">ご注意！</string>
     <string name="confirm_cloud_without_plus_msg">「Taxnoteプラス」を購読せずに「Taxnoteクラウド」を購読すると、月15件の入力制限が解除されないのでご注意ください。\n\nどちらの機能も使いたい場合、プラスとクラウドの両方を購読する必要があります。</string>
@@ -431,7 +439,7 @@
     <string name="confirm_email">このメールアドレスでよろしいですか？</string>
     <string name="register_success_wait_uploading">専用アカウントの登録完了\nデータをアップロードしています。数分以上かかることもありますが、この画面を開いたまま、しばらくお待ちください。</string>
     <string name="thx_for_waiting">お待たせしました</string>
-    <string name="upload_all_after_register_done">データのアップロードが完了しました。\n他のデバイスとデータを同期するには、他のデバイスから、今回作成したアカウントを使ってログインしてください。</string>
+    <string name="upload_all_after_register_done">データのアップロードが完了しました。\n他のiOS・Android端末とデータを同期するには、他の端末から今回作成したアカウントを使ってログインしてください</string>
     <string name="register_error">アカウント登録エラー</string>
     <string name="update">更新する</string>
     <string name="updating_data">データを更新中です...</string>

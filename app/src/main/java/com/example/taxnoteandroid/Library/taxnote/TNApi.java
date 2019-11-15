@@ -38,6 +38,19 @@ public class TNApi {
     protected static final String URL_PATH_SIGN_OUT = "/auth/sign_out";
     protected static final String URL_PATH_PASSWORD_RESET = "/auth/password";
 
+    private static final String PATH_BULK_CREATE = "/bulk_create";
+    private static final String PATH_BULK_UPDATE = "/bulk_update";
+    private static final String PATH_BULK_DESTROY = "/bulk_destroy";
+
+    protected static final String URL_PATH_ENTRY_BULK_SAVE = URL_PATH_ENTRY + PATH_BULK_CREATE;
+    protected static final String URL_PATH_REASON_BULK_SAVE = URL_PATH_REASON+ PATH_BULK_CREATE;
+    protected static final String URL_PATH_ACCOUNT_BULK_SAVE = URL_PATH_ACCOUNT + PATH_BULK_CREATE;
+    protected static final String URL_PATH_SUMMARY_BULK_SAVE = URL_PATH_SUMMARY + PATH_BULK_CREATE;
+    protected static final String URL_PATH_RECURRING_BULK_SAVE = URL_PATH_RECURRING + PATH_BULK_CREATE;
+
+    protected static final String URL_PATH_ENTRY_BULK_DELETE = URL_PATH_ENTRY + PATH_BULK_DESTROY;
+    protected static final String URL_PATH_ENTRY_BULK_UPDATE = URL_PATH_ENTRY + PATH_BULK_UPDATE;
+
     private static final String KEY_USER_UID = "TAXNOTE_USER_UID";
     private static final String KEY_USER_ACCESS_TOKEN = "TAXNOTE_USER_ACCESS_TOKEN";
     private static final String KEY_USER_CLIENT = "TAXNOTE_USER_CLIENT";
@@ -53,6 +66,7 @@ public class TNApi {
     private String requestUrl;
     private FormBody formBody;
     private AsyncOkHttpClient.Callback callback;
+    private AsyncOkHttpClient.ResponseCallback respCallback;
     private String httpMethod;
 
     private String loginUid;
@@ -118,6 +132,10 @@ public class TNApi {
         callback = cb;
     }
 
+    public void setRespCallback(AsyncOkHttpClient.ResponseCallback cb) {
+        respCallback = cb;
+    }
+
     private Headers getHeaders() {
         Map<String, String> headerMap = new LinkedHashMap<>();
         if (requestUrlPath.startsWith(URL_PATH_SUBSCRIPTION)) {
@@ -138,23 +156,42 @@ public class TNApi {
 
         // GETの場合、URLクエリーを創る
         if (httpMethod.equals(HTTP_METHOD_GET) && formBody != null) {
-            HttpUrl.Builder urlBuilder = new HttpUrl.Builder()
-                    .scheme("https")
-                    .host("taxnote") // dummy
-                    .addPathSegment("api"); // dummy
+            HttpUrl.Builder urlBuilder = HttpUrl.parse(requestUrl).newBuilder();
             int formSize = formBody.size();
             if (formSize > 0) {
                 for (int i = 0; i < formBody.size(); i++) {
                     urlBuilder.addQueryParameter(formBody.name(i), formBody.value(i));
                 }
-                requestUrl += "?" + urlBuilder.build().query();
             }
+            requestUrl = urlBuilder.build().toString();
             formBody = null;
         }
 
         Headers headers = getHeaders();
         AsyncOkHttpClient.execute(headers,
                 method, requestUrl, formBody, callback);
+    }
+
+    protected void requestBulkApi() {
+        String method = httpMethod;
+        if (httpMethod == null) method = HTTP_METHOD_GET;
+
+        // GETの場合、URLクエリーを創る
+        if (httpMethod.equals(HTTP_METHOD_GET) && formBody != null) {
+            HttpUrl.Builder urlBuilder = HttpUrl.parse(requestUrl).newBuilder();
+            int formSize = formBody.size();
+            if (formSize > 0) {
+                for (int i = 0; i < formBody.size(); i++) {
+                    urlBuilder.addQueryParameter(formBody.name(i), formBody.value(i));
+                }
+            }
+            requestUrl = urlBuilder.build().toString();
+            formBody = null;
+        }
+
+        Headers headers = getHeaders();
+        AsyncOkHttpClient.execute(headers,
+                method, requestUrl, formBody, respCallback);
     }
 
     public void setIsSyncing(boolean value) {
@@ -181,6 +218,10 @@ public class TNApi {
     }
 
     public boolean isCloudActive() {
+        if (BuildConfig.IS_DEBUG_CLOUD) {
+            return true;
+        }
+
         if (ZNUtils.isZeny()) return UpgradeManger.zenyPremiumIsActive(context);
 
         return UpgradeManger.taxnoteCloudIsActive(context);

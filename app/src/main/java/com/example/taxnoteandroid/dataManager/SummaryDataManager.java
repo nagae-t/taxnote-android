@@ -18,10 +18,12 @@ public class SummaryDataManager {
 
     private OrmaDatabase ormaDatabase;
     private Context mContext;
+    private Project mCurrentProject;
 
     public SummaryDataManager(Context context) {
         this.mContext = context;
         ormaDatabase = TaxnoteApp.getOrmaDatabase();
+        mCurrentProject = new ProjectDataManager(context).findCurrent();
     }
 
 
@@ -54,14 +56,10 @@ public class SummaryDataManager {
 
     public List<Summary> findAllWithReason(Reason reason) {
 
-        // Get the current project
-        ProjectDataManager projectDataManager = new ProjectDataManager(mContext);
-        Project project = projectDataManager.findCurrent();
-
         List summaries = ormaDatabase.selectFromSummary()
                 .where(Summary_Schema.INSTANCE.deleted.getQualifiedName() + " = 0")
                 .reasonEq(reason)
-                .projectEq(project)
+                .projectEq(mCurrentProject)
                 .orderBy(Summary_Schema.INSTANCE.order.getQualifiedName())
                 .toList();
 
@@ -94,6 +92,15 @@ public class SummaryDataManager {
                 .where(Summary_Schema.INSTANCE.deleted.getQualifiedName() + " = " + deleted)
                 .toList();
         return summaries;
+    }
+
+    public int countNeedSave(boolean isNeedSave) {
+        int needSave = (isNeedSave) ? 1 : 0;
+        return ormaDatabase.selectFromSummary()
+                .where(Summary_Schema.INSTANCE.deleted.getQualifiedName() + " = 0")
+                .and()
+                .where(Summary_Schema.INSTANCE.needSave.getQualifiedName() + " = " + needSave)
+                .count();
     }
 
 

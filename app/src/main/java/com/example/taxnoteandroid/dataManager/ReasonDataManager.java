@@ -55,9 +55,7 @@ public class ReasonDataManager {
     //--------------------------------------------------------------//
 
     public List<Reason> findAll() {
-        List<Reason> dataList = ormaDatabase.selectFromReason()
-                .projectEq(mCurrentProject)
-                .toList();
+        List<Reason> dataList = ormaDatabase.selectFromReason().toList();
 
         return dataList;
     }
@@ -87,7 +85,6 @@ public class ReasonDataManager {
     public List<Reason> findAllNeedSave(boolean isNeedSave) {
         int needSave = (isNeedSave) ? 1 : 0;
         List<Reason> reasons = ormaDatabase.selectFromReason()
-                .projectEq(mCurrentProject)
                 .where(Reason_Schema.INSTANCE.deleted.getQualifiedName() + " = 0")
                 .and()
                 .where(Reason_Schema.INSTANCE.needSave.getQualifiedName() + " = " + needSave)
@@ -98,7 +95,6 @@ public class ReasonDataManager {
     public List<Reason> findAllNeedSync(boolean isNeedSync) {
         int needSync = (isNeedSync) ? 1 : 0;
         List<Reason> reasons = ormaDatabase.selectFromReason()
-                .projectEq(mCurrentProject)
                 .where(Reason_Schema.INSTANCE.deleted.getQualifiedName() + " = 0")
                 .and()
                 .where(Reason_Schema.INSTANCE.needSync.getQualifiedName() + " = " + needSync)
@@ -109,10 +105,18 @@ public class ReasonDataManager {
     public List<Reason> findAllDeleted(boolean isDeleted) {
         int deleted = (isDeleted) ? 1 : 0;
         List<Reason> reasons = ormaDatabase.selectFromReason()
-                .projectEq(mCurrentProject)
                 .where(Reason_Schema.INSTANCE.deleted.getQualifiedName() + " = " + deleted)
                 .toList();
         return reasons;
+    }
+
+    public int countNeedSave(boolean isNeedSave) {
+        int needSave = (isNeedSave) ? 1 : 0;
+        return ormaDatabase.selectFromReason()
+                .where(Reason_Schema.INSTANCE.deleted.getQualifiedName() + " = 0")
+                .and()
+                .where(Reason_Schema.INSTANCE.needSave.getQualifiedName() + " = " + needSave)
+                .count();
     }
 
 
@@ -157,6 +161,10 @@ public class ReasonDataManager {
                 .execute();
     }
 
+    public void updateSetDeleted(String uuid) {
+        updateSetDeleted(uuid, null);
+    }
+
     public void updateSetDeleted(String uuid, TNApiModel apiModel) {
         boolean isLoggingIn = TNApiUser.isLoggingIn(mContext);
         Reason reason = findByUuid(uuid);
@@ -168,7 +176,9 @@ public class ReasonDataManager {
                     .execute();
 
             // send api
-            apiModel.deleteReason(uuid, null);
+            if (apiModel != null)
+                apiModel.deleteReason(uuid, null);
+
         } else {
             delete(reason.id);
         }
