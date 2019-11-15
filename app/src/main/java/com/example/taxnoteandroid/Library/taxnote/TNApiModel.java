@@ -1711,7 +1711,7 @@ public class TNApiModel extends TNApi {
 
             // Delete it if deleted is true
             if (deleted) {
-                if (reason != null) mRecurringDataManager.delete(reason.id);
+                if (reason != null)  mReasonDataManager.delete(reason.id);
             } else { // Update
                 if (reason == null) {
                     isNewReason = true;
@@ -3082,6 +3082,7 @@ public class TNApiModel extends TNApi {
             return;
         }
 
+
         //@@ If premium is not available, check the latest premium expired date from Taxnote Cloud server
         //@@ iOSでは subscriptionのチェックなどを行う
 
@@ -3090,6 +3091,7 @@ public class TNApiModel extends TNApi {
         if (!isSyncing()) {
             DialogManager.showToast(context, context.getString(R.string.updating_data));
         }
+
 
         // Start sync data
         saveAllNeedSaveSyncDeletedData(new AsyncOkHttpClient.Callback() {
