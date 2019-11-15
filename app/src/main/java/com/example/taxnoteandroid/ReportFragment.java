@@ -88,6 +88,7 @@ public class ReportFragment extends Fragment {
     }
 
     public void reloadData() {
+        mEntryDataManager = new EntryDataManager(mContext);
         int periodType = SharedPreferencesManager.getProfitLossReportPeriodType(mContext);
         switchReportPeriod(periodType);
     }

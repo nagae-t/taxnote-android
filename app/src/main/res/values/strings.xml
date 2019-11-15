@@ -49,6 +49,8 @@
 
     <string name="no_surplus_bar_graph">Carried Balance Bar Chart doesn\'t show negative balance data, only shows positive balance.</string>
 
+    <string name="email_already_use">The email address is already in use.</string>
+
     //--------------------------------------------------------------//
     // -- Entry Tab --
     //--------------------------------------------------------------//
@@ -129,9 +131,14 @@
     <string name="combine_all_accounts">Combine All Accounts</string>
     <string name="combine_all_accounts_message">Show data with all combined data of accounts you created in the settings.\nIf you don\'t have multiple accounts with Taxnote Cloud, this option doesn\'t change anything.</string>
 
+    <string name="saving_project">Saving Book</string>
+    <string name="saving_reason">Saving Category</string>
+    <string name="saving_account">Saving Account</string>
+    <string name="saving_summary">Saving Summary</string>
+    <string name="saving_recurring">Saving Recurring</string>
+    <string name="saving_entry">Saving Entry</string>
+
     <string name="caution">Caution!</string>
-    // ConfirmTaxnoteCloudWithoutTaxnotePlusMessage
-    // ConfirmTaxnoteCloudWithoutTaxnotePlusMessage again
     <string name="confirm_cloud_without_plus_msg">You can subscribe to Taxnote Cloud without purchasing Taxnote Plus, but the 15 entries/month limit still remains.\n\nPlease note that you need to subscribe to Taxnote Plus and Taxnote Cloud individually.</string>
     <string name="confirm_cloud_without_plus_msg_again">Are you sure to subscribe to Taxnote Cloud with 15 entries/month limit?\n\nYou can subscribe to Taxnote Cloud without purchasing Taxnote Plus, but the 15 entries/month limit still remains.\n\nPlease note that you need to subscribe to Taxnote Plus and Taxnote Cloud individually.</string>
 
@@ -167,6 +174,7 @@
 
     <string name="export_current_something">Export %1$s</string>
     <string name="delete_current_something">Delete %1$s</string>
+
 
     //--------------------------------------------------------------//
     // -- Help Message --

@@ -45,9 +45,7 @@ public class AccountDataManager {
     //--------------------------------------------------------------//
 
     public List<Account> findAll() {
-        List<Account> dataList = ormaDatabase.selectFromAccount()
-                .projectEq(mCurrentProject)
-                .toList();
+        List<Account> dataList = ormaDatabase.selectFromAccount().toList();
 
         return dataList;
     }
@@ -102,7 +100,6 @@ public class AccountDataManager {
     public List<Account> findAllNeedSave(boolean isNeedSave) {
         int needSave = (isNeedSave) ? 1 : 0;
         List<Account> accounts = ormaDatabase.selectFromAccount()
-                .projectEq(mCurrentProject)
                 .where(Account_Schema.INSTANCE.deleted.getQualifiedName() + " = 0")
                 .and()
                 .where(Account_Schema.INSTANCE.needSave.getQualifiedName() + " = " + needSave)
@@ -113,7 +110,6 @@ public class AccountDataManager {
     public List<Account> findAllNeedSync(boolean isNeedSync) {
         int needSync = (isNeedSync) ? 1 : 0;
         List<Account> accounts = ormaDatabase.selectFromAccount()
-                .projectEq(mCurrentProject)
                 .where(Account_Schema.INSTANCE.deleted.getQualifiedName() + " = 0")
                 .and()
                 .where(Account_Schema.INSTANCE.needSync.getQualifiedName() + " = " + needSync)
@@ -124,10 +120,18 @@ public class AccountDataManager {
     public List<Account> findAllDeleted(boolean isDeleted) {
         int deleted = (isDeleted) ? 1 : 0;
         List<Account> accounts = ormaDatabase.selectFromAccount()
-                .projectEq(mCurrentProject)
                 .where(Account_Schema.INSTANCE.deleted.getQualifiedName() + " = " + deleted)
                 .toList();
         return accounts;
+    }
+
+    public int countNeedSave(boolean isNeedSave) {
+        int needSave = (isNeedSave) ? 1 : 0;
+        return ormaDatabase.selectFromAccount()
+                .where(Account_Schema.INSTANCE.deleted.getQualifiedName() + " = 0")
+                .and()
+                .where(Account_Schema.INSTANCE.needSave.getQualifiedName() + " = " + needSave)
+                .count();
     }
 
 
@@ -171,6 +175,10 @@ public class AccountDataManager {
                 .execute();
     }
 
+    public void updateSetDeleted(String uuid) {
+        updateSetDeleted(uuid, null);
+    }
+
     public void updateSetDeleted(String uuid, TNApiModel apiModel) {
         boolean isLoggingIn = TNApiUser.isLoggingIn(mContext);
         Account account = findByUuid(uuid);
@@ -182,7 +190,8 @@ public class AccountDataManager {
                     .execute();
 
             // send api
-            apiModel.deleteAccount(uuid, null);
+            if (apiModel != null)
+                apiModel.deleteAccount(uuid, null);
         } else {
             delete(account.id);
         }

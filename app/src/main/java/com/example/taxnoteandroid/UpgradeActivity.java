@@ -220,7 +220,7 @@ public class UpgradeActivity extends DefaultCommonActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (!mBillingHelper.handleActivityResult(requestCode, resultCode, data)) {
+        if (!mBillingHelper.handleActivityResult(requestCode, resultCode, data) || BuildConfig.IS_DEBUG_CLOUD) {
             super.onActivityResult(requestCode, resultCode, data);
         }
 
@@ -234,6 +234,7 @@ public class UpgradeActivity extends DefaultCommonActivity {
                 binding.cloudPurchaseLayout.setVisibility(View.VISIBLE);
                 binding.purchaseInfoLayout.setVisibility(View.VISIBLE);
 
+                BroadcastUtil.sendAfterLogin(UpgradeActivity.this, true);
                 if (requestCode == REQUEST_CODE_CLOUD_LOGIN) {
                     DialogManager.showOKOnlyAlert(this,
                             R.string.thx_for_waiting,
@@ -246,7 +247,6 @@ public class UpgradeActivity extends DefaultCommonActivity {
                             R.string.thx_for_waiting,
                             R.string.upload_all_after_register_done);
                 }
-                BroadcastUtil.sendAfterLogin(UpgradeActivity.this, true);
             } else {
                 DialogManager.showOKOnlyAlert(this, null, getString(R.string.change_password_done));
             }
@@ -519,6 +519,16 @@ public class UpgradeActivity extends DefaultCommonActivity {
     };
 
     private void checkCloudPurchaseAction() {
+        if (BuildConfig.IS_DEBUG_CLOUD) {
+            if (mApiUser.isLoggingIn()) {
+                showMemberDialogItems();
+            } else {
+                LoginCloudActivity.startForResult(UpgradeActivity.this,
+                        REQUEST_CODE_CLOUD_REGISTER,
+                        LoginCloudActivity.VIEW_TYPE_REGISTER);
+            }
+            return;
+        }
 
         if (!mApiUser.isLoggingIn() && !mApiModel.isCloudActive()) {
             upgradeToTaxnoteCloud();

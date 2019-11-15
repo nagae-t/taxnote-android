@@ -121,6 +121,14 @@ public class ProjectDataManager {
         return projectList;
     }
 
+    public int countNeedSave(boolean isNeedSave) {
+        int needSave = (isNeedSave) ? 1 : 0;
+        return ormaDatabase.selectFromProject()
+                .where(Project_Schema.INSTANCE.deleted.getQualifiedName() + " = 0")
+                .where(Project_Schema.INSTANCE.needSave.getQualifiedName() + " = " + needSave)
+                .count();
+    }
+
 
     //--------------------------------------------------------------//
     //    -- Update --
