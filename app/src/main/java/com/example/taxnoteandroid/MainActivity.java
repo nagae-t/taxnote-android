@@ -679,7 +679,7 @@ public class MainActivity extends DefaultCommonActivity
 
     private void setRateThisApp() {
 
-        RateThisApp.onStart(this);
+//        RateThisApp.onCreate(this);
         RateThisApp.showRateDialogIfNeeded(this);
 
         // Custom message

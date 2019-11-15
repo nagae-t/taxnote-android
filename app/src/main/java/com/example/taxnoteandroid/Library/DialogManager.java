@@ -118,15 +118,13 @@ public class DialogManager {
 
         // Custom Alert
         final TNSimpleDialogFragment dialogFragment = TNSimpleDialogFragment.newInstance();
-        dialogFragment.setTitle(context.getString(R.string.AlertView_firstIntroTitle));
-        dialogFragment.setMessage(context.getString(R.string.AlertView_firstIntroMessage));
+        dialogFragment.setTitle(context.getString(R.string.AlertView_firstIntroMessage));
 
         dialogFragment.setCloseToFinish(true);
         dialogFragment.setPositiveBtnText(context.getString(android.R.string.ok));
         dialogFragment.setDialogListener(new TNSimpleDialogFragment.TNSimpleDialogListener() {
             @Override
             public void onPositiveBtnClick(DialogInterface dialogInterface, int i, String tag) {
-                dialogInterface.dismiss();
                 showFirstLaunchMessage2(context, fragmentManager);
             }
 
@@ -154,16 +152,13 @@ public class DialogManager {
 
         // Custom Alert
         final TNSimpleDialogFragment dialogFragment = TNSimpleDialogFragment.newInstance();
-        dialogFragment.setTitle(context.getString(R.string.AlertView_secondIntroTitle));
-        dialogFragment.setMessage(context.getString(R.string.AlertView_secondIntroMessage));
+        dialogFragment.setTitle(context.getString(R.string.AlertView_letsbegin));
 
         dialogFragment.setCloseToFinish(true);
         dialogFragment.setPositiveBtnText(context.getString(android.R.string.ok));
         dialogFragment.setDialogListener(new TNSimpleDialogFragment.TNSimpleDialogListener() {
             @Override
             public void onPositiveBtnClick(DialogInterface dialogInterface, int i, String tag) {
-                dialogInterface.dismiss();
-                showFirstLaunchMessage3(context, fragmentManager);
             }
 
             @Override

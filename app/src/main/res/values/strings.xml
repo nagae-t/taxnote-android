@@ -181,7 +181,7 @@
     //--------------------------------------------------------------//
 
     <string name="AlertView_firstIntroTitle">Fast</string>
-    <string name="AlertView_firstIntroMessage">Taxnote is a super fast accounting app.</string>
+    <string name="AlertView_firstIntroMessage">This is a quick bookkeeping app.</string>
     <string name="AlertView_secondIntroTitle">Simple</string>
     <string name="AlertView_secondIntroMessage">It specializes in entering data.</string>
     <string name="AlertView_thirdIntroTitle">Data Export</string>
