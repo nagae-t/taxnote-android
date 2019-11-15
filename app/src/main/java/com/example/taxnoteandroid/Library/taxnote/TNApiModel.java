@@ -1029,13 +1029,11 @@ public class TNApiModel extends TNApi {
 
         final int loopMax = getBulkLoopMax(reasonSize);
         final int loopSize = (int)LIMIT_BULK_SEND;
-        Log.v("TEST", "reasonSize:"+reasonSize+" | loopMax:"+loopMax);
 
         for (int i=0; i<reasonSize; i+=loopSize) {
             final int loopIndex = i;
 
             final List<Reason> sendData = reasons.subList(i, Math.min(i+loopSize, reasonSize));
-            Log.v("TEST", "send saveReason size : "+sendData.size());
             String msg = mContext.getString(R.string.saving_reason) +" "+(i+sendData.size());
             setSaveAllNeedProgressDialog(sendData.size(), msg);
 
@@ -1110,13 +1108,11 @@ public class TNApiModel extends TNApi {
 
         final int loopMax = getBulkLoopMax(accountSize);
         final int loopSize = (int)LIMIT_BULK_SEND;
-        Log.v("TEST", "accountSize:"+accountSize+" | loopMax:"+loopMax);
 
         for (int i=0; i<accountSize; i += loopSize) {
             final int loopIndex = i;
 
             final List<Account> sendData = accounts.subList(i, Math.min(i+loopSize, accountSize));
-            Log.v("TEST", "send saveAccount size : "+sendData.size());
             String msg = mContext.getString(R.string.saving_account) +" "+(i+sendData.size());
             setSaveAllNeedProgressDialog(sendData.size(), msg);
 
@@ -1184,13 +1180,11 @@ public class TNApiModel extends TNApi {
 
         final int loopMax = getBulkLoopMax(summarySize);
         final int loopSize = (int)LIMIT_BULK_SEND;
-        Log.v("TEST", "summarySize:"+summarySize+" | loopMax:"+loopMax);
 
         for (int i=0; i<summarySize; i += loopSize) {
             final int loopIndex = i;
 
             final List<Summary> sendData = summaries.subList(i, Math.min(i+loopSize, summarySize));
-            Log.v("TEST", "send saveSummary size : "+sendData.size());
             String msg = mContext.getString(R.string.saving_summary) +" "+(i+sendData.size());
             setSaveAllNeedProgressDialog(sendData.size(), msg);
 
@@ -1258,13 +1252,11 @@ public class TNApiModel extends TNApi {
 
         final int loopMax = getBulkLoopMax(recurringSize);
         final int loopSize = (int)LIMIT_BULK_SEND;
-        Log.v("TEST", "recurringSize:"+recurringSize+" | loopMax:"+loopMax);
 
         for (int i=0; i<recurringSize; i+=loopSize) {
             final int loopIndex = i;
 
             final List<Recurring> sendData = recurrings.subList(i, Math.min(i+loopSize, recurringSize));
-            Log.v("TEST", "send saveRecurring size : "+sendData.size());
             String msg = mContext.getString(R.string.saving_recurring) +" "+(i+sendData.size());
             setSaveAllNeedProgressDialog(sendData.size(), msg);
 
@@ -1363,15 +1355,12 @@ public class TNApiModel extends TNApi {
         double loopMaxDouble = Math.ceil(allSize/LIMIT_ENTRY_BULK_SEND);
         final int loopMax = (int)loopMaxDouble;
         final int loopSize = (int)LIMIT_ENTRY_BULK_SEND;
-        Log.v("TEST", "entries.size():"+entries.size()+" | loopMax:"+loopMax);
 
         for (int i=0; i<allSize; i += loopSize) {
             final int loopIndex = i;
 
             int sublistEnd = Math.min(i+loopSize, allSize);
             final List<Entry> sendData = entries.subList(i, sublistEnd);
-            Log.v("TEST", "send saveEntry size : "+sendData.size()
-                    +" data index: "+i+"~"+sublistEnd);
             String msg = mContext.getString(R.string.saving_entry) +" "+(i+sendData.size());
             setSaveAllNeedProgressDialog(sendData.size(), msg);
 
@@ -2503,15 +2492,12 @@ public class TNApiModel extends TNApi {
         double loopMaxDouble = Math.ceil(allSize/LIMIT_ENTRY_BULK_SEND);
         final int loopMax = (int)loopMaxDouble;
         final int loopSize = 100;
-        Log.v("TEST", "updateAll entries.size():"+entries.size()+" | loopMax:"+loopMax);
 
         for (int i=0; i<allSize; i += loopSize) {
             final int loopIndex = i;
 
             int sublistEnd = Math.min(i+loopSize, allSize);
             final List<Entry> sendData = entries.subList(i, sublistEnd);
-            Log.v("TEST", "send updateEntry size : "+sendData.size()
-                    +" data index: "+i+"~"+sublistEnd);
 
             new Handler().postDelayed(new Runnable() {
                 @Override
@@ -2992,15 +2978,12 @@ public class TNApiModel extends TNApi {
         double loopMaxDouble = Math.ceil(allSize/LIMIT_ENTRY_BULK_SEND);
         final int loopMax = (int)loopMaxDouble;
         final int loopSize = (int)LIMIT_ENTRY_BULK_SEND;
-        Log.v("TEST", "deleteAll entries.size():"+allSize+" | loopMax:"+loopMax);
 
         for (int i=0; i<allSize; i += loopSize) {
             final int loopIndex = i;
 
             int sublistEnd = Math.min(i+loopSize, allSize);
             final List<Entry> sendData = entries.subList(i, sublistEnd);
-            Log.v("TEST", "send deleteEntry size : "+sendData.size()
-                    +" data index: "+i+"~"+sublistEnd);
 
             new Handler().postDelayed(new Runnable() {
                 @Override
@@ -3167,7 +3150,6 @@ public class TNApiModel extends TNApi {
 
         mSaveAllNeedLoadedCount += loadedCount;
         int progress = (int)Math.floor((mSaveAllNeedLoadedCount / mLoadProgressMax) * 100);
-        Log.v("TEST", "setSaveAllNeedProgressDialog all: "+mLoadProgressMax+" loaded: "+mSaveAllNeedLoadedCount);
 
         View view = mLoadingDialog.getDialogView();
         ProgressBar bar = view.findViewById(R.id.progress_bar);

@@ -3,7 +3,6 @@ package com.example.taxnoteandroid.Library.taxnote;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.util.Log;
 
 import com.example.taxnoteandroid.BuildConfig;
 import com.example.taxnoteandroid.Library.AsyncOkHttpClient;
@@ -165,7 +164,6 @@ public class TNApi {
                 }
             }
             requestUrl = urlBuilder.build().toString();
-            Log.v("TEST", "requestApi GET url : " + requestUrl);
             formBody = null;
         }
 
