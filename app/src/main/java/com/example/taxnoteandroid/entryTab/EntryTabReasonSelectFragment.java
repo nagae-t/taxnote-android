@@ -309,7 +309,7 @@ public class EntryTabReasonSelectFragment extends Fragment {
                     if (countTarget > 0) {
                         entryManager.updateCombine(fromReason, toReason);
                     }
-                    reasonDataManager.updateSetDeleted(fromReason.uuid);
+                    reasonDataManager.updateSetDeleted(fromReason.uuid, mApiModel);
 
                     BroadcastUtil.sendReloadReport(getActivity());
 
