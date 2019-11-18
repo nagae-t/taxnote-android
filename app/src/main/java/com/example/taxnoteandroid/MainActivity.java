@@ -499,10 +499,10 @@ public class MainActivity extends DefaultCommonActivity
         if (reportFragment != null)
             reportFragment.switchReportPeriod(type);
 
-        GraphTabFragment graphFragment = (GraphTabFragment) mTabPagerAdapter
-                .instantiateItem(pager, 3);
-        if (graphFragment != null)
-            graphFragment.switchDataView(type);
+//        GraphTabFragment graphFragment = (GraphTabFragment) mTabPagerAdapter
+//                .instantiateItem(pager, 3);
+//        if (graphFragment != null)
+//            graphFragment.switchDataView(type);
     }
 
     private void reportSwitchView(boolean isExpense) {

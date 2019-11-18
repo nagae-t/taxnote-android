@@ -71,6 +71,8 @@ public class ReportContentFragment extends Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        Log.v("TEST", "ReportContentFragment onActivityCreated");
+
         mContext = getActivity().getApplicationContext();
         mApiModel = new TNApiModel(mContext);
         if (!mApiModel.isCloudActive() || !mApiModel.isLoggingIn()) binding.refreshLayout.setEnabled(false);
@@ -157,6 +159,9 @@ public class ReportContentFragment extends Fragment {
     }
 
     private void loadReportData() {
+        Log.v("TEST", "ReportContentFragment loadReportData");
+        binding.refreshLayout.setVisibility(View.GONE);
+        binding.loading.setVisibility(View.VISIBLE);
         isShowBalanceCarryForward = SharedPreferencesManager.getBalanceCarryForward(mContext);
         if (isShowBalanceCarryForward) {
             binding.topCarriedBalance.setVisibility(View.VISIBLE);
@@ -300,13 +305,12 @@ public class ReportContentFragment extends Fragment {
                 resultEntries.add(entry.getValue());
             }
 
-            mEntryManager.getCarriedBalance(mEndDate);
-
             return resultEntries;
         }
 
         @Override
         protected void onPostExecute(List<Entry> result) {
+            binding.loading.setVisibility(View.GONE);
             if (result == null || result.size() == 0) return;
 
             // 繰越残高
@@ -322,6 +326,7 @@ public class ReportContentFragment extends Fragment {
                 binding.carriedBalPrice.setText(cbPriceString);
                 binding.carriedBalPrice.setTextColor(priceColor);
             }
+            Log.v("TEST", "ReportContentFragment ReportDataTask onPostExecute");
 
             // 残高
             Entry topBalance = result.get(0);
@@ -341,6 +346,7 @@ public class ReportContentFragment extends Fragment {
                             mTargetCalendar, reasonName, null, entry.isExpense, true);
                 }
             });
+            binding.refreshLayout.setVisibility(View.VISIBLE);
             binding.reportList.setAdapter(mRecyclerAdapter);
         }
 
