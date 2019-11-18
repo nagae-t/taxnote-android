@@ -2,6 +2,8 @@ package com.example.taxnoteandroid;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -34,6 +36,8 @@ public class GraphTabFragment extends Fragment  {
     private int mCurrentPagerPosition = -1;
     private int mClosingDateIndex = 0;
     private boolean mIsExpense;
+
+    private boolean mIsSyncOnPageScroll = false;
 
     public static GraphTabFragment newInstance() {
         GraphTabFragment fragment = new GraphTabFragment();
@@ -69,7 +73,6 @@ public class GraphTabFragment extends Fragment  {
             @Override
             public void onPageSelected(int position) {
                 mCurrentPagerPosition = position;
-                BroadcastUtil.sendOnDataPeriodScrolled(getActivity(), 1, position);
                 if (mPagerAdapter != null) {
                     List<Calendar> calendars = mPagerAdapter.getCalendars();
                     TaxnoteApp.getInstance().SELECTED_TARGET_CAL = calendars.get(position);
@@ -78,6 +81,11 @@ public class GraphTabFragment extends Fragment  {
 
             @Override
             public void onPageScrollStateChanged(int state) {
+                if (state == 1) mIsSyncOnPageScroll = true;
+                if (state == 0 && mIsSyncOnPageScroll) {
+                    BroadcastUtil.sendOnDataPeriodScrolled(getActivity(), 1, mCurrentPagerPosition);
+                    mIsSyncOnPageScroll = false;
+                }
             }
         });
     }
@@ -116,7 +124,7 @@ public class GraphTabFragment extends Fragment  {
         switchDataView(periodType, isExpense);
     }
 
-    public void switchDataView(int periodType, boolean isExpense) {
+    public void switchDataView(final int periodType, final boolean isExpense) {
         mClosingDateIndex = SharedPreferencesManager.getMonthlyClosingDateIndex(mContext);
 
 //        if (periodType == EntryDataManager.PERIOD_TYPE_ALL) mCurrentPagerPosition = 0;
@@ -127,34 +135,46 @@ public class GraphTabFragment extends Fragment  {
             mCurrentPagerPosition = -1;
         }
 
-        ReportGrouping reportGrouping = new ReportGrouping(periodType);
+        final ReportGrouping reportGrouping = new ReportGrouping(periodType);
         SharedPreferencesManager.saveProfitLossReportPeriodType(mContext, periodType);
         SharedPreferencesManager.saveGraphReportIsExpenseType(mContext, isExpense);
 
-        List<Entry> entries = mEntryDataManager.findAll(null, true);
-        List<Calendar> calendars = reportGrouping.getReportCalendars(mClosingDateIndex, entries);
-        if (periodType == EntryDataManager.PERIOD_TYPE_ALL) {
-            TaxnoteApp.getInstance().ALL_PERIOD_CALS = calendars;
-        }
+        final Handler uiHandler = new Handler(Looper.getMainLooper());
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
 
-        mPagerAdapter = new GraphContentFragmentPagerAdapter(
-                getChildFragmentManager(), reportGrouping, calendars, isExpense);
-        binding.pager.setAdapter(mPagerAdapter);
-        if (periodType != EntryDataManager.PERIOD_TYPE_ALL && calendars.size() == 0) return;
+                List<Entry> entries = mEntryDataManager.findAll(null, true);
+                final List<Calendar> calendars = reportGrouping.getReportCalendars(mClosingDateIndex, entries);
+                if (periodType == EntryDataManager.PERIOD_TYPE_ALL) {
+                    TaxnoteApp.getInstance().ALL_PERIOD_CALS = calendars;
+                }
 
-        if (mCurrentPagerPosition < 0) {
-            int lastIndex = mPagerAdapter.getCount() - 1;
-            // 最後のページにデータがあるかどうか
-            long[] startEndDate = EntryLimitManager.getStartAndEndDate(mContext,
-                    periodType, calendars.get(lastIndex));
-            int countData = mEntryDataManager.count(startEndDate);
-            if (countData == 0) {
-                mCurrentPagerPosition = lastIndex - 1;
-            } else {
-                mCurrentPagerPosition = lastIndex;
+                uiHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        mPagerAdapter = new GraphContentFragmentPagerAdapter(
+                                getChildFragmentManager(), reportGrouping, calendars, isExpense);
+                        binding.pager.setAdapter(mPagerAdapter);
+                        if (periodType != EntryDataManager.PERIOD_TYPE_ALL && calendars.size() == 0) return;
+
+                        if (mCurrentPagerPosition < 0) {
+                            int lastIndex = mPagerAdapter.getCount() - 1;
+                            // 最後のページにデータがあるかどうか
+                            long[] startEndDate = EntryLimitManager.getStartAndEndDate(mContext,
+                                    periodType, calendars.get(lastIndex));
+                            int countData = mEntryDataManager.count(startEndDate);
+                            if (countData == 0) {
+                                mCurrentPagerPosition = lastIndex - 1;
+                            } else {
+                                mCurrentPagerPosition = lastIndex;
+                            }
+                        }
+                        binding.pager.setCurrentItem(mCurrentPagerPosition);
+                    }
+                });
             }
-        }
-        binding.pager.setCurrentItem(mCurrentPagerPosition);
+        }).start();
     }
 
     private class GraphContentFragmentPagerAdapter extends FragmentStatePagerAdapter {

@@ -71,7 +71,6 @@ public class ReportContentFragment extends Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        Log.v("TEST", "ReportContentFragment onActivityCreated");
 
         mContext = getActivity().getApplicationContext();
         mApiModel = new TNApiModel(mContext);
@@ -159,7 +158,6 @@ public class ReportContentFragment extends Fragment {
     }
 
     private void loadReportData() {
-        Log.v("TEST", "ReportContentFragment loadReportData");
         binding.refreshLayout.setVisibility(View.GONE);
         binding.loading.setVisibility(View.VISIBLE);
         isShowBalanceCarryForward = SharedPreferencesManager.getBalanceCarryForward(mContext);
@@ -326,7 +324,6 @@ public class ReportContentFragment extends Fragment {
                 binding.carriedBalPrice.setText(cbPriceString);
                 binding.carriedBalPrice.setTextColor(priceColor);
             }
-            Log.v("TEST", "ReportContentFragment ReportDataTask onPostExecute");
 
             // 残高
             Entry topBalance = result.get(0);

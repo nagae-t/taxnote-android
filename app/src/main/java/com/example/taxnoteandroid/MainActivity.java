@@ -496,13 +496,11 @@ public class MainActivity extends DefaultCommonActivity
 
         ReportFragment reportFragment = (ReportFragment) mTabPagerAdapter
                 .instantiateItem(pager, 2);
-        if (reportFragment != null)
-            reportFragment.switchReportPeriod(type);
+        reportFragment.switchReportPeriod(type);
 
-//        GraphTabFragment graphFragment = (GraphTabFragment) mTabPagerAdapter
-//                .instantiateItem(pager, 3);
-//        if (graphFragment != null)
-//            graphFragment.switchDataView(type);
+        GraphTabFragment graphFragment = (GraphTabFragment) mTabPagerAdapter
+                .instantiateItem(pager, 3);
+        graphFragment.switchDataView(type);
     }
 
     private void reportSwitchView(boolean isExpense) {
@@ -522,13 +520,13 @@ public class MainActivity extends DefaultCommonActivity
 
     private void reportOnPageScrolled(int target, int position) {
         CustomViewPager pager = binding.pager;
-        ReportFragment reportFragment =
-                (ReportFragment) mTabPagerAdapter.instantiateItem(pager, 2);
-        GraphTabFragment graphFragment =
-                (GraphTabFragment) mTabPagerAdapter.instantiateItem(pager, 3);
         if (target == 0) { // send to Graph Report
+            GraphTabFragment graphFragment =
+                    (GraphTabFragment) mTabPagerAdapter.instantiateItem(pager, 3);
             graphFragment.pagerOnSelected(position);
         } else { // send to normal report
+            ReportFragment reportFragment =
+                    (ReportFragment) mTabPagerAdapter.instantiateItem(pager, 2);
             reportFragment.pagerOnSelected(position);
         }
     }
