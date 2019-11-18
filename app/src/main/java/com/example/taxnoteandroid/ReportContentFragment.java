@@ -116,6 +116,7 @@ public class ReportContentFragment extends Fragment {
                 refreshSyncData();
             }
         });
+        loadReportData();
     }
 
     public long[] getStartEndDate() {
@@ -129,7 +130,7 @@ public class ReportContentFragment extends Fragment {
     public void onResume() {
         super.onResume();
 
-        loadReportData();
+//        loadReportData();
     }
 
     private void refreshSyncData() {
@@ -188,6 +189,9 @@ public class ReportContentFragment extends Fragment {
     private class ReportDataTask extends AsyncTask<long[], Integer, List<Entry>> {
 
         private long mEndDate = 0;
+
+        private long mCarriedBalPrice = 0;
+
         @Override
         protected List<Entry> doInBackground(long[]... longs) {
             long[] startEndDate = longs[0];
@@ -196,6 +200,8 @@ public class ReportContentFragment extends Fragment {
                     ? mEntryManager.findAll(null, false)
                     : mEntryManager.findAll(startEndDate, false);
             if (startEndDate.length != 0) mEndDate = startEndDate[1];
+
+            mCarriedBalPrice = mEntryManager.getCarriedBalance(mEndDate);
 
             boolean isFixedOrder = SharedPreferencesManager.getFixedCateOrder(mContext);
 
@@ -294,6 +300,8 @@ public class ReportContentFragment extends Fragment {
                 resultEntries.add(entry.getValue());
             }
 
+            mEntryManager.getCarriedBalance(mEndDate);
+
             return resultEntries;
         }
 
@@ -303,14 +311,14 @@ public class ReportContentFragment extends Fragment {
 
             // 繰越残高
             if (isShowBalanceCarryForward) {
-                long carriedBalPrice = mEntryManager.getCarriedBalance(mEndDate);
+
                 TypedValue incomePriceTv = new TypedValue();
                 mContext.getTheme().resolveAttribute(R.attr.colorPrimary, incomePriceTv, true);
-                String cbPriceString = ValueConverter.formatPrice(mContext, carriedBalPrice);
-                int priceColor = (carriedBalPrice < 0)
+                String cbPriceString = ValueConverter.formatPrice(mContext, mCarriedBalPrice);
+                int priceColor = (mCarriedBalPrice < 0)
                         ? ContextCompat.getColor(mContext, R.color.expense)
                         : ContextCompat.getColor(mContext, incomePriceTv.resourceId);
-                cbPriceString = (carriedBalPrice > 0) ? "+"+cbPriceString : cbPriceString;
+                cbPriceString = (mCarriedBalPrice > 0) ? "+"+cbPriceString : cbPriceString;
                 binding.carriedBalPrice.setText(cbPriceString);
                 binding.carriedBalPrice.setTextColor(priceColor);
             }
