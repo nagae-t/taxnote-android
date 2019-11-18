@@ -141,6 +141,8 @@ public class GraphContentFragment extends Fragment {
     }
 
     private void loadGraphData() {
+        binding.refreshLayout.setVisibility(View.GONE);
+        binding.loading.setVisibility(View.VISIBLE);
         if (mTargetCalendar == null) {
             new EntryDataTask(isExpense).execute(new long[]{});
             return;
@@ -211,6 +213,7 @@ public class GraphContentFragment extends Fragment {
 
         @Override
         protected void onPostExecute(List<Entry> result) {
+            binding.loading.setVisibility(View.GONE);
             if (result == null || result.size() == 0) return;
 
             Entry cbEntry = new Entry();
@@ -226,6 +229,7 @@ public class GraphContentFragment extends Fragment {
                     BroadcastUtil.sendSwitchGraphExpense(getActivity());
                 }
             });
+            binding.refreshLayout.setVisibility(View.VISIBLE);
             binding.recyclerContent.setAdapter(mRecyclerAdapter);
             mRecyclerAdapter.setOnItemClickListener(new GraphHistoryRecyclerAdapter.OnItemClickListener() {
                 @Override

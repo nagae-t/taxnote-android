@@ -125,6 +125,8 @@ public class GraphTabFragment extends Fragment  {
     }
 
     public void switchDataView(final int periodType, final boolean isExpense) {
+        binding.loading.setVisibility(View.VISIBLE);
+        binding.pager.setVisibility(View.GONE);
         mClosingDateIndex = SharedPreferencesManager.getMonthlyClosingDateIndex(mContext);
 
 //        if (periodType == EntryDataManager.PERIOD_TYPE_ALL) mCurrentPagerPosition = 0;
@@ -171,6 +173,8 @@ public class GraphTabFragment extends Fragment  {
                             }
                         }
                         binding.pager.setCurrentItem(mCurrentPagerPosition);
+                        binding.loading.setVisibility(View.GONE);
+                        binding.pager.setVisibility(View.VISIBLE);
                     }
                 });
             }

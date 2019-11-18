@@ -116,6 +116,8 @@ public class ReportFragment extends Fragment {
      * @param periodType
      */
     public void switchReportPeriod(final int periodType) {
+        binding.loading.setVisibility(View.VISIBLE);
+        binding.pager.setVisibility(View.GONE);
         mClosingDateIndex = SharedPreferencesManager.getMonthlyClosingDateIndex(mContext);
 
         int oldPeriodType = SharedPreferencesManager.getProfitLossReportPeriodType(mContext);
@@ -163,6 +165,8 @@ public class ReportFragment extends Fragment {
                             }
                         }
                         binding.pager.setCurrentItem(mCurrentPagerPosition);
+                        binding.loading.setVisibility(View.GONE);
+                        binding.pager.setVisibility(View.VISIBLE);
                     }
                 });
             }
