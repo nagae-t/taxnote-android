@@ -366,10 +366,14 @@ public class MainActivity extends DefaultCommonActivity
             case R.id.action_profit_loss_export:
                 long[] startEndDate = getReportStartEndDate();
 
-                if (startEndDate == null || startEndDate[0] <= 0) {
+                if (startEndDate != null && startEndDate.length == 0) {
+                    ProfitLossExportActivity.start(this, null);
+                    break;
+                } else if (startEndDate == null || startEndDate[0] <= 0) {
                     DialogManager.showToast(this, getString(R.string.no_data_to_export_message));
                     break;
                 }
+
 
                 ProfitLossExportActivity.start(this, startEndDate);
                 break;

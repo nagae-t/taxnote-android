@@ -53,7 +53,7 @@ public class DataExportManager implements TaxnoteConsts {
     private static String CHARACTER_CODE_SHIFT_JIS = "Shift_JIS";
 
     private AppCompatActivity mActivity;
-    private Context context = null;
+    private Context context;
     private String mode = null;
     private int columnSize = -1; // CSV column size.
     private String[] columnTitles = null;
@@ -358,7 +358,7 @@ public class DataExportManager implements TaxnoteConsts {
 
         try {
             File file = getOutputFile();
-            if (file.getParentFile().exists() == false)
+            if (!file.getParentFile().exists())
                 file.getParentFile().mkdirs(); // If parent folder doesn't exist, create it.
             streamOut = new FileOutputStream(file);
             writer = new PrintWriter(new OutputStreamWriter(streamOut, characterCode));
@@ -485,12 +485,15 @@ public class DataExportManager implements TaxnoteConsts {
             fileName += ".csv";
         }
 
-        return new File(Environment.getExternalStorageDirectory(), appName
+        return new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), appName
                 + "/" + System.currentTimeMillis() + "/" + fileName);
 
     }
 
     private String getCustomDateRangeStrings() {
+        if (startEndDate == null) {
+            return "_AllDate";
+        }
 
         long[] startAndEndDate = getCustomStartAndEndDate(context);
 
@@ -513,6 +516,9 @@ public class DataExportManager implements TaxnoteConsts {
     }
 
     private String getReportStartEndDateString() {
+        if (startEndDate == null) {
+            return context.getString(R.string.divide_by_all);
+        }
         long startDate  = startEndDate[0];
         long endDate    = startEndDate[1];
 
