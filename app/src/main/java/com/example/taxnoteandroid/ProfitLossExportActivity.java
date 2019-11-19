@@ -1,16 +1,19 @@
 package com.example.taxnoteandroid;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.content.PermissionChecker;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.example.taxnoteandroid.Library.AppPermission;
 import com.example.taxnoteandroid.Library.DataExportManager;
 import com.example.taxnoteandroid.Library.DialogManager;
 import com.example.taxnoteandroid.Library.EntryLimitManager;
@@ -100,8 +103,8 @@ public class ProfitLossExportActivity extends DefaultCommonActivity {
         binding.csvExport.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                new ReportDataTask().execute(mStartEndDate);
+                // ファイル書き込み権限があるかどうか調べる
+                checkPermissionForExport();
             }
         });
 
@@ -144,6 +147,26 @@ public class ProfitLossExportActivity extends DefaultCommonActivity {
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    // check permission
+    private void checkPermissionForExport() {
+        String permissionWriteStorage = Manifest.permission.WRITE_EXTERNAL_STORAGE;
+        String permissionReadStorage = Manifest.permission.READ_EXTERNAL_STORAGE;
+        switch (PermissionChecker.checkSelfPermission(this, permissionWriteStorage)) {
+            case PermissionChecker.PERMISSION_GRANTED:
+                new ReportDataTask().execute(mStartEndDate);
+                break;
+            case PermissionChecker.PERMISSION_DENIED:
+                AppPermission.requestPermissions(this,
+                        new String[]{permissionWriteStorage, permissionReadStorage});
+                break;
+            case PermissionChecker.PERMISSION_DENIED_APP_OP:
+                DialogManager.showToast(this, getString(R.string.device_permission_denied_msg));
+                break;
+            default:
+                break;
+        }
     }
 
     private class ReportDataTask extends AsyncTask<long[], Integer, List<Entry>> {
@@ -287,4 +310,5 @@ public class ProfitLossExportActivity extends DefaultCommonActivity {
 
         }
     }
+
 }
