@@ -149,6 +149,9 @@ public class ReportFragment extends Fragment {
                     public void run() {
                         mPagerAdapter = new ReportContentFragmentPagerAdapter(getChildFragmentManager(), reportGrouping, calendars);
                         binding.pager.setAdapter(mPagerAdapter);
+                        binding.loading.setVisibility(View.GONE);
+                        binding.pager.setVisibility(View.VISIBLE);
+
                         if (periodType != EntryDataManager.PERIOD_TYPE_ALL && calendars.size() == 0) return;
 
 
@@ -165,8 +168,6 @@ public class ReportFragment extends Fragment {
                             }
                         }
                         binding.pager.setCurrentItem(mCurrentPagerPosition);
-                        binding.loading.setVisibility(View.GONE);
-                        binding.pager.setVisibility(View.VISIBLE);
                     }
                 });
             }

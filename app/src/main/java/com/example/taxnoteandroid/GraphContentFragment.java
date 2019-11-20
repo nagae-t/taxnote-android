@@ -214,7 +214,11 @@ public class GraphContentFragment extends Fragment {
         @Override
         protected void onPostExecute(List<Entry> result) {
             binding.loading.setVisibility(View.GONE);
-            if (result == null || result.size() == 0) return;
+            if (result == null || result.size() == 0) {
+                binding.empty.setVisibility(View.VISIBLE);
+                return;
+            }
+            binding.empty.setVisibility(View.GONE);
 
             Entry cbEntry = new Entry();
             cbEntry.viewType = GraphHistoryRecyclerAdapter.VIEW_CARRIED_BAL_CELL;

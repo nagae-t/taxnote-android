@@ -309,7 +309,10 @@ public class ReportContentFragment extends Fragment {
         @Override
         protected void onPostExecute(List<Entry> result) {
             binding.loading.setVisibility(View.GONE);
-            if (result == null || result.size() == 0) return;
+            if (result == null || result.size() == 0) {
+
+                return;
+            }
 
             // 繰越残高
             if (isShowBalanceCarryForward) {

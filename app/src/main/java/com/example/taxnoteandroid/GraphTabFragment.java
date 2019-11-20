@@ -158,6 +158,8 @@ public class GraphTabFragment extends Fragment  {
                         mPagerAdapter = new GraphContentFragmentPagerAdapter(
                                 getChildFragmentManager(), reportGrouping, calendars, isExpense);
                         binding.pager.setAdapter(mPagerAdapter);
+                        binding.loading.setVisibility(View.GONE);
+                        binding.pager.setVisibility(View.VISIBLE);
                         if (periodType != EntryDataManager.PERIOD_TYPE_ALL && calendars.size() == 0) return;
 
                         if (mCurrentPagerPosition < 0) {
@@ -173,8 +175,6 @@ public class GraphTabFragment extends Fragment  {
                             }
                         }
                         binding.pager.setCurrentItem(mCurrentPagerPosition);
-                        binding.loading.setVisibility(View.GONE);
-                        binding.pager.setVisibility(View.VISIBLE);
                     }
                 });
             }
