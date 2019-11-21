@@ -222,10 +222,10 @@ public class HistoryTabFragment extends Fragment {
                         changedEntry.viewType = mSelectedEntry.viewType;
                         mEntryAdapter.setItem(mSelectedPosition, changedEntry);
                     }
+                    mSelectedEntry = null;
                     return;
-                } else {
-                    mEntryAdapter.notifyDataSetChanged();
                 }
+                mEntryAdapter.notifyDataSetChanged();
                 return;
 
             }
