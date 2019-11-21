@@ -210,6 +210,13 @@ public class HistoryTabFragment extends Fragment {
         mProjectManager = new ProjectDataManager(mContext);
         mEntryManager = new EntryDataManager(mContext);
         if (mEntryAdapter != null) {
+            if (TaxnoteApp.getInstance().IS_HISTORY_LIST_EDITING) {
+                TaxnoteApp.getInstance().IS_HISTORY_LIST_EDITING = false;
+                // TaxnoteApp.getInstance().EDITING_LIST_POSITION;
+                mEntryAdapter.notifyDataSetChanged();
+                return;
+
+            }
             mEntryAdapter.clearAllToNotifyData();
         }
         mEntryAdapter = new CommonEntryRecyclerAdapter(mContext);
@@ -296,6 +303,8 @@ public class HistoryTabFragment extends Fragment {
             mEntryAdapter.setOnItemClickListener(new CommonEntryRecyclerAdapter.OnItemClickListener() {
                 @Override
                 public void onItemClick(View view, int position, Entry entry) {
+                    TaxnoteApp.getInstance().IS_HISTORY_LIST_EDITING = true;
+                    TaxnoteApp.getInstance().EDITING_LIST_POSITION = position;
                     SharedPreferencesManager.saveTapHereHistoryEditDone(getActivity());
                     EntryEditActivity.start(mContext, entry);
                     mEntryAdapter.notifyDataSetChanged();
