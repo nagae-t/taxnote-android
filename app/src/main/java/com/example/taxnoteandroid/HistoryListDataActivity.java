@@ -216,6 +216,8 @@ public class HistoryListDataActivity extends DefaultCommonActivity {
             mEntryAdapter = new CommonEntryRecyclerAdapter(this);
         }
 
+        binding.refreshLayout.setVisibility(View.GONE);
+        binding.loading.setVisibility(View.VISIBLE);
         // Load by multi task.
         new HistoryDataTask(isBalance, isExpense)
                 .execute(startAndEndDate);
@@ -448,7 +450,8 @@ public class HistoryListDataActivity extends DefaultCommonActivity {
 
         @Override
         protected void onPostExecute(List<Entry> result) {
-
+            binding.refreshLayout.setVisibility(View.VISIBLE);
+            binding.loading.setVisibility(View.GONE);
             if (result.size() == 0) {
                 binding.entries.setVisibility(View.GONE);
                 binding.empty.setVisibility(View.VISIBLE);

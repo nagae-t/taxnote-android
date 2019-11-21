@@ -1,16 +1,19 @@
 package com.example.taxnoteandroid;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.content.PermissionChecker;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.example.taxnoteandroid.Library.AppPermission;
 import com.example.taxnoteandroid.Library.DataExportManager;
 import com.example.taxnoteandroid.Library.DialogManager;
 import com.example.taxnoteandroid.Library.EntryLimitManager;
@@ -60,12 +63,15 @@ public class ProfitLossExportActivity extends DefaultCommonActivity {
         mStartEndDate = getIntent().getLongArrayExtra(KEY_TARGET_START_END_DATE);
         mPeriodType = SharedPreferencesManager.getProfitLossReportPeriodType(this);
 
-        Calendar calendar = Calendar.getInstance();
-        calendar.clear();
-        calendar.setTimeInMillis(mStartEndDate[0]);
-        String subTitle = (mPeriodType == EntryDataManager.PERIOD_TYPE_ALL)
-                ? getString(R.string.divide_by_all)
-                : TNUtils.getCalendarStringFromPeriodType(this, calendar, mPeriodType);
+        String subTitle;
+        if (mStartEndDate == null && mPeriodType == EntryDataManager.PERIOD_TYPE_ALL) {
+            subTitle = getString(R.string.divide_by_all);
+        } else {
+            Calendar calendar = Calendar.getInstance();
+            calendar.clear();
+            calendar.setTimeInMillis(mStartEndDate[0]);
+            subTitle = TNUtils.getCalendarStringFromPeriodType(this, calendar, mPeriodType);
+        }
 
         ActionBar actionBar = getSupportActionBar();
         actionBar.setSubtitle(subTitle);
@@ -97,8 +103,8 @@ public class ProfitLossExportActivity extends DefaultCommonActivity {
         binding.csvExport.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                new ReportDataTask().execute(mStartEndDate);
+                // ファイル書き込み権限があるかどうか調べる
+                checkPermissionForExport();
             }
         });
 
@@ -143,6 +149,26 @@ public class ProfitLossExportActivity extends DefaultCommonActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    // check permission
+    private void checkPermissionForExport() {
+        String permissionWriteStorage = Manifest.permission.WRITE_EXTERNAL_STORAGE;
+        String permissionReadStorage = Manifest.permission.READ_EXTERNAL_STORAGE;
+        switch (PermissionChecker.checkSelfPermission(this, permissionWriteStorage)) {
+            case PermissionChecker.PERMISSION_GRANTED:
+                new ReportDataTask().execute(mStartEndDate);
+                break;
+            case PermissionChecker.PERMISSION_DENIED:
+                AppPermission.requestPermissions(this,
+                        new String[]{permissionWriteStorage, permissionReadStorage});
+                break;
+            case PermissionChecker.PERMISSION_DENIED_APP_OP:
+                DialogManager.showToast(this, getString(R.string.device_permission_denied_msg));
+                break;
+            default:
+                break;
+        }
+    }
+
     private class ReportDataTask extends AsyncTask<long[], Integer, List<Entry>> {
 
         @Override
@@ -152,7 +178,9 @@ public class ProfitLossExportActivity extends DefaultCommonActivity {
             EntryDataManager entryManager = new EntryDataManager(context);
             boolean isShowBalanceCarryForward = SharedPreferencesManager.getBalanceCarryForward(context);
             List<Entry> resultEntries = new ArrayList<>();
-            List<Entry> entries = entryManager.findAll(startEndDate, false);
+            List<Entry> entries = (startEndDate == null)
+                    ? entryManager.findAll(null, false)
+                    : entryManager.findAll(startEndDate, false);
 
             boolean isFixedOrder = SharedPreferencesManager.getFixedCateOrder(ProfitLossExportActivity.this);
 
@@ -190,7 +218,7 @@ public class ProfitLossExportActivity extends DefaultCommonActivity {
             Entry topBalance = new Entry();
             topBalance.reasonName = context.getString(R.string.Balance);
             if (isShowBalanceCarryForward) {
-                topBalance.price = entryManager.findSumBalance(startEndDate[1]);
+                topBalance.price = entryManager.getCarriedBalance((startEndDate == null) ? 0 :startEndDate[1]);
                 topBalance.reasonName += context.getString(R.string.balance_carry_forward_view);
             } else {
                 topBalance.price = balancePrice;
@@ -269,16 +297,18 @@ public class ProfitLossExportActivity extends DefaultCommonActivity {
             if (result == null || result.size() == 0) return;
 
             // To export CSV file...
-            Calendar endCal = Calendar.getInstance();
-            endCal.setTimeInMillis(mStartEndDate[1]);
-            endCal.add(Calendar.DATE, -1);
-            mStartEndDate[1] = endCal.getTimeInMillis();
+            if (mStartEndDate != null) {
+                Calendar endCal = Calendar.getInstance();
+                endCal.setTimeInMillis(mStartEndDate[1]);
+                endCal.add(Calendar.DATE, -1);
+                mStartEndDate[1] = endCal.getTimeInMillis();
+            }
             DataExportManager exportManager = new DataExportManager(
                     ProfitLossExportActivity.this,
                     mDefaultCharCode, mStartEndDate, result);
             exportManager.export();
 
-            mStartEndDate = getIntent().getLongArrayExtra(KEY_TARGET_START_END_DATE);
         }
     }
+
 }

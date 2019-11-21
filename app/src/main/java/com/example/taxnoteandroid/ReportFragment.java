@@ -2,6 +2,8 @@ package com.example.taxnoteandroid;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -29,6 +31,7 @@ public class ReportFragment extends Fragment {
     private EntryDataManager mEntryDataManager;
     private int mCurrentPagerPosition = -1;
     private int mClosingDateIndex = 0;
+    private boolean mIsSyncOnPageScroll = false;
 
     public ReportFragment() {
     }
@@ -60,15 +63,16 @@ public class ReportFragment extends Fragment {
         // ボタン押したあとReportGroupingの実装を切り替える
         switchReportPeriod(periodType);
 
+        binding.pager.setOffscreenPageLimit(2);
         binding.pager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
             }
 
             @Override
-            public void onPageSelected(int position) {
+            public void onPageSelected(final int position) {
                 mCurrentPagerPosition = position;
-                BroadcastUtil.sendOnDataPeriodScrolled(getActivity(), 0, position);
+
                 if (mPagerAdapter != null) {
                     List<Calendar> calendars = mPagerAdapter.getCalendars();
                     TaxnoteApp.getInstance().SELECTED_TARGET_CAL = calendars.get(position);
@@ -77,6 +81,11 @@ public class ReportFragment extends Fragment {
 
             @Override
             public void onPageScrollStateChanged(int state) {
+                if (state == 1) mIsSyncOnPageScroll = true;
+                if (state == 0 && mIsSyncOnPageScroll) {
+                    BroadcastUtil.sendOnDataPeriodScrolled(getActivity(), 0, mCurrentPagerPosition);
+                    mIsSyncOnPageScroll = false;
+                }
             }
         });
     }
@@ -106,7 +115,9 @@ public class ReportFragment extends Fragment {
      *
      * @param periodType
      */
-    public void switchReportPeriod(int periodType) {
+    public void switchReportPeriod(final int periodType) {
+        binding.loading.setVisibility(View.VISIBLE);
+        binding.pager.setVisibility(View.GONE);
         mClosingDateIndex = SharedPreferencesManager.getMonthlyClosingDateIndex(mContext);
 
         int oldPeriodType = SharedPreferencesManager.getProfitLossReportPeriodType(mContext);
@@ -117,34 +128,50 @@ public class ReportFragment extends Fragment {
         }
 
         // ボタン押したあとReportGroupingの実装を切り替える
-        ReportGrouping reportGrouping = new ReportGrouping(periodType);
+        final ReportGrouping reportGrouping = new ReportGrouping(periodType);
         // 期間タイプをデフォルト値として保存
         SharedPreferencesManager.saveProfitLossReportPeriodType(mContext, periodType);
 
-        List<Entry> entries = mEntryDataManager.findAll(null, true);
-        List<Calendar> calendars = reportGrouping.getReportCalendars(mClosingDateIndex, entries);
-        if (periodType == EntryDataManager.PERIOD_TYPE_ALL) {
-            TaxnoteApp.getInstance().ALL_PERIOD_CALS = calendars;
-        }
 
-        mPagerAdapter = new ReportContentFragmentPagerAdapter(getChildFragmentManager(), reportGrouping, calendars);
-        binding.pager.setAdapter(mPagerAdapter);
-        if (periodType != EntryDataManager.PERIOD_TYPE_ALL && calendars.size() == 0) return;
+        final Handler uiHandler = new Handler(Looper.getMainLooper());
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+
+                List<Entry> entries = mEntryDataManager.findAll(null, true);
+                final List<Calendar> calendars = reportGrouping.getReportCalendars(mClosingDateIndex, entries);
+                if (periodType == EntryDataManager.PERIOD_TYPE_ALL) {
+                    TaxnoteApp.getInstance().ALL_PERIOD_CALS = calendars;
+                }
+
+                uiHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        mPagerAdapter = new ReportContentFragmentPagerAdapter(getChildFragmentManager(), reportGrouping, calendars);
+                        binding.pager.setAdapter(mPagerAdapter);
+                        binding.loading.setVisibility(View.GONE);
+                        binding.pager.setVisibility(View.VISIBLE);
+
+                        if (periodType != EntryDataManager.PERIOD_TYPE_ALL && calendars.size() == 0) return;
 
 
-        if (mCurrentPagerPosition < 0) {
-            int lastIndex = mPagerAdapter.getCount() - 1;
-            // 最後のページにデータがあるかどうか
-            long[] startEndDate = EntryLimitManager.getStartAndEndDate(mContext,
-                    periodType, calendars.get(lastIndex));
-            int countData = mEntryDataManager.count(startEndDate);
-            if (countData == 0) {
-                mCurrentPagerPosition = lastIndex - 1;
-            } else {
-                mCurrentPagerPosition = lastIndex;
+                        if (mCurrentPagerPosition < 0) {
+                            int lastIndex = mPagerAdapter.getCount() - 1;
+                            // 最後のページにデータがあるかどうか
+                            long[] startEndDate = EntryLimitManager.getStartAndEndDate(mContext,
+                                    periodType, calendars.get(lastIndex));
+                            int countData = mEntryDataManager.count(startEndDate);
+                            if (countData == 0) {
+                                mCurrentPagerPosition = lastIndex - 1;
+                            } else {
+                                mCurrentPagerPosition = lastIndex;
+                            }
+                        }
+                        binding.pager.setCurrentItem(mCurrentPagerPosition);
+                    }
+                });
             }
-        }
-        binding.pager.setCurrentItem(mCurrentPagerPosition);
+        }).start();
     }
 
     public void pagerOnSelected(int position) {

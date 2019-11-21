@@ -141,6 +141,8 @@ public class GraphContentFragment extends Fragment {
     }
 
     private void loadGraphData() {
+        binding.refreshLayout.setVisibility(View.GONE);
+        binding.loading.setVisibility(View.VISIBLE);
         if (mTargetCalendar == null) {
             new EntryDataTask(isExpense).execute(new long[]{});
             return;
@@ -153,6 +155,7 @@ public class GraphContentFragment extends Fragment {
     private class EntryDataTask extends AsyncTask<long[], Integer, List<Entry>> {
         private boolean isExpense;
         private long mEndDate = 0;
+        private long mCarriedBalPrice = 0;
 
         public EntryDataTask(boolean isExpense) {
             this.isExpense = isExpense;
@@ -168,6 +171,7 @@ public class GraphContentFragment extends Fragment {
             if (startEndDate.length > 0) {
                 mEndDate = startEndDate[1];
             }
+            mCarriedBalPrice = mEntryManager.getCarriedBalance(mEndDate);
 
             Entry entrySum = new Entry();
             entrySum.viewType = GraphHistoryRecyclerAdapter.VIEW_ITEM_CELL;
@@ -209,13 +213,17 @@ public class GraphContentFragment extends Fragment {
 
         @Override
         protected void onPostExecute(List<Entry> result) {
-            if (result == null || result.size() == 0) return;
+            binding.loading.setVisibility(View.GONE);
+            if (result == null || result.size() == 0) {
+                binding.empty.setVisibility(View.VISIBLE);
+                return;
+            }
+            binding.empty.setVisibility(View.GONE);
 
-            long carriedBalance = mEntryManager.getCarriedBalance(mEndDate);
             Entry cbEntry = new Entry();
             cbEntry.viewType = GraphHistoryRecyclerAdapter.VIEW_CARRIED_BAL_CELL;
             cbEntry.titleName = mContext.getString(R.string.carried_balance);
-            cbEntry.price = carriedBalance;
+            cbEntry.price = mCarriedBalPrice;
             result.add(0, cbEntry);
 
             mRecyclerAdapter = new GraphHistoryRecyclerAdapter(mContext, result);
@@ -225,6 +233,7 @@ public class GraphContentFragment extends Fragment {
                     BroadcastUtil.sendSwitchGraphExpense(getActivity());
                 }
             });
+            binding.refreshLayout.setVisibility(View.VISIBLE);
             binding.recyclerContent.setAdapter(mRecyclerAdapter);
             mRecyclerAdapter.setOnItemClickListener(new GraphHistoryRecyclerAdapter.OnItemClickListener() {
                 @Override

@@ -163,7 +163,7 @@ public class SearchEntryActivity extends DefaultCommonActivity {
         super.onResume();
 
         if (mSearchWord != null)
-            new EntrySearchTask().execute(mSearchWord);
+            execSearchTask(mSearchWord);
     }
 
     private SearchView.OnQueryTextListener onQueryText = new SearchView.OnQueryTextListener() {
@@ -173,7 +173,7 @@ public class SearchEntryActivity extends DefaultCommonActivity {
             closeKeyboard(mSearchView);
             if (query.length() > 0) {
                 mSearchWord = query;
-                new EntrySearchTask().execute(query);
+                execSearchTask(query);
             } else {
                 mEntryAdapter.clearAllToNotifyData();
             }
@@ -185,7 +185,7 @@ public class SearchEntryActivity extends DefaultCommonActivity {
         public boolean onQueryTextChange(String newText) {
             if (newText.length() > 0) {
                 mSearchWord = newText;
-                new EntrySearchTask().execute(newText);
+                execSearchTask(newText);
             } else {
                 mEntryAdapter.clearAllToNotifyData();
             }
@@ -193,6 +193,12 @@ public class SearchEntryActivity extends DefaultCommonActivity {
             return false;
         }
     };
+
+    private void execSearchTask(String word) {
+        binding.loading.setVisibility(View.VISIBLE);
+        binding.refreshLayout.setVisibility(View.GONE);
+        new EntrySearchTask().execute(word);
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -301,6 +307,7 @@ public class SearchEntryActivity extends DefaultCommonActivity {
 
         @Override
         protected void onPostExecute(List<Entry> result) {
+            binding.loading.setVisibility(View.GONE);
             if (result == null || result.size() == 0) {
 
                 mEntryAdapter.clearAllToNotifyData();
@@ -311,11 +318,13 @@ public class SearchEntryActivity extends DefaultCommonActivity {
                         getString(R.string.no_match_by_search_message));
                     mIsOnSearchSubmit = false;
                 }
+                binding.refreshLayout.setVisibility(View.VISIBLE);
                 return;
             }
 
             mEntryAdapter.setItems(result);
             mEntryAdapter.notifyDataSetChanged();
+            binding.refreshLayout.setVisibility(View.VISIBLE);
         }
     }
 }

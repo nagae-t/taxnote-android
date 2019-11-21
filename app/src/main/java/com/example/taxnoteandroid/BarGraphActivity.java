@@ -13,6 +13,7 @@ import android.support.v7.app.ActionBar;
 import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.example.taxnoteandroid.Library.DayAxisValueFormatter;
 import com.example.taxnoteandroid.Library.DialogManager;
@@ -554,7 +555,8 @@ public class BarGraphActivity extends DefaultCommonActivity implements OnChartVa
             dataSets.add(set1);
             BarData data = new BarData(dataSets);
             mChart.setData(data);
-//            mChart.setVisibility(View.VISIBLE);
+            binding.loading.setVisibility(View.GONE);
+            mChart.setVisibility(View.VISIBLE);
 
             mChart.animateY(700, Easing.EasingOption.EaseInOutQuad);
 
