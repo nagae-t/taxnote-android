@@ -49,6 +49,8 @@ public class HistoryTabFragment extends Fragment {
 
     private ProjectDataManager mProjectManager;
     private EntryDataManager mEntryManager;
+    private Entry mSelectedEntry;
+    private int mSelectedPosition = -1;
 
     public HistoryTabFragment() {
         // Required empty public constructor
@@ -212,14 +214,25 @@ public class HistoryTabFragment extends Fragment {
         if (mEntryAdapter != null) {
             if (TaxnoteApp.getInstance().IS_HISTORY_LIST_EDITING) {
                 TaxnoteApp.getInstance().IS_HISTORY_LIST_EDITING = false;
-                // TaxnoteApp.getInstance().EDITING_LIST_POSITION;
-                mEntryAdapter.notifyDataSetChanged();
+                if (mSelectedEntry != null) {
+                    Entry changedEntry = mEntryManager.findById(mSelectedEntry.id);
+                    if (changedEntry == null || changedEntry.deleted) {
+                        mEntryAdapter.removeItem(mSelectedPosition);
+                    } else {
+                        changedEntry.viewType = mSelectedEntry.viewType;
+                        mEntryAdapter.setItem(mSelectedPosition, changedEntry);
+                    }
+                    return;
+                } else {
+                    mEntryAdapter.notifyDataSetChanged();
+                }
                 return;
 
             }
             mEntryAdapter.clearAllToNotifyData();
+        } else {
+            mEntryAdapter = new CommonEntryRecyclerAdapter(mContext);
         }
-        mEntryAdapter = new CommonEntryRecyclerAdapter(mContext);
 
         binding.empty.setText(mContext.getString(R.string.loading));
         new EntryDataTask().execute(0);
@@ -303,8 +316,9 @@ public class HistoryTabFragment extends Fragment {
             mEntryAdapter.setOnItemClickListener(new CommonEntryRecyclerAdapter.OnItemClickListener() {
                 @Override
                 public void onItemClick(View view, int position, Entry entry) {
+                    mSelectedEntry = entry;
+                    mSelectedPosition = position;
                     TaxnoteApp.getInstance().IS_HISTORY_LIST_EDITING = true;
-                    TaxnoteApp.getInstance().EDITING_LIST_POSITION = position;
                     SharedPreferencesManager.saveTapHereHistoryEditDone(getActivity());
                     EntryEditActivity.start(mContext, entry);
                     mEntryAdapter.notifyDataSetChanged();

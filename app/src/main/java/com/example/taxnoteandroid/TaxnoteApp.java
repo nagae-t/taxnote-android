@@ -39,7 +39,6 @@ public class TaxnoteApp extends MultiDexApplication {
 
     // 仕訳帳を選択して編集する際に扱う変数
     public boolean IS_HISTORY_LIST_EDITING = false;
-    public int EDITING_LIST_POSITION = -1;
 
     public static TaxnoteApp getInstance() {
         return singleton;
