@@ -46,6 +46,7 @@ public class ProfitLossSettingsActivity extends DefaultCommonActivity {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
                 SharedPreferencesManager.saveBalanceCarryForward(getApplicationContext(), isChecked);
+                BroadcastUtil.sendReloadReport(ProfitLossSettingsActivity.this);
             }
         });
 

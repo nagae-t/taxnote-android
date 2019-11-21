@@ -214,7 +214,10 @@ public class HistoryTabFragment extends Fragment {
         }
         mEntryAdapter = new CommonEntryRecyclerAdapter(mContext);
 
-        binding.empty.setText(mContext.getString(R.string.loading));
+//        binding.empty.setText(mContext.getString(R.string.loading));
+
+        binding.loading.setVisibility(View.VISIBLE);
+        binding.refreshLayout.setVisibility(View.GONE);
         new EntryDataTask().execute(0);
     }
 
@@ -284,12 +287,14 @@ public class HistoryTabFragment extends Fragment {
 
         @Override
         protected void onPostExecute(List<Entry> result) {
+            binding.loading.setVisibility(View.GONE);
             if (result.size() == 0) {
-
+                binding.refreshLayout.setVisibility(View.GONE);
                 binding.empty.setText(getResources().getString(R.string.history_data_empty));
                 binding.empty.setVisibility(View.VISIBLE);
             } else {
                 binding.empty.setVisibility(View.GONE);
+                binding.refreshLayout.setVisibility(View.VISIBLE);
             }
 
             mEntryAdapter.addAll(result);
