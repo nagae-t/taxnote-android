@@ -796,8 +796,15 @@ public class DataExportManager implements TaxnoteConsts {
         public String getValue() {
 
             String valString =  Long.toString(currentEntry.price);
-            if (context != null)
-                valString = "\""+ValueConverter.formatPrice(context, currentEntry.price)+"\"";
+            if (context != null) {
+                if (mode.compareTo(EXPORT_FORMAT_TYPE_FREEE) == 0
+                    || mode.compareTo(EXPORT_FORMAT_TYPE_YAYOI) == 0
+                    || mode.compareTo(EXPORT_FORMAT_TYPE_MFCLOUD) == 0) {
+                    valString = "\"" + currentEntry.price+ "\"";
+                } else {
+                    valString = "\"" + ValueConverter.formatPrice(context, currentEntry.price) + "\"";
+                }
+            }
 
             if (ZNUtils.isZeny()) {
                 return currentEntry.isExpense ? valString : "0";
@@ -820,8 +827,15 @@ public class DataExportManager implements TaxnoteConsts {
         public String getValue() {
 
             String valString =  Long.toString(currentEntry.price);
-            if (context != null)
-                valString = "\""+ValueConverter.formatPrice(context, currentEntry.price)+"\"";
+            if (context != null) {
+                if (mode.compareTo(EXPORT_FORMAT_TYPE_FREEE) == 0
+                        || mode.compareTo(EXPORT_FORMAT_TYPE_YAYOI) == 0
+                        || mode.compareTo(EXPORT_FORMAT_TYPE_MFCLOUD) == 0) {
+                    valString = "\"" + currentEntry.price+ "\"";
+                } else {
+                    valString = "\"" + ValueConverter.formatPrice(context, currentEntry.price) + "\"";
+                }
+            }
 
             if (ZNUtils.isZeny()) {
                 return currentEntry.isExpense ?  "0" : valString;
@@ -847,8 +861,15 @@ public class DataExportManager implements TaxnoteConsts {
                 return "";
             }
             String valueString = Long.toString(totalPrice);
-            if (context != null)
-                valueString = "\""+ValueConverter.formatPrice(context, totalPrice)+"\"";
+            if (context != null) {
+                if (mode.compareTo(EXPORT_FORMAT_TYPE_FREEE) == 0
+                        || mode.compareTo(EXPORT_FORMAT_TYPE_YAYOI) == 0
+                        || mode.compareTo(EXPORT_FORMAT_TYPE_MFCLOUD) == 0) {
+                    valueString = "\"" + totalPrice+ "\"";
+                } else {
+                    valueString = "\"" + ValueConverter.formatPrice(context, totalPrice) + "\"";
+                }
+            }
 
             return valueString;
         }
