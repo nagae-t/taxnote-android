@@ -58,6 +58,9 @@ public class HistoryListDataActivity extends DefaultCommonActivity {
     private TNApiModel mApiModel;
     private List<Entry> mResultEntries;
 
+    private Entry mSelectedEntry;
+    private int mSelectedPosition = -1;
+
     private static final String KEY_TARGET_CALENDAR = "target_calendar";
     private static final String KEY_PERIOD_TYPE = "period_type";
     private static final String KEY_REASON_NAME = "reason_name";
@@ -195,6 +198,24 @@ public class HistoryListDataActivity extends DefaultCommonActivity {
     }
 
     private void loadEntryData(long[] startAndEndDate, boolean isBalance, boolean isExpense) {
+
+        if (mEntryAdapter != null) {
+            if (mSelectedEntry != null) {
+                Entry changedEntry = mEntryManager.findById(mSelectedEntry.id);
+                if (changedEntry == null || changedEntry.deleted) {
+                    mEntryAdapter.removeItem(mSelectedPosition);
+                } else {
+                    changedEntry.viewType = mSelectedEntry.viewType;
+                    mEntryAdapter.setItem(mSelectedPosition, changedEntry);
+                }
+                mSelectedEntry = null;
+                return;
+            }
+            mEntryAdapter.clearAllToNotifyData();
+        } else {
+            mEntryAdapter = new CommonEntryRecyclerAdapter(this);
+        }
+
         binding.refreshLayout.setVisibility(View.GONE);
         binding.loading.setVisibility(View.VISIBLE);
         // Load by multi task.
@@ -443,7 +464,7 @@ public class HistoryListDataActivity extends DefaultCommonActivity {
             Entry topEntry = result.get(0);
             final boolean isMemoData = (topEntry.viewType == CommonEntryRecyclerAdapter.VIEW_ITEM_REPORT_TOTAL);
 
-            mEntryAdapter = new CommonEntryRecyclerAdapter(getApplicationContext(), result);
+            mEntryAdapter.addAll(result);
             mEntryAdapter.setOnItemClickListener(new CommonEntryRecyclerAdapter.OnItemClickListener() {
                 @Override
                 public void onItemClick(View view, int position, Entry entry) {
@@ -455,6 +476,8 @@ public class HistoryListDataActivity extends DefaultCommonActivity {
                                 mTargetCalendar, mReasonName, memoValue,
                                 entry.isExpense, (memoValue != null));
                     } else {
+                        mSelectedEntry = entry;
+                        mSelectedPosition = position;
                         EntryEditActivity.start(getApplicationContext(), entry);
                     }
                 }
