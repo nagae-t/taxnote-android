@@ -552,6 +552,8 @@ public class EntryEditActivity extends DefaultCommonActivity {
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
+        TaxnoteApp.getInstance().IS_HISTORY_LIST_EDITING = false;
+
         // バックキー
         if (keyCode == KeyEvent.KEYCODE_BACK && mIsCopySaved) {
             onCopyFinish();

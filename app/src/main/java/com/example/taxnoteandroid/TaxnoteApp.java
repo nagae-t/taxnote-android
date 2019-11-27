@@ -37,6 +37,9 @@ public class TaxnoteApp extends MultiDexApplication {
     public Calendar SELECTED_TARGET_CAL = null;
     public List<Calendar> ALL_PERIOD_CALS = null;
 
+    // 仕訳帳を選択して編集する際に扱う変数
+    public boolean IS_HISTORY_LIST_EDITING = false;
+
     public static TaxnoteApp getInstance() {
         return singleton;
     }

@@ -89,6 +89,16 @@ public class CommonEntryRecyclerAdapter extends RecyclerView.Adapter<BindingHold
         mDataList.addAll(entries);
     }
 
+    public void removeItem(int position) {
+        mDataList.remove(position);
+        notifyItemRemoved(position);
+    }
+
+    public void setItem(int position, Entry entry) {
+        mDataList.set(position, entry);
+        notifyItemChanged(position);
+    }
+
     public void clearAll() {
         mDataList = new ArrayList<>();
     }
