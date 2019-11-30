@@ -77,6 +77,7 @@ android {
             versionName "1.0.7"
 
             buildConfigField "String", "SERVICE_API_URI", "\"https://zenyapp.com/api\""
+            buildConfigField "boolean", "IS_DEBUG_CLOUD", "false"
         }
 
         zenyDevelop {
@@ -86,6 +87,7 @@ android {
             versionName "1.0"
 
             buildConfigField "String", "SERVICE_API_URI", "\"https://zeny-staging.herokuapp.com/api\""
+            buildConfigField "boolean", "IS_DEBUG_CLOUD", "false"
         }
 
     }
