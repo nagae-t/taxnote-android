@@ -241,7 +241,7 @@ public class GraphHistoryRecyclerAdapter extends RecyclerView.Adapter<BindingHol
             color3 = R.color.third_pie_chart_color3;
         }
 
-        Long sumPrice = mDataList.get(1).price;
+        Long sumPrice = mDataList.get(NOT_GRAPH_DATA_NUM-1).price;
         NumberFormat format = NumberFormat.getInstance();
         format.setMaximumFractionDigits(1);
         for (int i=NOT_GRAPH_DATA_NUM; i<mDataList.size(); i++) {
