@@ -780,7 +780,7 @@ public class UpgradeActivity extends DefaultCommonActivity {
 
         @Override
         protected void onPostExecute(SubscriptionPurchase result) {
-            if (mLoadingProgress != null) mLoadingProgress.dismissAllowingStateLoss();
+            if (mLoadingProgress != null && mLoadingProgress.isVisible()) mLoadingProgress.dismissAllowingStateLoss();
             if (result == null || subscriptionId == null) return;
             if (isFinishing()) return;
 
