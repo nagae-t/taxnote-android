@@ -392,11 +392,12 @@ public class UpgradeActivity extends DefaultCommonActivity {
         String transactionId = TNApiUser.getCloudOrderId(this);
         if (transactionId == null || isFinishing()) return;
 
-        mLoadingProgress.show(getSupportFragmentManager(), null);
+        final TNSimpleDialogFragment loadingProg = DialogManager.getLoading(this);
+        loadingProg.show(getSupportFragmentManager(), "loading-prog");
         mApiUser.checkUniqueOfSubscription(transactionId, new AsyncOkHttpClient.Callback() {
             @Override
             public void onFailure(Response response, Throwable throwable) {
-                mLoadingProgress.dismiss();
+                loadingProg.dismiss();
 
                 Log.e("ERROR", "checkUniqueOfSubscription onFailure ");
 
@@ -411,7 +412,7 @@ public class UpgradeActivity extends DefaultCommonActivity {
 
             @Override
             public void onSuccess(Response response, String content) {
-                mLoadingProgress.dismiss();
+                loadingProg.dismiss();
                 if (content == null || content.length() == 0) {
                     if (isMoveNext) {
                         LoginCloudActivity.startForResult(UpgradeActivity.this,
@@ -779,7 +780,7 @@ public class UpgradeActivity extends DefaultCommonActivity {
 
         @Override
         protected void onPostExecute(SubscriptionPurchase result) {
-            if (mLoadingProgress.isVisible()) mLoadingProgress.dismiss();
+            if (mLoadingProgress != null && mLoadingProgress.isVisible()) mLoadingProgress.dismissAllowingStateLoss();
             if (result == null || subscriptionId == null) return;
             if (isFinishing()) return;
 
