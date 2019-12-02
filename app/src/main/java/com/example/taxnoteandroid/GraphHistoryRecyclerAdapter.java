@@ -224,7 +224,7 @@ public class GraphHistoryRecyclerAdapter extends RecyclerView.Adapter<BindingHol
         ArrayList<PieEntry> pieEntries = new ArrayList<>();
         if (mDataList.size() < NOT_GRAPH_DATA_NUM) return;
 
-        int[] colorList = new int[mDataList.size()-2];
+        int[] colorList = new int[mDataList.size()-NOT_GRAPH_DATA_NUM];
         int color1 = R.color.pie_chart_color1;
         int color2 = R.color.pie_chart_color2;
         int color3 = R.color.pie_chart_color3;
@@ -241,10 +241,10 @@ public class GraphHistoryRecyclerAdapter extends RecyclerView.Adapter<BindingHol
             color3 = R.color.third_pie_chart_color3;
         }
 
-        Long sumPrice = mDataList.get(1).price;
+        Long sumPrice = mDataList.get(NOT_GRAPH_DATA_NUM-1).price;
         NumberFormat format = NumberFormat.getInstance();
         format.setMaximumFractionDigits(1);
-        for (int i=2; i<mDataList.size(); i++) {
+        for (int i=NOT_GRAPH_DATA_NUM; i<mDataList.size(); i++) {
             Entry _entry = mDataList.get(i);
             float entryPrice = (float) _entry.price;
             String labelName = _entry.titleName;
@@ -260,7 +260,7 @@ public class GraphHistoryRecyclerAdapter extends RecyclerView.Adapter<BindingHol
             }
             pieEntries.add(pEntry);
 
-            int colorIndex = i-2;
+            int colorIndex = i-NOT_GRAPH_DATA_NUM;
             if (colorIndex == 0) {
                 colorList[0] = color1;
             } else if (colorIndex%2 != 0) {
