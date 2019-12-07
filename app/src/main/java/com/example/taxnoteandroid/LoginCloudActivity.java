@@ -29,7 +29,6 @@ import com.example.taxnoteandroid.dataManager.SharedPreferencesManager;
 import com.example.taxnoteandroid.dataManager.SummaryDataManager;
 import com.example.taxnoteandroid.databinding.ActivityLoginCloudBinding;
 import com.example.taxnoteandroid.model.Account;
-import com.example.taxnoteandroid.model.Entry;
 import com.example.taxnoteandroid.model.OrmaDatabase;
 import com.example.taxnoteandroid.model.Project;
 import com.example.taxnoteandroid.model.Reason;
@@ -432,6 +431,7 @@ public class LoginCloudActivity extends DefaultCommonActivity {
 
         @Override
         protected Boolean doInBackground(String... params) {
+            Log.v("TEST", "SetNeedSaveDataTask doInBackground 1");
             Context context = getApplicationContext();
             ProjectDataManager projectDataManager = new ProjectDataManager(context);
             List<Project> projectList = projectDataManager.findAll();
@@ -440,6 +440,7 @@ public class LoginCloudActivity extends DefaultCommonActivity {
                 project.needSync = false;
                 projectDataManager.update(project);
             }
+            Log.v("TEST", "SetNeedSaveDataTask doInBackground 2");
 
             ReasonDataManager reasonDataManager = new ReasonDataManager(context);
             List<Reason> reasonList = reasonDataManager.findAll();
@@ -448,6 +449,7 @@ public class LoginCloudActivity extends DefaultCommonActivity {
                 reason.needSync = false;
                 reasonDataManager.update(reason);
             }
+            Log.v("TEST", "SetNeedSaveDataTask doInBackground 3");
 
             AccountDataManager accountDataManager = new AccountDataManager(context);
             List<Account> accList = accountDataManager.findAll();
@@ -456,6 +458,7 @@ public class LoginCloudActivity extends DefaultCommonActivity {
                 account.needSync = false;
                 accountDataManager.update(account);
             }
+            Log.v("TEST", "SetNeedSaveDataTask doInBackground 4");
 
             SummaryDataManager summaryDataManager = new SummaryDataManager(context);
             List<Summary> sumList = summaryDataManager.findAll();
@@ -464,6 +467,7 @@ public class LoginCloudActivity extends DefaultCommonActivity {
                 summ.needSync = false;
                 summaryDataManager.update(summ);
             }
+            Log.v("TEST", "SetNeedSaveDataTask doInBackground 5");
 
             RecurringDataManager recurringDataManager = new RecurringDataManager(context);
             List<Recurring> recList = recurringDataManager.findAll();
@@ -472,14 +476,10 @@ public class LoginCloudActivity extends DefaultCommonActivity {
                 rec.needSync = false;
                 recurringDataManager.update(rec);
             }
+            Log.v("TEST", "SetNeedSaveDataTask doInBackground 6");
 
             EntryDataManager entryDataManager = new EntryDataManager(context);
-            List<Entry> entryList = entryDataManager.findAll();
-            for (Entry entry : entryList) {
-                entry.needSave = true;
-                entry.needSync = false;
-                entryDataManager.update(entry);
-            }
+            entryDataManager.updateAllNeedSave();
 
 
             return true;
@@ -487,6 +487,7 @@ public class LoginCloudActivity extends DefaultCommonActivity {
 
         @Override
         protected void onPostExecute(Boolean result) {
+            Log.v("TEST", "SetNeedSaveDataTask onPostExecute");
 
             final TNApiModel apiModel = new TNApiModel(getApplicationContext());
             apiModel.setIsSyncing(true);
