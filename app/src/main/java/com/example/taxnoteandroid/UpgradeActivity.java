@@ -774,13 +774,16 @@ public class UpgradeActivity extends DefaultCommonActivity {
 
             mPurchase = purchases[0];
             subscriptionId =  mPurchase.getSku();
-            SubscriptionPurchase subPurchase = tnGoogleApi.getSubscription(subscriptionId, mPurchase.getToken());
-            return subPurchase;
+            return tnGoogleApi.getSubscription(subscriptionId, mPurchase.getToken());
         }
 
         @Override
         protected void onPostExecute(SubscriptionPurchase result) {
-            if (mLoadingProgress != null && mLoadingProgress.isVisible()) mLoadingProgress.dismissAllowingStateLoss();
+            if (mLoadingProgress != null){
+                try {
+                    mLoadingProgress.dismissAllowingStateLoss();
+                } catch (Exception ee) {}
+            }
             if (result == null || subscriptionId == null) return;
             if (isFinishing()) return;
 

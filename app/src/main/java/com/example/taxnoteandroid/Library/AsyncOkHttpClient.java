@@ -203,13 +203,7 @@ public class AsyncOkHttpClient {
                 mainHandler.post(new Runnable() {
                     @Override
                     public void run() {
-                        Response resp = null;
-                        try {
-                            resp = call.execute();
-                        } catch (IOException e1) {
-                            e1.printStackTrace();
-                        }
-                        callback.onFailure(resp, e);
+                        callback.onFailure(null, e);
                     }
                 });
             }
