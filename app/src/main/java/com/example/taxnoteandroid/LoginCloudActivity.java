@@ -29,7 +29,6 @@ import com.example.taxnoteandroid.dataManager.SharedPreferencesManager;
 import com.example.taxnoteandroid.dataManager.SummaryDataManager;
 import com.example.taxnoteandroid.databinding.ActivityLoginCloudBinding;
 import com.example.taxnoteandroid.model.Account;
-import com.example.taxnoteandroid.model.Entry;
 import com.example.taxnoteandroid.model.OrmaDatabase;
 import com.example.taxnoteandroid.model.Project;
 import com.example.taxnoteandroid.model.Reason;
@@ -474,12 +473,7 @@ public class LoginCloudActivity extends DefaultCommonActivity {
             }
 
             EntryDataManager entryDataManager = new EntryDataManager(context);
-            List<Entry> entryList = entryDataManager.findAll();
-            for (Entry entry : entryList) {
-                entry.needSave = true;
-                entry.needSync = false;
-                entryDataManager.update(entry);
-            }
+            entryDataManager.updateAllNeedSave();
 
 
             return true;

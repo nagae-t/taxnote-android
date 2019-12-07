@@ -498,6 +498,12 @@ public class EntryDataManager {
                 .execute();
     }
 
+    public void updateAllNeedSave() {
+        ormaDatabase.updateEntry()
+                .needSave(true).needSync(false)
+                .execute();
+    }
+
     public void updateSetDeleted(String uuid) {
         updateSetDeleted(uuid, null);
     }

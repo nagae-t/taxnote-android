@@ -906,6 +906,9 @@ public class TNApiModel extends TNApi {
                     Log.e(LTAG, "saveEntry(List) onFailure response.code: " + response.code()
                             + ", message: " + response.message());
                 }
+                if (throwable != null) {
+                    Log.e(LTAG, "saveEntry(List) onFailure throwable msg: "+throwable.getMessage());
+                }
                 if (callback != null)
                     callback.onFailure(response, throwable);
             }
@@ -974,8 +977,6 @@ public class TNApiModel extends TNApi {
 
         mCount = 0;
         for (Project project : projects) {
-            String msg = mContext.getString(R.string.saving_project) +" "+ (mCount+1);
-            setSaveAllNeedProgressDialog(1, msg);
 
             saveProject(project.uuid, new AsyncOkHttpClient.Callback() {
                 @Override
@@ -985,6 +986,8 @@ public class TNApiModel extends TNApi {
 
                 @Override
                 public void onSuccess(Response response, String content) {
+                    String msg = mContext.getString(R.string.saving_project) +" "+ (mCount+1);
+                    setSaveAllNeedProgressDialog(1, msg);
                     mCount++;
 
                     if (mCount >= projectSize)
@@ -1027,15 +1030,13 @@ public class TNApiModel extends TNApi {
             return;
         }
 
-        final int loopMax = getBulkLoopMax(reasonSize);
         final int loopSize = (int)LIMIT_BULK_SEND;
 
         for (int i=0; i<reasonSize; i+=loopSize) {
             final int loopIndex = i;
 
             final List<Reason> sendData = reasons.subList(i, Math.min(i+loopSize, reasonSize));
-            String msg = mContext.getString(R.string.saving_reason) +" "+(i+sendData.size());
-            setSaveAllNeedProgressDialog(sendData.size(), msg);
+            final int savedSize = i+sendData.size();
 
             new Handler().postDelayed(new Runnable() {
                 @Override
@@ -1056,6 +1057,8 @@ public class TNApiModel extends TNApi {
 
                         @Override
                         public void onSuccess(Response response, String content) {
+                            String msg = mContext.getString(R.string.saving_reason) +" "+savedSize;
+                            setSaveAllNeedProgressDialog(sendData.size(), msg);
 
 //                            if ((loopIndex+1) == loopMax)
                             if ((loopIndex+loopSize) >= reasonSize)
@@ -1106,15 +1109,13 @@ public class TNApiModel extends TNApi {
             return;
         }
 
-        final int loopMax = getBulkLoopMax(accountSize);
         final int loopSize = (int)LIMIT_BULK_SEND;
 
         for (int i=0; i<accountSize; i += loopSize) {
             final int loopIndex = i;
 
             final List<Account> sendData = accounts.subList(i, Math.min(i+loopSize, accountSize));
-            String msg = mContext.getString(R.string.saving_account) +" "+(i+sendData.size());
-            setSaveAllNeedProgressDialog(sendData.size(), msg);
+            final int savedSize = i+sendData.size();
 
             new Handler().postDelayed(new Runnable() {
                 @Override
@@ -1135,6 +1136,9 @@ public class TNApiModel extends TNApi {
 
                         @Override
                         public void onSuccess(Response response, String content) {
+                            String msg = mContext.getString(R.string.saving_account) +" "+savedSize;
+                            setSaveAllNeedProgressDialog(sendData.size(), msg);
+
 //                            if ((loopIndex+1) == loopMax)
                             if ((loopIndex+loopSize) >= accountSize)
                                 callback.onSuccess(response, content);
@@ -1178,15 +1182,13 @@ public class TNApiModel extends TNApi {
             return;
         }
 
-        final int loopMax = getBulkLoopMax(summarySize);
         final int loopSize = (int)LIMIT_BULK_SEND;
 
         for (int i=0; i<summarySize; i += loopSize) {
             final int loopIndex = i;
 
             final List<Summary> sendData = summaries.subList(i, Math.min(i+loopSize, summarySize));
-            String msg = mContext.getString(R.string.saving_summary) +" "+(i+sendData.size());
-            setSaveAllNeedProgressDialog(sendData.size(), msg);
+            final int savedSize = i+sendData.size();
 
             new Handler().postDelayed(new Runnable() {
                 @Override
@@ -1207,6 +1209,9 @@ public class TNApiModel extends TNApi {
 
                         @Override
                         public void onSuccess(Response response, String content) {
+                            String msg = mContext.getString(R.string.saving_summary) +" "+savedSize;
+                            setSaveAllNeedProgressDialog(sendData.size(), msg);
+
 //                            if ((loopIndex+1) == loopMax)
                             if ((loopIndex+loopSize) >= summarySize)
                                 callback.onSuccess(response, content);
@@ -1250,15 +1255,13 @@ public class TNApiModel extends TNApi {
             return;
         }
 
-        final int loopMax = getBulkLoopMax(recurringSize);
         final int loopSize = (int)LIMIT_BULK_SEND;
 
         for (int i=0; i<recurringSize; i+=loopSize) {
             final int loopIndex = i;
 
             final List<Recurring> sendData = recurrings.subList(i, Math.min(i+loopSize, recurringSize));
-            String msg = mContext.getString(R.string.saving_recurring) +" "+(i+sendData.size());
-            setSaveAllNeedProgressDialog(sendData.size(), msg);
+            final int savedSize = i+sendData.size();
 
             new Handler().postDelayed(new Runnable() {
                 @Override
@@ -1279,6 +1282,9 @@ public class TNApiModel extends TNApi {
 
                         @Override
                         public void onSuccess(Response response, String content) {
+                            String msg = mContext.getString(R.string.saving_recurring) +" "+savedSize;
+                            setSaveAllNeedProgressDialog(sendData.size(), msg);
+
 //                            if ((loopIndex+1) == loopMax)
                             if ((loopIndex+loopSize) >= recurringSize)
                                 callback.onSuccess(response, content);
@@ -1352,8 +1358,6 @@ public class TNApiModel extends TNApi {
             return;
         }
 
-        double loopMaxDouble = Math.ceil(allSize/LIMIT_ENTRY_BULK_SEND);
-        final int loopMax = (int)loopMaxDouble;
         final int loopSize = (int)LIMIT_ENTRY_BULK_SEND;
 
         for (int i=0; i<allSize; i += loopSize) {
@@ -1361,8 +1365,7 @@ public class TNApiModel extends TNApi {
 
             int sublistEnd = Math.min(i+loopSize, allSize);
             final List<Entry> sendData = entries.subList(i, sublistEnd);
-            String msg = mContext.getString(R.string.saving_entry) +" "+(i+sendData.size());
-            setSaveAllNeedProgressDialog(sendData.size(), msg);
+            final int savedSize = i+sendData.size();
 
             new Handler().postDelayed(new Runnable() {
                 @Override
@@ -1370,8 +1373,8 @@ public class TNApiModel extends TNApi {
                     saveEntry(sendData, new AsyncOkHttpClient.ResponseCallback() {
                         @Override
                         public void onFailure(Response response, Throwable throwable) {
-                            if (callback != null)
-                                callback.onFailure(response, throwable);
+//                            if (callback != null)
+//                                callback.onFailure(response, throwable);
                         }
 
                         @Override
@@ -1383,6 +1386,9 @@ public class TNApiModel extends TNApi {
 
                         @Override
                         public void onSuccess(Response response, String content) {
+                            String msg = mContext.getString(R.string.saving_entry) +" "+savedSize;
+                            setSaveAllNeedProgressDialog(sendData.size(), msg);
+
 //                            if ((loopIndex+1) == loopMax)
                             if ((loopIndex+loopSize) >= allSize)
                                 callback.onSuccess(response, content);
