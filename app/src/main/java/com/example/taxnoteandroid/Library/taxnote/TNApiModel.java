@@ -906,6 +906,9 @@ public class TNApiModel extends TNApi {
                     Log.e(LTAG, "saveEntry(List) onFailure response.code: " + response.code()
                             + ", message: " + response.message());
                 }
+                if (throwable != null) {
+                    Log.e(LTAG, "saveEntry(List) onFailure throwable msg: "+throwable.getMessage());
+                }
                 if (callback != null)
                     callback.onFailure(response, throwable);
             }
@@ -1370,8 +1373,8 @@ public class TNApiModel extends TNApi {
                     saveEntry(sendData, new AsyncOkHttpClient.ResponseCallback() {
                         @Override
                         public void onFailure(Response response, Throwable throwable) {
-                            if (callback != null)
-                                callback.onFailure(response, throwable);
+//                            if (callback != null)
+//                                callback.onFailure(response, throwable);
                         }
 
                         @Override
@@ -1470,7 +1473,6 @@ public class TNApiModel extends TNApi {
                 + mSummaryDataManager.countNeedSave(true)
                 + mRecurringDataManager.countNeedSave(true)
                 + mEntryDataManager.countNeedSave(true);
-        Log.v("TEST", "saveAllNeedSaveData mLoadProgressMax: "+mLoadProgressMax);
 
         saveAllNeedSaveProjects(new AsyncOkHttpClient.ResponseCallback() {
             @Override
@@ -3155,10 +3157,6 @@ public class TNApiModel extends TNApi {
         if (mLoadingDialog == null) return;
 
         mSaveAllNeedLoadedCount += loadedCount;
-        Log.v("TEST", "setSaveAllNeedProgressDialog mSaveAllNeedLoadedCount: "
-                +mSaveAllNeedLoadedCount
-                +" loadedCount: "+loadedCount
-                +" msg: "+msg);
         int progress = (int)Math.floor((mSaveAllNeedLoadedCount / mLoadProgressMax) * 100);
 
         View view = mLoadingDialog.getDialogView();

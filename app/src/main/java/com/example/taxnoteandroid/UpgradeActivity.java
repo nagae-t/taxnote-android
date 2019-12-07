@@ -783,7 +783,6 @@ public class UpgradeActivity extends DefaultCommonActivity {
                 try {
                     mLoadingProgress.dismissAllowingStateLoss();
                 } catch (Exception ee) {}
-
             }
             if (result == null || subscriptionId == null) return;
             if (isFinishing()) return;
