@@ -23,6 +23,7 @@ import com.example.taxnoteandroid.Library.KeyboardUtil;
 import com.example.taxnoteandroid.Library.UpgradeManger;
 import com.example.taxnoteandroid.Library.ValueConverter;
 import com.example.taxnoteandroid.Library.taxnote.TNApiModel;
+import com.example.taxnoteandroid.Library.zeny.ZNUtils;
 import com.example.taxnoteandroid.dataManager.EntryDataManager;
 import com.example.taxnoteandroid.dataManager.SharedPreferencesManager;
 import com.example.taxnoteandroid.databinding.ActivityEntryEditBinding;
@@ -154,8 +155,8 @@ public class EntryEditActivity extends DefaultCommonActivity {
         setPriceView();
         setDeleteView();
 
-        // コピー用画面ならUIを調整
-        if (mIsCopy) {
+        // コピー用画面ならUIを調整 / Taxnoteのみ
+        if (mIsCopy && !ZNUtils.isZeny()) {
             binding.bottomCtrlLayout.setVisibility(View.GONE);
             binding.enterEntry.setVisibility(View.VISIBLE);
             binding.enterEntry.setOnClickListener(new View.OnClickListener() {
