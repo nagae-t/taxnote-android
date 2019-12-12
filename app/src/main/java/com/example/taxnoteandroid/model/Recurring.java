@@ -54,4 +54,21 @@ public class Recurring {
     // not column
     public int viewType;
     public String titleName;
+
+    public String toString() {
+        return "Recurring{" +
+                "id=" + id +
+                ", order=" + order +
+                ", dateIndex=" + dateIndex +
+                ", price=" + price +
+                ", deleted=" + deleted +
+                ", isExpense=" + isExpense +
+                ", needSave=" + needSave +
+                ", needSync=" + needSync +
+                ", uuid='" + uuid + '\'' +
+                ", memo='" + memo + '\'' +
+                ", timezone=" + timezone +
+                ", memo=" + memo +
+                '}';
+    }
 }
