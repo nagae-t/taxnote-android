@@ -780,7 +780,7 @@ public class TNApiModel extends TNApi {
             formBuilder = formBuilder
                     .add(indexKey+"[uuid]", rec.uuid)
                     .add(indexKey+"[date]", String.valueOf(rec.dateIndex))
-                    .add(indexKey+"[timezone]", String.valueOf(rec.dateIndex))
+                    .add(indexKey+"[timezone]", rec.timezone)
                     .add(indexKey+"[memo]", memo)
                     .add(indexKey+"[price]", String.valueOf(rec.price))
                     .add(indexKey+"[is_expense]", String.valueOf(rec.isExpense))
