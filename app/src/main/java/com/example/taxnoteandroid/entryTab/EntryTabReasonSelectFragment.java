@@ -609,7 +609,9 @@ public class EntryTabReasonSelectFragment extends Fragment {
         public void onClick_Footer(View view) {
             final Context context = getContext();
             final View textInputView = LayoutInflater.from(context).inflate(R.layout.dialog_text_input, null);
-            final EditText editText = (EditText) textInputView.findViewById(R.id.edit); // 2017/01/23 E.Nozaki change the scope for editText since this is the component that should have a focus.
+            final EditText editText = textInputView.findViewById(R.id.edit);
+            final EditText editDescText = textInputView.findViewById(R.id.edit_desc);
+            editDescText.setVisibility(View.VISIBLE);
 
             new AlertDialog.Builder(context)
                     .setView(textInputView)
@@ -620,8 +622,10 @@ public class EntryTabReasonSelectFragment extends Fragment {
 
                             try {
                                 String newName = editText.getText().toString();
+                                String newDesc = editDescText.getText().toString();
 
-                                KeyboardUtil.hideKeyboard(getActivity(), editText); // 2017/01/24 E.Nozaki Hide keyboard.
+                                KeyboardUtil.hideKeyboard(getActivity(), editText);
+                                KeyboardUtil.hideKeyboard(getActivity(), editDescText);
 
                                 // Check empty
                                 if (newName.isEmpty()) {
@@ -635,6 +639,7 @@ public class EntryTabReasonSelectFragment extends Fragment {
 
                                 Reason reason = new Reason();
                                 reason.name = newName;
+                                reason.details = newDesc;
                                 reason.uuid = UUID.randomUUID().toString();
 
                                 if (reasonList.isEmpty()) {

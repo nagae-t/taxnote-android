@@ -810,8 +810,13 @@ public class DialogManager {
         final View dialogView = LayoutInflater.from(context)
                 .inflate(R.layout.dialog_edit_cate_input, null);
         final EditText editText = dialogView.findViewById(R.id.edit);
+        final EditText editDescText = dialogView.findViewById(R.id.edit_desc);
         final String oldName = (reason != null) ? reason.name : account.name;
         editText.setText(oldName);
+        if (reason != null) {
+            editDescText.setVisibility(View.VISIBLE);
+            editDescText.setText(reason.details);
+        }
 
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(activity)
                 .setView(dialogView)
@@ -822,6 +827,7 @@ public class DialogManager {
                         KeyboardUtil.hideKeyboard(activity, editText);
 
                         String inputName = editText.getText().toString();
+                        String inputDesc = editDescText.getText().toString();
 
                         if (reason != null) {
                             ReasonDataManager reasonManager = new ReasonDataManager(context);
@@ -834,7 +840,8 @@ public class DialogManager {
                                         reason, _reason, null, null);
                                 return;
                             } else {
-                                reasonManager.updateName(reason.id, inputName);
+//                                reasonManager.updateName(reason.id, inputName);
+                                reasonManager.updateNameDesc(reason.id, inputName, inputDesc);
                                 apiModel.updateReason(reason.uuid, null);
                             }
                         }

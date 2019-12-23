@@ -72,6 +72,7 @@
     <string name="confirm_subj_comb_message_again">「%1$s」を使用した入力データ%3$d件が「%2$s」に更新されます。\n科目を結合しますか？</string>
     <string name="rename_subj_comb_btn">科目を結合する</string>
     <string name="category_name">科目名</string>
+    <string name="category_desc">科目の説明</string>
     <string name="combined_categories">科目を結合しました。</string>
 
     //--------------------------------------------------------------//

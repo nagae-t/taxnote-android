@@ -130,6 +130,13 @@ public class ReasonDataManager {
                 .needSync(true)
                 .execute();
     }
+    public int updateNameDesc(long id, String name, String desc) {
+        return ormaDatabase.updateReason().idEq(id)
+                .name(name)
+                .details(desc)
+                .needSync(true)
+                .execute();
+    }
 
     public int updateOrder(long id, int order) {
         return ormaDatabase.updateReason().idEq(id)
