@@ -649,7 +649,6 @@ public class EntryTabReasonSelectFragment extends Fragment {
                                 }
                                 reason.isExpense = isExpense;
                                 reason.project = project;
-                                reason.details = "";
 
                                 long id = reasonDataManager.save(reason);
 

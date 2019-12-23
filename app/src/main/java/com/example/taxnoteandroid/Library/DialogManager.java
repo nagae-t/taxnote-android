@@ -833,7 +833,7 @@ public class DialogManager {
                             ReasonDataManager reasonManager = new ReasonDataManager(context);
                             Reason _reason = reasonManager.findByName(inputName);
                             // Check if Entry data has this reason already
-                            if (_reason != null) {
+                            if (_reason != null && _reason.id != reason.id) {
                                 int countTarget = entryManager.countByReason(reason);
                                 confirmCategoryComb(activity, listener,
                                         false, countTarget,
@@ -849,7 +849,7 @@ public class DialogManager {
                             AccountDataManager accManager = new AccountDataManager(context);
                             Account _account = accManager.findByName(inputName);
                             // Check if Entry data has this account already
-                            if (_account != null) {
+                            if (_account != null && _account.id != account.id) {
                                 int countTarget = entryManager.countByAccount(account);
                                 confirmCategoryComb(activity, listener,
                                         true, countTarget,
