@@ -561,7 +561,12 @@ public class EntryTabReasonSelectFragment extends Fragment {
                     RowListWithDetailsItemBinding binding = (RowListWithDetailsItemBinding) obj;
                     binding.title.setText(reason.name);
                     binding.details.setText(reason.details);
-                    binding.details.setVisibility(TextUtils.isEmpty(reason.details) ? View.GONE : View.VISIBLE);
+                    String reasonDesc = reason.details;
+                    if (reason.details != null) {
+                        reasonDesc = reason.details.replace(" ", "");
+                        reasonDesc = reasonDesc.replace("　", "");
+                    }
+                    binding.details.setVisibility(TextUtils.isEmpty(reasonDesc) ? View.GONE : View.VISIBLE);
                     this.itemView.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
