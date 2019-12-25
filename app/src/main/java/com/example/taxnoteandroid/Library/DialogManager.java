@@ -810,8 +810,13 @@ public class DialogManager {
         final View dialogView = LayoutInflater.from(context)
                 .inflate(R.layout.dialog_edit_cate_input, null);
         final EditText editText = dialogView.findViewById(R.id.edit);
+        final EditText editDescText = dialogView.findViewById(R.id.edit_desc);
         final String oldName = (reason != null) ? reason.name : account.name;
         editText.setText(oldName);
+        if (reason != null) {
+            editDescText.setVisibility(View.VISIBLE);
+            editDescText.setText(reason.details);
+        }
 
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(activity)
                 .setView(dialogView)
@@ -822,19 +827,21 @@ public class DialogManager {
                         KeyboardUtil.hideKeyboard(activity, editText);
 
                         String inputName = editText.getText().toString();
+                        String inputDesc = editDescText.getText().toString();
 
                         if (reason != null) {
                             ReasonDataManager reasonManager = new ReasonDataManager(context);
                             Reason _reason = reasonManager.findByName(inputName);
                             // Check if Entry data has this reason already
-                            if (_reason != null) {
+                            if (_reason != null && _reason.id != reason.id) {
                                 int countTarget = entryManager.countByReason(reason);
                                 confirmCategoryComb(activity, listener,
                                         false, countTarget,
                                         reason, _reason, null, null);
                                 return;
                             } else {
-                                reasonManager.updateName(reason.id, inputName);
+//                                reasonManager.updateName(reason.id, inputName);
+                                reasonManager.updateNameDesc(reason.id, inputName, inputDesc);
                                 apiModel.updateReason(reason.uuid, null);
                             }
                         }
@@ -842,7 +849,7 @@ public class DialogManager {
                             AccountDataManager accManager = new AccountDataManager(context);
                             Account _account = accManager.findByName(inputName);
                             // Check if Entry data has this account already
-                            if (_account != null) {
+                            if (_account != null && _account.id != account.id) {
                                 int countTarget = entryManager.countByAccount(account);
                                 confirmCategoryComb(activity, listener,
                                         true, countTarget,

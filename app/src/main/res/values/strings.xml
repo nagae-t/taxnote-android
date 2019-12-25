@@ -75,6 +75,7 @@
     <string name="confirm_subj_comb_message_again">Are you sure to combine to this category? %3$d entries using [%1$s] also will be updated to entries with [%2$s].</string>
     <string name="rename_subj_comb_btn">Combine Categories</string>
     <string name="category_name">Category Name</string>
+    <string name="category_desc">Descriptions</string>
     <string name="combined_categories">Combined Categories!</string>
 
 
@@ -458,7 +459,7 @@
     <string name="cloud_purchase_status">Taxnote Cloud</string>
     <string name="cloud_purchase_status_on">[Active] Manage</string>
     <string name="cloud_purchase_status_off">[Expired] Subscribe</string>
-    <string name="taxnote_cloud_desc">Monthly subscription with following features.\n1. Multiple Accounts\n2. Cloud Sync with different devices(auto-backup)\n3. Recurring Entries\n4. Bar Charts</string>
+    <string name="taxnote_cloud_desc">Monthly subscription with following features.\n1. Multiple Accounts\n2. Cloud Sync with different devices(auto-backup)\n3. Recurring Entries\n4. Bar Charts\n\nFor Taxnote Cloud only, you can use one week free trial.</string>
     <string name="add_project_without_cloud">You need to subscribe to Taxnote Cloud to use multiple books.  You can also try it with 10 entries limit.</string>
     <string name="not_cloud_input_limit_message">You have reached the 10 entries limit for Taxnote Cloud Trial.  Change to the first book in the settings or please subscribe to Taxnote Cloud to use additional books.</string>
     <string name="bar_graph_cloud_required_message">Please upgrade to Taxnote Cloud to use the bar charts. (You can try Income and Expense bar charts for free)</string>

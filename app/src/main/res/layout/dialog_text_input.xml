@@ -9,5 +9,13 @@
         android:id="@+id/edit"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:inputType="text" />
+        android:inputType="text"
+        android:hint="@string/category_name"/>
+    <EditText
+        android:id="@+id/edit_desc"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="text"
+        android:visibility="gone"
+        android:hint="@string/category_desc"/>
 </LinearLayout>
