@@ -451,7 +451,7 @@ public class DialogManager {
         EntryDataManager entryDataManager = new EntryDataManager(context);
         List<Entry> entries = entryDataManager.findAll(null, true);
 
-        if (entries.size() < 4) {
+        if (entries.size() < 10) {
             return;
         }
 
