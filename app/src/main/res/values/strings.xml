@@ -222,7 +222,7 @@
     // -- Helpshift --
     //--------------------------------------------------------------//
 
-    <string name="hs__new_conversation_hint">Feel free to ask me anything including questions or requests.  I will get back to you within 24 hours normally.</string>
+    <string name="hs__new_conversation_hint">Feel free to ask me anything including questions or requests.</string>
     <string name="hs__new_conversation_header">Ask Anything</string>
     <string name="hs__conversation_started_message">Thanks for your message!  I get back to you shortly and you will get a pop message within the app.</string>
     <string name="hs__conversation_detail_error">Search</string>

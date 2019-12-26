@@ -322,6 +322,13 @@ public class DialogManager {
             return;
         }
 
+        EntryDataManager entryDataManager = new EntryDataManager(context);
+        List<Entry> entries = entryDataManager.findAll(null, true);
+
+        if (entries.size() < 7) {
+            return;
+        }
+
         SharedPreferencesManager.saveAskAnythingMessageDone(context);
 
         // Custom Alert
@@ -336,11 +343,7 @@ public class DialogManager {
         dialogFragment.setDialogListener(new TNSimpleDialogFragment.TNSimpleDialogListener() {
             @Override
             public void onPositiveBtnClick(DialogInterface dialogInterface, int i, String tag) {
-                if (ZNUtils.isZeny()) {
-                    Support.showFAQs((Activity) context);
-                } else {
-                    Support.showFAQSection((Activity) context, "22");
-                }
+                Support.showFAQs((Activity) context);
                 dialogInterface.dismiss();
             }
 

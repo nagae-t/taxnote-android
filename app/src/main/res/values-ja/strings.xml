@@ -219,7 +219,7 @@
     //--------------------------------------------------------------//
 
     // English対応したら消す
-    <string name="hs__new_conversation_hint">要望・質問はお気軽に。24時間以内に作者の梅本が直接返信させてもらいます。(右上のボタンから写真の添付が可能です)</string>
+    <string name="hs__new_conversation_hint">要望・質問はお気軽に。作者の梅本が直接返信させてもらいます。(右上のボタンから写真の添付が可能です)</string>
     <string name="hs__new_conversation_header">要望・質問を送る</string>
     <string name="hs__conversation_started_message">返信はアプリ内のアラートでおしらせします。</string>
     <string name="hs__conversation_detail_error">検索</string>
