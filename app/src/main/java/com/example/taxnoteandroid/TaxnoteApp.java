@@ -104,6 +104,11 @@ public class TaxnoteApp extends MultiDexApplication {
         FOREGROUND                // app is foreground
     }
 
+    // readonly
+    public AppStatus getAppStatus() {
+        return mAppStatus;
+    }
+
     public class MyActivityLifecycleCallbacks implements ActivityLifecycleCallbacks {
 
         // running activity count
