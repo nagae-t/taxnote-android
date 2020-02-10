@@ -108,6 +108,21 @@
         <android.support.v4.widget.Space
             android:layout_width="match_parent"
             android:layout_height="1dp" />
+        <Switch
+            style="@style/font_style_standard"
+            android:background="@drawable/selector_background_colors"
+            android:id="@+id/passcode_switch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:minHeight="@dimen/cell_height_standard"
+            android:paddingEnd="16dp"
+            android:paddingStart="16dp"
+            android:textColor="@color/secondary_text"
+            android:text="@string/passcode_button" />
+        <android.support.v4.widget.Space
+            android:layout_width="match_parent"
+            android:layout_height="1dp" />
 
         <TextView
             style="@style/font_style_standard"

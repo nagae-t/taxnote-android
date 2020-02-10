@@ -78,6 +78,13 @@ public class ProjectDataManager {
         return project.decimal;
     }
 
+    public boolean getPasscodeStatus() {
+
+        String currentProjectUuid   = SharedPreferencesManager.getUuidForCurrentProject(mContext);
+        Project project             = findByUuid(currentProjectUuid);
+        return project.passcode;
+    }
+
     public List<Project> findAll() {
         List<Project> projectList = ormaDatabase.selectFromProject().toList();
 
@@ -151,6 +158,13 @@ public class ProjectDataManager {
     public int updateDecimal(Project project, boolean decimalStatus) {
         return ormaDatabase.updateProject().idEq(project.id)
                 .decimal(decimalStatus)
+                .needSync(true)
+                .execute();
+    }
+
+    public int updatePasscode(Project project, boolean passcodeStatus) {
+        return ormaDatabase.updateProject().idEq(project.id)
+                .passcode(passcodeStatus)
                 .needSync(true)
                 .execute();
     }

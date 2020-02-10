@@ -9,19 +9,15 @@ import android.security.keystore.KeyGenParameterSpec;
 import android.security.keystore.KeyPermanentlyInvalidatedException;
 import android.security.keystore.KeyProperties;
 import android.security.keystore.UserNotAuthenticatedException;
+import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
-import android.widget.Toast;
 
 import com.example.taxnoteandroid.dataManager.ProjectDataManager;
 import com.example.taxnoteandroid.dataManager.SharedPreferencesManager;
+import com.example.taxnoteandroid.model.Project;
 
-import java.io.IOException;
-import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
 import java.security.KeyStore;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
-import java.security.NoSuchProviderException;
-import java.security.cert.CertificateException;
 
 import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
@@ -35,7 +31,7 @@ public class DefaultCommonActivity extends AppCompatActivity {
 
     private static final String KEY_NAME = "taxnote_key";
     private static final byte[] SECRET_BYTE_ARRAY = new byte[] {1, 2, 3, 4, 5, 6};
-    private static final int AUTHENTICATION_DURATION_SECONDS = 10;
+    private static final int AUTHENTICATION_DURATION_SECONDS = 2;
     private KeyguardManager mKeyguardManager;
 
     @Override
@@ -50,91 +46,76 @@ public class DefaultCommonActivity extends AppCompatActivity {
         super.onResume();
         TaxnoteApp app = (TaxnoteApp) getApplication();
         if (app.getAppStatus() == TaxnoteApp.AppStatus.RETURNED_TO_FOREGROUND) {
-            mKeyguardManager = (KeyguardManager) getSystemService(Context.KEYGUARD_SERVICE);
-            if (!mKeyguardManager.isKeyguardSecure()) {
-                return;
+            // パスコードロック(6系以降のみ対象)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                ProjectDataManager projectDataManager = new ProjectDataManager(this);
+                Project project = projectDataManager.findCurrent();
+                if (project.passcode) {
+                    mKeyguardManager = (KeyguardManager) getSystemService(Context.KEYGUARD_SERVICE);
+                    if (mKeyguardManager.isKeyguardSecure()) {
+                        tryEncrypt();
+                    }
+                }
             }
-            createKey();
-            tryEncrypt();
         }
     }
 
     /**
      * セキュリティキーの作成.
      */
+    @RequiresApi(api = Build.VERSION_CODES.M)
     private void createKey() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            try {
-                KeyStore keyStore = KeyStore.getInstance("AndroidKeyStore");
-                keyStore.load(null);
-                KeyGenerator keyGenerator = KeyGenerator.getInstance(
-                        KeyProperties.KEY_ALGORITHM_AES, "AndroidKeyStore");
-                keyGenerator.init(new KeyGenParameterSpec.Builder(KEY_NAME,
-                        KeyProperties.PURPOSE_ENCRYPT | KeyProperties.PURPOSE_DECRYPT)
-                        .setBlockModes(KeyProperties.BLOCK_MODE_CBC)
-                        .setUserAuthenticationRequired(true)
-                        .setUserAuthenticationValidityDurationSeconds(AUTHENTICATION_DURATION_SECONDS)
-                        .setEncryptionPaddings(KeyProperties.ENCRYPTION_PADDING_PKCS7)
-                        .build());
-                keyGenerator.generateKey();
-            } catch (NoSuchAlgorithmException | NoSuchProviderException
-                    | InvalidAlgorithmParameterException | KeyStoreException
-                    | CertificateException | IOException e) {
-                // TODO: 例外発生時の挙動
-                throw new RuntimeException("Failed to create a symmetric key", e);
-            }
+        try {
+            KeyStore keyStore = KeyStore.getInstance("AndroidKeyStore");
+            keyStore.load(null);
+            KeyGenerator keyGenerator = KeyGenerator.getInstance(
+                    KeyProperties.KEY_ALGORITHM_AES, "AndroidKeyStore");
+            keyGenerator.init(new KeyGenParameterSpec.Builder(KEY_NAME,
+                    KeyProperties.PURPOSE_ENCRYPT | KeyProperties.PURPOSE_DECRYPT)
+                    .setBlockModes(KeyProperties.BLOCK_MODE_CBC)
+                    .setUserAuthenticationRequired(true)
+                    .setUserAuthenticationValidityDurationSeconds(AUTHENTICATION_DURATION_SECONDS)
+                    .setEncryptionPaddings(KeyProperties.ENCRYPTION_PADDING_PKCS7)
+                    .build());
+            keyGenerator.generateKey();
+        } catch (Exception e) {
+            // TODO: 例外発生時の挙動
+            throw new RuntimeException("Failed to create a symmetric key", e);
         }
     }
 
     /**
      * 認証画面を表示.
      */
+    @RequiresApi(api = Build.VERSION_CODES.M)
     private void tryEncrypt() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            try {
-                KeyStore keyStore = KeyStore.getInstance("AndroidKeyStore");
-                keyStore.load(null);
-                SecretKey secretKey = (SecretKey) keyStore.getKey(KEY_NAME, null);
-                Cipher cipher = Cipher.getInstance(KeyProperties.KEY_ALGORITHM_AES
-                        + "/" + KeyProperties.BLOCK_MODE_CBC
-                        + "/" + KeyProperties.ENCRYPTION_PADDING_PKCS7
-                );
-                cipher.init(Cipher.ENCRYPT_MODE, secretKey);
-                cipher.doFinal(SECRET_BYTE_ARRAY);
-            } catch (UserNotAuthenticatedException e) {
-                // 要認証
-                Intent intent = mKeyguardManager.createConfirmDeviceCredentialIntent(null, null);
-                if (intent != null) {
-                    startActivity(intent);
-                }
-            } catch (KeyPermanentlyInvalidatedException e) {
-                // セキュリティキーが無効
-                Toast.makeText(this, "Keys are invalidated after created. Retry the purchase\n"
-                                + e.getMessage(),
-                        Toast.LENGTH_LONG).show();
-            } catch (Exception e) {
-                // TODO: 例外発生時の挙動
-                throw new RuntimeException(e);
+        try {
+            KeyStore keyStore = KeyStore.getInstance("AndroidKeyStore");
+            keyStore.load(null);
+            SecretKey secretKey = (SecretKey) keyStore.getKey(KEY_NAME, null);
+            Cipher cipher = Cipher.getInstance(KeyProperties.KEY_ALGORITHM_AES
+                    + "/" + KeyProperties.BLOCK_MODE_CBC
+                    + "/" + KeyProperties.ENCRYPTION_PADDING_PKCS7
+            );
+            cipher.init(Cipher.ENCRYPT_MODE, secretKey);
+            cipher.doFinal(SECRET_BYTE_ARRAY);
+        } catch (UserNotAuthenticatedException e) {
+            // 要認証
+            Intent intent = mKeyguardManager.createConfirmDeviceCredentialIntent(null, null);
+            if (intent != null) {
+                startActivity(intent);
             }
-        } else {
-            try {
-                KeyStore keyStore = KeyStore.getInstance("AndroidKeyStore");
-                keyStore.load(null);
-                SecretKey secretKey = (SecretKey) keyStore.getKey(KEY_NAME, null);
-                Cipher cipher = Cipher.getInstance(KeyProperties.KEY_ALGORITHM_AES
-                        + "/" + KeyProperties.BLOCK_MODE_CBC
-                        + "/" + KeyProperties.ENCRYPTION_PADDING_PKCS7
-                );
-                cipher.init(Cipher.ENCRYPT_MODE, secretKey);
-                cipher.doFinal(SECRET_BYTE_ARRAY);
-            } catch (Exception e) {
-                // UserNotAuthenticatedException, KeyPermanentlyInvalidatedException が使えないため、
-                // 例外発生 = 要認証、とする
-                Intent intent = mKeyguardManager.createConfirmDeviceCredentialIntent(null, null);
-                if (intent != null) {
-                    startActivity(intent);
-                }
-            }
+        } catch (KeyPermanentlyInvalidatedException e) {
+            // Keys are invalidated after created. Retry the purchase.
+            createKey();
+            tryEncrypt();
+        } catch (InvalidKeyException e) {
+            // Keys are not created.
+            createKey();
+            tryEncrypt();
+        } catch (Exception e) {
+            // TODO: 例外発生時の挙動
+            throw new RuntimeException(e);
         }
     }
 }

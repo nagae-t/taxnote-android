@@ -26,6 +26,9 @@ public class Project {
     @Column
     public boolean decimal;
 
+    @Column(defaultExpr = "0")
+    public boolean passcode;
+
     @Column
     public boolean deleted;
 

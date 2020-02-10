@@ -118,6 +118,7 @@ public class SettingsTabFragment extends Fragment {
         setUpgradeView();
         setMultipleProject();
         setDecimalSwitch();
+        setPasscodeSwitch();
         setAlertInputForget();
         setDataBackup();
         setHelpViews();
@@ -564,6 +565,24 @@ public class SettingsTabFragment extends Fragment {
             @Override
             public void onCheckedChanged(CompoundButton buttonView,boolean isChecked) {
                 projectDataManager.updateDecimal(project, isChecked);
+
+                mApiModel.updateProject(project.uuid, null);
+                BroadcastUtil.sendReloadReport(getActivity());
+            }
+        });
+    }
+
+    private void setPasscodeSwitch() {
+
+        // Set current decimal status
+        final ProjectDataManager projectDataManager   = new ProjectDataManager(getActivity());
+        final Project project                         = projectDataManager.findCurrent();
+        binding.passcodeSwitch.setChecked(project.passcode);
+
+        binding.passcodeSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView,boolean isChecked) {
+                projectDataManager.updatePasscode(project, isChecked);
 
                 mApiModel.updateProject(project.uuid, null);
                 BroadcastUtil.sendReloadReport(getActivity());
