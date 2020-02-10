@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -574,7 +575,13 @@ public class SettingsTabFragment extends Fragment {
 
     private void setPasscodeSwitch() {
 
-        // Set current decimal status
+        // under Android 6.0(API level 23)
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+            binding.passcodeSwitch.setVisibility(View.GONE);
+            return;
+        }
+
+        // Set current passcode status
         final ProjectDataManager projectDataManager   = new ProjectDataManager(getActivity());
         final Project project                         = projectDataManager.findCurrent();
         binding.passcodeSwitch.setChecked(project.passcode);
