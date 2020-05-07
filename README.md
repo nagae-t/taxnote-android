@@ -1,5 +1,6 @@
 # Taxnote_Android
 
+https://www.taxnoteapp.com/
 
 ## 開発時間の測り方
 相談する時間を含め、自分で測ってもらい、issueの進捗に毎回、今までのトータル時間を下記のように書いてもらえれば。
