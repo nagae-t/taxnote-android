@@ -22,8 +22,6 @@ import com.helpshift.support.Support;
 import java.util.Calendar;
 import java.util.List;
 
-import io.fabric.sdk.android.Fabric;
-
 /**
  * Created by Eiichi on 2017/01/17.
  */
@@ -60,9 +58,6 @@ public class TaxnoteApp extends MultiDexApplication {
     public void onCreate() {
         super.onCreate();
         singleton = this;
-
-        // Fabric
-        Fabric.with(this, new Crashlytics());
 
         // Orma database
         TaxnoteApp.ormaDatabase = OrmaDatabase.builder(getApplicationContext())
