@@ -47,6 +47,7 @@ import com.kobakei.ratethisapp.RateThisApp;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
 
 import java.lang.reflect.Field;
+import java.util.Calendar;
 
 import static com.example.taxnoteandroid.R.string.report;
 import static com.example.taxnoteandroid.TaxnoteConsts.MIXPANEL_TOKEN;
@@ -755,34 +756,49 @@ public class MainActivity extends DefaultCommonActivity
 
         @Override
         protected void onPostExecute(SubscriptionPurchase result) {
-            if (result == null || subscriptionId == null) return;
+            if (subscriptionId == null) return;
+
+            long expiryTime;
+            if (result == null) {
+                // resultが何故か取れない場合があるため、購入時間から有効期限を計算する暫定対応
+                // 購入時間は定期購入継続しても更新されないため、while文で計算
+                if (mPurchase.getPurchaseState() != 0) {
+                    return;
+                }
+                expiryTime = mPurchase.getPurchaseTime();
+                long nowTime = System.currentTimeMillis();
+                while (expiryTime <= nowTime) {
+                    Calendar c = Calendar.getInstance();
+                    c.setTimeInMillis(expiryTime);
+                    if (subscriptionId.equals(UpgradeManger.SKU_TAXNOTE_CLOUD_ID) ||
+                            subscriptionId.equals(UpgradeManger.SKU_ZENY_PREMIUM_ID)) {
+                        c.add(Calendar.MONTH, 1);
+                    } else {
+                        c.add(Calendar.YEAR, 1);
+                    }
+                    expiryTime = c.getTimeInMillis();
+                }
+            } else {
+                expiryTime = result.getExpiryTimeMillis();
+            }
 
             Context context = getApplicationContext();
             switch (subscriptionId) {
                 case UpgradeManger.SKU_TAXNOTE_PLUS_ID:
-                    SharedPreferencesManager.saveTaxnotePlusExpiryTime(
-                            getApplicationContext(), result.getExpiryTimeMillis());
-                    break;
                 case UpgradeManger.SKU_TAXNOTE_PLUS_ID1:
-                    SharedPreferencesManager.saveTaxnotePlusExpiryTime(
-                            context, result.getExpiryTimeMillis());
-                    break;
                 case UpgradeManger.SKU_TAXNOTE_PLUS_ID2:
-                    SharedPreferencesManager.saveTaxnotePlusExpiryTime(
-                            getApplicationContext(), result.getExpiryTimeMillis());
-                    break;
                 case UpgradeManger.SKU_TAXNOTE_PLUS_ID3:
                     SharedPreferencesManager.saveTaxnotePlusExpiryTime(
-                            getApplicationContext(), result.getExpiryTimeMillis());
+                            context, expiryTime);
                     break;
                 case UpgradeManger.SKU_TAXNOTE_CLOUD_ID:
                 case UpgradeManger.SKU_ZENY_PREMIUM_ID:
                     if (ZNUtils.isZeny()) {
                         SharedPreferencesManager.saveZenyPremiumExpiryTime(
-                                context, result.getExpiryTimeMillis());
+                                context, expiryTime);
                     } else {
                         SharedPreferencesManager.saveTaxnoteCloudExpiryTime(
-                                context, result.getExpiryTimeMillis());
+                                context, expiryTime);
                     }
                     new TNApiUser(context).saveCloudPurchaseInfo(
                             mPurchase.getOrderId(), mPurchase.getToken());
