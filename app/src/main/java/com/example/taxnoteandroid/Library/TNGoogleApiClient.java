@@ -13,10 +13,16 @@ import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.services.androidpublisher.AndroidPublisher;
 import com.google.api.services.androidpublisher.AndroidPublisherScopes;
 import com.google.api.services.androidpublisher.model.SubscriptionPurchase;
+import com.mixpanel.android.mpmetrics.MixpanelAPI;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collections;
+
+import static com.example.taxnoteandroid.TaxnoteConsts.MIXPANEL_TOKEN;
 
 /**
  * Created by b0ne on 2017/04/06.
@@ -33,7 +39,19 @@ public class TNGoogleApiClient {
     }
 
     public SubscriptionPurchase getSubscription(String subscriptionId, String purchaseToken) {
+        MixpanelAPI mixpanel =
+                MixpanelAPI.getInstance(mContext, MIXPANEL_TOKEN);
+        JSONObject props = new JSONObject();
+        try {
+            props.put("subscriptionId", subscriptionId);
+            props.put("purchaseToken", purchaseToken);
+        } catch (JSONException e) {
+        }
         if (mPublisher == null) {
+            try {
+                props.put("mPublisher", null);
+            } catch (JSONException e) {
+            }
 
             JsonFactory jsonFactory = JacksonFactory.getDefaultInstance();
             HttpTransport httpTransport = new NetHttpTransport.Builder().build();
@@ -57,9 +75,16 @@ public class TNGoogleApiClient {
                         .build();
             } catch (Exception e) {
                 Log.e("ERROR", "TNGoogleApiClient init : " + e.getLocalizedMessage());
+                try {
+                    props.put("ERROR1", "TNGoogleApiClient init : " + e.getLocalizedMessage());
+                } catch (JSONException je) {
+                }
             }
 
-            if (mPublisher == null) return null;
+            if (mPublisher == null) {
+                mixpanel.track("TNGoogleApiClient getSubscription mPublisher == null", props);
+                return null;
+            }
         }
 
         String packageName = mContext.getPackageName();
@@ -72,10 +97,16 @@ public class TNGoogleApiClient {
 
         } catch (IOException e) {
             Log.e("ERROR", "getSubscription : " + e.getLocalizedMessage());
+            try {
+                props.put("ERROR2", "getSubscription : " + e.getLocalizedMessage());
+            } catch (JSONException je) {
+            }
         }
         if (subs != null) {
+            mixpanel.track("TNGoogleApiClient getSubscription", props);
             return subs;
         }
+        mixpanel.track("TNGoogleApiClient getSubscription subs == null", props);
         return null;
     }
 
