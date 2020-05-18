@@ -1,4 +1,5 @@
 buildscript {
+
     repositories {
         maven { url 'https://maven.fabric.io/public' }
     }
@@ -24,8 +25,8 @@ android {
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
 
-        versionCode 117
-        versionName "1.6.4"
+        versionCode 122
+        versionName "1.6.1"
 
         lintOptions {
             abortOnError false
