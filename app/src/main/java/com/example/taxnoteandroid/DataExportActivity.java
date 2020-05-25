@@ -34,6 +34,7 @@ import static com.example.taxnoteandroid.TaxnoteConsts.EXPORT_CHARACTER_CODE_UTF
 import static com.example.taxnoteandroid.TaxnoteConsts.EXPORT_FORMAT_TYPE_CSV;
 import static com.example.taxnoteandroid.TaxnoteConsts.EXPORT_FORMAT_TYPE_FREEE;
 import static com.example.taxnoteandroid.TaxnoteConsts.EXPORT_FORMAT_TYPE_MFCLOUD;
+import static com.example.taxnoteandroid.TaxnoteConsts.EXPORT_FORMAT_TYPE_PRINT;
 import static com.example.taxnoteandroid.TaxnoteConsts.EXPORT_FORMAT_TYPE_YAYOI;
 import static com.example.taxnoteandroid.TaxnoteConsts.EXPORT_RANGE_TYPE_ALL;
 import static com.example.taxnoteandroid.TaxnoteConsts.EXPORT_RANGE_TYPE_CUSTOM;
@@ -396,11 +397,6 @@ public class DataExportActivity extends DefaultCommonActivity
 
     // 出力実行
     private void exeExportData() {
-        DataExportManager manager = createDataExportManager();
-        manager.export(); // Generate CSV file and send it by email.
-    }
-
-    private DataExportManager createDataExportManager() {
         String format = SharedPreferencesManager.getCurrentExportFormat(DataExportActivity.this);
         String characterCode = SharedPreferencesManager.getCurrentCharacterCode(DataExportActivity.this);
         DataExportManager manager = new DataExportManager(DataExportActivity.this, format, characterCode);
@@ -417,7 +413,7 @@ public class DataExportActivity extends DefaultCommonActivity
             manager.setMemo(mMemoValue);
         }
         if (mIsBalance) manager.setBalance(true);
-        return manager;
+        manager.export(); // Generate CSV file and send it by email.
     }
 
     // check permission
@@ -461,8 +457,23 @@ public class DataExportActivity extends DefaultCommonActivity
 
     // 印刷プレビュー
     private void exePrintData() {
-        DataExportManager manager = createDataExportManager();
-        manager.setTargetName(mTargetName);
+        DataExportManager manager = new DataExportManager(DataExportActivity.this, EXPORT_FORMAT_TYPE_PRINT, EXPORT_CHARACTER_CODE_UTF8);
+        manager.setPeriod(mStartEndDate);
+        if (mTargetCalendar != null) {
+            manager.setPeriod(mStartEndDate);
+            manager.setFromList(true);
+            manager.setExpense(mIsExpense);
+        }
+        if (mReasonName != null) {
+            manager.setReasonName(mReasonName);
+        }
+        if (mMemoValue != null) {
+            manager.setMemo(mMemoValue);
+        }
+        if (mIsBalance) manager.setBalance(true);
+        if (mTargetName != null) {
+            manager.setTargetName(mTargetName);
+        }
         manager.print();
     }
 }

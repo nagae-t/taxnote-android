@@ -187,7 +187,8 @@ public class DataExportManager implements TaxnoteConsts {
 
         this.mode = mode;
 
-        if (mode.compareTo(EXPORT_FORMAT_TYPE_CSV) == 0) { // CSV
+        if (mode.compareTo(EXPORT_FORMAT_TYPE_CSV) == 0 ||
+                mode.compareTo(EXPORT_FORMAT_TYPE_PRINT) == 0) { // CSV
 
             // Zenyは単式簿記
             if (ZNUtils.isZeny()) {
@@ -455,8 +456,7 @@ public class DataExportManager implements TaxnoteConsts {
         return null;
     }
 
-    private File getOutputFile() {
-
+    private String getOutputFileName() {
         String appName = context.getString(R.string.app_name);
         String fileName = appName;
 
@@ -470,6 +470,10 @@ public class DataExportManager implements TaxnoteConsts {
             fileName += "_Free";
         } else if (mode.compareTo(EXPORT_FORMAT_TYPE_MFCLOUD) == 0) { // MF Could
             fileName += "_MFCloud";
+        } else if (mode.compareTo(EXPORT_FORMAT_TYPE_MFCLOUD) == 0) { // MF Could
+            fileName += "_MFCloud";
+        } else if (mode.compareTo(EXPORT_FORMAT_TYPE_PRINT) == 0) { // MF Could
+            fileName += "_Print";
         } else {
             throw new RuntimeException("Invalid Mode : " + mode);
         }
@@ -504,6 +508,12 @@ public class DataExportManager implements TaxnoteConsts {
         } else if (mode.compareTo(EXPORT_FORMAT_TYPE_MFCLOUD) == 0) { // MF Could
             fileName += "_utf8";
         }
+        return fileName;
+    }
+
+    private File getOutputFile() {
+        String appName = context.getString(R.string.app_name);
+        String fileName = getOutputFileName();
 
         // File extension
         if (mode.compareTo(EXPORT_FORMAT_TYPE_YAYOI) == 0) { // 弥生
@@ -774,7 +784,7 @@ public class DataExportManager implements TaxnoteConsts {
     private void createWebPrintJob(WebView webView) {
         PrintManager printManager = (PrintManager) mActivity.getSystemService(Context.PRINT_SERVICE);
 
-        String jobName = "Taxnote";
+        String jobName = getOutputFileName();
 
         PrintDocumentAdapter printAdapter = webView.createPrintDocumentAdapter(jobName);
 
@@ -823,6 +833,9 @@ public class DataExportManager implements TaxnoteConsts {
             this.characterCode = CHARACTER_CODE_UTF_8;
 
         } else if (mode.compareTo(EXPORT_FORMAT_TYPE_MFCLOUD) == 0) { // MF Could
+            this.characterCode = CHARACTER_CODE_UTF_8;
+
+        } else if (mode.compareTo(EXPORT_FORMAT_TYPE_PRINT) == 0) { // print
             this.characterCode = CHARACTER_CODE_UTF_8;
 
         } else {
