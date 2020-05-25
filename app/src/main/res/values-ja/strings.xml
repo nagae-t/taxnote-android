@@ -147,8 +147,6 @@
 
     <string name="data_export">データ出力</string>
     <string name="data_export_start">データを出力する</string>
-    <string name="data_print">データ印刷</string>
-    <string name="data_print_start">データを印刷する</string>
     <string name="data_export_range">出力する期間</string>
     <string name="data_export_all_range">すべての期間</string>
     <string name="data_export_this_month">今月</string>
@@ -166,7 +164,6 @@
     <string name="mfcloud_format">MFクラウド</string>
     <string name="title_activity_data_export_range">DataExportRangeActivity</string>
     <string name="data_export_cant_make_csv">CSVファイルを出力できません。</string>
-    <string name="data_print_cant_make_preview">印刷プレビューを作成できません。</string>
     <string name="data_export_no_valid_mailer">データをメールで送信するために、Android端末でメールが使えるよう設定してください。</string>
     <string name="data_export_mail_title">Taxnoteデータ出力</string>
     <string name="data_export_mail_message_csv">このデータはエクセルやGoogleスプレッドシートなどの表計算ソフトに取り込めるcsv形式です。\n\n文字化けする時はこちらを参考にしてください。\nhttps://goo.gl/JRvqvO</string>
@@ -508,4 +505,10 @@
     <string name="data_export_subject_desc">勘定科目や支払方法を「科目名@補助科目名」と変更すると、補助科目も出力できます。「普通預金@りそな銀行」とすれば、普通預金が科目名、りそな銀行が補助科目となります。「勘定科目名@補助科目名¥税区分名」とすると、税区分も出力できます。詳しくはヘルプをどうぞ。</string>
     <string name="device_permission_denied_msg">アクセス権限が無効になっています。端末の設定をご確認ください</string>
 
+    <!-- //@@@以下、他の言語対応必要 -->
+    <string name="data_print_start">データを印刷する</string>
+    <string name="export_header_business_name_default">事業者名:</string>
+    <string name="export_header_period_default">期間:</string>
+    <string name="export_header_dialog_title">情報を追加しますか？</string>
+    <string name="export_header_dialog_message">帳簿の上に追加する情報を編集できます。事業者名や詳細な期間の追加などにご利用ください。必要ない場合、そのままOKをタップしてください。（合計金額は自動集計されています。）</string>
 </resources>

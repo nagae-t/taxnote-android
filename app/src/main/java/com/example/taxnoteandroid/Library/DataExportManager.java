@@ -1,6 +1,7 @@
 package com.example.taxnoteandroid.Library;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Environment;
@@ -10,11 +11,13 @@ import android.print.PrintManager;
 import android.support.v4.app.ShareCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 import com.example.taxnoteandroid.BuildConfig;
 import com.example.taxnoteandroid.CommonEntryRecyclerAdapter;
+import com.example.taxnoteandroid.ExportHeaderSettingDialogFragment;
 import com.example.taxnoteandroid.Library.zeny.ZNUtils;
 import com.example.taxnoteandroid.R;
 import com.example.taxnoteandroid.TNSimpleDialogFragment;
@@ -77,6 +80,9 @@ public class DataExportManager implements TaxnoteConsts {
     private boolean mIsExpense;
     private boolean mIsBalance;
     private String mTargetName;
+    private String mHeaderBusinessName;
+    private String mHeaderSummary;
+    private String mHeaderPeriod;
 
     public DataExportManager(AppCompatActivity activity) {
         this.mActivity = activity;
@@ -335,6 +341,22 @@ public class DataExportManager implements TaxnoteConsts {
     }
 
     public void export() {
+        if (mode.equals(EXPORT_FORMAT_TYPE_CSV)) {
+            showExportHeaderSettingDialog(new ExportHeaderSettingDialogFragment.OnSubmitListener() {
+                @Override
+                public void onSubmit(DialogInterface dialogInterface, String businessName, String summary, String period) {
+                    mHeaderBusinessName = businessName;
+                    mHeaderSummary = summary;
+                    mHeaderPeriod = period;
+                    exportInternal();
+                }
+            });
+        } else {
+            exportInternal();
+        }
+    }
+
+    private void exportInternal() {
 
         final TNSimpleDialogFragment dialog = DialogManager.getLoading(mActivity, context.getString(R.string.data_export));
         dialog.show(mActivity.getSupportFragmentManager(), null);
@@ -363,6 +385,37 @@ public class DataExportManager implements TaxnoteConsts {
     }
 
     public void print() {
+        showExportHeaderSettingDialog(new ExportHeaderSettingDialogFragment.OnSubmitListener() {
+            @Override
+            public void onSubmit(DialogInterface dialogInterface, String businessName, String summary, String period) {
+                mHeaderBusinessName = businessName;
+                mHeaderSummary = summary;
+                mHeaderPeriod = period;
+                printInternal();
+            }
+        });
+    }
+
+    private void showExportHeaderSettingDialog(ExportHeaderSettingDialogFragment.OnSubmitListener listener) {
+        List<Entry> entries = getSelectedRangeEntries();
+        long totalPrice = 0;
+        for (Entry entry : entries) {
+            totalPrice += entry.isExpense ? -entry.price : entry.price;
+        }
+        String price = ValueConverter.formatPrice(context, totalPrice);
+
+        String defaultSummary = "";
+        if (!TextUtils.isEmpty(mTargetName)) {
+            defaultSummary += mTargetName + " ";
+        }
+        defaultSummary += mActivity.getString(R.string.total) + " " + price;
+        ExportHeaderSettingDialogFragment dialog = ExportHeaderSettingDialogFragment
+                .newInstance(defaultSummary);
+        dialog.setOnSubmitListener(listener);
+        dialog.show(mActivity.getSupportFragmentManager(), null);
+    }
+
+    private void printInternal() {
         WebView webView = new WebView(mActivity);
         webView.setWebViewClient(new WebViewClient() {
 
@@ -393,8 +446,19 @@ public class DataExportManager implements TaxnoteConsts {
 
             List<Entry> entries = getSelectedRangeEntries(); // Get a list of Entry.
 
-            // Output column titles.
+            if (mode.equals(EXPORT_FORMAT_TYPE_CSV)) {
+                if (!TextUtils.isEmpty(mHeaderBusinessName)) {
+                    writer.append("\"" + mHeaderBusinessName + "\"\n");
+                }
+                if (!TextUtils.isEmpty(mHeaderSummary)) {
+                    writer.append("\"" + mHeaderSummary + "\"\n");
+                }
+                if (!TextUtils.isEmpty(mHeaderPeriod)) {
+                    writer.append("\"" + mHeaderPeriod + "\"\n");
+                }
+            }
 
+            // Output column titles.
             if (columnTitles != null) {
                 writer.append(getCSVString(columnTitles, separator) + "\n");
             }
@@ -771,9 +835,10 @@ public class DataExportManager implements TaxnoteConsts {
                 "thead { display:table-header-group }\n" +
                 "</style></head>" +
                 "<body><div style=\"display: table; width: 100%; font-weight: bold;\">" +
-                "<p style=\"text-align: left; display: table-cell;\">" + mTargetName + "</p>" +
-                "<p style=\"text-align: right; display: table-cell;\">合計 " + ValueConverter.formatPrice(context, totalPrice) + "</p>" +
-                "</div><br>";
+                (!TextUtils.isEmpty(mHeaderBusinessName) ? ("<p>" + mHeaderBusinessName + "</p>") : "") +
+                (!TextUtils.isEmpty(mHeaderSummary) ? ("<p>" + mHeaderSummary + "</p>") : "") +
+                (!TextUtils.isEmpty(mHeaderPeriod) ? ("<p>" + mHeaderPeriod + "</p>") : "") +
+                "</div>";
         String footer = "</body></html>";
         htmlString.append(header);
         htmlString.append(table);

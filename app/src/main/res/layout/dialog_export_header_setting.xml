@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:paddingHorizontal="16dp">
+
+        <EditText
+            android:id="@+id/edit_business_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="text"
+            android:text="@string/export_header_business_name_default"
+            android:textSize="@dimen/font_size_standard" />
+
+        <EditText
+            android:id="@+id/edit_summary"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="text"
+            android:textSize="@dimen/font_size_standard" />
+
+        <EditText
+            android:id="@+id/edit_period"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="text"
+            android:text="@string/export_header_period_default"
+            android:textSize="@dimen/font_size_standard" />
+    </LinearLayout>
+</layout>

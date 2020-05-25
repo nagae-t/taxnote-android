@@ -413,6 +413,9 @@ public class DataExportActivity extends DefaultCommonActivity
             manager.setMemo(mMemoValue);
         }
         if (mIsBalance) manager.setBalance(true);
+        if (mTargetName != null) {
+            manager.setTargetName(mTargetName);
+        }
         manager.export(); // Generate CSV file and send it by email.
     }
 
