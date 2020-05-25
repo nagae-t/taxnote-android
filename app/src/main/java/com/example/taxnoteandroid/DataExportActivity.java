@@ -115,7 +115,7 @@ public class DataExportActivity extends DefaultCommonActivity
         Serializable calSerial = receiptIntent.getSerializableExtra(KEY_TARGET_CALENDAR);
         mStartEndDate = new long[]{};
         if (calSerial != null) {
-            mTargetCalendar = (Calendar)calSerial;
+            mTargetCalendar = (Calendar) calSerial;
             mStartEndDate = EntryLimitManager.getStartAndEndDate(this, mPeriodType, mTargetCalendar);
         }
         mReasonName = receiptIntent.getStringExtra(KEY_REASON_NAME);
@@ -173,8 +173,17 @@ public class DataExportActivity extends DefaultCommonActivity
             public void onClick(View view) {
 
                 // ファイル書き込み権限があるかどうか調べる
-                checkPermissionForExport();
+                if (checkPermissionForExport()) {
+                    exeExportData();
+                }
 
+            }
+        });
+
+        binding.dataPrintButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                exePrintData();
             }
         });
 
@@ -196,9 +205,9 @@ public class DataExportActivity extends DefaultCommonActivity
 
         View contentView = LayoutInflater.from(this).inflate(R.layout.export_subject_dialog_layout, null);
         dialogFragment.setDialogView(contentView);
-        Button validBtn = (Button)contentView.findViewById(R.id.subject_valid_btn);
-        Button invalidBtn = (Button)contentView.findViewById(R.id.subject_invalid_btn);
-        Button helpBtn = (Button)contentView.findViewById(R.id.subject_help_btn);
+        Button validBtn = (Button) contentView.findViewById(R.id.subject_valid_btn);
+        Button invalidBtn = (Button) contentView.findViewById(R.id.subject_invalid_btn);
+        Button helpBtn = (Button) contentView.findViewById(R.id.subject_help_btn);
         validBtn.setOnClickListener(exportSubjectBtnOnClick);
         invalidBtn.setOnClickListener(exportSubjectBtnOnClick);
         helpBtn.setOnClickListener(exportSubjectBtnOnClick);
@@ -209,6 +218,7 @@ public class DataExportActivity extends DefaultCommonActivity
                 .add(dialogFragment, TAG_EXPORT_SUBJECT_DIALOG_FRAGMENT)
                 .commitAllowingStateLoss();
     }
+
     // 補助科目の設定
     private View.OnClickListener exportSubjectBtnOnClick = new View.OnClickListener() {
         @Override
@@ -225,7 +235,7 @@ public class DataExportActivity extends DefaultCommonActivity
                     binding.dataExportSubjectVal.setText(R.string.settings_invalid);
                     break;
                 case R.id.subject_help_btn:
-                    Support.showSingleFAQ(DataExportActivity.this,"104");
+                    Support.showSingleFAQ(DataExportActivity.this, "104");
                     break;
             }
             Fragment fragment = getSupportFragmentManager()
@@ -293,7 +303,7 @@ public class DataExportActivity extends DefaultCommonActivity
 
     private void showCharacterCodePicker() {
 
-        CharSequence codes[] = new CharSequence[] {EXPORT_CHARACTER_CODE_UTF8, EXPORT_CHARACTER_CODE_SHIFTJIS};
+        CharSequence codes[] = new CharSequence[]{EXPORT_CHARACTER_CODE_UTF8, EXPORT_CHARACTER_CODE_SHIFTJIS};
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(getResources().getString(R.string.character_code_select_please));
@@ -378,7 +388,7 @@ public class DataExportActivity extends DefaultCommonActivity
         binding.dataExportHelp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Support.showFAQSection(DataExportActivity.this,"36");
+                Support.showFAQSection(DataExportActivity.this, "36");
             }
         });
     }
@@ -386,6 +396,11 @@ public class DataExportActivity extends DefaultCommonActivity
 
     // 出力実行
     private void exeExportData() {
+        DataExportManager manager = createDataExportManager();
+        manager.export(); // Generate CSV file and send it by email.
+    }
+
+    private DataExportManager createDataExportManager() {
         String format = SharedPreferencesManager.getCurrentExportFormat(DataExportActivity.this);
         String characterCode = SharedPreferencesManager.getCurrentCharacterCode(DataExportActivity.this);
         DataExportManager manager = new DataExportManager(DataExportActivity.this, format, characterCode);
@@ -402,18 +417,16 @@ public class DataExportActivity extends DefaultCommonActivity
             manager.setMemo(mMemoValue);
         }
         if (mIsBalance) manager.setBalance(true);
-
-        manager.export(); // Generate CSV file and send it by email.
+        return manager;
     }
 
     // check permission
-    private void checkPermissionForExport() {
+    private boolean checkPermissionForExport() {
         String permissionWriteStorage = Manifest.permission.WRITE_EXTERNAL_STORAGE;
         String permissionReadStorage = Manifest.permission.READ_EXTERNAL_STORAGE;
         switch (PermissionChecker.checkSelfPermission(this, permissionWriteStorage)) {
             case PermissionChecker.PERMISSION_GRANTED:
-                exeExportData();
-                break;
+                return true;
             case PermissionChecker.PERMISSION_DENIED:
                 AppPermission.requestPermissions(this,
                         new String[]{permissionWriteStorage, permissionReadStorage});
@@ -424,6 +437,7 @@ public class DataExportActivity extends DefaultCommonActivity
             default:
                 break;
         }
+        return false;
     }
 
     @Override
@@ -431,7 +445,7 @@ public class DataExportActivity extends DefaultCommonActivity
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
         boolean isGrantedWriteStorage = false;
-        for (int i=0; i<permissions.length; i++) {
+        for (int i = 0; i < permissions.length; i++) {
             if (permissions[i].equals(Manifest.permission.WRITE_EXTERNAL_STORAGE)
                     && grantResults[i] == PermissionChecker.PERMISSION_GRANTED) {
                 isGrantedWriteStorage = true;
@@ -445,4 +459,10 @@ public class DataExportActivity extends DefaultCommonActivity
         }
     }
 
+    // 印刷プレビュー
+    private void exePrintData() {
+        DataExportManager manager = createDataExportManager();
+        manager.setTargetName(mTargetName);
+        manager.print();
+    }
 }

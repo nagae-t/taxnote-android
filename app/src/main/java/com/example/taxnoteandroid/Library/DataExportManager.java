@@ -4,9 +4,14 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Environment;
+import android.print.PrintAttributes;
+import android.print.PrintDocumentAdapter;
+import android.print.PrintManager;
 import android.support.v4.app.ShareCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 
 import com.example.taxnoteandroid.BuildConfig;
 import com.example.taxnoteandroid.CommonEntryRecyclerAdapter;
@@ -71,6 +76,7 @@ public class DataExportManager implements TaxnoteConsts {
     private String mMemo;
     private boolean mIsExpense;
     private boolean mIsBalance;
+    private String mTargetName;
 
     public DataExportManager(AppCompatActivity activity) {
         this.mActivity = activity;
@@ -120,6 +126,10 @@ public class DataExportManager implements TaxnoteConsts {
 
     public void setBalance(boolean val) {
         this.mIsBalance = val;
+    }
+
+    public void setTargetName(String name) {
+        this.mTargetName = name;
     }
 
     private static long[] getThisMonthStartAndEndDate() {
@@ -188,7 +198,7 @@ public class DataExportManager implements TaxnoteConsts {
                 String MemoNameColumn = this.context.getResources().getString(R.string.data_export_details);
 
                 intColumns(5); // CSV column size.
-                setColumnTitles(date, leftAccountNameColumn,expenseNameColumn,incomeNameColumn, MemoNameColumn);
+                setColumnTitles(date, leftAccountNameColumn, expenseNameColumn, incomeNameColumn, MemoNameColumn);
                 setColumn(0, new DateColumn());
                 setColumn(1, new LeftAccountNameColumn());
                 setColumn(2, new LeftAccountPriceColumn());
@@ -351,6 +361,23 @@ public class DataExportManager implements TaxnoteConsts {
         task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
+    public void print() {
+        WebView webView = new WebView(mActivity);
+        webView.setWebViewClient(new WebViewClient() {
+
+            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                return false;
+            }
+
+            @Override
+            public void onPageFinished(WebView view, String url) {
+                createWebPrintJob(view);
+            }
+        });
+
+        webView.loadDataWithBaseURL(null, generateHTML(), "text/HTML", characterCode, null);
+    }
+
     private File generateCsvFile() {
 
         OutputStream streamOut = null;
@@ -502,15 +529,15 @@ public class DataExportManager implements TaxnoteConsts {
             startAndEndDate = startEndDate;
         }
 
-        long startDate  = startAndEndDate[0];
-        long endDate    = startAndEndDate[1];
+        long startDate = startAndEndDate[0];
+        long endDate = startAndEndDate[1];
 
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
                 context.getResources().getString(R.string.date_string_format_for_custom_range),
                 Locale.getDefault());
 
-        String startDateString  = simpleDateFormat.format(startDate);
-        String endDateString    = simpleDateFormat.format(endDate);
+        String startDateString = simpleDateFormat.format(startDate);
+        String endDateString = simpleDateFormat.format(endDate);
 
         return "_" + startDateString + "~" + endDateString;
     }
@@ -519,15 +546,15 @@ public class DataExportManager implements TaxnoteConsts {
         if (startEndDate == null) {
             return context.getString(R.string.divide_by_all);
         }
-        long startDate  = startEndDate[0];
-        long endDate    = startEndDate[1];
+        long startDate = startEndDate[0];
+        long endDate = startEndDate[1];
 
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
                 context.getResources().getString(R.string.date_string_format_to_year_month_day),
                 Locale.getDefault());
 
-        String startDateString  = simpleDateFormat.format(startDate);
-        String endDateString    = simpleDateFormat.format(endDate);
+        String startDateString = simpleDateFormat.format(startDate);
+        String endDateString = simpleDateFormat.format(endDate);
 
         return startDateString + "~" + endDateString;
     }
@@ -575,7 +602,7 @@ public class DataExportManager implements TaxnoteConsts {
         String subjectString = context.getString(R.string.data_export_mail_title);
         if (mode.equals(EXPORT_PROFIT_LOSS_FORMAT_TYPE_CSV)) {
             subjectString = appName + " " + context.getString(R.string.profit_loss_export)
-                + " (" +getReportStartEndDateString()+ ")";
+                    + " (" + getReportStartEndDateString() + ")";
         }
 
         // ShareCompat
@@ -590,7 +617,7 @@ public class DataExportManager implements TaxnoteConsts {
             builder.setType("text/csv");
         }
         builder.setChooserTitle(context.getString(R.string.data_export))
-            .setStream(streamUri);
+                .setStream(streamUri);
 
         // for mail
         builder.setSubject(subjectString)
@@ -685,6 +712,74 @@ public class DataExportManager implements TaxnoteConsts {
         }
 
         return entries;
+    }
+
+    private String generateHTML() {
+        List<Entry> entries = getSelectedRangeEntries();
+        String[] line = new String[columnSize];
+
+        StringBuilder table = new StringBuilder();
+        String tableHeader = "<table border=\"1\" cellpadding=\"5\" cellspacing=\"1\"" +
+                "style=\"font-size: 8pt; line-height: 200%; width: 100%; border-collapse: collapse;\">";
+        String tableFooter = "</tbody></table>";
+        table.append(tableHeader);
+
+        table.append("<thead><tr style=\"font-weight: bold;\">");
+        for (String column : columnTitles) {
+            table.append(String.format("<th>%s</th>", column));
+        }
+        table.append("</tr></thead><tbody>");
+
+        long totalPrice = 0;
+        for (Entry entry : entries) {
+            totalPrice += entry.isExpense ? -entry.price : entry.price;
+
+            setCurrentEntry(entry);
+            resetArray(line);
+
+            table.append("<tr style=\"white-space: nowrap;width: 100px;\">");
+            for (int i = 0; i < columnTitles.length; i++) {
+                if (columns[i] != null) {
+                    String value = columns[i].getValue();
+                    if (value == null) value = " ";
+                    else value = value.replaceAll("^\"|\"$", "");
+                    table.append(String.format("<td>%s</td>", value));
+                }
+            }
+            table.append("</tr>");
+        }
+
+        table.append(tableFooter);
+
+        StringBuilder htmlString = new StringBuilder();
+
+        String header = "<html><head>" +
+                "<style type=\"text/css\">\n" +
+                "table { page-break-inside:auto }\n" +
+                "tr    { page-break-inside:avoid; page-break-after:auto }\n" +
+                "td    { page-break-inside:avoid; page-break-after:auto }\n" +
+                "thead { display:table-header-group }\n" +
+                "</style></head>" +
+                "<body><div style=\"display: table; width: 100%; font-weight: bold;\">" +
+                "<p style=\"text-align: left; display: table-cell;\">" + mTargetName + "</p>" +
+                "<p style=\"text-align: right; display: table-cell;\">合計 " + ValueConverter.formatPrice(context, totalPrice) + "</p>" +
+                "</div><br>";
+        String footer = "</body></html>";
+        htmlString.append(header);
+        htmlString.append(table);
+        htmlString.append(footer);
+        return htmlString.toString();
+    }
+
+    private void createWebPrintJob(WebView webView) {
+        PrintManager printManager = (PrintManager) mActivity.getSystemService(Context.PRINT_SERVICE);
+
+        String jobName = "Taxnote";
+
+        PrintDocumentAdapter printAdapter = webView.createPrintDocumentAdapter(jobName);
+
+        printManager.print(jobName, printAdapter,
+                new PrintAttributes.Builder().build());
     }
 
 
@@ -795,12 +890,12 @@ public class DataExportManager implements TaxnoteConsts {
         @Override
         public String getValue() {
 
-            String valString =  Long.toString(currentEntry.price);
+            String valString = Long.toString(currentEntry.price);
             if (context != null) {
                 if (mode.compareTo(EXPORT_FORMAT_TYPE_FREEE) == 0
-                    || mode.compareTo(EXPORT_FORMAT_TYPE_YAYOI) == 0
-                    || mode.compareTo(EXPORT_FORMAT_TYPE_MFCLOUD) == 0) {
-                    valString = "\"" + currentEntry.price+ "\"";
+                        || mode.compareTo(EXPORT_FORMAT_TYPE_YAYOI) == 0
+                        || mode.compareTo(EXPORT_FORMAT_TYPE_MFCLOUD) == 0) {
+                    valString = "\"" + currentEntry.price + "\"";
                 } else {
                     valString = "\"" + ValueConverter.formatPrice(context, currentEntry.price) + "\"";
                 }
@@ -826,19 +921,19 @@ public class DataExportManager implements TaxnoteConsts {
         @Override
         public String getValue() {
 
-            String valString =  Long.toString(currentEntry.price);
+            String valString = Long.toString(currentEntry.price);
             if (context != null) {
                 if (mode.compareTo(EXPORT_FORMAT_TYPE_FREEE) == 0
                         || mode.compareTo(EXPORT_FORMAT_TYPE_YAYOI) == 0
                         || mode.compareTo(EXPORT_FORMAT_TYPE_MFCLOUD) == 0) {
-                    valString = "\"" + currentEntry.price+ "\"";
+                    valString = "\"" + currentEntry.price + "\"";
                 } else {
                     valString = "\"" + ValueConverter.formatPrice(context, currentEntry.price) + "\"";
                 }
             }
 
             if (ZNUtils.isZeny()) {
-                return currentEntry.isExpense ?  "0" : valString;
+                return currentEntry.isExpense ? "0" : valString;
             } else {
                 return valString;
             }
@@ -857,7 +952,7 @@ public class DataExportManager implements TaxnoteConsts {
         public String getValue() {
             if (mode.equals(EXPORT_PROFIT_LOSS_FORMAT_TYPE_CSV) &&
                     (currentEntry.reasonName == null ||
-                    currentEntry.viewType == CommonEntryRecyclerAdapter.VIEW_ITEM_HEADER)) {
+                            currentEntry.viewType == CommonEntryRecyclerAdapter.VIEW_ITEM_HEADER)) {
                 return "";
             }
             String valueString = Long.toString(totalPrice);
@@ -865,7 +960,7 @@ public class DataExportManager implements TaxnoteConsts {
                 if (mode.compareTo(EXPORT_FORMAT_TYPE_FREEE) == 0
                         || mode.compareTo(EXPORT_FORMAT_TYPE_YAYOI) == 0
                         || mode.compareTo(EXPORT_FORMAT_TYPE_MFCLOUD) == 0) {
-                    valueString = "\"" + totalPrice+ "\"";
+                    valueString = "\"" + totalPrice + "\"";
                 } else {
                     valueString = "\"" + ValueConverter.formatPrice(context, totalPrice) + "\"";
                 }
@@ -908,6 +1003,7 @@ public class DataExportManager implements TaxnoteConsts {
 
         public DebitSubAccountColumn() {
         }
+
         public DebitSubAccountColumn(String _defaultName) {
             this.defaultName = _defaultName;
         }
@@ -926,6 +1022,7 @@ public class DataExportManager implements TaxnoteConsts {
 
         public DebitTaxNameColumn() {
         }
+
         public DebitTaxNameColumn(String _defaultName) {
             this.defaultName = _defaultName;
         }
@@ -944,6 +1041,7 @@ public class DataExportManager implements TaxnoteConsts {
 
         public CreditSubAccountColumn() {
         }
+
         public CreditSubAccountColumn(String _defaultName) {
             this.defaultName = _defaultName;
         }
@@ -960,6 +1058,7 @@ public class DataExportManager implements TaxnoteConsts {
 
         public CreditTaxNameColumn() {
         }
+
         public CreditTaxNameColumn(String _defaultName) {
             this.defaultName = _defaultName;
         }

@@ -27,6 +27,23 @@
             android:textColor="?attr/colorPrimary"
             android:text="@string/data_export_start" />
 
+        <android.support.v4.widget.Space
+            android:layout_width="match_parent"
+            android:layout_height="1dp" />
+
+        <TextView
+            android:background="@drawable/selector_background_colors"
+            style="@style/font_style_standard"
+            android:gravity="center"
+            android:id="@+id/data_print_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="48dp"
+            android:paddingEnd="16dp"
+            android:paddingStart="16dp"
+            android:textColor="?attr/colorPrimary"
+            android:text="@string/data_print_start" />
+
         <!--Export Range Button-->
         <!--Character Code Button-->
 

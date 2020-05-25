@@ -147,6 +147,8 @@
 
     <string name="data_export">データ出力</string>
     <string name="data_export_start">データを出力する</string>
+    <string name="data_print">データ印刷</string>
+    <string name="data_print_start">データを印刷する</string>
     <string name="data_export_range">出力する期間</string>
     <string name="data_export_all_range">すべての期間</string>
     <string name="data_export_this_month">今月</string>
@@ -164,6 +166,7 @@
     <string name="mfcloud_format">MFクラウド</string>
     <string name="title_activity_data_export_range">DataExportRangeActivity</string>
     <string name="data_export_cant_make_csv">CSVファイルを出力できません。</string>
+    <string name="data_print_cant_make_preview">印刷プレビューを作成できません。</string>
     <string name="data_export_no_valid_mailer">データをメールで送信するために、Android端末でメールが使えるよう設定してください。</string>
     <string name="data_export_mail_title">Taxnoteデータ出力</string>
     <string name="data_export_mail_message_csv">このデータはエクセルやGoogleスプレッドシートなどの表計算ソフトに取り込めるcsv形式です。\n\n文字化けする時はこちらを参考にしてください。\nhttps://goo.gl/JRvqvO</string>

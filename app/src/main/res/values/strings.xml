@@ -150,6 +150,8 @@
 
     <string name="data_export">Export</string>
     <string name="data_export_start">Data Export</string>
+    <string name="data_print">Print</string>
+    <string name="data_print_start">Data Print</string>
     <string name="data_export_range">Period</string>
     <string name="data_export_all_range">All</string>
     <string name="data_export_this_month">This Month</string>
@@ -167,6 +169,7 @@
     <string name="mfcloud_format">MFCloud (JP Software)</string>
     <string name="title_activity_data_export_range">DataExportRangeActivity</string>
     <string name="data_export_cant_make_csv">Failed to make a csv file.</string>
+    <string name="data_print_cant_make_preview">Failed to make a print preview.</string>
     <string name="data_export_no_valid_mailer">Please set up email on Android to send data via email.</string>
     <string name="data_export_mail_title">Taxnote Data Export</string>
     <string name="data_export_mail_message_csv">You can open this csv file with spreadsheets like Excel or Google Spreadsheets.</string>
