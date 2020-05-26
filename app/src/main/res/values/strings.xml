@@ -508,4 +508,10 @@
     <string name="data_export_subject_desc">If you name each account and category with @ and ¥, you can export subCategory and taxCategory in CSV.  If you name an account as [Cash@PettyCash@ExcludedTax], account name is Cash, SubAccount name is PettyCash, and taxCategory is ExcludedTax.</string>
     <string name="device_permission_denied_msg">Permission to this feature has been denied.  Please permit the access to Taxnote on Android Settings.</string>
 
+    <string name="data_print_start">Print/PDF</string>
+    <string name="export_header_business_name_default">Name: </string>
+    <string name="export_header_period_default"></string>
+    <string name="export_header_dialog_title">Do you want to add notes?</string>
+    <string name="export_header_dialog_message">You can add any note to the data.  For example, you can add your company name or more detailed date.  Just tap OK if you don't need to.  (The Total has been set automatically.)</string>
+
 </resources>
