@@ -1,11 +1,17 @@
 package com.example.taxnoteandroid.Library;
 
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.support.v7.app.AlertDialog;
 
 import com.example.taxnoteandroid.Library.zeny.ZNUtils;
+import com.example.taxnoteandroid.R;
+import com.example.taxnoteandroid.UpgradeActivity;
 import com.example.taxnoteandroid.dataManager.EntryDataManager;
 import com.example.taxnoteandroid.dataManager.ProjectDataManager;
 import com.example.taxnoteandroid.dataManager.SharedPreferencesManager;
+import com.example.taxnoteandroid.entryTab.InputDataActivity;
 import com.example.taxnoteandroid.model.Entry;
 import com.example.taxnoteandroid.model.Project;
 
@@ -34,6 +40,11 @@ public class EntryLimitManager {
             return false;
         }
 
+        // 初回は31件まで無料で入力可能に
+        if (allowAdditionalEntryForNewUsers(context)) {
+            return false;
+        }
+
         // Get start and end date from the current date
         long[] startAndEndDate  = getStartAndEndDate(date);
 
@@ -46,6 +57,65 @@ public class EntryLimitManager {
         }
 
         return true;
+    }
+
+    private static boolean allowAdditionalEntryForNewUsers(Context context) {
+
+        EntryDataManager entryDataManager   = new EntryDataManager(context);
+        List<Entry> entries                 = entryDataManager.findAll();
+
+        // Show free entry extend message
+        if (entries.size() > 15 && entries.size() < 32) {
+
+            // Show the dialog only one time
+            if (SharedPreferencesManager.isFreeEntryExtendViewDone(context)) {
+                return true;
+            }
+
+            showFreeEntryExtendView(context);
+            SharedPreferencesManager.saveFreeEntryExtendViewDone(context);
+            return false;
+        }
+
+        if (entries.size() < 32) {
+            return true;
+        }
+
+        return false;
+    }
+
+    private static void showFreeEntryExtendView(final Context context) {
+
+        new AlertDialog.Builder(context)
+                .setTitle(context.getResources().getString(R.string.free_limit_extend_title))
+                .setMessage(context.getResources().getString(R.string.free_limit_extend_message))
+                .setPositiveButton(context.getResources().getString(R.string.free_limit_extend_button), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        showFreeEntryExtendDoneView(context);
+                        dialogInterface.dismiss();
+                    }
+                })
+                .show();
+    }
+
+    private static void showFreeEntryExtendDoneView(final Context context) {
+
+        new AlertDialog.Builder(context)
+                .setTitle(context.getResources().getString(R.string.free_limit_extend_done_title))
+                .setMessage(context.getResources().getString(R.string.free_limit_extend_done_message))
+                .setPositiveButton(context.getResources().getString(R.string.benefits_of_upgrade), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                        // Show upgrade activity
+                        Intent intent = new Intent(context, UpgradeActivity.class);
+                        context.startActivity(intent);
+                        dialogInterface.dismiss();
+                    }
+                })
+                .setNegativeButton(context.getResources().getString(R.string.cancel), null)
+                .show();
     }
 
     public static boolean limitNewEntryAddSubProject(Context context) {

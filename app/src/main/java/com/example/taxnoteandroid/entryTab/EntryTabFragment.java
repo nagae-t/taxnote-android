@@ -59,7 +59,9 @@ public class EntryTabFragment extends Fragment {
     public void onResume() {
         super.onResume();
 
-        DialogManager.showBusinessModelMessage(getActivity(), getFragmentManager());
+        // キャンペーンで31件まで入力できる時に説明するから一旦消す
+//        DialogManager.showBusinessModelMessage(getActivity(), getFragmentManager());
+
         DialogManager.showAskAnythingMessage(getActivity(), getFragmentManager());
         DialogManager.showHistoryTabHelpMessage(getActivity(), getFragmentManager());
     }

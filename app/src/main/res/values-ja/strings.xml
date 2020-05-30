@@ -510,4 +510,11 @@
     <string name="export_header_period_default">期間:</string>
     <string name="export_header_dialog_title">情報を追加しますか？</string>
     <string name="export_header_dialog_message">帳簿の上に追加する情報を編集できます。事業者名や詳細な期間の追加などにご利用ください。必要ない場合、そのままOKをタップしてください。（合計金額は自動集計されています。）</string>
+
+    <string name="free_limit_extend_title">無料版の制限について</string>
+    <string name="free_limit_extend_message">現在、キャンペーンとして、最初の31件までは無料で入力可能です。</string>
+    <string name="free_limit_extend_button">無料で入力を続ける</string>
+    <string name="free_limit_extend_done_title">キャンペーン</string>
+    <string name="free_limit_extend_done_message">最初の31件まで無料で入力可能です。\n\nその後は月15件の入力制限がかかるので、Taxnoteプラスをご検討ください。</string>
+
 </resources>

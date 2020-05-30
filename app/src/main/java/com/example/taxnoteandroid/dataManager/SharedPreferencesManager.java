@@ -20,7 +20,8 @@ public class SharedPreferencesManager {
     private static final String EXPORT_RANGE_END_DATE           = "EXPORT_RANGE_END_DATE";
     private static final String TAXNOTE_PLUS_EXPIRY_TIME        = "TAXNOTE_PLUS_EXPIRY_TIME";
     private static final String TAXNOTE_CLOUD_EXPIRY_TIME       = "TAXNOTE_CLOUD_EXPIRY_TIME";
-    private static final String ZENY_PREMIUM_EXPIRY_TIME       = "ZENY_PREMIUM_EXPIRY_TIME";
+    private static final String ZENY_PREMIUM_EXPIRY_TIME        = "ZENY_PREMIUM_EXPIRY_TIME";
+    private static final String FREE_ENTRY_EXTEND_VIEW_KEY      = "FREE_ENTRY_EXTEND_VIEW_KEY";
 
     private static final String HELP_FIRST_LAUNCH_KEY           = "HELP_FIRST_LAUNCH_KEY";
     private static final String HELP_SELECT_SUMMARY_KEY         = "HELP_SELECT_SUMMARY_KEY";
@@ -283,6 +284,14 @@ public class SharedPreferencesManager {
 
     public static long getZenyPremiumExpiryTime(Context context) {
         return getSharedPreferences(context).getLong(ZENY_PREMIUM_EXPIRY_TIME, 0);
+    }
+
+    public static void saveFreeEntryExtendViewDone(Context context) {
+        getSharedPreferences(context).edit().putBoolean(FREE_ENTRY_EXTEND_VIEW_KEY, true).apply();
+    }
+
+    public static boolean isFreeEntryExtendViewDone(Context context) {
+        return getSharedPreferences(context).getBoolean(FREE_ENTRY_EXTEND_VIEW_KEY, false);
     }
 
 

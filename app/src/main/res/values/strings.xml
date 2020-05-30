@@ -514,4 +514,10 @@
     <string name="export_header_dialog_title">Do you want to add notes?</string>
     <string name="export_header_dialog_message">You can add any note to the data.  For example, you can add your company name or more detailed date.  Just tap OK if you don't need to.  (The Total has been set automatically.)</string>
 
+    <string name="free_limit_extend_title">Free Entry Limit</string>
+    <string name="free_limit_extend_message">You can enter up to 31 entries for the first time.</string>
+    <string name="free_limit_extend_button">Continue for free</string>
+    <string name="free_limit_extend_done_title">Free Entry</string>
+    <string name="free_limit_extend_done_message">15 entries/month limit will be set after the first 31 free entries.\n\nPlease subscribe to Taxnote Plus to unlock that.</string>
+
 </resources>
