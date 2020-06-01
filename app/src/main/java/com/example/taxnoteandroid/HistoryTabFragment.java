@@ -260,7 +260,7 @@ public class HistoryTabFragment extends Fragment {
 
                 // Format date to string
                 SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
-                        getResources().getString(R.string.date_string_format_to_year_month_day_weekday),
+                        mContext.getResources().getString(R.string.date_string_format_to_year_month_day_weekday),
                         Locale.getDefault());
                 String dateString = simpleDateFormat.format(entry.date);
 
@@ -299,7 +299,7 @@ public class HistoryTabFragment extends Fragment {
                 }
 
                 // Format the totalPrice
-                headerItem.sumString = ValueConverter.formatPrice(getActivity(), totalPrice);
+                headerItem.sumString = ValueConverter.formatPrice(mContext, totalPrice);
             }
 
             return entryData;
