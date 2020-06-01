@@ -47,6 +47,7 @@ public class EntryEditActivity extends DefaultCommonActivity {
     private String entryUuid;
     private TNApiModel mApiModel;
     private EntryDataManager entryDataManager;
+    private boolean mIsDeleted;
 
     private boolean mIsCopy;
     private boolean mIsCopySaved = false;
@@ -136,11 +137,20 @@ public class EntryEditActivity extends DefaultCommonActivity {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_entry_edit);
         Intent intent = getIntent();
         entry = Parcels.unwrap(intent.getParcelableExtra(Entry.class.getName()));
+        if (entry == null) {
+            finish();
+            return;
+        }
         entryUuid = entry.uuid;
 
         mIsCopy = intent.getBooleanExtra(KEY_IS_COPY, false);
     }
 
+    @Override
+    public void startActivityForResult(Intent intent, int requestCode) {
+        if (mIsDeleted) return;
+        super.startActivityForResult(intent, requestCode);
+    }
 
     //--------------------------------------------------------------//
     //    -- Display Part --
@@ -187,7 +197,7 @@ public class EntryEditActivity extends DefaultCommonActivity {
 
         // Taxnoteクラウド購入なしで追加された帳簿の入力制限あり
         boolean limitNewEntrySubProject = EntryLimitManager.limitNewEntryAddSubProject(this);
-        if ( !UpgradeManger.taxnoteCloudIsActive(this) && limitNewEntrySubProject) {
+        if (!UpgradeManger.taxnoteCloudIsActive(this) && limitNewEntrySubProject) {
             showUpgradeCloudInputLimit();
             return;
         }
@@ -239,6 +249,10 @@ public class EntryEditActivity extends DefaultCommonActivity {
 
         // Load the latest entry
         entry = entryDataManager.findByUuid(entryUuid);
+        if (entry == null) {
+            finish();
+            return;
+        }
 
         binding.setEntry(entry);
         loadCurrentDate();
@@ -353,8 +367,8 @@ public class EntryEditActivity extends DefaultCommonActivity {
 //                    }
 //                });
 
-                final View textInputView    = LayoutInflater.from(EntryEditActivity.this).inflate(R.layout.dialog_text_input, null);
-                final EditText editText     = (EditText) textInputView.findViewById(R.id.edit);
+                final View textInputView = LayoutInflater.from(EntryEditActivity.this).inflate(R.layout.dialog_text_input, null);
+                final EditText editText = (EditText) textInputView.findViewById(R.id.edit);
                 editText.setText(entry.memo);
 
                 new AlertDialog.Builder(EntryEditActivity.this)
@@ -459,6 +473,7 @@ public class EntryEditActivity extends DefaultCommonActivity {
                 .setPositiveButton(getResources().getString(R.string.Delete), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
+                        mIsDeleted = true;
 
                         dialogInterface.dismiss();
 
@@ -500,6 +515,7 @@ public class EntryEditActivity extends DefaultCommonActivity {
                 .setNegativeButton(getResources().getString(R.string.cancel), null)
                 .show();
     }
+
     private void showUpgradeCloudInputLimit() {
         new AlertDialog.Builder(this)
                 .setTitle(R.string.taxnote_cloud_first_free)
@@ -543,7 +559,7 @@ public class EntryEditActivity extends DefaultCommonActivity {
         // コピー用画面を閉じたあと
         // 一度コピーしたらもとの編集画面も閉じる
         if (requestCode == REQUEST_CODE_COPY) {
-            if(resultCode == RESULT_OK){
+            if (resultCode == RESULT_OK) {
                 if (isCopySaved) {
                     finish();
                 }
