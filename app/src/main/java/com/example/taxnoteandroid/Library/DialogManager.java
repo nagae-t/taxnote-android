@@ -44,6 +44,7 @@ import java.util.Locale;
  */
 
 public class DialogManager {
+    private static Toast mToast;
 
     //--------------------------------------------------------------//
     //    -- Snackbar --
@@ -72,18 +73,17 @@ public class DialogManager {
 
         message += " " + priceString;
 
-        Toast toast = Toast.makeText(context, message, Toast.LENGTH_SHORT);
-        toast.setGravity(Gravity.CENTER, 0, 0);
-        toast.show();
+        showToast(context, message);
     }
 
     public static void showToast(Context context, String title) {
-
-        Toast toast = Toast.makeText(context, title, Toast.LENGTH_SHORT);
-        toast.setGravity(Gravity.CENTER, 0, 0);
-        toast.show();
+        if (mToast != null) {
+            mToast.cancel();
+        }
+        mToast = Toast.makeText(context, title, Toast.LENGTH_SHORT);
+        mToast.setGravity(Gravity.CENTER, 0, 0);
+        mToast.show();
     }
-
 
     //--------------------------------------------------------------//
     //    -- AlertDialog --
@@ -424,7 +424,7 @@ public class DialogManager {
     }
 
     public static void showBusinessModelMessage(final Context context, FragmentManager fragmentManager) {
-        
+
         // Skip for Zeny
         if (ZNUtils.isZeny()) {
             return;
@@ -508,7 +508,7 @@ public class DialogManager {
         }
 
         EntryDataManager entryDataManager = new EntryDataManager(context);
-        List<Entry> entries = entryDataManager.findAll( null, true);
+        List<Entry> entries = entryDataManager.findAll(null, true);
 
         if (entries.size() < 5) {
             return;
@@ -529,14 +529,22 @@ public class DialogManager {
             public void onPositiveBtnClick(DialogInterface dialogInterface, int i, String tag) {
                 dialogInterface.dismiss();
             }
+
             @Override
-            public void onNeutralBtnClick(DialogInterface dialogInterface, int i, String tag) {}
+            public void onNeutralBtnClick(DialogInterface dialogInterface, int i, String tag) {
+            }
+
             @Override
-            public void onNegativeBtnClick(DialogInterface dialogInterface, int i, String tag) {}
+            public void onNegativeBtnClick(DialogInterface dialogInterface, int i, String tag) {
+            }
+
             @Override
-            public void onDialogCancel(DialogInterface dialogInterface, String tag) {}
+            public void onDialogCancel(DialogInterface dialogInterface, String tag) {
+            }
+
             @Override
-            public void onDialogDismiss(DialogInterface dialogInterface, String tag) {}
+            public void onDialogDismiss(DialogInterface dialogInterface, String tag) {
+            }
         });
 
         dialogFragment.show(fragmentManager, null);
@@ -549,8 +557,8 @@ public class DialogManager {
 
     public static void showReleaseNoteAfterUpdate(final Context context, FragmentManager fragmentManager) {
 
-        String lastVersionName      = SharedPreferencesManager.getLastVersionName(context);
-        String currentVersionName   = com.example.taxnoteandroid.BuildConfig.VERSION_NAME;
+        String lastVersionName = SharedPreferencesManager.getLastVersionName(context);
+        String currentVersionName = com.example.taxnoteandroid.BuildConfig.VERSION_NAME;
 
         // Skip for the first run
         if (lastVersionName.isEmpty()) {
@@ -587,15 +595,21 @@ public class DialogManager {
             }
 
             @Override
-            public void onNeutralBtnClick(DialogInterface dialogInterface, int i, String tag) {}
+            public void onNeutralBtnClick(DialogInterface dialogInterface, int i, String tag) {
+            }
+
             @Override
             public void onNegativeBtnClick(DialogInterface dialogInterface, int i, String tag) {
                 dialogInterface.dismiss();
             }
+
             @Override
-            public void onDialogCancel(DialogInterface dialogInterface, String tag) {}
+            public void onDialogCancel(DialogInterface dialogInterface, String tag) {
+            }
+
             @Override
-            public void onDialogDismiss(DialogInterface dialogInterface, String tag) {}
+            public void onDialogDismiss(DialogInterface dialogInterface, String tag) {
+            }
         });
 
         dialogFragment.show(fragmentManager, null);
@@ -769,8 +783,8 @@ public class DialogManager {
     }
 
     public static void confirmEntryDeleteForReson(final AppCompatActivity activity,
-            final DialogInterface.OnClickListener onDeleteListener,
-            final int countNum, Reason reason, Account account) {
+                                                  final DialogInterface.OnClickListener onDeleteListener,
+                                                  final int countNum, Reason reason, Account account) {
         if (reason == null && account == null) {
             return;
         }
@@ -808,7 +822,7 @@ public class DialogManager {
                                             final Account account,
                                             final CategoryCombineListener listener) {
         final Context context = activity.getApplicationContext();
-        final TNApiModel apiModel  = new TNApiModel(context);
+        final TNApiModel apiModel = new TNApiModel(context);
         final EntryDataManager entryManager = new EntryDataManager(context);
         final View dialogView = LayoutInflater.from(context)
                 .inflate(R.layout.dialog_edit_cate_input, null);
@@ -939,15 +953,16 @@ public class DialogManager {
 
     public interface CategoryCombineListener {
         void onCombine(Reason fromReason, Reason toReason, int countTarget);
+
         void onCombine(Account fromAccount, Account toAccount, int countTarget);
     }
 
     public static TNSimpleDialogFragment getLoading(AppCompatActivity activity) {
-        return getLoading(activity,null, null);
+        return getLoading(activity, null, null);
     }
 
     public static TNSimpleDialogFragment getLoading(AppCompatActivity activity, String message) {
-        return getLoading(activity,null, message);
+        return getLoading(activity, null, message);
     }
 
     public static TNSimpleDialogFragment getLoading(AppCompatActivity activity, String title, String message) {
