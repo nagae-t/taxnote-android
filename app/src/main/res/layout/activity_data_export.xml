@@ -42,7 +42,8 @@
             android:paddingEnd="16dp"
             android:paddingStart="16dp"
             android:textColor="?attr/colorPrimary"
-            android:text="@string/data_print_start" />
+            android:text="@string/data_print_start"
+            android:onClick="onClickPrint"/>
 
         <!--Export Range Button-->
         <!--Character Code Button-->

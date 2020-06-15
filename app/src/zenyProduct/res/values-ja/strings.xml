@@ -36,7 +36,7 @@
 
     <string name="share_taxnote">Zenyをシェアする</string>
     <string name="share_taxnote_title">このアプリ便利。</string>
-    <string name="share_taxnote_message">このアプリ便利。https://play.google.com/store/apps/details?id=com.nonume.zeny</string>
+    <string name="share_taxnote_message">このアプリ便利。https://play.google.com/store/apps/details?id=com.nonapp.zeny</string>
 
 
     //--------------------------------------------------------------//
@@ -80,9 +80,8 @@
     <string name="tap_project_to_edit_name">アカウント名をタップすると名前を変更できます。</string>
 
     <string name="taxnote_data_import">Zenyへインポート</string>
-
     <!--//@@ここをアップデートごとに変更-->
-    <string name="release_note_url">http://taxnote.hatenablog.com/entry/2017/05/12/084155</string>
+    <string name="release_note_message">アプリが最新版にアップデートされました。新しい機能、変更点、バグ修正などのお知らせをご確認ください。</string>
 
     <string name="rename_category">カテゴリ名変更・結合</string>
     <string name="profit_loss_settings">レポートの設定</string>
@@ -116,4 +115,5 @@
 
     <string name="alert_notification_desc">通知が効かない時は端末の設定 => アプリ => Zeny から通知を許可してください。</string>
 
+    <string name="play_store_url">https://play.google.com/store/apps/details?id=com.nonapp.zeny</string>
 </resources>

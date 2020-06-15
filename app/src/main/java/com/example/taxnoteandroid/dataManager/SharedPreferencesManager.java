@@ -48,6 +48,7 @@ public class SharedPreferencesManager {
 
     private static final String APP_THEME_STYLE_KEY             = "APP_THEME_STYLE_KEY";
     private static final String RELEASE_NOTE_KEY                = "RELEASE_NOTE_KEY";
+    private static final String APP_UPDATE_KEY                  = "APP_UPDATE_KEY";
 
     private static final String DAILY_ALERT_INPUT_FORGET_ENABLE_KEY = "DAILY_ALERT_INPUT_FORGET_ENABLE_KEY";
     private static final String DAILY_ALERT_INPUT_FORGET_TIME_KEY = "DAILY_ALERT_INPUT_FORGET_TIME_KEY";
@@ -411,6 +412,19 @@ public class SharedPreferencesManager {
 
     public static String getLastVersionName(Context context) {
         return getSharedPreferences(context).getString(RELEASE_NOTE_KEY, "");
+    }
+
+
+    //--------------------------------------------------------------//
+    //    -- App Update --
+    //--------------------------------------------------------------//
+
+    public static void saveLastAppUpdateVersionCode(Context context, int versionCode) {
+        getSharedPreferences(context).edit().putInt(APP_UPDATE_KEY, versionCode).apply();
+    }
+
+    public static int getLastAppUpdateVersionCode(Context context) {
+        return getSharedPreferences(context).getInt(APP_UPDATE_KEY, 0);
     }
 
 

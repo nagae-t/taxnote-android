@@ -181,13 +181,6 @@ public class DataExportActivity extends DefaultCommonActivity
             }
         });
 
-        binding.dataPrintButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                exePrintData();
-            }
-        });
-
         // 補助科目のボタン
         boolean subjectEnable = SharedPreferencesManager.getExportSujectEnable(this);
         int enableValRes = (subjectEnable) ? R.string.settings_valid : R.string.settings_invalid;
@@ -198,6 +191,10 @@ public class DataExportActivity extends DefaultCommonActivity
                 showExportSubjectDialog();
             }
         });
+    }
+
+    public void onClickPrint() {
+        exePrintData();
     }
 
     private void showExportSubjectDialog() {

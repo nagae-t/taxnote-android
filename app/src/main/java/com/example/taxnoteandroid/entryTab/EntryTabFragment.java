@@ -47,10 +47,9 @@ public class EntryTabFragment extends Fragment {
         // Reset selected date
         SharedPreferencesManager.saveCurrentSelectedDate(getActivity(),System.currentTimeMillis());
 
-        DialogManager.showFirstLaunchMessage(getActivity(),getFragmentManager());
+        DialogManager.showReleaseNoteAfterUpdate(getActivity(), getFragmentManager());
 
-        // Update更新書くのが面倒なので一旦中止
-//        DialogManager.showReleaseNoteAfterUpdate(getActivity(), getFragmentManager());
+        DialogManager.showFirstLaunchMessage(getActivity(),getFragmentManager());
 
         return v;
     }

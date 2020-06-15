@@ -115,7 +115,7 @@
     <string name="upgrade">アップグレード</string>
     <string name="share_taxnote">Taxnoteをシェアする</string>
     <string name="share_taxnote_title">この会計アプリ便利。</string>
-    <string name="share_taxnote_message">この会計アプリ便利。https://play.google.com/store/apps/details?id=com.nonume.taxnote</string>
+    <string name="share_taxnote_message">この会計アプリ便利。https://play.google.com/store/apps/details?id=com.nonapp.taxnote</string>
     <string name="decimal_button">小数点表示（ドル・ユーロなどに）</string>
     <string name="passcode_button">パスコードロック</string>
 
@@ -268,10 +268,8 @@
     <string name="import_data_overwrite_confirm_message">バックアップデータをインポートすると全ての既存データに上書きされてます。本当にインポートしてよろしいですか？</string>
 
     <string name="release_note_title">最新版の情報 : </string>
-    <string name="release_note_message">アプリが最新版にアップデートされました。新しい機能、変更点、バグ修正などのお知らせをご確認ください。</string>
-
     <!--//@@ここをアップデートごとに変更-->
-    <string name="release_note_url">http://taxnote.hatenablog.com/entry/2017/05/12/084155</string>
+    <string name="release_note_message">アプリが最新版にアップデートされました。新しい機能、変更点、バグ修正などのお知らせをご確認ください。</string>
 
     <string name="update_check_title">新しいアップデートがあります</string>
     <string name="update_check_message">このアプリの最新版が更新されています。新しいバージョンにアップデートしてください。</string>
@@ -520,4 +518,6 @@
     <!-- //@@@以下、他の言語対応必要 -->
     <string name="app_update_completed_message">アップデートのダウンロードが完了しました。</string>
     <string name="app_update_completed_action">インストール</string>
+    <string name="play_store_review">レビューする</string>
+    <string name="play_store_url">https://play.google.com/store/apps/details?id=com.nonapp.taxnote</string>
 </resources>

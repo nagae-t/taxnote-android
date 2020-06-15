@@ -864,6 +864,14 @@ public class MainActivity extends DefaultCommonActivity
     }
 
     private void requestAppUpdate(AppUpdateInfo appUpdateInfo) throws IntentSender.SendIntentException {
+        int updateVersionCode = appUpdateInfo.availableVersionCode();
+        int lastCheckVersionCode = SharedPreferencesManager.getLastAppUpdateVersionCode(this);
+        if (updateVersionCode <= lastCheckVersionCode) {
+            appUpdateManager.unregisterListener(mInstallStateUpdatedListener);
+            return;
+        }
+        SharedPreferencesManager.saveLastAppUpdateVersionCode(this, updateVersionCode);
+
         appUpdateManager.startUpdateFlowForResult(
                 appUpdateInfo,
                 AppUpdateType.FLEXIBLE,
