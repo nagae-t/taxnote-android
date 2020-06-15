@@ -186,7 +186,6 @@ public class EntryTabReasonSelectFragment extends Fragment {
 
         loadCurrentDateWithToast(false);
         loadCurrentAccount();
-        DialogManager.checkLatestUpdate(getActivity());
     }
 
     @Override

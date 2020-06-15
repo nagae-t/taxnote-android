@@ -517,4 +517,7 @@
     <string name="free_limit_extend_done_title">キャンペーン</string>
     <string name="free_limit_extend_done_message">最初の31件まで無料で入力可能です。\n\nその後は月15件の入力制限がかかるので、Taxnoteプラスをご検討ください。</string>
 
+    <!-- //@@@以下、他の言語対応必要 -->
+    <string name="app_update_completed_message">アップデートのダウンロードが完了しました。</string>
+    <string name="app_update_completed_action">インストール</string>
 </resources>
