@@ -31,7 +31,6 @@ import com.example.taxnoteandroid.dataManager.SharedPreferencesManager;
 import com.example.taxnoteandroid.model.Account;
 import com.example.taxnoteandroid.model.Entry;
 import com.example.taxnoteandroid.model.Reason;
-import com.github.javiersantos.appupdater.AppUpdater;
 import com.helpshift.support.Support;
 
 import java.text.SimpleDateFormat;
@@ -561,7 +560,7 @@ public class DialogManager {
         String currentVersionName = com.example.taxnoteandroid.BuildConfig.VERSION_NAME;
 
         // Skip for the first run
-        if (lastVersionName.isEmpty()) {
+        if (!SharedPreferencesManager.isFirstLaunchMessageDone(context)) {
             SharedPreferencesManager.saveLastVersionName(context, currentVersionName);
             return;
         }
@@ -613,17 +612,6 @@ public class DialogManager {
         });
 
         dialogFragment.show(fragmentManager, null);
-    }
-
-    public static void checkLatestUpdate(final Context context) {
-
-        AppUpdater appUpdater = new AppUpdater(context)
-                .setTitleOnUpdateAvailable(context.getResources().getString(R.string.update_check_title))
-                .setContentOnUpdateAvailable(context.getResources().getString(R.string.update_check_message))
-                .setButtonUpdate(context.getResources().getString(R.string.update_check_update))
-                .setButtonDismiss(context.getResources().getString(R.string.update_check_later))
-                .setButtonDoNotShowAgain(context.getResources().getString(R.string.update_check_do_not_show_again));
-        appUpdater.start();
     }
 
 

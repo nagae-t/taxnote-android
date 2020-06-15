@@ -7,12 +7,17 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
-
-        <com.example.taxnoteandroid.CustomViewPager
-            android:id="@+id/pager"
+        <android.support.design.widget.CoordinatorLayout
+            android:id="@+id/place_snackBar"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1" />
+            android:layout_weight="1">
+
+            <com.example.taxnoteandroid.CustomViewPager
+                android:id="@+id/pager"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </android.support.design.widget.CoordinatorLayout>
 
         <android.support.design.widget.BottomNavigationView
             android:id="@+id/bottom_navigation"

@@ -5,6 +5,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.IntentSender;
 import android.databinding.DataBindingUtil;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -12,6 +13,7 @@ import android.support.annotation.NonNull;
 import android.support.design.internal.BottomNavigationItemView;
 import android.support.design.internal.BottomNavigationMenuView;
 import android.support.design.widget.BottomNavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -41,6 +43,15 @@ import com.example.taxnoteandroid.dataManager.SharedPreferencesManager;
 import com.example.taxnoteandroid.databinding.ActivityMainBinding;
 import com.example.taxnoteandroid.entryTab.EntryTabFragment;
 import com.google.android.gms.ads.AdRequest;
+import com.google.android.play.core.appupdate.AppUpdateInfo;
+import com.google.android.play.core.appupdate.AppUpdateManager;
+import com.google.android.play.core.appupdate.AppUpdateManagerFactory;
+import com.google.android.play.core.install.InstallState;
+import com.google.android.play.core.install.InstallStateUpdatedListener;
+import com.google.android.play.core.install.model.AppUpdateType;
+import com.google.android.play.core.install.model.InstallStatus;
+import com.google.android.play.core.install.model.UpdateAvailability;
+import com.google.android.play.core.tasks.OnSuccessListener;
 import com.google.api.services.androidpublisher.model.SubscriptionPurchase;
 import com.helpshift.support.Support;
 import com.kobakei.ratethisapp.RateThisApp;
@@ -65,6 +76,9 @@ public class MainActivity extends DefaultCommonActivity
     private TNGoogleApiClient tnGoogleApi;
 
     private AdRequest mAdRequest = null;
+
+    private AppUpdateManager appUpdateManager;
+    private static final int REQUEST_CODE_FLEXIBLE_UPDATE = 111;
 
     public static final String BROADCAST_AFTER_LOGIN
             = "broadcast_main_after_login";
@@ -114,7 +128,7 @@ public class MainActivity extends DefaultCommonActivity
             int position = intent.getIntExtra(
                     BroadcastUtil.KEY_DATA_PERIOD_SCROLLED_POSITION, 0);
             int target = intent.getIntExtra(
-                    BroadcastUtil.KEY_DATA_PERIOD_SCROLLED_TARGET,0);
+                    BroadcastUtil.KEY_DATA_PERIOD_SCROLLED_TARGET, 0);
             reportOnPageScrolled(target, position);
         }
     };
@@ -207,6 +221,8 @@ public class MainActivity extends DefaultCommonActivity
 
         // Zeny Ads
         toggleAdview();
+
+        checkAppUpdate();
     }
 
     // Zeny Ads
@@ -247,7 +263,6 @@ public class MainActivity extends DefaultCommonActivity
             e.printStackTrace();
         }
     }
-
 
 
     @Override
@@ -320,7 +335,7 @@ public class MainActivity extends DefaultCommonActivity
                 if (!ZNUtils.isZeny()) {
                     Support.showFAQs(this);
                 } else {
-                    Support.showFAQSection(this,"27");
+                    Support.showFAQSection(this, "27");
                 }
                 break;
 
@@ -553,7 +568,7 @@ public class MainActivity extends DefaultCommonActivity
         ReportFragment reportFragment =
                 (ReportFragment) mTabPagerAdapter.instantiateItem(pager, 2);
         if (reportFragment != null)
-           reportFragment.reloadData();
+            reportFragment.reloadData();
 
         GraphTabFragment graphFragment =
                 (GraphTabFragment) mTabPagerAdapter.instantiateItem(pager, 3);
@@ -592,7 +607,7 @@ public class MainActivity extends DefaultCommonActivity
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
         boolean isGrantedWriteStorage = false;
-        for (int i=0; i<permissions.length; i++) {
+        for (int i = 0; i < permissions.length; i++) {
             if (permissions[i].equals(Manifest.permission.WRITE_EXTERNAL_STORAGE)
                     && grantResults[i] == PermissionChecker.PERMISSION_GRANTED) {
                 isGrantedWriteStorage = true;
@@ -726,6 +741,9 @@ public class MainActivity extends DefaultCommonActivity
         unregisterReceiver(mSwitchGraphExpenseReceiver);
         unregisterReceiver(mAdviewToggleReceiver);
         unregisterReceiver(mDataPeriodScrolledReceiver);
+        if (appUpdateManager != null) {
+            appUpdateManager.unregisterListener(mInstallStateUpdatedListener);
+        }
         super.onDestroy();
 
 
@@ -806,5 +824,64 @@ public class MainActivity extends DefaultCommonActivity
                     break;
             }
         }
+    }
+
+    //--------------------------------------------------------------//
+    //    -- App Update --
+    //--------------------------------------------------------------//
+    private final InstallStateUpdatedListener mInstallStateUpdatedListener = new InstallStateUpdatedListener() {
+        @Override
+        public void onStateUpdate(InstallState state) {
+            switch (state.installStatus()) {
+                case InstallStatus.DOWNLOADED:
+                    notifyAppUpdateDownloadCompleted();
+                    break;
+                default:
+                    break;
+            }
+        }
+    };
+
+    private void checkAppUpdate() {
+        appUpdateManager = AppUpdateManagerFactory.create(this);
+        appUpdateManager.registerListener(mInstallStateUpdatedListener);
+
+        appUpdateManager.getAppUpdateInfo().addOnSuccessListener(new OnSuccessListener<AppUpdateInfo>() {
+            @Override
+            public void onSuccess(AppUpdateInfo result) {
+                if (result.installStatus() == InstallStatus.DOWNLOADED) {
+                    notifyAppUpdateDownloadCompleted();
+                } else if (result.isUpdateTypeAllowed(AppUpdateType.FLEXIBLE) &&
+                        result.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE) {
+                        try {
+                            requestAppUpdate(result);
+                        } catch (IntentSender.SendIntentException e) {
+                            e.printStackTrace();
+                        }
+                }
+            }
+        });
+    }
+
+    private void requestAppUpdate(AppUpdateInfo appUpdateInfo) throws IntentSender.SendIntentException {
+        appUpdateManager.startUpdateFlowForResult(
+                appUpdateInfo,
+                AppUpdateType.FLEXIBLE,
+                this,
+                REQUEST_CODE_FLEXIBLE_UPDATE);
+    }
+
+    private void notifyAppUpdateDownloadCompleted() {
+        View view = findViewById(R.id.place_snackBar);
+        Snackbar.make(view, R.string.app_update_completed_message, Snackbar.LENGTH_INDEFINITE)
+                .setAction(R.string.app_update_completed_action, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (appUpdateManager == null) return;
+                        appUpdateManager.completeUpdate();
+                        appUpdateManager.unregisterListener(mInstallStateUpdatedListener);
+                    }
+                })
+                .show();
     }
 }
