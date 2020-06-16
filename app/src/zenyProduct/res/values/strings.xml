@@ -16,7 +16,7 @@
 
     <string name="share_taxnote">Share Zeny</string>
     <string name="share_taxnote_title">I like this app</string>
-    <string name="share_taxnote_message">I like this app. https://play.google.com/store/apps/details?id=com.nonume.zeny</string>
+    <string name="share_taxnote_message">I like this app. https://play.google.com/store/apps/details?id=com.nonapp.zeny</string>
 
 
     //--------------------------------------------------------------//
@@ -52,9 +52,8 @@
     <string name="tap_project_to_edit_name">You can rename it if you tap an account.</string>
     <string name="taxnote_data_import">Import data into Zeny</string>
 
-
     <!--//@@ここをアップデートごとに変更-->
-    <string name="release_note_url">http://taxnote.hatenablog.com/entry/2017/05/12/084155</string>
+    <string name="release_note_message">アプリが最新版にアップデートされました。新しい機能、変更点、バグ修正などのお知らせをご確認ください。</string>
 
     <string name="data_export_debit">Category</string>
     <string name="data_export_account">Price</string>
@@ -80,4 +79,5 @@
     <string name="alert_notification_desc">If the notification don\'t work, enable Notifications in the Android Settings => Apps => Zeny => Notifications.</string>
     <string name="data_backup_message">Backup your app data into GoogleDrive, Gmail or other services.  You can restore your data when you want to transfer your data to other Android devices.  Please check Help about how you can backup and restore. (You cannot transfer data between Android and iOS versions with this feature, to do that, you need to use Cloud Sync of Zeny Premium.)</string>
 
+    <string name="play_store_url">https://play.google.com/store/apps/details?id=com.nonapp.zeny</string>
 </resources>
