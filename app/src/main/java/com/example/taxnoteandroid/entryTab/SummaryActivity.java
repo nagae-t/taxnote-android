@@ -449,7 +449,7 @@ public class SummaryActivity extends DefaultCommonActivity {
                         }
                     });
                     ListviewFooterBinding binding = (ListviewFooterBinding) obj;
-                    binding.text.setText(getResources().getString(R.string.list_view_add_reason));
+                    binding.text.setText(getResources().getString(R.string.SummaryActivity_footer));
                 }
             } catch (Exception e) {
                 e.printStackTrace();
