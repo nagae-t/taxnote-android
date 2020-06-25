@@ -19,6 +19,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.content.PermissionChecker;
+import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -71,6 +72,7 @@ public class MainActivity extends DefaultCommonActivity
     private int mBottomNaviSelected = 0;
     private boolean mGraphMenuIsExpense = true;
     private ProjectDataManager mProjectManager;
+    private SearchView searchView;
 
     private IabHelper mBillingHelper;
     private TNGoogleApiClient tnGoogleApi;
@@ -276,6 +278,7 @@ public class MainActivity extends DefaultCommonActivity
         MenuItem helpMenu = menu.findItem(R.id.help_in_settings_tab);
 
         MenuItem searchMenu = menu.findItem(R.id.action_search);
+        searchView = (SearchView) searchMenu.getActionView();
         MenuItem exportMenu = menu.findItem(R.id.data_export);
         MenuItem delMenu = menu.findItem(R.id.data_delete);
         String projectName = mProjectManager.getCurrentName();
@@ -346,7 +349,6 @@ public class MainActivity extends DefaultCommonActivity
                 break;
 
             case R.id.action_search:
-                SearchEntryActivity.start(this);
                 break;
 
             case R.id.data_delete:
@@ -429,6 +431,7 @@ public class MainActivity extends DefaultCommonActivity
                     case R.id.tab2:
                         binding.pager.setCurrentItem(1, false);
                         setTitle(getString(R.string.History));
+                        clearSearchEntry();
                         break;
                     case R.id.tab3:
                         binding.pager.setCurrentItem(2, false);
@@ -710,6 +713,11 @@ public class MainActivity extends DefaultCommonActivity
         RateThisApp.init(config);
     }
 
+    private void clearSearchEntry() {
+        searchView.setQuery("", false);
+        searchView.setIconified(true);
+    }
+
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (binding.pager == null) return super.onKeyDown(keyCode, event);
 
@@ -717,8 +725,12 @@ public class MainActivity extends DefaultCommonActivity
         if (keyCode == KeyEvent.KEYCODE_BACK) {
             int currentItem = binding.pager.getCurrentItem();
             if (currentItem != 0) {
-                BottomNavigationView bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_navigation);
-                bottomNavigationView.findViewById(R.id.tab1).performClick();
+                if (currentItem == 1 && searchView != null && !searchView.isIconified()) {
+                    clearSearchEntry();
+                } else {
+                    BottomNavigationView bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_navigation);
+                    bottomNavigationView.findViewById(R.id.tab1).performClick();
+                }
                 return false;
             }
 

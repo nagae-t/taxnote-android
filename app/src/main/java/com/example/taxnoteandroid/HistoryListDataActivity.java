@@ -11,9 +11,12 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.SearchView;
+import android.util.DisplayMetrics;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 
 import com.example.taxnoteandroid.Library.BroadcastUtil;
 import com.example.taxnoteandroid.Library.DialogManager;
@@ -61,6 +64,9 @@ public class HistoryListDataActivity extends DefaultCommonActivity {
     private Entry mSelectedEntry;
     private int mSelectedPosition = -1;
 
+    private SearchView searchView;
+    private List<Entry> allEntries = new ArrayList<>();
+
     private static final String KEY_TARGET_CALENDAR = "target_calendar";
     private static final String KEY_PERIOD_TYPE = "period_type";
     private static final String KEY_REASON_NAME = "reason_name";
@@ -82,6 +88,7 @@ public class HistoryListDataActivity extends DefaultCommonActivity {
 
     /**
      * 残高のコンテンツ
+     *
      * @param context
      * @param targetCalendar
      */
@@ -94,7 +101,6 @@ public class HistoryListDataActivity extends DefaultCommonActivity {
     }
 
     /**
-     *
      * @param context
      * @param targetCalendar
      * @param periodType
@@ -110,6 +116,7 @@ public class HistoryListDataActivity extends DefaultCommonActivity {
 
     /**
      * 収入または支出のコンテンツ
+     *
      * @param context
      * @param targetCalendar
      * @param reasonName
@@ -158,7 +165,7 @@ public class HistoryListDataActivity extends DefaultCommonActivity {
 
         Intent receiptIntent = getIntent();
         Serializable calSerial = receiptIntent.getSerializableExtra(KEY_TARGET_CALENDAR);
-        if (calSerial != null) mTargetCalendar = (Calendar)calSerial;
+        if (calSerial != null) mTargetCalendar = (Calendar) calSerial;
         mReasonName = receiptIntent.getStringExtra(KEY_REASON_NAME);
         mIsBalance = receiptIntent.getBooleanExtra(KEY_IS_BALANCE, false);
         mIsExpense = receiptIntent.getBooleanExtra(KEY_IS_EXPENSE, false);
@@ -176,7 +183,7 @@ public class HistoryListDataActivity extends DefaultCommonActivity {
             pageSubTitle = getString(R.string.History);
         }
 
-        mPageTitleAndSub = pageTitle+" "+pageSubTitle;
+        mPageTitleAndSub = pageTitle + " " + pageSubTitle;
         ActionBar actionBar = getSupportActionBar();
         actionBar.setTitle(pageTitle);
         actionBar.setSubtitle(pageSubTitle);
@@ -231,6 +238,15 @@ public class HistoryListDataActivity extends DefaultCommonActivity {
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
+        MenuItem menuItem = menu.findItem(R.id.action_search);
+        searchView = (SearchView) menuItem.getActionView();
+        searchView.setIconifiedByDefault(true);
+        searchView.setSubmitButtonEnabled(false);
+        searchView.setOnQueryTextListener(onQueryText);
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        searchView.setMaxWidth(displayMetrics.widthPixels - (int) (112f * getResources().getDisplayMetrics().density));
+
         MenuItem exportMenu = menu.findItem(R.id.action_export);
         MenuItem delMenu = menu.findItem(R.id.action_delete);
         String exportTitle = getString(R.string.export_current_something, mPageTitleAndSub);
@@ -248,12 +264,6 @@ public class HistoryListDataActivity extends DefaultCommonActivity {
                 finish();
                 return true;
             case R.id.action_search:
-                if (mIsBalance) {
-                    SearchEntryActivity.start(this, mStartEndDate);
-                } else {
-                    SearchEntryActivity.startWithIsExpense(
-                            this, mStartEndDate, mReasonName, mIsExpense);
-                }
                 break;
             case R.id.action_export:
                 if (mIsBalance) {
@@ -324,7 +334,6 @@ public class HistoryListDataActivity extends DefaultCommonActivity {
             long[] startEndDate = longs[0];
             if (mPeriodType == EntryDataManager.PERIOD_TYPE_ALL
                     && startEndDate.length == 0) startEndDate = null;
-            Context context = getApplicationContext();
 
             List<Entry> entries;
 
@@ -338,7 +347,7 @@ public class HistoryListDataActivity extends DefaultCommonActivity {
 
                 // Filter data by reasonName
                 String reasonName = getIntent().getStringExtra(KEY_REASON_NAME);
-                if (reasonName != null ) {
+                if (reasonName != null) {
                     for (Entry _entry : _entries) {
                         if (_entry.reason.name.equals(reasonName)) {
                             entries.add(_entry);
@@ -354,104 +363,14 @@ public class HistoryListDataActivity extends DefaultCommonActivity {
             }
             mResultEntries = entries;
 
-            List<Entry> entryData = new ArrayList<>();
-            Map<String, List<Entry>> map2 = new LinkedHashMap<>();
-
-
-            Map<String, Entry> memoMap = new LinkedHashMap<>();
-            // 備考金額の合計
-            Entry memoSum = new Entry();
-            memoSum.viewType = CommonEntryRecyclerAdapter.VIEW_ITEM_REPORT_TOTAL;
-            memoSum.isExpense = mIsExpense;
-
-            // 入力日ごとにグルーピング
-            for (Entry entry : entries) {
-
-                // Format date to string
-                SimpleDateFormat simpleDateFormat = new SimpleDateFormat(getResources().getString(R.string.date_string_format_to_year_month_day_weekday), Locale.getDefault());
-                String dateString = simpleDateFormat.format(entry.date);
-
-                if (!map2.containsKey(dateString)) {
-                    List<Entry> entryList = new ArrayList<>();
-                    entryList.add(entry);
-                    map2.put(dateString, entryList);
-                } else {
-                    List<Entry> entryList = map2.get(dateString);
-                    entryList.add(entry);
-                    map2.put(dateString, entryList);
-                }
-
-                // 備考ごとのデータ
-                String _memo = entry.memo;
-                if (memoMap.containsKey(_memo)) {
-                    Entry _memoEntry = memoMap.get(_memo);
-                    _memoEntry.price += entry.price;
-                } else {
-                    Entry _memoEntry = new Entry();
-                    _memoEntry.isExpense = mIsExpense;
-                    _memoEntry.viewType = CommonEntryRecyclerAdapter.VIEW_ITEM_REPORT_CELL;
-                    _memoEntry.reasonName = _memo;
-                    _memoEntry.price += entry.price;
-                    _memoEntry.uuid = entry.uuid;
-                    memoMap.put(_memo, _memoEntry);
-                }
-                memoSum.price += entry.price;
-
-            }
-            int memoMapSize = memoMap.size();
-            // 備考データが２つ以上の場合
-            if (mIsViewTotal && memoMapSize > 1 && mReasonName != null && mMemoValue == null) {
-                entryData.add(memoSum);
-
-                Entry memoSection = new Entry();
-                memoSection.viewType = CommonEntryRecyclerAdapter.VIEW_ITEM_HEADER;
-                memoSection.titleName = getString(R.string.Details);
-                entryData.add(memoSection);
-
-                // 備考順番ソート
-                List<Map.Entry<String, Entry>> memoSortList = EntryLimitManager.sortMemoLinkedHashMap(memoMap);
-                for (Map.Entry<String, Entry> entry : memoSortList) {
-                    Entry memoEntry = entry.getValue();
-                    entryData.add(memoEntry);
-                }
-                return entryData;
-
-            }
-
-            // RecyclerViewに渡すためにMapをListに変換する
-            for (Map.Entry<String, List<Entry>> e : map2.entrySet()) {
-
-                Entry headerItem = new Entry();
-                headerItem.dateString = e.getKey();
-                headerItem.viewType = CommonEntryRecyclerAdapter.VIEW_ITEM_HEADER;
-                entryData.add(headerItem);
-
-                long totalPrice = 0;
-
-                for (Entry _entry : e.getValue()) {
-
-                    // Calculate total price
-                    if (_entry.isExpense) {
-                        totalPrice -= _entry.price;
-                    } else {
-                        totalPrice += _entry.price;
-                    }
-
-                    _entry.viewType = CommonEntryRecyclerAdapter.VIEW_ITEM_CELL;
-                    entryData.add(_entry);
-                }
-
-                // Format the totalPrice
-                headerItem.sumString = ValueConverter.formatPrice(context, totalPrice);
-            }
-
-            return entryData;
+            return setupSectionHeader(entries, false);
         }
 
         @Override
         protected void onPostExecute(List<Entry> result) {
             binding.refreshLayout.setVisibility(View.VISIBLE);
             binding.loading.setVisibility(View.GONE);
+            allEntries = result;
             if (result.size() == 0) {
                 binding.entries.setVisibility(View.GONE);
                 binding.empty.setVisibility(View.VISIBLE);
@@ -484,5 +403,217 @@ public class HistoryListDataActivity extends DefaultCommonActivity {
             });
             binding.entries.setAdapter(mEntryAdapter);
         }
+    }
+
+    private List<Entry> setupSectionHeader(List<Entry> entries, Boolean hasTotalPrice) {
+        Context context = getApplicationContext();
+
+        List<Entry> entryData = new ArrayList<>();
+        Map<String, List<Entry>> map2 = new LinkedHashMap<>();
+
+
+        Map<String, Entry> memoMap = new LinkedHashMap<>();
+        // 備考金額の合計
+        Entry memoSum = new Entry();
+        memoSum.viewType = CommonEntryRecyclerAdapter.VIEW_ITEM_REPORT_TOTAL;
+        memoSum.isExpense = mIsExpense;
+
+        // 入力日ごとにグルーピング
+        for (Entry entry : entries) {
+
+            // Format date to string
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat(getResources().getString(R.string.date_string_format_to_year_month_day_weekday), Locale.getDefault());
+            String dateString = simpleDateFormat.format(entry.date);
+
+            if (!map2.containsKey(dateString)) {
+                List<Entry> entryList = new ArrayList<>();
+                entryList.add(entry);
+                map2.put(dateString, entryList);
+            } else {
+                List<Entry> entryList = map2.get(dateString);
+                entryList.add(entry);
+                map2.put(dateString, entryList);
+            }
+
+            // 備考ごとのデータ
+            String _memo = entry.memo;
+            if (memoMap.containsKey(_memo)) {
+                Entry _memoEntry = memoMap.get(_memo);
+                _memoEntry.price += entry.price;
+            } else {
+                Entry _memoEntry = new Entry();
+                _memoEntry.isExpense = mIsExpense;
+                _memoEntry.viewType = CommonEntryRecyclerAdapter.VIEW_ITEM_REPORT_CELL;
+                _memoEntry.reasonName = _memo;
+                _memoEntry.price += entry.price;
+                _memoEntry.uuid = entry.uuid;
+                memoMap.put(_memo, _memoEntry);
+            }
+            memoSum.price += entry.price;
+
+        }
+        int memoMapSize = memoMap.size();
+        // 備考データが２つ以上の場合
+        if (mIsViewTotal && memoMapSize > 1 && mReasonName != null && mMemoValue == null) {
+            entryData.add(memoSum);
+
+            Entry memoSection = new Entry();
+            memoSection.viewType = CommonEntryRecyclerAdapter.VIEW_ITEM_HEADER;
+            memoSection.titleName = getString(R.string.Details);
+            entryData.add(memoSection);
+
+            // 備考順番ソート
+            List<Map.Entry<String, Entry>> memoSortList = EntryLimitManager.sortMemoLinkedHashMap(memoMap);
+            for (Map.Entry<String, Entry> entry : memoSortList) {
+                Entry memoEntry = entry.getValue();
+                entryData.add(memoEntry);
+            }
+            return entryData;
+
+        }
+
+        long totalPrice = 0;
+        Entry totalPriceHeaderItem = new Entry();
+        totalPriceHeaderItem.dateString = getString(R.string.total);
+        totalPriceHeaderItem.viewType = CommonEntryRecyclerAdapter.VIEW_ITEM_HEADER;
+        if (hasTotalPrice) {
+            entryData.add(totalPriceHeaderItem);
+        }
+
+        // RecyclerViewに渡すためにMapをListに変換する
+        for (Map.Entry<String, List<Entry>> e : map2.entrySet()) {
+
+            Entry headerItem = new Entry();
+            headerItem.dateString = e.getKey();
+            headerItem.viewType = CommonEntryRecyclerAdapter.VIEW_ITEM_HEADER;
+            entryData.add(headerItem);
+
+            long dailyTotalPrice = 0;
+
+            for (Entry _entry : e.getValue()) {
+
+                // Calculate total price
+                if (_entry.isExpense) {
+                    dailyTotalPrice -= _entry.price;
+                } else {
+                    dailyTotalPrice += _entry.price;
+                }
+
+                _entry.viewType = CommonEntryRecyclerAdapter.VIEW_ITEM_CELL;
+                entryData.add(_entry);
+            }
+
+            // Format the totalPrice
+            headerItem.sumString = ValueConverter.formatPrice(context, dailyTotalPrice);
+
+            totalPrice += dailyTotalPrice;
+        }
+        totalPriceHeaderItem.sumString = ValueConverter.formatPrice(context, totalPrice);
+        return entryData;
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (!searchView.isIconified()) {
+            searchView.setQuery("", false);
+            searchView.setIconified(true);
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    private boolean mIsOnSearchSubmit = false;
+
+    private SearchView.OnQueryTextListener onQueryText = new SearchView.OnQueryTextListener() {
+        @Override
+        public boolean onQueryTextSubmit(String query) {
+            closeKeyboard(searchView);
+            if (query.length() > 0) {
+                mIsOnSearchSubmit = true;
+//                mSearchWord = query;
+                execSearchTask(query);
+            } else {
+                mEntryAdapter.setItems(allEntries);
+                mEntryAdapter.notifyDataSetChanged();
+            }
+
+            return true;
+        }
+
+        @Override
+        public boolean onQueryTextChange(String newText) {
+            mIsOnSearchSubmit = false;
+            if (newText.length() > 0) {
+//                mSearchWord = newText;
+                execSearchTask(newText);
+            } else {
+                mEntryAdapter.setItems(allEntries);
+                mEntryAdapter.notifyDataSetChanged();
+            }
+
+            return false;
+        }
+    };
+
+    private void execSearchTask(String word) {
+        binding.loading.setVisibility(View.VISIBLE);
+        binding.refreshLayout.setVisibility(View.GONE);
+        new EntrySearchTask().execute(word);
+    }
+
+    /**
+     * 検索処理のタスク
+     */
+    private class EntrySearchTask extends AsyncTask<String, Integer, List<Entry>> {
+
+        @Override
+        protected List<Entry> doInBackground(String... strings) {
+            String word = strings[0];
+            List<Entry> result;
+
+            long[] startEndDate = null;
+            if (mStartEndDate.length == 2 && mStartEndDate[0] != 0 && mStartEndDate[1] != 0) {
+                startEndDate = mStartEndDate;
+            }
+
+            if (mIsBalance) {
+                result = mEntryManager.searchBy(word, null, startEndDate);
+            } else {
+                result = mEntryManager.searchBy(word, mReasonName, startEndDate, mIsExpense);
+            }
+            for (Entry entry : result) {
+                entry.viewType = CommonEntryRecyclerAdapter.VIEW_ITEM_CELL;
+            }
+
+            return setupSectionHeader(result, true);
+        }
+
+        @Override
+        protected void onPostExecute(List<Entry> result) {
+            binding.loading.setVisibility(View.GONE);
+            if (result == null || result.size() == 0) {
+
+                mEntryAdapter.clearAllToNotifyData();
+
+                //QQ キーボードの検索の虫眼鏡ボタンをタップした時だけメッセージをだす
+                if (mIsOnSearchSubmit) {
+                    DialogManager.showToast(getApplicationContext(),
+                            getString(R.string.no_match_by_search_message));
+                    mIsOnSearchSubmit = false;
+                }
+                binding.refreshLayout.setVisibility(View.VISIBLE);
+                return;
+            }
+
+            mEntryAdapter.setItems(result);
+            mEntryAdapter.notifyDataSetChanged();
+            binding.refreshLayout.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void closeKeyboard(View view) {
+        if (view == null) return;
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 }

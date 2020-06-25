@@ -11,10 +11,14 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 
 import com.example.taxnoteandroid.Library.AsyncOkHttpClient;
 import com.example.taxnoteandroid.Library.BroadcastUtil;
@@ -52,6 +56,9 @@ public class HistoryTabFragment extends Fragment {
     private Entry mSelectedEntry;
     private int mSelectedPosition = -1;
 
+    private SearchView searchView;
+    private List<Entry> allEntries = new ArrayList<>();
+
     public HistoryTabFragment() {
         // Required empty public constructor
     }
@@ -66,9 +73,11 @@ public class HistoryTabFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         Context context = getContext();
-        binding = FragmentHistoryTabBinding.inflate(inflater,container, false);
+        binding = FragmentHistoryTabBinding.inflate(inflater, container, false);
         binding.history.setLayoutManager(new LinearLayoutManager(context));
         binding.history.addItemDecoration(new DividerDecoration(context));
+
+        setHasOptionsMenu(true);
 
         return binding.getRoot();
     }
@@ -82,7 +91,8 @@ public class HistoryTabFragment extends Fragment {
         mEntryManager = new EntryDataManager(mContext);
 
         mApiModel = new TNApiModel(mContext);
-        if (!mApiModel.isCloudActive() || !mApiModel.isLoggingIn()) binding.refreshLayout.setEnabled(false);
+        if (!mApiModel.isCloudActive() || !mApiModel.isLoggingIn())
+            binding.refreshLayout.setEnabled(false);
 
         binding.refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -109,6 +119,19 @@ public class HistoryTabFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+    }
+
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+
+        MenuItem menuItem = menu.findItem(R.id.action_search);
+        searchView = (SearchView) menuItem.getActionView();
+        searchView.setIconifiedByDefault(true);
+        searchView.setSubmitButtonEnabled(false);
+        searchView.setOnQueryTextListener(onQueryText);
+
+        searchView.setMaxWidth(getView().getWidth() - (int) (56f * getResources().getDisplayMetrics().density));
     }
 
     @Override
@@ -245,69 +268,19 @@ public class HistoryTabFragment extends Fragment {
 
         @Override
         protected List<Entry> doInBackground(Integer... integers) {
-            List<Entry> entryData = new ArrayList<>();
-
-            List<Entry> entries                 = mEntryManager.findAll(null, false);
+            List<Entry> entries = mEntryManager.findAll(null, false);
 
             if (entries == null || entries.isEmpty() || entries.size() == 0) {
-                return entryData;
+                return new ArrayList<>();
             }
 
-            Map<String, List<Entry>> map2 = new LinkedHashMap<>();
-
-            // 入力日ごとにグルーピング
-            for (Entry entry : entries) {
-
-                // Format date to string
-                SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
-                        mContext.getResources().getString(R.string.date_string_format_to_year_month_day_weekday),
-                        Locale.getDefault());
-                String dateString = simpleDateFormat.format(entry.date);
-
-                if (!map2.containsKey(dateString)) {
-                    List<Entry> entryList = new ArrayList<>();
-                    entryList.add(entry);
-                    map2.put(dateString, entryList);
-                } else {
-                    List<Entry> entryList = map2.get(dateString);
-                    entryList.add(entry);
-                    map2.put(dateString, entryList);
-                }
-            }
-
-            // RecyclerViewに渡すためにMapをListに変換する
-            for (Map.Entry<String, List<Entry>> e : map2.entrySet()) {
-
-                Entry headerItem = new Entry();
-                headerItem.dateString = e.getKey();
-                headerItem.viewType = CommonEntryRecyclerAdapter.VIEW_ITEM_HEADER;
-                entryData.add(headerItem);
-
-                long totalPrice = 0;
-
-                for (Entry _entry : e.getValue()) {
-
-                    // Calculate total price
-                    if (_entry.isExpense) {
-                        totalPrice -= _entry.price;
-                    } else {
-                        totalPrice += _entry.price;
-                    }
-
-                    _entry.viewType = CommonEntryRecyclerAdapter.VIEW_ITEM_CELL;
-                    entryData.add(_entry);
-                }
-
-                // Format the totalPrice
-                headerItem.sumString = ValueConverter.formatPrice(mContext, totalPrice);
-            }
-
-            return entryData;
+            return setupSectionHeader(entries, false);
         }
 
         @Override
         protected void onPostExecute(List<Entry> result) {
             binding.loading.setVisibility(View.GONE);
+            allEntries = result;
             if (result.size() == 0) {
                 binding.refreshLayout.setVisibility(View.GONE);
                 binding.empty.setText(getResources().getString(R.string.history_data_empty));
@@ -333,4 +306,152 @@ public class HistoryTabFragment extends Fragment {
         }
     }
 
+    private List<Entry> setupSectionHeader(List<Entry> entries, Boolean hasTotalPrice) {
+        List<Entry> entryData = new ArrayList<>();
+        Map<String, List<Entry>> map2 = new LinkedHashMap<>();
+
+        // 入力日ごとにグルーピング
+        for (Entry entry : entries) {
+
+            // Format date to string
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
+                    mContext.getResources().getString(R.string.date_string_format_to_year_month_day_weekday),
+                    Locale.getDefault());
+            String dateString = simpleDateFormat.format(entry.date);
+
+            if (!map2.containsKey(dateString)) {
+                List<Entry> entryList = new ArrayList<>();
+                entryList.add(entry);
+                map2.put(dateString, entryList);
+            } else {
+                List<Entry> entryList = map2.get(dateString);
+                entryList.add(entry);
+                map2.put(dateString, entryList);
+            }
+        }
+
+        long totalPrice = 0;
+        Entry totalPriceHeaderItem = new Entry();
+        totalPriceHeaderItem.dateString = getString(R.string.total);
+        totalPriceHeaderItem.viewType = CommonEntryRecyclerAdapter.VIEW_ITEM_HEADER;
+        if (hasTotalPrice) {
+            entryData.add(totalPriceHeaderItem);
+        }
+
+        // RecyclerViewに渡すためにMapをListに変換する
+        for (Map.Entry<String, List<Entry>> e : map2.entrySet()) {
+
+            Entry headerItem = new Entry();
+            headerItem.dateString = e.getKey();
+            headerItem.viewType = CommonEntryRecyclerAdapter.VIEW_ITEM_HEADER;
+            entryData.add(headerItem);
+
+            long dailyTotalPrice = 0;
+
+            for (Entry _entry : e.getValue()) {
+
+                // Calculate total price
+                if (_entry.isExpense) {
+                    dailyTotalPrice -= _entry.price;
+                } else {
+                    dailyTotalPrice += _entry.price;
+                }
+
+                _entry.viewType = CommonEntryRecyclerAdapter.VIEW_ITEM_CELL;
+                entryData.add(_entry);
+            }
+
+            // Format the totalPrice
+            headerItem.sumString = ValueConverter.formatPrice(mContext, dailyTotalPrice);
+
+            totalPrice += dailyTotalPrice;
+        }
+
+        totalPriceHeaderItem.sumString = ValueConverter.formatPrice(mContext, totalPrice);
+        return entryData;
+    }
+
+    private boolean mIsOnSearchSubmit = false;
+
+    private SearchView.OnQueryTextListener onQueryText = new SearchView.OnQueryTextListener() {
+        @Override
+        public boolean onQueryTextSubmit(String query) {
+            mIsOnSearchSubmit = true;
+            closeKeyboard(searchView);
+            if (query.length() > 0) {
+//                mSearchWord = query;
+                execSearchTask(query);
+            } else {
+                mEntryAdapter.setItems(allEntries);
+                mEntryAdapter.notifyDataSetChanged();
+            }
+
+            return true;
+        }
+
+        @Override
+        public boolean onQueryTextChange(String newText) {
+            if (newText.length() > 0) {
+//                mSearchWord = newText;
+                execSearchTask(newText);
+            } else {
+                mEntryAdapter.setItems(allEntries);
+                mEntryAdapter.notifyDataSetChanged();
+            }
+
+            return false;
+        }
+    };
+
+    private void execSearchTask(String word) {
+        binding.loading.setVisibility(View.VISIBLE);
+        binding.refreshLayout.setVisibility(View.GONE);
+        new EntrySearchTask().execute(word);
+    }
+
+    /**
+     * 検索処理のタスク
+     */
+    private class EntrySearchTask extends AsyncTask<String, Integer, List<Entry>> {
+
+        @Override
+        protected List<Entry> doInBackground(String... strings) {
+            String word = strings[0];
+            List<Entry> result;
+            result = mEntryManager.searchBy(word, null, null);
+            for (Entry entry : result) {
+                entry.viewType = CommonEntryRecyclerAdapter.VIEW_ITEM_CELL;
+            }
+
+            return setupSectionHeader(result, true);
+        }
+
+        @Override
+        protected void onPostExecute(List<Entry> result) {
+            binding.loading.setVisibility(View.GONE);
+            if (result == null || result.size() == 0) {
+
+                mEntryAdapter.clearAllToNotifyData();
+
+                //QQ キーボードの検索の虫眼鏡ボタンをタップした時だけメッセージをだす
+                if (mIsOnSearchSubmit) {
+                    DialogManager.showToast(getContext(),
+                            getString(R.string.no_match_by_search_message));
+                    mIsOnSearchSubmit = false;
+                }
+                binding.refreshLayout.setVisibility(View.VISIBLE);
+                return;
+            }
+
+            mEntryAdapter.setItems(result);
+            mEntryAdapter.notifyDataSetChanged();
+            binding.refreshLayout.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void closeKeyboard(View view) {
+        if (view == null) return;
+        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    }
 }
