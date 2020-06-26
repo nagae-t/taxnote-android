@@ -132,6 +132,7 @@ public class HistoryTabFragment extends Fragment {
         searchView.setOnQueryTextListener(onQueryText);
 
         searchView.setMaxWidth(getView().getWidth() - (int) (56f * getResources().getDisplayMetrics().density));
+        clearSearchEntry();
     }
 
     @Override
@@ -446,6 +447,13 @@ public class HistoryTabFragment extends Fragment {
             mEntryAdapter.setItems(result);
             mEntryAdapter.notifyDataSetChanged();
             binding.refreshLayout.setVisibility(View.VISIBLE);
+        }
+    }
+
+    void clearSearchEntry() {
+        if (searchView != null) {
+            searchView.setQuery("", false);
+            searchView.setIconified(true);
         }
     }
 

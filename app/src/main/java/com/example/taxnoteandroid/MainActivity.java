@@ -431,7 +431,6 @@ public class MainActivity extends DefaultCommonActivity
                     case R.id.tab2:
                         binding.pager.setCurrentItem(1, false);
                         setTitle(getString(R.string.History));
-                        clearSearchEntry();
                         break;
                     case R.id.tab3:
                         binding.pager.setCurrentItem(2, false);
@@ -714,8 +713,13 @@ public class MainActivity extends DefaultCommonActivity
     }
 
     private void clearSearchEntry() {
-        searchView.setQuery("", false);
-        searchView.setIconified(true);
+        if (mTabPagerAdapter == null) return;
+
+        CustomViewPager pager = binding.pager;
+        HistoryTabFragment fragment =
+                (HistoryTabFragment) mTabPagerAdapter.instantiateItem(pager, 1);
+        if (fragment != null)
+            fragment.clearSearchEntry();
     }
 
     public boolean onKeyDown(int keyCode, KeyEvent event) {
