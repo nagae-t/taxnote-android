@@ -160,28 +160,28 @@ public class AccountSelectActivity extends DefaultCommonActivity {
 
     private void showRenameAccountDialog(final Account account, final int position) {
         DialogManager.showRenameCateDialog(this, null, account,
-            new DialogManager.CategoryCombineListener() {
-                @Override
-                public void onCombine(Reason fromReason, Reason toReason, int countTarget) {
-                }
-
-                @Override
-                public void onCombine(Account fromAccount, Account toAccount, int countTarget) {
-                    if (countTarget > 0) {
-                        entryManager.updateCombine(fromAccount, toAccount);
+                new DialogManager.CategoryCombineListener() {
+                    @Override
+                    public void onCombine(Reason fromReason, Reason toReason, int countTarget) {
                     }
-                    accountDataManager.updateSetDeleted(fromAccount.uuid, mApiModel);
-                    reloadData();
-                    BroadcastUtil.sendReloadReport(AccountSelectActivity.this);
 
-                    String title = getString(R.string.done);
-                    String msg = getString(R.string.combined_categories);
-                    DialogManager.showCustomAlertDialog(AccountSelectActivity.this,
-                            getSupportFragmentManager(), title, msg);
+                    @Override
+                    public void onCombine(Account fromAccount, Account toAccount, int countTarget) {
+                        if (countTarget > 0) {
+                            entryManager.updateCombine(fromAccount, toAccount);
+                        }
+                        accountDataManager.updateSetDeleted(fromAccount.uuid, mApiModel);
+                        reloadData();
+                        BroadcastUtil.sendReloadReport(AccountSelectActivity.this);
 
-                }
+                        String title = getString(R.string.done);
+                        String msg = getString(R.string.combined_categories);
+                        DialogManager.showCustomAlertDialog(AccountSelectActivity.this,
+                                getSupportFragmentManager(), title, msg);
 
-            });
+                    }
+
+                });
 
     }
 
@@ -454,7 +454,7 @@ public class AccountSelectActivity extends DefaultCommonActivity {
                         }
                     });
                     ListviewFooterBinding binding = (ListviewFooterBinding) obj;
-                    binding.text.setText(getResources().getString(R.string.list_view_add_reason));
+                    binding.text.setText(getResources().getString(R.string.list_view_add_account));
                 }
             } catch (Exception e) {
                 e.printStackTrace();

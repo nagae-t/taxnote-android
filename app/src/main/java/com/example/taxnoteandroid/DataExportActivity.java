@@ -193,7 +193,7 @@ public class DataExportActivity extends DefaultCommonActivity
         });
     }
 
-    public void onClickPrint() {
+    public void onClickPrint(View view) {
         exePrintData();
     }
 
