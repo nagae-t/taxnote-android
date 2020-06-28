@@ -281,9 +281,9 @@ public class MainActivity extends DefaultCommonActivity
         searchView = (SearchView) searchMenu.getActionView();
         MenuItem exportMenu = menu.findItem(R.id.data_export);
         MenuItem delMenu = menu.findItem(R.id.data_delete);
-        String projectName = mProjectManager.getCurrentName();
-        String exportTitle = getString(R.string.export_current_something, projectName);
-        String delTitle = getString(R.string.delete_current_something, projectName);
+        String targetName = getHistoryTargetName();
+        String exportTitle = getString(R.string.export_current_something, targetName);
+        String delTitle = getString(R.string.delete_current_something, targetName);
         exportMenu.setTitle(exportTitle);
         delMenu.setTitle(delTitle);
 
@@ -344,8 +344,8 @@ public class MainActivity extends DefaultCommonActivity
 
             case R.id.data_export:
                 DataExportActivity.start(this,
-                        mProjectManager.getCurrentName(), null,
-                        EntryDataManager.PERIOD_TYPE_ALL);
+                        getHistoryTargetName(), null,
+                        EntryDataManager.PERIOD_TYPE_ALL, searchView.getQuery().toString());
                 break;
 
             case R.id.action_search:
@@ -355,7 +355,7 @@ public class MainActivity extends DefaultCommonActivity
                 HistoryTabFragment historyTabFragment = (HistoryTabFragment) mTabPagerAdapter
                         .instantiateItem(binding.pager, 1);
                 if (historyTabFragment != null)
-                    historyTabFragment.showAllDeleteConfirmDialog();
+                    historyTabFragment.showDeleteConfirmDialog();
                 break;
 
             // 損益表のメニューオプションが選択されたとき
@@ -397,6 +397,12 @@ public class MainActivity extends DefaultCommonActivity
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private String getHistoryTargetName() {
+        String projectName = mProjectManager.getCurrentName();
+        String query = searchView.getQuery().toString();
+        return query.isEmpty() ? projectName : projectName + " " + query;
     }
 
 

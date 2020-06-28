@@ -102,7 +102,7 @@ public class EntryDataManager {
         return ormaDatabase.selectFromEntry().toList();
     }
 
-    public List<Entry> findAll(long[] startAndEndDate, Boolean asc) {
+    private List<Entry> findAll(long[] startAndEndDate, Boolean asc) {
 
         List<Entry> entries;
         String orderSpec = (asc) ? OrderSpec.ASC : OrderSpec.DESC;
@@ -218,7 +218,7 @@ public class EntryDataManager {
     }
 
     // 収入・支出別
-    public List<Entry> findAll(long[] startAndEndDate, boolean isExpense, Boolean asc) {
+    private List<Entry> findAll(long[] startAndEndDate, boolean isExpense, Boolean asc) {
 
         List<Entry> entries;
         String orderSpec = (asc) ? OrderSpec.ASC : OrderSpec.DESC;
@@ -249,7 +249,7 @@ public class EntryDataManager {
     }
 
     // 備考で探す
-    public List<Entry> findAll(long[] startAndEndDate, String memo, boolean isExpense, Boolean asc) {
+    private List<Entry> findAll(long[] startAndEndDate, String memo, boolean isExpense, Boolean asc) {
 
         List<Entry> entries;
         String orderSpec = (asc) ? OrderSpec.ASC : OrderSpec.DESC;
@@ -282,7 +282,7 @@ public class EntryDataManager {
     }
 
     //@@ 未完成、まだデバッグ中
-    public List<Entry> findAll(String word) {
+    private List<Entry> findAll(String word) {
         List<Entry> entries = new ArrayList<>();
         String orderSpec = OrderSpec.DESC;
 
@@ -307,9 +307,10 @@ public class EntryDataManager {
      * @param startEndDate
      * @return
      */
-    public List<Entry> searchBy(String word, String reasonName, long[] startEndDate) {
+    public List<Entry> searchBy(String word, String reasonName, long[] startEndDate, Boolean asc) {
         List<Entry> entries = new ArrayList<>();
-        List<Entry> searchTargets = findAll(startEndDate, false);
+        List<Entry> searchTargets = findAll(startEndDate, asc);
+        word = word == null ? "" : word;
         for(Entry entry : searchTargets) {
 
             Pattern wordPattern = Pattern.compile(Pattern.quote(word));
@@ -340,9 +341,36 @@ public class EntryDataManager {
      * @param isExpense
      * @return
      */
-    public List<Entry> searchBy(String word, String reasonName, long[] startEndDate, boolean isExpense) {
+    public List<Entry> searchBy(String word, String reasonName, long[] startEndDate, boolean isExpense, Boolean asc) {
         List<Entry> entries = new ArrayList<>();
-        List<Entry> searchTargets = findAll(startEndDate, isExpense, false);
+        List<Entry> searchTargets = findAll(startEndDate, isExpense, asc);
+        word = word == null ? "" : word;
+        for(Entry entry : searchTargets) {
+
+            Pattern wordPattern = Pattern.compile(Pattern.quote(word));
+            Matcher accountNameMatcher = wordPattern.matcher(entry.account.name);
+            Matcher reasonNameMatcher = wordPattern.matcher(entry.reason.name);
+            Matcher memoMatcher = wordPattern.matcher(entry.memo);
+            Matcher priceMatcher = wordPattern.matcher(String.valueOf(entry.price));
+
+            if (accountNameMatcher.find() || reasonNameMatcher.find()
+                    || memoMatcher.find() || priceMatcher.find()) {
+
+                if (reasonName != null) {
+                    if (entry.reason.name.equals(reasonName))
+                        entries.add(entry);
+                } else {
+                    entries.add(entry);
+                }
+            }
+        }
+        return entries;
+    }
+
+    public List<Entry> searchBy(String word, String reasonName, long[] startEndDate, String memo, boolean isExpense, Boolean asc) {
+        List<Entry> entries = new ArrayList<>();
+        List<Entry> searchTargets = findAll(startEndDate, memo, isExpense, asc);
+        word = word == null ? "" : word;
         for(Entry entry : searchTargets) {
 
             Pattern wordPattern = Pattern.compile(Pattern.quote(word));

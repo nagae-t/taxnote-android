@@ -179,8 +179,8 @@ public class ProfitLossExportActivity extends DefaultCommonActivity {
             boolean isShowBalanceCarryForward = SharedPreferencesManager.getBalanceCarryForward(context);
             List<Entry> resultEntries = new ArrayList<>();
             List<Entry> entries = (startEndDate == null)
-                    ? entryManager.findAll(null, false)
-                    : entryManager.findAll(startEndDate, false);
+                    ? entryManager.searchBy(null, null, null, false)
+                    : entryManager.searchBy(null, null, startEndDate, false);
 
             boolean isFixedOrder = SharedPreferencesManager.getFixedCateOrder(ProfitLossExportActivity.this);
 

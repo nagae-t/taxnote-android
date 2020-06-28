@@ -200,8 +200,8 @@ public class ReportContentFragment extends Fragment {
             long[] startEndDate = longs[0];
             List<Entry> resultEntries = new ArrayList<>();
             List<Entry> entries = (startEndDate.length == 0)
-                    ? mEntryManager.findAll(null, false)
-                    : mEntryManager.findAll(startEndDate, false);
+                    ? mEntryManager.searchBy(null, null, null, false)
+                    : mEntryManager.searchBy(null, null, startEndDate, false);
             if (startEndDate.length != 0) mEndDate = startEndDate[1];
 
             mCarriedBalPrice = mEntryManager.getCarriedBalance(mEndDate);

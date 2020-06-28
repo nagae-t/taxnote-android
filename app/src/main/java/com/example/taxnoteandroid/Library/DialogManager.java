@@ -322,7 +322,7 @@ public class DialogManager {
         }
 
         EntryDataManager entryDataManager = new EntryDataManager(context);
-        List<Entry> entries = entryDataManager.findAll(null, true);
+        List<Entry> entries = entryDataManager.searchBy(null, null, null, true);
 
         if (entries.size() < 7) {
             return;
@@ -374,7 +374,7 @@ public class DialogManager {
         }
 
         EntryDataManager entryDataManager = new EntryDataManager(context);
-        List<Entry> entries = entryDataManager.findAll(null, true);
+        List<Entry> entries = entryDataManager.searchBy(null, null, null, true);
 
         if (entries.size() < 5) {
             return;
@@ -397,7 +397,7 @@ public class DialogManager {
 
                 DataExportActivity.start(context,
                         ProjectDataManager.getCurrentName(context), null,
-                        EntryDataManager.PERIOD_TYPE_ALL);
+                        EntryDataManager.PERIOD_TYPE_ALL, null);
                 dialogInterface.dismiss();
             }
 
@@ -451,7 +451,7 @@ public class DialogManager {
         }
 
         EntryDataManager entryDataManager = new EntryDataManager(context);
-        List<Entry> entries = entryDataManager.findAll(null, true);
+        List<Entry> entries = entryDataManager.searchBy(null, null, null, true);
 
         if (entries.size() < 10) {
             return;
@@ -507,7 +507,7 @@ public class DialogManager {
         }
 
         EntryDataManager entryDataManager = new EntryDataManager(context);
-        List<Entry> entries = entryDataManager.findAll(null, true);
+        List<Entry> entries = entryDataManager.searchBy(null, null, null, true);
 
         if (entries.size() < 5) {
             return;

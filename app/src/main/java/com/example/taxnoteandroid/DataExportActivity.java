@@ -57,6 +57,8 @@ public class DataExportActivity extends DefaultCommonActivity
     private boolean mIsBalance;
     private boolean mIsExpense;
 
+    private String mQuery;
+
     private static final String KEY_TARGET_CALENDAR = "target_calendar";
     private static final String KEY_PERIOD_TYPE = "period_type";
     private static final String KEY_TARGET_NAME = "target_name";
@@ -64,23 +66,25 @@ public class DataExportActivity extends DefaultCommonActivity
     private static final String KEY_MEMO = "memo";
     private static final String KEY_IS_BALANCE = "is_balance";
     private static final String KEY_IS_EXPENSE = "is_expense";
+    private static final String KEY_QUERY = "query";
 
     private static final String TAG_EXPORT_SUBJECT_DIALOG_FRAGMENT = "export_subject_dialog_fragment";
 
     public static void start(Context context, String targetName,
-                             Calendar targetCalendar, int periodType) {
+                             Calendar targetCalendar, int periodType, String query) {
         Intent intent = new Intent(context, DataExportActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.putExtra(KEY_TARGET_NAME, targetName);
         intent.putExtra(KEY_TARGET_CALENDAR, targetCalendar);
         intent.putExtra(KEY_PERIOD_TYPE, periodType);
+        intent.putExtra(KEY_QUERY, query);
 
         context.startActivity(intent);
     }
 
     public static void start(Context context, String targetName, Calendar targetCalendar,
                              String reasonName, String memo,
-                             boolean isExpense, int periodType) {
+                             boolean isExpense, int periodType, String query) {
         Intent intent = new Intent(context, DataExportActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.putExtra(KEY_TARGET_NAME, targetName);
@@ -89,18 +93,20 @@ public class DataExportActivity extends DefaultCommonActivity
         intent.putExtra(KEY_MEMO, memo);
         intent.putExtra(KEY_IS_EXPENSE, isExpense);
         intent.putExtra(KEY_PERIOD_TYPE, periodType);
+        intent.putExtra(KEY_QUERY, query);
 
         context.startActivity(intent);
     }
 
     public static void startForBalance(Context context, String targetName,
-                                       Calendar targetCalendar, int periodType) {
+                                       Calendar targetCalendar, int periodType, String query) {
         Intent intent = new Intent(context, DataExportActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.putExtra(KEY_TARGET_NAME, targetName);
         intent.putExtra(KEY_TARGET_CALENDAR, targetCalendar);
         intent.putExtra(KEY_IS_BALANCE, true);
         intent.putExtra(KEY_PERIOD_TYPE, periodType);
+        intent.putExtra(KEY_QUERY, query);
         context.startActivity(intent);
     }
 
@@ -123,6 +129,7 @@ public class DataExportActivity extends DefaultCommonActivity
         mMemoValue = receiptIntent.getStringExtra(KEY_MEMO);
         mIsExpense = receiptIntent.getBooleanExtra(KEY_IS_EXPENSE, false);
         mIsBalance = receiptIntent.getBooleanExtra(KEY_IS_BALANCE, false);
+        mQuery = receiptIntent.getStringExtra(KEY_QUERY);
 
         ActionBar actionBar = getSupportActionBar();
         actionBar.setSubtitle(mTargetName);
@@ -413,6 +420,9 @@ public class DataExportActivity extends DefaultCommonActivity
         if (mTargetName != null) {
             manager.setTargetName(mTargetName);
         }
+        if (mQuery != null && !mQuery.isEmpty()) {
+            manager.setQuery(mQuery);
+        }
         manager.export(); // Generate CSV file and send it by email.
     }
 
@@ -473,6 +483,9 @@ public class DataExportActivity extends DefaultCommonActivity
         if (mIsBalance) manager.setBalance(true);
         if (mTargetName != null) {
             manager.setTargetName(mTargetName);
+        }
+        if (mQuery != null && !mQuery.isEmpty()) {
+            manager.setQuery(mQuery);
         }
         manager.print();
     }

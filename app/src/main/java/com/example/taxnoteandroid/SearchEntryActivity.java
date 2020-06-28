@@ -294,9 +294,9 @@ public class SearchEntryActivity extends DefaultCommonActivity {
                 startEndDate = new long[]{mStartTime, mEndTime};
 
             if (mIsCommon) {
-                result = mEntryManager.searchBy(word, mReasonName, startEndDate);
+                result = mEntryManager.searchBy(word, mReasonName, startEndDate, false);
             } else {
-                result = mEntryManager.searchBy(word, mReasonName, startEndDate, mIsExpense);
+                result = mEntryManager.searchBy(word, mReasonName, startEndDate, mIsExpense, false);
             }
             for (Entry entry : result) {
                 entry.viewType = CommonEntryRecyclerAdapter.VIEW_ITEM_CELL;

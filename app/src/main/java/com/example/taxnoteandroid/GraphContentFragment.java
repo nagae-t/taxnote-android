@@ -166,8 +166,8 @@ public class GraphContentFragment extends Fragment {
             long[] startEndDate = longs[0];
             List<Entry> entryData = new ArrayList<>();
             List<Entry> entries = (startEndDate.length == 0)
-                    ? mEntryManager.findAll(null, isExpense, false)
-                    : mEntryManager.findAll(startEndDate, isExpense, false);
+                    ? mEntryManager.searchBy(null, null, null, isExpense, false)
+                    : mEntryManager.searchBy(null, null, startEndDate, isExpense, false);
             if (startEndDate.length > 0) {
                 mEndDate = startEndDate[1];
             }
