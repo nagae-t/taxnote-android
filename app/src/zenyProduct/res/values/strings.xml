@@ -52,7 +52,7 @@
     <string name="tap_project_to_edit_name">You can rename it if you tap an account.</string>
     <string name="taxnote_data_import">Import data into Zeny</string>
 
-    <!--//@@ここをアップデートごとに変更-->
+    <!--//@@@ここをアップデートごとに変更-->
     <string name="release_note_message">アプリが最新版にアップデートされました。新しい機能、変更点、バグ修正などのお知らせをご確認ください。</string>
 
     <string name="data_export_debit">Category</string>

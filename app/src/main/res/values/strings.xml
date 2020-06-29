@@ -271,8 +271,23 @@
     <string name="import_data_overwrite_confirm_message">Do you want to restore this backup data?  Please note that the current data of your Android device will be overwritten with the new data.</string>
 
     <string name="release_note_title">Update Info :</string>
-    <!--//@@ここをアップデートごとに変更-->
-    <string name="release_note_message">The app has been updated.  Please check new features, changes, and bug fixes.</string>
+    <!--//@@@ここをアップデートごとに変更-->
+    <string name="release_note_message">Hi, this update has nice new features\n
+\n
+@Total Sum after Search\n
+@Export & Bulk Delete after Search\n
+@Fixed Summary List Bug\n
+\n
+First, you can see the total sum based on search results from Overview. \n
+\n
+Also, you can use bulk delete and export button based on the search results, please try this handy feature if you are interested.\n
+\n
+Lastly, the small bug on the summary list has been fixed.\n
+\n
+As always,  I'd really appreciate it if you could review the app on the App Store.\n
+\n
+Thanks!\n
+</string>
 
     <string name="update_check_title">Update available</string>
     <string name="update_check_message">Please update to the latest version of this app.</string>
