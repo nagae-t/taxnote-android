@@ -146,7 +146,7 @@ public class GraphTabFragment extends Fragment  {
             @Override
             public void run() {
 
-                List<Entry> entries = mEntryDataManager.findAll(null, true);
+                List<Entry> entries = mEntryDataManager.searchBy(null, null, null, true);
                 final List<Calendar> calendars = reportGrouping.getReportCalendars(mClosingDateIndex, entries);
                 if (periodType == EntryDataManager.PERIOD_TYPE_ALL) {
                     TaxnoteApp.getInstance().ALL_PERIOD_CALS = calendars;

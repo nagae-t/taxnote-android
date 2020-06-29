@@ -65,7 +65,7 @@ public class HistoryListDataActivity extends DefaultCommonActivity {
     private int mSelectedPosition = -1;
 
     private SearchView searchView;
-    private List<Entry> allEntries = new ArrayList<>();
+    private String mQuery = "";
 
     private static final String KEY_TARGET_CALENDAR = "target_calendar";
     private static final String KEY_PERIOD_TYPE = "period_type";
@@ -249,12 +249,18 @@ public class HistoryListDataActivity extends DefaultCommonActivity {
 
         MenuItem exportMenu = menu.findItem(R.id.action_export);
         MenuItem delMenu = menu.findItem(R.id.action_delete);
-        String exportTitle = getString(R.string.export_current_something, mPageTitleAndSub);
-        String delTitle = getString(R.string.delete_current_something, mPageTitleAndSub);
+
+        String targetName = getTargetName();
+        String exportTitle = getString(R.string.export_current_something, targetName);
+        String delTitle = getString(R.string.delete_current_something, targetName);
         exportMenu.setTitle(exportTitle);
         delMenu.setTitle(delTitle);
 
         return super.onPrepareOptionsMenu(menu);
+    }
+
+    private String getTargetName() {
+        return mQuery.isEmpty() ? mPageTitleAndSub : mPageTitleAndSub + " " + mQuery;
     }
 
     @Override
@@ -266,13 +272,14 @@ public class HistoryListDataActivity extends DefaultCommonActivity {
             case R.id.action_search:
                 break;
             case R.id.action_export:
+                String targetName = getTargetName();
                 if (mIsBalance) {
                     DataExportActivity.startForBalance(this,
-                            mPageTitleAndSub, mTargetCalendar, mPeriodType);
+                            targetName, mTargetCalendar, mPeriodType, mQuery);
                 } else {
                     DataExportActivity.start(this,
-                            mPageTitleAndSub, mTargetCalendar,
-                            mReasonName, mMemoValue, mIsExpense, mPeriodType);
+                            targetName, mTargetCalendar,
+                            mReasonName, mMemoValue, mIsExpense, mPeriodType, mQuery);
                 }
                 break;
             case R.id.action_delete:
@@ -285,7 +292,7 @@ public class HistoryListDataActivity extends DefaultCommonActivity {
     private void showAllDeleteDialog() {
         final Context context = getApplicationContext();
 
-        String deleteBtnTitle = getString(R.string.delete_current_something, mPageTitleAndSub);
+        String deleteBtnTitle = getString(R.string.delete_current_something, getTargetName());
         // Confirm dialog
         new AlertDialog.Builder(this)
                 .setTitle(null)
@@ -294,9 +301,11 @@ public class HistoryListDataActivity extends DefaultCommonActivity {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
 
-                        for (Entry entry : mResultEntries) {
-                            if (entry.uuid != null) {
-                                mEntryManager.updateSetDeleted(entry.uuid);
+                        if (!mResultEntries.isEmpty()) {
+                            for (Entry entry : mResultEntries) {
+                                if (entry.uuid != null) {
+                                    mEntryManager.updateSetDeleted(entry.uuid);
+                                }
                             }
                         }
 
@@ -338,11 +347,11 @@ public class HistoryListDataActivity extends DefaultCommonActivity {
             List<Entry> entries;
 
             if (isBalance) {
-                entries = mEntryManager.findAll(startEndDate, false);
+                entries = mEntryManager.searchBy(null, null, startEndDate, false);
             } else {
                 List<Entry> _entries = (mMemoValue == null)
-                        ? mEntryManager.findAll(startEndDate, isExpense, false)
-                        : mEntryManager.findAll(startEndDate, mMemoValue, isExpense, false);
+                        ? mEntryManager.searchBy(null, null, startEndDate, isExpense, false)
+                        : mEntryManager.searchBy(null, null, startEndDate, mMemoValue, isExpense, false);
                 entries = new ArrayList<>();
 
                 // Filter data by reasonName
@@ -370,7 +379,6 @@ public class HistoryListDataActivity extends DefaultCommonActivity {
         protected void onPostExecute(List<Entry> result) {
             binding.refreshLayout.setVisibility(View.VISIBLE);
             binding.loading.setVisibility(View.GONE);
-            allEntries = result;
             if (result.size() == 0) {
                 binding.entries.setVisibility(View.GONE);
                 binding.empty.setVisibility(View.VISIBLE);
@@ -530,11 +538,9 @@ public class HistoryListDataActivity extends DefaultCommonActivity {
             closeKeyboard(searchView);
             if (query.length() > 0) {
                 mIsOnSearchSubmit = true;
-//                mSearchWord = query;
                 execSearchTask(query);
             } else {
-                mEntryAdapter.setItems(allEntries);
-                mEntryAdapter.notifyDataSetChanged();
+                loadEntryData(mStartEndDate, mIsBalance, mIsExpense);
             }
 
             return true;
@@ -543,12 +549,11 @@ public class HistoryListDataActivity extends DefaultCommonActivity {
         @Override
         public boolean onQueryTextChange(String newText) {
             mIsOnSearchSubmit = false;
+            mQuery = newText;
             if (newText.length() > 0) {
-//                mSearchWord = newText;
                 execSearchTask(newText);
             } else {
-                mEntryAdapter.setItems(allEntries);
-                mEntryAdapter.notifyDataSetChanged();
+                loadEntryData(mStartEndDate, mIsBalance, mIsExpense);
             }
 
             return false;
@@ -577,13 +582,14 @@ public class HistoryListDataActivity extends DefaultCommonActivity {
             }
 
             if (mIsBalance) {
-                result = mEntryManager.searchBy(word, null, startEndDate);
+                result = mEntryManager.searchBy(word, null, startEndDate, false);
             } else {
-                result = mEntryManager.searchBy(word, mReasonName, startEndDate, mIsExpense);
+                result = mEntryManager.searchBy(word, mReasonName, startEndDate, mIsExpense, false);
             }
             for (Entry entry : result) {
                 entry.viewType = CommonEntryRecyclerAdapter.VIEW_ITEM_CELL;
             }
+            mResultEntries = result;
 
             return setupSectionHeader(result, true);
         }

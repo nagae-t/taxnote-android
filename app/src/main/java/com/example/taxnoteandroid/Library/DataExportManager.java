@@ -83,6 +83,7 @@ public class DataExportManager implements TaxnoteConsts {
     private String mHeaderBusinessName;
     private String mHeaderSummary;
     private String mHeaderPeriod;
+    private String mQuery;
 
     public DataExportManager(AppCompatActivity activity) {
         this.mActivity = activity;
@@ -136,6 +137,10 @@ public class DataExportManager implements TaxnoteConsts {
 
     public void setTargetName(String name) {
         this.mTargetName = name;
+    }
+
+    public void setQuery(String query) {
+        this.mQuery = query;
     }
 
     private static long[] getThisMonthStartAndEndDate() {
@@ -736,11 +741,11 @@ public class DataExportManager implements TaxnoteConsts {
         if (isFromList) {
             entries = new ArrayList<>();
             if (mIsBalance) {
-                entries = entryDataManager.findAll(startEndDate, true);
+                entries = entryDataManager.searchBy(mQuery, null, startEndDate, true);
             } else {
                 List<Entry> _entries = (mMemo == null)
-                        ? entryDataManager.findAll(startEndDate, mIsExpense, true)
-                        : entryDataManager.findAll(startEndDate, mMemo, mIsExpense, true);
+                        ? entryDataManager.searchBy(mQuery, null, startEndDate, mIsExpense, true)
+                        : entryDataManager.searchBy(mQuery, null, startEndDate, mMemo, mIsExpense, true);
                 if (mReasonName != null) {
                     for (Entry _entry : _entries) {
                         if (_entry.reason.name.equals(mReasonName)) {
@@ -759,29 +764,29 @@ public class DataExportManager implements TaxnoteConsts {
         switch (exportRangeType) {
 
             case EXPORT_RANGE_TYPE_ALL:
-                entries = entryDataManager.findAll(null, true);
+                entries = entryDataManager.searchBy(mQuery, null, null, true);
                 break;
 
             case EXPORT_RANGE_TYPE_THIS_MONTH:
                 startEnd = getThisMonthStartAndEndDate();
-                entries = entryDataManager.findAll(startEnd, true);
+                entries = entryDataManager.searchBy(mQuery, null, startEnd, true);
                 break;
 
             case EXPORT_RANGE_TYPE_LAST_MONTH:
                 startEnd = getLastMonthStartAndEndDate();
-                entries = entryDataManager.findAll(startEnd, true);
+                entries = entryDataManager.searchBy(mQuery, null, startEnd, true);
                 break;
 
             case EXPORT_RANGE_TYPE_CUSTOM:
                 startEnd = getCustomStartAndEndDate(context);
-                entries = entryDataManager.findAll(startEnd, true);
+                entries = entryDataManager.searchBy(mQuery, null, startEnd, true);
                 break;
 
             case EXPORT_PROFIT_LOSS_FORMAT_TYPE_CSV: //@@ 多分使わない
                 return new ArrayList<>();
 
             default:
-                entries = entryDataManager.findAll(null, true);
+                entries = entryDataManager.searchBy(mQuery, null, null, true);
                 break;
         }
 

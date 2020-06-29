@@ -57,7 +57,7 @@ public class HistoryTabFragment extends Fragment {
     private int mSelectedPosition = -1;
 
     private SearchView searchView;
-    private List<Entry> allEntries = new ArrayList<>();
+    private String mQuery = "";
 
     public HistoryTabFragment() {
         // Required empty public constructor
@@ -132,7 +132,6 @@ public class HistoryTabFragment extends Fragment {
         searchView.setOnQueryTextListener(onQueryText);
 
         searchView.setMaxWidth(getView().getWidth() - (int) (56f * getResources().getDisplayMetrics().density));
-        clearSearchEntry();
     }
 
     @Override
@@ -142,6 +141,8 @@ public class HistoryTabFragment extends Fragment {
         if (this.isVisible()) {
             if (isVisibleToUser) {
                 DialogManager.showDataExportSuggestMessage(getActivity(), getFragmentManager());
+            } else {
+                clearSearchEntry();
             }
         }
     }
@@ -177,9 +178,10 @@ public class HistoryTabFragment extends Fragment {
         });
     }
 
-    public void showAllDeleteConfirmDialog() {
+    public void showDeleteConfirmDialog() {
         String projectName = mProjectManager.getCurrentName();
-        String deleteBtnTitle = getString(R.string.delete_current_something, projectName);
+        String targetName = mQuery.isEmpty() ? projectName : projectName + " " + mQuery;
+        String deleteBtnTitle = getString(R.string.delete_current_something, targetName);
         // Confirm dialog
         new AlertDialog.Builder(getActivity())
                 .setTitle(null)
@@ -187,16 +189,14 @@ public class HistoryTabFragment extends Fragment {
                 .setPositiveButton(deleteBtnTitle, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-
-                        deleteAllEntry();
-
+                        deleteEntries();
                     }
                 })
                 .setNegativeButton(getString(R.string.cancel), null)
                 .show();
     }
 
-    private void deleteAllEntry() {
+    private void deleteEntries() {
         final TNSimpleDialogFragment loading = DialogManager.getLoading((AppCompatActivity) getActivity());
         loading.show(getFragmentManager(), null);
         final Handler uiHandler = new Handler(Looper.getMainLooper());
@@ -204,7 +204,7 @@ public class HistoryTabFragment extends Fragment {
             @Override
             public void run() {
 
-                List<Entry> dataList = mEntryManager.findAll(null, false);
+                List<Entry> dataList = mEntryManager.searchBy(mQuery, null, null, false);
                 for (Entry entry : dataList) {
                     mEntryManager.updateSetDeleted(entry.uuid);
                 }
@@ -217,8 +217,7 @@ public class HistoryTabFragment extends Fragment {
                         loading.dismissAllowingStateLoss();
                         mApiModel.saveAllNeedSaveSyncDeletedData(null);
 
-                        mEntryAdapter.clearAll();
-                        mEntryAdapter.notifyDataSetChanged();
+                        clearSearchEntry();
                         DialogManager.showToast(mContext, mContext.getString(R.string.delete_done));
                         BroadcastUtil.sendReloadReport(getActivity());
 
@@ -269,7 +268,7 @@ public class HistoryTabFragment extends Fragment {
 
         @Override
         protected List<Entry> doInBackground(Integer... integers) {
-            List<Entry> entries = mEntryManager.findAll(null, false);
+            List<Entry> entries = mEntryManager.searchBy(null, null, null, false);
 
             if (entries == null || entries.isEmpty() || entries.size() == 0) {
                 return new ArrayList<>();
@@ -281,7 +280,6 @@ public class HistoryTabFragment extends Fragment {
         @Override
         protected void onPostExecute(List<Entry> result) {
             binding.loading.setVisibility(View.GONE);
-            allEntries = result;
             if (result.size() == 0) {
                 binding.refreshLayout.setVisibility(View.GONE);
                 binding.empty.setText(getResources().getString(R.string.history_data_empty));
@@ -380,11 +378,9 @@ public class HistoryTabFragment extends Fragment {
             mIsOnSearchSubmit = true;
             closeKeyboard(searchView);
             if (query.length() > 0) {
-//                mSearchWord = query;
                 execSearchTask(query);
             } else {
-                mEntryAdapter.setItems(allEntries);
-                mEntryAdapter.notifyDataSetChanged();
+                loadHistoryData();
             }
 
             return true;
@@ -392,12 +388,11 @@ public class HistoryTabFragment extends Fragment {
 
         @Override
         public boolean onQueryTextChange(String newText) {
+            mQuery = newText;
             if (newText.length() > 0) {
-//                mSearchWord = newText;
                 execSearchTask(newText);
             } else {
-                mEntryAdapter.setItems(allEntries);
-                mEntryAdapter.notifyDataSetChanged();
+                loadHistoryData();
             }
 
             return false;
@@ -419,7 +414,7 @@ public class HistoryTabFragment extends Fragment {
         protected List<Entry> doInBackground(String... strings) {
             String word = strings[0];
             List<Entry> result;
-            result = mEntryManager.searchBy(word, null, null);
+            result = mEntryManager.searchBy(word, null, null, false);
             for (Entry entry : result) {
                 entry.viewType = CommonEntryRecyclerAdapter.VIEW_ITEM_CELL;
             }

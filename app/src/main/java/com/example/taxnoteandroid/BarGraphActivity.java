@@ -391,14 +391,14 @@ public class BarGraphActivity extends DefaultCommonActivity implements OnChartVa
             List<Entry> entries;
             if (mIsCarriedBal) { // 繰越残高
                 entries = (mPeriodType == EntryDataManager.PERIOD_TYPE_ALL)
-                        ? mEntryDm.findAll(null, true)
-                        : mEntryDm.findAll(startEndDate, true);
+                        ? mEntryDm.searchBy(null, null, null, true)
+                        : mEntryDm.searchBy(null, null, startEndDate, true);
             } else if (mReason == null) { // 収入・支出別
                 entries = (mPeriodType == EntryDataManager.PERIOD_TYPE_ALL)
-                        ? mEntryDm.findAll(null, mIsExpense, true)
-                        : mEntryDm.findAll(startEndDate, mIsExpense, true);
+                        ? mEntryDm.searchBy(null, null,null, mIsExpense, true)
+                        : mEntryDm.searchBy(null, null, startEndDate, mIsExpense, true);
             } else { // 科目別のグラフ
-                List<Entry> _entries = mEntryDm.findAll(startEndDate, mIsExpense, false);
+                List<Entry> _entries = mEntryDm.searchBy(null, null, startEndDate, mIsExpense, false);
                 entries = new ArrayList<>();
 
                 // Filter data by reasonName
