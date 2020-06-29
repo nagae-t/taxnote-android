@@ -518,4 +518,11 @@
     <string name="free_limit_extend_done_title">Free Entry</string>
     <string name="free_limit_extend_done_message">15 entries/month limit will be set after the first 31 free entries.\n\nPlease subscribe to Taxnote Plus to unlock that.</string>
 
+    <string name="app_update_completed_message">Updating has completed.</string>
+    <string name="app_update_completed_action">Install</string>
+    <string name="play_store_review">Review</string>
+    <string name="play_store_url">https://play.google.com/store/apps/details?id=com.nonapp.taxnote</string>
+    <string name="list_view_add_account">Add payment method</string>
+
+
 </resources>
