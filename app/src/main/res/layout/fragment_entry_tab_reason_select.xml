@@ -26,8 +26,10 @@
                 android:id="@+id/date_previous_button"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:padding="16dp"
                 android:background="@drawable/selector_background_colors"
-                android:src="@drawable/ic_baseline_keyboard_arrow_left_55dp" />
+                android:tint="@color/divider"
+                android:src="@drawable/ic_baseline_keyboard_arrow_left_24dp" />
 
             <TextView
                 android:id="@+id/date_text_view"
@@ -43,8 +45,10 @@
                 android:id="@+id/date_next_button"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:padding="16dp"
                 android:background="@drawable/selector_background_colors"
-                android:src="@drawable/ic_baseline_keyboard_arrow_right_55dp" />
+                android:tint="@color/divider"
+                android:src="@drawable/ic_baseline_keyboard_arrow_right_24dp" />
 
         </LinearLayout>
 

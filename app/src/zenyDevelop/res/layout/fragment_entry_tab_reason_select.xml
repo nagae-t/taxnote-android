@@ -27,7 +27,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:background="@drawable/selector_background_colors"
-                android:src="@drawable/ic_baseline_keyboard_arrow_left_55dp" />
+                android:padding="16dp"
+                android:tint="@color/divider"
+                android:src="@drawable/ic_baseline_keyboard_arrow_left_24dp" />
 
             <TextView
                style="@style/font_style_standard"
@@ -44,7 +46,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:background="@drawable/selector_background_colors"
-                android:src="@drawable/ic_baseline_keyboard_arrow_right_55dp" />
+                android:padding="16dp"
+                android:tint="@color/divider"
+                android:src="@drawable/ic_baseline_keyboard_arrow_right_24dp" />
         </LinearLayout>
 
         <TextView
