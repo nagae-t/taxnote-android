@@ -238,10 +238,38 @@ public class EntryTabReasonSelectFragment extends Fragment {
                         loadCurrentDateWithToast(true);
 
                         // Save selected date
-                        SharedPreferencesManager.saveCurrentSelectedDate(getActivity(),date);
+                        SharedPreferencesManager.saveCurrentSelectedDate(getActivity(), date);
                     }
                 });
                 fragment.show(getFragmentManager(), DatePickerDialogFragment.class.getName());
+            }
+        });
+
+        binding.datePreviousButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Calendar c = Calendar.getInstance();
+                c.setTimeInMillis(date);
+                c.add(Calendar.DATE, -1);
+                date = c.getTimeInMillis();
+                loadCurrentDateWithToast(false);
+
+                // Save selected date
+                SharedPreferencesManager.saveCurrentSelectedDate(getActivity(), date);
+            }
+        });
+
+        binding.dateNextButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Calendar c = Calendar.getInstance();
+                c.setTimeInMillis(date);
+                c.add(Calendar.DATE, 1);
+                date = c.getTimeInMillis();
+                loadCurrentDateWithToast(false);
+
+                // Save selected date
+                SharedPreferencesManager.saveCurrentSelectedDate(getActivity(), date);
             }
         });
     }
@@ -302,28 +330,28 @@ public class EntryTabReasonSelectFragment extends Fragment {
 
     private void showRenameReasonDialog(final Reason reason, final int position) {
         DialogManager.showRenameCateDialog(getParentFragment().getActivity(), reason, null,
-            new DialogManager.CategoryCombineListener() {
-                @Override
-                public void onCombine(Reason fromReason, Reason toReason, int countTarget) {
-                    if (countTarget > 0) {
-                        entryManager.updateCombine(fromReason, toReason);
+                new DialogManager.CategoryCombineListener() {
+                    @Override
+                    public void onCombine(Reason fromReason, Reason toReason, int countTarget) {
+                        if (countTarget > 0) {
+                            entryManager.updateCombine(fromReason, toReason);
+                        }
+                        reasonDataManager.updateSetDeleted(fromReason.uuid, mApiModel);
+
+                        BroadcastUtil.sendReloadReport(getActivity());
+
+                        String title = mContext.getString(R.string.done);
+                        String msg = mContext.getString(R.string.combined_categories);
+                        DialogManager.showCustomAlertDialog(mContext,
+                                getFragmentManager(), title, msg);
+
                     }
-                    reasonDataManager.updateSetDeleted(fromReason.uuid, mApiModel);
 
-                    BroadcastUtil.sendReloadReport(getActivity());
+                    @Override
+                    public void onCombine(Account fromAccount, Account toAccount, int countTarget) {
+                    }
 
-                    String title = mContext.getString(R.string.done);
-                    String msg = mContext.getString(R.string.combined_categories);
-                    DialogManager.showCustomAlertDialog(mContext,
-                            getFragmentManager(), title, msg);
-
-                }
-
-                @Override
-                public void onCombine(Account fromAccount, Account toAccount, int countTarget) {
-                }
-
-            });
+                });
     }
 
     //--------------------------------------------------------------//
