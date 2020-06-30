@@ -272,17 +272,11 @@
 
     <string name="release_note_title">Update Info :</string>
     <!--//@@@ここをアップデートごとに変更-->
-    <string name="release_note_message">Hi, this update has nice new features\n
+    <string name="release_note_message">Hi, this is another nice update.\n
 \n
-@Total Sum after Search\n
-@Export and Bulk Delete after Search\n
-@Fixed Summary List Bug\n
+@Go, Back Button on Date\n
 \n
-First, you can see the total sum based on search results from Overview. \n
-\n
-Also, you can use bulk delete and export button based on the search results, please try this handy feature if you are interested.\n
-\n
-Lastly, the small bug on the summary list has been fixed.\n
+Finally, you can go or back with date button easily.  This must be very handy when you want to enter data a lot for your previous date accounting.\n
 \n
 As always,  I'd really appreciate it if you could review the app on the App Store.\n
 \n
