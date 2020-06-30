@@ -96,15 +96,6 @@ public class EntryEditActivity extends DefaultCommonActivity {
         loadData();
     }
 
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        getMenuInflater().inflate(R.menu.menu_entry_edit, menu);
-//        if (mIsCopy)
-//            menu.getItem(0).setVisible(false);
-//
-//        return super.onCreateOptionsMenu(menu);
-//    }
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -165,8 +156,8 @@ public class EntryEditActivity extends DefaultCommonActivity {
         setPriceView();
         setDeleteView();
 
-        // コピー用画面ならUIを調整 / Taxnoteのみ
-        if (mIsCopy && !ZNUtils.isZeny()) {
+        // コピー用画面ならUIを調整
+        if (mIsCopy) {
             binding.bottomCtrlLayout.setVisibility(View.GONE);
             binding.enterEntry.setVisibility(View.VISIBLE);
             binding.enterEntry.setOnClickListener(new View.OnClickListener() {
