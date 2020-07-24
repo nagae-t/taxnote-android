@@ -80,8 +80,22 @@
     <string name="tap_project_to_edit_name">アカウント名をタップすると名前を変更できます。</string>
 
     <string name="taxnote_data_import">Zenyへインポート</string>
-    <!--//@@ここをアップデートごとに変更-->
-    <string name="release_note_message">アプリが最新版にアップデートされました。新しい機能、変更点、バグ修正などのお知らせをご確認ください。</string>
+    <!--//@@@ここをアップデートごとに変更-->
+    <string name="release_note_message">こんにちは。若干腰痛です。\n
+\n
+さて、今回は大幅なアプデです。\n
+\n
+＠日付の左右に進む戻るボタン\n
+\n
+＠検索画面から出力、一括削除\n
+\n
+＠編集でコピー機能\n
+\n
+以前から要望のあった、日付の左右に進む戻るのボタンを付けまして、とても便利になりました。一気に一日ずつ入力する時などに活躍してくれると思います。\n
+\n
+アプリを気に入ってくれた方はレビューを書いてもらえると嬉しいです。\n
+\n
+それではまた！\n</string>
 
     <string name="rename_category">カテゴリ名変更・結合</string>
     <string name="profit_loss_settings">レポートの設定</string>

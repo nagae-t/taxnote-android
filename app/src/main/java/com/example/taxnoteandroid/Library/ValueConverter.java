@@ -59,7 +59,6 @@ public class ValueConverter {
 
         Calendar cal = Calendar.getInstance();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault());
-        sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
         try {
             cal.setTime(sdf.parse(dateString));
         } catch (ParseException e) {

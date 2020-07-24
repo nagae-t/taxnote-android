@@ -53,7 +53,19 @@
     <string name="taxnote_data_import">Import data into Zeny</string>
 
     <!--//@@@ここをアップデートごとに変更-->
-    <string name="release_note_message">アプリが最新版にアップデートされました。新しい機能、変更点、バグ修正などのお知らせをご確認ください。</string>
+    <string name="release_note_message">Hi, this is another nice update.\n
+\n
+@Go, Back Button on Date\n
+\n
+@Export or Bulk Delete from Search Results\n
+\n
+@Copy Button on Edit View\n
+\n
+Finally, you can go or back with date button easily.  This must be very handy when you want to enter data a lot for your previous date accounting.\n
+\n
+As always,  I'd really appreciate it if you could review the app on the App Store.\n
+\n
+Thanks!\n</string>
 
     <string name="data_export_debit">Category</string>
     <string name="data_export_account">Price</string>
