@@ -75,8 +75,8 @@ android {
         zenyProduct {
             dimension "mode"
             applicationId "com.nonapp.zeny"
-            versionCode 10
-            versionName "1.0.9"
+            versionCode 11
+            versionName "1.1.0"
 
             buildConfigField "String", "SERVICE_API_URI", "\"https://zenyapp.com/api\""
             buildConfigField "boolean", "IS_DEBUG_CLOUD", "false"
