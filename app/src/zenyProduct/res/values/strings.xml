@@ -55,9 +55,9 @@
     <!--//@@@ここをアップデートごとに変更-->
     <string name="release_note_message">Hi, this is an important bug fix.\n
 \n
-@Fixed Zeny Premium Date Issue\n
+@Fixed Zeny Premium Login, Crete Issues\n
 \n
-In the previous versions, if you input a data on Today, and sync with Zeny Premium next day, the date of the entry has become yesterday date in some cases.  This bug has been fixed thanks to the detailed report from a user.  Thank you very much.\n
+You can create your Zeny Premium account and log into your data without error on this version.
 \n
 As always,  I'd really appreciate it if you could review the app on the App Store.\n
 \n
