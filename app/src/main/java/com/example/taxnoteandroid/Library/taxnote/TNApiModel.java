@@ -1102,6 +1102,11 @@ public class TNApiModel extends TNApi {
     }
 
     private void saveAllNeedSaveAccounts(final AsyncOkHttpClient.ResponseCallback callback) {
+        if (ZNUtils.isZeny()) {
+            callback.onSuccess(null, null);
+            return;
+        }
+
         final List<Account> accounts = mAccountDataManager.findAllNeedSave(true);
         final int accountSize = accounts.size();
         if (accountSize == 0) {
