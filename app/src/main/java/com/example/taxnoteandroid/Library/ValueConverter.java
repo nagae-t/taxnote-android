@@ -59,6 +59,7 @@ public class ValueConverter {
 
         Calendar cal = Calendar.getInstance();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault());
+        sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
         try {
             cal.setTime(sdf.parse(dateString));
         } catch (ParseException e) {
@@ -71,6 +72,7 @@ public class ValueConverter {
         if (time <= 0) return "";
         Calendar cal = Calendar.getInstance();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault());
+        sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
         cal.setTimeInMillis(time);
         return sdf.format(cal.getTime());
     }
