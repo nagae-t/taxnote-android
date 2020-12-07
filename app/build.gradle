@@ -25,9 +25,9 @@ android {
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
 
-        versionCode 129
+        versionCode 130
 
-        versionName "1.6.8"
+        versionName "1.6.9"
 
         lintOptions {
             abortOnError false
@@ -75,8 +75,8 @@ android {
         zenyProduct {
             dimension "mode"
             applicationId "com.nonapp.zeny"
-            versionCode 12
-            versionName "1.1.1"
+            versionCode 13
+            versionName "1.1.2"
 
             buildConfigField "String", "SERVICE_API_URI", "\"https://zenyapp.com/api\""
             buildConfigField "boolean", "IS_DEBUG_CLOUD", "false"

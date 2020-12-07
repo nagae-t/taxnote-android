@@ -272,13 +272,13 @@
 
     <string name="release_note_title">Update Info :</string>
     <!--//@@@ここをアップデートごとに変更-->
-    <string name="release_note_message">Hi, this is an important bug fix.\n
+    <string name="release_note_message">Hi, this is a quick bug fix.\n
 \n
-@Fixed Taxnote Cloud Date Issue\n
+@Fixed Taxnote Cloud Date Sync\n
 \n
-In the previous versions, if you input a data on Today, and sync with Taxnote Cloud next day, the date of the entry has become yesterday date in some cases.  This bug has been fixed thanks to the detailed report from a user.  Thank you very much.\n
+In the Previous version, it had some date sync issue with iOS device, and that has been fixed.\n
 \n
-As always,  I'd really appreciate it if you could review the app on the App Store.\n
+As always,  I'd really appreciate it if you could review the app on PlayStore.\n
 \n
 Thanks!\n
 </string>

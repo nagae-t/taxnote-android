@@ -53,11 +53,11 @@
     <string name="taxnote_data_import">Import data into Zeny</string>
 
     <!--//@@@ここをアップデートごとに変更-->
-    <string name="release_note_message">Hi, this is an important bug fix.\n
+    <string name="release_note_message">Hi, this is a quick bug fix.\n
 \n
-@Fixed Zeny Premium Login, Crete Issues\n
+@Fixed Zeny Premium Date Sync\n
 \n
-You can create your Zeny Premium account and log into your data without error on this version.
+In the Previous version, it had some date sync issue with iOS device, and that has been fixed.
 \n
 As always,  I'd really appreciate it if you could review the app on the App Store.\n
 \n
