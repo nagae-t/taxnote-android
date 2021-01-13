@@ -38,6 +38,11 @@ import com.example.taxnoteandroid.model.Entry;
 import com.example.taxnoteandroid.model.Project;
 import com.example.taxnoteandroid.model.Reason;
 import com.example.taxnoteandroid.model.Summary;
+import com.google.android.play.core.review.ReviewInfo;
+import com.google.android.play.core.review.ReviewManager;
+import com.google.android.play.core.review.ReviewManagerFactory;
+import com.google.android.play.core.tasks.OnCompleteListener;
+import com.google.android.play.core.tasks.Task;
 import com.helpshift.support.Support;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
 
@@ -410,6 +415,14 @@ public class InputDataActivity extends DefaultCommonActivity {
             countAndTrackEntry();
             SharedPreferencesManager.saveFirstRegisterDone(InputDataActivity.this);
 
+            if (UpgradeManger.taxnotePlusIsActive(this) || UpgradeManger.taxnoteCloudIsActive(this)) {
+                int count = SharedPreferencesManager.incrementAppReviewRegisterCount(InputDataActivity.this);
+                if (count >= 30) {
+                    review();
+                    SharedPreferencesManager.resetAppReviewRegisterCount(InputDataActivity.this);
+                }
+            }
+
             DialogManager.showInputDataToast(this, dateString,entry);
 
             mApiModel.saveEntry(entry.uuid, null);
@@ -428,6 +441,20 @@ public class InputDataActivity extends DefaultCommonActivity {
         } else {
             DialogManager.showOKOnlyAlert(this, getResources().getString(R.string.Error), null);
         }
+    }
+
+    private void review() {
+        final ReviewManager manager = ReviewManagerFactory.create(this);
+        Task<ReviewInfo> request = manager.requestReviewFlow();
+        request.addOnCompleteListener(new OnCompleteListener<ReviewInfo>() {
+            @Override
+            public void onComplete(Task<ReviewInfo> task) {
+                if (task.isSuccessful()) {
+                    ReviewInfo reviewInfo = task.getResult();
+                    manager.launchReviewFlow(InputDataActivity.this, reviewInfo);
+                }
+            }
+        });
     }
 
     private void showUpgradeCloudInputLimit() {

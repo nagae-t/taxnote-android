@@ -31,6 +31,11 @@ import com.example.taxnoteandroid.Library.taxnote.TNApiUser;
 import com.example.taxnoteandroid.Library.zeny.ZNUtils;
 import com.example.taxnoteandroid.dataManager.SharedPreferencesManager;
 import com.example.taxnoteandroid.databinding.ActivityUpgradeBinding;
+import com.google.android.play.core.review.ReviewInfo;
+import com.google.android.play.core.review.ReviewManager;
+import com.google.android.play.core.review.ReviewManagerFactory;
+import com.google.android.play.core.tasks.OnCompleteListener;
+import com.google.android.play.core.tasks.Task;
 import com.google.api.services.androidpublisher.model.SubscriptionPurchase;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -851,6 +856,23 @@ public class UpgradeActivity extends DefaultCommonActivity {
             }
 
             updateUpgradeStatus();
+            if (isNewPurchased) {
+                review();
+            }
         }
+    }
+
+    private void review() {
+        final ReviewManager manager = ReviewManagerFactory.create(this);
+        Task<ReviewInfo> request = manager.requestReviewFlow();
+        request.addOnCompleteListener(new OnCompleteListener<ReviewInfo>() {
+            @Override
+            public void onComplete(Task<ReviewInfo> task) {
+                if (task.isSuccessful()) {
+                    ReviewInfo reviewInfo = task.getResult();
+                    manager.launchReviewFlow(UpgradeActivity.this, reviewInfo);
+                }
+            }
+        });
     }
 }

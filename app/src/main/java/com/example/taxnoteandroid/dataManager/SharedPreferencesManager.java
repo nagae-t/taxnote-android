@@ -53,6 +53,8 @@ public class SharedPreferencesManager {
     private static final String DAILY_ALERT_INPUT_FORGET_ENABLE_KEY = "DAILY_ALERT_INPUT_FORGET_ENABLE_KEY";
     private static final String DAILY_ALERT_INPUT_FORGET_TIME_KEY = "DAILY_ALERT_INPUT_FORGET_TIME_KEY";
 
+    private static final String APP_REVIEW_REGISTER_COUNT_KEY = "APP_REVIEW_REGISTER_COUNT_KEY";
+
 
     //--------------------------------------------------------------//
     //    -- Init --
@@ -453,4 +455,15 @@ public class SharedPreferencesManager {
         return getSharedPreferences(context).getLong(key, 0);
     }
 
+    public static int incrementAppReviewRegisterCount(Context context) {
+        int count = getAppReviewRegisterCount(context) + 1;
+        getSharedPreferences(context).edit().putInt(APP_REVIEW_REGISTER_COUNT_KEY, count).apply();
+        return count;
+    }
+    public static void resetAppReviewRegisterCount(Context context) {
+        getSharedPreferences(context).edit().putInt(APP_REVIEW_REGISTER_COUNT_KEY, 0).apply();
+    }
+    public static int getAppReviewRegisterCount(Context context) {
+        return getSharedPreferences(context).getInt(APP_REVIEW_REGISTER_COUNT_KEY, 0);
+    }
 }
