@@ -196,7 +196,9 @@ public class MainActivity extends DefaultCommonActivity
         super.onStart();
 
         setMixpanel();
-        setRateThisApp();
+
+        // InAppReview対応によりコメントアウト
+//        setRateThisApp();
     }
 
     @Override

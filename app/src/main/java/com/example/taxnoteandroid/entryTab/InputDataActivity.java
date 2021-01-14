@@ -415,12 +415,9 @@ public class InputDataActivity extends DefaultCommonActivity {
             countAndTrackEntry();
             SharedPreferencesManager.saveFirstRegisterDone(InputDataActivity.this);
 
-            if (UpgradeManger.taxnotePlusIsActive(this) || UpgradeManger.taxnoteCloudIsActive(this)) {
-                int count = SharedPreferencesManager.incrementAppReviewRegisterCount(InputDataActivity.this);
-                if (count >= 30) {
-                    review();
-                    SharedPreferencesManager.resetAppReviewRegisterCount(InputDataActivity.this);
-                }
+            int count = SharedPreferencesManager.incrementAppReviewRegisterCount(InputDataActivity.this);
+            if (count == 30 || count == 60 || count == 100) {
+                review();
             }
 
             DialogManager.showInputDataToast(this, dateString,entry);

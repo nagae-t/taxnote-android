@@ -460,9 +460,7 @@ public class SharedPreferencesManager {
         getSharedPreferences(context).edit().putInt(APP_REVIEW_REGISTER_COUNT_KEY, count).apply();
         return count;
     }
-    public static void resetAppReviewRegisterCount(Context context) {
-        getSharedPreferences(context).edit().putInt(APP_REVIEW_REGISTER_COUNT_KEY, 0).apply();
-    }
+
     public static int getAppReviewRegisterCount(Context context) {
         return getSharedPreferences(context).getInt(APP_REVIEW_REGISTER_COUNT_KEY, 0);
     }
