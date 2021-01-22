@@ -357,8 +357,7 @@ public class UpgradeActivity extends DefaultCommonActivity {
                         public void onClick(DialogInterface dialogInterface, int i) {
 
                             // Ask rating
-                            // InAppReview対応によりコメントアウト
-//                            RateThisApp.showRateDialog(UpgradeActivity.this);
+                            RateThisApp.showRateDialog(UpgradeActivity.this);
                         }
                     })
                     .show();

@@ -416,7 +416,7 @@ public class InputDataActivity extends DefaultCommonActivity {
             SharedPreferencesManager.saveFirstRegisterDone(InputDataActivity.this);
 
             int count = SharedPreferencesManager.incrementAppReviewRegisterCount(InputDataActivity.this);
-            if (count == 30 || count == 60 || count == 100) {
+            if (count == 30 || count == 60 || count == 100 || count == 150 || count == 200) {
                 review();
             }
 

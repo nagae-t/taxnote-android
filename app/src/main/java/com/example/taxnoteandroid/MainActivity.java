@@ -196,9 +196,7 @@ public class MainActivity extends DefaultCommonActivity
         super.onStart();
 
         setMixpanel();
-
-        // InAppReview対応によりコメントアウト
-//        setRateThisApp();
+        setRateThisApp();
     }
 
     @Override
@@ -707,8 +705,8 @@ public class MainActivity extends DefaultCommonActivity
 
     private void setRateThisApp() {
 
-//        RateThisApp.onCreate(this);
-        RateThisApp.showRateDialogIfNeeded(this);
+        // InAppReview対応によりコメントアウト
+//        RateThisApp.showRateDialogIfNeeded(this);
 
         // Custom message
         RateThisApp.Config config = new RateThisApp.Config(3, 10);
