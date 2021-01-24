@@ -196,7 +196,7 @@
     <string name="help_rename_category_message">この科目は仕訳帳にすでに使われているので、該当する仕訳帳内の科目名も自動的に変更されます。</string>
     <string name="tap_here">（ここをタップ）</string>
     <string name="ask_anything_title">質問や要望はお気軽に</string>
-    <string name="ask_anything_message">こんにちは、アプリを開発している梅本です。確定申告やアプリ操作で分からない部分や要望がありましたら、ヘルプからお気軽にお問い合わせください。開発からサポートまでやっているので直接お答えできます。</string>
+    <string name="ask_anything_message">こんにちは。アプリ操作で分からない部分や要望がありましたら、ヘルプからお気軽にお問い合わせください。</string>
     <string name="see_help">ヘルプを見る</string>
     <string name="data_export_suggest_title">データの出力</string>
     <string name="data_export_suggest_message">右上のボタンから、入力したデータをエクセル、弥生会計、freee、MFクラウドなどに出力できます。</string>
@@ -209,7 +209,7 @@
     //--------------------------------------------------------------//
 
     <string name="rate_app_title">レビューのお願い</string>
-    <string name="rate_app_message">こんにちは、アプリを開発している梅本です。ストアのレビューは全て読んでいるので、よければアプリへの要望を書いてもらえませんか？\n\n例えば、気に入ってて変えて欲しくないところ、今後の要望などを書いてもらえれば。\n\nもちろん一言メッセージや、星をつけるだけでも嬉しいです。\n\n良いレビューが増えるとDL数が増えやすく、開発が継続できるので、気がむいた時にどうぞよろしくお願いします。(ストア画面を下にスクロールするとレビュー画面があります)</string>
+    <string name="rate_app_message">こんにちは、よければアプリへの要望を書いてもらえませんか？\n\n例えば、気に入ってて変えて欲しくないところ、今後の要望などを書いてもらえれば。\n\nもちろん一言メッセージや、星をつけるだけでも嬉しいです。\n\n良いレビューが増えるとDL数が増えやすく、開発が継続できるので、気がむいた時にどうぞよろしくお願いします。(ストア画面を下にスクロールするとレビュー画面があります)</string>
     <string name="rate_app_yes_button">レビューを書く</string>
     <string name="rate_app_no_button">やらない</string>
     <string name="rate_app_cancel_button">あとで</string>
@@ -220,12 +220,12 @@
     //--------------------------------------------------------------//
 
     // English対応したら消す
-    <string name="hs__new_conversation_hint">要望・質問はお気軽に。作者の梅本が直接返信させてもらいます。(右上のボタンから写真の添付が可能です)</string>
+    <string name="hs__new_conversation_hint">要望・質問はお気軽に。(右上のボタンから写真の添付が可能です)</string>
     <string name="hs__new_conversation_header">要望・質問を送る</string>
     <string name="hs__conversation_started_message">返信はアプリ内のアラートでおしらせします。</string>
     <string name="hs__conversation_detail_error">検索</string>
     <string name="hs__review_title">アップデートに関して</string>
-    <string name="hs__review_message">こんにちは、アプリを開発している梅本です。今回のアップデートの感想、または今後の要望などあれば遠慮なくお願いします。</string>
+    <string name="hs__review_message">こんにちは。今回のアップデートの感想、または今後の要望などあれば遠慮なくお願いします。</string>
 
 
     //--------------------------------------------------------------//

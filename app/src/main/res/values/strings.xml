@@ -200,7 +200,7 @@
     <string name="help_rename_category_message">You have entries in the history using this category, so the category name in these entries will be also renamed automatically.</string>
     <string name="tap_here">(Tap here)</string>
     <string name="ask_anything_title">Ask Anything</string>
-    <string name="ask_anything_message">Hello, this is Non Umemoto, creator of the app.  If you have any questions or requests, feel free to contact me via the help button.</string>
+    <string name="ask_anything_message">Hello, if you have any questions or requests, feel free to contact me via the help button.</string>
     <string name="see_help">Help</string>
     <string name="data_export_suggest_title">Data Export</string>
     <string name="data_export_suggest_message">You can export your data into csv file to open it with Excel or other spreadsheets.</string>
@@ -213,7 +213,7 @@
     //--------------------------------------------------------------//
 
     <string name="rate_app_title">Review Request</string>
-    <string name="rate_app_message">Hi, this is Non Umemoto, creator of the app.  I read all reviews to make it better, so I would really appreciate it if you could review it or just rate it.</string>
+    <string name="rate_app_message">Hi, I would really appreciate it if you could review it or just rate it.</string>
     <string name="rate_app_yes_button">OK</string>
     <string name="rate_app_no_button">NO</string>
     <string name="rate_app_cancel_button">Later</string>
@@ -228,7 +228,7 @@
     <string name="hs__conversation_started_message">Thanks for your message!  I get back to you shortly and you will get a pop message within the app.</string>
     <string name="hs__conversation_detail_error">Search</string>
     <string name="hs__review_title">About New Updates</string>
-    <string name="hs__review_message">Hi, this is Non Umemoto, creator of Taxnote.  If you love new updates of Taxnote, I\'d appreciate it if you could review it.</string>
+    <string name="hs__review_message">Hi, if you love new updates of Taxnote, I\'d appreciate it if you could review it.</string>
 
 
     //--------------------------------------------------------------//
