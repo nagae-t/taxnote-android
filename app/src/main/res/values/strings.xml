@@ -272,11 +272,12 @@
 
     <string name="release_note_title">Update Info :</string>
     <!--//@@@ここをアップデートごとに変更-->
-    <string name="release_note_message">Hi, this is an important bug fix.\n
+    <string name="release_note_message">Hi, this is a small bug fix update.\n
 \n
-@Fixed CSV  Export Error\n
+@App review Dialog Fix\n
+@Minor Bug Fixes\n
 \n
-In the previous version, it had an issue with CSV export, and that has been fixed.\n
+In this version, some minor usability issues and minor bugs have been fixed.\n
 \n
 As always,  I'd really appreciate it if you could review the app on PlayStore.\n
 \n
