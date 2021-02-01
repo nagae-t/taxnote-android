@@ -53,14 +53,14 @@
     <string name="taxnote_data_import">Import data into Zeny</string>
 
     <!--//@@@ここをアップデートごとに変更-->
-    <string name="release_note_message">Hi, this is an important bug fix update.\n
+    <string name="release_note_message">Hi, this is a nice update.\n
 \n
-@Fixed CSV Export Error\n
-@Fixed Usability issues and small bugs\n
+@App Icon Updated\n
+@Minor Bug Fixes\n
 \n
-CSV Export had error with Android OS updates, and it has been fixed.  Also, the Review Api has been changed to the Google official one, and other minor bugs have been fixed.
+From this version, you can see the better app icon design on your device.  It is a small change, but it must be nice to have a modern design icon anyway.\n
 \n
-As always,  I'd really appreciate it if you could review the app on the App Store.\n
+As always,  I'd really appreciate it if you could review the app on PlayStore.\n
 \n
 Thanks!\n</string>
 
