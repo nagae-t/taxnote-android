@@ -53,11 +53,12 @@
     <string name="taxnote_data_import">Import data into Zeny</string>
 
     <!--//@@@ここをアップデートごとに変更-->
-    <string name="release_note_message">Hi, this is a quick bug fix.\n
+    <string name="release_note_message">Hi, this is an important bug fix update.\n
 \n
-@Fixed Zeny Premium Date Sync\n
+@Fixed CSV Export Error\n
+@Fixed Usability issues and small bugs\n
 \n
-In the Previous version, it had some date sync issue with iOS device, and that has been fixed.
+CSV Export had error with Android OS updates, and it has been fixed.  Also, the Review Api has been changed to the Google official one, and other minor bugs have been fixed.
 \n
 As always,  I'd really appreciate it if you could review the app on the App Store.\n
 \n
