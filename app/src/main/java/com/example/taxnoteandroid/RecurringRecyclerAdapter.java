@@ -10,7 +10,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.taxnoteandroid.Library.ValueConverter;
-import com.example.taxnoteandroid.Library.zeny.ZNUtils;
 import com.example.taxnoteandroid.databinding.RowHistoryCellBinding;
 import com.example.taxnoteandroid.databinding.RowHistorySectionHeaderBinding;
 import com.example.taxnoteandroid.model.Recurring;
@@ -22,8 +21,8 @@ import java.util.List;
  * Created by b0ne on 2017/04/12.
  */
 
-public class RecurringRecyclerAdapter extends  RecyclerView.Adapter<BindingHolder>
-        implements View.OnClickListener, View.OnLongClickListener  {
+public class RecurringRecyclerAdapter extends RecyclerView.Adapter<BindingHolder>
+        implements View.OnClickListener, View.OnLongClickListener {
 
     private Context mContext;
     private RecyclerView mRecyclerView;
@@ -100,20 +99,15 @@ public class RecurringRecyclerAdapter extends  RecyclerView.Adapter<BindingHolde
                 RowHistoryCellBinding cellBinding = (RowHistoryCellBinding) holder.binding;
 
                 // price
-                priceString = ValueConverter.formatPrice(mContext ,recurring.price);
+                priceString = ValueConverter.formatPrice(mContext, recurring.price);
                 cellBinding.price.setText(priceString);
                 cellBinding.price.setTextColor(priceColor);
 
                 // Name
-                String nameText;
-                if (!ZNUtils.isZeny()) {
-                    String reasonName = ValueConverter.parseCategoryName(mContext, recurring.reason.name);
-                    String accName = ValueConverter.parseCategoryName(mContext, recurring.account.name);
-                    nameText = (recurring.isExpense) ? reasonName + " / " + accName
-                            : accName + " / " + reasonName;
-                } else {
-                    nameText = recurring.reason.name;
-                }
+                String reasonName = ValueConverter.parseCategoryName(mContext, recurring.reason.name);
+                String accName = ValueConverter.parseCategoryName(mContext, recurring.account.name);
+                String nameText = (recurring.isExpense) ? reasonName + " / " + accName
+                        : accName + " / " + reasonName;
 
                 cellBinding.name.setText(nameText);
 
@@ -184,10 +178,6 @@ public class RecurringRecyclerAdapter extends  RecyclerView.Adapter<BindingHolde
 
     public void setOnItemClickListener(final OnItemClickListener listener) {
         mOnItemClickListener = listener;
-    }
-
-    public void setOnItemLongClickListener(final OnLongItemClickListener listener) {
-        mOnItemLongClickListener = listener;
     }
 
 }

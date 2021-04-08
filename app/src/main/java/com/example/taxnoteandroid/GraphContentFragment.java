@@ -51,7 +51,7 @@ public class GraphContentFragment extends Fragment {
     private TNApiModel mApiModel;
 
     private static final String KEY_TARGET_CALENDAR = "TARGET_CALENDAR";
-    private static final String KEY_IS_EXPENSE= "IS_EXPENSE";
+    private static final String KEY_IS_EXPENSE = "IS_EXPENSE";
 
     public static GraphContentFragment newInstance(Calendar targetCalendar, boolean isExpense) {
         GraphContentFragment fragment = new GraphContentFragment();
@@ -83,7 +83,7 @@ public class GraphContentFragment extends Fragment {
         isExpense = getArguments().getBoolean(KEY_IS_EXPENSE, true);
         Serializable calSerial = getArguments().getSerializable(KEY_TARGET_CALENDAR);
         if (calSerial != null)
-            mTargetCalendar = (Calendar)calSerial;
+            mTargetCalendar = (Calendar) calSerial;
 
         binding.refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -118,7 +118,7 @@ public class GraphContentFragment extends Fragment {
     }
 
     private void refreshSyncData() {
-        mApiModel.syncData(getActivity(), true, new AsyncOkHttpClient.Callback() {
+        mApiModel.syncData(getActivity(), new AsyncOkHttpClient.Callback() {
             @Override
             public void onFailure(Response response, Throwable throwable) {
                 Log.e("Error", "refreshSyncData onFailure");
@@ -239,7 +239,6 @@ public class GraphContentFragment extends Fragment {
                 @Override
                 public void onItemClick(View view, int position, Entry item) {
                     if (item.viewType == GraphHistoryRecyclerAdapter.VIEW_CARRIED_BAL_CELL) {
-                        // TODO: 表示グラフを確認して次へ遷移していいか
                         BarGraphActivity.startForCarriedBalance(mContext, mTargetCalendar, mPeriodType);
                     } else if (item.reason == null) {
                         BarGraphActivity.start(mContext, isExpense, mTargetCalendar, mPeriodType);

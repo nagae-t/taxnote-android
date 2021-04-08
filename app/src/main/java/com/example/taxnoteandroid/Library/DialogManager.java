@@ -19,7 +19,6 @@ import android.widget.Toast;
 import com.example.taxnoteandroid.DataExportActivity;
 import com.example.taxnoteandroid.HistoryListDataActivity;
 import com.example.taxnoteandroid.Library.taxnote.TNApiModel;
-import com.example.taxnoteandroid.Library.zeny.ZNUtils;
 import com.example.taxnoteandroid.R;
 import com.example.taxnoteandroid.TNSimpleDialogFragment;
 import com.example.taxnoteandroid.UpgradeActivity;
@@ -63,12 +62,8 @@ public class DialogManager {
         String message = dateString + " ";
         String priceString = ValueConverter.formatPrice(context, entry.price);
 
-        if (!ZNUtils.isZeny()) {
-            message += (entry.isExpense) ? entry.reason.name + " / " + entry.account.name
-                    : entry.account.name + " / " + entry.reason.name;
-        } else {
-            message += entry.reason.name;
-        }
+        message += (entry.isExpense) ? entry.reason.name + " / " + entry.account.name
+                : entry.account.name + " / " + entry.reason.name;
 
         message += " " + priceString;
 
@@ -421,134 +416,6 @@ public class DialogManager {
 
         dialogFragment.show(fragmentManager, null);
     }
-
-    public static void showBusinessModelMessage(final Context context, FragmentManager fragmentManager) {
-
-        // Skip for Zeny
-        if (ZNUtils.isZeny()) {
-            return;
-        }
-
-        // Skip Taxnote Plus users
-        if (UpgradeManger.taxnotePlusIsActive(context)) {
-            return;
-        }
-
-        if (!SharedPreferencesManager.isFirstRegisterDone(context)) {
-            return;
-        }
-
-        if (!SharedPreferencesManager.isHistoryTabHelpDone(context)) {
-            return;
-        }
-
-        if (!SharedPreferencesManager.isAskAnythingMessageDone(context)) {
-            return;
-        }
-
-        if (SharedPreferencesManager.isBusinessModelMessageDone(context)) {
-            return;
-        }
-
-        EntryDataManager entryDataManager = new EntryDataManager(context);
-        List<Entry> entries = entryDataManager.searchBy(null, null, null, true);
-
-        if (entries.size() < 10) {
-            return;
-        }
-
-        SharedPreferencesManager.saveBusinessModelMessageDone(context);
-
-        // Custom Alert
-        final TNSimpleDialogFragment dialogFragment = TNSimpleDialogFragment.newInstance();
-        dialogFragment.setTitle(context.getString(R.string.business_model_title));
-        dialogFragment.setMessage(context.getString(R.string.business_model_message));
-
-        dialogFragment.setCloseToFinish(true);
-        dialogFragment.setPositiveBtnText(context.getString(R.string.benefits_of_upgrade));
-        dialogFragment.setNegativeBtnText(context.getString(R.string.cancel));
-
-        dialogFragment.setDialogListener(new TNSimpleDialogFragment.TNSimpleDialogListener() {
-            @Override
-            public void onPositiveBtnClick(DialogInterface dialogInterface, int i, String tag) {
-
-                // Show upgrade activity
-                Intent intent = new Intent(context, UpgradeActivity.class);
-                context.startActivity(intent);
-
-                dialogInterface.dismiss();
-            }
-
-            @Override
-            public void onNeutralBtnClick(DialogInterface dialogInterface, int i, String tag) {
-            }
-
-            @Override
-            public void onNegativeBtnClick(DialogInterface dialogInterface, int i, String tag) {
-                dialogInterface.dismiss();
-            }
-
-            @Override
-            public void onDialogCancel(DialogInterface dialogInterface, String tag) {
-            }
-
-            @Override
-            public void onDialogDismiss(DialogInterface dialogInterface, String tag) {
-            }
-        });
-
-        dialogFragment.show(fragmentManager, null);
-    }
-
-    public static void showChartsTapSuggestMessage(final Context context, FragmentManager fragmentManager) {
-
-        if (SharedPreferencesManager.isChartsTapMessageDone(context)) {
-            return;
-        }
-
-        EntryDataManager entryDataManager = new EntryDataManager(context);
-        List<Entry> entries = entryDataManager.searchBy(null, null, null, true);
-
-        if (entries.size() < 5) {
-            return;
-        }
-
-        SharedPreferencesManager.saveChartsTapMessageDone(context);
-
-        // Custom Alert
-        final TNSimpleDialogFragment dialogFragment = TNSimpleDialogFragment.newInstance();
-        dialogFragment.setTitle(context.getString(R.string.data_export_suggest_title));
-        dialogFragment.setMessage(context.getString(R.string.data_export_suggest_message));
-
-        dialogFragment.setCloseToFinish(true);
-        dialogFragment.setPositiveBtnText(context.getString(android.R.string.ok));
-
-        dialogFragment.setDialogListener(new TNSimpleDialogFragment.TNSimpleDialogListener() {
-            @Override
-            public void onPositiveBtnClick(DialogInterface dialogInterface, int i, String tag) {
-                dialogInterface.dismiss();
-            }
-
-            @Override
-            public void onNeutralBtnClick(DialogInterface dialogInterface, int i, String tag) {
-            }
-
-            @Override
-            public void onNegativeBtnClick(DialogInterface dialogInterface, int i, String tag) {
-            }
-
-            @Override
-            public void onDialogCancel(DialogInterface dialogInterface, String tag) {
-            }
-
-            @Override
-            public void onDialogDismiss(DialogInterface dialogInterface, String tag) {
-            }
-        });
-
-        dialogFragment.show(fragmentManager, null);
-    }
-
 
     //--------------------------------------------------------------//
     //    -- Release Note --

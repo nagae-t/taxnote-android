@@ -30,7 +30,7 @@ import javax.crypto.SecretKey;
 public class DefaultCommonActivity extends AppCompatActivity {
 
     private static final String KEY_NAME = "taxnote_key";
-    private static final byte[] SECRET_BYTE_ARRAY = new byte[] {1, 2, 3, 4, 5, 6};
+    private static final byte[] SECRET_BYTE_ARRAY = new byte[]{1, 2, 3, 4, 5, 6};
     private static final int AUTHENTICATION_DURATION_SECONDS = 2;
     private KeyguardManager mKeyguardManager;
 
@@ -79,8 +79,7 @@ public class DefaultCommonActivity extends AppCompatActivity {
                     .build());
             keyGenerator.generateKey();
         } catch (Exception e) {
-            // TODO: 例外発生時の挙動
-            throw new RuntimeException("Failed to create a symmetric key", e);
+            e.printStackTrace();
         }
     }
 
@@ -114,8 +113,7 @@ public class DefaultCommonActivity extends AppCompatActivity {
             createKey();
             tryEncrypt();
         } catch (Exception e) {
-            // TODO: 例外発生時の挙動
-            throw new RuntimeException(e);
+            e.printStackTrace();
         }
     }
 }

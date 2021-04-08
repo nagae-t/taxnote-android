@@ -15,11 +15,9 @@ import com.example.taxnoteandroid.Library.BroadcastUtil;
 import com.example.taxnoteandroid.Library.DialogManager;
 import com.example.taxnoteandroid.Library.UpgradeManger;
 import com.example.taxnoteandroid.Library.ValueConverter;
-import com.example.taxnoteandroid.Library.zeny.ZNUtils;
 import com.example.taxnoteandroid.R;
 import com.example.taxnoteandroid.TNSimpleDialogFragment;
 import com.example.taxnoteandroid.dataManager.AccountDataManager;
-import com.example.taxnoteandroid.dataManager.DefaultDataInstaller;
 import com.example.taxnoteandroid.dataManager.EntryDataManager;
 import com.example.taxnoteandroid.dataManager.ProjectDataManager;
 import com.example.taxnoteandroid.dataManager.ReasonDataManager;
@@ -86,11 +84,6 @@ public class TNApiModel extends TNApi {
         this.mSummaryDataManager = new SummaryDataManager(context);
         this.mRecurringDataManager = new RecurringDataManager(context);
         this.mEntryDataManager = new EntryDataManager(context);
-    }
-
-    private int getBulkLoopMax(int allSize) {
-        double loopMaxDouble = Math.ceil(allSize/LIMIT_BULK_SEND);
-        return (int)loopMaxDouble;
     }
 
     //--------------------------------------------------------------//
@@ -165,11 +158,6 @@ public class TNApiModel extends TNApi {
     }
 
     private void getAccounts(final AsyncOkHttpClient.Callback callback) {
-        if (ZNUtils.isZeny()) {
-            callback.onSuccess(null, null);
-            return;
-        }
-
         setHttpMethod(HTTP_METHOD_GET);
         setRequestPath(URL_PATH_ACCOUNT);
 
@@ -264,7 +252,7 @@ public class TNApiModel extends TNApi {
         String timeStr = String.valueOf(updated);
         StringBuilder sb = new StringBuilder();
         sb.append(timeStr);
-        sb.insert(timeStr.length()-3, ".");
+        sb.insert(timeStr.length() - 3, ".");
         String updatedString = new String(sb);
         FormBody form = new FormBody.Builder()
                 .add("updated_at", updatedString)
@@ -354,10 +342,6 @@ public class TNApiModel extends TNApi {
         });
     }
 
-    public void getAllDataAfterLogin(final AsyncOkHttpClient.Callback callback) {
-        getAllDataAfterLogin(callback, null);
-    }
-
     public void getAllDataAfterLogin(final AsyncOkHttpClient.Callback callback, TNSimpleDialogFragment loadingDialog) {
         mLoadingDialog = loadingDialog;
         resetAllUpdatedKeys();
@@ -373,14 +357,12 @@ public class TNApiModel extends TNApi {
 
         Project project = mProjectDataManager.findByUuid(uuid);
         final long projectId = project.id;
-        boolean isZeny = ZNUtils.isZeny();
 
         // Cloud Purchase Info
         String subsExpires = TNApiUser.getCloudExpiryString(context);
         String subsId = TNApiUser.getCloudOrderId(context);
         if (subsId == null) subsId = "";
-        String subsType = (isZeny) ? UpgradeManger.SKU_ZENY_PREMIUM_ID
-            : UpgradeManger.SKU_TAXNOTE_CLOUD_ID;
+        String subsType = UpgradeManger.SKU_TAXNOTE_CLOUD_ID;
         String subsReceipt = TNApiUser.getCloudPurchaseToken(context);
         if (subsReceipt == null) subsReceipt = "";
 
@@ -393,11 +375,9 @@ public class TNApiModel extends TNApi {
                 .add("project[subscription_expires]", subsExpires)
                 .add("project[subscription_transaction]", subsId)
                 .add("project[subscription_type]", subsType)
-                .add("project[appstore_receipt]", subsReceipt);
-        if (!isZeny) {
-            formBuilder.add("project[account_for_expense]", project.accountUuidForExpense)
-                    .add("project[account_for_income]", project.accountUuidForIncome);
-        }
+                .add("project[appstore_receipt]", subsReceipt)
+                .add("project[account_for_expense]", project.accountUuidForExpense)
+                .add("project[account_for_income]", project.accountUuidForIncome);
 
         setHttpMethod(HTTP_METHOD_POST);
         setRequestPath(URL_PATH_PROJECT);
@@ -487,12 +467,12 @@ public class TNApiModel extends TNApi {
             String indexKey = "reasons[]";
             String details = (reason.details != null) ? reason.details : "";
             formBuilder = formBuilder
-                    .add(indexKey+"[uuid]", reason.uuid)
-                    .add(indexKey+"[name]", reason.name)
-                    .add(indexKey+"[details]", details)
-                    .add(indexKey+"[order]", String.valueOf(reason.order))
-                    .add(indexKey+"[is_expense]", String.valueOf(reason.isExpense))
-                    .add(indexKey+"[project_uuid]", reason.project.uuid);
+                    .add(indexKey + "[uuid]", reason.uuid)
+                    .add(indexKey + "[name]", reason.name)
+                    .add(indexKey + "[details]", details)
+                    .add(indexKey + "[order]", String.valueOf(reason.order))
+                    .add(indexKey + "[is_expense]", String.valueOf(reason.isExpense))
+                    .add(indexKey + "[project_uuid]", reason.project.uuid);
         }
 
         setHttpMethod(HTTP_METHOD_POST);
@@ -582,11 +562,11 @@ public class TNApiModel extends TNApi {
         for (Account account : accList) {
             String indexKey = "accounts[]";
             formBuilder = formBuilder
-                    .add(indexKey+"[uuid]", account.uuid)
-                    .add(indexKey+"[name]", account.name)
-                    .add(indexKey+"[order]", String.valueOf(account.order))
-                    .add(indexKey+"[is_expense]", String.valueOf(account.isExpense))
-                    .add(indexKey+"[project_uuid]", account.project.uuid);
+                    .add(indexKey + "[uuid]", account.uuid)
+                    .add(indexKey + "[name]", account.name)
+                    .add(indexKey + "[order]", String.valueOf(account.order))
+                    .add(indexKey + "[is_expense]", String.valueOf(account.isExpense))
+                    .add(indexKey + "[project_uuid]", account.project.uuid);
         }
 
         setHttpMethod(HTTP_METHOD_POST);
@@ -676,11 +656,11 @@ public class TNApiModel extends TNApi {
         for (Summary summary : sumList) {
             String indexKey = "summaries[]";
             formBuilder = formBuilder
-                    .add(indexKey+"[uuid]", summary.uuid)
-                    .add(indexKey+"[name]", summary.name)
-                    .add(indexKey+"[order]", String.valueOf(summary.order))
-                    .add(indexKey+"[reason_uuid]", summary.reason.uuid)
-                    .add(indexKey+"[project_uuid]", summary.project.uuid);
+                    .add(indexKey + "[uuid]", summary.uuid)
+                    .add(indexKey + "[name]", summary.name)
+                    .add(indexKey + "[order]", String.valueOf(summary.order))
+                    .add(indexKey + "[reason_uuid]", summary.reason.uuid)
+                    .add(indexKey + "[project_uuid]", summary.project.uuid);
         }
 
         setHttpMethod(HTTP_METHOD_POST);
@@ -778,16 +758,16 @@ public class TNApiModel extends TNApi {
             String indexKey = "recurrings[]";
             String memo = (rec.memo != null) ? rec.memo : "";
             formBuilder = formBuilder
-                    .add(indexKey+"[uuid]", rec.uuid)
-                    .add(indexKey+"[date]", String.valueOf(rec.dateIndex))
-                    .add(indexKey+"[timezone]", rec.timezone)
-                    .add(indexKey+"[memo]", memo)
-                    .add(indexKey+"[price]", String.valueOf(rec.price))
-                    .add(indexKey+"[is_expense]", String.valueOf(rec.isExpense))
-                    .add(indexKey+"[order]", String.valueOf(rec.order))
-                    .add(indexKey+"[reason_uuid]", rec.reason.uuid)
-                    .add(indexKey+"[account_uuid]", rec.account.uuid)
-                    .add(indexKey+"[project_uuid]", rec.project.uuid);
+                    .add(indexKey + "[uuid]", rec.uuid)
+                    .add(indexKey + "[date]", String.valueOf(rec.dateIndex))
+                    .add(indexKey + "[timezone]", rec.timezone)
+                    .add(indexKey + "[memo]", memo)
+                    .add(indexKey + "[price]", String.valueOf(rec.price))
+                    .add(indexKey + "[is_expense]", String.valueOf(rec.isExpense))
+                    .add(indexKey + "[order]", String.valueOf(rec.order))
+                    .add(indexKey + "[reason_uuid]", rec.reason.uuid)
+                    .add(indexKey + "[account_uuid]", rec.account.uuid)
+                    .add(indexKey + "[project_uuid]", rec.project.uuid);
         }
 
         setHttpMethod(HTTP_METHOD_POST);
@@ -884,15 +864,15 @@ public class TNApiModel extends TNApi {
             String indexKey = "entries[]";
             String memo = (entry.memo != null) ? entry.memo : "";
             formBuilder = formBuilder
-                    .add(indexKey+"[uuid]", entry.uuid)
-                    .add(indexKey+"[date]", ValueConverter.long2dateString(entry.date))
-                    .add(indexKey+"[memo]", memo)
-                    .add(indexKey+"[price]", String.valueOf(entry.price))
-                    .add(indexKey+"[is_expense]", String.valueOf(entry.isExpense))
-                    .add(indexKey+"[updated_mobile]", ValueConverter.long2dateString(entry.updated))
-                    .add(indexKey+"[reason_uuid]", entry.reason.uuid)
-                    .add(indexKey+"[account_uuid]", entry.account.uuid)
-                    .add(indexKey+"[project_uuid]", entry.project.uuid);
+                    .add(indexKey + "[uuid]", entry.uuid)
+                    .add(indexKey + "[date]", ValueConverter.long2dateString(entry.date))
+                    .add(indexKey + "[memo]", memo)
+                    .add(indexKey + "[price]", String.valueOf(entry.price))
+                    .add(indexKey + "[is_expense]", String.valueOf(entry.isExpense))
+                    .add(indexKey + "[updated_mobile]", ValueConverter.long2dateString(entry.updated))
+                    .add(indexKey + "[reason_uuid]", entry.reason.uuid)
+                    .add(indexKey + "[account_uuid]", entry.account.uuid)
+                    .add(indexKey + "[project_uuid]", entry.project.uuid);
         }
 
         setHttpMethod(HTTP_METHOD_POST);
@@ -907,7 +887,7 @@ public class TNApiModel extends TNApi {
                             + ", message: " + response.message());
                 }
                 if (throwable != null) {
-                    Log.e(LTAG, "saveEntry(List) onFailure throwable msg: "+throwable.getMessage());
+                    Log.e(LTAG, "saveEntry(List) onFailure throwable msg: " + throwable.getMessage());
                 }
                 if (callback != null)
                     callback.onFailure(response, throwable);
@@ -986,7 +966,7 @@ public class TNApiModel extends TNApi {
 
                 @Override
                 public void onSuccess(Response response, String content) {
-                    String msg = mContext.getString(R.string.saving_project) +" "+ (mCount+1);
+                    String msg = mContext.getString(R.string.saving_project) + " " + (mCount + 1);
                     setSaveAllNeedProgressDialog(1, msg);
                     mCount++;
 
@@ -1030,13 +1010,13 @@ public class TNApiModel extends TNApi {
             return;
         }
 
-        final int loopSize = (int)LIMIT_BULK_SEND;
+        final int loopSize = (int) LIMIT_BULK_SEND;
 
-        for (int i=0; i<reasonSize; i+=loopSize) {
+        for (int i = 0; i < reasonSize; i += loopSize) {
             final int loopIndex = i;
 
-            final List<Reason> sendData = reasons.subList(i, Math.min(i+loopSize, reasonSize));
-            final int savedSize = i+sendData.size();
+            final List<Reason> sendData = reasons.subList(i, Math.min(i + loopSize, reasonSize));
+            final int savedSize = i + sendData.size();
 
             new Handler().postDelayed(new Runnable() {
                 @Override
@@ -1057,11 +1037,11 @@ public class TNApiModel extends TNApi {
 
                         @Override
                         public void onSuccess(Response response, String content) {
-                            String msg = mContext.getString(R.string.saving_reason) +" "+savedSize;
+                            String msg = mContext.getString(R.string.saving_reason) + " " + savedSize;
                             setSaveAllNeedProgressDialog(sendData.size(), msg);
 
 //                            if ((loopIndex+1) == loopMax)
-                            if ((loopIndex+loopSize) >= reasonSize)
+                            if ((loopIndex + loopSize) >= reasonSize)
                                 callback.onSuccess(response, content);
                         }
                     });
@@ -1072,11 +1052,6 @@ public class TNApiModel extends TNApi {
     }
 
     private void saveAllNeedSaveAccounts(final AsyncOkHttpClient.Callback callback) {
-        if (ZNUtils.isZeny()) {
-            callback.onSuccess(null, null);
-            return;
-        }
-
         List<Account> accounts = mAccountDataManager.findAllNeedSave(true);
         final int accountSize = accounts.size();
         if (accountSize == 0) {
@@ -1102,11 +1077,6 @@ public class TNApiModel extends TNApi {
     }
 
     private void saveAllNeedSaveAccounts(final AsyncOkHttpClient.ResponseCallback callback) {
-        if (ZNUtils.isZeny()) {
-            callback.onSuccess(null, null);
-            return;
-        }
-
         final List<Account> accounts = mAccountDataManager.findAllNeedSave(true);
         final int accountSize = accounts.size();
         if (accountSize == 0) {
@@ -1114,13 +1084,13 @@ public class TNApiModel extends TNApi {
             return;
         }
 
-        final int loopSize = (int)LIMIT_BULK_SEND;
+        final int loopSize = (int) LIMIT_BULK_SEND;
 
-        for (int i=0; i<accountSize; i += loopSize) {
+        for (int i = 0; i < accountSize; i += loopSize) {
             final int loopIndex = i;
 
-            final List<Account> sendData = accounts.subList(i, Math.min(i+loopSize, accountSize));
-            final int savedSize = i+sendData.size();
+            final List<Account> sendData = accounts.subList(i, Math.min(i + loopSize, accountSize));
+            final int savedSize = i + sendData.size();
 
             new Handler().postDelayed(new Runnable() {
                 @Override
@@ -1141,11 +1111,11 @@ public class TNApiModel extends TNApi {
 
                         @Override
                         public void onSuccess(Response response, String content) {
-                            String msg = mContext.getString(R.string.saving_account) +" "+savedSize;
+                            String msg = mContext.getString(R.string.saving_account) + " " + savedSize;
                             setSaveAllNeedProgressDialog(sendData.size(), msg);
 
 //                            if ((loopIndex+1) == loopMax)
-                            if ((loopIndex+loopSize) >= accountSize)
+                            if ((loopIndex + loopSize) >= accountSize)
                                 callback.onSuccess(response, content);
                         }
                     });
@@ -1187,13 +1157,13 @@ public class TNApiModel extends TNApi {
             return;
         }
 
-        final int loopSize = (int)LIMIT_BULK_SEND;
+        final int loopSize = (int) LIMIT_BULK_SEND;
 
-        for (int i=0; i<summarySize; i += loopSize) {
+        for (int i = 0; i < summarySize; i += loopSize) {
             final int loopIndex = i;
 
-            final List<Summary> sendData = summaries.subList(i, Math.min(i+loopSize, summarySize));
-            final int savedSize = i+sendData.size();
+            final List<Summary> sendData = summaries.subList(i, Math.min(i + loopSize, summarySize));
+            final int savedSize = i + sendData.size();
 
             new Handler().postDelayed(new Runnable() {
                 @Override
@@ -1214,11 +1184,11 @@ public class TNApiModel extends TNApi {
 
                         @Override
                         public void onSuccess(Response response, String content) {
-                            String msg = mContext.getString(R.string.saving_summary) +" "+savedSize;
+                            String msg = mContext.getString(R.string.saving_summary) + " " + savedSize;
                             setSaveAllNeedProgressDialog(sendData.size(), msg);
 
 //                            if ((loopIndex+1) == loopMax)
-                            if ((loopIndex+loopSize) >= summarySize)
+                            if ((loopIndex + loopSize) >= summarySize)
                                 callback.onSuccess(response, content);
                         }
                     });
@@ -1260,13 +1230,13 @@ public class TNApiModel extends TNApi {
             return;
         }
 
-        final int loopSize = (int)LIMIT_BULK_SEND;
+        final int loopSize = (int) LIMIT_BULK_SEND;
 
-        for (int i=0; i<recurringSize; i+=loopSize) {
+        for (int i = 0; i < recurringSize; i += loopSize) {
             final int loopIndex = i;
 
-            final List<Recurring> sendData = recurrings.subList(i, Math.min(i+loopSize, recurringSize));
-            final int savedSize = i+sendData.size();
+            final List<Recurring> sendData = recurrings.subList(i, Math.min(i + loopSize, recurringSize));
+            final int savedSize = i + sendData.size();
 
             new Handler().postDelayed(new Runnable() {
                 @Override
@@ -1287,11 +1257,11 @@ public class TNApiModel extends TNApi {
 
                         @Override
                         public void onSuccess(Response response, String content) {
-                            String msg = mContext.getString(R.string.saving_recurring) +" "+savedSize;
+                            String msg = mContext.getString(R.string.saving_recurring) + " " + savedSize;
                             setSaveAllNeedProgressDialog(sendData.size(), msg);
 
 //                            if ((loopIndex+1) == loopMax)
-                            if ((loopIndex+loopSize) >= recurringSize)
+                            if ((loopIndex + loopSize) >= recurringSize)
                                 callback.onSuccess(response, content);
                         }
                     });
@@ -1320,38 +1290,38 @@ public class TNApiModel extends TNApi {
         mCount = 0;
         for (final Entry entry : entries) {
             new Handler().postDelayed(
-                new Runnable() {
+                    new Runnable() {
 
-                      @Override
-                      public void run() {
+                        @Override
+                        public void run() {
 
-                          saveEntry(entry.uuid, new AsyncOkHttpClient.Callback() {
-                              @Override
-                              public void onFailure(Response response, Throwable throwable) {
-                                  callback.onFailure(response, throwable);
-                              }
+                            saveEntry(entry.uuid, new AsyncOkHttpClient.Callback() {
+                                @Override
+                                public void onFailure(Response response, Throwable throwable) {
+                                    callback.onFailure(response, throwable);
+                                }
 
-                              @Override
-                              public void onSuccess(Response response, String content) {
-                                  mCount++;
-                                  if (mCount >= entrySize) {
-                                      if (mEntrySaveAllAgain) {
-                                          // call save entries again after delay 1.5 sec
-                                          new Handler().postDelayed(new Runnable() {
-                                              @Override
-                                              public void run() {
-                                                  saveAllNeedSaveEntries(callback);
-                                              }
-                                          }, 1000);
+                                @Override
+                                public void onSuccess(Response response, String content) {
+                                    mCount++;
+                                    if (mCount >= entrySize) {
+                                        if (mEntrySaveAllAgain) {
+                                            // call save entries again after delay 1.5 sec
+                                            new Handler().postDelayed(new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    saveAllNeedSaveEntries(callback);
+                                                }
+                                            }, 1000);
 
-                                      } else {
-                                          callback.onSuccess(response, content);
-                                      }
-                                  }
-                              }
-                          });
-                      }
-                  }, 20);
+                                        } else {
+                                            callback.onSuccess(response, content);
+                                        }
+                                    }
+                                }
+                            });
+                        }
+                    }, 20);
         }
     }
 
@@ -1363,14 +1333,14 @@ public class TNApiModel extends TNApi {
             return;
         }
 
-        final int loopSize = (int)LIMIT_ENTRY_BULK_SEND;
+        final int loopSize = (int) LIMIT_ENTRY_BULK_SEND;
 
-        for (int i=0; i<allSize; i += loopSize) {
+        for (int i = 0; i < allSize; i += loopSize) {
             final int loopIndex = i;
 
-            int sublistEnd = Math.min(i+loopSize, allSize);
+            int sublistEnd = Math.min(i + loopSize, allSize);
             final List<Entry> sendData = entries.subList(i, sublistEnd);
-            final int savedSize = i+sendData.size();
+            final int savedSize = i + sendData.size();
 
             new Handler().postDelayed(new Runnable() {
                 @Override
@@ -1391,11 +1361,11 @@ public class TNApiModel extends TNApi {
 
                         @Override
                         public void onSuccess(Response response, String content) {
-                            String msg = mContext.getString(R.string.saving_entry) +" "+savedSize;
+                            String msg = mContext.getString(R.string.saving_entry) + " " + savedSize;
                             setSaveAllNeedProgressDialog(sendData.size(), msg);
 
 //                            if ((loopIndex+1) == loopMax)
-                            if ((loopIndex+loopSize) >= allSize)
+                            if ((loopIndex + loopSize) >= allSize)
                                 callback.onSuccess(response, content);
                         }
                     });
@@ -1666,13 +1636,8 @@ public class TNApiModel extends TNApi {
                 project.order = obj.get("order").getAsLong();
                 project.isMaster = obj.get("master").getAsBoolean();
                 project.decimal = obj.get("decimal").getAsBoolean();
-                if (ZNUtils.isZeny()) {
-                    project.accountUuidForExpense = "";
-                    project.accountUuidForIncome = "";
-                } else {
-                    project.accountUuidForExpense = obj.get("account_for_expense").getAsString();
-                    project.accountUuidForIncome = obj.get("account_for_income").getAsString();
-                }
+                project.accountUuidForExpense = obj.get("account_for_expense").getAsString();
+                project.accountUuidForIncome = obj.get("account_for_income").getAsString();
 
                 if (project.isMaster) {
                     // Set master as current project
@@ -1686,20 +1651,12 @@ public class TNApiModel extends TNApi {
                     String receiptToken = obj.get("appstore_receipt").getAsString();
                     apiUser.saveCloudPurchaseInfo(subsTransaction, receiptToken);
                     long cloudExpiry = ValueConverter.cloudExpiryString2long(expiresDateString);
-                    if (ZNUtils.isZeny()) {
-                        SharedPreferencesManager.saveZenyPremiumExpiryTime(context, cloudExpiry);
-                    } else {
-                        SharedPreferencesManager.saveTaxnoteCloudExpiryTime(context, cloudExpiry);
-                    }
+                    SharedPreferencesManager.saveTaxnoteCloudExpiryTime(context, cloudExpiry);
                 }
 
                 if (isNewProject) {
                     long projectId = mProjectDataManager.save(project);
                     project.id = projectId;
-
-                    if (ZNUtils.isZeny()) { // zenyの場合はdummyのaccountが必要
-                        DefaultDataInstaller.setDefaultAccountData(context, project);
-                    }
                 } else {
                     mProjectDataManager.update(project);
                 }
@@ -1722,7 +1679,7 @@ public class TNApiModel extends TNApi {
 
             // Delete it if deleted is true
             if (deleted) {
-                if (reason != null)  mReasonDataManager.delete(reason.id);
+                if (reason != null) mReasonDataManager.delete(reason.id);
             } else { // Update
                 if (reason == null) {
                     isNewReason = true;
@@ -1861,13 +1818,9 @@ public class TNApiModel extends TNApi {
                 recurring.order = obj.get("order").getAsLong();
                 recurring.reason = mReasonDataManager.findByUuid(obj.get("reason_uuid").getAsString());
                 recurring.project = mProjectDataManager.findByUuid(obj.get("project_uuid").getAsString());
-                if (ZNUtils.isZeny()) {
-                    recurring.account = mAccountDataManager.findCurrentSelectedAccount(recurring.isExpense);
-                } else {
-                    recurring.account = mAccountDataManager.findByUuid(obj.get("account_uuid").getAsString());
-                }
+                recurring.account = mAccountDataManager.findByUuid(obj.get("account_uuid").getAsString());
 
-                if ((!ZNUtils.isZeny()) && (recurring.reason == null || recurring.account == null))
+                if (recurring.reason == null || recurring.account == null)
                     continue;
 
                 if (isNewRec) {
@@ -1915,13 +1868,9 @@ public class TNApiModel extends TNApi {
                 entry.isExpense = obj.get("is_expense").getAsBoolean();
                 entry.project = mProjectDataManager.findByUuid(obj.get("project_uuid").getAsString());
                 entry.reason = mReasonDataManager.findByUuid(obj.get("reason_uuid").getAsString());
-                if (ZNUtils.isZeny()) {
-                    entry.account = mAccountDataManager.findCurrentSelectedAccount(entry.isExpense);
-                } else {
-                    entry.account = mAccountDataManager.findByUuid(obj.get("account_uuid").getAsString());
-                }
+                entry.account = mAccountDataManager.findByUuid(obj.get("account_uuid").getAsString());
 
-                if ((!ZNUtils.isZeny()) && (entry.reason == null || entry.account == null))
+                if (entry.reason == null || entry.account == null)
                     continue;
 
                 if (isNewEntry) {
@@ -1932,11 +1881,11 @@ public class TNApiModel extends TNApi {
             }
 
             indexCount++;
-            final float viewPercent = ((indexCount/allSize)*80f) + 20f;
+            final float viewPercent = ((indexCount / allSize) * 80f) + 20f;
             uiHandler.post(new Runnable() {
                 @Override
                 public void run() {
-                    setDialogContentAfterLogin((int)viewPercent);
+                    setDialogContentAfterLogin((int) viewPercent);
                 }
             });
 
@@ -1948,12 +1897,13 @@ public class TNApiModel extends TNApi {
     }
 
     private void executeUpdateDbTask(int type, JsonArray jsonArray,
-                                      AsyncOkHttpClient.Callback callback,
-                                      Response response, String resContent) {
+                                     AsyncOkHttpClient.Callback callback,
+                                     Response response, String resContent) {
 
         new UpdateDbAsyncTask(type, callback, response, resContent)
                 .execute(jsonArray);
     }
+
     private class UpdateDbAsyncTask extends AsyncTask<JsonArray, Void, Void> {
         private final int mType;
         private final AsyncOkHttpClient.Callback callback;
@@ -2017,18 +1967,15 @@ public class TNApiModel extends TNApi {
 
         Project project = mProjectDataManager.findByUuid(uuid);
         final long projectId = project.id;
-        boolean isZeny = ZNUtils.isZeny();
 
         FormBody.Builder formBuilder = new FormBody.Builder();
         formBuilder
                 .add("project[name]", project.name)
                 .add("project[order]", String.valueOf(project.order))
                 .add("project[master]", String.valueOf(project.isMaster))
-                .add("project[decimal]", String.valueOf(project.decimal));
-        if (!isZeny) {
-            formBuilder.add("project[account_for_expense]", project.accountUuidForExpense)
-                    .add("project[account_for_income]", project.accountUuidForIncome);
-        }
+                .add("project[decimal]", String.valueOf(project.decimal))
+                .add("project[account_for_expense]", project.accountUuidForExpense)
+                .add("project[account_for_income]", project.accountUuidForIncome);
         if (project.isMaster) {
 
             String subsExpires = TNApiUser.getCloudExpiryString(context);
@@ -2319,15 +2266,15 @@ public class TNApiModel extends TNApi {
             String indexKey = "entries[]";
             String memo = (entry.memo != null) ? entry.memo : "";
             formBuilder
-                    .add(indexKey+ "[uuid]", entry.uuid)
-                    .add(indexKey+ "[date]", ValueConverter.long2dateString(entry.date))
-                    .add(indexKey+ "[memo]", memo)
-                    .add(indexKey+ "[price]", String.valueOf(entry.price))
-                    .add(indexKey+ "[is_expense]", String.valueOf(entry.isExpense))
-                    .add(indexKey+ "[updated_mobile]", ValueConverter.long2dateString(entry.updated))
-                    .add(indexKey+ "[reason_uuid]", entry.reason.uuid)
-                    .add(indexKey+ "[account_uuid]", entry.account.uuid)
-                    .add(indexKey+ "[project_uuid]", entry.project.uuid);
+                    .add(indexKey + "[uuid]", entry.uuid)
+                    .add(indexKey + "[date]", ValueConverter.long2dateString(entry.date))
+                    .add(indexKey + "[memo]", memo)
+                    .add(indexKey + "[price]", String.valueOf(entry.price))
+                    .add(indexKey + "[is_expense]", String.valueOf(entry.isExpense))
+                    .add(indexKey + "[updated_mobile]", ValueConverter.long2dateString(entry.updated))
+                    .add(indexKey + "[reason_uuid]", entry.reason.uuid)
+                    .add(indexKey + "[account_uuid]", entry.account.uuid)
+                    .add(indexKey + "[project_uuid]", entry.project.uuid);
         }
 
         setHttpMethod(HTTP_METHOD_PUT);
@@ -2348,7 +2295,7 @@ public class TNApiModel extends TNApi {
 
             @Override
             public void onSuccess(Response response, String content) {
-                for(Entry entry : entries) {
+                for (Entry entry : entries) {
                     mEntryDataManager.updateNeedSync(entry.id, false);
                 }
                 if (callback != null)
@@ -2413,11 +2360,6 @@ public class TNApiModel extends TNApi {
     }
 
     private void updateAllNeedSyncAccounts(final AsyncOkHttpClient.Callback callback) {
-        if (ZNUtils.isZeny()) {
-            callback.onSuccess(null, null);
-            return;
-        }
-
         List<Account> accounts = mAccountDataManager.findAllNeedSync(true);
         final int accountSize = accounts.size();
         if (accountSize == 0) {
@@ -2500,14 +2442,14 @@ public class TNApiModel extends TNApi {
             return;
         }
 
-        double loopMaxDouble = Math.ceil(allSize/LIMIT_ENTRY_BULK_SEND);
-        final int loopMax = (int)loopMaxDouble;
+        double loopMaxDouble = Math.ceil(allSize / LIMIT_ENTRY_BULK_SEND);
+        final int loopMax = (int) loopMaxDouble;
         final int loopSize = 100;
 
-        for (int i=0; i<allSize; i += loopSize) {
+        for (int i = 0; i < allSize; i += loopSize) {
             final int loopIndex = i;
 
-            int sublistEnd = Math.min(i+loopSize, allSize);
+            int sublistEnd = Math.min(i + loopSize, allSize);
             final List<Entry> sendData = entries.subList(i, sublistEnd);
 
             new Handler().postDelayed(new Runnable() {
@@ -2523,7 +2465,7 @@ public class TNApiModel extends TNApi {
                         @Override
                         public void onSuccess(Response response, String content) {
 //                            if ((loopIndex+1) == loopMax)
-                            if ((loopIndex+loopSize) >= allSize)
+                            if ((loopIndex + loopSize) >= allSize)
                                 callback.onSuccess(response, content);
                         }
                     });
@@ -2817,7 +2759,7 @@ public class TNApiModel extends TNApi {
 
         FormBody.Builder formBuilder = new FormBody.Builder();
         for (Entry entry : entries) {
-            formBuilder.add("entry_ids[]",entry.uuid);
+            formBuilder.add("entry_ids[]", entry.uuid);
         }
 
         setHttpMethod(HTTP_METHOD_DELETE);
@@ -2899,11 +2841,6 @@ public class TNApiModel extends TNApi {
     }
 
     private void deleteAllAccounts(final AsyncOkHttpClient.Callback callback) {
-        if (ZNUtils.isZeny()) {
-            callback.onSuccess(null, null);
-            return;
-        }
-
         List<Account> accounts = mAccountDataManager.findAllDeleted(true);
         final int accountSize = accounts.size();
         if (accountSize == 0) {
@@ -2986,14 +2923,13 @@ public class TNApiModel extends TNApi {
             return;
         }
 
-        double loopMaxDouble = Math.ceil(allSize/LIMIT_ENTRY_BULK_SEND);
-        final int loopMax = (int)loopMaxDouble;
-        final int loopSize = (int)LIMIT_ENTRY_BULK_SEND;
+        double loopMaxDouble = Math.ceil(allSize / LIMIT_ENTRY_BULK_SEND);
+        final int loopSize = (int) LIMIT_ENTRY_BULK_SEND;
 
-        for (int i=0; i<allSize; i += loopSize) {
+        for (int i = 0; i < allSize; i += loopSize) {
             final int loopIndex = i;
 
-            int sublistEnd = Math.min(i+loopSize, allSize);
+            int sublistEnd = Math.min(i + loopSize, allSize);
             final List<Entry> sendData = entries.subList(i, sublistEnd);
 
             new Handler().postDelayed(new Runnable() {
@@ -3009,7 +2945,7 @@ public class TNApiModel extends TNApi {
                         @Override
                         public void onSuccess(Response response, String content) {
 //                            if ((loopIndex+1) == loopMax)
-                            if ((loopIndex+loopSize) >= allSize)
+                            if ((loopIndex + loopSize) >= allSize)
                                 callback.onSuccess(response, content);
                         }
                     });
@@ -3086,7 +3022,7 @@ public class TNApiModel extends TNApi {
 
     // Sync Data
 
-    public void syncData(final Activity activity, boolean isShowMessage, final AsyncOkHttpClient.Callback callback) {
+    public void syncData(final Activity activity, final AsyncOkHttpClient.Callback callback) {
         if (!isLoggingIn() || !isCloudActive() || !isNetworkConnected(context) || isSyncing()) {
             if (callback != null)
                 callback.onSuccess(null, null);
@@ -3162,7 +3098,7 @@ public class TNApiModel extends TNApi {
         if (mLoadingDialog == null) return;
 
         mSaveAllNeedLoadedCount += loadedCount;
-        int progress = (int)Math.floor((mSaveAllNeedLoadedCount / mLoadProgressMax) * 100);
+        int progress = (int) Math.floor((mSaveAllNeedLoadedCount / mLoadProgressMax) * 100);
 
         View view = mLoadingDialog.getDialogView();
         ProgressBar bar = view.findViewById(R.id.progress_bar);
@@ -3181,7 +3117,7 @@ public class TNApiModel extends TNApi {
         ProgressBar bar = view.findViewById(R.id.progress_bar);
         bar.setProgress(percent);
         TextView tv = view.findViewById(R.id.message);
-        tv.setText(percent+"%");
+        tv.setText(percent + "%");
         mLoadingDialog.setDialogView(view);
     }
 }

@@ -36,7 +36,6 @@ import com.example.taxnoteandroid.Library.FileUtil;
 import com.example.taxnoteandroid.Library.taxnote.TNApi;
 import com.example.taxnoteandroid.Library.taxnote.TNApiModel;
 import com.example.taxnoteandroid.Library.taxnote.TNApiUser;
-import com.example.taxnoteandroid.Library.zeny.ZNUtils;
 import com.example.taxnoteandroid.dataManager.DefaultDataInstaller;
 import com.example.taxnoteandroid.dataManager.ProjectDataManager;
 import com.example.taxnoteandroid.dataManager.SharedPreferencesManager;
@@ -91,7 +90,7 @@ public class SettingsTabFragment extends Fragment {
         mContext = getActivity().getApplicationContext();
 
         mFragmentManager = getFragmentManager();
-        mInflater = (LayoutInflater)getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        mInflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         mProjectDataManager = new ProjectDataManager(mContext);
 
@@ -207,9 +206,9 @@ public class SettingsTabFragment extends Fragment {
         }
         // sub project があれば表示
         List<Project> projects = mProjectDataManager.findAll(false);
-        for (int i=0; i<projects.size(); i++) {
+        for (int i = 0; i < projects.size(); i++) {
             Project _pj = projects.get(i);
-            _pj.order = i+1;
+            _pj.order = i + 1;
             addSubProjectView(_pj);
         }
 
@@ -254,7 +253,7 @@ public class SettingsTabFragment extends Fragment {
             String newName = nameEdit.getText().toString();
 
             // hide keyboard
-            InputMethodManager imm = (InputMethodManager)mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
+            InputMethodManager imm = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(nameEdit.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
 
             switch (dialogType) {
@@ -328,7 +327,7 @@ public class SettingsTabFragment extends Fragment {
                 ColorStateList.valueOf(ContextCompat.getColor(mContext, radioBtnColorRes)));
 
         // delete btn
-        ImageButton deleteBtn = (ImageButton)viewRow.findViewById(R.id.delete_btn);
+        ImageButton deleteBtn = (ImageButton) viewRow.findViewById(R.id.delete_btn);
         deleteBtn.setOnClickListener(getSubProjectRemoveOnClick(project.name, viewRow));
 
         binding.subProjectRadioLayout.addView(viewRow);
@@ -349,10 +348,10 @@ public class SettingsTabFragment extends Fragment {
         }
 
         LinearLayout subProjectView = binding.subProjectRadioLayout;
-        for (int i=0; i<subProjectView.getChildCount(); i++) {
+        for (int i = 0; i < subProjectView.getChildCount(); i++) {
             View subView = subProjectView.getChildAt(i);
             AppCompatRadioButton radioBtn = subView.findViewWithTag(mEditingProject.uuid);
-            if (radioBtn != null ) {
+            if (radioBtn != null) {
                 radioBtn.setText(newName);
             }
         }
@@ -384,9 +383,9 @@ public class SettingsTabFragment extends Fragment {
 
             LinearLayout subProjectView = binding.subProjectRadioLayout;
             String tagUuid = null;
-            for (int i=0; i<subProjectView.getChildCount(); i++) {
+            for (int i = 0; i < subProjectView.getChildCount(); i++) {
                 View subView = subProjectView.getChildAt(i);
-                AppCompatRadioButton radioBtn =  subView.findViewById(R.id.project_radio_btn);
+                AppCompatRadioButton radioBtn = subView.findViewById(R.id.project_radio_btn);
                 String radioTagUuid = radioBtn.getTag().toString();
                 if (!mCurrentProject.uuid.equals(radioTagUuid)) {
                     if (radioTagUuid.equals(view.getTag())) {
@@ -411,7 +410,7 @@ public class SettingsTabFragment extends Fragment {
 
         LinearLayout subProjectView = binding.subProjectRadioLayout;
         String tagUuid = null;
-        for (int i=0; i<subProjectView.getChildCount(); i++) {
+        for (int i = 0; i < subProjectView.getChildCount(); i++) {
             View subView = subProjectView.getChildAt(i);
             AppCompatRadioButton radioBtn = subView.findViewById(R.id.project_radio_btn);
             if (radioBtn != null && radioBtn.getTag() == selectedView.getTag()) {
@@ -441,7 +440,7 @@ public class SettingsTabFragment extends Fragment {
 
     private void unCheckAllSubProjectRadio() {
         LinearLayout subProjectView = binding.subProjectRadioLayout;
-        for (int i=0; i<subProjectView.getChildCount(); i++) {
+        for (int i = 0; i < subProjectView.getChildCount(); i++) {
             View subView = subProjectView.getChildAt(i);
             AppCompatRadioButton radioBtn = subView.findViewById(R.id.project_radio_btn);
             if (radioBtn != null) {
@@ -467,7 +466,7 @@ public class SettingsTabFragment extends Fragment {
         binding.mainProjectRadio.jumpDrawablesToCurrentState();
         unCheckAllSubProjectRadio();
 
-        for (int i=0; i<subProjectView.getChildCount(); i++) {
+        for (int i = 0; i < subProjectView.getChildCount(); i++) {
             View subView = subProjectView.getChildAt(i);
             AppCompatRadioButton radioBtn = subView.findViewById(R.id.project_radio_btn);
             if (radioBtn != null && radioBtn.getTag().toString().equals(mCurrentProject.uuid)) {
@@ -480,6 +479,7 @@ public class SettingsTabFragment extends Fragment {
 
     /**
      * 帳簿の削除確認、処理など
+     *
      * @param projectName
      * @param parentRowView
      * @return
@@ -529,10 +529,10 @@ public class SettingsTabFragment extends Fragment {
 
         LinearLayout subProjectView = binding.subProjectRadioLayout;
         TextView settingsProjectBtn = binding.settingsProjectButton;
-        for (int i=0; i<subProjectView.getChildCount(); i++) {
+        for (int i = 0; i < subProjectView.getChildCount(); i++) {
             View subView = subProjectView.getChildAt(i);
 
-            ImageButton deleteBtn = (ImageButton)subView.findViewById(R.id.delete_btn);
+            ImageButton deleteBtn = (ImageButton) subView.findViewById(R.id.delete_btn);
 
             if (isProjectEditing) {
                 deleteBtn.setVisibility(View.GONE);
@@ -558,13 +558,13 @@ public class SettingsTabFragment extends Fragment {
     private void setDecimalSwitch() {
 
         // Set current decimal status
-        final ProjectDataManager projectDataManager   = new ProjectDataManager(getActivity());
-        final Project project                         = projectDataManager.findCurrent();
+        final ProjectDataManager projectDataManager = new ProjectDataManager(getActivity());
+        final Project project = projectDataManager.findCurrent();
         binding.decimalSwitch.setChecked(project.decimal);
 
         binding.decimalSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
-            public void onCheckedChanged(CompoundButton buttonView,boolean isChecked) {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 projectDataManager.updateDecimal(project, isChecked);
 
                 mApiModel.updateProject(project.uuid, null);
@@ -582,13 +582,13 @@ public class SettingsTabFragment extends Fragment {
         }
 
         // Set current passcode status
-        final ProjectDataManager projectDataManager   = new ProjectDataManager(getActivity());
-        final Project project                         = projectDataManager.findCurrent();
+        final ProjectDataManager projectDataManager = new ProjectDataManager(getActivity());
+        final Project project = projectDataManager.findCurrent();
         binding.passcodeSwitch.setChecked(project.passcode);
 
         binding.passcodeSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
-            public void onCheckedChanged(CompoundButton buttonView,boolean isChecked) {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 projectDataManager.updatePasscode(project, isChecked);
 
                 mApiModel.updateProject(project.uuid, null);
@@ -650,12 +650,7 @@ public class SettingsTabFragment extends Fragment {
                 .setNeutralButton(getResources().getString(R.string.help), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        
-                        if (ZNUtils.isZeny()) {
-                            Support.showSingleFAQ(getActivity(),"116");
-                        } else {
-                            Support.showSingleFAQ(getActivity(),"113");
-                        }
+                        Support.showSingleFAQ(getActivity(), "113");
                     }
                 })
                 .setNegativeButton(getResources().getString(R.string.cancel), new DialogInterface.OnClickListener() {
@@ -703,16 +698,12 @@ public class SettingsTabFragment extends Fragment {
             @Override
             public void onClick(View view) {
 
-                 binding.help.setOnClickListener(new View.OnClickListener() {
-                     @Override
-                     public void onClick(View view) {
-                         if (!ZNUtils.isZeny()) {
-                             Support.showFAQs(getActivity());
-                         } else {
-                             Support.showFAQSection(getActivity(),"27");
-                         }
-                     }
-                 });
+                binding.help.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Support.showFAQs(getActivity());
+                    }
+                });
             }
         });
     }

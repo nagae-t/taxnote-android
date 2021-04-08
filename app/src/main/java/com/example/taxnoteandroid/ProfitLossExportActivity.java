@@ -18,7 +18,6 @@ import com.example.taxnoteandroid.Library.DataExportManager;
 import com.example.taxnoteandroid.Library.DialogManager;
 import com.example.taxnoteandroid.Library.EntryLimitManager;
 import com.example.taxnoteandroid.Library.taxnote.TNUtils;
-import com.example.taxnoteandroid.Library.zeny.ZNUtils;
 import com.example.taxnoteandroid.dataManager.EntryDataManager;
 import com.example.taxnoteandroid.dataManager.SharedPreferencesManager;
 import com.example.taxnoteandroid.databinding.ActivityProfitLossExportBinding;
@@ -88,16 +87,12 @@ public class ProfitLossExportActivity extends DefaultCommonActivity {
         });
 
         // Help link
-        if (!ZNUtils.isZeny()) {
-            binding.help.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Support.showFAQSection(ProfitLossExportActivity.this, "36");
-                }
-            });
-        } else {
-            binding.help.setVisibility(View.GONE);
-        }
+        binding.help.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Support.showFAQSection(ProfitLossExportActivity.this, "36");
+            }
+        });
 
         // CSV 出力
         binding.csvExport.setOnClickListener(new View.OnClickListener() {
@@ -218,7 +213,7 @@ public class ProfitLossExportActivity extends DefaultCommonActivity {
             Entry topBalance = new Entry();
             topBalance.reasonName = context.getString(R.string.Balance);
             if (isShowBalanceCarryForward) {
-                topBalance.price = entryManager.getCarriedBalance((startEndDate == null) ? 0 :startEndDate[1]);
+                topBalance.price = entryManager.getCarriedBalance((startEndDate == null) ? 0 : startEndDate[1]);
                 topBalance.reasonName += context.getString(R.string.balance_carry_forward_view);
             } else {
                 topBalance.price = balancePrice;

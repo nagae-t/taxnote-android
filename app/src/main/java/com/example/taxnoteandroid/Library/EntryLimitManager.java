@@ -5,13 +5,11 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v7.app.AlertDialog;
 
-import com.example.taxnoteandroid.Library.zeny.ZNUtils;
 import com.example.taxnoteandroid.R;
 import com.example.taxnoteandroid.UpgradeActivity;
 import com.example.taxnoteandroid.dataManager.EntryDataManager;
 import com.example.taxnoteandroid.dataManager.ProjectDataManager;
 import com.example.taxnoteandroid.dataManager.SharedPreferencesManager;
-import com.example.taxnoteandroid.entryTab.InputDataActivity;
 import com.example.taxnoteandroid.model.Entry;
 import com.example.taxnoteandroid.model.Project;
 
@@ -29,13 +27,11 @@ import java.util.TimeZone;
 
 public class EntryLimitManager {
 
-    private static final long limitNumberOfEntryPerMonth    = 15;
+    private static final long limitNumberOfEntryPerMonth = 15;
     private static final long limitEntryAddSubProject = 10;
 
 
     public static boolean limitNewEntryForFreeUsersWithDate(Context context, long date) {
-        if (ZNUtils.isZeny()) return false;
-
         if (UpgradeManger.taxnotePlusIsActive(context)) {
             return false;
         }
@@ -46,10 +42,10 @@ public class EntryLimitManager {
         }
 
         // Get start and end date from the current date
-        long[] startAndEndDate  = getStartAndEndDate(date);
+        long[] startAndEndDate = getStartAndEndDate(date);
 
-        EntryDataManager entryDataManager   = new EntryDataManager(context);
-        List<Entry> entries                 = entryDataManager.searchBy(null, null, startAndEndDate, false);
+        EntryDataManager entryDataManager = new EntryDataManager(context);
+        List<Entry> entries = entryDataManager.searchBy(null, null, startAndEndDate, false);
 
         // Check the count of entries within the month of the current date
         if (entries.size() < limitNumberOfEntryPerMonth) {
@@ -61,8 +57,8 @@ public class EntryLimitManager {
 
     private static boolean allowAdditionalEntryForNewUsers(Context context) {
 
-        EntryDataManager entryDataManager   = new EntryDataManager(context);
-        List<Entry> entries                 = entryDataManager.findAll();
+        EntryDataManager entryDataManager = new EntryDataManager(context);
+        List<Entry> entries = entryDataManager.findAll();
 
         // Show free entry extend message
         if (entries.size() > 15 && entries.size() < 32) {
@@ -153,8 +149,8 @@ public class EntryLimitManager {
     }
 
     public static long[] getStartAndEndDate(Context context, int periodType, Calendar c) {
-        Calendar startCalendar = (Calendar)c.clone();
-        Calendar endCalendar = (Calendar)c.clone();
+        Calendar startCalendar = (Calendar) c.clone();
+        Calendar endCalendar = (Calendar) c.clone();
 
         int lastDayOfMonthIndex = 26;
         int closingDateIndex = SharedPreferencesManager.getMonthlyClosingDateIndex(context);
@@ -163,8 +159,8 @@ public class EntryLimitManager {
         int startDate = 1;
         int endDate = 1;
         if (closingDateIndex < lastDayOfMonthIndex) {
-            startDate = closingDateIndex+3;
-            endDate = closingDateIndex+3;
+            startDate = closingDateIndex + 3;
+            endDate = closingDateIndex + 3;
         }
         int startMonth = c.get(Calendar.MONTH);
         int startYear = c.get(Calendar.YEAR);
@@ -196,7 +192,7 @@ public class EntryLimitManager {
             case EntryDataManager.PERIOD_TYPE_YEAR:
                 int yearEndYear = c.get(Calendar.YEAR);
                 startCalendar.set(yearEndYear, startMonthIndex, startDate);
-                endCalendar.set(yearEndYear+1, startMonthIndex, endDate);
+                endCalendar.set(yearEndYear + 1, startMonthIndex, endDate);
                 break;
             case EntryDataManager.PERIOD_TYPE_MONTH:
                 startCalendar.set(startYear, startMonth, startDate);

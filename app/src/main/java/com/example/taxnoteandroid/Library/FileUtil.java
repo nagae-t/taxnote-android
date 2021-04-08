@@ -10,7 +10,6 @@ import android.util.Log;
 
 import com.example.taxnoteandroid.BuildConfig;
 import com.example.taxnoteandroid.Library.taxnote.TNApiModel;
-import com.example.taxnoteandroid.Library.zeny.ZNUtils;
 import com.example.taxnoteandroid.R;
 import com.example.taxnoteandroid.TaxnoteApp;
 import com.example.taxnoteandroid.dataManager.AccountDataManager;
@@ -49,19 +48,6 @@ import java.util.Locale;
  */
 
 public class FileUtil  {
-    public static void saveCSV(String path, String name) {
-        PrintWriter writer = null;
-
-        try {
-            File folder = new File(Environment.getExternalStorageDirectory(), path);
-            File file = new File(folder, name);
-            writer = new PrintWriter(new BufferedWriter(new FileWriter(file, false)));
-        }  catch(IOException e) {
-            e.printStackTrace();
-        } finally {
-          if(writer!=null) writer.close();
-        }
-    }
 
     /**
      * DBデータからJsonに変換し、テキストファイル(*.json)を書き出して共有する
@@ -84,10 +70,6 @@ public class FileUtil  {
         String dateString = simpleDateFormat.format(cal.getTime());
 
         String bkFilename = "taxnote_android_" + dateString + ".json";
-
-        if (ZNUtils.isZeny()) {
-            bkFilename = "zeny_android_" + dateString + ".json";
-        }
 
         File file = new File(Environment.
                 getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), bkFilename);

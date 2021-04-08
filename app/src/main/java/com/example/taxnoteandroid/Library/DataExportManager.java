@@ -18,7 +18,6 @@ import android.webkit.WebViewClient;
 import com.example.taxnoteandroid.BuildConfig;
 import com.example.taxnoteandroid.CommonEntryRecyclerAdapter;
 import com.example.taxnoteandroid.ExportHeaderSettingDialogFragment;
-import com.example.taxnoteandroid.Library.zeny.ZNUtils;
 import com.example.taxnoteandroid.R;
 import com.example.taxnoteandroid.TNSimpleDialogFragment;
 import com.example.taxnoteandroid.TaxnoteConsts;
@@ -201,70 +200,49 @@ public class DataExportManager implements TaxnoteConsts {
         if (mode.compareTo(EXPORT_FORMAT_TYPE_CSV) == 0 ||
                 mode.compareTo(EXPORT_FORMAT_TYPE_PRINT) == 0) { // CSV
 
-            // Zenyは単式簿記
-            if (ZNUtils.isZeny()) {
-                String date = this.context.getResources().getString(R.string.entry_tab_fragment_date);
-                String leftAccountNameColumn = this.context.getResources().getString(R.string.data_export_debit);
-                String expenseNameColumn = this.context.getResources().getString(R.string.Expense);
-                String incomeNameColumn = this.context.getResources().getString(R.string.Income);
-                String MemoNameColumn = this.context.getResources().getString(R.string.data_export_details);
+            // 補助科目が有効かどうか
+            boolean isExportSubject = SharedPreferencesManager.getExportSujectEnable(context);
 
-                intColumns(5); // CSV column size.
-                setColumnTitles(date, leftAccountNameColumn, expenseNameColumn, incomeNameColumn, MemoNameColumn);
+            String date = this.context.getResources().getString(R.string.entry_tab_fragment_date);
+            String LeftAccountNameColumn = this.context.getResources().getString(R.string.data_export_account);
+            String LeftAccountPriceColumn = this.context.getResources().getString(R.string.data_export_debit);
+            String RightAccountNameColumn = this.context.getResources().getString(R.string.data_export_credit_account);
+            String RightAccountPriceColumn = this.context.getResources().getString(R.string.data_export_credit);
+            String MemoNameColumn = this.context.getResources().getString(R.string.data_export_details);
+
+            // 補助科目・税区分のカラム
+            String debitSubAccountCol = context.getString(R.string.data_export_debit_sub_account);
+            String debitTaxNameCol = context.getString(R.string.data_export_debit_tax_name);
+            String creditSubAccountCol = context.getString(R.string.data_export_credit_sub_account);
+            String creditTaxNameCol = context.getString(R.string.data_export_credit_tax_name);
+
+            if (isExportSubject) {
+                intColumns(10); // CSV column size.
+                setColumnTitles(date, LeftAccountNameColumn, debitSubAccountCol, debitTaxNameCol,
+                        LeftAccountPriceColumn, RightAccountNameColumn, creditSubAccountCol,
+                        creditTaxNameCol, RightAccountPriceColumn, MemoNameColumn);
+                setColumn(0, new DateColumn());
+                setColumn(1, new LeftAccountNameColumn());
+                setColumn(2, new DebitSubAccountColumn());
+                setColumn(3, new DebitTaxNameColumn());
+                setColumn(4, new LeftAccountPriceColumn());
+                setColumn(5, new RightAccountNameColumn());
+                setColumn(6, new CreditSubAccountColumn());
+                setColumn(7, new CreditTaxNameColumn());
+                setColumn(8, new RightAccountPriceColumn());
+                setColumn(9, new MemoNameColumn());
+
+            } else {
+                intColumns(6); // CSV column size.
+                setColumnTitles(date, LeftAccountNameColumn, LeftAccountPriceColumn, RightAccountNameColumn, RightAccountPriceColumn, MemoNameColumn);
                 setColumn(0, new DateColumn());
                 setColumn(1, new LeftAccountNameColumn());
                 setColumn(2, new LeftAccountPriceColumn());
-                setColumn(3, new RightAccountPriceColumn());
-                setColumn(4, new MemoNameColumn());
-                setSeparator(",");
-
-                // Taxnoteは複式簿記
-            } else {
-
-                // 補助科目が有効かどうか
-                boolean isExportSubject = SharedPreferencesManager.getExportSujectEnable(context);
-
-                String date = this.context.getResources().getString(R.string.entry_tab_fragment_date);
-                String LeftAccountNameColumn = this.context.getResources().getString(R.string.data_export_account);
-                String LeftAccountPriceColumn = this.context.getResources().getString(R.string.data_export_debit);
-                String RightAccountNameColumn = this.context.getResources().getString(R.string.data_export_credit_account);
-                String RightAccountPriceColumn = this.context.getResources().getString(R.string.data_export_credit);
-                String MemoNameColumn = this.context.getResources().getString(R.string.data_export_details);
-
-                // 補助科目・税区分のカラム
-                String debitSubAccountCol = context.getString(R.string.data_export_debit_sub_account);
-                String debitTaxNameCol = context.getString(R.string.data_export_debit_tax_name);
-                String creditSubAccountCol = context.getString(R.string.data_export_credit_sub_account);
-                String creditTaxNameCol = context.getString(R.string.data_export_credit_tax_name);
-
-                if (isExportSubject) {
-                    intColumns(10); // CSV column size.
-                    setColumnTitles(date, LeftAccountNameColumn, debitSubAccountCol, debitTaxNameCol,
-                            LeftAccountPriceColumn, RightAccountNameColumn, creditSubAccountCol,
-                            creditTaxNameCol, RightAccountPriceColumn, MemoNameColumn);
-                    setColumn(0, new DateColumn());
-                    setColumn(1, new LeftAccountNameColumn());
-                    setColumn(2, new DebitSubAccountColumn());
-                    setColumn(3, new DebitTaxNameColumn());
-                    setColumn(4, new LeftAccountPriceColumn());
-                    setColumn(5, new RightAccountNameColumn());
-                    setColumn(6, new CreditSubAccountColumn());
-                    setColumn(7, new CreditTaxNameColumn());
-                    setColumn(8, new RightAccountPriceColumn());
-                    setColumn(9, new MemoNameColumn());
-
-                } else {
-                    intColumns(6); // CSV column size.
-                    setColumnTitles(date, LeftAccountNameColumn, LeftAccountPriceColumn, RightAccountNameColumn, RightAccountPriceColumn, MemoNameColumn);
-                    setColumn(0, new DateColumn());
-                    setColumn(1, new LeftAccountNameColumn());
-                    setColumn(2, new LeftAccountPriceColumn());
-                    setColumn(3, new RightAccountNameColumn());
-                    setColumn(4, new RightAccountPriceColumn());
-                    setColumn(5, new MemoNameColumn());
-                }
-                setSeparator(",");
+                setColumn(3, new RightAccountNameColumn());
+                setColumn(4, new RightAccountPriceColumn());
+                setColumn(5, new MemoNameColumn());
             }
+            setSeparator(",");
 
         } else if (mode.compareTo(EXPORT_FORMAT_TYPE_YAYOI) == 0) { // 弥生
 
@@ -935,15 +913,8 @@ public class DataExportManager implements TaxnoteConsts {
     private class LeftAccountNameColumn extends Column {
         @Override
         public String getValue() {
-
-            // Zenyは単式簿記だからカテゴリ名固定
-            if (ZNUtils.isZeny()) {
-                return currentEntry.reason.name;
-
-            } else {
-                String nameVal = (currentEntry.isExpense ? currentEntry.reason.name : currentEntry.account.name);
-                return ValueConverter.parseCategoryName(context, nameVal);
-            }
+            String nameVal = (currentEntry.isExpense ? currentEntry.reason.name : currentEntry.account.name);
+            return ValueConverter.parseCategoryName(context, nameVal);
         }
     }
 
@@ -984,11 +955,7 @@ public class DataExportManager implements TaxnoteConsts {
                 }
             }
 
-            if (ZNUtils.isZeny()) {
-                return currentEntry.isExpense ? valString : "0";
-            } else {
-                return valString;
-            }
+            return valString;
         }
     }
 
@@ -1015,11 +982,7 @@ public class DataExportManager implements TaxnoteConsts {
                 }
             }
 
-            if (ZNUtils.isZeny()) {
-                return currentEntry.isExpense ? "0" : valString;
-            } else {
-                return valString;
-            }
+            return valString;
         }
     }
 

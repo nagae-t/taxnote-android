@@ -19,7 +19,6 @@ import com.example.taxnoteandroid.Library.DialogManager;
 import com.example.taxnoteandroid.Library.KeyboardUtil;
 import com.example.taxnoteandroid.Library.ValueConverter;
 import com.example.taxnoteandroid.Library.taxnote.TNApiModel;
-import com.example.taxnoteandroid.Library.zeny.ZNUtils;
 import com.example.taxnoteandroid.dataManager.AccountDataManager;
 import com.example.taxnoteandroid.dataManager.ProjectDataManager;
 import com.example.taxnoteandroid.dataManager.ReasonDataManager;
@@ -32,8 +31,6 @@ import com.example.taxnoteandroid.model.Recurring;
 import java.util.List;
 import java.util.TimeZone;
 import java.util.UUID;
-
-import static android.view.View.Z;
 
 /**
  * Created by b0ne on 2017/04/11.
@@ -120,14 +117,10 @@ public class InputRecurringEditActivity extends DefaultCommonActivity {
 
         // set view
         binding.setRecurring(mRecurring);
-        binding.dateSelect.setText(mRecurringDates[Integer.valueOf(mRecurring.dateIndex+"")]);
-        String priceString = (mRecurring.price == 0) ? "0" : ValueConverter.formatPrice(this,mRecurring.price);
+        binding.dateSelect.setText(mRecurringDates[Integer.valueOf(mRecurring.dateIndex + "")]);
+        String priceString = (mRecurring.price == 0) ? "0" : ValueConverter.formatPrice(this, mRecurring.price);
         binding.priceSelect.setText(priceString);
 
-        if (ZNUtils.isZeny()) {
-            binding.accountHeader.setVisibility(View.GONE);
-            binding.accountSelect.setVisibility(View.GONE);
-        }
     }
 
     @Override
@@ -214,7 +207,7 @@ public class InputRecurringEditActivity extends DefaultCommonActivity {
                 toastMsg = reason.name;
             } else if (requestCode == REQUEST_CODE_PRICE) {
                 mRecurring.price = data.getLongExtra(CalculatorActivity.KEY_CURRENT_PRICE, 0);
-                String priceString = (mRecurring.price == 0) ? "0" : ValueConverter.formatPrice(this,mRecurring.price);
+                String priceString = (mRecurring.price == 0) ? "0" : ValueConverter.formatPrice(this, mRecurring.price);
                 binding.priceSelect.setText(priceString);
                 toastMsg = priceString;
             }
@@ -249,7 +242,7 @@ public class InputRecurringEditActivity extends DefaultCommonActivity {
         builder.setItems(mRecurringDates, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                mRecurring.dateIndex = Long.valueOf(i+"");
+                mRecurring.dateIndex = Long.valueOf(i + "");
                 binding.dateSelect.setText(mRecurringDates[i]);
 
                 DialogManager.showToast(InputRecurringEditActivity.this, mRecurringDates[i]);
@@ -262,8 +255,8 @@ public class InputRecurringEditActivity extends DefaultCommonActivity {
     }
 
     private void showMemoInputDialog() {
-        final View textInputView    = LayoutInflater.from(this).inflate(R.layout.dialog_text_input, null);
-        final EditText editText     = (EditText) textInputView.findViewById(R.id.edit);
+        final View textInputView = LayoutInflater.from(this).inflate(R.layout.dialog_text_input, null);
+        final EditText editText = (EditText) textInputView.findViewById(R.id.edit);
         editText.setText(mRecurring.memo);
         new AlertDialog.Builder(this)
                 .setView(textInputView)
@@ -304,7 +297,7 @@ public class InputRecurringEditActivity extends DefaultCommonActivity {
         mRecurringDm.save(mRecurring);
 
         //@@ show message saved
-        String dateString = mRecurringDates[Integer.valueOf(mRecurring.dateIndex+"")];
+        String dateString = mRecurringDates[Integer.valueOf(mRecurring.dateIndex + "")];
         String priceString = ValueConverter.formatPrice(this, mRecurring.price);
         String savedMessage = dateString + " "
                 + mRecurring.reason.name + " " + priceString;

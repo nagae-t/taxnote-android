@@ -9,7 +9,6 @@ import android.util.Log;
 import com.example.taxnoteandroid.BuildConfig;
 import com.example.taxnoteandroid.Library.AsyncOkHttpClient;
 import com.example.taxnoteandroid.Library.BroadcastUtil;
-import com.example.taxnoteandroid.Library.zeny.ZNUtils;
 import com.example.taxnoteandroid.R;
 import com.example.taxnoteandroid.UpgradeActivity;
 import com.example.taxnoteandroid.dataManager.ProjectDataManager;
@@ -65,18 +64,6 @@ public class TNApiUser extends TNApi {
         this.email = email;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getPasswordConfirm() {
-        return passwordConfirm;
-    }
-
     public void setPasswordConfirm(String passwordConfirm) {
         this.passwordConfirm = passwordConfirm;
     }
@@ -122,8 +109,7 @@ public class TNApiUser extends TNApi {
         if (BuildConfig.IS_DEBUG_CLOUD) {
             return "2020-12-01 12:12:00";
         }
-        long cloudExpiry = (ZNUtils.isZeny()) ? SharedPreferencesManager.getZenyPremiumExpiryTime(context)
-                : SharedPreferencesManager.getTaxnoteCloudExpiryTime(context);
+        long cloudExpiry = SharedPreferencesManager.getTaxnoteCloudExpiryTime(context);
         if (cloudExpiry == 0) return "";
         Calendar cal = Calendar.getInstance();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss 'Etc/GMT'", Locale.getDefault());
@@ -222,7 +208,6 @@ public class TNApiUser extends TNApi {
         // subscription情報を削除
         saveCloudPurchaseInfo(null, null);
         SharedPreferencesManager.saveTaxnoteCloudExpiryTime(context, 0);
-        SharedPreferencesManager.saveZenyPremiumExpiryTime(context, 0);
 
         deleteLoginData();
         apiModel.resetAllUpdatedKeys();
@@ -327,9 +312,6 @@ public class TNApiUser extends TNApi {
 
     public static boolean isLoggingIn(Context context) {
         String userUid = SharedPreferencesManager.getUserApiLoginValue(context, KEY_USER_UID);
-        if (userUid != null) {
-            return true;
-        }
-        return false;
+        return userUid != null;
     }
 }

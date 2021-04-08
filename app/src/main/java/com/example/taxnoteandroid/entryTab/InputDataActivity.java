@@ -26,7 +26,6 @@ import com.example.taxnoteandroid.Library.EntryLimitManager;
 import com.example.taxnoteandroid.Library.UpgradeManger;
 import com.example.taxnoteandroid.Library.ValueConverter;
 import com.example.taxnoteandroid.Library.taxnote.TNApiModel;
-import com.example.taxnoteandroid.Library.zeny.ZNUtils;
 import com.example.taxnoteandroid.R;
 import com.example.taxnoteandroid.UpgradeActivity;
 import com.example.taxnoteandroid.dataManager.AccountDataManager;
@@ -65,16 +64,10 @@ public class InputDataActivity extends DefaultCommonActivity {
     public Summary summary;
     public long date;
     private long currentPrice = 0;
-    private  String dateString;
+    private String dateString;
     public boolean pinButton = false;
 
     private TNApiModel mApiModel;
-
-    /**
-     * ATTENTION: This was auto-generated to implement the App Indexing API.
-     * See https://g.co/AppIndexing/AndroidStudio for more information.
-     */
-//    private GoogleApiClient client;
 
     public static void start(Context context, boolean isExpense, long date, Reason reason) {
         Intent i = new Intent(context, InputDataActivity.class);
@@ -105,10 +98,6 @@ public class InputDataActivity extends DefaultCommonActivity {
         setCalculatorView();
 
         DialogManager.showTapRegisterMessage(InputDataActivity.this);
-
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-//        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
 
@@ -239,7 +228,7 @@ public class InputDataActivity extends DefaultCommonActivity {
 
         priceTextView = (TextView) findViewById(R.id.title);
 
-        String priceString = ValueConverter.formatPrice(InputDataActivity.this ,currentPrice);
+        String priceString = ValueConverter.formatPrice(InputDataActivity.this, currentPrice);
         priceTextView.setHint(priceString);
 
         OnPriceClickListener onPriceClickListener = new OnPriceClickListener();
@@ -257,47 +246,11 @@ public class InputDataActivity extends DefaultCommonActivity {
         findViewById(R.id.button_c).setOnClickListener(onPriceClickListener);
     }
 
-    /**
-     * ATTENTION: This was auto-generated to implement the App Indexing API.
-     * See https://g.co/AppIndexing/AndroidStudio for more information.
-     */
-//    public Action getIndexApiAction() {
-//        Thing object = new Thing.Builder()
-//                .setName("InputData Page") // TODO: Define a title for the content shown.
-//                // TODO: Make sure this auto-generated URL is correct.
-//                .setUrl(Uri.parse("http://[ENTER-YOUR-URL-HERE]"))
-//                .build();
-//        return new Action.Builder(Action.TYPE_VIEW)
-//                .setObject(object)
-//                .setActionStatus(Action.STATUS_TYPE_COMPLETED)
-//                .build();
-//    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-//        client.connect();
-//        AppIndex.AppIndexApi.start(client, getIndexApiAction());
-    }
-
     @Override
     public void onResume() {
         super.onResume();
 
         getWindow().setSoftInputMode(LayoutParams.SOFT_INPUT_STATE_HIDDEN);
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-//        AppIndex.AppIndexApi.end(client, getIndexApiAction());
-//        client.disconnect();
     }
 
     private class OnPriceClickListener implements View.OnClickListener {
@@ -355,7 +308,7 @@ public class InputDataActivity extends DefaultCommonActivity {
             // Create price string
             String currentPriceString = Long.toString(currentPrice);
             currentPrice = Long.parseLong(currentPriceString + price);
-            String priceString = ValueConverter.formatPrice(InputDataActivity.this ,currentPrice);
+            String priceString = ValueConverter.formatPrice(InputDataActivity.this, currentPrice);
 
             priceTextView.setText(priceString);
         }
@@ -378,7 +331,7 @@ public class InputDataActivity extends DefaultCommonActivity {
 
         // Taxnoteクラウド購入なしで追加された帳簿の入力制限あり
         boolean limitNewEntrySubProject = EntryLimitManager.limitNewEntryAddSubProject(this);
-        if ( !UpgradeManger.taxnoteCloudIsActive(this) && limitNewEntrySubProject) {
+        if (!UpgradeManger.taxnoteCloudIsActive(this) && limitNewEntrySubProject) {
             showUpgradeCloudInputLimit();
             return;
         }
@@ -420,7 +373,7 @@ public class InputDataActivity extends DefaultCommonActivity {
                 review();
             }
 
-            DialogManager.showInputDataToast(this, dateString,entry);
+            DialogManager.showInputDataToast(this, dateString, entry);
 
             mApiModel.saveEntry(entry.uuid, null);
 
@@ -429,8 +382,6 @@ public class InputDataActivity extends DefaultCommonActivity {
                 currentPrice = 0;
                 priceTextView.setText(null);
             } else {
-                if (ZNUtils.isZeny()) BroadcastUtil.sendReloadReport(this);
-
                 setResult(RESULT_OK);
                 finish();
             }
@@ -535,7 +486,7 @@ public class InputDataActivity extends DefaultCommonActivity {
         if (requestCode == 1 && resultCode == RESULT_OK) {
 
             currentPrice = data.getLongExtra(CalculatorActivity.KEY_CURRENT_PRICE, 0);
-            String priceString = ValueConverter.formatPrice(InputDataActivity.this ,currentPrice);
+            String priceString = ValueConverter.formatPrice(InputDataActivity.this, currentPrice);
             priceTextView.setText(priceString);
         }
     }

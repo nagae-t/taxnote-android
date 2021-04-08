@@ -33,7 +33,6 @@ import com.example.taxnoteandroid.Library.DialogManager;
 import com.example.taxnoteandroid.Library.KeyboardUtil;
 import com.example.taxnoteandroid.Library.taxnote.TNApi;
 import com.example.taxnoteandroid.Library.taxnote.TNApiModel;
-import com.example.taxnoteandroid.Library.zeny.ZNUtils;
 import com.example.taxnoteandroid.R;
 import com.example.taxnoteandroid.dataManager.AccountDataManager;
 import com.example.taxnoteandroid.dataManager.EntryDataManager;
@@ -148,7 +147,7 @@ public class EntryTabReasonSelectFragment extends Fragment {
     }
 
     private void refreshSyncData() {
-        mApiModel.syncData(getActivity(), true, new AsyncOkHttpClient.Callback() {
+        mApiModel.syncData(getActivity(), new AsyncOkHttpClient.Callback() {
             @Override
             public void onFailure(Response response, Throwable throwable) {
                 Log.e("Error", "refreshSyncData onFailure");
@@ -292,8 +291,6 @@ public class EntryTabReasonSelectFragment extends Fragment {
     }
 
     private void setAccountView() {
-        if (ZNUtils.isZeny()) return;
-
         binding.accountTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -308,8 +305,6 @@ public class EntryTabReasonSelectFragment extends Fragment {
     //--------------------------------------------------------------//
 
     private void loadCurrentAccount() {
-        if (ZNUtils.isZeny()) return;
-
         AccountDataManager accountDataManager = new AccountDataManager(getContext());
         account = accountDataManager.findCurrentSelectedAccount(isExpense);
         if (account != null && account.name != null)
@@ -614,7 +609,7 @@ public class EntryTabReasonSelectFragment extends Fragment {
                     this.itemView.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            onClick_Footer(view);
+                            onClick_Footer();
                         }
                     });
                     ListviewFooterBinding binding = (ListviewFooterBinding) obj;
@@ -626,14 +621,10 @@ public class EntryTabReasonSelectFragment extends Fragment {
         }
 
         public void onClick_Reason() {
-            if (ZNUtils.isZeny()) {
-                InputDataActivity.start(getContext(), isExpense, date, reason);
-            } else {
-                startActivity(SummaryActivity.createIntent(getContext(), isExpense, date, account, reason));
-            }
+            startActivity(SummaryActivity.createIntent(getContext(), isExpense, date, account, reason));
         }
 
-        public void onClick_Footer(View view) {
+        public void onClick_Footer() {
             final Context context = getContext();
             final View textInputView = LayoutInflater.from(context).inflate(R.layout.dialog_text_input, null);
             final EditText editText = textInputView.findViewById(R.id.edit);

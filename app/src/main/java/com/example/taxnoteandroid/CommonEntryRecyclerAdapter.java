@@ -10,7 +10,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.taxnoteandroid.Library.ValueConverter;
-import com.example.taxnoteandroid.Library.zeny.ZNUtils;
 import com.example.taxnoteandroid.dataManager.SharedPreferencesManager;
 import com.example.taxnoteandroid.databinding.RowHistoryCellBinding;
 import com.example.taxnoteandroid.databinding.RowHistorySectionHeaderBinding;
@@ -25,7 +24,7 @@ import java.util.List;
  */
 
 public class CommonEntryRecyclerAdapter extends RecyclerView.Adapter<BindingHolder>
-        implements View.OnClickListener, View.OnLongClickListener  {
+        implements View.OnClickListener, View.OnLongClickListener {
 
     private Context mContext;
     private RecyclerView mRecyclerView;
@@ -47,6 +46,7 @@ public class CommonEntryRecyclerAdapter extends RecyclerView.Adapter<BindingHold
     public interface OnLongItemClickListener {
         boolean onItemLongClick(View view, int position, Entry item);
     }
+
     public CommonEntryRecyclerAdapter(Context context) {
         super();
         this.mContext = context;
@@ -143,20 +143,16 @@ public class CommonEntryRecyclerAdapter extends RecyclerView.Adapter<BindingHold
                 RowHistoryCellBinding cellBinding = (RowHistoryCellBinding) holder.binding;
 
                 // price
-                priceString = ValueConverter.formatPriceWithSymbol(mContext ,entry.price, entry.isExpense);
+                priceString = ValueConverter.formatPriceWithSymbol(mContext, entry.price, entry.isExpense);
                 cellBinding.price.setText(priceString);
                 cellBinding.price.setTextColor(priceColor);
 
                 // Name
                 String nameText;
-                if (!ZNUtils.isZeny()) {
-                    String reasonName = ValueConverter.parseCategoryName(mContext, entry.reason.name);
-                    String accName = ValueConverter.parseCategoryName(mContext, entry.account.name);
-                    nameText = (entry.isExpense) ? reasonName + " / " + accName
-                            : accName + " / " + reasonName;
-                } else {
-                    nameText = entry.reason.name;
-                }
+                String reasonName = ValueConverter.parseCategoryName(mContext, entry.reason.name);
+                String accName = ValueConverter.parseCategoryName(mContext, entry.account.name);
+                nameText = (entry.isExpense) ? reasonName + " / " + accName
+                        : accName + " / " + reasonName;
 
                 if (!SharedPreferencesManager.isTapHereHistoryEditDone(mContext)) {
                     nameText += " " + mContext.getString(R.string.tap_here);
@@ -255,7 +251,4 @@ public class CommonEntryRecyclerAdapter extends RecyclerView.Adapter<BindingHold
         mOnItemClickListener = listener;
     }
 
-    public void setOnItemLongClickListener(final OnLongItemClickListener listener) {
-        mOnItemLongClickListener = listener;
-    }
 }

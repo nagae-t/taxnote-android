@@ -8,7 +8,6 @@ import android.support.multidex.MultiDexApplication;
 
 import com.crashlytics.android.Crashlytics;
 import com.example.taxnoteandroid.Library.taxnote.TNApiModel;
-import com.example.taxnoteandroid.Library.zeny.ZNUtils;
 import com.example.taxnoteandroid.dataManager.ProjectDataManager;
 import com.example.taxnoteandroid.dataManager.SharedPreferencesManager;
 import com.example.taxnoteandroid.model.OrmaDatabase;
@@ -77,19 +76,11 @@ public class TaxnoteApp extends MultiDexApplication {
                 .setEnableInAppNotification(true)
                 .build();
         try {
-            if (ZNUtils.isZeny()) {
-                Core.install(this,
-                        "e685cb1ee3ca8bc1fea59ece9a6e7817",
-                        "texttospeech.helpshift.com",
-                        "texttospeech_platform_20140416041509145-c9aec6408e10215",
-                        installConfig);
-            } else {
-                Core.install(this,
-                        "14f761394d47454be7d6db4956f8e4ae",
-                        "texttospeech.helpshift.com",
-                        "texttospeech_platform_20170117101706929-9d883d52d724719",
-                        installConfig);
-            };
+            Core.install(this,
+                    "14f761394d47454be7d6db4956f8e4ae",
+                    "texttospeech.helpshift.com",
+                    "texttospeech_platform_20170117101706929-9d883d52d724719",
+                    installConfig);
         } catch (InstallException e) {
             android.util.Log.e("Helpshift", "install call : ", e);
         }
@@ -142,7 +133,7 @@ public class TaxnoteApp extends MultiDexApplication {
             if (mAppStatus == null || apiModel == null) return;
             if (mAppStatus == AppStatus.RETURNED_TO_FOREGROUND) {
                 // 起動時、アプリ再表示のときにデータの同期を行う
-                apiModel.syncData(activity, false, null);
+                apiModel.syncData(activity, null);
             }
         }
 

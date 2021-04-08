@@ -71,27 +71,6 @@ android {
             buildConfigField "String", "SERVICE_API_URI", "\"https://taxnote-staging.herokuapp.com/api\""
             buildConfigField "boolean", "IS_DEBUG_CLOUD", "true"
         }
-
-        zenyProduct {
-            dimension "mode"
-            applicationId "com.nonapp.zeny"
-            versionCode 16
-            versionName "1.1.4"
-
-            buildConfigField "String", "SERVICE_API_URI", "\"https://zenyapp.com/api\""
-            buildConfigField "boolean", "IS_DEBUG_CLOUD", "false"
-        }
-
-        zenyDevelop {
-            dimension "mode"
-            applicationId "com.nonapp.zeny.debug"
-            versionCode 1
-            versionName "1.0"
-
-            buildConfigField "String", "SERVICE_API_URI", "\"https://zeny-staging.herokuapp.com/api\""
-            buildConfigField "boolean", "IS_DEBUG_CLOUD", "false"
-        }
-
     }
 
     buildTypes {

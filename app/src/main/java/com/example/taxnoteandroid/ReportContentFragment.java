@@ -135,7 +135,7 @@ public class ReportContentFragment extends Fragment {
     }
 
     private void refreshSyncData() {
-        mApiModel.syncData(getActivity(), true, new AsyncOkHttpClient.Callback() {
+        mApiModel.syncData(getActivity(), new AsyncOkHttpClient.Callback() {
             @Override
             public void onFailure(Response response, Throwable throwable) {
                 Log.e("Error", "refreshSyncData onFailure");

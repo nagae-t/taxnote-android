@@ -194,7 +194,6 @@ public class EntryDataManager {
         Entry_Selector entrySelector = selector
                 .where(Entry_Schema.INSTANCE.deleted.getQualifiedName() + " = 0");
 
-        // TODO: 全帳簿の合計を表示するかどうか
         // 損益表の設定値から反映する
 
         if (endDate != 0) {

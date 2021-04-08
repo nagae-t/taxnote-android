@@ -36,7 +36,6 @@ import com.example.taxnoteandroid.Library.billing.IabResult;
 import com.example.taxnoteandroid.Library.billing.Inventory;
 import com.example.taxnoteandroid.Library.billing.Purchase;
 import com.example.taxnoteandroid.Library.taxnote.TNApiUser;
-import com.example.taxnoteandroid.Library.zeny.ZNUtils;
 import com.example.taxnoteandroid.dataManager.DefaultDataInstaller;
 import com.example.taxnoteandroid.dataManager.EntryDataManager;
 import com.example.taxnoteandroid.dataManager.ProjectDataManager;
@@ -101,8 +100,6 @@ public class MainActivity extends DefaultCommonActivity
         public void onReceive(Context context, Intent intent) {
             boolean isLoggingIn = intent.getBooleanExtra(BroadcastUtil.KEY_IS_LOGGING_IN, false);
             afterLogin(isLoggingIn);
-
-            toggleAdview();
         }
     };
 
@@ -146,15 +143,6 @@ public class MainActivity extends DefaultCommonActivity
         }
     };
 
-    private final BroadcastReceiver mAdviewToggleReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            if (!ZNUtils.isZeny()) return;
-
-            toggleAdview();
-        }
-    };
-
     /**
      * Check in app billing finished listener
      */
@@ -182,12 +170,6 @@ public class MainActivity extends DefaultCommonActivity
             Purchase purchaseCloud = inventory.getPurchase(UpgradeManger.SKU_TAXNOTE_CLOUD_ID);
             if (purchaseCloud != null)
                 new CheckBillingAsyncTask().execute(purchaseCloud);
-
-            if (ZNUtils.isZeny()) {
-                Purchase purchaseZeny = inventory.getPurchase(UpgradeManger.SKU_ZENY_PREMIUM_ID);
-                if (purchaseZeny != null)
-                    new CheckBillingAsyncTask().execute(purchaseZeny);
-            }
         }
     };
 
@@ -207,7 +189,6 @@ public class MainActivity extends DefaultCommonActivity
         registerReceiver(mReportReloadReceiver, new IntentFilter(BROADCAST_REPORT_RELOAD));
         registerReceiver(mRestartAppReceiver, new IntentFilter(BROADCAST_RESTART_APP));
         registerReceiver(mSwitchGraphExpenseReceiver, new IntentFilter(BROADCAST_SWITCH_GRAPH_EXPENSE));
-        registerReceiver(mAdviewToggleReceiver, new IntentFilter(BROADCAST_ADVIEW_TOGGLE));
         registerReceiver(mDataPeriodScrolledReceiver, new IntentFilter(BROADCASE_DATA_PERIOD_SCROLLED));
 
         DefaultDataInstaller.installDefaultUserAndCategories(this);
@@ -221,27 +202,7 @@ public class MainActivity extends DefaultCommonActivity
 
         checkInAppBilling();
 
-        // Zeny Ads
-        toggleAdview();
-
         checkAppUpdate();
-    }
-
-    // Zeny Ads
-    private void toggleAdview() {
-        if (!ZNUtils.isZeny()) return;
-
-        if (!UpgradeManger.zenyPremiumIsActive(this)) {
-            if (mAdRequest == null)
-                mAdRequest = new AdRequest.Builder()
-                        .addTestDevice("92A2669BB3BA9419A031D355C4103234")
-                        .build();
-
-            binding.adsLayout.setVisibility(View.VISIBLE);
-            binding.adView1.loadAd(mAdRequest);
-        } else {
-            binding.adsLayout.setVisibility(View.GONE);
-        }
     }
 
     private void checkInAppBilling() {
@@ -335,11 +296,7 @@ public class MainActivity extends DefaultCommonActivity
         switch (item.getItemId()) {
 
             case R.id.help_in_settings_tab:
-                if (!ZNUtils.isZeny()) {
-                    Support.showFAQs(this);
-                } else {
-                    Support.showFAQSection(this, "27");
-                }
+                Support.showFAQs(this);
                 break;
 
             case R.id.data_export:
@@ -761,7 +718,6 @@ public class MainActivity extends DefaultCommonActivity
         unregisterReceiver(mReportReloadReceiver);
         unregisterReceiver(mRestartAppReceiver);
         unregisterReceiver(mSwitchGraphExpenseReceiver);
-        unregisterReceiver(mAdviewToggleReceiver);
         unregisterReceiver(mDataPeriodScrolledReceiver);
         if (appUpdateManager != null) {
             appUpdateManager.unregisterListener(mInstallStateUpdatedListener);
@@ -810,8 +766,7 @@ public class MainActivity extends DefaultCommonActivity
                 while (expiryTime <= nowTime) {
                     Calendar c = Calendar.getInstance();
                     c.setTimeInMillis(expiryTime);
-                    if (subscriptionId.equals(UpgradeManger.SKU_TAXNOTE_CLOUD_ID) ||
-                            subscriptionId.equals(UpgradeManger.SKU_ZENY_PREMIUM_ID)) {
+                    if (subscriptionId.equals(UpgradeManger.SKU_TAXNOTE_CLOUD_ID)) {
                         c.add(Calendar.MONTH, 1);
                     } else {
                         c.add(Calendar.YEAR, 1);
@@ -832,14 +787,8 @@ public class MainActivity extends DefaultCommonActivity
                             context, expiryTime);
                     break;
                 case UpgradeManger.SKU_TAXNOTE_CLOUD_ID:
-                case UpgradeManger.SKU_ZENY_PREMIUM_ID:
-                    if (ZNUtils.isZeny()) {
-                        SharedPreferencesManager.saveZenyPremiumExpiryTime(
-                                context, expiryTime);
-                    } else {
-                        SharedPreferencesManager.saveTaxnoteCloudExpiryTime(
-                                context, expiryTime);
-                    }
+                    SharedPreferencesManager.saveTaxnoteCloudExpiryTime(
+                            context, expiryTime);
                     new TNApiUser(context).saveCloudPurchaseInfo(
                             mPurchase.getOrderId(), mPurchase.getToken());
 
@@ -875,11 +824,11 @@ public class MainActivity extends DefaultCommonActivity
                     notifyAppUpdateDownloadCompleted();
                 } else if (result.isUpdateTypeAllowed(AppUpdateType.FLEXIBLE) &&
                         result.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE) {
-                        try {
-                            requestAppUpdate(result);
-                        } catch (IntentSender.SendIntentException e) {
-                            e.printStackTrace();
-                        }
+                    try {
+                        requestAppUpdate(result);
+                    } catch (IntentSender.SendIntentException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         });

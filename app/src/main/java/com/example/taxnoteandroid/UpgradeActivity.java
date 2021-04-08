@@ -28,7 +28,6 @@ import com.example.taxnoteandroid.Library.billing.SkuDetails;
 import com.example.taxnoteandroid.Library.taxnote.TNApi;
 import com.example.taxnoteandroid.Library.taxnote.TNApiModel;
 import com.example.taxnoteandroid.Library.taxnote.TNApiUser;
-import com.example.taxnoteandroid.Library.zeny.ZNUtils;
 import com.example.taxnoteandroid.dataManager.SharedPreferencesManager;
 import com.example.taxnoteandroid.databinding.ActivityUpgradeBinding;
 import com.google.android.play.core.review.ReviewInfo;
@@ -180,7 +179,7 @@ public class UpgradeActivity extends DefaultCommonActivity {
                 if (plusSkuDetail != null) {
                     String plusPriceString = plusSkuDetail.getPrice();
                     if (plusPriceString != null) {
-                        plusPriceString += " "+getApplicationContext().getString(R.string.taxnote_plus_show_price_tail);
+                        plusPriceString += " " + getApplicationContext().getString(R.string.taxnote_plus_show_price_tail);
                         binding.upgraded.setText(plusPriceString);
                     }
                 }
@@ -194,19 +193,11 @@ public class UpgradeActivity extends DefaultCommonActivity {
                 if (cloudSkuDetail != null) {
                     String cloudPriceString = cloudSkuDetail.getPrice();
                     if (cloudPriceString != null) {
-                        cloudPriceString += " "+getApplicationContext().getString(R.string.taxnote_cloud_show_price_tail);
+                        cloudPriceString += " " + getApplicationContext().getString(R.string.taxnote_cloud_show_price_tail);
                         binding.cloudRightTv.setText(cloudPriceString);
                     }
                 }
             }
-
-            if (ZNUtils.isZeny()) {
-                Purchase purchaseZeny = inventory.getPurchase(UpgradeManger.SKU_ZENY_PREMIUM_ID);
-                if (purchaseZeny != null) {
-                    new CheckBillingAsyncTask(false).execute(purchaseZeny);
-                }
-            }
-
         }
     };
 
@@ -315,12 +306,7 @@ public class UpgradeActivity extends DefaultCommonActivity {
         binding.help.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                if (ZNUtils.isZeny()) {
-                    Support.showSingleFAQ(UpgradeActivity.this, "117");
-                } else {
-                    Support.showFAQSection(UpgradeActivity.this,"60");
-                }
+                Support.showFAQSection(UpgradeActivity.this, "60");
             }
         });
     }
@@ -371,11 +357,7 @@ public class UpgradeActivity extends DefaultCommonActivity {
         if (!mApiModel.isCloudActive()) return;
 
         MixpanelAPI mixpanel = MixpanelAPI.getInstance(this, MIXPANEL_TOKEN);
-        if (ZNUtils.isZeny()) {
-            mixpanel.track("Zeny Premium Upgraded");
-        } else {
-            mixpanel.track("Taxnote Cloud Upgraded");
-        }
+        mixpanel.track("Taxnote Cloud Upgraded");
 
         if (isFinishing()) return;
 
@@ -561,7 +543,7 @@ public class UpgradeActivity extends DefaultCommonActivity {
         }
 
         // Taxnoteプラス購入済みか確認してダイアログを表示する
-        if (!ZNUtils.isZeny() && !UpgradeManger.taxnotePlusIsActive(this)) {
+        if (!UpgradeManger.taxnotePlusIsActive(this)) {
             AlertDialog.Builder builder = new AlertDialog.Builder(this)
                     .setTitle(R.string.caution)
                     .setMessage(R.string.confirm_cloud_without_plus_msg)
@@ -580,11 +562,9 @@ public class UpgradeActivity extends DefaultCommonActivity {
                     });
             builder.create().show();
         } else {
-            String skuId = (ZNUtils.isZeny()) ? UpgradeManger.SKU_ZENY_PREMIUM_ID
-                    : UpgradeManger.SKU_TAXNOTE_CLOUD_ID;
             try {
-                    mBillingHelper.launchSubscriptionPurchaseFlow(this, skuId,
-                            REQUEST_CODE_PURCHASE_PREMIUM, mPurchaseFinishedListener);
+                mBillingHelper.launchSubscriptionPurchaseFlow(this, UpgradeManger.SKU_TAXNOTE_CLOUD_ID,
+                        REQUEST_CODE_PURCHASE_PREMIUM, mPurchaseFinishedListener);
             } catch (IabHelper.IabAsyncInProgressException e) {
                 e.printStackTrace();
             }
@@ -779,16 +759,17 @@ public class UpgradeActivity extends DefaultCommonActivity {
             if (tnGoogleApi == null) cancel(true);
 
             mPurchase = purchases[0];
-            subscriptionId =  mPurchase.getSku();
+            subscriptionId = mPurchase.getSku();
             return tnGoogleApi.getSubscription(subscriptionId, mPurchase.getToken());
         }
 
         @Override
         protected void onPostExecute(SubscriptionPurchase result) {
-            if (mLoadingProgress != null){
+            if (mLoadingProgress != null) {
                 try {
                     mLoadingProgress.dismissAllowingStateLoss();
-                } catch (Exception ee) {}
+                } catch (Exception ee) {
+                }
             }
             if (subscriptionId == null) return;
             if (isFinishing()) return;
@@ -805,8 +786,7 @@ public class UpgradeActivity extends DefaultCommonActivity {
                 while (expiryTime <= nowTime) {
                     Calendar c = Calendar.getInstance();
                     c.setTimeInMillis(expiryTime);
-                    if (subscriptionId.equals(UpgradeManger.SKU_TAXNOTE_CLOUD_ID) ||
-                            subscriptionId.equals(UpgradeManger.SKU_ZENY_PREMIUM_ID)) {
+                    if (subscriptionId.equals(UpgradeManger.SKU_TAXNOTE_CLOUD_ID)) {
                         c.add(Calendar.MONTH, 1);
                     } else {
                         c.add(Calendar.YEAR, 1);
@@ -831,15 +811,8 @@ public class UpgradeActivity extends DefaultCommonActivity {
                         showUpgradeToTaxnotePlusSuccessDialog();
                     break;
                 case UpgradeManger.SKU_TAXNOTE_CLOUD_ID:
-                case UpgradeManger.SKU_ZENY_PREMIUM_ID:
-                    if (ZNUtils.isZeny()) {
-                        SharedPreferencesManager.saveZenyPremiumExpiryTime(
-                                context, expiryTime);
-                        BroadcastUtil.sendAdviewToggle(UpgradeActivity.this);
-                    } else {
-                        SharedPreferencesManager.saveTaxnoteCloudExpiryTime(
-                                context, expiryTime);
-                    }
+                    SharedPreferencesManager.saveTaxnoteCloudExpiryTime(
+                            context, expiryTime);
 
                     String orderId = mPurchase.getOrderId();
                     String purchaseToken = mPurchase.getToken();

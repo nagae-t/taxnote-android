@@ -189,7 +189,6 @@ public abstract class RecyclerArrayAdapter<T, VH extends RecyclerView.ViewHolder
     }
 
     public boolean isEmpty() {
-        // TODO:これもlockしないとダメじゃね？？
         return objects.isEmpty();
     }
 }

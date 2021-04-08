@@ -3,7 +3,6 @@ package com.example.taxnoteandroid.Library;
 import android.content.Context;
 import android.util.Log;
 
-import com.example.taxnoteandroid.Library.zeny.ZNUtils;
 import com.example.taxnoteandroid.R;
 import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
 import com.google.api.client.http.HttpTransport;
@@ -56,14 +55,8 @@ public class TNGoogleApiClient {
             JsonFactory jsonFactory = JacksonFactory.getDefaultInstance();
             HttpTransport httpTransport = new NetHttpTransport.Builder().build();
             try {
-                InputStream inputStream;
-                if ( ZNUtils.isZeny() ) {
-                    inputStream = mContext.getResources()
-                            .openRawResource(R.raw.zeny_google_api_client);
-                } else {
-                    inputStream = mContext.getResources()
-                            .openRawResource(R.raw.taxnote_google_api_client);
-                }
+                InputStream inputStream = mContext.getResources()
+                        .openRawResource(R.raw.taxnote_google_api_client);
 
                 GoogleCredential credential = GoogleCredential.fromStream(
                         inputStream, httpTransport, jsonFactory);

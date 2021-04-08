@@ -3,9 +3,7 @@ package com.example.taxnoteandroid.dataManager;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 
-import com.example.taxnoteandroid.Library.zeny.ZNUtils;
 import com.example.taxnoteandroid.MainActivity;
 import com.example.taxnoteandroid.R;
 import com.example.taxnoteandroid.model.Account;
@@ -74,6 +72,7 @@ public class DefaultDataInstaller {
 
     /**
      * 新しいProject（帳簿）を追加する
+     *
      * @param context
      * @param name
      * @return
@@ -103,6 +102,7 @@ public class DefaultDataInstaller {
 
     /**
      * 帳簿(Project)を切り替える
+     *
      * @param context
      * @param targetProject
      */
@@ -117,20 +117,20 @@ public class DefaultDataInstaller {
         }.getType();
 
         // Get default json list
-        int rawReson = (ZNUtils.isZeny()) ? R.raw.default_zeny_reason : R.raw.default_reason;
+        int rawReson = R.raw.default_reason;
         InputStream inputStream = context.getResources().openRawResource(rawReson);
-        JsonReader jsonReader   = new JsonReader(new InputStreamReader(inputStream));
-        Gson gson               = new Gson();
-        List<Reason> reasons    = gson.fromJson(jsonReader, type);
+        JsonReader jsonReader = new JsonReader(new InputStreamReader(inputStream));
+        Gson gson = new Gson();
+        List<Reason> reasons = gson.fromJson(jsonReader, type);
 
         ReasonDataManager reasonDataManager = new ReasonDataManager(context);
 
         for (int i = 0, size = reasons.size(); i < size; i++) {
 
-            Reason reason   = reasons.get(i);
-            reason.order    = i;
-            reason.uuid     = UUID.randomUUID().toString();
-            reason.project  = project;
+            Reason reason = reasons.get(i);
+            reason.order = i;
+            reason.uuid = UUID.randomUUID().toString();
+            reason.project = project;
 
             long id = reasonDataManager.save(reason);
             reason.id = id;
@@ -146,36 +146,34 @@ public class DefaultDataInstaller {
         }.getType();
 
         // Get default json list
-        int rawAccount =  (ZNUtils.isZeny()) ? R.raw.default_zeny_account : R.raw.default_account;
+        int rawAccount = R.raw.default_account;
         InputStream inputStream = context.getResources().openRawResource(rawAccount);
-        JsonReader jsonReader   = new JsonReader(new InputStreamReader(inputStream));
-        Gson gson               = new Gson();
-        List<Account> accounts  = gson.fromJson(jsonReader, type);
+        JsonReader jsonReader = new JsonReader(new InputStreamReader(inputStream));
+        Gson gson = new Gson();
+        List<Account> accounts = gson.fromJson(jsonReader, type);
 
         AccountDataManager accountDataManager = new AccountDataManager(context);
 
         for (int i = 0, size = accounts.size(); i < size; i++) {
 
-            Account account   = accounts.get(i);
-            account.order    = i;
-            account.uuid     = UUID.randomUUID().toString();
-            account.project  = project;
+            Account account = accounts.get(i);
+            account.order = i;
+            account.uuid = UUID.randomUUID().toString();
+            account.project = project;
 
             accountDataManager.save(account);
         }
     }
 
     private static void setDefaultSummaryData(Context context, Project project, Reason reason) {
-        if (ZNUtils.isZeny()) return;
-
         Type type = new TypeToken<List<DefaultSummary>>() {
         }.getType();
 
         // Get default json list
         InputStream inputStream = context.getResources().openRawResource(R.raw.default_summary);
-        JsonReader jsonReader   = new JsonReader(new InputStreamReader(inputStream));
-        Gson gson               = new Gson();
-        List<DefaultSummary> summaries  = gson.fromJson(jsonReader, type);
+        JsonReader jsonReader = new JsonReader(new InputStreamReader(inputStream));
+        Gson gson = new Gson();
+        List<DefaultSummary> summaries = gson.fromJson(jsonReader, type);
 
         // Catch reason name from summary list
         for (int i = 0, size = summaries.size(); i < size; i++) {
@@ -196,11 +194,11 @@ public class DefaultDataInstaller {
         for (int i = 0, size = summaryStrings.size(); i < size; i++) {
 
             Summary summary = new Summary();
-            summary.order   = i;
-            summary.uuid    = UUID.randomUUID().toString();
-            summary.name    = summaryStrings.get(i);
+            summary.order = i;
+            summary.uuid = UUID.randomUUID().toString();
+            summary.name = summaryStrings.get(i);
             summary.project = project;
-            summary.reason  = reason;
+            summary.reason = reason;
 
             summaryDataManager.save(summary);
         }
