@@ -2,15 +2,9 @@ package com.example.taxnoteandroid.Library;
 
 import android.content.Context;
 import android.net.Uri;
-import android.os.Environment;
-import android.support.v4.app.ShareCompat;
-import android.support.v4.content.FileProvider;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
-import com.example.taxnoteandroid.BuildConfig;
 import com.example.taxnoteandroid.Library.taxnote.TNApiModel;
-import com.example.taxnoteandroid.R;
 import com.example.taxnoteandroid.TaxnoteApp;
 import com.example.taxnoteandroid.dataManager.AccountDataManager;
 import com.example.taxnoteandroid.dataManager.EntryDataManager;
@@ -32,76 +26,14 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.io.InputStream;
-import java.io.PrintWriter;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.List;
-import java.util.Locale;
 
 /**
  * Created by Eiichi on 2017/01/18.
  */
 
-public class FileUtil  {
-
-    /**
-     * DBデータからJsonに変換し、テキストファイル(*.json)を書き出して共有する
-     *
-     * @param activity
-     */
-    public static void dataExport(AppCompatActivity activity) {
-        Context context = activity.getApplicationContext();
-        // Db to Json
-        DataExportManager dataExportManager = new DataExportManager(activity);
-        String dataJsonString = dataExportManager.generateDbToJson();
-
-        // jsonファイル出力
-        Calendar cal = Calendar.getInstance();
-        cal.setTimeInMillis(System.currentTimeMillis());
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
-                context.getResources().getString(R.string.date_string_format_for_custom_range)
-                +"_HHmmss",
-                Locale.getDefault());
-        String dateString = simpleDateFormat.format(cal.getTime());
-
-        String bkFilename = "taxnote_android_" + dateString + ".json";
-
-        File file = new File(Environment.
-                getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), bkFilename);
-        FileWriter filewriter;
-
-        Uri streamUri = null;
-        try {
-            filewriter = new FileWriter(file);
-            BufferedWriter bw = new BufferedWriter(filewriter);
-            PrintWriter pw = new PrintWriter(bw);
-            pw.write(dataJsonString);
-            pw.close();
-
-            streamUri = FileProvider.getUriForFile(context,
-                    BuildConfig.APPLICATION_ID + ".provider",
-                    file);
-        } catch (IOException e) {
-            Log.e("ERROR", "data export : " + e.getMessage());
-            e.printStackTrace();
-        }
-
-        if (streamUri == null) return;
-
-        // share intent
-        ShareCompat.IntentBuilder.from(activity)
-                .setType("application/json")
-                .setChooserTitle("Backup file")
-                .setStream(streamUri)
-                .startChooser();
-
-    }
-
+public class FileUtil {
     /**
      * 共有されたファイルから内容を読み込んでJsonに変換する
      *

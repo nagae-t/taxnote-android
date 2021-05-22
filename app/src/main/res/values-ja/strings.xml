@@ -260,6 +260,7 @@
     <string name="tap_project_to_edit_name">帳簿名をタップすると名前を変更できます。</string>
 
     <string name="data_backup">データのバックアップ・移行</string>
+    <string name="finished_data_export">データの保存が完了しました。</string>
     <string name="data_import">データのインポート</string>
     <string name="taxnote_data_import">Taxnoteへインポート</string>
     <string name="loading">読み込み中・・・</string>

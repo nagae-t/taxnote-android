@@ -263,6 +263,7 @@
 
 
     <string name="data_backup">Data Backup and Transfer</string>
+    <string name="finished_data_export">Saving has completed.</string>
     <string name="data_import">Data Import</string>
     <string name="taxnote_data_import">Import data into Taxnote</string>
     <string name="loading">Loading...</string>

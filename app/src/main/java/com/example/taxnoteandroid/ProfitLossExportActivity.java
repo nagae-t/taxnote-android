@@ -1,19 +1,18 @@
 package com.example.taxnoteandroid;
 
-import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.content.PermissionChecker;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.example.taxnoteandroid.Library.AppPermission;
 import com.example.taxnoteandroid.Library.DataExportManager;
 import com.example.taxnoteandroid.Library.DialogManager;
 import com.example.taxnoteandroid.Library.EntryLimitManager;
@@ -30,6 +29,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.example.taxnoteandroid.Library.DataExportManager.CREATE_EXPORT_FILE;
 import static com.example.taxnoteandroid.TaxnoteConsts.EXPORT_CHARACTER_CODE_SHIFTJIS;
 import static com.example.taxnoteandroid.TaxnoteConsts.EXPORT_CHARACTER_CODE_UTF8;
 
@@ -43,6 +43,7 @@ public class ProfitLossExportActivity extends DefaultCommonActivity {
     private String mDefaultCharCode;
     private long[] mStartEndDate;
     private int mPeriodType;
+    private DataExportManager mExportManager;
 
     private static final String KEY_TARGET_START_END_DATE = "target_start_end_date";
 
@@ -98,11 +99,22 @@ public class ProfitLossExportActivity extends DefaultCommonActivity {
         binding.csvExport.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // ファイル書き込み権限があるかどうか調べる
-                checkPermissionForExport();
+                exportData();
             }
         });
 
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == CREATE_EXPORT_FILE && resultCode == Activity.RESULT_OK) {
+            Uri uri = data.getData();
+            if (uri != null && mExportManager != null) {
+                mExportManager.writeExportData(uri);
+            }
+        }
     }
 
     private void showCharCodeMenuDialog() {
@@ -144,24 +156,8 @@ public class ProfitLossExportActivity extends DefaultCommonActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    // check permission
-    private void checkPermissionForExport() {
-        String permissionWriteStorage = Manifest.permission.WRITE_EXTERNAL_STORAGE;
-        String permissionReadStorage = Manifest.permission.READ_EXTERNAL_STORAGE;
-        switch (PermissionChecker.checkSelfPermission(this, permissionWriteStorage)) {
-            case PermissionChecker.PERMISSION_GRANTED:
-                new ReportDataTask().execute(mStartEndDate);
-                break;
-            case PermissionChecker.PERMISSION_DENIED:
-                AppPermission.requestPermissions(this,
-                        new String[]{permissionWriteStorage, permissionReadStorage});
-                break;
-            case PermissionChecker.PERMISSION_DENIED_APP_OP:
-                DialogManager.showToast(this, getString(R.string.device_permission_denied_msg));
-                break;
-            default:
-                break;
-        }
+    private void exportData() {
+        new ReportDataTask().execute(mStartEndDate);
     }
 
     private class ReportDataTask extends AsyncTask<long[], Integer, List<Entry>> {
@@ -298,10 +294,10 @@ public class ProfitLossExportActivity extends DefaultCommonActivity {
                 endCal.add(Calendar.DATE, -1);
                 mStartEndDate[1] = endCal.getTimeInMillis();
             }
-            DataExportManager exportManager = new DataExportManager(
+            mExportManager = new DataExportManager(
                     ProfitLossExportActivity.this,
                     mDefaultCharCode, mStartEndDate, result);
-            exportManager.export();
+            mExportManager.export();
 
         }
     }
