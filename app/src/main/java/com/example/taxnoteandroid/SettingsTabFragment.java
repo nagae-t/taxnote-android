@@ -686,7 +686,7 @@ public class SettingsTabFragment extends Fragment {
                 .setNeutralButton(getResources().getString(R.string.help), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        Support.showSingleFAQ(getActivity(), "113");
+                        Support.showSingleFAQ(getActivity(), "173");
                     }
                 })
                 .setNegativeButton(getResources().getString(R.string.cancel), new DialogInterface.OnClickListener() {
