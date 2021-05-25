@@ -159,21 +159,29 @@ public class UpgradeActivity extends DefaultCommonActivity {
             }
 
             // Restore purchases
+            boolean hasTaxnotePlus = false;
             Purchase purchasePlus = inventory.getPurchase(UpgradeManger.SKU_TAXNOTE_PLUS_ID);
-            if (purchasePlus != null)
+            if (purchasePlus != null) {
                 new CheckBillingAsyncTask(false).execute(purchasePlus);
+                hasTaxnotePlus = true;
+            }
 
             Purchase purchasePlus1 = inventory.getPurchase(UpgradeManger.SKU_TAXNOTE_PLUS_ID1);
-            if (purchasePlus1 != null)
+            if (purchasePlus1 != null) {
                 new CheckBillingAsyncTask(false).execute(purchasePlus1);
+                hasTaxnotePlus = true;
+            }
 
             Purchase purchasePlus2 = inventory.getPurchase(UpgradeManger.SKU_TAXNOTE_PLUS_ID2);
-            if (purchasePlus2 != null)
+            if (purchasePlus2 != null) {
                 new CheckBillingAsyncTask(false).execute(purchasePlus2);
+                hasTaxnotePlus = true;
+            }
 
             Purchase purchasePlus3 = inventory.getPurchase(UpgradeManger.SKU_TAXNOTE_PLUS_ID3);
             if (purchasePlus3 != null) {
                 new CheckBillingAsyncTask(false).execute(purchasePlus3);
+                hasTaxnotePlus = true;
             } else { // 価格表記するように
                 SkuDetails plusSkuDetail = inventory.getSkuDetails(UpgradeManger.SKU_TAXNOTE_PLUS_ID3);
                 if (plusSkuDetail != null) {
@@ -183,6 +191,9 @@ public class UpgradeActivity extends DefaultCommonActivity {
                         binding.upgraded.setText(plusPriceString);
                     }
                 }
+            }
+            if (!hasTaxnotePlus) {
+                SharedPreferencesManager.saveTaxnotePlusExpiryTime(getApplicationContext(), 0);
             }
 
             Purchase purchaseCloud = inventory.getPurchase(UpgradeManger.SKU_TAXNOTE_CLOUD_ID);
