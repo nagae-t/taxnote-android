@@ -1,15 +1,14 @@
 package com.example.taxnoteandroid;
 
-import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
+import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.PermissionChecker;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
@@ -18,7 +17,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.RadioGroup;
 
-import com.example.taxnoteandroid.Library.AppPermission;
 import com.example.taxnoteandroid.Library.DataExportManager;
 import com.example.taxnoteandroid.Library.DialogManager;
 import com.example.taxnoteandroid.Library.EntryLimitManager;
@@ -29,6 +27,7 @@ import com.helpshift.support.Support;
 import java.io.Serializable;
 import java.util.Calendar;
 
+import static com.example.taxnoteandroid.Library.DataExportManager.CREATE_EXPORT_FILE;
 import static com.example.taxnoteandroid.TaxnoteConsts.EXPORT_CHARACTER_CODE_SHIFTJIS;
 import static com.example.taxnoteandroid.TaxnoteConsts.EXPORT_CHARACTER_CODE_UTF8;
 import static com.example.taxnoteandroid.TaxnoteConsts.EXPORT_FORMAT_TYPE_CSV;
@@ -58,6 +57,8 @@ public class DataExportActivity extends DefaultCommonActivity
     private boolean mIsExpense;
 
     private String mQuery;
+
+    private DataExportManager manager;
 
     private static final String KEY_TARGET_CALENDAR = "target_calendar";
     private static final String KEY_PERIOD_TYPE = "period_type";
@@ -154,6 +155,17 @@ public class DataExportActivity extends DefaultCommonActivity
         setExportRangeView();
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == CREATE_EXPORT_FILE && resultCode == Activity.RESULT_OK) {
+            Uri uri = data.getData();
+            if (uri != null && manager != null) {
+                manager.writeExportData(uri);
+            }
+        }
+    }
 
     //--------------------------------------------------------------//
     //    -- Display Part --
@@ -179,12 +191,7 @@ public class DataExportActivity extends DefaultCommonActivity
         binding.dataExportButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                // ファイル書き込み権限があるかどうか調べる
-                if (checkPermissionForExport()) {
-                    exeExportData();
-                }
-
+                exeExportData();
             }
         });
 
@@ -403,7 +410,7 @@ public class DataExportActivity extends DefaultCommonActivity
     private void exeExportData() {
         String format = SharedPreferencesManager.getCurrentExportFormat(DataExportActivity.this);
         String characterCode = SharedPreferencesManager.getCurrentCharacterCode(DataExportActivity.this);
-        DataExportManager manager = new DataExportManager(DataExportActivity.this, format, characterCode);
+        manager = new DataExportManager(DataExportActivity.this, format, characterCode);
         manager.setPeriod(mStartEndDate);
         if (mTargetCalendar != null) {
             manager.setPeriod(mStartEndDate);
@@ -424,45 +431,6 @@ public class DataExportActivity extends DefaultCommonActivity
             manager.setQuery(mQuery);
         }
         manager.export(); // Generate CSV file and send it by email.
-    }
-
-    // check permission
-    private boolean checkPermissionForExport() {
-        String permissionWriteStorage = Manifest.permission.WRITE_EXTERNAL_STORAGE;
-        String permissionReadStorage = Manifest.permission.READ_EXTERNAL_STORAGE;
-        switch (PermissionChecker.checkSelfPermission(this, permissionWriteStorage)) {
-            case PermissionChecker.PERMISSION_GRANTED:
-                return true;
-            case PermissionChecker.PERMISSION_DENIED:
-                AppPermission.requestPermissions(this,
-                        new String[]{permissionWriteStorage, permissionReadStorage});
-                break;
-            case PermissionChecker.PERMISSION_DENIED_APP_OP:
-                DialogManager.showToast(this, getString(R.string.device_permission_denied_msg));
-                break;
-            default:
-                break;
-        }
-        return false;
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-
-        boolean isGrantedWriteStorage = false;
-        for (int i = 0; i < permissions.length; i++) {
-            if (permissions[i].equals(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                    && grantResults[i] == PermissionChecker.PERMISSION_GRANTED) {
-                isGrantedWriteStorage = true;
-            }
-        }
-
-        if (isGrantedWriteStorage) {
-            exeExportData();
-        } else {
-            DialogManager.showToast(this, getString(R.string.device_permission_denied_msg));
-        }
     }
 
     // 印刷プレビュー

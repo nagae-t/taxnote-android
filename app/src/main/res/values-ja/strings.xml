@@ -260,6 +260,7 @@
     <string name="tap_project_to_edit_name">帳簿名をタップすると名前を変更できます。</string>
 
     <string name="data_backup">データのバックアップ・移行</string>
+    <string name="finished_data_export">データの保存が完了しました。</string>
     <string name="data_import">データのインポート</string>
     <string name="taxnote_data_import">Taxnoteへインポート</string>
     <string name="loading">読み込み中・・・</string>
@@ -269,14 +270,13 @@
 
     <string name="release_note_title">最新版の情報 : </string>
     <!--//@@@ここをアップデートごとに変更-->
-    <string name="release_note_message">こんにちは。旅行熱だけがチャージされてます。\n
+    <string name="release_note_message">こんにちは。散歩熱が高まりました。\n
 \n
-さて、今回はナイスなアップデートです。\n
+さて、今回は地味なアップデートです。\n
 \n
-＠アイコンをアプデ\n
-＠細かいバグを修正\n
+＠データ出力を修正\n
 \n
-インストールした後のアイコンが、今までは余白が多くてカッコ悪い状態だったのですが、ちゃんとしたモダンなアイコンにアップデートしました。ちょっと気分が違うと思います。他には、細かいバグなども修正しております。\n
+データ出力やバックアップの挙動をAndroidの新しいapiを使うために修正しております。こちら、Playstoreの新しい規約に準じた挙動なのですが、使う分にはあまりよくわからないかもしれません。\n
 \n
 もし、アプリを気に入ってくれた方はレビューを書いてもらえると嬉しいです。\n
 \n
@@ -398,7 +398,7 @@
     <string name="alert_input_forget_notify_message">本日の入力はお済みですか？</string>
 
     <string name="data_backup_button">バックアップ</string>
-    <string name="data_backup_message">アプリに保存されたすべてのデータと科目をマイドライブやGmailなどにバックアップし、好きな時に復元ができます。機種変更時や、別の端末にデータを移行したい時も便利です。バックアップと復元の手順は左下のヘルプをご覧ください。（iOS版とは互換性がなく、AndroidとiPhone/iPad端末でデータを移行するには有料版の自動同期が必要です。）</string>
+    <string name="data_backup_message">アプリに保存されたすべてのデータと科目をマイドライブやGmailなどにバックアップし、好きな時に復元ができます。\n\n機種変更時や、別の端末にデータを移行したい時も便利です。バックアップと復元の手順は左下のヘルプをご覧ください。\n\n（iOS版とは互換性がなく、AndroidとiPhone/iPad端末でデータを移行するには有料版の自動同期が必要です。）</string>
 
     <string name="data_export_debit">借方金額</string>
     <string name="data_export_account">借方勘定</string>

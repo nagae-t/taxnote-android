@@ -1,6 +1,6 @@
 package com.example.taxnoteandroid;
 
-import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -12,7 +12,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.ShareCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.content.PermissionChecker;
 import android.support.v4.widget.CompoundButtonCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -28,9 +27,9 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.example.taxnoteandroid.Library.AppPermission;
 import com.example.taxnoteandroid.Library.AsyncOkHttpClient;
 import com.example.taxnoteandroid.Library.BroadcastUtil;
+import com.example.taxnoteandroid.Library.DataExportManager;
 import com.example.taxnoteandroid.Library.DialogManager;
 import com.example.taxnoteandroid.Library.FileUtil;
 import com.example.taxnoteandroid.Library.taxnote.TNApi;
@@ -43,7 +42,11 @@ import com.example.taxnoteandroid.databinding.FragmentSettingsTabBinding;
 import com.example.taxnoteandroid.model.Project;
 import com.helpshift.support.Support;
 
+import java.io.OutputStream;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 
 import okhttp3.Response;
 
@@ -62,6 +65,8 @@ public class SettingsTabFragment extends Fragment {
 
     private TNApiUser mApiUser;
     private TNApiModel mApiModel;
+
+    private static int CREATE_FILE = 1;
 
     public SettingsTabFragment() {
         // Required empty public constructor
@@ -95,6 +100,29 @@ public class SettingsTabFragment extends Fragment {
         mProjectDataManager = new ProjectDataManager(mContext);
 
         setViews();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == CREATE_FILE && resultCode == Activity.RESULT_OK) {
+            Uri uri = data.getData();
+            if (uri != null) {
+
+                DataExportManager dataExportManager = new DataExportManager((AppCompatActivity) getActivity());
+                String dataJsonString = dataExportManager.generateDbToJson();
+                try (OutputStream outputStream =
+                             getActivity().getContentResolver().openOutputStream(uri)) {
+                    if (outputStream != null) {
+                        outputStream.write(dataJsonString.getBytes());
+                        DialogManager.showSnackbar(getView(), getString(R.string.finished_data_export));
+                    }
+                } catch (Exception e) {
+                    Log.e("ERROR", "data export : " + e.getMessage());
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 
     public void afterLogin() {
@@ -622,8 +650,7 @@ public class SettingsTabFragment extends Fragment {
         binding.dataBackup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // ファイル書き込み権限があるかどうか調べる
-                checkPermissionForBackup();
+                showDataBackupDialog();
             }
         });
     }
@@ -637,20 +664,29 @@ public class SettingsTabFragment extends Fragment {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
 
-                        // 別のスレッドで実行
-                        new Thread(new Runnable() {
+                        Calendar cal = Calendar.getInstance();
+                        cal.setTimeInMillis(System.currentTimeMillis());
+                        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
+                                mContext.getResources().getString(R.string.date_string_format_for_custom_range)
+                                        + "_HHmmss",
+                                Locale.getDefault());
+                        String dateString = simpleDateFormat.format(cal.getTime());
 
-                            @Override
-                            public void run() {
-                                FileUtil.dataExport((AppCompatActivity) getActivity());
-                            }
-                        }).start();
+                        String fileName = "taxnote_android_" + dateString + ".json";
+
+                        Intent intent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
+                        intent.addCategory(Intent.CATEGORY_OPENABLE);
+                        intent.setType("application/json");
+                        intent.putExtra(Intent.EXTRA_TITLE, fileName);
+
+                        startActivityForResult(intent, CREATE_FILE);
+
                     }
                 })
                 .setNeutralButton(getResources().getString(R.string.help), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        Support.showSingleFAQ(getActivity(), "113");
+                        Support.showSingleFAQ(getActivity(), "173");
                     }
                 })
                 .setNegativeButton(getResources().getString(R.string.cancel), new DialogInterface.OnClickListener() {
@@ -659,25 +695,6 @@ public class SettingsTabFragment extends Fragment {
                     }
                 })
                 .show();
-    }
-
-    private void checkPermissionForBackup() {
-        String permissionWriteStorage = Manifest.permission.WRITE_EXTERNAL_STORAGE;
-        String permissionReadStorage = Manifest.permission.READ_EXTERNAL_STORAGE;
-        switch (PermissionChecker.checkSelfPermission(mContext, permissionWriteStorage)) {
-            case PermissionChecker.PERMISSION_GRANTED:
-                showDataBackupDialog();
-                break;
-            case PermissionChecker.PERMISSION_DENIED:
-                AppPermission.requestPermissions(getActivity(),
-                        new String[]{permissionWriteStorage, permissionReadStorage});
-                break;
-            case PermissionChecker.PERMISSION_DENIED_APP_OP:
-                DialogManager.showToast(mContext, mContext.getString(R.string.device_permission_denied_msg));
-                break;
-            default:
-                break;
-        }
     }
 
 

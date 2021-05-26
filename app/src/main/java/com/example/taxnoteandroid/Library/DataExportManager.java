@@ -2,9 +2,9 @@ package com.example.taxnoteandroid.Library;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Environment;
 import android.print.PrintAttributes;
 import android.print.PrintDocumentAdapter;
 import android.print.PrintManager;
@@ -19,7 +19,6 @@ import com.example.taxnoteandroid.BuildConfig;
 import com.example.taxnoteandroid.CommonEntryRecyclerAdapter;
 import com.example.taxnoteandroid.ExportHeaderSettingDialogFragment;
 import com.example.taxnoteandroid.R;
-import com.example.taxnoteandroid.TNSimpleDialogFragment;
 import com.example.taxnoteandroid.TaxnoteConsts;
 import com.example.taxnoteandroid.dataManager.AccountDataManager;
 import com.example.taxnoteandroid.dataManager.EntryDataManager;
@@ -37,7 +36,6 @@ import com.example.taxnoteandroid.model.Summary;
 import com.google.gson.Gson;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
@@ -58,6 +56,8 @@ public class DataExportManager implements TaxnoteConsts {
 
     private static String CHARACTER_CODE_UTF_8 = "UTF-8";
     private static String CHARACTER_CODE_SHIFT_JIS = "Shift_JIS";
+
+    public static int CREATE_EXPORT_FILE = 2;
 
     private AppCompatActivity mActivity;
     private Context context;
@@ -331,33 +331,40 @@ public class DataExportManager implements TaxnoteConsts {
                     mHeaderBusinessName = businessName;
                     mHeaderSummary = summary;
                     mHeaderPeriod = period;
-                    exportInternal();
+                    createExportFile();
                 }
             });
         } else {
-            exportInternal();
+            createExportFile();
         }
     }
 
-    private void exportInternal() {
+    private void createExportFile() {
+        Intent intent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        if (mode.compareTo(EXPORT_FORMAT_TYPE_YAYOI) == 0) {
+            intent.setType("text/plain");
+        } else {
+            intent.setType("text/csv");
+        }
+        intent.putExtra(Intent.EXTRA_TITLE, getOutputFile());
+        mActivity.startActivityForResult(intent, CREATE_EXPORT_FILE);
+    }
 
-        final TNSimpleDialogFragment dialog = DialogManager.getLoading(mActivity, context.getString(R.string.data_export));
-        dialog.show(mActivity.getSupportFragmentManager(), null);
-
-        AsyncTask<Object, Object, File> task = new AsyncTask<Object, Object, File>() {
+    public void writeExportData(final Uri uri) {
+        AsyncTask<Object, Object, Boolean> task = new AsyncTask<Object, Object, Boolean>() {
 
             @Override
-            protected File doInBackground(Object... objects) {
-                return generateCsvFile();
+            protected Boolean doInBackground(Object... objects) {
+                return writeCsvFile(uri);
             }
 
             @Override
-            protected void onPostExecute(File file) {
-                super.onPostExecute(file);
-                dialog.dismissAllowingStateLoss();
+            protected void onPostExecute(Boolean isSuccess) {
+                super.onPostExecute(isSuccess);
 
-                if (file != null) {
-                    shareFileContent(file);
+                if (isSuccess) {
+                    DialogManager.showToast(context, context.getString(R.string.finished_data_export));
                 } else {
                     DialogManager.showOKOnlyAlert(mActivity, context.getString(R.string.Error), context.getString(R.string.data_export_cant_make_csv));
                 }
@@ -415,16 +422,12 @@ public class DataExportManager implements TaxnoteConsts {
         webView.loadDataWithBaseURL(null, generateHTML(), "text/HTML", characterCode, null);
     }
 
-    private File generateCsvFile() {
-
+    private Boolean writeCsvFile(Uri uri) {
         OutputStream streamOut = null;
         PrintWriter writer = null;
 
         try {
-            File file = getOutputFile();
-            if (!file.getParentFile().exists())
-                file.getParentFile().mkdirs(); // If parent folder doesn't exist, create it.
-            streamOut = new FileOutputStream(file);
+            streamOut = context.getContentResolver().openOutputStream(uri);
             writer = new PrintWriter(new OutputStreamWriter(streamOut, characterCode));
 
             List<Entry> entries = getSelectedRangeEntries(); // Get a list of Entry.
@@ -477,7 +480,7 @@ public class DataExportManager implements TaxnoteConsts {
                 entryCount++;
             }
 
-            return file;
+            return true;
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -500,7 +503,7 @@ public class DataExportManager implements TaxnoteConsts {
             }
         }
 
-        return null;
+        return false;
     }
 
     private String getOutputFileName() {
@@ -558,8 +561,7 @@ public class DataExportManager implements TaxnoteConsts {
         return fileName;
     }
 
-    private File getOutputFile() {
-        String appName = context.getString(R.string.app_name);
+    private String getOutputFile() {
         String fileName = getOutputFileName();
 
         // File extension
@@ -569,8 +571,7 @@ public class DataExportManager implements TaxnoteConsts {
             fileName += ".csv";
         }
 
-        return new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), appName
-                + "/" + System.currentTimeMillis() + "/" + fileName);
+        return fileName;
 
     }
 
