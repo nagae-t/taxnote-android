@@ -151,21 +151,34 @@ public class MainActivity extends DefaultCommonActivity
         public void onQueryInventoryFinished(IabResult result, Inventory inventory) {
             if (result.isFailure()) return;
 
+
+            boolean hasTaxnotePlus = false;
             Purchase purchasePlus = inventory.getPurchase(UpgradeManger.SKU_TAXNOTE_PLUS_ID);
-            if (purchasePlus != null)
+            if (purchasePlus != null) {
                 new CheckBillingAsyncTask().execute(purchasePlus);
+                hasTaxnotePlus = true;
+            }
 
             Purchase purchasePlus1 = inventory.getPurchase(UpgradeManger.SKU_TAXNOTE_PLUS_ID1);
-            if (purchasePlus1 != null)
+            if (purchasePlus1 != null) {
                 new CheckBillingAsyncTask().execute(purchasePlus1);
+                hasTaxnotePlus = true;
+            }
 
             Purchase purchasePlus2 = inventory.getPurchase(UpgradeManger.SKU_TAXNOTE_PLUS_ID2);
-            if (purchasePlus2 != null)
+            if (purchasePlus2 != null) {
                 new CheckBillingAsyncTask().execute(purchasePlus2);
+                hasTaxnotePlus = true;
+            }
 
             Purchase purchasePlus3 = inventory.getPurchase(UpgradeManger.SKU_TAXNOTE_PLUS_ID3);
-            if (purchasePlus3 != null)
+            if (purchasePlus3 != null) {
                 new CheckBillingAsyncTask().execute(purchasePlus3);
+                hasTaxnotePlus = true;
+            }
+            if (!hasTaxnotePlus) {
+                SharedPreferencesManager.saveTaxnotePlusExpiryTime(getApplicationContext(), 0);
+            }
 
             Purchase purchaseCloud = inventory.getPurchase(UpgradeManger.SKU_TAXNOTE_CLOUD_ID);
             if (purchaseCloud != null)
