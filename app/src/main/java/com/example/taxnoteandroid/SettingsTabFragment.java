@@ -111,16 +111,30 @@ public class SettingsTabFragment extends Fragment {
 
                 DataExportManager dataExportManager = new DataExportManager((AppCompatActivity) getActivity());
                 String dataJsonString = dataExportManager.generateDbToJson();
-                try (OutputStream outputStream =
-                             getActivity().getContentResolver().openOutputStream(uri)) {
+                OutputStream outputStream = null;
+                try {
+                    outputStream = getActivity().getContentResolver().openOutputStream(uri);
                     if (outputStream != null) {
                         outputStream.write(dataJsonString.getBytes());
-                        DialogManager.showSnackbar(getView(), getString(R.string.finished_data_export));
                     }
                 } catch (Exception e) {
                     Log.e("ERROR", "data export : " + e.getMessage());
                     e.printStackTrace();
                 }
+
+                try {
+                    if (outputStream != null) {
+                        outputStream.close();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                ShareCompat.IntentBuilder.from(getActivity())
+                        .setType("application/json")
+                        .setChooserTitle("Backup file")
+                        .setStream(uri)
+                        .startChooser();
             }
         }
     }

@@ -352,19 +352,19 @@ public class DataExportManager implements TaxnoteConsts {
     }
 
     public void writeExportData(final Uri uri) {
-        AsyncTask<Object, Object, Boolean> task = new AsyncTask<Object, Object, Boolean>() {
+        AsyncTask<Object, Object, Uri> task = new AsyncTask<Object, Object, Uri>() {
 
             @Override
-            protected Boolean doInBackground(Object... objects) {
+            protected Uri doInBackground(Object... objects) {
                 return writeCsvFile(uri);
             }
 
             @Override
-            protected void onPostExecute(Boolean isSuccess) {
-                super.onPostExecute(isSuccess);
+            protected void onPostExecute(Uri uri) {
+                super.onPostExecute(uri);
 
-                if (isSuccess) {
-                    DialogManager.showToast(context, context.getString(R.string.finished_data_export));
+                if (uri != null) {
+                    shareFileContent(uri);
                 } else {
                     DialogManager.showOKOnlyAlert(mActivity, context.getString(R.string.Error), context.getString(R.string.data_export_cant_make_csv));
                 }
@@ -422,7 +422,7 @@ public class DataExportManager implements TaxnoteConsts {
         webView.loadDataWithBaseURL(null, generateHTML(), "text/HTML", characterCode, null);
     }
 
-    private Boolean writeCsvFile(Uri uri) {
+    private Uri writeCsvFile(Uri uri) {
         OutputStream streamOut = null;
         PrintWriter writer = null;
 
@@ -480,7 +480,7 @@ public class DataExportManager implements TaxnoteConsts {
                 entryCount++;
             }
 
-            return true;
+            return uri;
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -503,7 +503,7 @@ public class DataExportManager implements TaxnoteConsts {
             }
         }
 
-        return false;
+        return null;
     }
 
     private String getOutputFileName() {
@@ -653,7 +653,7 @@ public class DataExportManager implements TaxnoteConsts {
         return builder.toString();
     }
 
-    private void shareFileContent(File file) {
+    private void shareFileContent(Uri streamUri) {
 
         String appName = context.getString(R.string.app_name);
 
@@ -662,11 +662,6 @@ public class DataExportManager implements TaxnoteConsts {
             subjectString = appName + " " + context.getString(R.string.profit_loss_export)
                     + " (" + getReportStartEndDateString() + ")";
         }
-
-        // ShareCompat
-        Uri streamUri = FileProvider.getUriForFile(context,
-                BuildConfig.APPLICATION_ID + ".provider",
-                file);
 
         ShareCompat.IntentBuilder builder = ShareCompat.IntentBuilder.from(mActivity);
         if (mode.compareTo(EXPORT_FORMAT_TYPE_YAYOI) == 0) {
