@@ -636,7 +636,7 @@ public class EntryDataManager {
             this._periodType = periodType;
         }
 
-        public Calendar getGroupingCalendar(Entry entry) {
+        public Calendar getGroupingCalendar(Entry entry, int closingDateIndex) {
             Calendar calendar = Calendar.getInstance();
             calendar.clear();
             calendar.setTimeInMillis(entry.date);
@@ -645,8 +645,18 @@ public class EntryDataManager {
                     calendar.set(calendar.get(Calendar.YEAR), 0, 1, 0, 0, 0);
                     break;
                 case PERIOD_TYPE_MONTH:
-                    calendar.set(calendar.get(Calendar.YEAR),
-                            calendar.get(Calendar.MONTH), 1, 0, 0, 0);
+                    int lastDayOfMonthIndex = 26;
+                    int date = calendar.get(Calendar.DATE);
+                    if (closingDateIndex >= lastDayOfMonthIndex) {
+                        calendar.set(calendar.get(Calendar.YEAR),
+                                calendar.get(Calendar.MONTH), 1, 0, 0, 0);
+                    } else {
+                        calendar.set(calendar.get(Calendar.YEAR),
+                                calendar.get(Calendar.MONTH), closingDateIndex + 3, 0, 0, 0);
+                        if (date > closingDateIndex + 2) {
+                            calendar.add(Calendar.MONTH, 1);
+                        }
+                    }
                     break;
                 case PERIOD_TYPE_DAY:
                     calendar.set(calendar.get(Calendar.YEAR),
@@ -744,7 +754,7 @@ public class EntryDataManager {
 
 
             for (Entry entry : entries) {
-                Calendar calendar = getGroupingCalendar(entry);
+                Calendar calendar = getGroupingCalendar(entry, closingDateIndex);
                 if (!calendars.contains(calendar)) {
                     calendars.add(calendar);
                 }
@@ -753,51 +763,24 @@ public class EntryDataManager {
             int calSize = calendars.size();
             if (calSize == 0) return calendars;
 
-            Calendar firstCal = calendars.get(0);
-            Calendar newFirstCal = (Calendar)firstCal.clone();
-            Calendar lastCal = (calSize == 1) ? firstCal : calendars.get(calSize-1);
-            Calendar newLastCal = (Calendar)lastCal.clone();
-
-            // 月の締め日が月末以外に設定されていたら
-            // 頭と最後に1ヶ月ずつ増やす
-            if (_periodType == PERIOD_TYPE_MONTH && closingDateIndex != 28) {
-                int newFirstYear = firstCal.get(Calendar.YEAR);
-                int newFirstMonth = firstCal.get(Calendar.MONTH)-1;
-                if (newFirstMonth < 0) {
-                    newFirstMonth = 11;
-                    newFirstYear -= 1;
-                } else if (_periodType == PERIOD_TYPE_YEAR) {
-                    newFirstYear -= 1;
-                }
-                newFirstCal.set(newFirstYear,
-                        newFirstMonth,
-                        firstCal.get(Calendar.DATE));
-
-                int newLastYear = lastCal.get(Calendar.YEAR);
-                int newLastMonth = lastCal.get(Calendar.MONTH)+1;
-                if (newLastMonth == 12) {
-                    newLastMonth = 0;
-                    newLastYear += 1;
-                } else if (_periodType == PERIOD_TYPE_YEAR) {
-                    newLastYear += 1;
-                }
-                newLastCal.set(newLastYear,
-                        newLastMonth,
-                        firstCal.get(Calendar.DATE));
-
-                calendars.add(0, newFirstCal);
-                calendars.add(newLastCal);
+            int type = -1;
+            if (_periodType == PERIOD_TYPE_MONTH && closingDateIndex != 26) {
+                // 月の締め日が月末以外に設定されていたら
+                // 頭と最後に1ヶ月ずつ増やす
+                type = Calendar.MONTH;
+            } else if (_periodType == PERIOD_TYPE_YEAR) {
+                // 年別のときは前後１年ずつ増やす
+                type = Calendar.YEAR;
             }
-
-            // 年別のときは前後１年ずつ増やす
-            if (_periodType == PERIOD_TYPE_YEAR) {
-                int newFirstYear = firstCal.get(Calendar.YEAR);
-                newFirstCal.set(newFirstYear-1, firstCal.get(Calendar.MONTH), firstCal.get(Calendar.DATE));
-
-                int newLastYear = lastCal.get(Calendar.YEAR);
-                newLastCal.set(newLastYear+1, lastCal.get(Calendar.MONTH), lastCal.get(Calendar.DATE));
-
+            if (type >= 0) {
+                Calendar newFirstCal = Calendar.getInstance();
+                newFirstCal.setTime(calendars.get(0).getTime());
+                newFirstCal.add(type, -1);
                 calendars.add(0, newFirstCal);
+
+                Calendar newLastCal = Calendar.getInstance();
+                newLastCal.setTime(calendars.get(calendars.size() - 1).getTime());
+                newLastCal.add(type, 1);
                 calendars.add(newLastCal);
             }
 
