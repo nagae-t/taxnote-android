@@ -761,16 +761,6 @@ public class SettingsTabFragment extends Fragment {
             }
         });
 
-        binding.otherApps.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String receiptUrl = "https://play.google.com/store/apps/developer?id=Non+Umemoto";
-                Uri uri = Uri.parse(receiptUrl);
-                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-                startActivity(intent);
-            }
-        });
-
     }
 
 }
