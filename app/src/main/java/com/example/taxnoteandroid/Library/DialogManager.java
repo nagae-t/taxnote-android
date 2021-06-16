@@ -448,17 +448,11 @@ public class DialogManager {
         dialogFragment.setMessage(context.getString(R.string.release_note_message));
 
         dialogFragment.setCloseToFinish(true);
-        dialogFragment.setPositiveBtnText(context.getString(R.string.play_store_review));
-        dialogFragment.setNegativeBtnText(context.getString(R.string.cancel));
-
+        dialogFragment.setPositiveBtnText(context.getString(android.R.string.ok));
         dialogFragment.setDialogListener(new TNSimpleDialogFragment.TNSimpleDialogListener() {
             @Override
             public void onPositiveBtnClick(DialogInterface dialogInterface, int i, String tag) {
-
                 dialogInterface.dismiss();
-                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(context.getString(R.string.play_store_url)));
-                intent.setPackage("com.android.vending");
-                context.startActivity(intent);
             }
 
             @Override
@@ -467,7 +461,6 @@ public class DialogManager {
 
             @Override
             public void onNegativeBtnClick(DialogInterface dialogInterface, int i, String tag) {
-                dialogInterface.dismiss();
             }
 
             @Override
