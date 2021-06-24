@@ -272,13 +272,17 @@
 
     <string name="release_note_title">Update Info :</string>
     <!--//@@@ここをアップデートごとに変更-->
-    <string name="release_note_message">Hi, this is a small update.\n
+    <string name="release_note_message">Hi, this update has another small change.\n
 \n
-@Updated Export and Backup behaviours\n
+@App Icon Update\n
 \n
-To use Android new api, Export and Backup behaviours have been updated even though you do not notice so much difference while using.\n
+In the previous update, I explained the background for Taxnote Buy-Out.  (You can read it anytime in Settings => Help.)\n
 \n
-As always,  I\'d really appreciate it if you could review the app on PlayStore.\n
+On this update, Taxnote app Icon has been updated because of the buy-out.\n
+\n
+Since I always liked the old Taxnote icon, I requested to keep the taste of the old icon to the designer who made the new one.\n
+\n
+He made a simple icon that still keep the taste of the previous one, and I quite like it too.  I guess you cannot get used to the new one easily, but I hope you like it.\n
 \n
 Thanks!\n
 </string>
