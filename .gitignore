@@ -10,3 +10,5 @@ build
 bin
 gen
 captures
+.apk
+app/taxnoteProduct/
