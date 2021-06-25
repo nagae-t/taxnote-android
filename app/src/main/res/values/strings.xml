@@ -114,6 +114,8 @@
     <string name="upgrade_is_active">Active</string>
     <string name="taxnote_plus_descriptions">You can unlock 15 entries limit per month.</string>
     <string name="frequently_asked_questions">Help</string>
+    <string name="terms_of_use">Terms of use</string>
+    <string name="privacy_policy">Privacy policy</string>
     <string name="ask_questions_or_request">Ask Anything</string>
     <string name="version">Version</string>
     <string name="upgrade_to_plus_unlock_the_limit">You can register for free up to 15 entries on the same month.  Please upgrade to Taxnote Plus for unlimited entry.\n\nIf you already upgraded before, you can restore it for free.</string>    <string name="upgrade">Upgrade</string>

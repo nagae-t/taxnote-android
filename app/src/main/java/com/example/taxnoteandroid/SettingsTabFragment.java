@@ -8,6 +8,7 @@ import android.content.res.ColorStateList;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.customtabs.CustomTabsIntent;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.ShareCompat;
@@ -737,6 +738,28 @@ public class SettingsTabFragment extends Fragment {
                 });
             }
         });
+
+        binding.terms.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showUrlInCustomTabs(getString(R.string.url_terms));
+            }
+        });
+
+        binding.privacyPolicy.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showUrlInCustomTabs(getString(R.string.url_privacy_policy));
+            }
+        });
+    }
+
+    private void showUrlInCustomTabs(final String url) {
+        final CustomTabsIntent tabsIntent = new CustomTabsIntent.Builder()
+                .setShowTitle(true)
+                .setToolbarColor(ContextCompat.getColor(requireContext(), R.color.primary))
+                .build();
+        tabsIntent.launchUrl(requireContext(), Uri.parse(url));
     }
 
 

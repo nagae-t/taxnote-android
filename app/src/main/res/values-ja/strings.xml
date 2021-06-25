@@ -109,6 +109,8 @@
     <string name="upgrade_is_active">有効</string>
     <string name="taxnote_plus_descriptions">月15件の入力制限がなくなります。</string>
     <string name="frequently_asked_questions">ヘルプ・よくある質問</string>
+    <string name="terms_of_use">利用規約</string>
+    <string name="privacy_policy">プライバシーポリシー</string>
     <string name="ask_questions_or_request">要望・質問を送る</string>
     <string name="version">バージョン</string>
     <string name="upgrade_to_plus_unlock_the_limit">無料版では入力数が月15件までとなります。もしよければ無制限に記録できるTaxnoteプラスをご検討ください。機種変更時など、以前に購入している方は有料版がアップグレード画面で自動的に復元されます。</string>

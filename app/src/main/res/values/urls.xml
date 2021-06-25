@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="url_terms" tools:ignore="MissingTranslation">https://www.freee.co.jp/terms/</string>
+    <string name="url_privacy_policy" tools:ignore="MissingTranslation">https://www.freee.co.jp/privacy_policy/</string>
+</resources>
