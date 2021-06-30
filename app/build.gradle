@@ -97,6 +97,7 @@ dependencies {
     implementation "com.android.support:support-v4:${supportPackageVersion}"
     implementation "com.android.support:recyclerview-v7:${supportPackageVersion}"
     implementation "com.android.support:cardview-v7:${supportPackageVersion}"
+    implementation "com.android.support:customtabs:${supportPackageVersion}"
     implementation 'com.android.support:multidex:1.0.3'
 
     implementation "com.google.android.gms:play-services-ads-lite:${playServicesVersion}"

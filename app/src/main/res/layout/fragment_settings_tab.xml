@@ -186,6 +186,30 @@
 
         <TextView
             style="@style/font_style_standard"
+            android:background="@drawable/selector_background_colors"
+            android:id="@+id/terms"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:minHeight="@dimen/cell_height_standard"
+            android:paddingEnd="16dp"
+            android:paddingStart="16dp"
+            android:text="@string/terms_of_use" />
+
+        <TextView
+            style="@style/font_style_standard"
+            android:background="@drawable/selector_background_colors"
+            android:id="@+id/privacy_policy"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:minHeight="@dimen/cell_height_standard"
+            android:paddingEnd="16dp"
+            android:paddingStart="16dp"
+            android:text="@string/privacy_policy" />
+
+        <TextView
+            style="@style/font_style_standard"
             android:id="@+id/share_taxnote_button"
             android:background="@drawable/selector_background_colors"
             android:layout_width="match_parent"
