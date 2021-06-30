@@ -270,21 +270,6 @@
     <string name="import_data_overwrite_confirm_message">バックアップデータをインポートすると全ての既存データに上書きされてます。本当にインポートしてよろしいですか？</string>
 
     <string name="release_note_title">最新版の情報 : </string>
-    <!--//@@@ここをアップデートごとに変更-->
-    <string name="release_note_message">こんにちは。扇風機を毎日使ってます。\n
-\n
-さて、今回も地味なアップデートです。\n
-\n
-＠データ出力とバックアップの挙動修正\n
-\n
-データ出力やバックアップの挙動をAndroidの新しいapiを使うために修正したのですが、動きとして、先にGoogleドライブに保存するという挙動に変わっております。その後、保存ボタンをタップしたあと、メールなどに送信できる動きになりました。\n
-\n
-そのため、まずはDriveに保存という動きをしてから、出力先を選んでもらえればと思います。\n
-\n
-もし、アプリを気に入ってくれた方はレビューを書いてもらえると嬉しいです。\n
-\n
-それではまた！\n
-</string>
 
     <string name="update_check_title">新しいアップデートがあります</string>
     <string name="update_check_message">このアプリの最新版が更新されています。新しいバージョンにアップデートしてください。</string>
