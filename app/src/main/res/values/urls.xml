@@ -2,4 +2,5 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <string name="url_terms" tools:ignore="MissingTranslation">https://www.taxnoteapp.com/kiyaku</string>
     <string name="url_privacy_policy" tools:ignore="MissingTranslation">https://www.taxnoteapp.com/praivacypolicy</string>
+    <string name="url_send_message" tools:ignore="MissingTranslation">https://docs.google.com/forms/d/e/1FAIpQLSdTaXFWYrg490hvQivc3dXVFuT1zRfAprKOwVMJkwAVK1RN4A/viewform</string>
 </resources>

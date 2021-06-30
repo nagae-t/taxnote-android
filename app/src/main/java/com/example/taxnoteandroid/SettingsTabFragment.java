@@ -722,7 +722,7 @@ public class SettingsTabFragment extends Fragment {
         binding.sendMessageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Support.showConversation(getActivity());
+                showUrlInCustomTabs(getString(R.string.url_send_message));
             }
         });
 
