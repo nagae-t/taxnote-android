@@ -12,11 +12,6 @@ import com.example.taxnoteandroid.dataManager.ProjectDataManager;
 import com.example.taxnoteandroid.dataManager.SharedPreferencesManager;
 import com.example.taxnoteandroid.model.OrmaDatabase;
 import com.github.gfx.android.orma.AccessThreadConstraint;
-import com.helpshift.All;
-import com.helpshift.Core;
-import com.helpshift.InstallConfig;
-import com.helpshift.exceptions.InstallException;
-import com.helpshift.support.Support;
 
 import java.util.Calendar;
 import java.util.List;
@@ -69,22 +64,6 @@ public class TaxnoteApp extends MultiDexApplication {
                 .writeOnMainThread(AccessThreadConstraint.NONE)
                 .readOnMainThread(AccessThreadConstraint.NONE)
                 .build();
-
-        // Helpshift
-        Core.init(All.getInstance());
-        InstallConfig installConfig = new InstallConfig.Builder()
-                .setEnableInAppNotification(true)
-                .build();
-        try {
-            Core.install(this,
-                    "14f761394d47454be7d6db4956f8e4ae",
-                    "texttospeech.helpshift.com",
-                    "texttospeech_platform_20170117101706929-9d883d52d724719",
-                    installConfig);
-        } catch (InstallException e) {
-            android.util.Log.e("Helpshift", "install call : ", e);
-        }
-        android.util.Log.d("Helpshift", Support.libraryVersion + " - is the version for gradle");
 
         registerActivityLifecycleCallbacks(new MyActivityLifecycleCallbacks());
     }

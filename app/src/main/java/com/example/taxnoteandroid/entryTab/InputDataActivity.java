@@ -32,6 +32,7 @@ import com.example.taxnoteandroid.dataManager.AccountDataManager;
 import com.example.taxnoteandroid.dataManager.EntryDataManager;
 import com.example.taxnoteandroid.dataManager.ProjectDataManager;
 import com.example.taxnoteandroid.dataManager.SharedPreferencesManager;
+import com.example.taxnoteandroid.misc.CustomTabsUtils;
 import com.example.taxnoteandroid.model.Account;
 import com.example.taxnoteandroid.model.Entry;
 import com.example.taxnoteandroid.model.Project;
@@ -42,7 +43,6 @@ import com.google.android.play.core.review.ReviewManager;
 import com.google.android.play.core.review.ReviewManagerFactory;
 import com.google.android.play.core.tasks.OnCompleteListener;
 import com.google.android.play.core.tasks.Task;
-import com.helpshift.support.Support;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
 
 import org.parceler.Parcels;
@@ -412,7 +412,7 @@ public class InputDataActivity extends DefaultCommonActivity {
                 .setNeutralButton(R.string.view_help, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        Support.showSingleFAQ(InputDataActivity.this, "177");
+                        CustomTabsUtils.showHelp(InputDataActivity.this, CustomTabsUtils.Content.UPGRADE);
                     }
                 })
                 .setPositiveButton(getResources().getString(R.string.benefits_of_upgrade), new DialogInterface.OnClickListener() {

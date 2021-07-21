@@ -22,7 +22,7 @@ import com.example.taxnoteandroid.Library.DialogManager;
 import com.example.taxnoteandroid.Library.EntryLimitManager;
 import com.example.taxnoteandroid.dataManager.SharedPreferencesManager;
 import com.example.taxnoteandroid.databinding.ActivityDataExportBinding;
-import com.helpshift.support.Support;
+import com.example.taxnoteandroid.misc.CustomTabsUtils;
 
 import java.io.Serializable;
 import java.util.Calendar;
@@ -247,7 +247,7 @@ public class DataExportActivity extends DefaultCommonActivity
                     binding.dataExportSubjectVal.setText(R.string.settings_invalid);
                     break;
                 case R.id.subject_help_btn:
-                    Support.showSingleFAQ(DataExportActivity.this, "104");
+                    CustomTabsUtils.showHelp(DataExportActivity.this, CustomTabsUtils.Content.SUBSIDIARY);
                     break;
             }
             Fragment fragment = getSupportFragmentManager()
@@ -400,7 +400,7 @@ public class DataExportActivity extends DefaultCommonActivity
         binding.dataExportHelp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Support.showFAQSection(DataExportActivity.this, "36");
+                CustomTabsUtils.showHelp(DataExportActivity.this, CustomTabsUtils.Content.EXPORT);
             }
         });
     }
