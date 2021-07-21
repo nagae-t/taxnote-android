@@ -42,6 +42,7 @@ import com.example.taxnoteandroid.dataManager.ProjectDataManager;
 import com.example.taxnoteandroid.dataManager.SharedPreferencesManager;
 import com.example.taxnoteandroid.databinding.ActivityMainBinding;
 import com.example.taxnoteandroid.entryTab.EntryTabFragment;
+import com.example.taxnoteandroid.misc.CustomTabsUtils;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.play.core.appupdate.AppUpdateInfo;
 import com.google.android.play.core.appupdate.AppUpdateManager;
@@ -53,7 +54,6 @@ import com.google.android.play.core.install.model.InstallStatus;
 import com.google.android.play.core.install.model.UpdateAvailability;
 import com.google.android.play.core.tasks.OnSuccessListener;
 import com.google.api.services.androidpublisher.model.SubscriptionPurchase;
-import com.helpshift.support.Support;
 import com.kobakei.ratethisapp.RateThisApp;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
 
@@ -216,6 +216,7 @@ public class MainActivity extends DefaultCommonActivity
         checkInAppBilling();
 
         checkAppUpdate();
+
     }
 
     private void checkInAppBilling() {
@@ -309,7 +310,7 @@ public class MainActivity extends DefaultCommonActivity
         switch (item.getItemId()) {
 
             case R.id.help_in_settings_tab:
-                Support.showFAQs(this);
+                CustomTabsUtils.showHelp(this, CustomTabsUtils.Content.TOP);
                 break;
 
             case R.id.data_export:

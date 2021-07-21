@@ -16,7 +16,6 @@ import com.helpshift.All;
 import com.helpshift.Core;
 import com.helpshift.InstallConfig;
 import com.helpshift.exceptions.InstallException;
-import com.helpshift.support.Support;
 
 import java.util.Calendar;
 import java.util.List;
@@ -84,7 +83,6 @@ public class TaxnoteApp extends MultiDexApplication {
         } catch (InstallException e) {
             android.util.Log.e("Helpshift", "install call : ", e);
         }
-        android.util.Log.d("Helpshift", Support.libraryVersion + " - is the version for gradle");
 
         registerActivityLifecycleCallbacks(new MyActivityLifecycleCallbacks());
     }

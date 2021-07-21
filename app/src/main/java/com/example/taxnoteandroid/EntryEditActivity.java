@@ -26,8 +26,8 @@ import com.example.taxnoteandroid.Library.taxnote.TNApiModel;
 import com.example.taxnoteandroid.dataManager.EntryDataManager;
 import com.example.taxnoteandroid.dataManager.SharedPreferencesManager;
 import com.example.taxnoteandroid.databinding.ActivityEntryEditBinding;
+import com.example.taxnoteandroid.misc.CustomTabsUtils;
 import com.example.taxnoteandroid.model.Entry;
-import com.helpshift.support.Support;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
 
 import org.parceler.Parcels;
@@ -513,7 +513,7 @@ public class EntryEditActivity extends DefaultCommonActivity {
                 .setNeutralButton(R.string.view_help, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        Support.showSingleFAQ(EntryEditActivity.this, "177");
+                        CustomTabsUtils.showHelp(EntryEditActivity.this, CustomTabsUtils.Content.UPGRADE);
                     }
                 })
                 .setPositiveButton(R.string.benefits_of_upgrade, new DialogInterface.OnClickListener() {

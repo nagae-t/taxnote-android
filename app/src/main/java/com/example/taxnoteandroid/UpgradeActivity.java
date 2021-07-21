@@ -30,6 +30,7 @@ import com.example.taxnoteandroid.Library.taxnote.TNApiModel;
 import com.example.taxnoteandroid.Library.taxnote.TNApiUser;
 import com.example.taxnoteandroid.dataManager.SharedPreferencesManager;
 import com.example.taxnoteandroid.databinding.ActivityUpgradeBinding;
+import com.example.taxnoteandroid.misc.CustomTabsUtils;
 import com.google.android.play.core.review.ReviewInfo;
 import com.google.android.play.core.review.ReviewManager;
 import com.google.android.play.core.review.ReviewManagerFactory;
@@ -38,7 +39,6 @@ import com.google.android.play.core.tasks.Task;
 import com.google.api.services.androidpublisher.model.SubscriptionPurchase;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.helpshift.support.Support;
 import com.kobakei.ratethisapp.RateThisApp;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
 
@@ -317,7 +317,7 @@ public class UpgradeActivity extends DefaultCommonActivity {
         binding.help.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Support.showFAQSection(UpgradeActivity.this, "60");
+                CustomTabsUtils.showHelp(UpgradeActivity.this, CustomTabsUtils.Content.UPGRADE);
             }
         });
     }
@@ -562,7 +562,7 @@ public class UpgradeActivity extends DefaultCommonActivity {
                     .setNeutralButton(R.string.view_help, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            Support.showSingleFAQ(UpgradeActivity.this, "177");
+                            CustomTabsUtils.showHelp(UpgradeActivity.this, CustomTabsUtils.Content.UPGRADE);
                         }
                     })
                     .setPositiveButton(R.string.buy_taxnote_cloud_with_taxnote_plus_limit, new DialogInterface.OnClickListener() {
@@ -591,7 +591,7 @@ public class UpgradeActivity extends DefaultCommonActivity {
                 .setNeutralButton(R.string.view_help, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        Support.showSingleFAQ(UpgradeActivity.this, "177");
+                        CustomTabsUtils.showHelp(UpgradeActivity.this, CustomTabsUtils.Content.UPGRADE);
                     }
                 })
                 .setPositiveButton(R.string.buy_taxnote_cloud_with_taxnote_plus_limit, new DialogInterface.OnClickListener() {

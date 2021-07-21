@@ -8,7 +8,6 @@ import android.content.res.ColorStateList;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.customtabs.CustomTabsIntent;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.ShareCompat;
@@ -32,7 +31,6 @@ import com.example.taxnoteandroid.Library.AsyncOkHttpClient;
 import com.example.taxnoteandroid.Library.BroadcastUtil;
 import com.example.taxnoteandroid.Library.DataExportManager;
 import com.example.taxnoteandroid.Library.DialogManager;
-import com.example.taxnoteandroid.Library.FileUtil;
 import com.example.taxnoteandroid.Library.taxnote.TNApi;
 import com.example.taxnoteandroid.Library.taxnote.TNApiModel;
 import com.example.taxnoteandroid.Library.taxnote.TNApiUser;
@@ -40,8 +38,8 @@ import com.example.taxnoteandroid.dataManager.DefaultDataInstaller;
 import com.example.taxnoteandroid.dataManager.ProjectDataManager;
 import com.example.taxnoteandroid.dataManager.SharedPreferencesManager;
 import com.example.taxnoteandroid.databinding.FragmentSettingsTabBinding;
+import com.example.taxnoteandroid.misc.CustomTabsUtils;
 import com.example.taxnoteandroid.model.Project;
-import com.helpshift.support.Support;
 
 import java.io.OutputStream;
 import java.text.SimpleDateFormat;
@@ -701,7 +699,7 @@ public class SettingsTabFragment extends Fragment {
                 .setNeutralButton(getResources().getString(R.string.help), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        Support.showSingleFAQ(getActivity(), "173");
+                        CustomTabsUtils.showHelp(requireContext(), CustomTabsUtils.Content.BACKUP);
                     }
                 })
                 .setNegativeButton(getResources().getString(R.string.cancel), new DialogInterface.OnClickListener() {
@@ -729,13 +727,7 @@ public class SettingsTabFragment extends Fragment {
         binding.help.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                binding.help.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        Support.showFAQs(getActivity());
-                    }
-                });
+                CustomTabsUtils.showHelp(requireContext(), CustomTabsUtils.Content.TOP);
             }
         });
 
@@ -755,11 +747,7 @@ public class SettingsTabFragment extends Fragment {
     }
 
     private void showUrlInCustomTabs(final String url) {
-        final CustomTabsIntent tabsIntent = new CustomTabsIntent.Builder()
-                .setShowTitle(true)
-                .setToolbarColor(ContextCompat.getColor(requireContext(), R.color.primary))
-                .build();
-        tabsIntent.launchUrl(requireContext(), Uri.parse(url));
+        CustomTabsUtils.showUrl(requireContext(), url);
     }
 
 

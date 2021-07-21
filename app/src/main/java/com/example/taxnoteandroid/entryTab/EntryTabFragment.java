@@ -1,6 +1,5 @@
 package com.example.taxnoteandroid.entryTab;
 
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -13,9 +12,7 @@ import android.view.ViewGroup;
 
 import com.example.taxnoteandroid.Library.DialogManager;
 import com.example.taxnoteandroid.R;
-import com.example.taxnoteandroid.TNSimpleDialogFragment;
 import com.example.taxnoteandroid.dataManager.SharedPreferencesManager;
-import com.helpshift.support.Support;
 
 
 public class EntryTabFragment extends Fragment {
@@ -63,17 +60,6 @@ public class EntryTabFragment extends Fragment {
 
         DialogManager.showAskAnythingMessage(getActivity(), getFragmentManager());
         DialogManager.showHistoryTabHelpMessage(getActivity(), getFragmentManager());
-    }
-
-    @Override
-    public void setUserVisibleHint(boolean isVisibleToUser) {
-        super.setUserVisibleHint(isVisibleToUser);
-
-        if (this.isVisible()) {
-            if (isVisibleToUser) {
-                checkHelpshiftReplyMessage();
-            }
-        }
     }
 
     public void afterLogin() {
@@ -125,43 +111,4 @@ public class EntryTabFragment extends Fragment {
             return super.getPageTitle(position);
         }
     }
-
-
-    //--------------------------------------------------------------//
-    //    -- Help --
-    //--------------------------------------------------------------//
-
-    private void checkHelpshiftReplyMessage() {
-
-        // Check if the Hhelpshit reply message exists
-        if (Support.getNotificationCount() != 0) {
-
-            // Custom Alert
-            final TNSimpleDialogFragment dialogFragment = TNSimpleDialogFragment.newInstance();
-            dialogFragment.setTitle(getString(R.string.Helpshift_ReplyTitle));
-            dialogFragment.setMessage(getString(R.string.Helpshift_ReplyMessage));
-
-            dialogFragment.setCloseToFinish(true);
-            dialogFragment.setPositiveBtnText("OK");
-
-            dialogFragment.setDialogListener(new TNSimpleDialogFragment.TNSimpleDialogListener() {
-                @Override
-                public void onPositiveBtnClick(DialogInterface dialogInterface, int i, String tag) {
-                    dialogInterface.dismiss();
-                    Support.showConversation(getActivity());
-                }
-                @Override
-                public void onNeutralBtnClick(DialogInterface dialogInterface, int i, String tag) {}
-                @Override
-                public void onNegativeBtnClick(DialogInterface dialogInterface, int i, String tag) {}
-                @Override
-                public void onDialogCancel(DialogInterface dialogInterface, String tag) {}
-                @Override
-                public void onDialogDismiss(DialogInterface dialogInterface, String tag) {}
-            });
-
-            dialogFragment.show(getFragmentManager(), null);
-        }
-    }
-
 }

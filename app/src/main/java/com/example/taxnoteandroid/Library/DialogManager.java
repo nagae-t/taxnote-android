@@ -3,8 +3,6 @@ package com.example.taxnoteandroid.Library;
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.net.Uri;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
@@ -27,10 +25,10 @@ import com.example.taxnoteandroid.dataManager.EntryDataManager;
 import com.example.taxnoteandroid.dataManager.ProjectDataManager;
 import com.example.taxnoteandroid.dataManager.ReasonDataManager;
 import com.example.taxnoteandroid.dataManager.SharedPreferencesManager;
+import com.example.taxnoteandroid.misc.CustomTabsUtils;
 import com.example.taxnoteandroid.model.Account;
 import com.example.taxnoteandroid.model.Entry;
 import com.example.taxnoteandroid.model.Reason;
-import com.helpshift.support.Support;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -337,7 +335,7 @@ public class DialogManager {
         dialogFragment.setDialogListener(new TNSimpleDialogFragment.TNSimpleDialogListener() {
             @Override
             public void onPositiveBtnClick(DialogInterface dialogInterface, int i, String tag) {
-                Support.showFAQs((Activity) context);
+                CustomTabsUtils.showHelp(context, CustomTabsUtils.Content.TOP);
                 dialogInterface.dismiss();
             }
 
