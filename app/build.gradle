@@ -119,9 +119,6 @@ dependencies {
     // Android-RateThisApp
     implementation 'io.github.kobakei:ratethisapp:1.2.0'
 
-    // Helpshift
-    implementation 'com.helpshift:android-helpshift-aar:4.8.1'
-
     // In-App Billing v3 Library
 //    compile 'com.anjlab.android.iab.v3:library:1.0.38'
 //    compile 'org.solovyev.android:checkout:0.9.4'

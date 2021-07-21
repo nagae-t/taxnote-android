@@ -191,8 +191,6 @@
     <string name="AlertView_tapHistory">画面下の仕訳帳タブから編集できます。</string>
     <string name="AlertView_inputPrice">金額を入力して「記録する」をタップ</string>
     <string name="AlertView_selectSummary">備考をタップ</string>
-    <string name="Helpshift_ReplyTitle">返信があります</string>
-    <string name="Helpshift_ReplyMessage">あなたのメッセージに返信が届きました。</string>
     <string name="reorder_how_to_title">並び替え方法</string>
     <string name="reorder_how_to_message">科目をしばらくタップし続けると色が変わるので、そのまま押し続けながら上下に移動させてください。</string>
     <string name="help_rename_category_message">この科目は仕訳帳にすでに使われているので、該当する仕訳帳内の科目名も自動的に変更されます。</string>
@@ -215,19 +213,6 @@
     <string name="rate_app_yes_button">レビューを書く</string>
     <string name="rate_app_no_button">やらない</string>
     <string name="rate_app_cancel_button">あとで</string>
-
-
-    //--------------------------------------------------------------//
-    // -- Helpshift --
-    //--------------------------------------------------------------//
-
-    // English対応したら消す
-    <string name="hs__new_conversation_hint">要望・質問はお気軽に。(右上のボタンから写真の添付が可能です)</string>
-    <string name="hs__new_conversation_header">要望・質問を送る</string>
-    <string name="hs__conversation_started_message">返信はアプリ内のアラートでおしらせします。</string>
-    <string name="hs__conversation_detail_error">検索</string>
-    <string name="hs__review_title">アップデートに関して</string>
-    <string name="hs__review_message">こんにちは。今回のアップデートの感想、または今後の要望などあれば遠慮なくお願いします。</string>
 
 
     //--------------------------------------------------------------//

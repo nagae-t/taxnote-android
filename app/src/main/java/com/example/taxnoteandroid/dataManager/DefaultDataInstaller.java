@@ -23,7 +23,6 @@ import java.util.UUID;
 
 import static com.example.taxnoteandroid.TaxnoteConsts.EXPORT_CHARACTER_CODE_SHIFTJIS;
 import static com.example.taxnoteandroid.TaxnoteConsts.EXPORT_CHARACTER_CODE_UTF8;
-import static com.helpshift.util.HelpshiftContext.getApplicationContext;
 
 public class DefaultDataInstaller {
 
@@ -205,7 +204,7 @@ public class DefaultDataInstaller {
     }
 
     public static void restartApp(AppCompatActivity activity) {
-        Intent mainIntent = new Intent(getApplicationContext(), MainActivity.class);
+        Intent mainIntent = new Intent(activity.getApplicationContext(), MainActivity.class);
         mainIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         activity.startActivity(mainIntent);
         activity.finishAffinity();

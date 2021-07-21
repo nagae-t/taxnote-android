@@ -195,8 +195,6 @@
     <string name="AlertView_tapHistory">Tap the History tab to edit it.</string>
     <string name="AlertView_inputPrice">Enter numbers and tap Register</string>
     <string name="AlertView_selectSummary">Select a summary</string>
-    <string name="Helpshift_ReplyTitle">New Message</string>
-    <string name="Helpshift_ReplyMessage">You got a new message.</string>
     <string name="reorder_how_to_title">How to reorder</string>
     <string name="reorder_how_to_message">Tap and hold a category, then drag it to reorder.</string>
     <string name="help_rename_category_message">You have entries in the history using this category, so the category name in these entries will be also renamed automatically.</string>
@@ -219,18 +217,6 @@
     <string name="rate_app_yes_button">OK</string>
     <string name="rate_app_no_button">NO</string>
     <string name="rate_app_cancel_button">Later</string>
-
-
-    //--------------------------------------------------------------//
-    // -- Helpshift --
-    //--------------------------------------------------------------//
-
-    <string name="hs__new_conversation_hint">Feel free to ask me anything including questions or requests.</string>
-    <string name="hs__new_conversation_header">Ask Anything</string>
-    <string name="hs__conversation_started_message">Thanks for your message!  I get back to you shortly and you will get a pop message within the app.</string>
-    <string name="hs__conversation_detail_error">Search</string>
-    <string name="hs__review_title">About New Updates</string>
-    <string name="hs__review_message">Hi, if you love new updates of Taxnote, I\'d appreciate it if you could review it.</string>
 
 
     //--------------------------------------------------------------//
