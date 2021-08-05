@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.multidex.MultiDex;
 import android.support.multidex.MultiDexApplication;
 
-import com.crashlytics.android.Crashlytics;
 import com.example.taxnoteandroid.Library.taxnote.TNApiModel;
 import com.example.taxnoteandroid.dataManager.ProjectDataManager;
 import com.example.taxnoteandroid.dataManager.SharedPreferencesManager;
@@ -15,8 +14,6 @@ import com.github.gfx.android.orma.AccessThreadConstraint;
 
 import java.util.Calendar;
 import java.util.List;
-
-import io.fabric.sdk.android.Fabric;
 
 /**
  * Created by Eiichi on 2017/01/17.
@@ -54,9 +51,6 @@ public class TaxnoteApp extends MultiDexApplication {
     public void onCreate() {
         super.onCreate();
         singleton = this;
-
-        // Fabric
-        Fabric.with(this, new Crashlytics());
 
         // Orma database
         TaxnoteApp.ormaDatabase = OrmaDatabase.builder(getApplicationContext())
